@@ -5217,6 +5217,18 @@
         box-sizing: border-box;
     }
 
+    /* The field's ring, composed with its offset shadow [fix-38, DI2]: the
+     * rule above sets box-shadow in kp.components, which beats the ring in
+     * kp.base, so a focused input kept only the outer half — the page's own
+     * ground, on a field grounded in the same colour. Tabbing to a field
+     * changed 0 pixels in formal, light, pastel, blueprint, solstice and
+     * shade-light. Restated as .kp-button:focus-visible does. */
+    .kp-field__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
     /* The native <select>'s open list is drawn by the browser in the
  * platform's own highlight colour — purple on Kenny's desktop, in every
  * theme, which is how the one control the package did not paint became
@@ -14819,6 +14831,16 @@
         box-shadow: inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
     }
 
+    /* The keyboard keeps its ring [fix-38, DI2]: the glow above replaced
+       the inner half on a focused link, and the outer half is the page's
+       own ground, so a Tab showed only the stripe under the word. The ring
+       is restated beside the glow. */
+    [data-theme='synthwave'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
+    }
+
     [data-theme='synthwave'] .kp-nav__link:hover::after,
     [data-theme='synthwave'] .kp-nav__link:focus-visible::after,
     [data-theme='synthwave'] .kp-nav__link[aria-current]::after,
@@ -21846,6 +21868,21 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item already gives. The ink
+       (--focus-ring) runs along the edge and the void
+       (--focus-ring-contrast) inside it, the same order as the ring
+       outside. The outline stays declared and stays clipped. */
+    [data-theme='titanium'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='titanium'] h1,
@@ -22066,6 +22103,14 @@
     [data-theme='titanium'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--foreground);
         background: var(--accent);
+    }
+
+    /* The ring above the next link's plate [fix-38]: the links sit 0.15rem
+       apart and the ring reaches 4px out, so a later item — the current
+       page's accent plate — painted over its end side (5% of it changed on
+       focus). The focused item is lifted over its neighbours. */
+    [data-theme='titanium'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
     }
 
     [data-theme='titanium'] .kp-nav__link[aria-haspopup]::after {
@@ -23427,6 +23472,13 @@
         background: var(--muted);
         color: var(--foreground);
         box-shadow: none;
+    }
+
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab changed no pixel a person could see. */
+    [data-theme='pastel'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     [data-theme='pastel'] .kp-nav__link[aria-haspopup]::after {
@@ -30117,6 +30169,13 @@
         transition-duration: 0.15s;
     }
 
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab showed only the rule under the word. */
+    [data-theme='grotesk'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
     [data-theme='grotesk'] .kp-nav__link--lang {
         text-transform: uppercase;
     }
@@ -34244,8 +34303,8 @@
     }
 
     [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog,
-    [data-theme='dark'] .kp-alert {
+    [data-theme='dark'] .kp-alert,
+    [data-theme='dark'] .kp-dialog::before {
         clip-path: polygon(
             0 0,
             calc(100% - var(--kp-chamfer-panel)) 0,
@@ -34310,8 +34369,8 @@
         padding-inline: max(var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem)), calc(0.55rem + 0.55em + 0.25rem));
     }
 
-    [data-theme='dark'] .kp-button:hover::before,
-    [data-theme='dark'] .kp-button:hover::after,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::after,
     [data-theme='dark'] .kp-button:focus-visible::before,
     [data-theme='dark'] .kp-button:focus-visible::after {
         opacity: 1;
@@ -34327,7 +34386,7 @@
         z-index: 1;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__edge,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__edge,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__edge {
         scale: 1 1;
     }
@@ -34337,7 +34396,7 @@
         z-index: 2;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__label,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__label,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__label {
         scale: 0.94;
     }
@@ -34354,7 +34413,7 @@
         translate: 0 0.2rem;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__readout,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__readout,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__readout {
         opacity: 1;
         translate: 0 0;
@@ -34495,6 +34554,23 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item below and cyberpunk's bevel
+       already give. The ink (--focus-ring) runs along the edge and the
+       void (--focus-ring-contrast) inside it, the same order as the ring
+       outside: on the card-grounded button the ink reads, on the
+       near-white primary the void does. The outline stays declared and
+       stays clipped. */
+    [data-theme='dark'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='dark'] h1,
@@ -34519,7 +34595,7 @@
         display: inline-block;
     }
 
-    /* Microlabels: a quiet dot before the label, the theme's own violet. */
+    /* Microlabels: a quiet dot before the label, in the near-white primary. */
     [data-theme='dark'] .microlabel {
         font-family: var(--theme-font-body);
         font-size: 0.7rem;
@@ -34741,10 +34817,18 @@
         color: var(--background);
     }
 
+    /* The ring above the next link's plate [fix-38]: the ring reaches 4px
+       out, and a later item — the current page's plate — painted over its
+       end side in chromium (5% of it changed on focus). The focused item
+       is lifted over its neighbours. */
+    [data-theme='dark'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
+    }
+
     /* The dropdown: a quiet dark panel, the theme's own edge, and — the
        thing every one of the first batch's demos left unstyled (KT14) —
-       its own keyboard state, the theme's own violet rather than the
-       page-wide ink outline. */
+       its own keyboard state: a 2px outline in the primary drawn inside
+       the item on the accent ground, rather than the page-wide ring. */
     [data-theme='dark'] .kp-nav__menu {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -34796,7 +34880,11 @@
         font-weight: 600;
     }
 
-    [data-theme='dark'] .kp-button:hover {
+    /* Hover answers a live button only [scope-100]: a disabled one took the
+       accent ground, the brackets and the label's draw-in like any other
+       (ground 17 → 28, brackets 0 → 1). Every hover rule of the instrument
+       carries the same guard. */
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--accent);
     }
 
@@ -34805,15 +34893,17 @@
     }
 
     [data-theme='dark'] .kp-button--primary,
-    [data-theme='dark'] .kp-button--primary:hover {
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--primary);
         border-color: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6));
-        border-color: hsl(from var(--primary) h s calc(l + 6));
+    /* The theme's own hover step [scope-100]: `l + 6` lifted the 93% primary
+       to about 99%, past the token that names the step (86%). */
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
     }
 
     [data-theme='dark'] .kp-button--ghost {
@@ -34822,7 +34912,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-button--ghost:hover {
+    [data-theme='dark'] .kp-button--ghost:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--accent);
         border-color: var(--border-strong);
     }
@@ -34833,7 +34923,7 @@
         color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-button--destructive:hover {
+    [data-theme='dark'] .kp-button--destructive:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--destructive);
         color: var(--destructive-foreground);
     }
@@ -34842,7 +34932,7 @@
         opacity: 0.45;
     }
 
-    /* ── Fields: a panel and an edge, the violet as focus ──────────────── */
+    /* ── Fields: a panel and an edge, the primary edge as focus ────────── */
 
     [data-theme='dark'] .kp-field__label {
         font-weight: 600;
@@ -35642,9 +35732,13 @@
         background: var(--secondary-active);
     }
 
+    /* Not `--primary-active` any more [scope-100]: with the hover on its own
+       token (86%), that token (78%) sat 6.2 in OKLab distance from it, under
+       the States block's floor of 10, so a press barely showed. Fourteen
+       points under the hover ground instead. */
     [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
     }
 
     [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
@@ -35673,11 +35767,39 @@
        A gradient border, drawn by painting the panel's own ground over
        the oxide and letting only the border box show through. */
     [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog {
+    [data-theme='dark'] .kp-dialog::before {
         border: 1px solid transparent;
         background:
             linear-gradient(var(--card), var(--card)) padding-box,
             var(--kp-iris) border-box;
+    }
+
+    /* ── The dialog's plate under its content, the shadow outside it [scope-100]
+       A clip-path clips everything the element paints, its box-shadow and
+       any filter included, so a chamfered dialog lay flat on its backdrop:
+       the 0 12px 28px shadow painted nothing (1406px of it came back with
+       the clip removed). The chamfer, the ground and the film edge move to
+       the dialog's ::before, and the dialog itself stays unclipped and casts
+       the same shadow as a drop-shadow, which follows the plate's cut shape.
+       The filter makes the dialog the containing block of a fixed
+       descendant, so the plate is fixed to the dialog's box and does not
+       scroll away with a dialog whose content scrolls; the popovers a
+       dialog can hold open in the top layer, which no containing block
+       reaches. The inset is the border's width, because that containing
+       block is the padding box. */
+    [data-theme='dark'] .kp-dialog {
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none;
+        filter: drop-shadow(0 12px 28px hsl(from var(--background) h s l / 0.45));
+    }
+
+    [data-theme='dark'] .kp-dialog::before {
+        content: '';
+        position: fixed;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
     }
 
     /* ── The small parts that carry the film [scope-16] ───────────────── */
@@ -37353,6 +37475,13 @@
         background: var(--card);
         color: var(--primary);
         box-shadow: none;
+    }
+
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab changed no pixel a person could see. */
+    [data-theme='sepia'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     [data-theme='sepia'] .kp-nav__link[aria-haspopup]::after {

@@ -369,6 +369,13 @@
         box-shadow: none;
     }
 
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab changed no pixel a person could see. */
+    [data-theme='sepia'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
     [data-theme='sepia'] .kp-nav__link[aria-haspopup]::after {
         content: ' \2304';
         font-size: 0.7em;

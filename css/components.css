@@ -988,6 +988,18 @@
         box-sizing: border-box;
     }
 
+    /* The field's ring, composed with its offset shadow [fix-38, DI2]: the
+     * rule above sets box-shadow in kp.components, which beats the ring in
+     * kp.base, so a focused input kept only the outer half — the page's own
+     * ground, on a field grounded in the same colour. Tabbing to a field
+     * changed 0 pixels in formal, light, pastel, blueprint, solstice and
+     * shade-light. Restated as .kp-button:focus-visible does. */
+    .kp-field__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
     /* The native <select>'s open list is drawn by the browser in the
  * platform's own highlight colour — purple on Kenny's desktop, in every
  * theme, which is how the one control the package did not paint became

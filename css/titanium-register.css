@@ -271,6 +271,21 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item already gives. The ink
+       (--focus-ring) runs along the edge and the void
+       (--focus-ring-contrast) inside it, the same order as the ring
+       outside. The outline stays declared and stays clipped. */
+    [data-theme='titanium'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='titanium'] h1,
@@ -491,6 +506,14 @@
     [data-theme='titanium'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--foreground);
         background: var(--accent);
+    }
+
+    /* The ring above the next link's plate [fix-38]: the links sit 0.15rem
+       apart and the ring reaches 4px out, so a later item — the current
+       page's accent plate — painted over its end side (5% of it changed on
+       focus). The focused item is lifted over its neighbours. */
+    [data-theme='titanium'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
     }
 
     [data-theme='titanium'] .kp-nav__link[aria-haspopup]::after {
