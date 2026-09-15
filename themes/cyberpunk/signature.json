@@ -1,0 +1,548 @@
+{
+    "$schema": "../signature.schema.json",
+    "theme": "cyberpunk",
+    "idea": "Signal yellow on a void with a violet cast: yellow acts and grounds, blood red alarms, cyan labels what must be read. Every corner is square or cut by a notch, the type is uppercase and spaced, and machine prefixes (///, >, !!) speak for the interface. Motion is a signal being acquired: text deciphers out of noise, a slice burst fires once, a charge sweeps across a button.",
+    "loadBearing": [
+        {
+            "claim": "Yellow acts and grounds, red alarms, cyan labels: swap any two and it is a different theme.",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "primary" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "destructive" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "accent" }
+            ]
+        },
+        {
+            "claim": "The app ink is a warm smoke on a violet-cast void, never white on black.",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "foreground" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "background" }
+            ]
+        },
+        {
+            "claim": "The radius is 0: every corner is square or a notch cut off it.",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "radius" },
+                { "file": "css/cyberpunk-register.css", "property": "--kp-button-notch" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-card" }
+            ]
+        },
+        {
+            "claim": "Headings, buttons, links and labels are uppercase and letter-spaced; labels and identifiers speak in the mono face.",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] h1" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .microlabel" },
+                { "file": "css/cyberpunk-register.css", "property": "--kp-mono" }
+            ]
+        },
+        {
+            "claim": "Motion glitches once and settles: decipher, slice burst, charge sweep. The only loop is the data stream between sections.",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "property": "--kp-reveal-headline" },
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-slice-1" },
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-charge" },
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-stream-144" }
+            ]
+        }
+    ],
+    "colourRoles": [
+        {
+            "role": "Signal",
+            "token": "primary",
+            "use": "The primary action's fill, the navbar and hero ground, the section heading's brackets, the selected tab's underline, the focus ring.",
+            "never": "Body text in long runs, or a large ground inside the app surface; it is the one colour that is both a surface and a signal, so it is spent on those two jobs only.",
+            "example": "button-primary",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "primary" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button--primary" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-tab[aria-selected='true']" }
+            ]
+        },
+        {
+            "role": "Void",
+            "token": "background",
+            "use": "The app ground, the face of every unfilled button, the dropdown panel, the strip behind the nav links.",
+            "never": "Pure black; the void keeps its violet cast.",
+            "example": "surface-app",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "background" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__links::before" }
+            ]
+        },
+        {
+            "role": "Smoke",
+            "token": "foreground",
+            "use": "Running text and ghost button labels on the void.",
+            "never": "White: white on the void reads as a terminal, smoke reads as print.",
+            "example": "text-body",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "foreground" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button--ghost" }
+            ]
+        },
+        {
+            "role": "Label",
+            "token": "accent",
+            "use": "What must be read: microlabels, field labels, table headers, the drawn rule, the caret, the tooltip frame, a toast's left edge, the charge band on a dark face.",
+            "never": "A ground or a button fill.",
+            "example": "field",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "accent" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field__label" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-table th" }
+            ]
+        },
+        {
+            "role": "Alarm",
+            "token": "destructive",
+            "use": "The destructive plate, an invalid field's border, the error summary's edge, the alarm's ink, the band's letters on yellow.",
+            "never": "Decoration or a hover colour: red only ever means something is wrong.",
+            "example": "button-destructive",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "destructive" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field--invalid .kp-field__input" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-form__summary" }
+            ]
+        },
+        {
+            "role": "Red on yellow",
+            "token": "surface-hero-danger",
+            "use": "The alert plate and the second ink on the hero, where the brighter red would not read.",
+            "never": "On the void, where the brighter destructive red is the alarm.",
+            "example": "hero-alert",
+            "proof": [{ "file": "themes/cyberpunk/tokens.json", "token": "surface-hero-danger" }]
+        },
+        {
+            "role": "Boundary",
+            "token": "border-strong",
+            "use": "The edge of a control that must be found (DI1), the disabled button's frame, the side navigation's edge, a picture's frame.",
+            "never": "A decorative hairline; that is the hairline below.",
+            "example": "field",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "border-strong" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:disabled" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-sidenav" }
+            ]
+        },
+        {
+            "role": "Hairline",
+            "token": "kp-hairline",
+            "use": "The primary at 22 %: the frame of a card, a panel, a tag, a fieldset, the gaps of a grid.",
+            "never": "A control boundary; it sits under 3:1 on purpose.",
+            "example": "card",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "property": "--kp-hairline" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-grid" }
+            ]
+        },
+        {
+            "role": "Glitch violet",
+            "token": "chart-4",
+            "use": "The second copy of the headline's slice burst, and charts.",
+            "never": "Anywhere outside a glitch slice or a chart.",
+            "example": "hero-headline",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "chart-4" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-reveal='headline']::after" }
+            ]
+        }
+    ],
+    "type": [
+        {
+            "role": "Display",
+            "font": "theme-font-display",
+            "scale": "kp-text-display",
+            "case": "uppercase",
+            "tracking": "0.005em on a surface headline, 0.01em on headings",
+            "weight": "900 headline, 800 section heading and card title",
+            "description": "Big Shoulders Display, condensed and heavy: the headline fills the hero, a section heading wears the bracket frame.",
+            "example": "hero-headline",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] h1" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-surface] h1" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "theme-font-display" }
+            ]
+        },
+        {
+            "role": "Body",
+            "font": "theme-font-body",
+            "scale": "kp-text-md",
+            "case": "as written",
+            "description": "Rajdhani: squared-off, technical, still readable at length.",
+            "example": "text-body",
+            "proof": [{ "file": "themes/cyberpunk/tokens.json", "token": "theme-font-body" }]
+        },
+        {
+            "role": "Mono",
+            "font": "kp-mono",
+            "case": "uppercase",
+            "tracking": "0.12em to 0.14em",
+            "description": "KP Tech Mono (Share Tech Mono) for microlabels, field labels, badges, tabs, toasts, identifiers and timestamps: the interface talking.",
+            "example": "mono",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "property": "--kp-mono" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-badge" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-timestamp" }
+            ]
+        },
+        {
+            "role": "Button and link",
+            "font": "theme-font-body",
+            "case": "uppercase",
+            "tracking": "0.12em",
+            "weight": "700 button, 600 nav link",
+            "description": "Actions are spaced capitals in the body face, never the mono.",
+            "example": "buttons",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__link" }
+            ]
+        }
+    ],
+    "shape": {
+        "radius": {
+            "description": "0 everywhere: the token is 0 and the register restates border-radius: 0 on badges, cards, panels, tabs and pickers.",
+            "example": "badges",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "radius" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-popover" }
+            ]
+        },
+        "borders": {
+            "description": "A button has no border: its frame is the background colour, the face is inset 2px and a 10px slit runs through the middle. Cards and panels take a 1px hairline; toasts and alerts a 3px left edge.",
+            "example": "buttons",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "property": "--kp-button-slit" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-toast" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-alert" }
+            ]
+        },
+        "shadows": {
+            "description": "None. Buttons and cards set box-shadow: none; the focus ring is an inset box-shadow drawn on the face, inside the clip.",
+            "example": "card",
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:focus-visible" }]
+        },
+        "signature": {
+            "description": "The notch. A button's bottom-right corner is cut by 14px, an input, badge, toast and alert by 8px; a card cuts its top-right by 16px; a dialog and the spec sheet cut two opposite corners by 18px; a button pointing back carries the notch bottom-left.",
+            "example": "notches",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "fx-notch" },
+                { "file": "css/cyberpunk-register.css", "property": "--fx-notch-sm" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-dialog" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button[data-kp-direction='back']" }
+            ]
+        }
+    },
+    "surfaces": [
+        {
+            "name": "hero",
+            "ground": "surface-hero-bg",
+            "ink": "surface-hero-fg",
+            "description": "Signal yellow with ink on it. The primary button inverts to ink with yellow letters, the card is the deeper yellow, the alert the deeper red with white letters.",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "surface-hero-bg" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "surface-hero-primary" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "surface-hero-card" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-surface='hero']" }
+            ]
+        },
+        {
+            "name": "app",
+            "ground": "background",
+            "ink": "foreground",
+            "description": "The void, with smoke on it. Cards rise to 8 % and popovers to 10 % lightness; the scanlines and a faint vignette lie over the whole page.",
+            "proof": [
+                { "file": "themes/cyberpunk/tokens.json", "token": "card" },
+                { "file": "themes/cyberpunk/tokens.json", "token": "popover" },
+                { "file": "css/cyberpunk-register.css", "property": "--fx-texture" }
+            ]
+        },
+        {
+            "name": "footer",
+            "ground": "sidebar-background",
+            "ink": "muted-foreground",
+            "description": "Near-black under the page, headings in mono capitals in the signal, links spaced capitals that turn yellow under the pointer.",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-footer" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-footer h4" }
+            ]
+        }
+    ],
+    "motion": {
+        "flicker": {
+            "allowed": true,
+            "reason": "Glitch is this theme's own vocabulary: the headline's slice burst and the nav link's hover slice already step between frames, each with its rate in reports/di5.md.",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-slice-a" },
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-slice-2" }
+            ]
+        },
+        "verbs": {
+            "enter": {
+                "description": "A panel drops into place: the nav dropdown rises 6px into position as it fades in, and the strip of links slides in 24px from its own side once, on load.",
+                "duration": "180ms (--fx-duration) for the dropdown; 520ms after 80ms for the strip",
+                "easing": "--fx-ease, cubic-bezier(0.2, 0.9, 0.2, 1)",
+                "reducedMotion": "The dropdown appears in place and the strip stands at rest.",
+                "open": false,
+                "note": "Dialogs, popovers and toasts have no entrance of their own; see the recipe.",
+                "demo": { "kind": "menu", "example": "nav-menu" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__menu" },
+                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-strip-in" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__links" }
+                ]
+            },
+            "leave": {
+                "description": "Classified words are released: the ink bar over each marked phrase wipes off toward its right edge, one phrase after another, and the words turn the link colour and bold.",
+                "duration": "720ms (--kp-wipe) per bar, 160ms apart, after 1500ms",
+                "easing": "--fx-ease",
+                "reducedMotion": "The phrases stand cleared at once, in the link colour and bold.",
+                "open": false,
+                "note": "No component leaves with motion: a dialog, toast or dropdown is simply gone. See the recipe.",
+                "demo": { "kind": "reveal", "example": "lede" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] mark::after" },
+                    { "file": "css/cyberpunk-register.css", "property": "--kp-wipe" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared)::after" }
+                ]
+            },
+            "press": {
+                "description": "The button drops by --fx-lift (1px) and its fill steps to the pressed token.",
+                "duration": "180ms (--fx-duration)",
+                "easing": "--fx-ease",
+                "reducedMotion": "The drop and the pressed fill still happen, at once.",
+                "open": false,
+                "demo": { "kind": "press", "example": "buttons" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:active:not(:disabled)" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button--primary:active:not(:disabled)" },
+                    { "file": "themes/cyberpunk/tokens.json", "token": "fx-lift" }
+                ]
+            },
+            "hover": {
+                "description": "The button lifts 1px and a charge band sweeps across its face once: cyan over a dark face, the face's own ink over a filled one. A nav link fires a two-step slice.",
+                "duration": "520ms sweep; 320ms link slice",
+                "easing": "--fx-ease; steps(2, end) for the slice",
+                "reducedMotion": "The lift and the hover fill remain, at once; no sweep, no slice.",
+                "open": false,
+                "demo": { "kind": "hover", "example": "buttons" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:hover:not(:disabled)::after" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:hover:not(:disabled)" },
+                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-charge" }
+                ]
+            },
+            "load": {
+                "description": "The headline deciphers left to right out of glyph noise, then one slice burst in cyan and violet; a section rule draws in from the left when its heading scrolls into view.",
+                "duration": "26 characters per second, then 600ms of slices; 900ms rule",
+                "easing": "steps(1, end) for the slices; --fx-ease for the rule",
+                "reducedMotion": "The headline stands as its own text and the rule stands drawn.",
+                "open": false,
+                "demo": { "kind": "reveal", "example": "hero-headline" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "property": "--kp-decipher-cps" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-reveal='headline'].is-glitching::before" },
+                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-slice-1" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-reveal='rule']::after" }
+                ]
+            },
+            "attention": {
+                "description": "The alarm: blood red on the void with the signal-yellow split and hazard bars, running the package's flicker-in, decode, slice and marching bars in this theme's colours. Smaller asks keep to the edge: a 3px left edge on a toast or an alert, '!! ' before an error.",
+                "duration": "600ms flicker-in, 1400ms breathing glow, 1600ms march",
+                "easing": "steps(1, end) flicker; ease-in-out glow; linear march",
+                "reducedMotion": "The plate, frame, bars and glow at full strength; nothing moves.",
+                "open": false,
+                "note": "scope-96 stopped this theme's own alarm redesign until the portraits are approved; what plays here is the alarm as it ships.",
+                "demo": { "kind": "restamp", "example": "alarm" },
+                "proof": [
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-alarm" },
+                    { "file": "css/components.css", "keyframes": "kp-alarm-flicker-in" },
+                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field__error::before" }
+                ]
+            }
+        }
+    },
+    "ornaments": [
+        {
+            "name": "The data stream",
+            "where": "Between two surfaces: [data-kp-divider], the alt one before the footer.",
+            "description": "Three rows of muted yellow dashes and a few cyan packets under a scan hairline, drifting at two speeds; the alt divider flows the other way.",
+            "example": "divider",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-divider]" },
+                { "file": "css/cyberpunk-register.css", "keyframes": "kp-stream-216" }
+            ]
+        },
+        {
+            "name": "The bracket frame",
+            "where": "A section heading on a surface.",
+            "description": "Two yellow corner brackets over the heading, drawn as four gradients so both pseudo-elements stay free.",
+            "example": "heading",
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-surface] h2" }]
+        },
+        {
+            "name": "The notch and the slit",
+            "where": "Buttons, inputs, badges, toasts, alerts, cards, dialogs, the current side navigation row.",
+            "description": "A cut corner instead of a radius, and on a button a slit through the frame.",
+            "example": "notches",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "property": "--kp-button-notch" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-sidenav__link[aria-current='page']" }
+            ]
+        },
+        {
+            "name": "Machine prefixes",
+            "where": "Microlabels, field labels, errors, breadcrumbs, menu items.",
+            "description": "'/// ' before a microlabel, '> ' before a label, '!! ' before an error, '//' between breadcrumb steps, '— ' before a menu item.",
+            "example": "voice",
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .microlabel::before" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field__label::before" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-breadcrumb li + li::before" }
+            ]
+        },
+        {
+            "name": "The file stamp",
+            "where": "A card that carries an emphasis reveal and a label.",
+            "description": "The consumer's label in spaced mono, in a red frame rotated -4deg, over a dossier whose redactions lift.",
+            "example": "dossier",
+            "proof": [
+                {
+                    "file": "css/cyberpunk-register.css",
+                    "selector": "[data-theme='cyberpunk'] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before"
+                }
+            ]
+        },
+        {
+            "name": "The band",
+            "where": ".kp-marquee",
+            "description": "Signal yellow with blood-red mono capitals and every corner cut the same; red on yellow reads 3.21, approved by Kenny on 2026-09-08.",
+            "example": "marquee",
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-marquee" }]
+        },
+        {
+            "name": "Scanlines and vignette",
+            "where": "The page's texture layer, over everything.",
+            "description": "Static yellow scanlines every 3px and a faint vignette, both at the texture ceiling's 6 %.",
+            "example": null,
+            "proof": [{ "file": "css/cyberpunk-register.css", "property": "--fx-texture" }]
+        }
+    ],
+    "voice": {
+        "case": "UPPERCASE for headings, buttons, nav links, labels, badges, tabs and the breadcrumb; running text as written.",
+        "labels": [
+            "A microlabel starts with '/// '.",
+            "A field label starts with '> ' and is mono cyan.",
+            "An error starts with '!! '.",
+            "Breadcrumb steps are joined by '//'; menu items start with '— '.",
+            "A stamp carries the consumer's own label (js/strings.js), never a word written in CSS."
+        ],
+        "icons": "Drawn geometry instead of icons: a health dot is a square turned 45deg, a dropdown link carries a CSS caret, the checkbox tick is a notched block.",
+        "neverDoes": [
+            "Pure black, or white text on the void.",
+            "Violet outside a glitch slice.",
+            "A rounded corner or a soft shadow.",
+            "A second loop besides the data stream and the marquee."
+        ],
+        "example": "voice",
+        "proof": [
+            { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-health__dot" },
+            { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__link[aria-haspopup]::after" },
+            { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-field__check:checked::before" }
+        ]
+    },
+    "recipe": [
+        {
+            "situation": "Ask for attention, loudly",
+            "verb": "attention",
+            "answer": "The alarm: red on the void, yellow split and hazard bars, flicker and decode allowed.",
+            "components": ["kp-alarm"],
+            "open": false,
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-alarm" }]
+        },
+        {
+            "situation": "Ask for attention, in place",
+            "verb": "attention",
+            "answer": "A notched plate in mono with a 3px left edge in its own ink; words in the status colour carry the meaning.",
+            "components": ["kp-toast", "kp-alert", "kp-badge"],
+            "open": false,
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-toast" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-alert" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-badge" }
+            ]
+        },
+        {
+            "situation": "Act",
+            "verb": "press",
+            "answer": "The notched, slit button: yellow fill for the one primary action, void face with a yellow frame for the rest; lift and charge on hover, drop on press.",
+            "components": ["kp-button"],
+            "open": false,
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:active:not(:disabled)" }]
+        },
+        {
+            "situation": "Point at something",
+            "verb": "hover",
+            "answer": "A 12 % wash of the signal behind a nav or menu row; a one-shot slice on a nav link; a charge sweep on a button.",
+            "components": ["kp-button", "kp-nav"],
+            "open": false,
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__menu a:hover" }
+            ]
+        },
+        {
+            "situation": "A menu opens",
+            "verb": "enter",
+            "answer": "The dropdown drops 6px into place over --fx-duration on --fx-ease, clipped with its cut corner.",
+            "components": ["kp-nav"],
+            "open": false,
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__menu" }]
+        },
+        {
+            "situation": "A panel opens (dialog, popover, toast)",
+            "verb": "enter",
+            "answer": "No entrance today: the panel is there at once, already notched and framed.",
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
+            "open": true,
+            "proposal": "Borrow the dropdown's drop (translate 0 -6px to 0 with the fade, --fx-duration, --fx-ease) and, for a toast only, one kp-slice-a burst on arrival; nothing under reduced motion."
+        },
+        {
+            "situation": "A panel closes",
+            "verb": "leave",
+            "answer": "No exit today: the panel is simply gone. The theme's own way of taking something away is the redaction bar wiping off.",
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
+            "open": true,
+            "proposal": "A clip wipe toward the notch (clip-path inset from 0 to 100 % on the right, --kp-wipe, --fx-ease), the mirror of the redaction clear; nothing under reduced motion."
+        },
+        {
+            "situation": "Wait for something",
+            "verb": "load",
+            "answer": "A square spinner in yellow and cyan and a skeleton sweeping card to secondary; the package's own spin and pulse drive them.",
+            "components": ["kp-spinner", "kp-skeleton", "kp-progress"],
+            "open": false,
+            "proof": [
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-spinner" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-skeleton" },
+                { "file": "css/components.css", "keyframes": "kp-spin" }
+            ]
+        },
+        {
+            "situation": "Separate two sections",
+            "answer": "The data stream divider; before the footer, the alt one flowing the other way.",
+            "components": [],
+            "open": false,
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] [data-kp-divider]" }]
+        },
+        {
+            "situation": "Label a value",
+            "answer": "Mono capitals with a prefix; identifiers and timestamps in the mono face, timestamps muted.",
+            "components": ["kp-id", "kp-timestamp"],
+            "open": false,
+            "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-id" }]
+        }
+    ],
+    "banner": {
+        "description": "A banner that asks for attention, from existing parts only: an app surface with a microlabel, the destructive alert (notched, 3px left edge, the words 'Warning:' carrying the meaning), the primary and ghost buttons, and the data stream closing it off. Nothing here is new CSS.",
+        "markup": "<section class=\"kp-section kp-stack\" data-kp-surface=\"app\"><p class=\"microlabel\">Pump 2 · coolant loop</p><div class=\"kp-alert kp-alert--destructive\" role=\"alert\" data-kp-semantic><span class=\"kp-alert__icon\" aria-hidden=\"true\">!</span><span class=\"kp-alert__body\"><span class=\"kp-alert__label\">Warning: </span>Coolant pressure fell below the floor at 03:12. The pump keeps running on the reserve loop.</span></div><div class=\"kp-row\"><button type=\"button\" class=\"kp-button kp-button--primary\">Acknowledge</button><button type=\"button\" class=\"kp-button kp-button--ghost\">Show the readings</button></div></section><div data-kp-divider></div>"
+    }
+}

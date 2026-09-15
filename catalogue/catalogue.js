@@ -149,6 +149,14 @@ function mountShell() {
 /* --------------------------------------------------------------- theme */
 
 function mountThemeMenu(bar) {
+    // A page that IS one theme (a theme portrait, scope-97) says so with
+    // data-cat-theme-fixed as well: it shows that theme and nothing else, so
+    // it carries no menu and a stored choice does not move it.
+    const root = document.documentElement;
+    if (root.hasAttribute('data-cat-theme-fixed') && root.getAttribute('data-cat-theme')) {
+        applyTheme(/** @type {string} */ (root.getAttribute('data-cat-theme')));
+        return;
+    }
     // The package's own theme menu, grouped Light and Dark, exactly as a
     // consumer gets it — the catalogue reviews the picker by using it.
     const slot = document.createElement('span');

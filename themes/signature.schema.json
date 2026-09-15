@@ -1,0 +1,248 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/kennypassenier/kp-themes/themes/signature.schema.json",
+    "title": "A theme's signature",
+    "description": "The machine-readable essence of one theme [scope-97]: what it stands for, the colour roles, type, shape, surfaces, motion verbs, ornaments, voice and the recipe a new component follows. Every claim carries proof: a selector, keyframes or custom property that exists in the named stylesheet, or a token in the theme's tokens.json. research/theme-portraits/<theme>.html is generated from it (gates/generate-portraits.mjs) and tests/theme-portraits.spec.mjs refuses proof that does not exist.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["theme", "idea", "loadBearing", "colourRoles", "type", "shape", "surfaces", "motion", "ornaments", "voice", "recipe", "banner"],
+    "properties": {
+        "$schema": { "type": "string" },
+        "theme": { "type": "string", "pattern": "^[a-z][a-z-]*$" },
+        "idea": { "type": "string", "minLength": 1, "maxLength": 600, "description": "At most three sentences." },
+        "loadBearing": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["claim", "proof"],
+                "properties": { "claim": { "type": "string", "minLength": 1 }, "proof": { "$ref": "#/$defs/proofs" } }
+            }
+        },
+        "colourRoles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["role", "token", "use", "never", "example", "proof"],
+                "properties": {
+                    "role": { "type": "string", "minLength": 1 },
+                    "token": { "$ref": "#/$defs/customProperty" },
+                    "use": { "type": "string", "minLength": 1 },
+                    "never": { "type": "string", "minLength": 1 },
+                    "example": { "$ref": "#/$defs/example" },
+                    "proof": { "$ref": "#/$defs/proofs" }
+                }
+            }
+        },
+        "type": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["role", "font", "case", "description", "example", "proof"],
+                "properties": {
+                    "role": { "type": "string", "minLength": 1 },
+                    "font": { "$ref": "#/$defs/customProperty" },
+                    "scale": { "$ref": "#/$defs/customProperty" },
+                    "case": { "enum": ["uppercase", "as written", "small caps"] },
+                    "tracking": { "type": "string" },
+                    "weight": { "type": "string" },
+                    "description": { "type": "string", "minLength": 1 },
+                    "example": { "$ref": "#/$defs/example" },
+                    "proof": { "$ref": "#/$defs/proofs" }
+                }
+            }
+        },
+        "shape": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["radius", "borders", "shadows", "signature"],
+            "properties": {
+                "radius": { "$ref": "#/$defs/described" },
+                "borders": { "$ref": "#/$defs/described" },
+                "shadows": { "$ref": "#/$defs/described" },
+                "signature": { "$ref": "#/$defs/described" }
+            }
+        },
+        "surfaces": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "ground", "ink", "description", "proof"],
+                "properties": {
+                    "name": { "enum": ["hero", "app", "footer"] },
+                    "ground": { "$ref": "#/$defs/customProperty" },
+                    "ink": { "$ref": "#/$defs/customProperty" },
+                    "description": { "type": "string", "minLength": 1 },
+                    "proof": { "$ref": "#/$defs/proofs" }
+                }
+            }
+        },
+        "motion": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["flicker", "verbs"],
+            "properties": {
+                "flicker": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["allowed", "reason", "proof"],
+                    "properties": {
+                        "allowed": { "type": "boolean" },
+                        "reason": { "type": "string", "minLength": 1 },
+                        "proof": { "$ref": "#/$defs/proofs" }
+                    }
+                },
+                "verbs": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["enter", "leave", "press", "hover", "load", "attention"],
+                    "properties": {
+                        "enter": { "$ref": "#/$defs/verb" },
+                        "leave": { "$ref": "#/$defs/verb" },
+                        "press": { "$ref": "#/$defs/verb" },
+                        "hover": { "$ref": "#/$defs/verb" },
+                        "load": { "$ref": "#/$defs/verb" },
+                        "attention": { "$ref": "#/$defs/verb" }
+                    }
+                }
+            }
+        },
+        "ornaments": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "where", "description", "example", "proof"],
+                "properties": {
+                    "name": { "type": "string", "minLength": 1 },
+                    "where": { "type": "string", "minLength": 1 },
+                    "description": { "type": "string", "minLength": 1 },
+                    "example": { "$ref": "#/$defs/example" },
+                    "proof": { "$ref": "#/$defs/proofs" }
+                }
+            }
+        },
+        "voice": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["case", "labels", "icons", "neverDoes", "example", "proof"],
+            "properties": {
+                "case": { "type": "string", "minLength": 1 },
+                "labels": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                "icons": { "type": "string", "minLength": 1 },
+                "neverDoes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+                "example": { "$ref": "#/$defs/example" },
+                "proof": { "$ref": "#/$defs/proofs" }
+            }
+        },
+        "recipe": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["situation", "answer", "components", "open"],
+                "properties": {
+                    "situation": { "type": "string", "minLength": 1 },
+                    "verb": { "$ref": "#/$defs/verbName" },
+                    "answer": { "type": "string", "minLength": 1 },
+                    "components": { "type": "array", "items": { "type": "string", "pattern": "^kp-[a-z0-9-]+$" } },
+                    "open": { "type": "boolean" },
+                    "proposal": { "type": "string", "minLength": 1 },
+                    "proof": { "$ref": "#/$defs/proofs" }
+                },
+                "if": { "properties": { "open": { "const": true } } },
+                "then": { "required": ["proposal"] },
+                "else": { "required": ["proof"] }
+            }
+        },
+        "banner": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["description", "markup"],
+            "properties": {
+                "description": { "type": "string", "minLength": 1 },
+                "markup": { "type": "string", "minLength": 1 }
+            }
+        }
+    },
+    "$defs": {
+        "verbName": { "enum": ["enter", "leave", "press", "hover", "load", "attention"] },
+        "customProperty": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "description": "A custom property without its leading dashes: a token, or a knob the register declares."
+        },
+        "example": {
+            "description": "The name of a live snippet gates/generate-portraits.mjs knows, or null when nothing can be drawn on its own.",
+            "anyOf": [{ "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }, { "type": "null" }]
+        },
+        "described": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["description", "example", "proof"],
+            "properties": {
+                "description": { "type": "string", "minLength": 1 },
+                "example": { "$ref": "#/$defs/example" },
+                "proof": { "$ref": "#/$defs/proofs" }
+            }
+        },
+        "verb": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["description", "duration", "easing", "reducedMotion", "open", "demo"],
+            "properties": {
+                "description": { "type": "string", "minLength": 1 },
+                "duration": { "type": "string", "minLength": 1 },
+                "easing": { "type": "string", "minLength": 1 },
+                "reducedMotion": { "type": "string", "minLength": 1, "description": "What remains when the reader asked for less motion." },
+                "open": {
+                    "type": "boolean",
+                    "description": "True when the theme has no existing answer; the entry is then a proposal, never a fact."
+                },
+                "proposal": { "type": "string", "minLength": 1 },
+                "note": { "type": "string", "minLength": 1 },
+                "demo": {
+                    "anyOf": [
+                        { "type": "null" },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["kind", "example"],
+                            "properties": {
+                                "kind": { "enum": ["hover", "press", "reveal", "menu", "restamp"] },
+                                "example": { "$ref": "#/$defs/example" }
+                            }
+                        }
+                    ]
+                },
+                "proof": { "$ref": "#/$defs/proofs" }
+            },
+            "if": { "properties": { "open": { "const": true } } },
+            "then": { "required": ["proposal"] },
+            "else": { "required": ["proof"], "properties": { "demo": { "type": "object" } } }
+        },
+        "proofs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/proof" } },
+        "proof": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["file"],
+            "properties": {
+                "file": { "type": "string", "pattern": "^(css/[a-z-]+\\.css|themes/[a-z-]+/tokens\\.json)$" },
+                "selector": { "type": "string", "minLength": 1 },
+                "keyframes": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+                "property": { "type": "string", "pattern": "^--[a-z][a-z0-9-]*$" },
+                "token": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+            },
+            "oneOf": [{ "required": ["selector"] }, { "required": ["keyframes"] }, { "required": ["property"] }, { "required": ["token"] }]
+        }
+    }
+}

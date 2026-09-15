@@ -61,7 +61,14 @@ export const PAGES = [
     },
     {
         group: 'Research to look at',
-        pages: [{ href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' }],
+        pages: [
+            // The theme portraits' pilot [scope-97]: one fixed page per theme,
+            // generated from themes/<theme>/signature.json.
+            { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
+            { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
+            { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
+            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
+        ],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

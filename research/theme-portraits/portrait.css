@@ -1,0 +1,167 @@
+/* The theme portraits' own layout [scope-97]. Like catalogue/catalogue.css it
+   styles no kp- class: every component on the page is painted by the package
+   and the theme's register, and this file only arranges them. Unlayered, and
+   every selector prefixed `pt-`. The page speaks in its theme by using the
+   theme's own tokens and faces for its chrome, never by restyling a
+   component. */
+
+.pt-masthead {
+    margin-block-end: 1.5rem;
+}
+
+.pt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.pt-card {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    min-inline-size: 0;
+    padding: 0.9rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.pt-card > p {
+    margin: 0;
+}
+
+.pt-card__name {
+    margin: 0;
+    font-family: var(--theme-font-display);
+}
+
+.pt-card__token {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.8rem;
+}
+
+.pt-swatch {
+    block-size: 3.5rem;
+    border: 1px solid var(--border-strong);
+}
+
+.pt-specimen {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.pt-specimen[data-pt-case='uppercase'] {
+    text-transform: uppercase;
+}
+
+.pt-specimen[data-pt-case='small caps'] {
+    font-variant-caps: all-small-caps;
+}
+
+.pt-dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 0.75rem;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.pt-dl dt {
+    color: var(--muted-foreground);
+    font-weight: 600;
+}
+
+.pt-dl dd {
+    margin: 0;
+}
+
+.pt-dl ul {
+    margin: 0;
+    padding-inline-start: 1.1rem;
+}
+
+.pt-dl--wide {
+    align-self: start;
+}
+
+.pt-example {
+    min-inline-size: 0;
+    padding: 0.6rem;
+    border: 1px dotted var(--border);
+    overflow: hidden;
+}
+
+.pt-muted {
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+}
+
+.pt-proof {
+    font-size: 0.78rem;
+    color: var(--muted-foreground);
+}
+
+.pt-proof ul {
+    margin: 0.3rem 0 0;
+    padding-inline-start: 1rem;
+}
+
+.pt-proof code {
+    font-family: var(--theme-font-mono, monospace);
+    overflow-wrap: anywhere;
+}
+
+.pt-idea {
+    display: grid;
+    gap: 1rem;
+}
+
+.pt-bearing {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding-inline-start: 1.4rem;
+}
+
+.pt-bearing p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.pt-surfaces {
+    display: grid;
+    gap: 1rem;
+}
+
+.pt-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.pt-scroll {
+    overflow-x: auto;
+    max-inline-size: 100%;
+}
+
+.pt-flicker {
+    margin-block: 0 0.5rem;
+}
+
+.pt-banner {
+    margin-block: 0.75rem;
+}
+
+.pt-live [data-pt-live] {
+    min-block-size: 4rem;
+}
+
+.pt-worked {
+    margin-block-start: 1.75rem;
+}

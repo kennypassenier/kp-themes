@@ -1,0 +1,560 @@
+{
+    "$schema": "../signature.schema.json",
+    "theme": "formal",
+    "idea": "Paper and ink: a warm off-white stock, near-black ink with a blue cast, and one navy that carries every interactive thing, with bronze and gold as a second voice that never acts. Fraunces on the headings is the whole typographic gesture. Formal stays still while the others move: motion commits once, as a fade, a rise or a rule that draws, and never glitches, loops or flickers.",
+    "loadBearing": [
+        {
+            "claim": "The ground is a warm off-white; moved to pure white, the theme becomes light.",
+            "proof": [{ "file": "themes/formal/tokens.json", "token": "background" }]
+        },
+        {
+            "claim": "One colour acts: navy is the only hue that means you can do something here.",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "primary" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__link--cta" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--ghost" }
+            ]
+        },
+        {
+            "claim": "No ornament: no glow, no visible texture, no flourish; the 0.375rem radius is the largest concession.",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "radius" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-card" }
+            ]
+        },
+        {
+            "claim": "The display serif is for headings only, at its highest optical size on a surface.",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] h1" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-surface] h1" }
+            ]
+        },
+        {
+            "claim": "Motion commits, it does not perform: every reveal is a one-shot transition and the register has no keyframes.",
+            "proof": [
+                { "file": "css/formal-register.css", "property": "--kp-reveal-headline" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-reveal='headline']" }
+            ]
+        }
+    ],
+    "colourRoles": [
+        {
+            "role": "Paper",
+            "token": "background",
+            "use": "The page ground and the ground of a field, so an input is a ruled box on the page.",
+            "never": "Pure white, which reads as a screen rather than a page.",
+            "example": "surface-app",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "background" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-field__input" }
+            ]
+        },
+        {
+            "role": "Card stock",
+            "token": "card",
+            "use": "A brighter stock laid on the page: cards, every panel, the navbar, the hero.",
+            "never": "The fill of a control.",
+            "example": "card",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "card" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav-wrap" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-surface='hero']" }
+            ]
+        },
+        {
+            "role": "Ink",
+            "token": "foreground",
+            "use": "Running text, headings and field labels.",
+            "never": "Pure black.",
+            "example": "text-body",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "foreground" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-field__label" }
+            ]
+        },
+        {
+            "role": "Navy",
+            "token": "primary",
+            "use": "Everything that acts: the primary button, the call to action, a ghost button's label, the selected tab, the current page, a sorted column; and the two rules that close a section, the drawn heading rule and the docket tick.",
+            "never": "Decoration unrelated to an action or a section's end.",
+            "example": "button-primary",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "primary" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-tab[aria-selected='true']" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider]:not([data-kp-divider='alt'])::after" }
+            ]
+        },
+        {
+            "role": "Bronze wash",
+            "token": "accent",
+            "use": "The highlighter under a marked phrase.",
+            "never": "A button, or any other thing that acts.",
+            "example": "lede",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "accent" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] mark" }
+            ]
+        },
+        {
+            "role": "Gold signal",
+            "token": "fx-signal",
+            "use": "Wet ink: the mirror button's 2px offset impression and the laurels' glyphs.",
+            "never": "A control's fill or its label.",
+            "example": "button-mirror",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "fx-signal" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--mirror" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-laurels svg" }
+            ]
+        },
+        {
+            "role": "Brick",
+            "token": "destructive",
+            "use": "The stamp's ink and frame, the destructive button, an invalid field's border, an error.",
+            "never": "Emphasis that is not a warning or a stamp.",
+            "example": "button-destructive",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "destructive" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-card[data-kp-label]::before" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-field--invalid .kp-field__input" }
+            ]
+        },
+        {
+            "role": "Rule",
+            "token": "border-strong",
+            "use": "A control's boundary (a field, a ghost button), the rule under a table's header, the divider's hairline.",
+            "never": "The quiet rule between paragraphs; that is the hairline.",
+            "example": "field",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "border-strong" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider]::before" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-table th" }
+            ]
+        },
+        {
+            "role": "Hairline",
+            "token": "border",
+            "use": "The quiet content rule: card and panel frames, the navbar's bottom line, table rows.",
+            "never": "A control boundary (DI1).",
+            "example": "card",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "border" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-table td" }
+            ]
+        },
+        {
+            "role": "Muted stock",
+            "token": "muted",
+            "use": "The darker third stock: the dossier, the footer, a secondary button, a hovered menu row, the current side navigation row.",
+            "never": "A ground for long reading.",
+            "example": "dossier",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "muted" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-footer" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-card[data-kp-reveal='emphasis']" }
+            ]
+        }
+    ],
+    "type": [
+        {
+            "role": "Display",
+            "font": "theme-font-display",
+            "scale": "kp-text-display",
+            "case": "as written",
+            "tracking": "-0.03em on a surface headline, -0.02em on an app heading",
+            "weight": "560 headings, 600 card titles",
+            "description": "Fraunces with its optical size at work: 144 on the headline, 90 on an app heading, 60 on card and dialog titles, 40 on the wordmark.",
+            "example": "hero-headline",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] h1" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-surface] h1" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-surface='app'] h2" }
+            ]
+        },
+        {
+            "role": "Body",
+            "font": "theme-font-body",
+            "scale": "kp-text-md",
+            "case": "as written",
+            "weight": "600 on buttons and labels",
+            "description": "Instrument Sans for everything that is not a heading: text, buttons, labels, the tree, identifiers.",
+            "example": "text-body",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "theme-font-body" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button" }
+            ]
+        },
+        {
+            "role": "Masthead line",
+            "font": "theme-font-body",
+            "case": "uppercase",
+            "tracking": "0.16em",
+            "weight": "600",
+            "description": "The microlabel is a masthead line: 0.75rem spaced capitals in navy, the only uppercase besides footer headings and the stamp.",
+            "example": "microlabel",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] .microlabel" }]
+        },
+        {
+            "role": "Small caps",
+            "font": "theme-font-body",
+            "case": "small caps",
+            "tracking": "0.08em to 0.1em",
+            "description": "The band and a menu's caption set in all small caps between hairlines, the way a printed running head is.",
+            "example": "marquee",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-marquee" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__menu[data-kp-menu-label]::before" }
+            ]
+        },
+        {
+            "role": "Identifiers",
+            "font": "theme-font-body",
+            "case": "as written",
+            "description": "No mono voice of its own: identifiers, timestamps and URLs stay in the body face, identifiers and timestamps muted.",
+            "example": "mono",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-id" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-timestamp" }
+            ]
+        }
+    ],
+    "shape": {
+        "radius": {
+            "description": "0.375rem on buttons, cards, fields and panels; 2px less on badges and tabs; 3px on the stamp. Status dots, timeline markers and the chosen day are circles and the switch is a pill.",
+            "example": "badges",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "radius" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-health__dot" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-switch" }
+            ]
+        },
+        "borders": {
+            "description": "1px hairlines frame cards, panels, tables and the navbar; fields and ghost buttons take the stronger rule; an empty state is a dashed rule.",
+            "example": "card",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-dialog" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-empty" }
+            ]
+        },
+        "shadows": {
+            "description": "One static letterpress impression, the mirror button's 2px gold offset with no blur, composed with the focus ring; the dropdown floats no further than an 8px/24px shadow of ink at 28 %. No glow.",
+            "example": "button-mirror",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--mirror:focus-visible" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__menu" }
+            ]
+        },
+        "signature": {
+            "description": "The rule. A section ends in a docket cut, a hairline with a short 4px navy tick; a heading's 2px rule draws itself once; a hovered or focused button draws a second rule 2px inside its edge, the way a certificate frames what it wants noticed.",
+            "example": "divider",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider]::before" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button::after" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-reveal='rule']::after" }
+            ]
+        }
+    },
+    "surfaces": [
+        {
+            "name": "hero",
+            "ground": "card",
+            "ink": "foreground",
+            "description": "The hero is laid on the brighter card stock (the register paints it, over the paper its tokens name), with the headline at optical size 144.",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-surface='hero']" },
+                { "file": "themes/formal/tokens.json", "token": "surface-hero-bg" }
+            ]
+        },
+        {
+            "name": "app",
+            "ground": "background",
+            "ink": "foreground",
+            "description": "Three stocks of the same paper: the page, a brighter card on it, and the darker muted stock of a dossier. In a light theme, raised means lighter.",
+            "proof": [
+                { "file": "themes/formal/tokens.json", "token": "background" },
+                { "file": "themes/formal/tokens.json", "token": "card" },
+                { "file": "themes/formal/tokens.json", "token": "muted" }
+            ]
+        },
+        {
+            "name": "footer",
+            "ground": "muted",
+            "ink": "foreground",
+            "description": "One step down, on the muted stock: spaced capital headings in the muted ink, links that underline only under the pointer.",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-footer" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-footer a:hover" }
+            ]
+        }
+    ],
+    "motion": {
+        "flicker": {
+            "allowed": false,
+            "reason": "Formal commits to a line once: no glitch, no decipher, no loop. The headline stays whole from the first frame to the last, and the register holds no keyframes at all.",
+            "proof": [
+                {
+                    "file": "css/formal-register.css",
+                    "selector": "[data-theme='formal'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered)"
+                },
+                { "file": "themes/formal/tokens.json", "token": "fx-ease" }
+            ]
+        },
+        "verbs": {
+            "enter": {
+                "description": "The headline arrives whole: it fades up with a 6px rise, once. No character is ever replaced.",
+                "duration": "450ms",
+                "easing": "--fx-ease, cubic-bezier(0.2, 0, 0, 1)",
+                "reducedMotion": "The headline stands at full opacity, in place.",
+                "open": false,
+                "note": "A menu's fade is the package's; dialogs, popovers and toasts have no entrance. See the recipe.",
+                "demo": { "kind": "reveal", "example": "hero-headline" },
+                "proof": [
+                    {
+                        "file": "css/formal-register.css",
+                        "selector": "[data-theme='formal'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered)"
+                    },
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-reveal='headline']" }
+                ]
+            },
+            "leave": {
+                "description": "A redaction is lifted: the ink over each phrase of the dossier narrows away toward the phrase's start, the way a redaction pen is dragged off a page, not a fade.",
+                "duration": "260ms per phrase, staggered by --kp-redact-stagger (the register declares none, so its 80ms fallback)",
+                "easing": "--fx-ease",
+                "reducedMotion": "The phrases stand uncovered.",
+                "open": false,
+                "note": "No component leaves with motion; see the recipe.",
+                "demo": { "kind": "reveal", "example": "dossier" },
+                "proof": [
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark" },
+                    {
+                        "file": "css/formal-register.css",
+                        "selector": "[data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared"
+                    }
+                ]
+            },
+            "press": {
+                "description": "Pressing harder makes the ink darker: the package steps the fill to the pressed token, and nothing moves (--fx-lift is 0).",
+                "duration": "180ms (--fx-duration)",
+                "easing": "--fx-ease",
+                "reducedMotion": "The darker fill, at once.",
+                "open": false,
+                "demo": { "kind": "press", "example": "buttons" },
+                "proof": [
+                    { "file": "css/components.css", "selector": ".kp-button--primary:active:not(:disabled)" },
+                    { "file": "themes/formal/tokens.json", "token": "fx-lift" }
+                ]
+            },
+            "hover": {
+                "description": "The rule doubles: a second 1px rule fades in 2px inside the button's edge, navy on a light button and the label's colour on a filled one. Nothing moves.",
+                "duration": "180ms (--fx-duration)",
+                "easing": "--fx-ease",
+                "reducedMotion": "The second rule appears at once.",
+                "open": false,
+                "demo": { "kind": "hover", "example": "buttons" },
+                "proof": [
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button:hover:not(:disabled)::after" },
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--primary::after" }
+                ]
+            },
+            "load": {
+                "description": "The page sets itself once: a section's rule draws from the left when 40 % of its heading is in view, and the lede's two marks wash in left to right, 90ms apart, after 1.05s.",
+                "duration": "450ms rule; 350ms per wash after 1050ms",
+                "easing": "--fx-ease",
+                "reducedMotion": "The rule stands drawn and the marks stand washed: the finished look, not a degraded one.",
+                "open": false,
+                "demo": { "kind": "reveal", "example": "rule" },
+                "proof": [
+                    {
+                        "file": "css/formal-register.css",
+                        "selector": "[data-theme='formal'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after"
+                    },
+                    { "file": "css/formal-register.css", "property": "--kp-reveal-threshold" },
+                    { "file": "css/formal-register.css", "property": "--kp-classified-delay" }
+                ]
+            },
+            "attention": {
+                "description": "Not answered in this theme's own manner. The alarm carries formal's colours (a navy plate, brick ink, a double-rule frame, engraved spacing) but moves with the package's flicker, decode and jitter, which this theme does not allow.",
+                "duration": "as the package: 600ms flicker-in, 5000ms jitter loop",
+                "easing": "steps(1, end)",
+                "reducedMotion": "The plate, the double frame and the bars, still.",
+                "open": true,
+                "proposal": "A notice served on the house paper (held design, 2026-09-15, a proposal): the navy plate fades in, one card sheet settles with the headline's own arrive (opacity and a 6px rise, 450ms, --fx-ease), the docket tick draws under the title and the button's second rule draws once. No flicker, no decode, nothing loops.",
+                "note": "What plays here is the alarm as it ships, flicker included, so the disagreement can be seen.",
+                "demo": { "kind": "restamp", "example": "alarm" },
+                "proof": [
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm" },
+                    { "file": "css/components.css", "keyframes": "kp-alarm-flicker-in" }
+                ]
+            }
+        }
+    },
+    "ornaments": [
+        {
+            "name": "The docket cut",
+            "where": "[data-kp-divider]; the alt divider before the footer.",
+            "description": "A full-width hairline and a 3rem navy tick 4px tall, the way a ledger marks a section closed; the alt divider is a dashed rule, quieter still.",
+            "example": "divider",
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider]:not([data-kp-divider='alt'])::after" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider='alt']::before" }
+            ]
+        },
+        {
+            "name": "The drawn heading rule",
+            "where": "A heading marked [data-kp-reveal='rule'].",
+            "description": "A 2px navy rule the width of the heading's box, set once.",
+            "example": "rule",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-reveal='rule']::after" }]
+        },
+        {
+            "name": "The stamp",
+            "where": "A card with a label; on the dossier, over its muted stock.",
+            "description": "Fraunces capitals in brick inside a 1.5px brick frame, rotated -3deg; the word never changes when the file is opened.",
+            "example": "dossier",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-card[data-kp-label]::before" }]
+        },
+        {
+            "name": "The mirror impression",
+            "where": ".kp-button--mirror",
+            "description": "A static 2px gold offset, a letterpress double strike; it never animates.",
+            "example": "button-mirror",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--mirror" }]
+        },
+        {
+            "name": "The double rule",
+            "where": "Every button, under the pointer or the keyboard focus.",
+            "description": "A second 1px rule 2px inside the edge; the quietest of the six hover gestures, because formal is the package's default.",
+            "example": "buttons",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button:focus-visible::after" }]
+        },
+        {
+            "name": "The running head",
+            "where": ".kp-marquee",
+            "description": "All small caps between two strong hairlines on a card-tinted ground, the slowest pass in the package (60s).",
+            "example": "marquee",
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-marquee" }]
+        }
+    ],
+    "voice": {
+        "case": "Sentence case for headings, buttons and links; spaced capitals only for the masthead line, footer headings and the stamp; small caps for the band and menu captions.",
+        "labels": [
+            "A microlabel is a masthead line in navy capitals.",
+            "A field label is the ink at weight 600, with no prefix.",
+            "The stamp reads the consumer's own label and never swaps it on reveal.",
+            "Footer links and the language link underline only under the pointer."
+        ],
+        "icons": "Almost none: laurel glyphs take the gold, and status dots and timeline markers are plain circles.",
+        "neverDoes": [
+            "Pure white paper or pure black ink.",
+            "Bronze or gold on something that acts.",
+            "A visible texture, a glow or a rounded flourish.",
+            "A serif in running text.",
+            "Touch the headline's characters, or loop a reveal."
+        ],
+        "example": "voice",
+        "proof": [
+            { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .microlabel" },
+            { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-footer h4" },
+            { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__link--lang:hover" }
+        ]
+    },
+    "recipe": [
+        {
+            "situation": "Ask for attention, loudly",
+            "verb": "attention",
+            "answer": "The alarm in formal's colours, still moving with the package's flicker.",
+            "components": ["kp-alarm"],
+            "open": true,
+            "proposal": "A notice on the house paper: navy plate fades, the sheet settles with arrive (450ms, --fx-ease), the docket tick and the double rule draw once; no flicker."
+        },
+        {
+            "situation": "Ask for attention, in place",
+            "verb": "attention",
+            "answer": "A plate on the card stock with a hairline and the radius; the severity toasts on the alert's token pair; the words say which severity.",
+            "components": ["kp-toast", "kp-alert"],
+            "open": false,
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-toast--warning" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alert" }
+            ]
+        },
+        {
+            "situation": "Act",
+            "verb": "press",
+            "answer": "The navy plate for the one action that matters, the gold impression on the decisive one; pressing darkens the ink.",
+            "components": ["kp-button"],
+            "open": false,
+            "proof": [
+                { "file": "css/components.css", "selector": ".kp-button--primary:active:not(:disabled)" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button--mirror" }
+            ]
+        },
+        {
+            "situation": "Point at something",
+            "verb": "hover",
+            "answer": "The rule doubles on a button; a menu row takes the muted stock; a footer link underlines. Nothing moves.",
+            "components": ["kp-button", "kp-nav"],
+            "open": false,
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-button:hover:not(:disabled)::after" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__menu a:hover" }
+            ]
+        },
+        {
+            "situation": "A menu opens",
+            "verb": "enter",
+            "answer": "The package's fade over --fx-duration, on the card paper with an 8px/24px ink shadow.",
+            "components": ["kp-nav"],
+            "open": false,
+            "proof": [
+                { "file": "css/components.css", "selector": ".kp-nav__menu" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-nav__menu" }
+            ]
+        },
+        {
+            "situation": "A panel opens (dialog, popover, toast)",
+            "verb": "enter",
+            "answer": "No entrance today: the panel is on the page at once.",
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
+            "open": true,
+            "proposal": "The headline's arrive: opacity 0 to 1 with a 6px rise over 450ms on --fx-ease, once; nothing under reduced motion."
+        },
+        {
+            "situation": "A panel closes",
+            "verb": "leave",
+            "answer": "No exit today: the panel is gone at once.",
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
+            "open": true,
+            "proposal": "A plain fade over --fx-duration (180ms) with no movement: a page does not perform its exits."
+        },
+        {
+            "situation": "Wait for something",
+            "verb": "load",
+            "answer": "A hairline spinner with a navy head, a half-radius skeleton, a progress track on the muted stock.",
+            "components": ["kp-spinner", "kp-skeleton", "kp-progress"],
+            "open": false,
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-spinner" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-progress" }
+            ]
+        },
+        {
+            "situation": "Separate two sections",
+            "answer": "The docket cut; before the footer, the dashed rule.",
+            "components": [],
+            "open": false,
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] [data-kp-divider]" }]
+        },
+        {
+            "situation": "Mark what matters in a sentence",
+            "answer": "A bronze wash under the phrase, drawn left to right once.",
+            "components": [],
+            "open": false,
+            "proof": [{ "file": "css/formal-register.css", "selector": "[data-theme='formal'] mark" }]
+        }
+    ],
+    "banner": {
+        "description": "A banner that asks for attention, from existing parts only: a card on the page with a masthead line, a Fraunces title, the warning alert whose word 'Warning:' carries the meaning, the navy button with its gold impression beside a ghost button, and the docket cut under it. No stamp: on a card without a dossier reveal the stamp has nothing to anchor to (see the README).",
+        "markup": "<section class=\"kp-section kp-stack\" data-kp-surface=\"app\"><div class=\"kp-card\" data-slot=\"card\"><div class=\"kp-card__header\"><p class=\"microlabel\">Notice · pump 2</p><h3 class=\"kp-card__title\">Coolant pressure below the floor</h3></div><div class=\"kp-card__body kp-stack\"><div class=\"kp-alert kp-alert--warning\" role=\"status\" data-kp-semantic><span class=\"kp-alert__icon\" aria-hidden=\"true\">!</span><span class=\"kp-alert__body\"><span class=\"kp-alert__label\">Warning: </span>Pressure fell at 03:12; the pump runs on the reserve loop.</span></div><div class=\"kp-row\"><button type=\"button\" class=\"kp-button kp-button--primary kp-button--mirror\">Acknowledge</button><button type=\"button\" class=\"kp-button kp-button--ghost\">Show the readings</button></div></div></div></section><div data-kp-divider></div>"
+    }
+}

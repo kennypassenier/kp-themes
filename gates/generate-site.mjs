@@ -105,6 +105,20 @@ ${tokens
                         </ul>`;
 }
 
+/** Where the review site publishes the theme portraits [scope-97]. */
+const REVIEW_SITE = 'https://kennypassenier.github.io/kp-themes/review/';
+
+/**
+ * The link to a theme's portrait, for a theme with a signature [scope-97]. The
+ * portraits live on the review site (research/, published under /review/ by
+ * .github/workflows/pages.yml), not on this one, so the link is absolute.
+ * @param {string} theme
+ */
+function portraitLink(theme) {
+    if (!existsSync(join(ROOT, `themes/${theme}/signature.json`))) return '';
+    return `                        <p class="kp-mt-md"><a href="${REVIEW_SITE}research/theme-portraits/${theme}.html">See the ${theme} portrait: its colours in their roles, type, shape, motion and the recipe for a new component</a></p>\n`;
+}
+
 /** @param {Nav} nav */
 function indexPage(nav) {
     const stories = ORDER.map(
@@ -114,7 +128,7 @@ ${swatches()}
                         <div class="kp-prose">
 ${story(theme)}
                         </div>
-                    </article>`,
+${portraitLink(theme)}                    </article>`,
     ).join('\n');
 
     const body = [
