@@ -17,6 +17,7 @@ import { JUDGEMENT_EVENT, JUDGEMENTS_KEY, loadJudgements, registerReady, restore
 import { readBlocks } from './block-hash.js';
 import { ENGINE, engineLabel } from './engine.js';
 import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
+import { mountReviewDialog } from './review-dialog.js';
 
 /**
  * @typedef {object} Entry
@@ -135,11 +136,14 @@ function panelFor(entry) {
 
 /**
  * Mount a panel for every entry and keep them true to storage and theme.
- * @param {{ entries: Entry[], toolbar?: HTMLElement | null, onRender?: () => void }} options
+ * @param {{ entries: Entry[], toolbar?: HTMLElement | null, onRender?: () => void, dialog?: boolean }} options
  *   toolbar: a `.cat-review-bar` to fill with the count, Undo and "Show blocks already judged";
  *   given one, a judged block leaves the page until the toggle brings it back.
+ *   dialog: the review dialog (review-dialog.js) over these blocks, a button on each and one
+ *   in the page's bar; on by default where a toolbar is given (the review page and the
+ *   component pages). A compare column spreads a block over rows, so it has none.
  */
-export function mountJudging({ entries, toolbar = null, onRender }) {
+export function mountJudging({ entries, toolbar = null, onRender, dialog = Boolean(toolbar) }) {
     // A block with a theme of its own is read in it: its stages wear that
     // theme, so the hash is the same whatever the page around it wears.
     for (const entry of entries) {
@@ -171,6 +175,10 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             refused: panel.querySelector('[data-cat-reject-refused]'),
             reviewNote: panel.querySelector('[data-cat-review-note]'),
             timer: 0,
+            // Whether the block has its verdict in its theme (render), and
+            // whether it stands in the review dialog now, where it never hides.
+            judged: false,
+            staged: false,
         };
     });
 
@@ -231,10 +239,12 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             showReviewNote(item, note);
             item.entry.root.toggleAttribute('data-cat-review-note', asking);
             const judged = (state === 'approved' || state === 'rejected') && !asking;
+            item.judged = judged;
             if (!judged) open += 1;
             // Judged blocks leave the page, so the reviewer stays at the top and
             // judges one block after another; a block that changed since comes back.
-            if (toolbar) item.entry.root.hidden = judged && !showJudged.checked && item.entry.root.id !== pinned;
+            // The one in the review dialog stays until the dialog puts it back.
+            if (toolbar) item.entry.root.hidden = judged && !showJudged.checked && item.entry.root.id !== pinned && !item.staged;
         }
         if (count) count.textContent = open ? `${open} of ${items.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
         onRender?.();
@@ -340,9 +350,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
         });
         for (const button of [item.approve, item.reject]) {
             button.addEventListener('click', () => {
-                const hash = current.get(item.entry.key);
-                if (!hash) return;
-                const theme = blockTheme(item.entry.root);
+                if (!current.get(item.entry.key)) return;
                 const verdict = button.getAttribute('data-cat-verdict');
                 // A rejection without a reason is refused (scope-89).
                 if (verdict === 'rejected' && !item.area.value.trim()) {
@@ -350,35 +358,49 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
                     item.area.focus();
                     return;
                 }
-                showRefusal(item, false);
-                const previous = storeVerdict(item.entry.key, theme, verdict, hash);
-                // An approval answers the reviewer's note in this theme, so the
-                // note goes with it and no prompt carries it on (fix-29, Kenny
-                // 2026-09-15). A rejection keeps it: it says why. Undo puts it back.
-                const { notePage, noteBlock } = item.entry;
-                const note = verdict === 'approved' ? noteFor(notePage, noteBlock, theme) : '';
-                if (note) {
-                    setNote(notePage, noteBlock, theme, '');
-                    item.area.value = '';
-                    clearTimeout(item.timer);
-                    item.saved.textContent = '';
-                }
-                // The block a link pinned leaves like any other once it has its
-                // verdict, and the address stops pinning it, so a reload does not
-                // bring it back either (fix-29: it stayed, "Approved", for as long
-                // as the address named it).
-                if (pinned && item.entry.root.id === pinned) {
-                    pinned = '';
-                    history.replaceState(history.state, '', `${location.pathname}${location.search}`);
-                }
-                last = { key: item.entry.key, theme, previous, item, note };
-                if (undo) {
-                    undo.hidden = false;
-                    undo.textContent = `Undo: ${item.entry.title}`;
-                }
-                render();
+                record(item, verdict);
             });
         }
+    }
+
+    /**
+     * Store a verdict on a block in its theme, with the hash read at its place
+     * on the page: the one path for the panel's buttons and the review dialog's
+     * keys, so both keep the same verdict, hash and note. The caller has
+     * refused a rejection without a note. False while the block is still read.
+     */
+    function record(item, verdict) {
+        const hash = current.get(item.entry.key);
+        if (!hash) return false;
+        const theme = blockTheme(item.entry.root);
+        showRefusal(item, false);
+        const previous = storeVerdict(item.entry.key, theme, verdict, hash);
+        // An approval answers the reviewer's note in this theme, so the
+        // note goes with it and no prompt carries it on (fix-29, Kenny
+        // 2026-09-15). A rejection keeps it: it says why. Undo puts it back.
+        const { notePage, noteBlock } = item.entry;
+        const note = verdict === 'approved' ? noteFor(notePage, noteBlock, theme) : '';
+        if (verdict === 'approved') {
+            if (note) setNote(notePage, noteBlock, theme, '');
+            item.area.value = '';
+            clearTimeout(item.timer);
+            item.saved.textContent = '';
+        }
+        // The block a link pinned leaves like any other once it has its
+        // verdict, and the address stops pinning it, so a reload does not
+        // bring it back either (fix-29: it stayed, "Approved", for as long
+        // as the address named it).
+        if (pinned && item.entry.root.id === pinned) {
+            pinned = '';
+            history.replaceState(history.state, '', `${location.pathname}${location.search}`);
+        }
+        last = { key: item.entry.key, theme, previous, item, note };
+        if (undo) {
+            undo.hidden = false;
+            undo.textContent = `Undo: ${item.entry.title}`;
+        }
+        render();
+        return true;
     }
 
     undo?.addEventListener('click', () => {
@@ -421,6 +443,17 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
         // requestAnimationFrame: a tab in the background never runs a frame.
         setTimeout(measure, 150);
     });
+
+    if (dialog) {
+        mountReviewDialog({
+            items,
+            record,
+            refresh: render,
+            themeOf: (item) => blockTheme(item.entry.root),
+            hashOf: (item) => current.get(item.entry.key),
+            refusal: REJECT_NEEDS_NOTE,
+        });
+    }
 
     render();
     renderNotes();

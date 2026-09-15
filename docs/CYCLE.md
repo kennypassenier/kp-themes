@@ -44,6 +44,13 @@ theme its window plays, whatever the page wears [scope-86].
    browser, not yet recorded"). Not approved records only when the block's
    note holds text; with an empty note the panel refuses, marks the note and
    says why, on every review surface [scope-89]. Approve needs no text.
+   On the review page and the component pages, **Review in a dialog** (in
+   the bar, and on every block) opens one block at a time in a dialog of one
+   fixed size, the cursor in the note: Up approves, Down rejects (only with
+   text), Left and Right move to another block while the note is empty and
+   move the cursor once it holds text, and after each verdict the next block
+   still to judge comes in. Escape returns to the page. The dialog stores
+   the same verdict, hash and note as the panel under the block [scope-90].
 2. Kenny copies the prompt and pastes it into the conversation. Its last
    block, `Verdict lines (hash version N):`, carries one line per verdict not
    yet in the register: `block key · theme · engine · verdict · hash`.

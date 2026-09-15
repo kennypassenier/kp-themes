@@ -450,6 +450,121 @@
         font-size: 0.8rem;
     }
 
+    /* The review dialog (review-dialog.js) [scope-89, scope-90]: one fixed
+       size, 92% of the window wide and 90% high, whatever block it holds.
+       The header on top; the block's stage on the left, the note and the
+       verdicts on the right. The class sits on the package's own dialog, so
+       its surface, border and backdrop are the theme's. */
+    .cat-review-dialog {
+        --kp-dialog-max-width: none;
+        --kp-dialog-max-height: none;
+        box-sizing: border-box;
+        inline-size: 92vw;
+        block-size: 90vh;
+        max-inline-size: none;
+        max-block-size: none;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .cat-review-dialog[open] {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .cat-review-dialog__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.75rem;
+        padding: 0.75rem 1rem;
+        padding-inline-end: 3.5rem;
+        border-block-end: 1px solid var(--border);
+    }
+
+    .cat-review-dialog__head > h2 {
+        margin: 0;
+        flex: 1 1 18rem;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cat-review-dialog__position {
+        margin: 0;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-review-dialog__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 24rem;
+        min-block-size: 0;
+    }
+
+    /* The stage scrolls in both directions and never gives its size back to
+       the dialog: `contain: strict` keeps the block's own size out of the
+       dialog's layout. */
+    .cat-review-dialog__stage {
+        contain: strict;
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding: 1rem 1.25rem;
+    }
+
+    .cat-review-dialog__stage > .cat-block {
+        margin: 0;
+    }
+
+    /* The title is in the header, the look and the note at the side. */
+    .cat-review-dialog__stage > .cat-block > h2,
+    .cat-review-dialog__stage > .cat-block > h3,
+    .cat-review-dialog__stage > .cat-block > .cat-look,
+    .cat-review-dialog__stage > .cat-block > .cat-judge {
+        display: none;
+    }
+
+    .cat-review-dialog__side {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto auto auto auto auto;
+        gap: 0.75rem;
+        min-block-size: 0;
+        padding: 1rem;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .cat-review-dialog__side > .cat-look {
+        margin: 0;
+        overflow: auto;
+    }
+
+    .cat-review-dialog__field {
+        margin: 0;
+    }
+
+    .cat-review-dialog__field textarea {
+        resize: none;
+    }
+
+    .cat-review-dialog__actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .cat-review-dialog__meta {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-review-dialog__away {
+        padding: 1rem;
+        font-style: italic;
+    }
+
     /* The prompt bar every page carries under its header. */
     .cat-prompt-bar {
         padding: 0.45rem 1rem;
