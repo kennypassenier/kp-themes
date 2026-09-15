@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en" data-theme="shade-light" data-cat-theme="shade-light">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Laurels and platforms, four redesigns · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only. Every class prefixed
+               `lr-` is written for this page and is NOT the package. The
+               directions sit on the package's own markup (.kp-laurels with
+               <li><b>value</b> source</li>, .kp-platforms with <span>) and one
+               package container (.kp-card in D). The rules are unlayered on
+               purpose: they beat the registers (kp.register), so each direction
+               is judged from the ground up, drawn only from tokens.
+               ================================================================== */
+            .lr-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .lr-tag--package {
+                color: var(--success-foreground);
+            }
+            .lr-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .lr-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .lr-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .lr-stage {
+                border: 1px dashed var(--border);
+                padding: clamp(1rem, 3vw, 2rem);
+                display: grid;
+                gap: 1.5rem;
+                background: var(--background);
+            }
+            .lr-frame-label {
+                margin: 0 0 0.5rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            /* The narrow pane: 16rem, resizable, so wrapping can be judged. */
+            .lr-narrow {
+                inline-size: 16rem;
+                max-inline-size: 100%;
+                min-inline-size: 10rem;
+                resize: horizontal;
+                overflow: auto;
+                padding: 0.75rem;
+                border: 1px dashed var(--border);
+            }
+
+            /* ── The reset: every direction starts from nothing ─────────────── */
+            .lr-dir :where(.kp-laurels, .kp-laurels li, .kp-laurels b, .kp-platforms, .kp-platforms span, .kp-platforms b) {
+                all: unset;
+            }
+            .lr-dir :where(.kp-laurels li, .kp-platforms span, .kp-platforms b)::before,
+            .lr-dir :where(.kp-laurels li, .kp-platforms span, .kp-platforms b)::after {
+                all: unset;
+                content: none;
+            }
+            .lr-dir .kp-laurels,
+            .lr-dir .kp-platforms {
+                display: block;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                color: var(--muted-foreground);
+            }
+            .lr-dir svg.lr-glyph {
+                inline-size: 1.15em;
+                block-size: 1.15em;
+                flex: none;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 1.6;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            /* ── A · Figures: a stat band ───────────────────────────────────── */
+            .lr-a .kp-laurels {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+                gap: var(--kp-space-lg, 1rem) var(--kp-space-md, 0.75rem);
+            }
+            .lr-a .kp-laurels li {
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+                padding-inline-start: var(--kp-space-md, 0.75rem);
+                border-inline-start: 1px solid var(--border-strong);
+                font-family: var(--theme-font-body);
+                font-size: var(--kp-text-sm, 0.875rem);
+                line-height: 1.4;
+                text-wrap: pretty;
+            }
+            .lr-a .kp-laurels b {
+                display: block;
+                font-family: var(--theme-font-display, var(--theme-font-body));
+                font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.5rem);
+                font-weight: 600;
+                line-height: 1;
+                letter-spacing: -0.02em;
+                font-variant-numeric: tabular-nums;
+                color: var(--foreground);
+                white-space: nowrap;
+            }
+            .lr-a .kp-platforms {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                row-gap: 0.35rem;
+                padding-block-start: var(--kp-space-md, 0.75rem);
+                border-block-start: 1px solid var(--border);
+                font-family: var(--theme-font-body);
+                font-size: var(--kp-text-sm, 0.875rem);
+            }
+            .lr-a .kp-platforms b {
+                display: inline-block;
+                margin-inline-end: 0.9rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .lr-a .kp-platforms span {
+                display: inline-flex;
+                align-items: center;
+                white-space: nowrap;
+                color: var(--foreground);
+            }
+            /* The separator is a dot drawn as a plate, never a character. It
+               follows a name, so a wrapped line never opens with a dot. */
+            .lr-a .kp-platforms span:not(:last-child)::after {
+                content: '';
+                inline-size: 0.25rem;
+                block-size: 0.25rem;
+                margin-inline: 0.7rem;
+                border-radius: 999px;
+                background: var(--border-strong);
+            }
+
+            /* ── B · Wreaths and store badges ──────────────────────────────── */
+            .lr-b .kp-laurels {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem);
+            }
+            .lr-b .kp-laurels li {
+                display: grid;
+                grid-template-columns: 1.4rem minmax(0, 9.5rem) 1.4rem;
+                grid-template-rows: auto auto;
+                align-items: center;
+                column-gap: 0.35rem;
+                text-align: center;
+                font-family: var(--theme-font-body);
+                font-size: 0.78rem;
+                line-height: 1.3;
+                text-wrap: balance;
+            }
+            .lr-b .kp-laurels li::before,
+            .lr-b .kp-laurels li::after {
+                content: '';
+                grid-row: 1 / 3;
+                align-self: stretch;
+                min-block-size: 3.4rem;
+                background: var(--primary);
+                /* A branch drawn for this page: a stem and ten leaves. */
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 48'%3E%3Cpath d='M14 46Q3 34 8 4' fill='none' stroke='black' stroke-width='1.2'/%3E%3Cg fill='black'%3E%3Cellipse cx='8.4' cy='41.4' rx='1.5' ry='3.4' transform='rotate(-40 8.4 41.4)'/%3E%3Cellipse cx='13.6' cy='40.2' rx='1.5' ry='3.4' transform='rotate(40 13.6 40.2)'/%3E%3Cellipse cx='6' cy='36' rx='1.5' ry='3.4' transform='rotate(-30 6 36)'/%3E%3Cellipse cx='11.4' cy='35' rx='1.5' ry='3.4' transform='rotate(40 11.4 35)'/%3E%3Cellipse cx='4.6' cy='30.4' rx='1.5' ry='3.4' transform='rotate(-20 4.6 30.4)'/%3E%3Cellipse cx='9.8' cy='29.6' rx='1.5' ry='3.4' transform='rotate(35 9.8 29.6)'/%3E%3Cellipse cx='3.9' cy='24.2' rx='1.5' ry='3.4' transform='rotate(-12 3.9 24.2)'/%3E%3Cellipse cx='9.2' cy='23.4' rx='1.5' ry='3.4' transform='rotate(30 9.2 23.4)'/%3E%3Cellipse cx='4' cy='17.4' rx='1.5' ry='3.4' transform='rotate(-5 4 17.4)'/%3E%3Cellipse cx='9.2' cy='16.6' rx='1.5' ry='3.4' transform='rotate(28 9.2 16.6)'/%3E%3Cellipse cx='8.2' cy='3.6' rx='1.4' ry='3.2' transform='rotate(8 8.2 3.6)'/%3E%3C/g%3E%3C/svg%3E")
+                    center / contain no-repeat;
+            }
+            .lr-b .kp-laurels li::before {
+                grid-column: 1;
+            }
+            .lr-b .kp-laurels li::after {
+                grid-column: 3;
+                transform: scaleX(-1);
+            }
+            .lr-b .kp-laurels b {
+                display: block;
+                grid-column: 2;
+                align-self: end;
+                font-family: var(--theme-font-display, var(--theme-font-body));
+                font-size: 1.3rem;
+                font-weight: 700;
+                line-height: 1.1;
+                color: var(--foreground);
+                white-space: nowrap;
+            }
+            .lr-b .kp-platforms {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.6rem;
+            }
+            .lr-b .kp-platforms span {
+                display: inline-grid;
+                grid-template-columns: auto auto;
+                grid-template-rows: auto auto;
+                column-gap: 0.55rem;
+                align-items: center;
+                padding: 0.4rem 0.95rem 0.45rem 0.75rem;
+                border-radius: max(var(--radius, 0.5rem), 0.5rem);
+                background: var(--foreground);
+                color: var(--background);
+                font-family: var(--theme-font-body);
+                font-size: 0.95rem;
+                font-weight: 600;
+                line-height: 1.15;
+                white-space: nowrap;
+            }
+            .lr-b .kp-platforms span svg {
+                grid-row: 1 / 3;
+                inline-size: 1.5rem;
+                block-size: 1.5rem;
+            }
+            .lr-b .kp-platforms small {
+                font-size: 0.62rem;
+                font-weight: 400;
+                letter-spacing: 0.02em;
+                opacity: 0.85;
+            }
+
+            /* ── C · The proof strip and the name wall ──────────────────────── */
+            .lr-c .lr-strip {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+                border-block: 1px solid var(--border-strong);
+            }
+            .lr-c .lr-strip__caption {
+                margin: 0;
+                padding: 0.9rem 1rem 0.9rem 0;
+                align-self: center;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .lr-c .lr-strip .kp-laurels {
+                display: contents;
+            }
+            .lr-c .kp-laurels li {
+                display: block;
+                padding: 0.9rem 1rem;
+                border-inline-start: 1px solid var(--border);
+                font-family: var(--theme-font-body);
+                font-size: var(--kp-text-sm, 0.875rem);
+                line-height: 1.45;
+                text-wrap: pretty;
+            }
+            .lr-c .kp-laurels b {
+                font-weight: 700;
+                color: var(--foreground);
+            }
+            .lr-c .lr-wall-caption {
+                margin: 0 0 0.6rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+                text-align: center;
+            }
+            .lr-c .kp-platforms {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+                gap: 1px;
+                background: var(--border);
+                border: 1px solid var(--border);
+            }
+            .lr-c .kp-platforms span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                min-block-size: 3.5rem;
+                padding: 0.5rem 0.75rem;
+                background: var(--background);
+                color: var(--muted-foreground);
+                font-family: var(--theme-font-display, var(--theme-font-body));
+                font-size: 1.05rem;
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                white-space: nowrap;
+                transition: color var(--fx-duration, 200ms) var(--fx-ease, ease);
+            }
+            .lr-c .kp-platforms span:hover {
+                color: var(--foreground);
+            }
+
+            /* ── D · The ledger card ────────────────────────────────────────── */
+            .lr-d .kp-card {
+                max-inline-size: 30rem;
+                padding: 0;
+                overflow: hidden;
+            }
+            .lr-d .lr-ledger__title {
+                margin: 0;
+                padding: 0.9rem 1.1rem 0.4rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .lr-d .kp-laurels {
+                display: block;
+                padding: 0 1.1rem 0.6rem;
+            }
+            .lr-d .kp-laurels li {
+                display: flex;
+                align-items: baseline;
+                gap: 0.5rem;
+                padding-block: 0.55rem;
+                font-family: var(--theme-font-body);
+                font-size: var(--kp-text-sm, 0.875rem);
+                line-height: 1.35;
+                color: var(--card-foreground);
+            }
+            .lr-d .kp-laurels li + li {
+                border-block-start: 1px solid var(--border);
+            }
+            /* Source left, a dotted leader, the value right: `order` moves
+               the <b> after the text without touching the markup. */
+            .lr-d .kp-laurels li::after {
+                content: '';
+                order: 1;
+                flex: 1 1 1.5rem;
+                min-inline-size: 1.5rem;
+                border-block-end: 1px dotted var(--border-strong);
+                transform: translateY(-0.25em);
+            }
+            .lr-d .kp-laurels b {
+                order: 2;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.95rem;
+                font-weight: 700;
+                font-variant-numeric: tabular-nums;
+                color: var(--foreground);
+                white-space: nowrap;
+            }
+            .lr-d .kp-platforms {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.35rem 1.1rem;
+                padding: 0.75rem 1.1rem;
+                border-block-start: 1px solid var(--border);
+                background: var(--muted);
+                color: var(--muted-foreground);
+                font-family: var(--theme-font-body);
+                font-size: var(--kp-text-xs, 0.75rem);
+            }
+            .lr-d .kp-platforms b {
+                inline-size: 100%;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.66rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+            .lr-d .kp-platforms span {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                white-space: nowrap;
+                color: var(--foreground);
+            }
+            /* The tick: two borders of a rotated box, drawn in the primary ink. */
+            .lr-d .kp-platforms span::before {
+                content: '';
+                inline-size: 0.3rem;
+                block-size: 0.6rem;
+                margin-block-start: -0.15rem;
+                border-inline-end: 2px solid var(--primary);
+                border-block-end: 2px solid var(--primary);
+                transform: rotate(45deg);
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Laurels and platforms: four directions from the ground up</h1>
+            <p class="cat-intro">
+                Kenny rejected <code>catalogue/media.html#laurels</code> in shade-light: "this just looks ugly, redo these completely from the ground
+                up". This page shows the laurels and platforms as they ship, then four genuinely different directions. Every direction uses the same
+                claims and the same four platform names as the catalogue block, so only the design differs. Parts marked
+                <span class="lr-tag lr-tag--package">package</span> are the stylesheets as they ship. Parts marked
+                <span class="lr-tag lr-tag--mock">mock</span> are <code>lr-</code> rules written for this page, placed on the package's own classes
+                (<code>.kp-laurels</code>, <code>.kp-platforms</code>, <code>.kp-card</code>); they first reset the registers' styling, so each
+                direction is drawn only from tokens and looks the same way in every theme. The page opens in shade-light; loaded registers:
+                shade-light, pastel, dark. The theme menu in the bar reaches the other themes too.
+            </p>
+            <div class="lr-switcher" role="group" aria-label="Theme for this page">
+                <span class="lr-tag lr-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-lr-theme="shade-light" aria-pressed="true">shade-light</button>
+                <button type="button" class="kp-button kp-button--ghost" data-lr-theme="pastel" aria-pressed="false">pastel</button>
+                <button type="button" class="kp-button kp-button--ghost" data-lr-theme="dark" aria-pressed="false">dark</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="current">
+                <h2>0 · As it ships <span class="lr-tag lr-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> in shade-light, the accent dot stands alone on the first line because <code>.kp-laurels b</code> is
+                    <code>display: block</code> in <code>css/components.css</code>; the pill radius (999px) is drawn around two lines of text, so the
+                    corners crowd the words; the platforms line is four monospace words with a rule over it and nothing to say what they are. This is
+                    the state the four directions replace. Switch to pastel and dark to see that each register answers differently today.
+                </div>
+                <div class="lr-stage">
+                    <ul class="kp-laurels" aria-label="What this site is measured against">
+                        <li><b>412 days</b> without a lost-time injury</li>
+                        <li><b>99.7 %</b> pump availability, last quarter</li>
+                        <li><b>2 minutes</b> median time to lock out</li>
+                    </ul>
+                    <div class="kp-platforms">
+                        <span>PT-204 sensor</span>
+                        <span>Wall gauge</span>
+                        <span>Handheld</span>
+                        <span>Vendor portal</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="a-figures">
+                <h2>A · Figures: a stat band <span class="lr-tag lr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each figure is set large in the display face and is by far the loudest thing in its column; the source sits under
+                    it at body size, muted, and wraps as a sentence. A thin rule in <code>--border-strong</code> marks where each column starts. The
+                    platforms become one quiet line that says what it is: a small uppercase label (an optional <code>&lt;b&gt;</code>, which the
+                    formal register already styles in <code>.kp-platforms</code>) and the names separated by drawn dots, not characters. In the narrow
+                    pane the columns stack, no figure breaks across lines, and a platform name never splits. Markup change: none for the laurels; the
+                    platforms label is optional.
+                </div>
+                <div class="lr-stage lr-dir lr-a">
+                    <div>
+                        <p class="lr-frame-label">wide</p>
+                        <ul class="kp-laurels" aria-label="What this site is measured against">
+                            <li><b>412 days</b> without a lost-time injury</li>
+                            <li><b>99.7 %</b> pump availability, last quarter</li>
+                            <li><b>2 min</b> median time to lock out</li>
+                        </ul>
+                    </div>
+                    <div class="kp-platforms">
+                        <b>Reads from</b>
+                        <span>PT-204 sensor</span>
+                        <span>Wall gauge</span>
+                        <span>Handheld</span>
+                        <span>Vendor portal</span>
+                    </div>
+                    <div class="lr-narrow">
+                        <p class="lr-frame-label">narrow, drag the corner</p>
+                        <div class="kp-stack">
+                            <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+                                <li><b>412 days</b> without a lost-time injury</li>
+                                <li><b>99.7 %</b> pump availability, last quarter</li>
+                            </ul>
+                            <div class="kp-platforms">
+                                <b>Reads from</b>
+                                <span>PT-204 sensor</span>
+                                <span>Wall gauge</span>
+                                <span>Handheld</span>
+                                <span>Vendor portal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="b-wreaths">
+                <h2>B · Wreaths and store badges <span class="lr-tag lr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the literal reading of "laurels": each claim is centred between two branches drawn for this page (a stem and
+                    leaves, painted in <code>--primary</code> through a CSS mask, mirrored on the right). The bold value still has to be the loudest
+                    thing, above the branches' colour. The platforms become badges in the manner of the app-store download badges: inverted (<code
+                        >--foreground</code
+                    >
+                    ground, <code>--background</code> text), a small glyph drawn for this page, a small "Available on" line over the name. Check dark:
+                    the badges turn light on a dark page. In the narrow pane the wreaths stack one per row and the badges wrap whole. Markup change:
+                    none for the laurels; each platform gains a glyph and a <code>&lt;small&gt;</code> line.
+                </div>
+                <div class="lr-stage lr-dir lr-b">
+                    <ul class="kp-laurels" aria-label="What this site is measured against">
+                        <li><b>412 days</b> without a lost-time injury</li>
+                        <li><b>99.7 %</b> pump availability, last quarter</li>
+                        <li><b>2 minutes</b> median time to lock out</li>
+                    </ul>
+                    <div class="kp-platforms">
+                        <span
+                            ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="2.5" />
+                                <path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10" /></svg
+                            ><small>Available on</small>PT-204 sensor</span
+                        >
+                        <span
+                            ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="13" r="8" />
+                                <path d="M12 13l4-4" /></svg
+                            ><small>Available on</small>Wall gauge</span
+                        >
+                        <span
+                            ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="7" y="3" width="10" height="18" rx="2" />
+                                <path d="M11 18h2" /></svg
+                            ><small>Available on</small>Handheld</span
+                        >
+                        <span
+                            ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="14" rx="2" />
+                                <path d="M3 9h18" /></svg
+                            ><small>Available on</small>Vendor portal</span
+                        >
+                    </div>
+                    <div class="lr-narrow">
+                        <p class="lr-frame-label">narrow, drag the corner</p>
+                        <div class="kp-stack">
+                            <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+                                <li><b>412 days</b> without a lost-time injury</li>
+                                <li><b>99.7 %</b> pump availability, last quarter</li>
+                            </ul>
+                            <div class="kp-platforms">
+                                <span
+                                    ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="7" y="3" width="10" height="18" rx="2" />
+                                        <path d="M11 18h2" /></svg
+                                    ><small>Available on</small>Handheld</span
+                                >
+                                <span
+                                    ><svg class="lr-glyph" viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                                        <path d="M3 9h18" /></svg
+                                    ><small>Available on</small>Vendor portal</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="c-strip">
+                <h2>C · The proof strip and the name wall <span class="lr-tag lr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the press-strip reading: a caption at the start of one ruled band, then each claim as a single sentence with its
+                    value in bold, between hairlines. Nothing is large; the band's two rules in <code>--border-strong</code> carry the section. The
+                    platforms become a logo-cloud grid of equal cells separated by 1px hairlines, the names set as wordmarks in the display face,
+                    muted until hovered. A consumer with real logos would put a monochrome SVG in each cell instead of the word. In the narrow pane
+                    the caption, the claims and the cells each take a full row. Markup change: a caption element beside the list, and a caption over
+                    the wall.
+                </div>
+                <div class="lr-stage lr-dir lr-c">
+                    <div class="lr-strip">
+                        <p class="lr-strip__caption">Measured on site</p>
+                        <ul class="kp-laurels" aria-label="What this site is measured against">
+                            <li><b>412 days</b> without a lost-time injury</li>
+                            <li><b>99.7 %</b> pump availability, last quarter</li>
+                            <li><b>2 minutes</b> median time to lock out</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="lr-wall-caption">The log reads from</p>
+                        <div class="kp-platforms">
+                            <span>PT-204 sensor</span>
+                            <span>Wall gauge</span>
+                            <span>Handheld</span>
+                            <span>Vendor portal</span>
+                        </div>
+                    </div>
+                    <div class="lr-narrow">
+                        <p class="lr-frame-label">narrow, drag the corner</p>
+                        <div class="kp-stack">
+                            <div class="lr-strip">
+                                <p class="lr-strip__caption">Measured on site</p>
+                                <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+                                    <li><b>412 days</b> without a lost-time injury</li>
+                                    <li><b>99.7 %</b> pump availability, last quarter</li>
+                                </ul>
+                            </div>
+                            <div class="kp-platforms">
+                                <span>PT-204 sensor</span>
+                                <span>Wall gauge</span>
+                                <span>Handheld</span>
+                                <span>Vendor portal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="d-ledger">
+                <h2>D · The ledger card <span class="lr-tag lr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a spec-sheet reading inside the package's own <code>.kp-card</code>: the source on the left, a dotted leader, the
+                    value on the right in the mono face with tabular figures, so the three values line up in one column. The <code>&lt;b&gt;</code> is
+                    moved to the end with <code>order</code>, the markup is unchanged. The platforms become the card's foot on the
+                    <code>--muted</code> plate: a label, then each name with a tick drawn from two borders in <code>--primary</code>. In the narrow
+                    pane the leader shrinks first; a value never wraps and never overlaps its source. Markup change: a title element inside the card,
+                    and the optional <code>&lt;b&gt;</code> label in the platforms.
+                </div>
+                <div class="lr-stage lr-dir lr-d">
+                    <div class="kp-card">
+                        <p class="lr-ledger__title">Pump house 4 · this quarter</p>
+                        <ul class="kp-laurels" aria-label="What this site is measured against">
+                            <li><b>412 days</b> without a lost-time injury</li>
+                            <li><b>99.7 %</b> pump availability, last quarter</li>
+                            <li><b>2 minutes</b> median time to lock out</li>
+                        </ul>
+                        <div class="kp-platforms">
+                            <b>Reads from</b>
+                            <span>PT-204 sensor</span>
+                            <span>Wall gauge</span>
+                            <span>Handheld</span>
+                            <span>Vendor portal</span>
+                        </div>
+                    </div>
+                    <div class="lr-narrow">
+                        <p class="lr-frame-label">narrow, drag the corner</p>
+                        <div class="kp-card">
+                            <p class="lr-ledger__title">Pump house 4 · this quarter</p>
+                            <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+                                <li><b>412 days</b> without a lost-time injury</li>
+                                <li><b>99.7 %</b> pump availability, last quarter</li>
+                            </ul>
+                            <div class="kp-platforms">
+                                <b>Reads from</b>
+                                <span>PT-204 sensor</span>
+                                <span>Wall gauge</span>
+                                <span>Handheld</span>
+                                <span>Vendor portal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu and the judging
+            // panel follow it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-lr-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.lrTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.lrTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        </script>
+    </body>
+</html>

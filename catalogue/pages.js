@@ -59,6 +59,13 @@ export const PAGES = [
         ],
     },
     {
+        group: 'Research to look at',
+        pages: [
+            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
+            { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
+        ],
+    },
+    {
         // Every demo here has its decision taken. A new research demo goes in
         // a 'Research to look at' group of its own, above this one, and moves
         // down here once Kenny has decided on it [scope-81].
