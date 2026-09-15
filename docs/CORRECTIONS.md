@@ -3350,3 +3350,43 @@ his choice shows no text above the header.
 Claude tries to reproduce it in FireDragon itself for a new correction.
 
 **9 · When we review the measure.** At that review.
+
+## fix-34 · 290 verdicts carried a hash the test browser does not read, because the page was zoomed (2026-09-15)
+
+**1 · What went wrong.** `node gates/verdicts.mjs compare --against-browser
+--commit d499b6b27812` after Kenny's light-theme review: 1212 equal, 290
+differ (brutalism 115 of 137). The review dialog is not the cause (dialog and
+panel stored the same hash for all 137 brutalism blocks). Gecko rounds border
+widths to whole device pixels: brutalism matched 100 of 137 of Kenny's hashes
+at `layout.css.devPixelsPerPx` 1.25 against 22 at 1; his hashes match 1, 1.25
+and 1.5 within one theme.
+
+**2 · Which gate let it through.** The review page reads a block at any zoom
+and records nothing about it; the comparison reads at ratio 1 only.
+
+**3 · Where the same fault sits.** Searched by reading every block at ratios
+1, 1.1, 1.2, 1.25, 1.333, 1.5, 1.7 and 2 and comparing with the 1502
+recorded hashes: 1212 equal at 1, 180 match another ratio, 110 match none
+(mostly data tables and closed pickers, probably read while scrolled or open).
+In every differing brutalism and grotesk block the first differing property is
+a `border-*-width`.
+
+**4 · How we prevent recurrence.** Kenny reviews zoomed by default
+(`scope-93`), so the page records the zoom a verdict was read at, and the
+comparison with the test browser reads each verdict at its recorded zoom. The
+proposed refusal at another zoom is not built.
+
+**5 · What the remedy costs.** One more field per verdict and a comparison
+that launches the test browser once per recorded zoom.
+
+**6 · Who enforces it.** Code: a test that records a verdict at 1.25 and
+finds it equal when compared at 1.25.
+
+**7 · How we measure it works, and when.** At Kenny's next review: the
+comparison with the test browser shows no difference caused by zoom.
+
+**8 · If the measurement fails.** The remaining differences are listed with
+their first differing property and return as a correction of their own.
+
+**9 · When we review the measure.** After two reviews without a zoom
+difference.

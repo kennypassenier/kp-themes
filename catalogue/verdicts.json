@@ -10586,9 +10586,9 @@
             },
             "light": {
                 "firefox": {
-                    "verdict": "approved",
-                    "hash": "3482d6b6ae767fc851e668277ea0b8c46187cae492d5064cef13b8c720163f01",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "verdict": "rejected",
+                    "hash": "a8e01f2873d072bde75e9127e9c77e132fafd0c4cb3b19411c36a14fcd16c92b",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -10765,8 +10765,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "f1610e7bbe089be076853983aeddcd2ad0ef234183e2ec00a9551b389be7de19",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "3bae107debf2d0912eb8b6f6bad9f12f57fc5b8bb8dd673c957f52048035e9d5",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -10942,9 +10942,9 @@
             },
             "light": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "020a452cf7342b840b51d06ebd36acca9ed7199cdf2ba94e3cab52efdf88e958",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "verdict": "approved",
+                    "hash": "422b0718e83dfee68efb4dba2d8a6fff06f542a9e03f09cc8f0acc2610e3b406",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -11121,8 +11121,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "10c70cbaaf97b067bad598a31dd16ccc7c5501045e99111f87c2eceaa0f09caf",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "572e6f26f7be173e815c336aec3a793c2e2a26a1c29da956c0bd05bc592c38f1",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -11299,8 +11299,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "05edd221bd66344d75c22dc384f6a0bf7e167bd5164efe6738028c385e79c13d",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "b2e1ecf8092c3e8a2360fed2b51b7f4063b05fa8ded1c4af4e4978927e242a6f",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -11477,8 +11477,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "f56922a6f3cfe2fa37ee309356d1d73ddc696492c3dc250891b7518d0569eafb",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "761e48d5feb393e5d4dbfca32da0a98df9697fd36c0b88e21e53ff0c729bf7ff",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -11833,8 +11833,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "891e2bcf43cbd04bcc30d3e6df86f831dff685632a6cbb2851f1b765b373c35e",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "5231f9ded3f1b98f8913c6b19eeebe73f8357b5ecc103bfb35322c8e58e64f31",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },
@@ -12011,8 +12011,8 @@
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "aaa6d5aafc046f518e6ba754ed5f68ade1b473db63f9cc5147aa6e809b6a9700",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
+                    "hash": "0439ddfdc00330df2b314526d15a01893c27829e61dca44c7cd358cfae7b2dac",
+                    "commit": "ff81ed71d044c7b82fbc017c5c75952e95aacd40",
                     "given": "2026-09-15"
                 }
             },

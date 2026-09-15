@@ -1592,3 +1592,23 @@ the compare columns get no review dialog. step-timing "Akkoord".
 next-step form (commit `bec8bb07`). next-step "Eerst de catalogusreview":
 nothing new starts; Kenny reviews the returned blocks in the review dialog,
 and the JavaScript split of `scope-50` waits. step-timing "Akkoord".
+
+**scope-93 · The light-theme review's answers.** Kenny, 2026-09-15, the
+light-theme review form (commit `957e79ac`). redaction-fix "b": each register
+that draws a redaction bar paints it on the phrase itself with
+`box-decoration-break: clone`, so a wrapped phrase is covered line by line
+(`fix-33`). zoom-hashes "Klopt", with his hash-recovery answer: "niks
+opnieuw, ik gebruik die level van zoom standaard, dus mijn oordeel blijft
+gelden" — he reviews zoomed by default, so field 5 of `fix-34` holds: the
+review page records the zoom a verdict was read at and the comparison with the
+test browser reads at that zoom; no verdict is re-judged and the refusal at
+another zoom is not built. laurels-direction "B · Wreaths": each claim between
+two drawn laurel branches, platforms as app-store badges, for every theme.
+divider-shape, his own answer "pearls": the shape knob `data-kp-divider-shape`
+with pearls as pastel's default; the form offered three of the five shapes,
+which he caught. hc-filled-hover "De opstijgende balk van Cancel". light-indigo
+"Ook daar weg", with a catalogue prompt approving seven light navigation blocks
+and rejecting the application shell: "blauw moet uit navbar". retro-scrollbars
+"Tooltips zonder scrollbalk". cta-plates "Gelijktrekken": forest, solstice,
+shade-dark, lapis and nostromo get room around a drawn call-to-action plate.
+step-timing "Akkoord".
