@@ -146,11 +146,12 @@ colour space, and lightness alone left their pressed state invisible.
 ## The gates, and the advice beside them
 
 Thirty checks, all in Node, the whole chain in seconds, all run by
-`.claude/hooks/gates.sh` before every commit. Since scope-76 six older
+`.claude/hooks/gates.sh` before every commit. Since scope-76 older
 checks run inside them rather than on their own line — tokens in `npm test`,
 the bundle in `generate-min --check`, the migration note in
-`check-docs-runnable`, the fonts stylesheet in `check-fonts`, the tear in
-`generate-themes --check`, the package in `check-manifest`. Nothing runs on a server:
+`check-docs-runnable`, the fonts stylesheet in `check-fonts`, the package in
+`check-manifest`; the tear check that ran in `generate-themes --check` went
+with cyberpunk's razor tear at scope-96. Nothing runs on a server:
 Kenny deleted the CI on 2026-09-09 and runs the browser suite himself.
 `package.json`'s `gates` script is the authoritative list; the table below
 is the shape of it rather than the whole.

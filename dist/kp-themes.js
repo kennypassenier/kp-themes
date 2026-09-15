@@ -666,6 +666,10 @@ var TIMINGS = Object.freeze({
   // The indeterminate progress stripes [gap-11]: a background-position
   // drift of one stripe period, no luminance change of its own.
   "kp-progress-stripes": { durationMs: 1200, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+  // Cyberpunk's data stream [scope-96]: two dash tiles drifting by one
+  // tile width per loop (144px and 216px in 8000ms), no luminance change.
+  "kp-stream-144": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
+  "kp-stream-216": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
   // The shared marquee [M1, 2026-09-08]: one transform across a doubled
   // row, no luminance change of its own, and the only loop besides
   // brutalism's hatch. The duration is a knob, so this row carries the

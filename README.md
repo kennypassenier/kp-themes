@@ -8,7 +8,7 @@ shade-dark, lapis, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
 form fields, print), twenty-one components, a theme picker, and a register
 for every one of the twenty-two themes — the opt-in stylesheet that
-carries a theme's own expression, from cyberpunk's notches and razor tear
+carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
 **Everything exists in two channels.** React, for a consumer with a build
@@ -158,7 +158,7 @@ passage _is_, and every theme answers — some loudly, most quietly:
 | `data-kp-surface="hero\|app"`               | which ground a section stands on | signal yellow / the void          | the night sky / the void            |
 | `<mark>`                                    | an emphasis the theme may reveal | a redaction that lifts            | a neon tube that switches on        |
 | `data-kp-reveal="headline\|emphasis\|rule"` | something that arrives           | decipher, clearance, a drawn rule | tracking and shine, the tube, laser |
-| `data-kp-divider`                           | a section transition             | the razor tear                    | the horizon                         |
+| `data-kp-divider`                           | a section transition             | the data stream                   | the horizon                         |
 | `h1`/`h2` inside a surface                  | the heading accent               | brackets, display type            | chrome type, a cyan tube            |
 | `--kp-arrival` (on the root)                | how the page comes on            | quiet                             | `boot`: a boot line with a Skip     |
 

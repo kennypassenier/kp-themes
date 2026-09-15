@@ -6,7 +6,8 @@
 //       opened invisible (the demo's own history).
 // TH118 the buttons: notch, mirror and slit computed per variant, and the
 //       focus ring is measured as the difference it makes, inside the box.
-// TH121 the tear is judged on catalogue/page-effects.html#dividers [scope-73].
+// TH121 the divider, now the data stream, is held in
+//       tests/cyberpunk-data-stream.spec.mjs [scope-96].
 // TH133 a bare .kp-card gets the register rule.
 //
 // Drills [KT3], each performed 2026-09-07 in both browsers and restored:

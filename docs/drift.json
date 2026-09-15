@@ -19,10 +19,10 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "416e167a78bb341bef2cc4e6c4b9ad7ff0614a0d9c0d4c78765e0e2e127f7fb2",
-            "doc": "2311b90207f045d37f3f14cfe25aa703484e137938f75383fe20d3bee324d5b3",
+            "hash": "2305e22b5219ec47bbac73bb7fcdc73c58d52d03494203bc5468de340fe59a8e",
+            "doc": "65c72acbe3cb0d6ecd6d7cd1160ebe9cbbffa5cdc7bf106ecc263814ab2e9073",
             "files": {
-                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
+                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -154,10 +154,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "385b40d6947d7c5d40eeedc9c5aa8b0dce55a25e94480ea94efd9be0bbd81bbc",
-            "doc": "53b7996f74548c3e92e9d6bba9fd362d5c84707fcaeed4004c45d6bd9f41f6ad",
+            "hash": "55b58589d5e68f56bb4f62ae732622f565646709f98c20690958d43c99c44283",
+            "doc": "233e3cb7e0555da385120b4dbafd042f0d004624935f074c7dd0cc83a90d28ee",
             "files": {
-                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
+                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
@@ -176,12 +176,12 @@
                 "gates/check-texture.mjs",
                 "gates/config.json"
             ],
-            "hash": "c4873ec7d45cde0f8d77fc2209d08f26903109f6e4c874424f262363568adfe6",
+            "hash": "7a2ed2218c5b56a4a6b39ba2eae429e7c0676b787ed504eb78a38dba7a678806",
             "doc": "76380b94c01ac674695ac833699694d13b276a50405e990b9d7cac80c2e2efe7",
             "files": {
                 "gates/check-contrast.mjs": "e5d4227e381943c609c93ace3ecb38fc045742df569197d0cd0ab58a7b126c99",
                 "gates/check-invariants.mjs": "8e554d4b7422db3ce2e34cedff5944ae13c8eb7453f4972de7bd4aceebf3ba07",
-                "gates/check-motion.mjs": "8a9daa29645b0659ea743398e1021c36af0466be313dfa8565065cd619e161ea",
+                "gates/check-motion.mjs": "cd612e40fb851d4bf8d98001a3b150166e01e26fc8a08be04d61abf6320f2471",
                 "gates/check-texture.mjs": "7707c0feee5af074b28ad43b4e2fbe6ee15295412bbe17cf822af340558c31c4",
                 "gates/compliance.mjs": "f89b68f8d66f867e9aa965f217433fe36db7095ab4b9f288ea628492e1429b15",
                 "gates/config.json": "ec9cd1908f462cc0d0fe1d5aefc3f024e48c819ec438b12280220f87dc7f5a43"
@@ -221,10 +221,10 @@
                 ".github/workflows/*.yml",
                 "playwright.config.mjs"
             ],
-            "hash": "4c43505602ec9004655e743fe4c7df2a636f2d21bca5e5b7aa93a9de45750b16",
+            "hash": "3aa496dc85ec825110e55849db83706e95fd4cae8d6192312b9fb0fff0b03e13",
             "doc": "7dd5ff005da310e5934a2f393c0fcb9c291091b320cbb4962c3d01f3e54329bc",
             "files": {
-                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
+                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
                 "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",

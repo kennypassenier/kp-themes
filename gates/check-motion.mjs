@@ -69,6 +69,11 @@ const OUT_OF_SCOPE = {
     // The indeterminate progress bar [gap-11].
     'kp-progress-stripes':
         'a background-position slide of diagonal stripes by one 1rem period every 1.2 seconds, on a bar 0.5rem tall; the stripes keep their colours, only their position moves',
+    // Cyberpunk's section divider [scope-96].
+    'kp-stream-144':
+        'a mask-position slide of a 144px dash tile by one tile every 8 seconds, on a 28px divider; the dashes keep their colours, only their position moves',
+    'kp-stream-216':
+        'a mask-position slide of a 216px packet tile by one tile every 8 seconds, on a 28px divider; the packets keep their colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
     'kp-charge':
         'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',

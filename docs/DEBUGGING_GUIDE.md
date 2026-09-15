@@ -106,8 +106,8 @@ npm run gates
 Thirty steps chained with `&&` (counted from `scripts.gates` in
 `package.json` on 2026-09-14, after scope-78): twenty-nine `check:*`
 scripts, then `npm test` (the unit tests through `node --test gates/`).
-Six older checks run inside those steps and print their own lines there:
-the tear in `check:generated`, the bundle in `check:min`, the migration
+Five older checks run inside those steps and print their own lines there:
+the bundle in `check:min`, the migration
 note in `check:docs-runnable`, the fonts stylesheet in `check:fonts`, the
 package in `check:manifest`, token parity in `npm test`. It finishes in
 seconds and the commit hook

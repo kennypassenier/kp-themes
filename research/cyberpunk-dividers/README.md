@@ -1,5 +1,8 @@
 # A new divider for cyberpunk: six options
 
+**Decided (scope-96, 2026-09-15):** Data stream. Kenny chose option 3 over the recommended circuit bus; it replaces the razor tear in
+`css/cyberpunk-register.css`, and `gates/generate-tear.mjs` and `gates/tear.json` went with the tear. The demo is archived.
+
 Kenny, judging `catalogue/page-effects.html#dividers` in cyberpunk (2026-09-15): "Ik wil enkel voor dit thema een nieuwe divider, geef me
 een paar opties die bij het thema passen". Demo: [`demo.html`](demo.html) (46468 bytes, `wc -c`), in the catalogue under "Research to
 look at". A full-page capture at 1280px, reduced motion: [`screenshot.png`](screenshot.png) (740045 bytes). A firefox check sits beside

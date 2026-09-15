@@ -126,7 +126,6 @@ Three things about that table are not style, they are code:
 
     ```
     2 generated files match their source (22 themes).
-    Tear: the register carries the tear gates/tear.json produces (two seeds, two hairlines).
     Hooks: 22 themes answer 6 hooks (118 answers checked, quiet or scoped).
     ```
 
@@ -170,11 +169,11 @@ Something rewrote files after they were staged. Re-add and retry.
 ## 2 · Regenerating the generated artefacts
 
 Most of what this package ships is assembled, not authored. `npm run
-generate:all` runs sixteen steps in order (`package.json`, script
+generate:all` runs fifteen steps in order (`package.json`, script
 `generate:all`):
 
 `generate` → `generate:fonts-css` → `generate:utilities` →
-`generate:tear` → `generate:bundle` → `generate:min` →
+`generate:bundle` → `generate:min` →
 `generate:examples` → `generate:showcase` → `generate:site` →
 `generate:ha` → `gates/generate-compare.mjs` → `report:di5` →
 `generate:types` → `gates/compliance.mjs` → `checksums` →
@@ -187,7 +186,6 @@ What that covers, by output:
 | `gates/generate-themes.mjs`      | `css/themes.css` and `js/theme-registry.js` from `themes/<name>/tokens.json`  |
 | `gates/generate-fonts-css.mjs`   | `css/fonts.css` from `fonts/families.json`                                    |
 | `gates/generate-utilities.mjs`   | `css/utilities.css`                                                           |
-| `gates/generate-tear.mjs`        | the tear geometry **inside** `css/cyberpunk-register.css`, from `gates/tear.json` |
 | `gates/generate-bundle.mjs`      | `dist/kp-themes.css` and `dist/kp-themes.js`                                  |
 | `gates/generate-min.mjs`         | `dist/css/*.min.css`, the minified bundles and `docs/MINIFIED.md`             |
 | `gates/generate-examples.mjs`    | the pages under `examples/`                                                   |
@@ -201,7 +199,7 @@ What that covers, by output:
 
 ### Procedure 2.1 — regenerate after changing a source
 
-1. Make the source change (a token file, `gates/tear.json`,
+1. Make the source change (a token file,
    `fonts/families.json`, a site descriptor).
 
 2. Regenerate everything:

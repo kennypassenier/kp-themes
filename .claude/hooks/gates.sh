@@ -40,7 +40,7 @@ gate_tree_before=$(gate_tree_fingerprint)
 # `npm run advice`, printed and never refusing: variant grounds, the
 # compliance table, the vendored baseline and prettier.
 
-echo "→ generated files match their source, and the tear its parameters (TH121, AR41) [scope-76]"
+echo "→ generated files match their source (TH121) [scope-76, scope-96]"
 node gates/generate-themes.mjs --check
 
 # Kenny, 2026-09-09: the checks that exist for people with disabilities —

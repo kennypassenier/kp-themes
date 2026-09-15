@@ -569,7 +569,6 @@ test('scope-76: every merged check still runs, inside the target that took it', 
     // be there to spawn. Token parity is the seventh name on the list and
     // needs no spawn: the TH22 tests above run it over the real themes.
     const merged = [
-        ['generate-themes.mjs', 'generate-tear.mjs'],
         ['generate-min.mjs', 'generate-bundle.mjs'],
         ['check-docs-runnable.mjs', 'check-migration.mjs'],
         ['check-fonts.mjs', 'generate-fonts-css.mjs'],
@@ -746,7 +745,6 @@ test('R5-BADGE: every status has a badge rule, and every badge rule has a status
 import { audit as auditHooks } from './check-hooks.mjs';
 import { audit as auditCoverage, missingParts } from './check-register-coverage.mjs';
 import { audit as auditFonts, declaredFamilies } from './check-fonts.mjs';
-import { block as tearBlock, ridge, withBlock } from './generate-tear.mjs';
 import { references } from './check-manifest.mjs';
 import { tableProblems } from './check-motion.mjs';
 import { audit as auditTexture, strongestAlpha, textures } from './check-texture.mjs';
@@ -857,15 +855,6 @@ test('AR39: a theme over the font budget fails', () => {
         problems.some((p) => p.includes('(budget)')),
         problems.join('\n'),
     );
-});
-
-test('AR41: the tear is deterministic per seed, two seeds differ, and the block round-trips', () => {
-    assert.deepEqual(ridge(7), ridge(7));
-    assert.notDeepEqual(ridge(7), ridge(23));
-    const once = withBlock('@layer kp.register {\n    .a { }\n}');
-    assert.ok(once.includes('--fx-tear:') && once.includes('--fx-tear-alt:') && once.includes('--fx-tear-line:'));
-    assert.equal(withBlock(once), once);
-    assert.equal(tearBlock(), tearBlock());
 });
 
 test('AR39: a stylesheet url() is a reference the manifest walk follows; a data: URI is not', () => {
@@ -993,7 +982,6 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
         '--kp-slice': '600ms',
         '--kp-slice-hover': '320ms',
         '--kp-charge': '520ms',
-        '--kp-tear-height': '44px',
         '--fx-notch-sm': '8px',
     };
     const block = register.match(/\[data-theme='cyberpunk'\]\s*\{([^}]*)\}/)?.[1] ?? '';

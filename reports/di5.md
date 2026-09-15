@@ -75,6 +75,8 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-spin` | transform | 900 ms | loops | — | 0.00/s | under |
 | `kp-pulse` | opacity | 1600 ms | loops | 1 → 0.6 → 1 | 1.25/s | under |
 | `kp-progress-stripes` | background-position | 1200 ms | loops | — | 0.00/s | under |
+| `kp-stream-144` | mask-position | 8000 ms | loops | — | 0.00/s | under |
+| `kp-stream-216` | mask-position | 8000 ms | loops | — | 0.00/s | under |
 | `kp-marquee-pass` | transform | 42000 ms | loops | — | 0.00/s | under |
 | `kp-kento-blue` | transform | 700 ms | 1× | — | 0.00/s | under |
 | `kp-kento-red` | transform | 700 ms | 1× | — | 0.00/s | under |
