@@ -1587,3 +1587,8 @@ no change. caption-reach "Alleen bij scrollen": the header's 2px reach
 2026-09-15, the form after `scope-90` (commit `a2c30166`). dialog-research
 "Alleen review-site en componentpagina's": research demos, the intro page and
 the compare columns get no review dialog. step-timing "Akkoord".
+
+**scope-92 · The catalogue review comes first.** Kenny, 2026-09-15, the
+next-step form (commit `bec8bb07`). next-step "Eerst de catalogusreview":
+nothing new starts; Kenny reviews the returned blocks in the review dialog,
+and the JavaScript split of `scope-50` waits. step-timing "Akkoord".
