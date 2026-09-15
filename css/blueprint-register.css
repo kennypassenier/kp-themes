@@ -886,6 +886,8 @@
 
     [data-theme='blueprint'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-block-end: 1px solid var(--border-strong);
         font-weight: 600;
     }

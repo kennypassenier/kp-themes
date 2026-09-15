@@ -949,6 +949,8 @@
 
     [data-theme='brutalism'] .kp-table th {
         background: var(--secondary);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--secondary);
         color: var(--secondary-foreground);
         font-weight: 700;
         letter-spacing: 0.08em;

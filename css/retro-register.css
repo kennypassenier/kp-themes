@@ -462,8 +462,13 @@
 
     [data-theme='retro'] .kp-nav__link--cta:active {
         box-shadow: var(--kp-pressed);
-        /* The label steps one pixel toward the inline start; the block padding is the package's [scope-88]. */
+        /* The label steps one pixel down and one toward the inline end, as the
+         * original did: a pixel of the package's block padding [scope-88] and
+         * one of the inline padding move across, so the box keeps its size
+         * [scope-89]. */
         padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
+        padding-block: calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) + 1px)
+            max(0px, calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) - 1px));
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -1248,9 +1253,16 @@
 
     [data-theme='retro'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 600;
+    }
+
+    /* A sticky header keeps its raised edge and the reach above it [fix-32]. */
+    [data-theme='retro'] .kp-datatable[data-kp-max-height] .kp-table thead th {
+        box-shadow: var(--kp-raised), var(--kp-datatable-head-reach);
     }
 
     [data-theme='retro'] .kp-table td {

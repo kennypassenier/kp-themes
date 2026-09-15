@@ -508,6 +508,8 @@
 
     [data-theme='light'] .kp-table th {
         background: var(--muted);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--muted);
         font-weight: 600;
     }
 

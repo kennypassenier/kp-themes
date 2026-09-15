@@ -8002,6 +8002,19 @@
         background-color: var(--kp-datatable-head-ground, var(--background));
     }
 
+    /* The header's ground reaches 2px above the header [fix-32]: Kenny saw
+ * slivers of row text just above it while wheel-scrolling in FireDragon,
+ * the box starting on a half pixel. An unblurred shadow in the header's
+ * own ground, clipped by the scroll box, so at rest nothing shows. The
+ * shadow is a knob: a register that paints its header in another colour
+ * names that colour in `--kp-datatable-head-ground` on the cell, and one
+ * that draws its own shadow on the cell adds `var(--kp-datatable-head-reach)`
+ * to its list. */
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        --kp-datatable-head-reach: 0 -2px 0 0 var(--kp-datatable-head-ground, var(--background));
+        box-shadow: var(--kp-datatable-head-reach);
+    }
+
     /* A status label in a table keeps its word whole [gap-13]: the badge's
  * default `anywhere` broke "WATCHING" into WATCHI / NG in nostromo, in a
  * column squeezed by a long note. The knob is the badge's own. */
@@ -8096,6 +8109,14 @@
 
     .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th {
         z-index: 2;
+    }
+
+    /* The last fixed header cell keeps its hairline and the reach above the
+ * sticky header [fix-32]. */
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th[data-kp-fixed='last'] {
+        box-shadow:
+            inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong)),
+            var(--kp-datatable-head-reach);
     }
 
     .kp-datatable[data-kp-fixed-columns] .kp-table thead th[data-kp-fixed] {
@@ -11465,8 +11486,13 @@
 
     [data-theme='retro'] .kp-nav__link--cta:active {
         box-shadow: var(--kp-pressed);
-        /* The label steps one pixel toward the inline start; the block padding is the package's [scope-88]. */
+        /* The label steps one pixel down and one toward the inline end, as the
+         * original did: a pixel of the package's block padding [scope-88] and
+         * one of the inline padding move across, so the box keeps its size
+         * [scope-89]. */
         padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
+        padding-block: calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) + 1px)
+            max(0px, calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) - 1px));
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -12251,9 +12277,16 @@
 
     [data-theme='retro'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 600;
+    }
+
+    /* A sticky header keeps its raised edge and the reach above it [fix-32]. */
+    [data-theme='retro'] .kp-datatable[data-kp-max-height] .kp-table thead th {
+        box-shadow: var(--kp-raised), var(--kp-datatable-head-reach);
     }
 
     [data-theme='retro'] .kp-table td {
@@ -19331,6 +19364,8 @@
 
     [data-theme='brutalism'] .kp-table th {
         background: var(--secondary);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--secondary);
         color: var(--secondary-foreground);
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -23484,6 +23519,8 @@
 
     [data-theme='shade-light'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-bottom: 1px solid var(--border-strong);
         font-weight: 600;
     }
@@ -27129,6 +27166,8 @@
 
     [data-theme='light'] .kp-table th {
         background: var(--muted);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--muted);
         font-weight: 600;
     }
 
@@ -29905,6 +29944,8 @@
 
     [data-theme='blueprint'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-block-end: 1px solid var(--border-strong);
         font-weight: 600;
     }
@@ -35129,6 +35170,8 @@
 
     [data-theme='sepia'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-bottom: 1px solid var(--border-strong);
         font-weight: 600;
     }

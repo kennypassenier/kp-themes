@@ -546,3 +546,79 @@ for (const channel of FEATURE_CHANNELS) {
         });
     });
 }
+
+// ── fix-32: the sticky header's ground reaches above it ───────────────────
+//
+// Kenny, in FireDragon, saw slivers of row text just above the header that
+// stays while wheel-scrolling. The measure: each header cell's ground
+// reaches 2px above the cell, an unblurred shadow in the colour the cell
+// paints, clipped by the scroll box. A register that paints its own header
+// ground or shadow must keep the reach, in that colour.
+
+/** Split a computed box-shadow into its shadows. @param {string} value */
+const shadowsOf = (value) => {
+    if (!value || value === 'none') return [];
+    const parts = [];
+    let depth = 0;
+    let from = 0;
+    for (let i = 0; i < value.length; i++) {
+        if (value[i] === '(') depth++;
+        else if (value[i] === ')') depth--;
+        else if (value[i] === ',' && depth === 0) {
+            parts.push(value.slice(from, i).trim());
+            from = i + 1;
+        }
+    }
+    parts.push(value.slice(from).trim());
+    return parts.map((part) => {
+        const colour = part.match(/(?:rgba?|color|oklch|oklab)\([^)]*\)|transparent/)?.[0] ?? '';
+        const [x = 0, y = 0, blur = 0, spread = 0] = part
+            .replace(colour, '')
+            .replace(/\binset\b/, '')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .map((n) => parseFloat(n));
+        return { inset: /\binset\b/.test(part), colour, x, y, blur, spread };
+    });
+};
+
+test.describe('datatable sticky header reach [fix-32]', { tag: ['@component:datatable'] }, () => {
+    /** @type {[string, string][]} */
+    const TABLES = [
+        ['/tests/fixtures/datatable.html', '.kp-datatable[data-test="plain-sticky"]'],
+        ['/tests/fixtures/datatable-more.html', '.kp-datatable[data-test="plain-fixed"]'],
+        ['/tests/fixtures/datatable-more.html', '.kp-datatable[data-test="react-fixed"]'],
+    ];
+    for (const [url, selector] of TABLES) {
+        test(
+            `the sticky header's ground reaches 2px above it in its own colour, in every theme: ${selector} [fix-32]`,
+            { tag: ['@sweep'] },
+            async ({ page }) => {
+                // Before (a051db4d): no shadow reaching above a sticky header cell, in any theme.
+                await page.goto(url);
+                const table = page.locator(selector);
+                await expect(table.locator('thead th').first()).toBeVisible();
+                const faults = [];
+                for (const theme of THEME_NAMES) {
+                    await wearSettled(page, theme);
+                    const cells = await table.locator('thead th').evaluateAll((ths) =>
+                        ths.map((th) => {
+                            const s = getComputedStyle(th);
+                            return { fixed: th.getAttribute('data-kp-fixed'), shadow: s.boxShadow, ground: s.backgroundColor, position: s.position };
+                        }),
+                    );
+                    cells.forEach((cell, i) => {
+                        const reach = shadowsOf(cell.shadow).find(
+                            (sh) => !sh.inset && sh.x === 0 && sh.blur === 0 && sh.spread - sh.y >= 2 && sh.colour === cell.ground,
+                        );
+                        const name = `${theme} th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
+                        if (cell.position !== 'sticky') faults.push(`${name}: position ${cell.position}`);
+                        else if (!reach) faults.push(`${name}: shadow "${cell.shadow}", ground ${cell.ground}`);
+                    });
+                }
+                expect(faults).toEqual([]);
+            },
+        );
+    }
+});
