@@ -687,7 +687,10 @@ default). While its box is scrolled away from the top, the script sets
 `data-kp-scrolled` on the data table (`watchScrolled(element, box)` does it
 for a table of your own) and the header's ground then reaches 2px above
 the header, `--kp-datatable-head-reach`, so no sliver of a row shows over
-it mid-scroll. At the top the attribute goes and so does the reach, which
+it mid-scroll. Under the same attribute the box clips its own top edge
+(`clip-path`, top side only, not while it has a keyboard focus ring), so
+row text cannot paint a device pixel above it on a zoomed screen. At the
+top the attribute goes and so do the reach and the clip, which
 leaves a caption right above the header untouched; without script there
 is no reach at all.
 

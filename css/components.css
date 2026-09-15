@@ -3839,6 +3839,22 @@
         box-shadow: var(--kp-datatable-head-reach);
     }
 
+    /* The box clips its own top edge while scrolled [fix-32, 2026-09-15
+ * follow-up]. Kenny still saw row letters above the header in FireDragon,
+ * zoomed. Recorded from the compositor (FireDragon 155 on a virtual
+ * display, real wheel clicks): when the box's top edge falls in the lower
+ * half of a device pixel, the box's ground and the sticky header start on
+ * the next pixel row, but row text still paints one device pixel above
+ * them, outside the box, at every zoom 1 to 1.75 and in every theme. The
+ * reach cannot cover it — the box clips the reach too — and a larger reach,
+ * a backing pseudo-element or a layer on the header left it; a clip-path
+ * with its top at 0 took it away. Only the top edge is clipped, and only
+ * while scrolled and not keyboard-focused, so a caption above is untouched
+ * at rest and the focus ring keeps its top side. */
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] > .kp-table-wrap:not(:focus-visible) {
+        clip-path: inset(0 -100vmax -100vmax);
+    }
+
     /* A status label in a table keeps its word whole [gap-13]: the badge's
  * default `anywhere` broke "WATCHING" into WATCHI / NG in nostromo, in a
  * column squeezed by a long note. The knob is the badge's own. */

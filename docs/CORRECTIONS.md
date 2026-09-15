@@ -3483,6 +3483,65 @@ Claude tries to reproduce it in FireDragon itself for a new correction.
 
 **9 · When we review the measure.** At that review.
 
+### fix-32, the letters that stayed: measured from the compositor (2026-09-15)
+
+**What Kenny still saw.** In FireDragon, solstice,
+`catalogue/table.html#datatable-sticky`, after the reach shipped: "the
+letters from the rows below sometimes show when they are behind the
+header". He browses zoomed (`layout.css.devPixelsPerPx`, his verdict hashes
+match 1.25 and 1.5).
+
+**Headless does not see it.** Wheel steps with screenshots at once, +16ms
+and +250ms, at `devPixelsPerPx` 1.25 and 1.5, and a sweep of `scrollTop` in
+0.2px steps: 0 frames with row text in FireDragon or Playwright's firefox.
+A headless screenshot paints the page again on the main thread; what Kenny
+sees is the compositor's frame.
+
+**Reproduced.** FireDragon 155 and Playwright's firefox 153, headed on a
+private Xvfb display, real wheel clicks (xdotool), every presented frame
+of the header band recorded at 60fps (ffmpeg x11grab) and compared with the
+frame before scrolling. Four themes (solstice, formal, nostromo, retro),
+the data table moved by 0, 0.25, 0.5 and 0.75 device pixels, so its top
+edge falls on four fractions. Frames with row text, before → after:
+
+| Zoom | FireDragon 155          | Playwright firefox 153 |
+| ---- | ----------------------- | ---------------------- |
+| 1    | 504 / 3278 → 0 / 3464   | 0 / 3486               |
+| 1.1  | 496 / 3368 → 0 / 3458   | 0 / 3426               |
+| 1.25 | 447 / 3425 → 0 / 3366   | 0 / 3457 → 0 / 3338    |
+| 1.5  | 492 / 3481 → 0 / 3359   | 0 / 3514               |
+| 1.75 | 445 / 3476 → 9 / 3355   | 0 / 3451 → 0 / 3460    |
+
+Before, in FireDragon, every theme and every zoom leaked, in exactly the
+recordings whose box top fell in the lower half of a device pixel (8 of
+16 each). The nine frames after are one recording of nostromo at 1.75
+(top at .94 of a pixel); the same fraction measured again showed none.
+
+**Cause.** With the themes' grounds replaced by red outside the box,
+green in the box and blue in the header: the box's ground and the sticky
+header both start on the next device row, but the row text is clipped one
+device row higher and paints over the parent's ground, above the box. The
+reach cannot cover it, because the box clips the reach as well. Measured
+and left: the reach at 4px, a backing pseudo-element above the header,
+`will-change: transform` on the header, `contain: paint` and `isolation`
+on the box, `clip-path: inset(-6px)`. A clip-path whose top is 0 took it
+away.
+
+**Measure.** While scrolled, and not keyboard-focused, the box clips its
+own top edge: `clip-path: inset(0 -100vmax -100vmax)` on
+`.kp-datatable[data-kp-max-height][data-kp-scrolled] > .kp-table-wrap:not(:focus-visible)`.
+At rest nothing is clipped, so a caption is untouched; a focused box keeps
+its whole ring. The fix-32 sweep now also reads the box's clip at rest,
+scrolled, back at the top and focused, in every theme, four tables: red
+on 9a833da0 (4 failed, firefox), green after (8 passed, both engines). The
+pixel measurement itself stays a scratch harness: Playwright's own engine
+never showed the fault.
+
+**Open.** A keyboard-focused box, scrolled by keys, is not clipped and
+could still show the pixel. Horizontal scrolling with fixed columns was not
+measured. Kenny's look at `#table--datatable-sticky` in FireDragon, zoomed,
+is still the measurement that closes this.
+
 ## fix-33 · A redaction stood beside its phrase instead of over it (2026-09-15)
 
 **1 · What went wrong.** Kenny, in FireDragon, on

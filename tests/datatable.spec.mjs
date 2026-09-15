@@ -621,8 +621,10 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
             };
             const caption = el.querySelector('caption');
             const captionShown = caption !== null && getComputedStyle(caption).visibility !== 'hidden' && caption.getBoundingClientRect().height > 0;
+            const wrap = /** @type {HTMLElement} */ (el.querySelector(':scope > .kp-table-wrap'));
             return {
                 scrolled: el.hasAttribute('data-kp-scrolled'),
+                clip: getComputedStyle(wrap).clipPath,
                 caption: captionShown && caption !== null ? box(caption) : null,
                 cells: [...el.querySelectorAll('thead th')].map((th) => {
                     const s = getComputedStyle(th);
@@ -637,17 +639,32 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
             };
         });
 
+    /**
+     * The box's clip of its own top edge [fix-32 follow-up]: `inset(0 …)` with
+     * a top of 0 and no side or bottom inside the box, or null when absent.
+     * @param {string} value the computed clip-path
+     */
+    const topClipOf = (value) => {
+        const m = /^inset\(([^)]*)\)$/.exec((value ?? '').trim());
+        if (!m) return null;
+        const parts = m[1].split(/\s+/).map((n) => parseFloat(n));
+        const [top, right = top, bottom = top, left = right] = parts;
+        return top === 0 && right <= 0 && bottom <= 0 && left <= 0 ? { top, right, bottom, left } : null;
+    };
+
     /** The reach: an unblurred outer shadow in the cell's ground, at least 2px above it. @param {{ shadow: string, ground: string }} cell */
     const reachOf = (cell) =>
         shadowsOf(cell.shadow).find((sh) => !sh.inset && sh.x === 0 && sh.blur === 0 && sh.spread - sh.y >= 2 && sh.colour === cell.ground);
 
     for (const [url, selector] of TABLES) {
         test(
-            `the sticky header's ground reaches 2px above it only while its box is scrolled, in every theme: ${selector} [fix-32, scope-90]`,
+            `the sticky header's ground reaches 2px above it and the box clips its top edge only while scrolled, in every theme: ${selector} [fix-32, scope-90]`,
             { tag: ['@sweep'] },
             async ({ page }) => {
                 // Before (a051db4d): no shadow reaching above a sticky header cell, in any theme.
                 // Before (6fd84fe0): the reach was drawn at rest too, over the caption's bottom 2px.
+                // Before (9a833da0): no clip on the box while scrolled; in FireDragon, zoomed, row text
+                // painted one device pixel above the box when its top edge fell past half a pixel.
                 await page.goto(url);
                 const table = page.locator(selector);
                 await expect(table.locator('thead th').first()).toBeVisible();
@@ -658,6 +675,7 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
                     await scrollBoxTo(table, 0);
                     const rest = await readHead(table);
                     if (rest.scrolled) faults.push(`${theme} at rest: data-kp-scrolled is set`);
+                    if (rest.clip !== 'none') faults.push(`${theme} at rest: the box is clipped, "${rest.clip}"`);
                     rest.cells.forEach((cell, i) => {
                         const name = `${theme} at rest, th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
                         if (cell.position !== 'sticky') faults.push(`${name}: position ${cell.position}`);
@@ -683,6 +701,7 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
                     const scrolled = await readHead(table);
                     if (moved <= 0) faults.push(`${theme}: the box did not scroll`);
                     else if (!scrolled.scrolled) faults.push(`${theme} scrolled: data-kp-scrolled is not set`);
+                    if (!topClipOf(scrolled.clip)) faults.push(`${theme} scrolled: the box does not clip its top edge, "${scrolled.clip}"`);
                     scrolled.cells.forEach((cell, i) => {
                         const name = `${theme} scrolled, th ${i + 1}${cell.fixed ? ` (fixed ${cell.fixed})` : ''}`;
                         if (!reachOf(cell)) faults.push(`${name}: shadow "${cell.shadow}", ground ${cell.ground}`);
@@ -691,10 +710,22 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
                     await scrollBoxTo(table, 0);
                     const back = await readHead(table);
                     if (back.scrolled) faults.push(`${theme} back at the top: data-kp-scrolled is still set`);
+                    if (back.clip !== 'none') faults.push(`${theme} back at the top: the box is still clipped, "${back.clip}"`);
                     back.cells.forEach((cell, i) => {
                         if (reachOf(cell)) faults.push(`${theme} back at the top, th ${i + 1}: reach still drawn, shadow "${cell.shadow}"`);
                     });
                 }
+
+                // A keyboard-focused box keeps its whole focus ring: no clip, even scrolled.
+                await scrollBoxTo(table, 40);
+                const focused = await table.evaluate((el) => {
+                    const wrap = /** @type {HTMLElement} */ (el.querySelector(':scope > .kp-table-wrap'));
+                    if (!wrap.hasAttribute('tabindex')) wrap.setAttribute('tabindex', '0');
+                    wrap.focus({ focusVisible: true });
+                    return { visible: wrap.matches(':focus-visible'), clip: getComputedStyle(wrap).clipPath };
+                });
+                if (focused.visible && focused.clip !== 'none') faults.push(`keyboard-focused and scrolled: the box is clipped, "${focused.clip}"`);
+                if (!focused.visible) faults.push('the box did not take :focus-visible, so the ring could not be checked');
                 expect(faults).toEqual([]);
             },
         );

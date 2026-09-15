@@ -289,7 +289,7 @@
                 "themes/hooks.json"
             ],
             "hash": "7bdd664aabd5c196ef23d27eb6302436d4d362e4c08f76eceb1700541b9ba975",
-            "doc": "6ef47a9dc46f1f9c29bbedf4ad9fab7214454634f00dd5688e46231512fdf240",
+            "doc": "c7813cbf3b395ee520c46cbdde6f1eb12e4620be5230a5f04d9f799f6497734b",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
