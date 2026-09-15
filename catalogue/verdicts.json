@@ -1097,9 +1097,9 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "54129325dfc65974f0a32cee43991da9c2fe4503a2484e8d8bcffeb67d80c090",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "43862cff0b78e4a46c200da531e486e68b609cf9436e38fc2eddeca3d3b65a6b",
+                    "commit": "8424e8962e82846463f39ba48ac141ad443e6930",
+                    "given": "2026-09-15"
                 }
             },
             "deco": {
@@ -1866,11 +1866,35 @@
             }
         },
         "navigation--bar-sticky": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "491435638d2fd83cc540707c662d5991d21ca2e9d7e3eee2f48022e63be48d93",
+                    "commit": "8424e8962e82846463f39ba48ac141ad443e6930",
+                    "given": "2026-09-15"
+                }
+            },
             "dark": {
                 "firefox": {
                     "verdict": "approved",
                     "hash": "5e2b073d9e58441883b700444097f060f84d1dd66fa467e539dcf643142f9ae4",
                     "commit": "b5b58b61d7c97b5097024d20378ebf69930fb793",
+                    "given": "2026-09-15"
+                }
+            },
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2998617bf4e583b72557d4bd17860265c682a108c6ede1bee9729453fcac3130",
+                    "commit": "8424e8962e82846463f39ba48ac141ad443e6930",
+                    "given": "2026-09-15"
+                }
+            },
+            "grotesk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7137890e96fd318a472dd5056316f10d7579155acc291458ab9ab7a1613673eb",
+                    "commit": "8424e8962e82846463f39ba48ac141ad443e6930",
                     "given": "2026-09-15"
                 }
             }
