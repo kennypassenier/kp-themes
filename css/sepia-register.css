@@ -251,8 +251,14 @@
         font-weight: inherit;
     }
 
+    /* The lede anchors the drop cap's wash and isolates it: the wash sits
+       at z-index -1, and without a positioned, isolated lede its
+       containing block was the page (it painted at the page's corner) and
+       its stacking context an ancestor whose ground covered it [scope-100]. */
     [data-theme='sepia'] .kp-lede {
         max-width: 38rem;
+        position: relative;
+        isolation: isolate;
     }
 
     /* The drop cap: Miranda's 7vw display-face initial, clamped so it
@@ -564,8 +570,12 @@
     /* The dossier's stamp (KT5: the word is data, from data-kp-label, not
        CSS content) — rotated, the ink wash behind it, the second and last
        appearance of the multiply layer. */
+    /* Isolated, so the wash's z-index -1 lands above the card's own ground
+       and below the stamp and the text, rather than under the card, where
+       it never showed [scope-100]. */
     [data-theme='sepia'] .kp-card[data-kp-label] {
         position: relative;
+        isolation: isolate;
     }
 
     [data-theme='sepia'] .kp-card[data-kp-label]::before {
@@ -775,15 +785,16 @@
         color: var(--foreground);
     }
 
-    /* The footer's links: the demo's hand-drawn underline, here a
-       background-size transition rather than an injected SVG rule per
-       link (the same markup constraint as the drawn rule above; an X1
-       finding, anatomy.md). At rest the underline is drawn — a page
-       without the script shows exactly what a page with it settles to. */
+    /* The footer's links: the demo's hand-drawn underline, here a 1px
+       background rule rather than an injected SVG rule per link (the same
+       markup constraint as the drawn rule above; an X1 finding,
+       anatomy.md). The underline stands drawn at rest and on hover; the
+       hover eases the ink from sienna to the text colour, and the rule,
+       drawn in currentColor, follows it. */
     [data-theme='sepia'] .kp-footer a {
         color: var(--primary);
         text-decoration: none;
-        background-image: linear-gradient(var(--primary), var(--primary));
+        background-image: linear-gradient(currentColor, currentColor);
         background-repeat: no-repeat;
         background-position: 0 100%;
         background-size: 100% 1px;
@@ -793,7 +804,6 @@
     [data-theme='sepia'] .kp-footer a:hover,
     [data-theme='sepia'] .kp-footer a:focus-visible {
         color: var(--foreground);
-        background-image: linear-gradient(var(--foreground), var(--foreground));
     }
 
     /* ── Badges, tags, status: warm plates ──────────────────────────────── */
@@ -1123,14 +1133,22 @@
             transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
         }
 
+        /* The underline stands drawn at rest and on hover alike, so the
+           hover's one change is the ink: the text and the underline (drawn
+           in currentColor) ease to it together, on the knob and the
+           hand-drawn easing the underline always had [scope-100]. */
         [data-theme='sepia'] .kp-footer a {
-            transition: background-size var(--kp-underline-duration) var(--kp-hand);
+            transition: color var(--kp-underline-duration) var(--kp-hand);
         }
 
+        /* `display … allow-discrete` restates the package's own closing
+           half: without it this list replaced the package's, and the panel
+           was display: none from the first frame of closing [scope-100]. */
         [data-theme='sepia'] .kp-nav__menu {
             transition:
                 opacity var(--fx-duration) var(--fx-ease),
-                transform var(--fx-duration) var(--fx-ease);
+                transform var(--fx-duration) var(--fx-ease),
+                display var(--fx-duration) allow-discrete;
         }
 
         [data-theme='sepia'] .kp-button,

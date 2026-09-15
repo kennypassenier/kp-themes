@@ -900,7 +900,7 @@
         /* The emphasis containers with nothing to clear settle out of the
            blur once, on load (see the finding above the rest-state rule). */
         [data-theme='shade-dark'][data-kp-effects] [data-kp-reveal='emphasis'] {
-            animation: kp-focus-in 500ms var(--kp-ease-reveal) both;
+            animation: kp-focus 500ms var(--kp-ease-reveal) both;
         }
 
         [data-theme='shade-dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
@@ -935,16 +935,32 @@
         [data-theme='shade-dark'] .kp-button,
         [data-theme='shade-dark'] .kp-nav__link,
         [data-theme='shade-dark'] .kp-nav__link--cta,
-        [data-theme='shade-dark'] .kp-nav__menu,
         [data-theme='shade-dark'] .kp-nav__menu a,
         [data-theme='shade-dark'] .kp-footer a,
-        [data-theme='shade-dark'] .skip-link {
+        [data-theme='shade-dark'] .kp-skip-link {
             transition:
                 background var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
                 color var(--fx-duration) var(--fx-ease),
                 opacity var(--fx-duration) var(--fx-ease),
                 transform var(--fx-duration) var(--fx-ease),
                 visibility var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The same list for the dropdown, with the package's closing half
+           restated: `display … allow-discrete` keeps the panel displayed
+           while it fades out. The list above replaced the package's, and
+           the panel was display: none from the first frame of closing
+           [scope-100]. */
+        [data-theme='shade-dark'] .kp-nav__menu {
+            transition:
+                background var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                opacity var(--fx-duration) var(--fx-ease),
+                transform var(--fx-duration) var(--fx-ease),
+                visibility var(--fx-duration) var(--fx-ease),
+                display var(--fx-duration) allow-discrete;
         }
     }
 
@@ -952,21 +968,10 @@
 
     /* Every keyframe here has its row in TIMINGS (js/effects.js). The
        headline's words and the emphasis containers' entrance are the same
-       blur-and-focus device at two grains; the dialog's pair is opacity
+       blur-and-focus device at two grains, one keyframe (kp-focus) at two
+       durations; the dialog's pair is opacity
        with a small settle, once, on open. */
     @keyframes kp-focus {
-        0% {
-            opacity: 0;
-            filter: blur(6px);
-        }
-
-        100% {
-            opacity: 1;
-            filter: blur(0);
-        }
-    }
-
-    @keyframes kp-focus-in {
         0% {
             opacity: 0;
             filter: blur(6px);
@@ -1191,7 +1196,7 @@
     }
 
     /* ── The alarm [scope-94] ──────────────────────────────────────────────
-       The same correction at night: a deep teal plate from its background, the headline in its red serif, a blue split. Every colour is one of this theme's tokens. The
+       The same correction at night: a near-black plate from its background, the headline in its red serif, a blue split. Every colour is one of this theme's tokens. The
        button keeps this register's shape and takes the alarm's paint, on
        selectors long enough to outrank this register's own button states;
        the dialog takes no focus ring, because in the auto mode the whole

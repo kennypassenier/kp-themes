@@ -25,6 +25,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { expectMenuDisplayTransition, measureMenuClose } from './helpers/menu-fade.mjs';
 import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -204,6 +205,53 @@ for (const [channel, url] of CHANNELS) {
             await style(marks.first(), 'color').toBe(await paint(page, '--card-foreground'));
             await trigger.click();
             await expect(marks.first()).not.toHaveClass(/is-cleared/);
+        });
+
+        test('the dropdown closes with its fade, as it opens [scope-100]', async ({ page, browserName }) => {
+            await open(page, url);
+            await expectMenuDisplayTransition(page);
+            // Firefox closes every theme's dropdown at once (measured
+            // 2026-09-16, the package's own formal included), so the
+            // frames are read in chromium only.
+            if (browserName !== 'chromium') return;
+            const closing = await measureMenuClose(page);
+            expect(closing.lastShownMs, `still fading 100ms after closing (seen ${closing.opacities.join(' ')})`).toBeGreaterThanOrEqual(100);
+            expect(closing.opacities.length, 'through more than one opacity').toBeGreaterThan(1);
+        });
+
+        test("the skip link takes the register's transition [scope-100]", async ({ page }) => {
+            await open(page, url);
+            const durations = await page
+                .locator('.kp-skip-link')
+                .first()
+                .evaluate((el) =>
+                    getComputedStyle(el)
+                        .transitionDuration.split(',')
+                        .map((d) => parseFloat(d)),
+                );
+            expect(Math.max(...durations), 'a transition with a duration').toBeGreaterThan(0);
+        });
+
+        test('a pressed variant button eases its border with its fill, rather than jumping [scope-100]', async ({ page }) => {
+            await open(page, url);
+            await settled(page);
+            const button = page.locator('[data-kp-surface="app"] .kp-button--primary:not(:disabled)').last();
+            await button.scrollIntoViewIfNeeded();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await button.boundingBox());
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await settled(page);
+            await page.mouse.down();
+            const running = await button.evaluate((el) =>
+                el
+                    .getAnimations()
+                    .map((a) => /** @type {CSSTransition} */ (a).transitionProperty)
+                    .filter(Boolean),
+            );
+            // Released off the button, so no click follows.
+            await page.mouse.move(2, 2);
+            await page.mouse.up();
+            expect(running, `the fill eases (${running.join(', ')})`).toContain('background-color');
+            expect(running, 'and the border with it').toContain('border-top-color');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

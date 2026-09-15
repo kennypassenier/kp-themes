@@ -35,6 +35,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { expectMenuDisplayTransition, measureMenuClose } from './helpers/menu-fade.mjs';
 import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -95,6 +96,40 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
         s.remove();
         return v;
     }, token);
+
+/**
+ * How many pixels of `clip` (page coordinates) change when `offCss` is
+ * injected — the paint of the rule that stylesheet switches off [KT13].
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} offCss
+ * @param {{ x: number, y: number, width: number, height: number }} clip
+ */
+async function washPixels(page, offCss, clip) {
+    const shot = async () => (await page.screenshot({ clip, fullPage: true, animations: 'disabled', caret: 'hide' })).toString('base64');
+    const on = await shot();
+    const tag = await page.addStyleTag({ content: offCss });
+    const off = await shot();
+    await tag.evaluate((el) => el.remove());
+    return page.evaluate(
+        async ([a, b]) => {
+            const load = async (/** @type {string} */ b64) => {
+                const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
+                const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                const ctx = /** @type {OffscreenCanvasRenderingContext2D} */ (canvas.getContext('2d'));
+                ctx.drawImage(bitmap, 0, 0);
+                return ctx.getImageData(0, 0, bitmap.width, bitmap.height).data;
+            };
+            const [one, two] = await Promise.all([load(a), load(b)]);
+            let n = 0;
+            for (let i = 0; i < Math.min(one.length, two.length); i += 4) {
+                if (Math.abs(one[i] - two[i]) + Math.abs(one[i + 1] - two[i + 1]) + Math.abs(one[i + 2] - two[i + 2]) > 24) n++;
+            }
+            return n;
+        },
+        [on, off],
+    );
+}
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the sepia register, ${channel}`, { tag: ['@theme:sepia', '@component:page-effects', '@component:examples'] }, () => {
@@ -220,6 +255,70 @@ for (const [channel, url] of CHANNELS) {
                 .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the bar lifted')
                 .toBe('0% 100%');
             await style(marks.first(), 'color', 'the word now reads').not.toBe('rgba(0, 0, 0, 0)');
+        });
+
+        test('the dossier stamp has its ink wash behind it, and the wash covers none of the stamp [scope-100]', async ({ page }) => {
+            await open(page, url);
+            await settled(page);
+            const card = page.locator('.kp-card[data-kp-label]').first();
+            await card.scrollIntoViewIfNeeded();
+            const box = await card.evaluate((el) => {
+                const r = el.getBoundingClientRect();
+                const s = getComputedStyle(el, '::before');
+                const px = (v) => parseFloat(v) || 0;
+                const right = r.right - px(s.insetInlineEnd);
+                const top = r.top + px(s.insetBlockStart);
+                return {
+                    card: { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height },
+                    // The stamp's inside, 6px in from its rotated border.
+                    stamp: { x: right - px(s.width) + scrollX + 6, y: top + scrollY + 6, width: px(s.width) - 12, height: px(s.height) - 12 },
+                };
+            });
+            const off = "[data-theme='sepia'] .kp-card[data-kp-label]::after { background: none !important; }";
+            expect(await washPixels(page, off, box.card), 'the wash paints within the card').toBeGreaterThan(0);
+            expect(await washPixels(page, off, box.stamp), "and none of it over the stamp's word").toBe(0);
+        });
+
+        test("the drop cap's ink wash paints behind the drop cap, not at the page corner [scope-100]", async ({ page }) => {
+            await open(page, url);
+            await settled(page);
+            const lede = await page
+                .locator('.kp-lede')
+                .first()
+                .evaluate((el) => {
+                    const r = el.getBoundingClientRect();
+                    return { x: Math.max(0, r.left + scrollX - 8), y: Math.max(0, r.top + scrollY - 8), width: 90, height: 90 };
+                });
+            const off = "[data-theme='sepia'] .kp-lede::before { background: none !important; }";
+            expect(await washPixels(page, off, lede), 'the wash paints at the drop cap').toBeGreaterThan(0);
+            expect(await washPixels(page, off, { x: 0, y: 0, width: 80, height: 80 }), 'and nothing at the page corner').toBe(0);
+        });
+
+        test('the dropdown closes with its fade, as it opens [scope-100]', async ({ page, browserName }) => {
+            await open(page, url);
+            await expectMenuDisplayTransition(page);
+            // Firefox closes every theme's dropdown at once (measured
+            // 2026-09-16, the package's own formal included), so the
+            // frames are read in chromium only.
+            if (browserName !== 'chromium') return;
+            const closing = await measureMenuClose(page);
+            expect(closing.lastShownMs, `still fading 100ms after closing (seen ${closing.opacities.join(' ')})`).toBeGreaterThanOrEqual(100);
+            expect(closing.opacities.length, 'through more than one opacity').toBeGreaterThan(1);
+        });
+
+        test("a footer link's hover eases its ink, the drawn underline with it [scope-100]", async ({ page }) => {
+            await open(page, url);
+            const link = page.locator('.kp-footer a').first();
+            await link.scrollIntoViewIfNeeded();
+            await settled(page);
+            await link.hover();
+            const running = await link.evaluate((el) =>
+                el
+                    .getAnimations()
+                    .map((a) => /** @type {CSSTransition} */ (a).transitionProperty)
+                    .filter(Boolean),
+            );
+            expect(running, 'a colour transition runs on hover').toContain('color');
         });
 
         test('the wipe confirmation is a real dialog, Cancel focused by default, never Wipe [DI10]', async ({ page }) => {

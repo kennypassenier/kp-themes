@@ -614,8 +614,9 @@ var TIMINGS = Object.freeze({
   // out of the same blur once on load, and the confirmation dialog's
   // native open/close — the last two shared with academia's, which mounts
   // its dialog the same way.
+  // One keyframe for both grains since scope-100 (the two were identical):
+  // the words at 600ms, the hero button and dossier card at 500ms.
   "kp-focus": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-focus-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
   // The nostromo register [S48, LIFT_PLAN row 19]: the headline and the
@@ -716,7 +717,7 @@ var TIMINGS = Object.freeze({
   "kp-mark-sweep": { durationMs: 420, cycles: 1, property: "color", luminanceSteps: [0, 1] },
   // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
   // resolve, a monotone blur+brightness sweep, once, on the whole,
-  // unsplit line (`kp-sharpen-in` — not `kp-focus-in`/`focus`, which the
+  // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
   // dark and shade-dark registers already own for their own, different
   // mechanics). The confirmation dialog's one-shot open reuses the
   // `kp-dialog-in` row above, which academia, nostromo and shade-dark

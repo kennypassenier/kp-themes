@@ -18,9 +18,14 @@ photograph, but paper, ink, and the warmth both acquire.
 
 ## What is load-bearing
 
-1. **No cool hues in the body.** Everything in the reading surface sits
-   between 24° and 45°. The moment a blue-grey appears, the page stops
-   feeling like paper and starts feeling like a document viewer.
+1. **No cool hues in the body.** The reading surface — ground, ink,
+   cards, borders, the primary and the accent — sits between 24° and
+   45°. The moment a blue-grey appears, the page stops feeling like paper
+   and starts feeling like a document viewer. What leaves that band does
+   so to be told apart, never to decorate: the status colours
+   (destructive at 6°, success at 90°–95°, the info toast at 200°–205°,
+   the interview status at 280°–285°) and three chart series (chart-2 at
+   95°, chart-3 at 200°, chart-4 at 340°).
 2. **Ink, not black.** `--foreground` is `hsl(28, 45%, 16%)`. True black
    on warm paper reads as a hole punched in the page.
 3. **A serif for display.** The only theme besides terminal that changes
@@ -91,12 +96,15 @@ the research:
   a page arriving; it ships no full-page overlay at all (`themes/hooks.json`
   answers the hook `quiet` with this reason).
 
-Every hover on a footer link is the demo's hand-drawn underline,
-approximated as a background-size transition (X1 finding below); the
+A footer link's underline, the demo's hand-drawn one approximated as a
+1px background rule (X1 finding below), stands drawn at rest; a hover
+eases the link's ink from sienna to the text colour, the underline with
+it, over the register's own 450ms hand-drawn easing (scope-100); the
 navbar's dropdown (KT14) is a quiet card popover, sienna ink on hover;
 every button is a plain plate with no bevel, the theme's own 0.375rem
 radius; the confirmation dialog is a real `<dialog>` (Kenny, 2026-09-08),
-its backdrop fading once through the demo's own `@keyframes confirm-in`.
+its backdrop fading once through `@keyframes kp-confirm-in`, the demo's
+own `confirm-in` under the package's prefix.
 One answer per component root (56 of 64, the eight helpers excused).
 
 ## X1 — findings: what the demo showed and the package now renders exactly (S49)
@@ -127,10 +135,13 @@ implementation matches the demo everywhere else.
   alone. The rule is rebuilt as a flat line grown by `transform: scaleX()`
   on the existing `[data-kp-reveal='rule']::after` pseudo-element (the
   same technique retro's groove and phantom's rail already use for their
-  own rule reveals); the footer's link underlines are rebuilt as a
-  `background-size` transition. Both keep the demo's motion — nothing
-  drawn until it is meant to be, one growth, once — and lose only the
-  literal hand-drawn wobble of the curve itself.
+  own rule reveals); the footer's link underlines are rebuilt as a 1px
+  background rule that stands drawn and takes the link's ink. The rule
+  keeps the demo's motion — nothing drawn until it is meant to be, one
+  growth, once — and loses only the literal hand-drawn wobble of the
+  curve; the footer underline keeps no growth of its own (it was a
+  `background-size` transition between two equal sizes, which animated
+  nothing, and since scope-100 the hover eases the colour instead).
 - **The double-rule divider has no child elements to draw with.** The
   demo's divider is a `<div>` holding two `<i>` lines; the shared concept
   page emits one bare `[data-kp-divider]` element for every theme (S46,
@@ -233,9 +244,10 @@ No texture — refused wholesale rather than dialled to a ceiling (X1).
 
 ## What this theme may not do
 
-- **No cool accent.** Not for links, not for focus, not for charts one to
-  five. Two of the charts are green and blue-ish by necessity, and both
-  are pulled towards the warm end far enough to belong.
+- **No cool accent.** Not for links, not for focus. The charts are the
+  exception a series needs: chart-2 is a muted green (95°), chart-3 a
+  plain dark blue (200°) and chart-4 a dusky rose (340°), each held to
+  a low saturation (35%–40%) so it sits on the paper without shouting.
 - **No aged-paper texture, no page-wide grain.** The obvious flourish,
   and the wrong one: a mottled background reduces text contrast for
   exactly the reader this theme is for (X1).
