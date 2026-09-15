@@ -16,6 +16,7 @@
 
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
+import { useRegister } from './helpers/empty-register.mjs';
 
 const FRAME = '/catalogue/frame/intro.html';
 
@@ -133,5 +134,72 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
         await expect(line).toHaveText(/^No intro: formal, /);
         await expect(line).not.toContainText('Declares an intro but has no block');
         for (const theme of ['synthwave', 'terminal', 'retro', 'phantom']) await expect(line).not.toContainText(theme);
+    });
+});
+
+// Het thema van de intro [scope-86, intro-verdict-theme]: a block on the intro
+// page is judged in the theme its window plays, whatever theme the page
+// around it wears. The block declares it (`data-cat-theme`), and the verdict,
+// the label by the buttons, the note and the prompt's verdict line all follow
+// that declaration; a block without one keeps the page theme.
+//
+// Red first, 2026-09-15, firefox, on 77f4b2fd: approving #intro-synthwave in
+// formal stored the verdict under formal and the label read "Formal".
+test.describe('the verdict of an intro block is kept under its own theme [scope-86]', { tag: ['@component:catalogue'] }, () => {
+    const JUDGEMENTS = 'kp-catalogue-judgements:v3';
+    const ENGINE_LABEL = { firefox: 'Firefox', chromium: 'Chromium', webkit: 'WebKit' };
+
+    test.beforeEach(async ({ context }) => {
+        await useRegister(context);
+    });
+
+    /** @param {import('@playwright/test').Page} page @param {string} theme */
+    const setTheme = (page, theme) => page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
+
+    /** @param {import('@playwright/test').Page} page @param {string} key */
+    const storedThemes = (page, key) =>
+        page.evaluate(([store, block]) => Object.keys(JSON.parse(localStorage.getItem(store) ?? '{}')[block] ?? {}), [JUDGEMENTS, key]);
+
+    test(
+        'approving the synthwave intro while the page wears formal records it under synthwave',
+        { tag: ['@theme:synthwave'] },
+        async ({ page, browserName }) => {
+            const engine = ENGINE_LABEL[browserName];
+            await page.goto('/catalogue/intros.html');
+            await waitForJudging(page);
+            expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('formal');
+            const block = page.locator('#intro-synthwave');
+            const state = block.locator('.cat-judge [data-cat-approval-state]');
+            await expect(state).toHaveText(`Not yet judged · Synthwave · ${engine}`);
+            await expect(block.locator('.cat-judge label')).toHaveText('Note for Synthwave');
+
+            await block.locator('.cat-judge [data-cat-verdict="approved"]').click();
+            await expect(state).toHaveText(`Approved · Synthwave · ${engine}`);
+            expect(await storedThemes(page, 'catalogue/intros.html#intro-synthwave')).toEqual(['synthwave']);
+            // The other blocks keep their own themes and are still open.
+            await expect(page.locator('#intro-terminal .cat-judge [data-cat-approval-state]')).toHaveText(`Not yet judged · Terminal · ${engine}`);
+
+            const prompt = await page.evaluate(() => import('/catalogue/review-state.js').then((m) => m.buildPrompt().text));
+            expect(prompt).toContain('Theme Synthwave:');
+            expect(prompt).toMatch(new RegExp(`catalogue/intros\\.html#intro-synthwave · synthwave · ${browserName} · approved · \\w+`));
+            expect(prompt).not.toContain('· formal ·');
+
+            // Another page theme: the block is still judged, in its own theme, with the same hash.
+            for (const theme of ['nostromo', 'cyberpunk']) {
+                await setTheme(page, theme);
+                await waitForJudging(page);
+                await expect(state, `page in ${theme}`).toHaveText(`Approved · Synthwave · ${engine}`);
+            }
+        },
+    );
+
+    test('a block that declares no theme is still judged in the page theme', { tag: ['@component:button'] }, async ({ page, browserName }) => {
+        await page.goto('/catalogue/button.html');
+        await waitForJudging(page);
+        const block = page.locator('#variants');
+        await block.locator('.cat-judge [data-cat-verdict="approved"]').click();
+        expect(await storedThemes(page, 'button--variants')).toEqual(['formal']);
+        await block.evaluate((el) => el.removeAttribute('hidden'));
+        await expect(block.locator('.cat-judge [data-cat-approval-state]')).toHaveText(`Approved · Formal · ${ENGINE_LABEL[browserName]}`);
     });
 });

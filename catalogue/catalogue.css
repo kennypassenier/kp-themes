@@ -130,6 +130,14 @@
         display: block;
     }
 
+    /* A block judged in a theme of its own (`data-cat-theme`, judging.js puts
+       it on the stage as `data-theme`) inherits nothing from the page theme:
+       what the body would pass down, it takes from its own [scope-86]. */
+    .cat-stage[data-theme] {
+        color: var(--foreground);
+        font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+    }
+
     .cat-stage--tight {
         gap: 0.5rem;
     }

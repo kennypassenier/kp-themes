@@ -8120,6 +8120,7 @@ var TIMINGS = Object.freeze({
 });
 var started = /* @__PURE__ */ new WeakSet();
 var carets = /* @__PURE__ */ new WeakSet();
+var arrivalsOnScreen = /* @__PURE__ */ new WeakMap();
 var unknownReported = /* @__PURE__ */ new Set();
 function unknownEffects() {
   return [...unknownReported];
@@ -8217,7 +8218,7 @@ function attachEffects(root = document, options = {}) {
       el.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
     }
   };
-  const headline = (el) => {
+  const headline = (el, atRest = false) => {
     const text = el.textContent ?? "";
     el.setAttribute(TEXT_ATTRIBUTE, text);
     if (!el.hasAttribute("aria-label")) el.setAttribute("aria-label", text);
@@ -8228,7 +8229,7 @@ function attachEffects(root = document, options = {}) {
       el.classList.add(STATE.deciphered);
       announce(el, "headline", routine, skipped);
     };
-    if (routine === "" || reduced() || seen(el, "headline")) {
+    if (atRest || routine === "" || reduced() || seen(el, "headline")) {
       rest(true);
       return;
     }
@@ -8762,8 +8763,25 @@ function attachEffects(root = document, options = {}) {
     const reveal = el.getAttribute(HOOKS.reveal);
     if (reveal === null || !REVEALS.includes(reveal)) return;
     started.add(el);
-    if (reveal === "headline") headline(el);
-    else if (reveal === "emphasis") emphasis(el);
+    if (reveal === "headline") {
+      const held = arrivalsOnScreen.get(doc);
+      if (!held) {
+        headline(el);
+        return;
+      }
+      pending++;
+      let waiting = true;
+      const go = () => {
+        if (!waiting) return;
+        waiting = false;
+        held.delete(go);
+        pending--;
+        if (detached) headline(el, true);
+        else headline(el);
+      };
+      held.add(go);
+      finishers.push(go);
+    } else if (reveal === "emphasis") emphasis(el);
     else rule(el);
   };
   const countUp = (el) => {
@@ -8860,6 +8878,11 @@ function attachEffects(root = document, options = {}) {
     done();
   };
   if (query) query.addEventListener("change", onPreference);
+  const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
+  const arrivalRoutine = arrivalAsked === "" || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
+  const arrivalPerformed = (arrivalRoutine === "boot" || arrivalRoutine === "card") && Boolean(doc.body);
+  const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, "arrival");
+  if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, /* @__PURE__ */ new Set());
   scan(root);
   const caret = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
@@ -9001,14 +9024,18 @@ function attachEffects(root = document, options = {}) {
   };
   marquee();
   const arrival = () => {
-    const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
-    const routine = asked === "" || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
-    if (routine !== "boot" && routine !== "card" || !doc.body) return;
+    const routine = arrivalRoutine;
+    if (!arrivalPerformed || !doc.body) return;
     const card = routine === "card";
-    if (reduced() || seen(html, "arrival")) {
+    if (!arrivalPlays) {
       announce(html, "arrival", routine, true);
       return;
     }
+    const release = () => {
+      const held = arrivalsOnScreen.get(doc);
+      arrivalsOnScreen.delete(doc);
+      if (held) for (const go of [...held]) go();
+    };
     const words = getStrings();
     const theme = html.getAttribute("data-theme") ?? "";
     const own = words.arrivalWordsByTheme?.[theme] ?? {};
@@ -9046,10 +9073,14 @@ function attachEffects(root = document, options = {}) {
     pending++;
     let ended = false;
     let pct = 0;
+    let removed = false;
     const remove = () => {
+      if (removed) return;
+      removed = true;
       overlay.remove();
       announce(html, "arrival", routine, false);
       pending--;
+      release();
       done();
     };
     const end = () => {
@@ -9089,7 +9120,10 @@ function attachEffects(root = document, options = {}) {
     skip.addEventListener("click", end);
     if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== "skip-only") overlay.addEventListener("click", end);
     finishers.push(end);
-    cleanups.push(() => overlay.remove());
+    cleanups.push(() => {
+      overlay.remove();
+      if (!removed) release();
+    });
     if (card) {
       line.textContent = theme;
       paced(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);

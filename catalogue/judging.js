@@ -60,6 +60,20 @@ const notesReady = (async () => {
 /** The review note of a block in a theme, if Claude left one. */
 const reviewNoteOf = (key, theme) => reviewNotes[key]?.[theme] ?? null;
 
+/* ------------------------------------------------------------ block theme */
+
+// A block is judged in the theme on screen, unless it declares a theme of its
+// own with `data-cat-theme="<name>"` on its root (scope-86, Kenny 2026-09-15:
+// "Het thema van de intro"). An intro block on catalogue/intros.html plays one
+// theme's arrival in a window of its own, whatever the page wears, so its
+// verdict, its note, its review note, its label and its prompt line belong to
+// that theme. Only the block root is read: `data-cat-theme` on <html> is a
+// page that opens in one theme (catalogue.js), and its blocks still follow the
+// menu.
+
+/** The theme a block is judged in: its own declaration, or the page's. */
+export const blockTheme = (root) => root.getAttribute('data-cat-theme') || currentTheme();
+
 const STATES = {
     new: { glyph: '○', words: 'Not yet judged', tone: '' },
     approved: { glyph: '✓', words: 'Approved', tone: ' kp-badge--success' },
@@ -114,6 +128,14 @@ function panelFor(entry) {
  *   given one, a judged block leaves the page until the toggle brings it back.
  */
 export function mountJudging({ entries, toolbar = null, onRender }) {
+    // A block with a theme of its own is read in it: its stages wear that
+    // theme, so the hash is the same whatever the page around it wears.
+    for (const entry of entries) {
+        const own = entry.root.getAttribute('data-cat-theme');
+        if (!own) continue;
+        const stages = entry.root.matches('.cat-stage') ? [entry.root] : [...entry.root.querySelectorAll('.cat-stage')];
+        for (const stage of stages) stage.setAttribute('data-theme', own);
+    }
     const titles = {};
     for (const entry of entries) (titles[entry.notePage] ??= {})[entry.noteBlock] = entry.title;
     for (const [page, map] of Object.entries(titles)) rememberTitles(page, map);
@@ -166,17 +188,19 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     let last = null; // { key, theme, previous, title } for Undo
 
     function render() {
-        const theme = currentTheme();
-        const label = `${themeLabel(theme)} · ${engineLabel(ENGINE)}`;
+        const label = `${themeLabel(currentTheme())} · ${engineLabel(ENGINE)}`;
         const all = loadJudgements();
         let open = 0;
         for (const item of items) {
+            const theme = blockTheme(item.entry.root);
+            // What the prompt reads to tell a stale verdict (review-state.js).
+            item.panel.dataset.catJudgedTheme = theme;
             const hash = current.get(item.entry.key);
             const state = stateOf(item.entry.key, theme, hash, ENGINE, all);
             const shown = hash ? STATES[state] : STATES.checking;
             item.badge.className = `kp-badge cat-judge__badge${shown.tone}`;
             item.glyph.textContent = shown.glyph;
-            item.state.textContent = `${shown.words} · ${label}`;
+            item.state.textContent = `${shown.words} · ${themeLabel(theme)} · ${engineLabel(ENGINE)}`;
             // Where the verdict comes from: kept in the repository, or only in this browser so far.
             const verdict = verdictOf(item.entry.key, theme, ENGINE, all);
             item.source.textContent = verdict ? (verdict.recorded ? 'In the register' : 'In this browser, not yet recorded') : '';
@@ -214,8 +238,8 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
     }
 
     function renderNotes() {
-        const theme = currentTheme();
         for (const item of items) {
+            const theme = blockTheme(item.entry.root);
             item.label.textContent = `Note for ${themeLabel(theme)}`;
             // The one being typed in keeps its text; another document's write
             // to the same note must not move the caret.
@@ -271,7 +295,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
 
     for (const item of items) {
         item.area.addEventListener('input', () => {
-            const ok = setNote(item.entry.notePage, item.entry.noteBlock, currentTheme(), item.area.value);
+            const ok = setNote(item.entry.notePage, item.entry.noteBlock, blockTheme(item.entry.root), item.area.value);
             item.saved.textContent = '';
             clearTimeout(item.timer);
             if (!ok) {
@@ -288,7 +312,7 @@ export function mountJudging({ entries, toolbar = null, onRender }) {
             button.addEventListener('click', () => {
                 const hash = current.get(item.entry.key);
                 if (!hash) return;
-                const theme = currentTheme();
+                const theme = blockTheme(item.entry.root);
                 const verdict = button.getAttribute('data-cat-verdict');
                 const previous = storeVerdict(item.entry.key, theme, verdict, hash);
                 // An approval answers the reviewer's note in this theme, so the

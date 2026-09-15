@@ -1390,6 +1390,12 @@ arrival plays is `--kp-arrival-rate` on the root: every wait is divided
 by it and the overlay's animations play at it, so `0.5` takes twice as
 long; unset, it is 1.
 
+The headline reveal waits for the arrival [scope-86]: while the overlay is
+on screen a `data-kp-reveal="headline"` is held, and its routine starts the
+moment the overlay is removed — at its own end, on Skip, on a click, or on
+`detach()`. Without an arrival (a theme that declares none, seen this
+session, reduced motion) the headline starts at once, as before.
+
 ## The side navigation [feat-nav-3]
 
 A navigation that stands beside the content instead of above it: three

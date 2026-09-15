@@ -34,7 +34,10 @@ form item verdict-ledger). A verdict belongs to a block, a theme and a
 browser engine — `firefox` for Gecko (Firefox, FireDragon), `chromium` for
 Blink (Chrome, Chromium, Edge) — which the page detects on its own; a block
 approved in FireDragon is still to be judged in Chrome. Each entry keeps the
-block's hash, the commit it was recorded on and the date.
+block's hash, the commit it was recorded on and the date. The theme is the
+page's, unless the block declares its own with `data-cat-theme="<name>"`: an
+intro block on `catalogue/intros.html` is judged, labelled and recorded in the
+theme its window plays, whatever the page wears [scope-86].
 
 1. Kenny judges on the review site or a local server. Every Approve and Not
    approved is kept in that browser first, and the panel says so ("In this

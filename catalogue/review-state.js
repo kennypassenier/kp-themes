@@ -210,7 +210,12 @@ export function promptItems() {
         for (const [theme, engines] of Object.entries(themes)) {
             for (const [engine, entry] of Object.entries(engines ?? {})) {
                 const { verdict, hash, v } = entry;
-                if (engine === ENGINE && panel?.getAttribute('data-cat-state') === 'changed' && theme === currentTheme()) continue;
+                if (
+                    engine === ENGINE &&
+                    panel?.getAttribute('data-cat-state') === 'changed' &&
+                    theme === (panel.getAttribute('data-cat-judged-theme') || currentTheme())
+                )
+                    continue;
                 // Already kept in the register, or overruled by it: nothing to pass on.
                 if (verdictOf(key, theme, engine, stored)?.source !== 'browser') continue;
                 items.push({

@@ -130,7 +130,7 @@
                 ".github/workflows/pages.yml"
             ],
             "hash": "51bad6f2f919d02375eb109d2eb99029b6b6e6880cb600459351abd77697c06a",
-            "doc": "a62ffa5be5fb70a5f0bba0dab5212425bff3f3209aaee4f9f6a0f05e7daf53a3",
+            "doc": "b4a0ada9fe02dcd05a51dd30f62901df5e678fa4d8833a4601a9ecaeb4215fe3",
             "files": {
                 ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
@@ -289,7 +289,7 @@
                 "themes/hooks.json"
             ],
             "hash": "8ac8457d5a35027f68ad0981b15b55aab46de023e0e0e67fe7773468328e9742",
-            "doc": "d44e79d73348ade03dc474a06a5c3bb12fdf035e273b22e5ada32f26eb0edcb6",
+            "doc": "53193f214083fb671ac1a092224a506cbd0737ff6f00e72e843e225dd8f1817e",
             "files": {
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",

@@ -500,6 +500,16 @@ export const TIMINGS = Object.freeze({
 const started = new WeakSet();
 /** Fields whose caret listeners are already bound, so a second attach adds none [G16]. */
 const carets = new WeakSet();
+/**
+ * The documents whose arrival overlay is on screen, each with the headline
+ * reveals held until it has gone [scope-86]. Kept per document rather than
+ * per attach: a second attach on the same page (js/auto.js over React, the
+ * `DecipherText` wrapper) sees the arrival as already seen, but its
+ * headline must still wait for the overlay the first attach put up.
+ *
+ * @type {WeakMap<Document, Set<() => void>>}
+ */
+const arrivalsOnScreen = new WeakMap();
 
 /** The unknown hook values reported on this page, `hook=value`, for the diagnostics [AR44]. */
 const unknownReported = new Set();
@@ -667,8 +677,8 @@ export function attachEffects(root = document, options = {}) {
     };
 
     // ── The headline: decipher, then one slice burst [TH119] ───────────
-    /** @param {Element} el */
-    const headline = (el) => {
+    /** @param {Element} el @param {boolean} [atRest] straight to rest, as a detach does for a reveal it never started */
+    const headline = (el, atRest = false) => {
         const text = el.textContent ?? '';
         el.setAttribute(TEXT_ATTRIBUTE, text);
         if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);
@@ -685,7 +695,7 @@ export function attachEffects(root = document, options = {}) {
             el.classList.add(STATE.deciphered);
             announce(el, 'headline', routine, skipped);
         };
-        if (routine === '' || reduced() || seen(el, 'headline')) {
+        if (atRest || routine === '' || reduced() || seen(el, 'headline')) {
             rest(true);
             return;
         }
@@ -1320,8 +1330,32 @@ export function attachEffects(root = document, options = {}) {
         const reveal = el.getAttribute(HOOKS.reveal);
         if (reveal === null || !REVEALS.includes(reveal)) return;
         started.add(el);
-        if (reveal === 'headline') headline(el);
-        else if (reveal === 'emphasis') emphasis(el);
+        if (reveal === 'headline') {
+            // The headline waits for the arrival [scope-86]: started under
+            // the overlay it was over before the overlay went, so a first
+            // visit never saw it. It starts when the overlay is removed,
+            // whether the arrival ran its course, was skipped or clicked
+            // away; with no arrival on screen it starts now, as before.
+            const held = arrivalsOnScreen.get(doc);
+            if (!held) {
+                headline(el);
+                return;
+            }
+            pending++;
+            let waiting = true;
+            const go = () => {
+                if (!waiting) return;
+                waiting = false;
+                held.delete(go);
+                pending--;
+                // Detached while held: the text was never touched, so the
+                // element only needs its rest record.
+                if (detached) headline(el, true);
+                else headline(el);
+            };
+            held.add(go);
+            finishers.push(go);
+        } else if (reveal === 'emphasis') emphasis(el);
         else rule(el);
     };
 
@@ -1472,6 +1506,16 @@ export function attachEffects(root = document, options = {}) {
     // listeners the routines made, and it must not unsubscribe itself
     // while doing so. detach() drops it explicitly [G8].
     if (query) query.addEventListener('change', onPreference);
+
+    // Whether this attach puts up the arrival, decided before the scan so
+    // the headline the scan finds already knows to wait for it [scope-86].
+    // The arrival itself is built at the end of attach, as before.
+    const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
+    const arrivalRoutine =
+        arrivalAsked === '' || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
+    const arrivalPerformed = (arrivalRoutine === 'boot' || arrivalRoutine === 'card') && Boolean(doc.body);
+    const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, 'arrival');
+    if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, new Set());
 
     scan(root);
 
@@ -1679,14 +1723,21 @@ export function attachEffects(root = document, options = {}) {
     // neutral ones, and `--kp-arrival-rate` scales the whole sequence
     // [scope-84].
     const arrival = () => {
-        const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
-        const routine = asked === '' || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
-        if ((routine !== 'boot' && routine !== 'card') || !doc.body) return;
+        const routine = arrivalRoutine;
+        if (!arrivalPerformed || !doc.body) return;
         const card = routine === 'card';
-        if (reduced() || seen(html, 'arrival')) {
+        if (!arrivalPlays) {
             announce(html, 'arrival', routine, true);
             return;
         }
+        // The headlines held for this overlay start once it has gone
+        // [scope-86]: on its own end, on Skip, on a click, and when a
+        // detach takes it down.
+        const release = () => {
+            const held = arrivalsOnScreen.get(doc);
+            arrivalsOnScreen.delete(doc);
+            if (held) for (const go of [...held]) go();
+        };
         const words = getStrings();
         const theme = html.getAttribute('data-theme') ?? '';
         // The words of this theme's own world [scope-84]: a theme with an
@@ -1732,10 +1783,14 @@ export function attachEffects(root = document, options = {}) {
         pending++;
         let ended = false;
         let pct = 0;
+        let removed = false;
         const remove = () => {
+            if (removed) return;
+            removed = true;
             overlay.remove();
             announce(html, 'arrival', routine, false);
             pending--;
+            release();
             done();
         };
         const end = () => {
@@ -1790,7 +1845,10 @@ export function attachEffects(root = document, options = {}) {
         // skip-only`.
         if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== 'skip-only') overlay.addEventListener('click', end);
         finishers.push(end);
-        cleanups.push(() => overlay.remove());
+        cleanups.push(() => {
+            overlay.remove();
+            if (!removed) release();
+        });
         if (card) {
             line.textContent = theme;
             paced(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
