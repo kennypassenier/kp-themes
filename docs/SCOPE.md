@@ -1663,3 +1663,22 @@ what the theme stands for, its mannerisms and its colours, and the flicker
 stays only where it belongs. alarm-button "Per register, zoals nu".
 dialog-scroll-reset "Bovenaan openen": a dialog's body opens at the top every
 time. fix-36 "Klopt". step-timing "Akkoord".
+
+**scope-97 · A portrait per theme, and a recipe new components follow.** Kenny,
+2026-09-15, asking whether the essence of each theme — what makes it unique, its
+mannerisms, colours and motion — can be shown on a page of its own, so new
+components find their place in every theme more easily. portrait-shape
+"Catalogus, en de site linkt ernaar": a live page per theme in the catalogue,
+built on the real stylesheets and registers; the site's theme page links to it.
+portrait-content, all nine sections in this order: idea, colour in its role,
+type, shape, surfaces, motion (enter, leave, press, hover, load, ask for
+attention, and what reduced motion keeps), ornaments, voice, and a recipe for a
+new component. portrait-data "Databestand, poort als advies":
+`themes/<theme>/signature.json` feeds the page, and `npm run advice` reports a
+component without an answer to a recipe verb, without refusing. portrait-pilot
+"Eerst cyberpunk, formal en pastel": three portraits first, as research to look
+at; the other nineteen follow once Kenny has judged the form. portrait-review
+"Per sectie, zoals blokken": each section is a hashed block with its own
+verdict. alarm-order "Stoppen tot de portretten er zijn": the per-theme alarm
+redesign of scope-96 is stopped and is rebuilt from the approved portraits.
+step-timing "Akkoord".
