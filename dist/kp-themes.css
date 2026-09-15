@@ -37145,6 +37145,18 @@
     }
 }
 
+/* How far the ink has spread from the press point, 0 at rest and 1 at its
+   full size [scope-25, built at scope-101]. Registered, and at the file's
+   top level because @property is not allowed inside a cascade layer: a
+   gradient cannot be transitioned, but a number the gradient reads can, and
+   an unregistered custom property jumps to its end value instead of passing
+   through the ones between. */
+@property --kp-ink-spread {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/sepia-register.css
    The sepia register, 5.0.0 [S48, LIFT_PLAN row 9]: aged paper and warm
@@ -37218,6 +37230,17 @@
         --kp-rule-duration: 760ms;
         --kp-redact-duration: 600ms;
         --kp-underline-duration: 450ms;
+        /* The ink on a press [scope-25, scope-101]: in quickly, out slowly.
+           A click is shorter than the spread, so the stain is still there
+           after the finger leaves and sinks back into the paper over the
+           settle. The demo's own two durations. */
+        --kp-ink-spread-duration: 240ms;
+        --kp-ink-settle-duration: 900ms;
+        /* The knob js/effects.js reads to write the point a press started
+           at into the button [scope-101]. Without the module the two
+           properties keep the defaults below, and the stain grows from the
+           middle of the button — which is also where a key press puts it. */
+        --kp-press: point;
         /* The demo's own easing: a hand-drawn settle, not a mechanical one. */
         --kp-hand: cubic-bezier(0.785, 0.135, 0.15, 0.86);
         /* The reveals this theme performs [S45]: js/effects.js reads these
@@ -37238,6 +37261,17 @@
            texture. A relative colour of --primary, never a colour of its
            own (DI9). */
         --kp-wash: radial-gradient(ellipse at 30% 30%, hsl(from var(--primary) h s l / 0.5), transparent 70%);
+        /* The swelled rule [scope-25, built at scope-101]: one shape, never
+           tiled, stretched to whatever width it is given with
+           preserveAspectRatio='none', so there is no tile edge to split at
+           any device pixel ratio. Its outline is 4 units tall — a hairline
+           of 0.5px at both ends swelling to 3px in the middle — and
+           stretching a path sideways keeps its vertical profile, so the
+           ends stay hairlines at every width. The named mask is declared
+           once here because the divider and the heading rule are the same
+           stroke at two lengths (craigmod's habit, anatomy.md). */
+        --kp-swell: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 4' preserveAspectRatio='none'%3E%3Cpath d='M0 1.75C220 1.75 330 0.5 500 0.5S780 1.75 1000 1.75V2.25C780 2.25 670 3.5 500 3.5S220 2.25 0 2.25Z'/%3E%3C/svg%3E")
+            0 0 / 100% 100% no-repeat;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -37318,14 +37352,21 @@
        to its full width, the demo's own easing — with a scaled
        pseudo-element instead (an X1 finding, recorded in anatomy.md:
        "not reproducible without markup"). Without the script the rule
-       stands drawn. */
+       stands drawn.
+
+       Since scope-101 it is a swelled rule [scope-25, "the rule that is
+       thickest in the middle"]: the same 6rem line, the same scaleX
+       reveal, drawn through the shape below instead of as a flat bar. It
+       grows from 2px to 4px tall, so the text under a heading sits 2px
+       lower at rest — a cost Kenny accepted with the gesture. */
     [data-theme='sepia'] [data-kp-reveal='rule']::after {
         content: '';
         display: block;
         inline-size: 6rem;
-        block-size: 2px;
+        block-size: 4px;
         margin-block-start: 0.65rem;
-        background: var(--border-strong);
+        background: var(--primary);
+        mask: var(--kp-swell);
         transform: scaleX(1);
         transform-origin: left center;
     }
@@ -37334,21 +37375,33 @@
         transform: scaleX(0);
     }
 
-    /* The divider: a double warm-brown rule, sepia's answer to the razor
-       tear — Public Domain Review's device, kept inside this theme's own
-       24°–45° family rather than PDR's literal gold (anatomy.md). The
-       concept page's divider is one bare element for every theme (S46),
-       so both lines are painted as layered backgrounds on it rather than
-       child elements. The `alt` variant carries a small diamond at the
-       centre, drawn in a pseudo-element — the theme's second-tear
-       flourish, still the same two lines underneath. */
+    /* The divider: one stroke of sienna ink that swells to 3px in the
+       middle and tapers to a hairline at both ends, the way a printer's
+       swelled rule closes a section [scope-25, built at scope-101]. It
+       replaces the double warm-brown rule this register carried until
+       then (Public Domain Review's device, two 1px lines at 32% and 68%
+       painted as layered backgrounds): Kenny's own sentence for this
+       theme is "the rule that is thickest in the middle", and one
+       tapered stroke reads as print where two even lines read as a form.
+       The concept page's divider is one bare element for every theme
+       (S46), so the stroke is a pseudo-element on it rather than a child.
+       The `alt` variant keeps its small diamond at the centre — the
+       theme's second-tear flourish, now sitting on the thickest part. */
     [data-theme='sepia'] [data-kp-divider] {
         position: relative;
         display: block;
         block-size: 1rem;
-        background:
-            linear-gradient(var(--border-strong), var(--border-strong)) 0 32% / 100% 1px no-repeat,
-            linear-gradient(var(--border-strong), var(--border-strong)) 0 68% / 100% 1px no-repeat;
+        background: none;
+    }
+
+    [data-theme='sepia'] [data-kp-divider]::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 2px);
+        block-size: 4px;
+        background: var(--primary);
+        mask: var(--kp-swell);
     }
 
     [data-theme='sepia'] [data-kp-divider='alt']::after {
@@ -38470,6 +38523,106 @@
     [data-theme='sepia'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── The ink on a press [scope-25, built at scope-101] ──────────────
+       Kenny's sentence for this theme is "the ink spreading into the paper
+       on a press". Pressing a button grows an uneven brown stain from the
+       exact point the pointer went down, over the button's own fill and
+       about 12px out into the paper around it, feathered at its edge where
+       it meets the paper and smooth under the label. It is the only press
+       in the set that leaves a trace you can still see after the finger
+       lifts: the spread is quicker than a click, the settle is not.
+
+       The known cost Kenny accepted with the gesture: the stain reaches
+       12px past the button, so it can touch a neighbour closer than that.
+       The ink is a pseudo-element with a negative inset, so no box changes
+       size and nothing reflows.
+
+       `isolation` makes the button its own stacking context, so the ink
+       (z-index -1) paints over the button's fill and under its label, and
+       the paper outside the button takes it too. The press point is the
+       button's own middle by default — a key press, or no module at all —
+       and js/effects.js writes the pointer's own point over it. */
+    [data-theme='sepia'] .kp-button {
+        isolation: isolate;
+        --kp-press-x: calc(50% - 12px);
+        --kp-press-y: calc(50% - 12px);
+    }
+
+    [data-theme='sepia'] .kp-button::after {
+        --kp-ink-r: calc(var(--kp-ink-spread) * 58px);
+        content: '';
+        position: absolute;
+        inset: -12px;
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 18px;
+        /* Four blots of one ink, offset from the press point by fractions
+           of the radius, so the stain grows unevenly, as ink does along
+           the fibres of a sheet. Every blot is a relative colour of
+           --primary and names none of its own [DI9]. */
+        background:
+            radial-gradient(
+                calc(var(--kp-ink-r) * 1.15) calc(var(--kp-ink-r) * 0.62) at calc(var(--kp-press-x) + 12px) calc(var(--kp-press-y) + 12px),
+                hsl(from var(--primary) h s l / 0.3),
+                hsl(from var(--primary) h s l / 0.16) 55%,
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.62) calc(var(--kp-ink-r) * 0.5) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.55)
+                    calc(var(--kp-press-y) + 12px - var(--kp-ink-r) * 0.16),
+                hsl(from var(--primary) h s l / 0.2),
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.5) calc(var(--kp-ink-r) * 0.4) at calc(var(--kp-press-x) + 12px - var(--kp-ink-r) * 0.62)
+                    calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.2),
+                hsl(from var(--primary) h s l / 0.18),
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.34) calc(var(--kp-ink-r) * 0.3) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.12)
+                    calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.42),
+                hsl(from var(--primary) h s l / 0.16),
+                transparent
+            );
+        /* The fibres: outside the button a fractal-noise mask thins the
+           stain unevenly, so its edge feathers into the paper instead of
+           ending on a clean ellipse. Over the button itself (the content
+           box, 12px in) the mask is solid, so the ground under the label
+           stays smooth — no mottle behind text, which is the one thing
+           this theme refuses outright (anatomy.md: no aged-paper grain). */
+        padding: 12px;
+        mask-image:
+            linear-gradient(currentColor 0 0),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.2 1.4'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23f)'/%3E%3C/svg%3E");
+        mask-clip: content-box, border-box;
+        mask-size:
+            auto,
+            90px 90px;
+        mask-composite: add;
+    }
+
+    [data-theme='sepia'] .kp-button:active:not(:disabled)::after {
+        --kp-ink-spread: 1;
+    }
+
+    /* In quickly, out slowly: a click is shorter than the spread, so the
+       stain is still visible after the finger leaves and settles back into
+       the paper over the next second. Under reduced motion neither
+       transition exists and the stain is simply there, at its full size,
+       for as long as the button is held [DI7]. The settle takes the
+       register's own hand-drawn easing, which is the curve the demo wrote
+       out in full. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] .kp-button::after {
+            transition: --kp-ink-spread var(--kp-ink-settle-duration) var(--kp-hand);
+        }
+
+        [data-theme='sepia'] .kp-button:active:not(:disabled)::after {
+            transition: --kp-ink-spread var(--kp-ink-spread-duration) cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */

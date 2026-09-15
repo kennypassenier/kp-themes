@@ -85,11 +85,15 @@ the research:
   faint, blurred ghost of the ink colour settles to the full colour in
   one shot, the whole line moving together, no per-word stagger. The
   rule under a heading (`draw`) grows from nothing to its full width when
-  it scrolls into view.
-- **Divider.** A double warm-brown rule — Public Domain Review's device,
-  kept inside this theme's own 24°–45° family rather than PDR's literal
-  gold. The `alt` variant carries a small diamond at its centre, the
-  theme's second-tear flourish.
+  it scrolls into view; since scope-101 the shape it grows is the swelled
+  rule of X3 below.
+- **Divider.** One stroke of sienna ink, thickest in the middle and a
+  hairline at both ends (X3). Until scope-101 it was a double warm-brown
+  rule — Public Domain Review's device, kept inside this theme's own
+  24°–45° family rather than PDR's literal gold — and Kenny's own
+  sentence for this theme replaced it. The `alt` variant carries a small
+  diamond at its centre, the theme's second-tear flourish, now sitting on
+  the thickest part of the stroke.
 - **Accent.** No shadow, no offset: the serif face itself, roman for h1
   and italic for h2, is the whole accent (anatomy point 3).
 - **Arrival.** Quiet. The headline's own ink-in is this theme's answer to
@@ -189,6 +193,50 @@ dialog backdrop's fade — has its `TIMINGS` row and was included in
 `npm run report:di5` (`reports/di5.md`, 35 effects, sepia's own entry
 verified against the table).
 
+## X3 — the two gestures of scope-25, built at scope-101
+
+Kenny gave this theme two sentences of its own at `scope-25`
+(2026-09-11) — "the ink spreading into the paper on a press and the rule
+that is thickest in the middle" — and neither was built until
+`scope-101` (2026-09-16). The approved concept demo for both is
+`research/scope25-gestures/demo.html`, blocks 1 and 2, and both are
+implemented exactly as it draws them. `tests/sepia-gestures.spec.mjs`
+holds them.
+
+**The ink on a press.** A `::after` twelve pixels larger than the button
+grows four offset blots of `--primary` from the point the pointer went
+down, feathered by a fractal-noise mask outside the button and solid
+under the label, so the ground behind text stays smooth — this theme
+refuses grain behind words (X1). It spreads in 240ms and settles back
+over 900ms, on a registered `--kp-ink-spread` (a gradient cannot be
+transitioned; a number it reads can), and the `@property` sits at the
+top level of the register because a cascade layer may not hold one. The
+press point comes from `js/effects.js`, which writes `--kp-press-x` and
+`--kp-press-y` onto the button for a theme declaring `--kp-press: point`;
+without the module, and on a key press, the stain grows from the middle
+of the button, which the register declares as its own default.
+
+Two costs Kenny accepted with the gesture, re-measured after the move
+(2026-09-16, firefox, `/examples/concept-sepia.html`): the stain reaches
+**11px past the button's border edge** (12px past its padding box, the
+demo's own figure), so a neighbour closer than that is touched — in the
+concept page's own hero row the buttons stand 20.8px apart and the stain
+stops 9.8px short. Contrast under a held press is unchanged from the
+demo: **9.52 primary, 7.41 plain, 7.79 ghost**, read from the worst pixel
+of each label's ground.
+
+**The swelled rule.** One shape (`--kp-swell`), never tiled, stretched to
+whatever width it is given with `preserveAspectRatio='none'`: 0.5px at
+both ends, 3px in the middle. Stretching a path sideways keeps its
+vertical profile, so the ends stay hairlines at every width and there is
+no tile edge to split at any device pixel ratio. It draws both the
+section divider and the rule under a heading, and it keeps the register's
+own scaleX reveal. Measured at devicePixelRatio 2.222, at 1280px and at
+997px wide, in both: **6.14 device pixels of ink in the middle against
+0.89 at each end, and no seam**. Its cost, also accepted: the heading
+rule grows from 2px to 4px tall, so the paragraph under a heading sits
+**2.00px lower** at rest.
+
 ## Answers to the invariant questions
 
 **DI1 — boundaries at 3:1.** `--border-strong` and `--input` are a mid
@@ -207,7 +255,9 @@ button's own border, never instead of it.
 **DI3 — states you can see.** The pressed state reaches the floor on
 lightness alone; nothing here is near the edge of the colour space. The
 register adds a quiet inset shadow on `:active` and a border-colour step
-on `:hover`, both derived from tokens.
+on `:hover`, both derived from tokens, and since scope-101 the ink of
+X3 spreads from the press point as well — the only press in the set that
+leaves a trace you can still see after the finger lifts.
 
 **DI4 — colour is never the only carrier.** This theme has the hardest
 time of any: warm tints on warm paper converge under a colour deficiency
@@ -235,7 +285,9 @@ register live inside `@media (prefers-reduced-motion: no-preference)`;
 without it, the headline stands in its full colour, the lede marks are
 already settled, the rule stands drawn, the redactions are already
 lifted or covered at rest (never mid-motion), and the dialog opens with
-no fade.
+no fade. The ink of X3 is the same picture without the easing: the stain
+stands at its full size for as long as the button is held, and goes when
+the press does.
 
 **DI9 — theme colour stays in the token layer.** The register names no
 colour: every plate, border, shadow and the ink wash are `var(--token)`

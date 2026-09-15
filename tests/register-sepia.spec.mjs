@@ -229,7 +229,12 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const after = await pseudo(rule, '::after', ['transform', 'background-color']);
             expect(after.transform, 'drawn full width').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-            expect(after['background-color']).toBe(await paint(page, '--border-strong'));
+            // Sienna, not the border brown, since scope-101: the rule is the
+            // swelled stroke of the approved gestures demo, drawn in the ink
+            // this register gives its drop cap. The reveal itself, and this
+            // test's reading of it, are unchanged — only the colour and the
+            // shape are. Its measurements are in tests/sepia-gestures.spec.mjs.
+            expect(after['background-color']).toBe(await paint(page, '--primary'));
         });
 
         test('the dossier: a rotated stamp from data-kp-label, and redactions covered until the file opens, lifting in order [TH120]', async ({

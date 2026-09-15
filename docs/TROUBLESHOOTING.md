@@ -179,6 +179,15 @@ If it does not follow with a mouse on an effects-enabled page, check that
 the root still carries `--kp-pointer: track`: that one declaration arms the
 bus, and `--kp-light: pointer` only says which surfaces it lights.
 
+### In sepia the ink of a press always starts in the middle of the button
+
+That is the theme's own declared default, and it is what you get without
+the module: `js/effects.js` is what writes `--kp-press-x` and
+`--kp-press-y` onto the button a pointer went down on, and only for a
+theme that declares `--kp-press: point`. So either the module is not
+attached on that page (`js/auto.js`, or `attachEffects()`), or it was
+detached, or the register on the page predates scope-101. A key press has
+no point of its own and puts the stain in the middle deliberately.
 ### The boot screen ignores the `arrivalLine` I set
 
 Since scope-84 (2026-09-15) a theme with words of its own reads them

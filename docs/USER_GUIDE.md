@@ -1773,6 +1773,22 @@ multiplies its shadow offsets by `x` and `y`; shade-dark multiplies them by
 faded by `near`. The light goes out on a touch, on Tab, when the pointer
 leaves the window and when the module is detached.
 
+## The press point, for a theme that wants it [scope-101]
+
+A theme that declares `--kp-press: point` has `--kp-press-x` and
+`--kp-press-y` written to the button a press started on, in pixels from
+that button's own top left corner. Sepia asks for it, because its press
+grows a stain of ink and ink spreads from where the nib touched down, not
+from the middle of the plate. CSS knows a button is being pressed; it
+cannot know where.
+
+The theme declares its own default for both, so the gesture is whole
+before a pointer has ever touched it: a key press, a page with no module,
+and a detached module all fall back to that value, and sepia's is the
+middle of the button. Unlike the pointer bus this one stays armed under
+reduced motion — someone asking for less movement is not asking for the
+stain to appear in the wrong place; the register gives them the same
+stain without a transition.
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package

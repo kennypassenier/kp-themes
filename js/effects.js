@@ -291,6 +291,29 @@ export const LIGHT_REACH = 240;
 /** Past this many pixels the light no longer reaches the surface at all. */
 export const LIGHT_FAR = 560;
 
+/**
+ * The knob a theme sets to have the point a press started at written to the
+ * button it started on [scope-25, built at scope-101]: `--kp-press: point`.
+ *
+ * Sepia's approved gesture is the ink spreading into the paper on a press,
+ * and ink spreads from where the nib touched down, not from the middle of
+ * the plate. CSS knows a button is being pressed; it cannot know WHERE, so
+ * something has to write the two numbers down. That is all this does — the
+ * whole gesture is the register's, and this is the coordinate it reads.
+ *
+ * Unlike `POINTER_KNOB` it stays armed under reduced motion: someone asking
+ * for less movement is not asking for the stain to appear in the wrong
+ * place, and the register gives them the same stain with no transition.
+ *
+ * Without the module, on a key press, or after `detach()`, the two
+ * properties are whatever the stylesheet declared — sepia's own default is
+ * the middle of the button, so the gesture is whole before a pointer has
+ * ever touched it [KT6].
+ */
+export const PRESS_KNOB = '--kp-press';
+
+/** The properties `PRESS_KNOB` drives: the press point inside the button's box. */
+export const PRESS = Object.freeze({ x: '--kp-press-x', y: '--kp-press-y' });
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -1822,6 +1845,54 @@ export function attachEffects(root = document, options = {}) {
         });
     };
 
+    // The press point [scope-101]. One delegated listener, one write per
+    // press, and nothing at all unless the theme asked for it.
+    //
+    // It writes to the button rather than to the root, because every button
+    // on the page has a press point of its own and the last one pressed
+    // must keep its stain while the next one grows.
+    const pressBus = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : '';
+        if (routine !== 'point' || !view) return;
+        /** The buttons this bus has written to, so it can take it all back [KT6]. */
+        /** @type {Set<HTMLElement>} */
+        const marked = new Set();
+        /** @param {Event} event */
+        const onDown = (event) => {
+            const pointer = /** @type {PointerEvent} */ (event);
+            const target = event.target;
+            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
+            if (!button) return;
+            const box = button.getBoundingClientRect();
+            button.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
+            button.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
+            marked.add(button);
+        };
+        // A key press has no point: the stylesheet's own default takes over
+        // again, which puts the stain in the middle of the button.
+        /** @param {Event} event */
+        const onKey = (event) => {
+            const key = /** @type {KeyboardEvent} */ (event).key;
+            const target = event.target;
+            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
+            if (!button || (key !== ' ' && key !== 'Enter')) return;
+            button.style.removeProperty(PRESS.x);
+            button.style.removeProperty(PRESS.y);
+            marked.delete(button);
+        };
+        doc.addEventListener('pointerdown', onDown, { passive: true });
+        doc.addEventListener('keydown', onKey);
+        cleanups.push(() => {
+            doc.removeEventListener('pointerdown', onDown);
+            doc.removeEventListener('keydown', onKey);
+            for (const button of marked) {
+                button.style.removeProperty(PRESS.x);
+                button.style.removeProperty(PRESS.y);
+            }
+            marked.clear();
+        });
+    };
+
     const measure = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
         if (routine !== 'live' || !view) return;
@@ -1873,6 +1944,7 @@ export function attachEffects(root = document, options = {}) {
         }
     };
     pointerBus();
+    pressBus();
     measure();
 
     // ── The marquee [M1, M2]: a row that runs ──────────────────────────

@@ -41,7 +41,9 @@ js/alarm.js          the full-screen alarm      │
 js/effects.js        the hooks, the marquee,    │ effect, by design
                      the pointer bus and its    │
                      light, the count           │
-js/sidenav.js        the side navigation        │
+
+                     the pointer and press      │
+                     buses, the count           │js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │
 js/datatable.js      search, paging             │

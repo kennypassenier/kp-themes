@@ -50,6 +50,8 @@ __export(effects_exports, {
   MEMO_PREFIX: () => MEMO_PREFIX,
   POINTER: () => POINTER,
   POINTER_KNOB: () => POINTER_KNOB,
+  PRESS: () => PRESS,
+  PRESS_KNOB: () => PRESS_KNOB,
   REVEALS: () => REVEALS,
   REVEAL_EVENT: () => REVEAL_EVENT,
   REVEAL_STATE: () => REVEAL_STATE,
@@ -542,6 +544,8 @@ var LIGHT = Object.freeze({
 var LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
 var LIGHT_REACH = 240;
 var LIGHT_FAR = 560;
+var PRESS_KNOB = "--kp-press";
+var PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
 var ROOT_ATTRIBUTE = "data-kp-effects";
 var DONE_ATTRIBUTE = "data-kp-effects-done";
 var REVEAL_STATE = "data-kp-reveal-state";
@@ -1680,6 +1684,53 @@ function attachEffects(root = document, options = {}) {
       html.style.removeProperty(POINTER.y);
     });
   };
+  const pressBus = () => {
+    const routine = rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : "";
+    if (routine !== "point" || !view) return;
+    const marked = /* @__PURE__ */ new Set();
+    const onDown = (event) => {
+      const pointer = (
+        /** @type {PointerEvent} */
+        event
+      );
+      const target = event.target;
+      const button = target instanceof Element ? (
+        /** @type {HTMLElement | null} */
+        target.closest(".kp-button")
+      ) : null;
+      if (!button) return;
+      const box = button.getBoundingClientRect();
+      button.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
+      button.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
+      marked.add(button);
+    };
+    const onKey = (event) => {
+      const key = (
+        /** @type {KeyboardEvent} */
+        event.key
+      );
+      const target = event.target;
+      const button = target instanceof Element ? (
+        /** @type {HTMLElement | null} */
+        target.closest(".kp-button")
+      ) : null;
+      if (!button || key !== " " && key !== "Enter") return;
+      button.style.removeProperty(PRESS.x);
+      button.style.removeProperty(PRESS.y);
+      marked.delete(button);
+    };
+    doc.addEventListener("pointerdown", onDown, { passive: true });
+    doc.addEventListener("keydown", onKey);
+    cleanups.push(() => {
+      doc.removeEventListener("pointerdown", onDown);
+      doc.removeEventListener("keydown", onKey);
+      for (const button of marked) {
+        button.style.removeProperty(PRESS.x);
+        button.style.removeProperty(PRESS.y);
+      }
+      marked.clear();
+    });
+  };
   const measure = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
     if (routine !== "live" || !view) return;
@@ -1724,6 +1775,7 @@ function attachEffects(root = document, options = {}) {
     }
   };
   pointerBus();
+  pressBus();
   measure();
   const marquee = () => {
     for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
@@ -10763,6 +10815,8 @@ export {
   PICK_EVENT,
   POINTER,
   POINTER_KNOB,
+  PRESS,
+  PRESS_KNOB,
   REGISTER_ATTRIBUTE,
   REGISTER_ERROR_EVENT,
   REGISTER_LOAD_EVENT,

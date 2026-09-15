@@ -1,5 +1,7 @@
 # The scope-25 gestures beside what ships
 
+**Decided (scope-101): sepia's two gestures built; the pointer light is built in the shade pair.**
+
 Kenny, scope-100 (2026-09-16), "Eerst een demo": the gestures approved at scope-25 were never built, and he wants to see them next to the
 shipped blocks before choosing. No register changes until he does. Demo: [`demo.html`](demo.html) (56396 bytes, `wc -c`), in the catalogue
 under "Research to look at". A firefox check sits beside it: [`verify.spec.mjs`](verify.spec.mjs) with
