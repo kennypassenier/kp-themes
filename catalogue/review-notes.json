@@ -1,78 +1,8 @@
 {
-    "button--sizes": {
-        "terminal": {
-            "rejected": "(rejected with Variants) De cursor moet op gelijke hoogte als de tekst komen",
-            "change": "The cursor now sits on the text line in the small and large sizes too (it was 6.4px high on small).",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
-    "button--states": {
-        "cyberpunk": {
-            "rejected": "(rejected with Variants) de cancel knop heeft de animatie, maar de anderen niet precies?",
-            "change": "The same sweep change as Variants: every state's hover sweep now contrasts with its face instead of blending into it.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        },
-        "terminal": {
-            "rejected": "(rejected with Variants) De cursor moet op gelijke hoogte als de tekst komen, en rood zijn in de destructive button",
-            "change": "The same cursor change: on the text line in every state, red on destructive.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        },
-        "titanium": {
-            "rejected": "(rejected with Variants) De primary knop toont bijna geen effect als ik erover hover",
-            "change": "The same hover and pressed change as Variants, in every state that can be hovered.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
     "button--variants": {
-        "cyberpunk": {
-            "rejected": "de cancel knop heeft de animatie, maar de anderen niet precies? of toch niet zichtbaar? Zie dat de kleur van de animatie ook matched met de kleur van de achtergrond",
-            "change": "Every variant already ran the hover sweep, but at 0.5 white with overlay blending it barely changed a dark or saturated face (contrast 1.00-1.28). The sweep now blends normally: cyan over the dark faces, the button's own dark ink over yellow and red, contrast 3.17-4.89 against the face. Hover each variant to see it.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        },
-        "phantom": {
-            "rejected": "de primary heeft een animatie nodig zoals de anderen wanneer ik erop klik",
-            "change": "The primary already moved 3px on hover, so pressing changed nothing. Pressed, it now moves 5px onto its own shadow and the shadow disappears, like the other variants. Press and hold it to see it.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        },
-        "terminal": {
-            "rejected": "De cursor moet op gelijke hoogte als de tekst komen, en rood zijn in de destructive button",
-            "change": "The cursor is one line tall and centred on the label: its top sat 5.9px above the text, now within 0.8px in every size. On the destructive button it is red instead of green. On the primary it now takes the button's own ink, the colour of its label, instead of green on the green plate. Hover the primary to see it.",
-            "commit": "15f391e6",
-            "given": "2026-09-14"
-        },
         "titanium": {
             "rejected": "De primary knop toont bijna geen effect als ik erover hover",
             "change": "Hover now darkens the primary instead of lightening it: rest to hover went from 4.9 to 11.4 in OKLab distance (about 10 is visible), and pressed sits 11.0 further. Hover and press it to see both steps.",
-            "commit": "ec3d3b9",
-            "given": "2026-09-14"
-        }
-    },
-    "datepicker--closed": {
-        "solstice": {
-            "rejected": "Kenny: the date picker offers no way to choose the month or year directly, as most date pickers do today.",
-            "change": "scope-89: a click on the calendar's title (\"September 2026\") opens a grid of twelve months, a second click a grid of years; keyboard reachable, in every theme.",
-            "commit": "1b9c72bd",
-            "given": "2026-09-15"
-        }
-    },
-    "media--marquee": {
-        "solstice": {
-            "rejected": "Kenny: the marquee does not run.",
-            "change": "fix-31: the review page's hash paused every running animation and never restarted one that was already still; it now sets the time to zero, reads, and puts the time back, so the band runs again.",
-            "commit": "1b9c72bd",
-            "given": "2026-09-15"
-        }
-    },
-    "table--datatable-add-filter": {
-        "dark": {
-            "rejected": "Als ik de filter \"hours open\" en dan hover over de cancel knop, zijn de \"[]\" haakjes op de letters van \"Cancel\"",
-            "change": "Dark's buttons now keep enough inline padding for the brackets they draw on hover, in every size: the overlap on Cancel went from 6.8px to 0. Every dark button is a little wider as a result.",
             "commit": "ec3d3b9",
             "given": "2026-09-14"
         }
