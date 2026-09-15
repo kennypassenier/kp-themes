@@ -67,7 +67,6 @@ export const PAGES = [
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
             { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
             { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
-            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
         ],
     },
     {
@@ -88,6 +87,7 @@ export const PAGES = [
             { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
             { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
             { href: 'research/cyberpunk-dividers/demo.html', label: 'A new divider for cyberpunk, six options' },
+            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
         ],
     },
 ];

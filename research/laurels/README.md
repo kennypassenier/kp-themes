@@ -1,5 +1,7 @@
 # Laurels and platforms: four redesign directions
 
+**Decided (scope-93, scope-94):** direction B, Wreaths, in shade-light only; the platform badges carry a glyph and an "Available on" line. Archived.
+
 Kenny rejected `catalogue/media.html#laurels` in shade-light (2026-09-15): "Well, this just looks ugly, redo these completely from the
 ground up." Demo: [`demo.html`](demo.html) (36183 bytes, `wc -c`), in the catalogue under "Research to look at". It opens in
 shade-light; pastel and dark are one click away.

@@ -1682,3 +1682,24 @@ at; the other nineteen follow once Kenny has judged the form. portrait-review
 verdict. alarm-order "Stoppen tot de portretten er zijn": the per-theme alarm
 redesign of scope-96 is stopped and is rebuilt from the approved portraits.
 step-timing "Akkoord".
+
+**scope-98 · The pilot portraits judged: the alarm glitches only in cyberpunk,
+and the other nineteen portraits follow.** Kenny, 2026-09-15, the pilot form and
+his catalogue review of the three portraits. Cyberpunk's nine sections approved;
+formal and pastel approved except Motion. formal #motion: "het alarm geeft nog
+altijd het glitch effect, dat enkel bij cyberpunk thuishoort. het kleurenschema
+van het alarm passen volgens mij ook niet super hard bij dit thema". pastel
+#motion: "zelfde commentaar, glitch effect past helemaal niet bij pastel, maak
+het alarm eigen aan dit thema". So the glitch and the flicker leave the
+package's alarm and live in cyberpunk's register; formal and pastel get alarms
+of their own from their portraits; the portrait form is approved and the
+other nineteen portraits are built in it. anatomy-sync "Bijwerken, en de tekst
+naar het portret laten verwijzen": cyberpunk's, formal's, pastel's and dark's
+anatomy are corrected to their registers, the lists the portrait proves leave
+the text, and the text links to the portrait; the others follow with their
+portraits. stamp-cards "Op elke kaart met een label": formal's and pastel's
+stamp lands on every labelled card and keeps off the title. hc-side-bars "Ook
+in de tekstkleur": a ghost button's side bars on a toast take the toast's ink.
+Kenny also asked why the laurels demo was still under "Research to look at"
+when it was decided at scope-93: it moves to "Archived research".
+step-timing "Akkoord".

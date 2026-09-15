@@ -18872,6 +18872,303 @@
                 }
             }
         },
+        "research/theme-portraits/cyberpunk.html#colour": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a70ad8090f7e6c1424f205c0721eea5d16161da9b496f11555f10934aa2bc889",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#idea": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "51754b46a23ecb96f7f07e198e62abe31821a8f72f6008ed7ca6501bb1ace27b",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#motion": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5ce8123a203235c99a8bd818d851290e17caa25bdd9778d09ff2e9b7d4eec8e1",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#ornaments": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "00c019761040ec409e38ef25a08f2a5c9fa4b8113a7745f783f246e86719a62b",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#recipe": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f45d34a3870e09567bf3946ebe4b16cbc7a4678433b375610c0e3628ee1e027a",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#shape": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e61270af5c4c7f62fba02d5a5856e1479763d9785d8af0cf53a9d2ed72aef884",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#surfaces": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "6fa107182174917c022c61876612880b4d58ba8f32602ef785cbc0a404e65c25",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#type": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "538a7ad41c26ed04ea68ede1170b0ab3be30f748d0e626ca303fa78e4f86e690",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/cyberpunk.html#voice": {
+            "cyberpunk": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cac016f78ec285cad75b94492859004c742a571de9f7f9a9612670ab9338bf90",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#colour": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2f717e4b7b8b244cc853cc0ac45dafcc12b055dbba6da1805e388c913592fe93",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#idea": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3b9c658bf457747cb6749ee084ee070cb3c00930dd8d901a7230b21b1d4645ab",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#motion": {
+            "formal": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "38bd70d21926784d2226e39a7dc4994cf6aa9c4e0999360a5b99ac1aa0f321c0",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#ornaments": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "849c34f810a55bb51472cc0fd5119eb897043adc0d14ec12704d7781fbe8a2d3",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#recipe": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "af6f9dab2daadb05677f8c2ef64df9f43b2f151fbfbbf97ac37e568f04e86b4b",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#shape": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a7029c3a64e7861500a43d6cfe3803de83304e79adafd964d15798c45b8d7348",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#surfaces": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c585e05f0413831aecc8e4f5212a1b5b46b7a1890c99520708aa1821a5b843fb",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#type": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "92813805e511de8396f3501e787074ca0f2f64b60a3dcc775dc597c1448c7263",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/formal.html#voice": {
+            "formal": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1ddeb8219a82b48cd92556769d199de9918194c03ff63f2361416e0f4d9767c3",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#colour": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d66d5b078a2312e0eeb017de38f48f9e1e33e52ea511d8c295f014095fe7898d",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#idea": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e91fd5c6ec1614740cab0221bea1f0d834cf5aa249d34e45aacbf319375c0583",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#motion": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "ef21e140965de8bc83e158bfd882aca11926bbb5f1268b7b0cf81779fab9ded5",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#ornaments": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d73ee37ba168a9f1534c1864fa7c47d7851f0cb33903f43162f89238fd7a6ba6",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#recipe": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "de561f75c6a3e7afce3180a80c8ac6773ad34fe9d600fbd692e656327d0b9f47",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#shape": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b1cde40b337d4454595d841707a6bbc85c22fce083461500be77b827e2ec2254",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#surfaces": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b0892915f2fd656a770f1612222994f8d1eb3be79b2f2a8356ba1478d66b354d",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#type": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d320f94a913be682775a2273d8615e001d484b51654a63897b25ea0858d3fa2b",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
+        "research/theme-portraits/pastel.html#voice": {
+            "pastel": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "770b103992d9068e9c8744b6109217810ec4b9f886960d1f5a4e88c473abd2b7",
+                    "commit": "b831e5ccbe1879889ee7335a501a62b7775b4a59",
+                    "given": "2026-09-15",
+                    "ratio": 2.222
+                }
+            }
+        },
         "structure--accordion": {
             "blueprint": {
                 "firefox": {
