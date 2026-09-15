@@ -24,10 +24,13 @@
 // Every word the component adds itself comes from js/strings.js; the
 // headline, the detail and the code line are the caller's.
 //
-// Motion is the stylesheet's alone (css/components.css, `.kp-alarm`): the
-// decode, the flicker and the glow run only under
+// Motion is the stylesheet's alone (css/components.css, `.kp-alarm`, and
+// each register): the package's arrival and a register's own (cyberpunk's
+// decode and flicker, since scope-98 its alone) run only under
 // `prefers-reduced-motion: no-preference`, so nothing here reads the
-// preference. The countdown writes two numbers, a continuous share and the
+// preference. The tree keeps every part a register may opt into — the
+// letter cells with their noise glyphs, the split copies' text, the scan and
+// the bars — so both channels render the same tree in every theme. The countdown writes two numbers, a continuous share and the
 // whole-second share, and the stylesheet picks the second when the reader
 // asked for less motion, so the bar steps instead of sliding.
 

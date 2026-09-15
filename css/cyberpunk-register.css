@@ -1856,4 +1856,105 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* The glitch, opted into [scope-98]. Since Kenny's judgement of the pilot
+       portraits the package's alarm arrives whole, and the glitch lives here
+       alone: "het alarm geeft nog altijd het glitch effect, dat enkel bij
+       cyberpunk thuishoort". Cyberpunk's portrait approved its alarm as it
+       was, so these rules give back exactly what the package used to draw —
+       the scanlines and the sweeping band, the split copies, the letter
+       cells' noise glyphs and the caret — and name the package's own
+       keyframes (css/components.css: kp-alarm-flicker-in, kp-alarm-jitter,
+       kp-alarm-slice-in, kp-alarm-slice, kp-alarm-decode-letter,
+       kp-alarm-decode-noise, kp-alarm-detail-in, kp-alarm-caret,
+       kp-alarm-march, kp-alarm-sweep) at the timings they had.
+       research/alarm-per-theme/ holds the before and after. */
+    [data-theme='cyberpunk'] .kp-alarm__scan {
+        background:
+            repeating-linear-gradient(to bottom, var(--kp-alarm-scan) 0 1px, transparent 1px 3px),
+            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__scan::after {
+        content: '';
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__glyphs::before,
+    [data-theme='cyberpunk'] .kp-alarm__glyphs::after {
+        content: attr(data-text);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__char::before {
+        content: attr(data-n1);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__char::after {
+        content: attr(data-n2);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__detail::after {
+        display: inline-block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-alarm-ground-in 180ms ease-out both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: none;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
+            animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+            animation:
+                kp-alarm-slice-in 600ms steps(1, end) both,
+                kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
+            animation:
+                kp-alarm-slice-in 600ms 90ms steps(1, end) both,
+                kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
+        }
+
+        /* The decode: each letter cell shows one noise glyph for 90 ms, a
+           second for 90 ms, then its letter, 35 ms after the cell before
+           it. A cell changes three times, ever. */
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char {
+            animation: kp-alarm-decode-letter calc(var(--i, 0) * 35ms + 180ms) steps(1, end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms + 90ms) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            animation: kp-alarm-detail-in 300ms 600ms ease-out both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
+            animation: kp-alarm-caret 1000ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
+            animation: kp-alarm-march 1600ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            animation: kp-alarm-sweep 6000ms linear infinite;
+        }
+    }
 }

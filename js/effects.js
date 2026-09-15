@@ -367,7 +367,13 @@ export const TIMINGS = Object.freeze({
     // headline's short dip every 5 s, the detail line fading in, the caret,
     // the hazard stripes marching and the faint band sweeping down. Measured
     // from rendered frames in tests/alarm.spec.mjs as well.
+    // Since scope-98 the flicker, the decode, the split, the dip, the caret,
+    // the march and the sweep are cyberpunk's alone; the package's default
+    // arrives whole: the panel settling and the headline arriving, once each.
+    // The plate's row keeps cyberpunk's 180 ms, the shorter of the two.
     'kp-alarm-ground-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-settle': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-arrive': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-alarm-pulse': { durationMs: 1400, cycles: Infinity, property: 'opacity', luminanceSteps: [0.4, 1] },
     'kp-alarm-flicker-in': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 0.3, 1, 1] },
     'kp-alarm-jitter': { durationMs: 5000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0.6, 1] },

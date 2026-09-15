@@ -366,17 +366,22 @@
                 ]
             },
             "attention": {
-                "description": "Not answered in this theme's own manner. The alarm carries pastel's colours (its own milk ground, the headline in its red, a dotted frame, a rounded panel, stripes at a third of the red) but moves with the package's flicker, decode and jitter.",
-                "duration": "as the package: 600ms flicker-in, 5000ms jitter loop",
-                "easing": "steps(1, end)",
-                "reducedMotion": "The ground, the dotted frame and the stripes, still.",
-                "open": true,
-                "proposal": "A sticker slapped on: the panel lands from 6px above and -1.2deg askew to rest with the overshoot (420ms, --fx-ease), a hard plum-black offset beside it; the headline's second pass springs into register and the reason fills in behind its key phrase. No flicker, nothing loops.",
-                "note": "What plays here is the alarm as it ships, flicker included, so the disagreement can be seen.",
+                "description": "A sticker slapped on a risograph sheet. The milk plate fades in; the paper panel lands the way a hovered sticker lifts, from 6px up and -1.2deg askew to rest, overshooting; the mint plate fills in behind the code line; the headline's second pass springs from a wide misregistration into its 2px rest. Nothing loops or flickers.",
+                "duration": "--fx-duration plate; 420ms landing; 420ms fill after 300ms; 650ms overprint after 200ms",
+                "easing": "--fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1); plain ease for the fades",
+                "reducedMotion": "The landed panel, the full mint plate and the overprint at rest 2px off register, at once.",
+                "open": false,
+                "note": "The alarm's colours keep their roles: the milk ground, plum pearls on the seams, a paper panel with the boundary frame and the soft plum drop, the danger red headline, plum ink, a plum sticker button.",
                 "demo": { "kind": "restamp", "example": "alarm" },
                 "proof": [
                     { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm" },
-                    { "file": "css/components.css", "keyframes": "kp-alarm-flicker-in" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel"
+                    },
+                    { "file": "css/pastel-register.css", "keyframes": "kp-registration" },
+                    { "file": "css/pastel-register.css", "keyframes": "kp-fill" },
+                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm__bars::before" }
                 ]
             }
         }
@@ -468,10 +473,13 @@
         {
             "situation": "Ask for attention, loudly",
             "verb": "attention",
-            "answer": "The alarm in pastel's colours, still moving with the package's flicker.",
+            "answer": "The alarm as a sticker on the milk ground: pearls on the seams, a paper panel that lands askew and overshoots into place, the danger red headline with its overprint springing into register, a mint plate filling in behind the code line, the plum sticker button; nothing flickers.",
             "components": ["kp-alarm"],
-            "open": true,
-            "proposal": "A sticker slapped on: lands askew with the overshoot (420ms, --fx-ease), hard offset shadow, the headline's second pass springs into register; no flicker."
+            "open": false,
+            "proof": [
+                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm" },
+                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm__glyphs::before" }
+            ]
         },
         {
             "situation": "Ask for attention, in place",

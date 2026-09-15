@@ -9326,6 +9326,24 @@
  * own voice on the knobs below. js/alarm.js builds it and opens it with
  * showModal(), which puts it in the top layer and makes the page inert.
  *
+ * The default arrives whole [scope-98]: the plate fades in, the panel
+ * settles, the headline arrives in one piece and the reason follows. The
+ * glitch is not the default any more — Kenny, judging formal's and pastel's
+ * portraits: "het alarm geeft nog altijd het glitch effect, dat enkel bij
+ * cyberpunk thuishoort". Its parts stay in the markup and its keyframes stay
+ * here, for a register that opts in (cyberpunk's does, and only cyberpunk's):
+ * the split copies (.kp-alarm__glyphs::before/::after, content: none until a
+ * register gives them attr(data-text)), the letter cells' noise glyphs
+ * (.kp-alarm__char::before/::after, content: none until attr(data-n1) and
+ * attr(data-n2)), the caret (.kp-alarm__detail::after, display: none), the
+ * scanlines and the sweeping band (.kp-alarm__scan, a vignette alone by
+ * default; its ::after has no content), and the hazard stripes (a
+ * transparent --kp-alarm-stripe by default); and the keyframes
+ * kp-alarm-flicker-in, kp-alarm-jitter, kp-alarm-slice-in, kp-alarm-slice,
+ * kp-alarm-decode-letter, kp-alarm-decode-noise, kp-alarm-caret,
+ * kp-alarm-march and kp-alarm-sweep. tests/alarm.spec.mjs holds that they run
+ * in cyberpunk alone.
+ *
  * The knobs [KT6], the colours defaulting to the prototype's dark plate:
  * --kp-alarm-ground (the plate), --kp-alarm-ink (the headline, the frame,
  * the bars), --kp-alarm-soft (the detail line), --kp-alarm-split (the second
@@ -9410,15 +9428,17 @@
         pointer-events: none;
     }
 
+    /* The darkened edges. The scanlines are a part a register opts into: it
+     * restates this background with a repeating gradient of --kp-alarm-scan
+     * over the vignette [scope-98]. */
     .kp-alarm__scan {
-        background:
-            repeating-linear-gradient(to bottom, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)) 0 1px, transparent 1px 3px),
-            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
+        background: radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
     }
 
-    /* A faint band that sweeps down the plate. */
+    /* A faint band that sweeps down the plate: the geometry, for a register
+     * that opts in with content: '' and kp-alarm-sweep [scope-98]. */
     .kp-alarm__scan::after {
-        content: '';
+        content: none;
         position: absolute;
         inset-inline: 0;
         block-size: 18%;
@@ -9426,14 +9446,15 @@
         background: linear-gradient(to bottom, transparent, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)), transparent);
     }
 
-    /* The hazard bars, top and bottom. */
+    /* The hazard bars, top and bottom: transparent unless a register names
+     * --kp-alarm-stripe, still unless it opts into kp-alarm-march [scope-98]. */
     .kp-alarm__bars::before,
     .kp-alarm__bars::after {
         content: '';
         position: absolute;
         inset-inline: 0;
         block-size: var(--kp-alarm-bar, 0.9rem);
-        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, currentColor) 0 1rem, transparent 1rem 2rem);
+        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, transparent) 0 1rem, transparent 1rem 2rem);
         background-size: 2.8284rem 100%;
     }
 
@@ -9487,10 +9508,11 @@
     }
 
     /* The chromatic split: two copies of the words, clipped to nothing at
-     * rest and to thin bands during a burst. */
+     * rest and to thin bands during a burst. A part a register opts into
+     * with content: attr(data-text) [scope-98]; the default draws neither. */
     .kp-alarm__glyphs::before,
     .kp-alarm__glyphs::after {
-        content: attr(data-text);
+        content: none;
         position: absolute;
         inset: 0;
         clip-path: inset(50% 0 50% 0);
@@ -9517,7 +9539,8 @@
     }
 
     /* The two noise glyphs of a letter cell, drawn over the letter, so the
-     * layout never changes while it decodes. */
+     * layout never changes while it decodes. A part a register opts into with
+     * content: attr(data-n1) and attr(data-n2) [scope-98]. */
     .kp-alarm__char::before,
     .kp-alarm__char::after {
         position: absolute;
@@ -9527,12 +9550,9 @@
         pointer-events: none;
     }
 
-    .kp-alarm__char::before {
-        content: attr(data-n1);
-    }
-
+    .kp-alarm__char::before,
     .kp-alarm__char::after {
-        content: attr(data-n2);
+        content: none;
     }
 
     .kp-alarm__detail {
@@ -9545,10 +9565,11 @@
         text-wrap: pretty;
     }
 
-    /* A caret at the end of the line: one character cell. */
+    /* A caret at the end of the line: one character cell. A part a register
+     * opts into with display: inline-block [scope-98]. */
     .kp-alarm__detail::after {
         content: '';
-        display: inline-block;
+        display: none;
         inline-size: 0.6em;
         block-size: 1.05em;
         margin-inline-start: 0.2em;
@@ -9636,22 +9657,23 @@
     }
 
     /* Motion, only when the reader has not asked for less, and never on a
-     * held-open frame marked still. The budget per one-second window (WCAG
-     * 2.3.1 allows three flashes; each keyframe has its row in TIMINGS in
-     * js/effects.js):
-     *   kp-alarm-flicker-in   0 -> 1 -> 0.3 -> 1, once
-     *   kp-alarm-decode-*     a letter cell: blank, noise, noise, letter, once
-     *   kp-alarm-jitter       1 -> 0.6 -> 1, once every 5 s
+     * held-open frame marked still. The default arrives whole [scope-98]; the
+     * budget per one-second window (WCAG 2.3.1 allows three flashes; each
+     * keyframe has its row in TIMINGS in js/effects.js):
+     *   kp-alarm-ground-in    the plate, 0 -> 1, once
+     *   kp-alarm-settle       the panel, 0 -> 1 with a rise and a scale, once
+     *   kp-alarm-arrive       the headline, whole, 0 -> 1 from a larger size, once
+     *   kp-alarm-detail-in    the reason, 0 -> 1, once
      *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
-     *   kp-alarm-caret        one character cell on and off once a second
-     *   kp-alarm-march        the stripes move one period per 1.6 s
-     *   kp-alarm-sweep        a band of a faint tint, once per 6 s
-     * Under reduced motion nothing runs: the words are there at once, and the
-     * drama is the plate, the glow at full strength, the frame, the bars and
-     * the size. The rendered frames are measured in tests/alarm.spec.mjs. */
+     * The glitch keyframes below (flicker-in, jitter, slice-in, slice,
+     * decode-letter, decode-noise, caret, march, sweep) run only where a
+     * register names them. Under reduced motion nothing runs: the words are
+     * there at once, and the drama is the plate, the glow at full strength,
+     * the frame and the size. The rendered frames are measured in
+     * tests/alarm.spec.mjs. */
     @media (prefers-reduced-motion: no-preference) {
         .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            animation: kp-alarm-ground-in 180ms ease-out both;
+            animation: kp-alarm-ground-in 240ms ease-out both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still'])::after {
@@ -9659,60 +9681,44 @@
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+            animation: kp-alarm-settle 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
 
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
-            animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
-            animation:
-                kp-alarm-slice-in 600ms steps(1, end) both,
-                kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
-            animation:
-                kp-alarm-slice-in 600ms 90ms steps(1, end) both,
-                kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
-        }
-
-        /* The decode: each letter cell shows one noise glyph for 90 ms, a
-         * second for 90 ms, then its letter, 35 ms after the cell before
-         * it. A cell changes three times, ever. */
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char {
-            animation: kp-alarm-decode-letter calc(var(--i, 0) * 35ms + 180ms) steps(1, end) both;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
-            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms) steps(1, end) forwards;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
-            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms + 90ms) steps(1, end) forwards;
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: kp-alarm-arrive 480ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            animation: kp-alarm-detail-in 300ms 600ms ease-out both;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
-            animation: kp-alarm-caret 1000ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
-            animation: kp-alarm-march 1600ms linear infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
-            animation: kp-alarm-sweep 6000ms linear infinite;
+            animation: kp-alarm-detail-in 300ms 360ms ease-out both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
             transform: scaleX(var(--kp-alarm-left, 1));
             transition: transform 100ms linear;
+        }
+    }
+
+    @keyframes kp-alarm-settle {
+        0% {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-arrive {
+        0% {
+            opacity: 0;
+            scale: 1.06;
+        }
+        100% {
+            opacity: 1;
+            scale: 1;
         }
     }
 
@@ -11715,6 +11721,107 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* The glitch, opted into [scope-98]. Since Kenny's judgement of the pilot
+       portraits the package's alarm arrives whole, and the glitch lives here
+       alone: "het alarm geeft nog altijd het glitch effect, dat enkel bij
+       cyberpunk thuishoort". Cyberpunk's portrait approved its alarm as it
+       was, so these rules give back exactly what the package used to draw —
+       the scanlines and the sweeping band, the split copies, the letter
+       cells' noise glyphs and the caret — and name the package's own
+       keyframes (css/components.css: kp-alarm-flicker-in, kp-alarm-jitter,
+       kp-alarm-slice-in, kp-alarm-slice, kp-alarm-decode-letter,
+       kp-alarm-decode-noise, kp-alarm-detail-in, kp-alarm-caret,
+       kp-alarm-march, kp-alarm-sweep) at the timings they had.
+       research/alarm-per-theme/ holds the before and after. */
+    [data-theme='cyberpunk'] .kp-alarm__scan {
+        background:
+            repeating-linear-gradient(to bottom, var(--kp-alarm-scan) 0 1px, transparent 1px 3px),
+            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__scan::after {
+        content: '';
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__glyphs::before,
+    [data-theme='cyberpunk'] .kp-alarm__glyphs::after {
+        content: attr(data-text);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__char::before {
+        content: attr(data-n1);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__char::after {
+        content: attr(data-n2);
+    }
+
+    [data-theme='cyberpunk'] .kp-alarm__detail::after {
+        display: inline-block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-alarm-ground-in 180ms ease-out both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: none;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
+            animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+            animation:
+                kp-alarm-slice-in 600ms steps(1, end) both,
+                kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
+            animation:
+                kp-alarm-slice-in 600ms 90ms steps(1, end) both,
+                kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
+        }
+
+        /* The decode: each letter cell shows one noise glyph for 90 ms, a
+           second for 90 ms, then its letter, 35 ms after the cell before
+           it. A cell changes three times, ever. */
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char {
+            animation: kp-alarm-decode-letter calc(var(--i, 0) * 35ms + 180ms) steps(1, end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
+            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms + 90ms) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            animation: kp-alarm-detail-in 300ms 600ms ease-out both;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
+            animation: kp-alarm-caret 1000ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
+            animation: kp-alarm-march 1600ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            animation: kp-alarm-sweep 6000ms linear infinite;
+        }
     }
 }
 
@@ -24315,51 +24422,202 @@
         box-shadow: none;
     }
 
-    /* ── The alarm [scope-94] ──────────────────────────────────────────────
-       Soft but unmistakable: its own pale ground, the headline in its red, a dotted frame and rounded panel and stripes at a third of the red. Every colour is one of this theme's tokens. The
-       button keeps this register's shape and takes the alarm's paint, on
-       selectors long enough to outrank this register's own button states;
-       the dialog takes no focus ring, because in the auto mode the whole
-       screen is what has focus. */
+    /* ── The alarm [scope-94, scope-98] ────────────────────────────────────
+       A sticker slapped on a risograph sheet. Kenny, judging the portrait:
+       "glitch effect past helemaal niet bij pastel, maak het alarm eigen aan
+       dit thema". Nothing flickers or loops ("A sharp corner or a flicker" is
+       in the portrait's never-does), and every colour keeps its role in
+       signature.json:
+
+         the plate    the milk ground (--background) at 95 %: the role that
+                      names "the alarm's ground"
+         the seams    pearls on a 2px thread in plum, top and bottom, the
+                      plain divider's own drawing
+         the panel    the paper card, the boundary frame (--border-strong),
+                      a panel's 1.1rem round and its soft plum drop
+         the code     a mint plate (--accent) with its ink, in the mono tick's
+                      spaced capitals, the marked word's fill
+         headline     the danger red (the role names "the alarm's headline"),
+                      Instrument Sans 700 in sentence case, and the
+                      overprint behind it: the second pass in --fx-overprint
+                      at 55 %, multiplied, 2px down and right
+         the reason   the plum ink
+         the button   plum (what acts), the sticker's hard offset from this
+                      register's own button rule, lifting askew under the
+                      pointer and pressed flat as every button here is
+
+       Motion is the register's own: the plate fades over --fx-duration with
+       plain ease (the leave's fade); the panel lands the way a hovered
+       sticker lifts, from 6px up and -1.2deg askew to rest, overshooting on
+       --fx-ease over 420ms (a plate's fill time); the mint plate fills in
+       with kp-fill (420ms, --fx-ease); the headline's second pass springs
+       into register with kp-registration (650ms, --fx-ease). Nothing loops.
+       Under reduced motion the landed sticker, the full plate and the
+       registered overprint stand at once. The button keeps this register's
+       shape and takes the alarm's paint, on selectors long enough to outrank
+       this register's own button states; the dialog takes no focus ring,
+       because in the auto mode the whole screen is what has focus. */
     [data-theme='pastel'] .kp-alarm {
-        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.95);
         --kp-alarm-ink: var(--destructive);
         --kp-alarm-soft: var(--foreground);
-        --kp-alarm-split: var(--primary);
-        --kp-alarm-on-ink: var(--destructive-foreground);
-        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.16);
+        --kp-alarm-split: var(--fx-overprint);
+        --kp-alarm-on-ink: var(--primary-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
-        --kp-alarm-stripe: hsl(from var(--destructive) h s l / 0.35);
-        --kp-alarm-frame: 3px dotted;
-        --kp-alarm-panel-radius: var(--radius, 1rem);
+        --kp-alarm-bar: 1.5rem;
+        --kp-alarm-frame: 0 none;
+        --kp-alarm-title-size: clamp(2.25rem, 8.5cqi, 6.5rem);
+        --kp-alarm-title-case: none;
+        --kp-alarm-title-tracking: -0.01em;
+        --kp-alarm-panel-ground: var(--card);
+        --kp-alarm-panel-border: 1px solid var(--border-strong);
+        --kp-alarm-panel-radius: 1.1rem;
+        --kp-alarm-panel-shadow: 0 24px 48px hsl(from var(--foreground) h s l / 0.25);
+        --kp-alarm-panel-padding: clamp(1.75rem, 5cqi, 3.5rem) clamp(1.25rem, 5cqi, 4rem);
     }
 
     [data-theme='pastel'] .kp-alarm:focus-visible {
         outline: none;
     }
 
-    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
-    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
-    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
-        border-color: var(--kp-alarm-ink);
-        background: var(--kp-alarm-ink);
-        color: var(--kp-alarm-on-ink);
-        text-shadow: none;
+    [data-theme='pastel'] .kp-alarm__bars::before,
+    [data-theme='pastel'] .kp-alarm__bars::after {
+        inset-inline: 1.5rem;
+        background: var(--primary);
+        mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+        mask-size:
+            100% 2px,
+            1.5rem 0.75rem;
+        mask-position: center;
+        mask-repeat:
+            no-repeat,
+            space no-repeat;
     }
 
-    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
-        background: var(--kp-alarm-on-ink);
-        color: var(--kp-alarm-ink);
+    [data-theme='pastel'] .kp-alarm__panel {
+        inline-size: min(100%, 54rem);
+    }
+
+    [data-theme='pastel'] .kp-alarm__code {
+        padding: 0.15em 0.6em;
+        border-radius: 0.25em;
+        background: linear-gradient(var(--accent), var(--accent)) left center / 100% 100% no-repeat;
+        color: var(--accent-foreground);
+        letter-spacing: 0.22em;
+    }
+
+    [data-theme='pastel'] .kp-alarm__title {
+        font-weight: 700;
+        text-wrap: balance;
+    }
+
+    [data-theme='pastel'] .kp-alarm__glyphs {
+        isolation: isolate;
+    }
+
+    [data-theme='pastel'] .kp-alarm__glyphs::before {
+        content: attr(data-text);
+        z-index: -1;
+        clip-path: none;
+        color: var(--fx-overprint);
+        mix-blend-mode: multiply;
+        opacity: 0.55;
+        translate: none;
+        transform: translate(2px, 2px);
+    }
+
+    [data-theme='pastel'] .kp-alarm__detail {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='pastel'] .kp-alarm__hint,
+    [data-theme='pastel'] .kp-alarm__countdown {
+        color: var(--muted-foreground);
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='pastel'] .kp-alarm__track,
+    [data-theme='pastel'] .kp-alarm__fill {
+        border-radius: 999px;
+    }
+
+    [data-theme='pastel'] .kp-alarm__track {
+        background: var(--muted);
+    }
+
+    [data-theme='pastel'] .kp-alarm__fill {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled),
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        text-shadow: none;
     }
 
     [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
     [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
-        border-color: currentColor;
-        background: transparent;
-        color: inherit;
+        border-color: var(--border-strong);
+        background: var(--card);
+        color: var(--foreground);
         text-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            transition: opacity var(--fx-duration) ease;
+        }
+
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            transition:
+                opacity var(--fx-duration) ease,
+                translate 420ms var(--fx-ease),
+                rotate 420ms var(--fx-ease);
+        }
+
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__code {
+            animation: kp-fill 420ms 300ms var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+            animation: kp-registration 650ms 200ms var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            transition: opacity var(--fx-duration) ease 300ms;
+        }
+
+        @starting-style {
+            [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+                opacity: 0;
+            }
+
+            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                opacity: 0;
+                translate: 0 -6px;
+                rotate: -1.2deg;
+            }
+
+            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+                opacity: 0;
+            }
+        }
     }
 }
 
@@ -36512,51 +36770,200 @@
         border-bottom-color: currentcolor;
     }
 
-    /* ── The alarm [scope-94] ──────────────────────────────────────────────
-       A notice served on the house paper: the page goes to the navy of its primary, the headline is set in its display serif with engraved spacing, the frame is a double rule and the bars are narrow. Every colour is one of this theme's tokens. The
-       button keeps this register's shape and takes the alarm's paint, on
-       selectors long enough to outrank this register's own button states;
-       the dialog takes no focus ring, because in the auto mode the whole
-       screen is what has focus. */
+    /* ── The alarm [scope-94, scope-98] ────────────────────────────────────
+       A notice served on the house paper. Kenny, judging the portrait:
+       "het alarm geeft nog altijd het glitch effect, dat enkel bij cyberpunk
+       thuishoort. het kleurenschema van het alarm passen volgens mij ook niet
+       super hard bij dit thema". So nothing here glitches, glows, loops or
+       flickers, and every colour keeps the role signature.json gives it:
+
+         the plate    navy (--primary) at 94 %: the one thing that acts now
+                      is the alarm, and the page behind it is inert
+         the sheet    the card stock, a hairline frame (--border) and the
+                      double rule 2px inside it in navy, the certificate's
+                      gesture; the dropdown's 8px/24px ink shadow, no further
+         the code     the masthead line: body face, spaced capitals, navy
+         headline     the stamp: Fraunces capitals in brick (--destructive),
+                      engraved spacing, optical size 144, no shadow
+         under it     the docket cut: a --border-strong hairline and a 3rem
+                      navy tick
+         the reason   the ink, in the body face (formal has no mono voice)
+         the button   the navy plate with the mirror's 2px gold impression
+                      (--fx-signal); pressing darkens it (--primary-active)
+
+       Motion is the register's own, a transition once each, never a
+       keyframe (the header: this register holds none): the plate fades, the
+       sheet arrives as the headline does (opacity and a 6px rise, 450ms,
+       --fx-ease), the docket tick draws as the section rule does (a scaleX,
+       450ms, --fx-ease), the double rule fades in as a hovered button's does
+       (--fx-duration, --fx-ease), and the reason fades after. Under reduced
+       motion the finished notice stands at once. The button keeps this
+       register's shape and takes the alarm's paint, on selectors long enough
+       to outrank this register's own button states; the dialog takes no focus
+       ring, because in the auto mode the whole screen is what has focus. */
     [data-theme='formal'] .kp-alarm {
-        --kp-alarm-ground: hsl(from var(--primary) h s 9% / 0.96);
-        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
-        --kp-alarm-soft: var(--background);
-        --kp-alarm-split: var(--background);
-        --kp-alarm-on-ink: hsl(from var(--primary) h s 9%);
-        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.3);
-        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.3);
+        --kp-alarm-ground: hsl(from var(--primary) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--primary-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-scan: hsl(from var(--primary) h s l / 0);
-        --kp-alarm-vignette: hsl(from var(--primary) h s 3% / 0.7);
-        --kp-alarm-bar: 0.5rem;
-        --kp-alarm-frame: 6px double;
+        --kp-alarm-vignette: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-bar: 0rem;
+        --kp-alarm-frame: 0 none;
+        --kp-alarm-title-size: clamp(2.25rem, 8.5cqi, 6.5rem);
         --kp-alarm-title-tracking: 0.08em;
+        --kp-alarm-panel-ground: var(--card);
+        --kp-alarm-panel-border: 1px solid var(--border);
+        --kp-alarm-panel-radius: var(--radius);
+        --kp-alarm-panel-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.28);
+        --kp-alarm-panel-padding: clamp(1.75rem, 5cqi, 3.5rem) clamp(1.25rem, 5cqi, 4rem);
     }
 
     [data-theme='formal'] .kp-alarm:focus-visible {
         outline: none;
     }
 
+    [data-theme='formal'] .kp-alarm__panel {
+        inline-size: min(100%, 54rem);
+    }
+
+    [data-theme='formal'] .kp-alarm__panel::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] .kp-alarm__code {
+        color: var(--primary);
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+    }
+
+    [data-theme='formal'] .kp-alarm__title {
+        font-variation-settings: 'opsz' 144;
+        font-weight: 600;
+    }
+
+    [data-theme='formal'] .kp-alarm__title::after {
+        content: '';
+        display: block;
+        inline-size: min(100%, 24rem);
+        block-size: 8px;
+        margin: 0.35em auto 0;
+        background:
+            linear-gradient(var(--border-strong) 0 0) left top / 100% 1px no-repeat,
+            linear-gradient(var(--primary) 0 0) center 4px / 3rem 4px no-repeat;
+        font-size: 1rem;
+    }
+
+    [data-theme='formal'] .kp-alarm__detail {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__hint,
+    [data-theme='formal'] .kp-alarm__countdown {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__track {
+        background: var(--muted);
+    }
+
+    [data-theme='formal'] .kp-alarm__fill {
+        background: var(--primary);
+    }
+
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
-        border-color: var(--kp-alarm-ink);
-        background: var(--kp-alarm-ink);
-        color: var(--kp-alarm-on-ink);
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 2px 2px 0 0 var(--fx-signal);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
         text-shadow: none;
     }
 
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
-        background: var(--kp-alarm-on-ink);
-        color: var(--kp-alarm-ink);
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-alarm__ack::after {
+        border-color: currentColor;
     }
 
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
-        border-color: currentColor;
+        border-color: var(--border-strong);
         background: transparent;
-        color: inherit;
+        color: var(--primary);
         text-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            transition: opacity 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            transition:
+                opacity 450ms var(--fx-ease),
+                transform 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease) 450ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+            transition: transform 450ms var(--fx-ease) 300ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            transition: opacity 450ms var(--fx-ease) 250ms;
+        }
+
+        @starting-style {
+            [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+                transform: scaleX(0);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+                opacity: 0;
+            }
+        }
     }
 }
 

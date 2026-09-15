@@ -15,8 +15,11 @@
 //   - the page behind cannot be clicked or tabbed to
 //   - reduced motion runs no animation and shows the words at once
 //   - the flash rate from rendered frames stays at 2 per second or under
-//     (WCAG 2.3.1 allows 3) in seven themes
-//   - the headline reads at 4.5:1 or more on its ground in every theme
+//     (WCAG 2.3.1 allows 3) in eight themes
+//   - the glitch and the flicker run only in cyberpunk, in all 22 themes,
+//     and the DI5 report rates what cyberpunk keeps [scope-98]
+//   - the headline, the reason and the button read at 4.5:1 or more on their
+//     ground in every theme, 7:1 in high-contrast
 //   - the two channels render the same tree, and the words the component
 //     adds come from the dictionary
 //
@@ -213,7 +216,7 @@ for (const channel of CHANNELS) {
 
         test(`reduced motion: no animation or transition runs inside, and the words are there at once, ${channel.name}`, async ({ page }) => {
             await open(page);
-            for (const theme of ['cyberpunk', 'formal']) {
+            for (const theme of ['cyberpunk', 'formal', 'pastel', 'sepia']) {
                 await wear(page, theme);
                 for (const id of [`${p}-ack`, `${p}-auto`]) {
                     await page.locator(at(id)).click();
@@ -321,7 +324,7 @@ test('a declarative trigger raises the alarm it describes and hears why it close
 });
 
 test(
-    'the headline reads at 4.5:1 or more on its ground, in every theme, and the detail line too',
+    'the headline reads at 4.5:1 or more on its ground, in every theme (7:1 in high-contrast), and the detail line and the button too',
     { tag: ['@component:alarm', '@sweep'] },
     async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -381,9 +384,10 @@ test(
                 };
             });
             console.log(`[alarm] contrast ${theme}: ${JSON.stringify(numbers)}`);
-            if (numbers.title < 4.5) low.push(`${theme}: headline ${numbers.title}`);
-            if (numbers.detail < 4.5) low.push(`${theme}: detail ${numbers.detail}`);
-            if (numbers.button < 4.5) low.push(`${theme}: button label ${numbers.button}`);
+            const floor = theme === 'high-contrast' ? 7 : 4.5;
+            if (numbers.title < floor) low.push(`${theme}: headline ${numbers.title}`);
+            if (numbers.detail < floor) low.push(`${theme}: detail ${numbers.detail}`);
+            if (numbers.button < floor) low.push(`${theme}: button label ${numbers.button}`);
             await page.locator(`${OPEN} .kp-alarm__ack`).focus();
             await page.keyboard.press('Enter');
             await expect(page.locator(OPEN)).toHaveCount(0);
@@ -392,6 +396,96 @@ test(
         expect(errors).toEqual([]);
     },
 );
+
+/**
+ * The glitch lives in cyberpunk alone [scope-98]. Kenny, judging formal's and
+ * pastel's portraits: "het alarm geeft nog altijd het glitch effect, dat enkel
+ * bij cyberpunk thuishoort". The package's default alarm arrives whole; the
+ * flicker, the jitter, the chromatic split, the decode, the caret, the
+ * marching hazard bars and the sweeping scan band are parts a register opts
+ * into, and only cyberpunk's does. Read from the animations the engine runs
+ * inside an open alarm, motion on, in all 22 themes.
+ */
+const GLITCH = [
+    'kp-alarm-flicker-in',
+    'kp-alarm-jitter',
+    'kp-alarm-slice-in',
+    'kp-alarm-slice',
+    'kp-alarm-decode-letter',
+    'kp-alarm-decode-noise',
+    'kp-alarm-caret',
+    'kp-alarm-march',
+    'kp-alarm-sweep',
+];
+test('the glitch and the flicker run only in cyberpunk, in all 22 themes [scope-98]', { tag: ['@component:alarm', '@sweep'] }, async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const errors = await open(page);
+    expect(THEMES.length).toBe(22);
+    /** @type {Record<string, string[]>} */
+    const seen = {};
+    for (const theme of THEMES) {
+        await wear(page, theme);
+        const names = await page.evaluate(async () => {
+            void (/** @type {any} */ (window).showAlarm({ .../** @type {any} */ (window).kpAlarmOptions, mode: 'ack' }));
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            const dialog = /** @type {HTMLDialogElement} */ (document.querySelector('dialog.kp-alarm[open]'));
+            const list = document
+                .getAnimations()
+                .filter((a) => {
+                    const t = /** @type {KeyframeEffect} */ (a.effect)?.target;
+                    return t instanceof Element && dialog.contains(t);
+                })
+                .map((a) => /** @type {any} */ (a).animationName ?? `transition ${/** @type {any} */ (a).transitionProperty}`);
+            dialog.close('ack');
+            return [...new Set(list)].sort();
+        });
+        seen[theme] = names;
+    }
+    console.log(`[alarm] animations per theme: ${JSON.stringify(seen)}`);
+    for (const theme of THEMES) {
+        const glitch = seen[theme].filter((name) => GLITCH.includes(name));
+        if (theme === 'cyberpunk') expect(glitch.sort(), 'cyberpunk keeps every part of its glitch').toEqual([...GLITCH].sort());
+        else expect(glitch, `${theme} runs no glitch`).toEqual([]);
+        expect(seen[theme].length, `${theme} still arrives with motion`).toBeGreaterThan(1);
+    }
+    expect(errors).toEqual([]);
+});
+
+/**
+ * The DI5 report for the flicker cyberpunk keeps [scope-98]: every glitch
+ * keyframe that steps opacity is rated from its TIMINGS row (js/effects.js,
+ * the same arithmetic as reports/di5.md) and must read under 2.5 opposing
+ * changes a second, a margin under WCAG's three.
+ *
+ * FINDING for Kenny, not corrected: kp-alarm-flicker-in (0 -> 1 -> 0.3 -> 1
+ * in 600 ms, once) reads 3.00/s — the whole WCAG budget of its second, as its
+ * TIMINGS comment has said since scope-94. Bringing it under 2.5 means a
+ * shallower dip, which changes cyberpunk's approved alarm; the rendered
+ * measurement below holds it at 2 per second or under. Marked as an expected
+ * failure so the finding stays visible and a change to the keyframe turns
+ * this red.
+ */
+test('the DI5 report rates every flicker cyberpunk keeps under 2.5 per second [scope-98]', { tag: ['@component:alarm'] }, async () => {
+    test.fail(true, 'finding: kp-alarm-flicker-in reads 3.00/s in the DI5 report; under 2.5 needs a change to the approved cyberpunk alarm');
+    const { TIMINGS } = await import('../js/effects.js');
+    const { flashesPerSecond } = await import('../gates/check-motion.mjs');
+    /** @type {string[]} */
+    const over = [];
+    for (const name of GLITCH) {
+        const row = /** @type {any} */ (TIMINGS)[name];
+        expect(row, `${name} has a TIMINGS row`).toBeTruthy();
+        if (row.property !== 'opacity') continue;
+        const rate = flashesPerSecond(
+            row.luminanceSteps.map((/** @type {number} */ opacity, /** @type {number} */ stop) => ({ stop, opacity })),
+            row.durationMs,
+            row.cycles,
+        );
+        console.log(`[alarm] DI5 ${name}: ${rate.toFixed(2)}/s`);
+        if (rate >= 2.5) over.push(`${name} ${rate.toFixed(2)}/s`);
+    }
+    expect(over).toEqual([]);
+});
 
 /**
  * The flash rate from rendered frames, carried over from the prototype's
@@ -408,7 +502,7 @@ test(
  * what a Harding analyser does, not a certified one. WCAG allows 3; this
  * holds 2, a margin of one.
  */
-const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'terminal', 'formal', 'pastel', 'retro'];
+const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'terminal', 'formal', 'pastel', 'retro', 'sepia'];
 for (const theme of FLASH_THEMES) {
     test(
         `flash rate in ${theme}: at most 2 per second, measured from rendered frames [WCAG 2.3.1]`,
@@ -434,9 +528,11 @@ for (const theme of FLASH_THEMES) {
                         const t = /** @type {KeyframeEffect} */ (a.effect)?.target;
                         return t instanceof Element && dialog?.contains(t);
                     })
-                    .map((a) => /** @type {any} */ (a).animationName);
+                    .map((a) => /** @type {any} */ (a).animationName ?? /** @type {any} */ (a).transitionProperty);
             });
-            expect(animations.length, 'the alarm runs its motion').toBeGreaterThan(5);
+            // Formal's and pastel's alarms arrive on transitions and a register
+            // keyframe or two [scope-98]; the neutral default runs five.
+            expect(animations.length, 'the alarm runs its motion').toBeGreaterThan(2);
 
             const decoder = await browser.newPage();
             await decoder.setContent('<canvas id="c" width="1024" height="768"></canvas>');

@@ -373,17 +373,21 @@
                 ]
             },
             "attention": {
-                "description": "Not answered in this theme's own manner. The alarm carries formal's colours (a navy plate, brick ink, a double-rule frame, engraved spacing) but moves with the package's flicker, decode and jitter, which this theme does not allow.",
-                "duration": "as the package: 600ms flicker-in, 5000ms jitter loop",
-                "easing": "steps(1, end)",
-                "reducedMotion": "The plate, the double frame and the bars, still.",
-                "open": true,
-                "proposal": "A notice served on the house paper (held design, 2026-09-15, a proposal): the navy plate fades in, one card sheet settles with the headline's own arrive (opacity and a 6px rise, 450ms, --fx-ease), the docket tick draws under the title and the button's second rule draws once. No flicker, no decode, nothing loops.",
-                "note": "What plays here is the alarm as it ships, flicker included, so the disagreement can be seen.",
+                "description": "A notice served on the house paper. The navy plate fades in; one sheet of card stock arrives as the headline does, fading up with a 6px rise, once; the docket cut under the brick headline draws as a section rule does; the double rule 2px inside the sheet fades in as a hovered button's does; the reason fades after. Every step is a transition, nothing loops, flickers or touches a character.",
+                "duration": "450ms plate and sheet; 450ms docket after 300ms; --fx-duration double rule after 450ms; 450ms reason after 250ms",
+                "easing": "--fx-ease, cubic-bezier(0.2, 0, 0, 1)",
+                "reducedMotion": "The finished notice at once: the plate, the sheet, the drawn docket cut and the double rule.",
+                "open": false,
+                "note": "The alarm's colours keep their roles: navy plate and button, card stock sheet with a hairline, brick stamp capitals, ink reason, a gold impression on the button.",
                 "demo": { "kind": "restamp", "example": "alarm" },
                 "proof": [
                     { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm" },
-                    { "file": "css/components.css", "keyframes": "kp-alarm-flicker-in" }
+                    {
+                        "file": "css/formal-register.css",
+                        "selector": "[data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel"
+                    },
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm__title::after" },
+                    { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm__panel::before" }
                 ]
             }
         }
@@ -462,10 +466,13 @@
         {
             "situation": "Ask for attention, loudly",
             "verb": "attention",
-            "answer": "The alarm in formal's colours, still moving with the package's flicker.",
+            "answer": "The alarm as a notice on the house paper: a navy plate, a card stock sheet framed by the double rule, the headline in the stamp's brick capitals over the docket cut, the navy button with its gold impression; the sheet arrives, the docket draws, nothing flickers.",
             "components": ["kp-alarm"],
-            "open": true,
-            "proposal": "A notice on the house paper: navy plate fades, the sheet settles with arrive (450ms, --fx-ease), the docket tick and the double rule draw once; no flicker."
+            "open": false,
+            "proof": [
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm" },
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack" }
+            ]
         },
         {
             "situation": "Ask for attention, in place",

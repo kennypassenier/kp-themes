@@ -1012,50 +1012,199 @@
         border-bottom-color: currentcolor;
     }
 
-    /* ── The alarm [scope-94] ──────────────────────────────────────────────
-       A notice served on the house paper: the page goes to the navy of its primary, the headline is set in its display serif with engraved spacing, the frame is a double rule and the bars are narrow. Every colour is one of this theme's tokens. The
-       button keeps this register's shape and takes the alarm's paint, on
-       selectors long enough to outrank this register's own button states;
-       the dialog takes no focus ring, because in the auto mode the whole
-       screen is what has focus. */
+    /* ── The alarm [scope-94, scope-98] ────────────────────────────────────
+       A notice served on the house paper. Kenny, judging the portrait:
+       "het alarm geeft nog altijd het glitch effect, dat enkel bij cyberpunk
+       thuishoort. het kleurenschema van het alarm passen volgens mij ook niet
+       super hard bij dit thema". So nothing here glitches, glows, loops or
+       flickers, and every colour keeps the role signature.json gives it:
+
+         the plate    navy (--primary) at 94 %: the one thing that acts now
+                      is the alarm, and the page behind it is inert
+         the sheet    the card stock, a hairline frame (--border) and the
+                      double rule 2px inside it in navy, the certificate's
+                      gesture; the dropdown's 8px/24px ink shadow, no further
+         the code     the masthead line: body face, spaced capitals, navy
+         headline     the stamp: Fraunces capitals in brick (--destructive),
+                      engraved spacing, optical size 144, no shadow
+         under it     the docket cut: a --border-strong hairline and a 3rem
+                      navy tick
+         the reason   the ink, in the body face (formal has no mono voice)
+         the button   the navy plate with the mirror's 2px gold impression
+                      (--fx-signal); pressing darkens it (--primary-active)
+
+       Motion is the register's own, a transition once each, never a
+       keyframe (the header: this register holds none): the plate fades, the
+       sheet arrives as the headline does (opacity and a 6px rise, 450ms,
+       --fx-ease), the docket tick draws as the section rule does (a scaleX,
+       450ms, --fx-ease), the double rule fades in as a hovered button's does
+       (--fx-duration, --fx-ease), and the reason fades after. Under reduced
+       motion the finished notice stands at once. The button keeps this
+       register's shape and takes the alarm's paint, on selectors long enough
+       to outrank this register's own button states; the dialog takes no focus
+       ring, because in the auto mode the whole screen is what has focus. */
     [data-theme='formal'] .kp-alarm {
-        --kp-alarm-ground: hsl(from var(--primary) h s 9% / 0.96);
-        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
-        --kp-alarm-soft: var(--background);
-        --kp-alarm-split: var(--background);
-        --kp-alarm-on-ink: hsl(from var(--primary) h s 9%);
-        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.3);
-        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.3);
+        --kp-alarm-ground: hsl(from var(--primary) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--primary-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-scan: hsl(from var(--primary) h s l / 0);
-        --kp-alarm-vignette: hsl(from var(--primary) h s 3% / 0.7);
-        --kp-alarm-bar: 0.5rem;
-        --kp-alarm-frame: 6px double;
+        --kp-alarm-vignette: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-bar: 0rem;
+        --kp-alarm-frame: 0 none;
+        --kp-alarm-title-size: clamp(2.25rem, 8.5cqi, 6.5rem);
         --kp-alarm-title-tracking: 0.08em;
+        --kp-alarm-panel-ground: var(--card);
+        --kp-alarm-panel-border: 1px solid var(--border);
+        --kp-alarm-panel-radius: var(--radius);
+        --kp-alarm-panel-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.28);
+        --kp-alarm-panel-padding: clamp(1.75rem, 5cqi, 3.5rem) clamp(1.25rem, 5cqi, 4rem);
     }
 
     [data-theme='formal'] .kp-alarm:focus-visible {
         outline: none;
     }
 
+    [data-theme='formal'] .kp-alarm__panel {
+        inline-size: min(100%, 54rem);
+    }
+
+    [data-theme='formal'] .kp-alarm__panel::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] .kp-alarm__code {
+        color: var(--primary);
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+    }
+
+    [data-theme='formal'] .kp-alarm__title {
+        font-variation-settings: 'opsz' 144;
+        font-weight: 600;
+    }
+
+    [data-theme='formal'] .kp-alarm__title::after {
+        content: '';
+        display: block;
+        inline-size: min(100%, 24rem);
+        block-size: 8px;
+        margin: 0.35em auto 0;
+        background:
+            linear-gradient(var(--border-strong) 0 0) left top / 100% 1px no-repeat,
+            linear-gradient(var(--primary) 0 0) center 4px / 3rem 4px no-repeat;
+        font-size: 1rem;
+    }
+
+    [data-theme='formal'] .kp-alarm__detail {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__hint,
+    [data-theme='formal'] .kp-alarm__countdown {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__track {
+        background: var(--muted);
+    }
+
+    [data-theme='formal'] .kp-alarm__fill {
+        background: var(--primary);
+    }
+
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
-        border-color: var(--kp-alarm-ink);
-        background: var(--kp-alarm-ink);
-        color: var(--kp-alarm-on-ink);
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 2px 2px 0 0 var(--fx-signal);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
         text-shadow: none;
     }
 
-    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
-        background: var(--kp-alarm-on-ink);
-        color: var(--kp-alarm-ink);
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-alarm__ack::after {
+        border-color: currentColor;
     }
 
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
     [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
-        border-color: currentColor;
+        border-color: var(--border-strong);
         background: transparent;
-        color: inherit;
+        color: var(--primary);
         text-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            transition: opacity 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            transition:
+                opacity 450ms var(--fx-ease),
+                transform 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease) 450ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+            transition: transform 450ms var(--fx-ease) 300ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            transition: opacity 450ms var(--fx-ease) 250ms;
+        }
+
+        @starting-style {
+            [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+                transform: scaleX(0);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+                opacity: 0;
+            }
+        }
     }
 }

@@ -17,7 +17,14 @@ import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
 import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
-import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
+import {
+    animations,
+    flashesPerSecond,
+    parseOpacityKeyframes,
+    reachableKeyframes,
+    unguardedMotion,
+    unsubscribedPreferenceReads,
+} from './check-motion.mjs';
 import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
 import { swallowedVariants, variantGrounds } from './check-variant-ground.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
@@ -148,7 +155,9 @@ test('DI5: a swing under ten percent is not a flash', () => {
 // duration and iteration count.
 test('DI5: every opacity keyframe the cyberpunk register animates stays under the threshold [TH131]', () => {
     const css = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
-    const keyframes = parseOpacityKeyframes(css);
+    // Since scope-98 the register names the package's alarm keyframes, so
+    // the keyframes it can reach include css/components.css's.
+    const keyframes = reachableKeyframes(css, parseOpacityKeyframes(readFileSync(new URL('../css/components.css', import.meta.url), 'utf8')));
     const rated = [];
     for (const anim of animations(css)) {
         const stops = keyframes.get(anim.name);
@@ -158,6 +167,24 @@ test('DI5: every opacity keyframe the cyberpunk register animates stays under th
         assert.ok(flashesPerSecond(stops, anim.durationMs, anim.cycles) <= 3, `${anim.name} exceeds three opposing changes per second`);
     }
     assert.ok(rated.length >= 3, `only ${rated.length} opacity animations rated — the register ships more than that`);
+});
+
+// scope-98: a register that names a keyframe another stylesheet declares is
+// measured with that keyframe's stops, not reported as unmeasurable. Before
+// the fix the gate read the using file alone and this name had no stops.
+test('DI5: a register naming a package keyframe is rated with the package stops [scope-98]', () => {
+    const pkg =
+        '@layer kp.components { @keyframes kp-alarm-flicker-in { 0% { opacity: 0; } 18% { opacity: 1; } 30% { opacity: 0.3; } 42% { opacity: 1; } 100% { opacity: 1; } } }';
+    const register =
+        "@layer kp.register { @media (prefers-reduced-motion: no-preference) { [data-theme='x'] .kp-alarm__panel { animation: kp-alarm-flicker-in 600ms steps(1, end) both; } } }";
+    assert.equal(parseOpacityKeyframes(register).get('kp-alarm-flicker-in'), undefined);
+    const [anim] = animations(register);
+    const stops = reachableKeyframes(register, parseOpacityKeyframes(pkg)).get(anim.name);
+    assert.ok(stops, 'the package keyframe is reachable from the register');
+    assert.equal(flashesPerSecond(stops, anim.durationMs ?? 0, anim.cycles), 3);
+    // The register's own keyframe of the same name wins, as the later layer's would.
+    const own = `${register} @keyframes kp-alarm-flicker-in { 0% { opacity: 0; } 100% { opacity: 1; } }`;
+    assert.equal(reachableKeyframes(own, parseOpacityKeyframes(pkg)).get('kp-alarm-flicker-in')?.length, 2);
 });
 
 // Drill [TH131]: a 5/s loop turns the same reading red.

@@ -31,6 +31,8 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-caret` | background-size | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
 | `kp-alarm-ground-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-alarm-settle` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-alarm-arrive` | opacity | 480 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-alarm-pulse` | opacity | 1400 ms | loops | 0.4 → 1 | 0.71/s | under |
 | `kp-alarm-flicker-in` | opacity | 600 ms | 1× | 0 → 1 → 0.3 → 1 → 1 | 3.00/s | under |
 | `kp-alarm-jitter` | opacity | 5000 ms | loops | 1 → 1 → 0.6 → 1 | 0.40/s | under |

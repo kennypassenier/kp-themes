@@ -351,17 +351,37 @@ export function tableProblems(source, timings) {
     return problems;
 }
 
+/**
+ * The opacity keyframes a stylesheet can reach: its own first, then every
+ * other stylesheet's [scope-98]. A register may name a keyframe the package
+ * declares — cyberpunk's alarm names kp-alarm-flicker-in, kp-alarm-jitter and
+ * kp-alarm-decode-noise from css/components.css — and the cascade resolves
+ * that name across files. Until scope-98 this gate read keyframes only from
+ * the file that used them, so such a register was reported as animating
+ * "something this gate cannot measure" when the package's own stops were a
+ * file away.
+ *
+ * @param {string} source the stylesheet that names the animation
+ * @param {Map<string, {stop: number, opacity: number}[]>} shared every stylesheet's keyframes
+ */
+export function reachableKeyframes(source, shared) {
+    return new Map([...shared, ...parseOpacityKeyframes(source)]);
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
     let failed = 0;
     let checked = 0;
     /** @type {string[]} */
     const skipped = [];
+    /** @type {Map<string, {stop: number, opacity: number}[]>} */
+    const shared = new Map();
+    for (const rel of CSS) for (const [k, v] of parseOpacityKeyframes(readFileSync(new URL(rel, import.meta.url), 'utf8'))) shared.set(k, v);
 
     for (const rel of CSS) {
         const path = new URL(rel, import.meta.url);
         const source = readFileSync(path, 'utf8');
         const name = rel.replace('../', '');
-        const frames = parseOpacityKeyframes(source);
+        const frames = reachableKeyframes(source, shared);
 
         for (const anim of animations(source)) {
             const stops = frames.get(anim.name);

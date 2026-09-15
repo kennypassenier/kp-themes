@@ -5097,6 +5097,24 @@
  * own voice on the knobs below. js/alarm.js builds it and opens it with
  * showModal(), which puts it in the top layer and makes the page inert.
  *
+ * The default arrives whole [scope-98]: the plate fades in, the panel
+ * settles, the headline arrives in one piece and the reason follows. The
+ * glitch is not the default any more — Kenny, judging formal's and pastel's
+ * portraits: "het alarm geeft nog altijd het glitch effect, dat enkel bij
+ * cyberpunk thuishoort". Its parts stay in the markup and its keyframes stay
+ * here, for a register that opts in (cyberpunk's does, and only cyberpunk's):
+ * the split copies (.kp-alarm__glyphs::before/::after, content: none until a
+ * register gives them attr(data-text)), the letter cells' noise glyphs
+ * (.kp-alarm__char::before/::after, content: none until attr(data-n1) and
+ * attr(data-n2)), the caret (.kp-alarm__detail::after, display: none), the
+ * scanlines and the sweeping band (.kp-alarm__scan, a vignette alone by
+ * default; its ::after has no content), and the hazard stripes (a
+ * transparent --kp-alarm-stripe by default); and the keyframes
+ * kp-alarm-flicker-in, kp-alarm-jitter, kp-alarm-slice-in, kp-alarm-slice,
+ * kp-alarm-decode-letter, kp-alarm-decode-noise, kp-alarm-caret,
+ * kp-alarm-march and kp-alarm-sweep. tests/alarm.spec.mjs holds that they run
+ * in cyberpunk alone.
+ *
  * The knobs [KT6], the colours defaulting to the prototype's dark plate:
  * --kp-alarm-ground (the plate), --kp-alarm-ink (the headline, the frame,
  * the bars), --kp-alarm-soft (the detail line), --kp-alarm-split (the second
@@ -5181,15 +5199,17 @@
         pointer-events: none;
     }
 
+    /* The darkened edges. The scanlines are a part a register opts into: it
+     * restates this background with a repeating gradient of --kp-alarm-scan
+     * over the vignette [scope-98]. */
     .kp-alarm__scan {
-        background:
-            repeating-linear-gradient(to bottom, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)) 0 1px, transparent 1px 3px),
-            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
+        background: radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
     }
 
-    /* A faint band that sweeps down the plate. */
+    /* A faint band that sweeps down the plate: the geometry, for a register
+     * that opts in with content: '' and kp-alarm-sweep [scope-98]. */
     .kp-alarm__scan::after {
-        content: '';
+        content: none;
         position: absolute;
         inset-inline: 0;
         block-size: 18%;
@@ -5197,14 +5217,15 @@
         background: linear-gradient(to bottom, transparent, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)), transparent);
     }
 
-    /* The hazard bars, top and bottom. */
+    /* The hazard bars, top and bottom: transparent unless a register names
+     * --kp-alarm-stripe, still unless it opts into kp-alarm-march [scope-98]. */
     .kp-alarm__bars::before,
     .kp-alarm__bars::after {
         content: '';
         position: absolute;
         inset-inline: 0;
         block-size: var(--kp-alarm-bar, 0.9rem);
-        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, currentColor) 0 1rem, transparent 1rem 2rem);
+        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, transparent) 0 1rem, transparent 1rem 2rem);
         background-size: 2.8284rem 100%;
     }
 
@@ -5258,10 +5279,11 @@
     }
 
     /* The chromatic split: two copies of the words, clipped to nothing at
-     * rest and to thin bands during a burst. */
+     * rest and to thin bands during a burst. A part a register opts into
+     * with content: attr(data-text) [scope-98]; the default draws neither. */
     .kp-alarm__glyphs::before,
     .kp-alarm__glyphs::after {
-        content: attr(data-text);
+        content: none;
         position: absolute;
         inset: 0;
         clip-path: inset(50% 0 50% 0);
@@ -5288,7 +5310,8 @@
     }
 
     /* The two noise glyphs of a letter cell, drawn over the letter, so the
-     * layout never changes while it decodes. */
+     * layout never changes while it decodes. A part a register opts into with
+     * content: attr(data-n1) and attr(data-n2) [scope-98]. */
     .kp-alarm__char::before,
     .kp-alarm__char::after {
         position: absolute;
@@ -5298,12 +5321,9 @@
         pointer-events: none;
     }
 
-    .kp-alarm__char::before {
-        content: attr(data-n1);
-    }
-
+    .kp-alarm__char::before,
     .kp-alarm__char::after {
-        content: attr(data-n2);
+        content: none;
     }
 
     .kp-alarm__detail {
@@ -5316,10 +5336,11 @@
         text-wrap: pretty;
     }
 
-    /* A caret at the end of the line: one character cell. */
+    /* A caret at the end of the line: one character cell. A part a register
+     * opts into with display: inline-block [scope-98]. */
     .kp-alarm__detail::after {
         content: '';
-        display: inline-block;
+        display: none;
         inline-size: 0.6em;
         block-size: 1.05em;
         margin-inline-start: 0.2em;
@@ -5407,22 +5428,23 @@
     }
 
     /* Motion, only when the reader has not asked for less, and never on a
-     * held-open frame marked still. The budget per one-second window (WCAG
-     * 2.3.1 allows three flashes; each keyframe has its row in TIMINGS in
-     * js/effects.js):
-     *   kp-alarm-flicker-in   0 -> 1 -> 0.3 -> 1, once
-     *   kp-alarm-decode-*     a letter cell: blank, noise, noise, letter, once
-     *   kp-alarm-jitter       1 -> 0.6 -> 1, once every 5 s
+     * held-open frame marked still. The default arrives whole [scope-98]; the
+     * budget per one-second window (WCAG 2.3.1 allows three flashes; each
+     * keyframe has its row in TIMINGS in js/effects.js):
+     *   kp-alarm-ground-in    the plate, 0 -> 1, once
+     *   kp-alarm-settle       the panel, 0 -> 1 with a rise and a scale, once
+     *   kp-alarm-arrive       the headline, whole, 0 -> 1 from a larger size, once
+     *   kp-alarm-detail-in    the reason, 0 -> 1, once
      *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
-     *   kp-alarm-caret        one character cell on and off once a second
-     *   kp-alarm-march        the stripes move one period per 1.6 s
-     *   kp-alarm-sweep        a band of a faint tint, once per 6 s
-     * Under reduced motion nothing runs: the words are there at once, and the
-     * drama is the plate, the glow at full strength, the frame, the bars and
-     * the size. The rendered frames are measured in tests/alarm.spec.mjs. */
+     * The glitch keyframes below (flicker-in, jitter, slice-in, slice,
+     * decode-letter, decode-noise, caret, march, sweep) run only where a
+     * register names them. Under reduced motion nothing runs: the words are
+     * there at once, and the drama is the plate, the glow at full strength,
+     * the frame and the size. The rendered frames are measured in
+     * tests/alarm.spec.mjs. */
     @media (prefers-reduced-motion: no-preference) {
         .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            animation: kp-alarm-ground-in 180ms ease-out both;
+            animation: kp-alarm-ground-in 240ms ease-out both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still'])::after {
@@ -5430,60 +5452,44 @@
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            animation: kp-alarm-flicker-in 600ms steps(1, end) both;
+            animation: kp-alarm-settle 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
 
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs {
-            animation: kp-alarm-jitter 5000ms 600ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
-            animation:
-                kp-alarm-slice-in 600ms steps(1, end) both,
-                kp-alarm-slice 5000ms 600ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::after {
-            animation:
-                kp-alarm-slice-in 600ms 90ms steps(1, end) both,
-                kp-alarm-slice 5000ms 690ms steps(1, end) infinite;
-        }
-
-        /* The decode: each letter cell shows one noise glyph for 90 ms, a
-         * second for 90 ms, then its letter, 35 ms after the cell before
-         * it. A cell changes three times, ever. */
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char {
-            animation: kp-alarm-decode-letter calc(var(--i, 0) * 35ms + 180ms) steps(1, end) both;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::before {
-            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms) steps(1, end) forwards;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__char::after {
-            animation: kp-alarm-decode-noise 90ms calc(var(--i, 0) * 35ms + 90ms) steps(1, end) forwards;
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: kp-alarm-arrive 480ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            animation: kp-alarm-detail-in 300ms 600ms ease-out both;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail::after {
-            animation: kp-alarm-caret 1000ms steps(1, end) infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::before,
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__bars::after {
-            animation: kp-alarm-march 1600ms linear infinite;
-        }
-
-        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
-            animation: kp-alarm-sweep 6000ms linear infinite;
+            animation: kp-alarm-detail-in 300ms 360ms ease-out both;
         }
 
         .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
             transform: scaleX(var(--kp-alarm-left, 1));
             transition: transform 100ms linear;
+        }
+    }
+
+    @keyframes kp-alarm-settle {
+        0% {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-arrive {
+        0% {
+            opacity: 0;
+            scale: 1.06;
+        }
+        100% {
+            opacity: 1;
+            scale: 1;
         }
     }
 
