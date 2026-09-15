@@ -37,7 +37,7 @@
 // the day cells can be decorated; and the panel's glyphs are attributes.
 
 import { DEFAULT_STRINGS, getStrings } from './strings.js';
-import { raiseOverlay, raised } from './top-layer.js';
+import { placeBlockSide, raiseOverlay, raised } from './top-layer.js';
 import { calendarNames, datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
 
 const PICKER = '[data-kp-datepicker]';
@@ -129,6 +129,8 @@ export function placeDatePanel(panel) {
         }
         panel.style.left = `${Math.round(x)}px`;
         panel.style.top = `${Math.round(anchor.bottom)}px`;
+        // Above the picker when the window has no room under it [fix-30].
+        placeBlockSide(panel, anchor);
         return;
     }
 

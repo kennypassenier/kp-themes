@@ -443,7 +443,7 @@
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 700;
-        padding: 0.25rem 0.9rem;
+        padding-inline: 0.9rem;
     }
 
     [data-theme='retro'] .kp-nav__link--cta:hover,
@@ -462,7 +462,8 @@
 
     [data-theme='retro'] .kp-nav__link--cta:active {
         box-shadow: var(--kp-pressed);
-        padding: calc(0.25rem + 1px) calc(0.9rem - 1px) calc(0.25rem - 1px) calc(0.9rem + 1px);
+        /* The label steps one pixel toward the inline start; the block padding is the package's [scope-88]. */
+        padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -700,7 +701,6 @@
 
     [data-theme='retro'] .kp-field__error {
         font-family: var(--kp-dos);
-        font-size: 1rem;
         color: var(--destructive);
     }
 
@@ -1852,7 +1852,6 @@
     }
 
     [data-theme='retro'] .kp-sidenav__title {
-        font-size: 0.75rem;
         letter-spacing: 0;
         text-transform: none;
         color: inherit;

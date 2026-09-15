@@ -1968,14 +1968,48 @@ function raiseOverlay(element, place2) {
   follow();
   window.addEventListener("scroll", follow, { capture: true, passive: true });
   window.addEventListener("resize", follow);
+  const resized = typeof ResizeObserver === "function" ? new ResizeObserver(follow) : null;
+  resized?.observe(element);
   return () => {
+    resized?.disconnect();
     window.removeEventListener("scroll", follow, { capture: true });
     window.removeEventListener("resize", follow);
     if (element.matches(":popover-open")) element.hidePopover();
     if (added) element.removeAttribute("popover");
+    clearBlockSide(element);
   };
 }
-function raiseInPlace(element, anchor) {
+var clearBlockSide = (element) => {
+  element.style.removeProperty("max-block-size");
+  element.style.removeProperty("overflow-y");
+  delete element.dataset.kpOverlaySide;
+};
+function placeBlockSide(element, field) {
+  clearBlockSide(element);
+  const drawn = element.getBoundingClientRect();
+  const style = getComputedStyle(element);
+  const height = drawn.height;
+  const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
+  const cap = (room) => {
+    element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
+    element.style.overflowY = "auto";
+  };
+  const gap = Math.max(0, drawn.top - field.bottom);
+  const view = document.documentElement.clientHeight;
+  const below = view - drawn.top;
+  const above = field.top - gap;
+  if (height <= below || below >= above) {
+    if (height > below) cap(below);
+    return "below";
+  }
+  const size = Math.min(height, above);
+  const top = Number.parseFloat(element.style.top) || 0;
+  element.style.top = `${top + (field.top - gap - size - drawn.top)}px`;
+  if (height > above) cap(above);
+  element.dataset.kpOverlaySide = "above";
+  return "above";
+}
+function raiseInPlace(element, anchor, field = anchor) {
   const drawn = element.getBoundingClientRect();
   const from = anchor.getBoundingClientRect();
   const dx = drawn.left - from.left;
@@ -1987,6 +2021,7 @@ function raiseInPlace(element, anchor) {
     element.style.left = `${at.left + dx - (Number.parseFloat(style.marginLeft) || 0)}px`;
     element.style.top = `${at.top + dy - (Number.parseFloat(style.marginTop) || 0)}px`;
     element.style.width = `${width}px`;
+    placeBlockSide(element, field.getBoundingClientRect());
   });
   return () => {
     lower();
@@ -2107,7 +2142,7 @@ function attachComboboxes(root = document, {
     const setOpen = (next) => {
       const was = list.hidden === false;
       list.hidden = !next;
-      if (next && !was) lower = raiseInPlace(list, box);
+      if (next && !was) lower = raiseInPlace(list, box, input);
       if (!next && was) {
         lower();
         lower = () => {
@@ -2405,6 +2440,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
     list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
     list.style.width = `${box.width}px`;
+    if (raised(list)) placeBlockSide(list, box);
   };
   const isOpen = () => list.hidden === false;
   let lower = () => {
@@ -3111,6 +3147,7 @@ function placeDatePanel(panel) {
     }
     panel.style.left = `${Math.round(x)}px`;
     panel.style.top = `${Math.round(anchor.bottom)}px`;
+    placeBlockSide(panel, anchor);
     return;
   }
   const start = panel.getBoundingClientRect();

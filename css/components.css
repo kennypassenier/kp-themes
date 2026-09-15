@@ -1041,7 +1041,11 @@
     /* The error is text, and it names what is wrong. A red border alone is
  * colour as the only carrier [DI4], and says nothing to a screen reader. */
     .kp-field__error {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        /* Its size is the package's [scope-88]: titanium's 13px, on the
+     * running line height; a register keeps its face and its ornaments. */
+        padding-block: 0;
+        font-size: var(--kp-field-error-size, 0.8125rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--destructive);
     }
 
@@ -1651,7 +1655,8 @@
  * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
  * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
  * two layout units, and the bar's measured height and the scroll offset
- * written from it no longer read the same (tests/nav-sticky.spec.mjs). The links sit in
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The call to
+ * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
  * a column item (below), so the padding holds its room even where a
  * register leaves the link inline. */
     .kp-nav__link {
@@ -2237,7 +2242,11 @@
 
     .kp-sidenav__title {
         margin: 0;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        /* Its size is the package's [scope-88]: titanium's 14px, on the
+           running line height; a register keeps its face, case and spacing. */
+        padding-block: 0;
+        font-size: var(--kp-sidenav-title-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
@@ -3317,7 +3326,9 @@
  * options were out of reach inside a card in dark, cyberpunk, phantom and
  * titanium. js/combobox.js places it in window coordinates under its field
  * and as wide as the list was; the popover's UA inset, margin and ink are
- * put back to the list's own. */
+ * put back to the list's own. With no room below, it opens above the field
+ * at the same distance, with `data-kp-overlay-side="above"` written for a
+ * register that mirrors something [fix-30]. */
     .kp-combobox__list:popover-open {
         position: fixed;
         inset: auto;
@@ -4585,7 +4596,8 @@
  * or overflow reaches it (js/top-layer.js). js/datepicker.js places it in
  * window coordinates; what the popover's UA sheet gives every popover —
  * an inset of 0, auto margins, its own overflow and ink — is put back to
- * what the panel had. */
+ * what the panel had. With no room below, it opens above the picker, with
+ * `data-kp-overlay-side="above"` [fix-30]. */
     .kp-datepicker__panel:popover-open {
         position: fixed;
         inset: auto;

@@ -114,6 +114,16 @@ popover needs a matching `position-anchor`; both are set by the React
 they are set and it still happens, the browser is older than the baseline
 — `tests/baseline.spec.mjs` names the four features this package needs.
 
+### A list or calendar opens above its field, or scrolls inside itself
+
+That is the placement, not a fault [fix-30]. An open combobox list, drawn
+select list or date picker calendar is fixed to the window
+(`js/top-layer.js`), so it cannot be scrolled into view: with too little room
+under the field and more above it, it opens above and carries
+`data-kp-overlay-side="above"`; with too little room on either side, it
+takes the larger one with a `max-block-size` and scrolls. A register that
+draws something only on the list's top edge can answer the attribute.
+
 ### A sticky bar does not stick, or never turns compact
 
 `.kp-nav-wrap--sticky` sticks inside its parent, so a parent exactly as

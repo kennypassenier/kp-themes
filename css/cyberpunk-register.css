@@ -674,7 +674,6 @@
 
     [data-theme='cyberpunk'] .kp-field__error {
         font-family: var(--kp-mono);
-        font-size: 0.7rem;
         letter-spacing: 0.06em;
     }
 

@@ -425,7 +425,6 @@
 
     [data-theme='shade-light'] .kp-field__error {
         color: var(--destructive);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-fieldset {

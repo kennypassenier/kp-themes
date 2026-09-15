@@ -35,7 +35,7 @@
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
-import { raiseInPlace, raiseOverlay } from './top-layer.js';
+import { placeBlockSide, raiseInPlace, raiseOverlay, raised } from './top-layer.js';
 
 const COMBOBOX = '[data-kp-combobox]';
 const INPUT = 'input[role="combobox"]';
@@ -181,7 +181,7 @@ export function attachComboboxes(
             const was = list.hidden === false;
             list.hidden = !next;
             // Above a container that clips — a card's cut corners hid every option in four themes — where it was drawn.
-            if (next && !was) lower = raiseInPlace(list, box);
+            if (next && !was) lower = raiseInPlace(list, box, input);
             if (!next && was) {
                 lower();
                 lower = () => {};
@@ -599,6 +599,8 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
         list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
         list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
         list.style.width = `${box.width}px`;
+        // Above the select when the window has no room under it [fix-30].
+        if (raised(list)) placeBlockSide(list, box);
     };
 
     const isOpen = () => list.hidden === false;

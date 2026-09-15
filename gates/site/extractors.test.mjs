@@ -202,7 +202,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // padding; the tab's size and block padding; the bar link's, the menu
     // link's and the side-navigation link's size and block padding; the
     // breadcrumb's and the pagination's size: 182 + 18.
-    assert.equal(result.expected, 200, 'AR21 counted 200 --kp-* properties in css/components.css');
+    // scope-88 added two, the field error's and the side navigation title's
+    // size (--kp-field-error-size, --kp-sidenav-title-size): 200 + 2.
+    assert.equal(result.expected, 202, 'AR21 counted 202 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -235,8 +237,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
-    // Option B's eighteen (scope-87) are read through var() too.
-    assert.equal(result.readCount, 200);
+    // Option B's eighteen (scope-87) and scope-88's two are read through var() too.
+    assert.equal(result.readCount, 202);
     assert.deepEqual(result.unread, []);
 });
 

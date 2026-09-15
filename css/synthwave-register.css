@@ -481,7 +481,7 @@
     /* The call to action is a neon frame. */
     [data-theme='synthwave'] .kp-nav__link--cta {
         margin-left: 0.6rem;
-        padding: 0.55rem 1.3rem;
+        padding-inline: 1.3rem;
         border: 2px solid var(--primary);
         border-radius: var(--radius);
         color: var(--kp-core);

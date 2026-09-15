@@ -27,6 +27,11 @@
 // case, letter spacing and ornaments. Letter spacing and capitals still
 // widen a line, so B promises nearly equal, not identical.
 //
+// scope-88 added three boxes on 2026-09-15: the bar's call to action
+// (`.kp-nav__link--cta`, a bar link the link matcher's `(?![\w-])` did not
+// reach), a field's error and the side navigation's title. Nine
+// declarations in six registers on 6dd76c6c, none after.
+//
 // Run: node --test gates/
 
 import { test } from 'node:test';
@@ -111,6 +116,18 @@ COVERED_TYPE.push(
         properties: [...TYPE_METRICS, ...BLOCK_METRICS],
         matches: (compound) => /\.kp-sidenav__(?:link|category-toggle)(?![\w-])/.test(compound),
     },
+    // scope-88: the bar's call to action, a field's error and the side navigation's title.
+    {
+        name: '.kp-nav__link--cta',
+        properties: [...TYPE_METRICS, ...BLOCK_METRICS],
+        matches: (compound) => /\.kp-nav__link--cta(?![\w-])/.test(compound),
+    },
+    { name: '.kp-field__error', properties: [...TYPE_METRICS, ...BLOCK_METRICS], matches: (compound) => /\.kp-field__error(?![\w-])/.test(compound) },
+    {
+        name: '.kp-sidenav__title',
+        properties: [...TYPE_METRICS, ...BLOCK_METRICS],
+        matches: (compound) => /\.kp-sidenav__title(?![\w-])/.test(compound),
+    },
     {
         name: '.kp-breadcrumb / .kp-pagination',
         properties: TYPE_METRICS,
@@ -164,6 +181,9 @@ export const PACKAGE_TOKENS = [
     '--kp-sidenav-item-pad',
     '--kp-breadcrumb-size',
     '--kp-pagination-size',
+    // scope-88.
+    '--kp-field-error-size',
+    '--kp-sidenav-title-size',
 ];
 
 /**
@@ -332,6 +352,14 @@ test('option B reads type metrics on headings, labels, tabs, badges and navigati
     assert.equal(scoped("[data-theme='x'] .kp-sidenav__link, [data-theme='x'] .kp-sidenav__category-toggle { padding: 0.6rem 1.1rem; }").length, 2);
     assert.equal(scoped("[data-theme='x'] .kp-breadcrumb, [data-theme='x'] .kp-pagination { font-size: 0.85rem; }").length, 2);
     assert.equal(scoped("[data-theme='x'] { --kp-nav-link-size: 1rem; }").length, 1);
+    // scope-88: the shapes the registers of 6dd76c6c wrote.
+    assert.equal(scoped("[data-theme='x'] .kp-nav__link--cta { padding: 0.55rem 1.3rem; }").length, 1);
+    assert.equal(scoped("[data-theme='x'] .kp-nav__link--cta:active { padding: calc(0.25rem + 1px) 0.9rem; }").length, 1);
+    assert.equal(scoped("[data-theme='x'] .kp-field__error { font-size: 0.7rem; }").length, 1);
+    assert.equal(scoped("[data-theme='x'] .kp-sidenav__title { font-size: 0.625rem; }").length, 1);
+    assert.equal(scoped("[data-theme='x'] { --kp-field-error-size: 1rem; --kp-sidenav-title-size: 1rem; }").length, 2);
+    assert.deepEqual(scoped("[data-theme='x'] .kp-nav__link--cta { padding-inline: 1.3rem; font-weight: 700; }"), []);
+    assert.deepEqual(scoped("[data-theme='x'] .kp-field__error::before { content: '!! '; font-size: 0.7rem; }"), []);
     // What a register keeps: inline padding, face, case, spacing, ornaments, the strip's own layout.
     assert.deepEqual(scoped("[data-theme='x'] .kp-nav__link { padding-inline: 1.1rem; letter-spacing: 0.18em; text-transform: uppercase; }"), []);
     assert.deepEqual(scoped("[data-theme='x'] .kp-nav__link::after { height: 4px; bottom: 0; }"), []);

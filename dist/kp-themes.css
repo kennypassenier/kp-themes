@@ -5250,7 +5250,11 @@
     /* The error is text, and it names what is wrong. A red border alone is
  * colour as the only carrier [DI4], and says nothing to a screen reader. */
     .kp-field__error {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        /* Its size is the package's [scope-88]: titanium's 13px, on the
+     * running line height; a register keeps its face and its ornaments. */
+        padding-block: 0;
+        font-size: var(--kp-field-error-size, 0.8125rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--destructive);
     }
 
@@ -5860,7 +5864,8 @@
  * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
  * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
  * two layout units, and the bar's measured height and the scroll offset
- * written from it no longer read the same (tests/nav-sticky.spec.mjs). The links sit in
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The call to
+ * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
  * a column item (below), so the padding holds its room even where a
  * register leaves the link inline. */
     .kp-nav__link {
@@ -6446,7 +6451,11 @@
 
     .kp-sidenav__title {
         margin: 0;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        /* Its size is the package's [scope-88]: titanium's 14px, on the
+           running line height; a register keeps its face, case and spacing. */
+        padding-block: 0;
+        font-size: var(--kp-sidenav-title-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
@@ -7526,7 +7535,9 @@
  * options were out of reach inside a card in dark, cyberpunk, phantom and
  * titanium. js/combobox.js places it in window coordinates under its field
  * and as wide as the list was; the popover's UA inset, margin and ink are
- * put back to the list's own. */
+ * put back to the list's own. With no room below, it opens above the field
+ * at the same distance, with `data-kp-overlay-side="above"` written for a
+ * register that mirrors something [fix-30]. */
     .kp-combobox__list:popover-open {
         position: fixed;
         inset: auto;
@@ -8794,7 +8805,8 @@
  * or overflow reaches it (js/top-layer.js). js/datepicker.js places it in
  * window coordinates; what the popover's UA sheet gives every popover —
  * an inset of 0, auto margins, its own overflow and ink — is put back to
- * what the panel had. */
+ * what the panel had. With no room below, it opens above the picker, with
+ * `data-kp-overlay-side="above"` [fix-30]. */
     .kp-datepicker__panel:popover-open {
         position: fixed;
         inset: auto;
@@ -9839,7 +9851,6 @@
 
     [data-theme='cyberpunk'] .kp-field__error {
         font-family: var(--kp-mono);
-        font-size: 0.7rem;
         letter-spacing: 0.06em;
     }
 
@@ -11404,7 +11415,7 @@
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 700;
-        padding: 0.25rem 0.9rem;
+        padding-inline: 0.9rem;
     }
 
     [data-theme='retro'] .kp-nav__link--cta:hover,
@@ -11423,7 +11434,8 @@
 
     [data-theme='retro'] .kp-nav__link--cta:active {
         box-shadow: var(--kp-pressed);
-        padding: calc(0.25rem + 1px) calc(0.9rem - 1px) calc(0.25rem - 1px) calc(0.9rem + 1px);
+        /* The label steps one pixel toward the inline start; the block padding is the package's [scope-88]. */
+        padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -11661,7 +11673,6 @@
 
     [data-theme='retro'] .kp-field__error {
         font-family: var(--kp-dos);
-        font-size: 1rem;
         color: var(--destructive);
     }
 
@@ -12813,7 +12824,6 @@
     }
 
     [data-theme='retro'] .kp-sidenav__title {
-        font-size: 0.75rem;
         letter-spacing: 0;
         text-transform: none;
         color: inherit;
@@ -13458,7 +13468,7 @@
     /* The call to action is a neon frame. */
     [data-theme='synthwave'] .kp-nav__link--cta {
         margin-left: 0.6rem;
-        padding: 0.55rem 1.3rem;
+        padding-inline: 1.3rem;
         border: 2px solid var(--primary);
         border-radius: var(--radius);
         color: var(--kp-core);
@@ -23126,7 +23136,6 @@
 
     [data-theme='shade-light'] .kp-field__error {
         color: var(--destructive);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-fieldset {
@@ -29401,7 +29410,7 @@
         background: var(--primary);
         border: 1px solid var(--primary);
         border-radius: 2px;
-        padding: 0.4rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 600;
     }
 
@@ -31525,7 +31534,6 @@
         font-family: var(--theme-font-mono);
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        font-size: 0.625rem;
     }
 
     [data-theme='nostromo'] .kp-sidenav__link,

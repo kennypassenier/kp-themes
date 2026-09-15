@@ -865,7 +865,11 @@ the drawn select's list become a manual popover while they are open
 following it when anything scrolls. They stay where they are in the
 document, so the theme, the register rules and focus behave as before. A
 calendar that would run past the window's inline end opens toward the
-inline start instead (`data-kp-align="end"` on the panel).
+inline start instead (`data-kp-align="end"` on the panel). A list or
+calendar whose field sits near the window's bottom edge opens above the
+field when there is more room there, and says so with
+`data-kp-overlay-side="above"`; when neither side has room for all of it,
+it takes the larger side and scrolls itself [fix-30].
 
 ## The grid and the nav bar measure their own box too [TH104]
 

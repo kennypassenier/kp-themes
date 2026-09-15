@@ -167,4 +167,4 @@ register's colours are.
 
 | fix-18-M1 | Does the stop hook block, or does it not have to because the next phase had already begun? Measured at the next phase close. | open |
 
-| fix-30-M1 | Does a raised overlay open upward when the room below is too small? Measured at the commit of the fix: six new tests red on `7c707d54` and green after, and `tests/nostromo-second-pass.spec.mjs:121` green at the commit level. | open |
+| fix-30-M1 | Does a raised overlay open upward when the room below is too small? Measured at the commit of the fix: the six tests in `tests/overlay-flip.spec.mjs` red on `6dd76c6c` (list at y=486–604 under an input at 446 in a 520px window) and green after, `tests/nostromo-second-pass.spec.mjs:121` green, commit level 1362 passed, 3 skipped, 0 failed. | closed |

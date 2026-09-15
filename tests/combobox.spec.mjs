@@ -145,7 +145,7 @@ const wear = async (page, theme) => {
 
 for (const channel of CHANNELS) {
     test(
-        `inside a card that clips its corners the open list is whole, takes its clicks and stays under the input, in every theme — ${channel.name} [2026-09-13]`,
+        `inside a card that clips its corners the open list is whole, takes its clicks and stays against the input, in every theme — ${channel.name} [2026-09-13]`,
         { tag: ['@component:combobox', '@sweep'] },
         async ({ page }) => {
             // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach (4 of 5 in phantom).
@@ -186,9 +186,20 @@ for (const channel of CHANNELS) {
                         const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
                         return hit !== option && !option.contains(hit);
                     }).length;
-                    return { missed, of: options.length, gap: Math.round(drawn.getBoundingClientRect().top - field.bottom) };
+                    // Under the input, or above it when the window has no room below [fix-30]: the card
+                    // puts the framework-free input's bottom 88px above a 720px window's edge, less than the
+                    // list's 118px, so that list opens above, at the same gap.
+                    const list = drawn.getBoundingClientRect();
+                    const above = drawn.dataset.kpOverlaySide === 'above';
+                    return {
+                        missed,
+                        of: options.length,
+                        side: above ? 'above' : 'under',
+                        gap: Math.round(above ? field.top - list.bottom : list.top - field.bottom),
+                    };
                 });
-                if (m.missed > 0 || m.gap < 0 || m.gap > 8) lost.push(`${theme}: ${m.missed} of ${m.of} out of reach, ${m.gap}px under the input`);
+                if (m.missed > 0 || m.gap < 0 || m.gap > 8)
+                    lost.push(`${theme}: ${m.missed} of ${m.of} out of reach, ${m.gap}px ${m.side} the input`);
                 await input.press('Escape');
                 await expect(list).toBeHidden();
                 await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());

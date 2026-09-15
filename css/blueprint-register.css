@@ -422,7 +422,7 @@
         background: var(--primary);
         border: 1px solid var(--primary);
         border-radius: 2px;
-        padding: 0.4rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 600;
     }
 

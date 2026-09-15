@@ -271,7 +271,7 @@ function ComboboxInner(
     // raiseInPlace the framework-free channel opens with (js/top-layer.js).
     useLayoutEffect(() => {
         if (!listShown || listRef.current === null || boxRef.current === null) return undefined;
-        return raiseInPlace(listRef.current, boxRef.current);
+        return raiseInPlace(listRef.current, boxRef.current, inputRef.current ?? boxRef.current);
     }, [listShown]);
 
     return (

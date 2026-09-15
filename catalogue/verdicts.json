@@ -149,9 +149,9 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a91734805ab427b860e41d85af59fe46edd124fa9efbf7b51ea7b260b859be9d",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "66b9db47979509844c86847fa7b9d10bdc8dcfbd5f79f74f1f22c6bb3c74af8f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -327,9 +327,9 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "67593d374f886a28811c81d589a2e44ee6439433b68a493fa50091cddf65f945",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "446d4a583cacb4c5d5f03f20a63168782a0a65de0a19ac72f84f0727462a1a1d",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -505,9 +505,9 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "316db228ae14c0aee65f91d933f27a498715c601385eb4d74c0c375ae7918c42",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "edff13239c9bf2864a2bc7ccaf5d6bb6c0f4421d1354babdef70afaf6c96523b",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -675,17 +675,17 @@
             "shade-light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "dc54d6019aa8d8d4c496ab9d85cd95929f0dd2554592e357f2b698c8c50c545e",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "f301784a21003f38cce704c843616818363d23512b4618817763a5f87eb77ef1",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "4e77faa36395455e52cfc805dccee1f3ccbd1a34c3e9aad15224719784cfa8ab",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "42a45669f6e20341a0dd5e1753cf15c902ff9b42a5a9e2caae8e8346ac53b10d",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -853,17 +853,17 @@
             "shade-light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "b01d10399d4945553fa46a95cae82f6c289b8a4f0db89dec8a1cbe5dc7253439",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "a49a784a9d38c1a7d90129a4ec345010989512e1473eb5134caae4e339d53e73",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "e1a79b3ccea701840fb418db646015c3af4ab6a4efb3c4550078e5b41ac914f5",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "3c451af9491f60550c13c268a25b94c2cbe4bc47070fcc471112ac98957c6183",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -1031,17 +1031,17 @@
             "shade-light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "826b56c6c75bed8e6d736f857521632d11758fa61c88baaacf5feb718940df52",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "48022f19c9484fecf9d633dfbd1bce8c02bddf18b4790252d73a744d6aff9da7",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7d61e54c81e2147a1046e47ae419836f97b442eadc536533c091476c66618e31",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "c7f5639bb2494ca12c8200c7890479d5a2cc8b0b2b1c963bfac3e6faea00a653",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -1209,17 +1209,17 @@
             "shade-light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "4acf31023966b4d39d1d45dfe239fbca6153a1891168d9047cacef16fefc120a",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "31475e6cf00cb93d2e0622b4db23763de485e186d8c0e91ddd2eed6170034ae1",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "0fe98d5c417bd5b153e478a11055fa4267ea0f18b88b4052df1e48b18387265d",
-                    "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
-                    "given": "2026-09-14"
+                    "hash": "087bc5eae054597a4573616bb2177efbc5a6528c8dd3945061ab1e4d56d42404",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             },
             "synthwave": {
@@ -1255,6 +1255,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ca0a862e8be17f239c2a343d122d60bad93bb3ce6c6055462052db731e65d598",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "colorpicker--default": {
@@ -1264,6 +1272,14 @@
                     "hash": "83f8c0da539d9d6cc123b5eccd6a27a3b6002143ae40e530807529803d77676c",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c3dddbdcda650e0a7daf3b3b0c36d52b399c08b9f856c58a302934b2c51432ac",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1275,6 +1291,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a11ed40c24e6a1d3cbf347e7a1b923fbfd276f2ec16d1f27c9e9fb99fd610a78",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "colorpicker--narrow": {
@@ -1284,6 +1308,14 @@
                     "hash": "705806649d98f3a376e7fa772c4cfbd996d7e90eb7a93d1df049280561d9d41a",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "466d94bffac5eafa66bb13a40610cbf6b7b2416d3d3022b576883ec2675d9abb",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1295,6 +1327,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "49fbf560985df24cfaf09d459c01051c2d85dcd060a3e0dd4d0bec899bce4ec4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "combobox--closed": {
@@ -1304,6 +1344,14 @@
                     "hash": "e4fb4eb3cd5fbf4406d85d7ff6e9ab8fe8dbacc9212b2da7c7646f7af308bab2",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a189316b0bc11e113e8fc9dc8c93025156c4349eedbaae69013114bf8d26a9f5",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1315,6 +1363,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "46863dd2f1c5d83844305a65a2a4f457fb74841527569b09e1495c022eb8edc5",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "combobox--long": {
@@ -1324,6 +1380,14 @@
                     "hash": "cad93b7b31eaa4c0143608efa37f910b7060d44214685c548fdeae0d18943542",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ba77b6ccd40e56b74b9ed2cf15d51e37476a534f6ac40b639a549387c952e1c1",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1335,6 +1399,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ec6eafc6221b7c7591c5c86c3f02fdbf0f4f76b3ed804347b550933b481f3639",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "combobox--nothing": {
@@ -1344,6 +1416,14 @@
                     "hash": "f525a4e230a7b32ff05d1dfc3cf983b00a9c6e01fe4b75e3c6c7b008e4a0f77a",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "12a417e6480b7c11e77475df03ebb99c6d309f248b909493be2e63e74f1c75a1",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1355,6 +1435,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1520172e9eb8cd9748ae0bba3a06255f161d29465f9532031ef326175fb56c03",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "combobox--tags": {
@@ -1364,6 +1452,14 @@
                     "hash": "bc1b3f40545f1abcd013ba62d251efb65f02ebbe5df83fafba8c96526a1cb2ae",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "be0dbf03d1204cb073e63cd2713846e89da977d2783916fe874311596362fb0f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1375,6 +1471,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "417fada44519280ea81d1aad7f829c922c78fb57430f905798c92be399b5c95b",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "data--copyable": {
@@ -1384,6 +1488,14 @@
                     "hash": "7d74360943a4a0a4c147753fba957f391126b7538af81aeffe7635a975eb8f29",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "6c832aaeb1379cbd7cd71b011ab68a490795d922cce1ef69ae36670bd9230adc",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1395,6 +1507,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2ab06f441bd5483f3b2b304065baa931c71506e7ce4dfc0a288ba9895b851054",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "data--health": {
@@ -1404,6 +1524,14 @@
                     "hash": "32f400931de3412c6899ea00e9d21513228ab2c42594d210092ad1048dcd4e9e",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "532bfbcc57f670596e6673cec2a8b1eb5468c09526435c2b09aae2b9e39bf80e",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1415,6 +1543,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b6263482473ca202b89b379d7bb6112bde6c35f23146b90f6308d0b7174dadcf",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "data--shortcuts": {
@@ -1424,6 +1560,14 @@
                     "hash": "73896998ea212b08280d6aa350cacda06e4ff99a0a4ea267f451ec72ccc46250",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0d7e15a7e5633d29cefd4e1ab327a6bf05257e02aea53af86852f142bf1a9964",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1435,6 +1579,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e72aa2583ba6fbd14c2186f033d8f8d4c97dd6892b66acb4bebfb040bfa672ad",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "data--values": {
@@ -1444,6 +1596,14 @@
                     "hash": "5a18add92e7ad927cb5599c5f09d68a4c166185d4050b0fb49e02c0de3c0328b",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "d60a9c35c40b319d2e074cd9b4f621d8d5951f285b54bb2ebe76af426e39e5de",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1455,6 +1615,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "ee62f45c74bdfc8b76f3e9e1f75cc9cd31660d635ab31d2b353ea2a1fd1dd6b5",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "datepicker--keyboard": {
@@ -1464,6 +1632,14 @@
                     "hash": "85c6e174eea447b465bc8825b1168a110214d6d5e845b1d3e92ed656ae18377c",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1716e6376d26b5829165bd6ea5b7aae38abf621e4c8d87abe5ab089aeaaf03f6",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1475,6 +1651,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3e8920419aa5767c14c340b09c22880e4e63597933bbf5c3d2dc8432cdffb476",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "datepicker--locale": {
@@ -1484,6 +1668,14 @@
                     "hash": "5b8070d71342196e9b9787bc510694b03bac6143b3e54fdd8186bd7cff630d20",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "238bb279e22fc3b11a8155205947c3e6c854296ee1ae75e58137d2261abf5746",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1495,6 +1687,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "00fd6bf8268d4ae5410bd6b6fc75f3351bbfa0d6d562af4d1c024ba068eed5ed",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--alert-long": {
@@ -1504,6 +1704,14 @@
                     "hash": "4d0e7e9348e47a71964e172bbc57bb49d2bfa58ba0deffe98ed6f9387bba4ec7",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a494ea38e665e5f8e3a3de29ea1af632f3b001e2792fb43f223faba056c19150",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1515,6 +1723,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1d7d9c19984de1840b644e793a6f5d1696bf3512d70ff6dfecaf2d96f14591bd",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--badge-long": {
@@ -1524,6 +1740,14 @@
                     "hash": "06d912315da62d1dc5fc9cffc50d7ba43f84c370f20c83bdaca4d802e0f4cf62",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "53721f497b9053b82bf9c26c2657454f591fd5253865258141c710bfb07d17e2",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1535,6 +1759,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ed47fe3605b36f8edb7a697d831578b5dff263120edd25ffd878e9ea75ca2e88",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--empty": {
@@ -1544,6 +1776,14 @@
                     "hash": "7c8685d5db49463d926e11630840f9b11f9a97063e7607db1e12f64da996b8ee",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a5c8e0307955a46201e50f4b169fc8b35360361e29ab475add15629f65edcc2c",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1555,6 +1795,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e0b9dcdf1e41c5afba3e29849b4bd19ae74c811fbdde8a1f10d7ee52269dfed7",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--skeleton": {
@@ -1564,6 +1812,14 @@
                     "hash": "c4639d33512ad0b2a212aa9fcf2420724ddf52b5ba974abbbbc28981080eb844",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9ba18cd7af8c297ea838b6612c201713f93b752e68d83a0a8187349b7cec2aa2",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1575,6 +1831,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "629b4eca495965ca10d425fa76df10bf294675ace8071f00725cfa153f6dd068",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--tags": {
@@ -1585,6 +1849,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a8af4a1bf5a8f35182e422f90274d42a859e7c341297f9370b2224476c1d4862",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "feedback--toasts": {
@@ -1594,6 +1866,14 @@
                     "hash": "3afafd3b06f623f56cb5487bc191a52e37296476ea515a3a54ea475cadc5822d",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "bbab2146ed9478803e426219d9ffafea7c00b58b029f9e87e8fc9e2588c42c6a",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1613,6 +1893,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ed5bc1a5861c7b3025693724f47f642c5db1cec818e730896a9c377a93883143",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--error-page": {
@@ -1622,6 +1910,14 @@
                     "hash": "5c11633d87fa86dde2f4ffbc0642762245958c081c0b069460ec2164bac61bfa",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "530859a2d3087897d15665dc33a2bacdaee4695803b76a9272c0f6f4775e7757",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1633,6 +1929,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b42907b7858473cf3d13e001c77d9760cf3fc97e3d836a1d859b5a29a27cd2a8",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--help": {
@@ -1643,6 +1947,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "41f60b787c1f97b9d95f726dadde157f83c14b8faae92d16c1b7e80152bcbaf4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--invalid": {
@@ -1652,6 +1964,14 @@
                     "hash": "1db19366f13984cb73163ad7f3953b630531456782588140acfde59c58d33402",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e927ad4e23611f7b7298856cb75808644b6df6ae4a3e12614126e0b4b31ba925",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1671,6 +1991,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e71c91fe225ab76c0b76264361e3673a532f80e4d7a00c101da092cc6c82ab84",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--narrow": {
@@ -1681,6 +2009,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b8065382a80b38c0297a91b4f961d3a534bf328915e714c7fc97032c9c0c3a8f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--summary": {
@@ -1690,6 +2026,14 @@
                     "hash": "cb00baf20a4bd9cd2a32d604bcf32374424d5ba216b6276cf462b30054a88c9d",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "8c2fe2a6e8a7f60f0cf7c7879db67052722bf7eaf94afa310d8fbd378f62cc6e",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1709,6 +2053,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "94b36de7474e7f46ba2761e412c43d9d79cf42ab75121042a6e001fb70c41d38",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "field--unavailable": {
@@ -1718,6 +2070,14 @@
                     "hash": "f3d8fcf4e8182c63edd0b3790ee4aa5abd133e6c6f24d53f0a82369c2f7ad048",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "94d5db8d29d1819901132a470ba164c53465329606bc22713a6c37d93f1fedf7",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1729,6 +2089,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dc31e26369101545b03def1aa095c5bc83774554fc98fbb110f714996d300d79",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "media--figure": {
@@ -1738,6 +2106,14 @@
                     "hash": "6ae15c6efbd88815754fe5571b99e610ff3b7780680dab11e02bee05f223900e",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b11e1998e2aea50f6cd471a049cca186fec9940771a21b9eda45fc1fda5c5588",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1749,6 +2125,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cab77607d12fcf6d5e6d1513a4f0af08454543fcac4c6ae95c8f969e37f50b51",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "media--grid-narrow": {
@@ -1758,6 +2142,14 @@
                     "hash": "a037d1648c853ecdc2559b2954891ac45fe94428fe783d7353652d00c2bd0c2c",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1ee5be8a5ce837fb4d074bad4404bc7a2aaa3f0c9a9964a1f52452815f9e7df7",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1769,6 +2161,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c5b67049bef060d07e049da3172004a9b66dcbad35671c478a37550e5795d8ec",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "media--marquee": {
@@ -1778,6 +2178,14 @@
                     "hash": "d0d78f02e53279b2a2975a39990c27397d3cafd9f8ee95e521ae8b922476457a",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "01c303e36e3c33a6777d3a47b69d5676b62c9871f1620cc533d869f5842bee98",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1789,6 +2197,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "94df0b931543f8ea20fc95b6eda33a5c8f573e66115e3ce0604eb7f42827ebdb",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--app-shell": {
@@ -1797,6 +2213,14 @@
                     "verdict": "approved",
                     "hash": "89ab8825f1363c8661975a02f0c1d6487f4e14cbfb122cfaad5755506bf90889",
                     "commit": "b5b58b61d7c97b5097024d20378ebf69930fb793",
+                    "given": "2026-09-15"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dca02567ecb3ba42a9f386b2820aad185ac8fd52d5ecb94f094e0f830f4b5a74",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
                     "given": "2026-09-15"
                 }
             }
@@ -1817,6 +2241,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7c0a4fa39f3143b3c6a739330711e0c00f0c0ff8ec86e18a7cb661fec18e8398",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--bar-collapsed": {
@@ -1834,6 +2266,14 @@
                     "hash": "fe351b929afe93134abc872e19a441b0ae88ef323e20b9e63c513197e18923da",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "24b434e8e02203a2ec34222734d238f366ab3a3f498d2aa49d998031609ac5d0",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1853,6 +2293,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "8c8666b8b69d2808cb9605ea03a5d3c53014b137315b808e9dcc1cd10496b4e3",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--bar-search": {
@@ -1861,6 +2309,14 @@
                     "verdict": "approved",
                     "hash": "0da429c19fde13d21c129ae787e7ca87a49fee787e28da31da30f61f3e7652ef",
                     "commit": "b5b58b61d7c97b5097024d20378ebf69930fb793",
+                    "given": "2026-09-15"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "676a00d00e60c1c9afcb3e2b3a5aba649af855075f95c5ef38ad196a0a88a908",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
                     "given": "2026-09-15"
                 }
             }
@@ -1897,6 +2353,14 @@
                     "commit": "8424e8962e82846463f39ba48ac141ad443e6930",
                     "given": "2026-09-15"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "da447c5b18f32c19eda01b2e9f07d764dc9552c1b405c38c2ac8a0bb8acf67e8",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--breadcrumb": {
@@ -1914,6 +2378,14 @@
                     "hash": "eaf62c66aa996de6092bcf5730ea753fffbc5776a4560ded6f585e81c55894a4",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "78f781467d9a0b625864e0c0765fa5d7095cc7f9233e35f6b315d3a634279d1e",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1933,6 +2405,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5b8cafe19f57d064af0c8cf9156bf089c5749258b89b588663592ea096ddbfa6",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--mega-menu": {
@@ -1941,6 +2421,14 @@
                     "verdict": "approved",
                     "hash": "da871092c8d1752129b67a9453d319254b27f2efd1e8a1832ae78d10ff5d4aec",
                     "commit": "b5b58b61d7c97b5097024d20378ebf69930fb793",
+                    "given": "2026-09-15"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "bc51baf771b73784376e9d4f822e67543332158f050549bc9f1c897ab8dd7166",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
                     "given": "2026-09-15"
                 }
             }
@@ -1961,6 +2449,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "06b2d2ef49d64351090bc9cf15845ac419dba3b0cee39b55b66eb9e9a1bd4004",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--sidenav-over": {
@@ -1978,6 +2474,14 @@
                     "hash": "f893941bd7a77704b760f607fb3de563e74785f4bba735ae200467dfc1a16512",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "eb294040c91d80ab0c4a62c3d13e05c78e62e8cbc91abcc210c28f07a10e3925",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -1997,6 +2501,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "15936eeaac2686accc479f1704f8c945e2d689a871a37b3dda9776a2b1411757",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--sidenav-slim": {
@@ -2015,6 +2527,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dd5664ae6f06fc8731ee38e1c1e203909bc5da3dc24468e507925a2f5f4f3330",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--sidenav-slim-toggle": {
@@ -2023,6 +2543,14 @@
                     "verdict": "approved",
                     "hash": "4743da235018a14ae9b93c08f44799cf89617e5e49bb310c63e07ec7f9707c32",
                     "commit": "b5b58b61d7c97b5097024d20378ebf69930fb793",
+                    "given": "2026-09-15"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "29abcf5537a3188e879dea149792a2fd9cfaaee4709ac95791120286f56bb796",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
                     "given": "2026-09-15"
                 }
             }
@@ -2043,6 +2571,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9edf7ce8aaa88a4501363245acee6bc6aeb7cfed430a1b01366bcec71287f4b2",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "navigation--tabs-many": {
@@ -2060,6 +2596,14 @@
                     "hash": "c55eaa90c995056a86ac345f028543cbcc05f87c3b8cbe36a7da0eddf5d90bad",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "8593b77cc127364b4cbb606e1577f7fb2ed4d7cbafda4e8e24628ee4870cc96a",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2079,6 +2623,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f9afdd4a60f6c1be1be09c9a4bed33a05101cba54f87c921ae040c68983ff8ed",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "overlays--confirm": {
@@ -2088,6 +2640,14 @@
                     "hash": "4b3405ecc3c46e5fc1c628275b6ccd6c01f816d5cbf88dd76b8a5502d3cd0207",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "0e729516c3b554c6433396215c56295334df4d9c6dd54621d1ee6ce9e3598fdc",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2099,6 +2659,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "246a7b7fe841911fd1588a92ba191ef13a567dfb6b94ac223d65529265ece3d3",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "overlays--dialog-long": {
@@ -2108,6 +2676,14 @@
                     "hash": "0ea77689edce697cf5628ed5aae6bb7c6f8282bb03a590271f719c8386c15ffa",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3ce3b9d8c8c582e1df5439f94602766a9bc2fb52e2382b0ffd932ad8a5ebaaff",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2119,6 +2695,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9b892fce186bcf209cced922a3164b2352ac4b1263731f448f02950b4de089de",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "overlays--menu": {
@@ -2128,6 +2712,14 @@
                     "hash": "7c055afd24827ddfd3391ef8ce18cf1c40abbcc45ff2842d7eac67131d01c92f",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4617307a990af10b29bed45bea4315c3778a949bc13dccd4f2dd5c9d311dd0da",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2139,6 +2731,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e5b976fab174643251b91f1c7ed97690306c3945bf80b5fbf041ab79e4b7fedb",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "overlays--tooltip": {
@@ -2148,6 +2748,14 @@
                     "hash": "4afd0c2edfddf21eb40fdac625c26cdca8f788a3119961d3067460c0c528e410",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5452ff49c606598aca8d0dd976998c14613ec6b23c5a45b29db8a13bc71009b7",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2159,6 +2767,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "3700b704711e69ecf6a775b66dbf56101ad3aa3992ec8e3ebfe16803bd26a535",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "page--palette": {
@@ -2168,6 +2784,14 @@
                     "hash": "c2bc6a9b18a2065a3ae62933463492b931182e154fc3ce7227506a7162b3be71",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "45217afc743747e654c8e265b263afef30e3da47bdef7fda284f306c619863e0",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2179,6 +2803,34 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4a6dbaa1e1509eee8ca4db76ef74ad080888b06eeb134601e43e1a155b903eb8",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page--palette-links": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "72c0aa1cc7010c6d3485fc4eb06e958c0de98ee4fbd0faeab101270c9e5d7e28",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page--side-note": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "ade5bca6130336e05abe0e356573fee9de4bc0cf1c35771f89652069fae3ee5b",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "page--theme-buttons": {
@@ -2188,6 +2840,14 @@
                     "hash": "230868483fec2f8550bb155e15175e6860b294009c5f997d3c0722b21165c6f4",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "35bd446a25a975633770bdea54e7fa06efacc0196750d299bdb364a69aaba5ba",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2199,6 +2859,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e77c6f2166564bd9572fce19bd23f0bd32748ad75fa1f24c11d3a1646facc9fc",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "page--theme-menu-react": {
@@ -2208,6 +2876,124 @@
                     "hash": "571bd0f2d3503307a996c09adff4ad7e1d9baccbc956e96c4e252fec8258e930",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4bd37217f411d4cf56b954fca17968ef1d7a7f7237b68c3b8e65c4099adbc2ed",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--button-readout": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "fe25b0321af436f9178e7214a6dff89bbcd99c5f111c7d7b460619dfc3df4a64",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--density-compact-form": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "284da5dbb7d43148fdbc6bec9b4ff2ba84dd3ede63fa28fca601ba599412df26",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--dividers": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9d7e1d5685209dd55b8447255c2aab2ce3b072ed25344f8561bff1611d16e9f9",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--dossier": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a9a0727fcb191d5872ce9c486607a496f90d338b37abf13da4fe935ff7e1809f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--headline": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "878ed3f4c0ad2cfbacbdb41fc831428d18eb421ac7fe58343d15c659791139e4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--lede-marks": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7a3d0b60277d6c7215df2fcf542983652b558d2ebcae2a478c68d5d91fbaf7b0",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--palette-narrow": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "7b20ee1f135f823138e28db331c820616d2a55f11bf1d06975682e26147ae3a0",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--picker-focus": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "07967a1e6c4e73a790133f6ff96d4d7b847fa5298d69af70a25448de064bb8fa",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--section-rule": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "6a7c6bd9cac21cb20b0b923ffcc82f3a179434ee21377da1176b28f4191ff322",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--surfaces": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "238ac57ba21eefc3978fe7bbd734070bf38dab2a35f38b917ceb6515069dfcec",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "page-effects--table-plain-narrow": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2483dd17b061024fd4481900fc915137787510f8d1b0ff5900b777d2c9509a27",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2219,6 +3005,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "65b9accf4f0b16b6a9818109715bc93becec3bfff6efb85260a29d7d1e999946",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "structure--reorder": {
@@ -2228,6 +3022,14 @@
                     "hash": "1a3afe448accc47e7109173c0dce753edb33c235e702133268c1b5542cab4dbb",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a2aef2b3ba60da9335282c8f2e39a946bd87630a852150f2e01f557b3588ef39",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2239,6 +3041,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5435ec4c3552dc1403eaf156cbf4a69a0e7927459cea3afde0d7530f9d9b38a4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "structure--timeline": {
@@ -2248,6 +3058,14 @@
                     "hash": "be63fd3f193a0c2a463bf4908c8f26df43151b45d614d6a60770822e7ac9d071",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2a9947d93dac100b65bb83195b9f2845924db413a20e8ad1de6dac64746c2183",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2259,6 +3077,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "acc9a8498dd8774d02f355e7751c3f1e4e0f7d59f9182479c8eba8efc1a47d5f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "structure--tree-deep": {
@@ -2268,6 +3094,14 @@
                     "hash": "a29361841137f24c22d324e1a58f08795a8561de401da113f85a13b7fbeab358",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f8762abcb6b7f2484f4ed3125c452acc85e92919b069dcdcf5179ff9d080c874",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2279,6 +3113,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "824dd4e5714c31094daad42903e35dad054327b77a1f6fa33da819ca846d5f27",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "structure--wizard-live": {
@@ -2288,6 +3130,14 @@
                     "hash": "35a740a3540fb655202417f9b6258c38e2b5b1546f5d699c9985374593a57bbb",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "b36f64d69b289d88b668ad48e5055cfaa2ad99d8aa459accae8eeb476bb1d527",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2299,6 +3149,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e6b9b47715bec4ca202493e6f736e98f8541b558c74f98856c6eaebc9282d63f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "switch--invalid": {
@@ -2308,6 +3166,14 @@
                     "hash": "7148ccfd8210d567e9cdecbac3b1c3933b8614da6488453cc68617e6a35e08a5",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a13624748a1a61254c803f7279ffcbfe0458186f02866cceb6daef483f7491c4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2319,6 +3185,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a44dcbfc3525a83283a7d4abd3a53ec7df6b8516a8294b64f8f89576c8c7310f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "switch--states": {
@@ -2329,6 +3203,24 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5ac6f162ca5a6f39e0126977de03ed533a877e11e405b26356aa5cb180ca686d",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "08aa6fa668c31c8465cddf1cd265be29140130f48617261381d5041631a85606",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "table--datatable-add-filter": {
@@ -2338,6 +3230,84 @@
                     "hash": "5c605fcec8ed2e206da2f9c512ec09223330a3c37b1487b2b0c9ff9571c465bc",
                     "commit": "001af2f304bd7f52ed494c95f5f14a46a2e57de8",
                     "given": "2026-09-14"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "a24d66ae182ed972c3521b480d4dde842ee74301d5b4f439580dc5874a0763cb",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-columns": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "61c189d736d4de30ec08f824b11884c8f08b63fb155f514ed0334442e0442d9f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-expansion": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e02684f86957abb2db7d013847bb4b57d7fae25d364eed278a9d52beb1501f54",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-fixed-column": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "9d3f5b8a54f77d75295c64155c53f6a62c007d3ab918914edc3f9567424ea256",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-inline-edit": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "5e028eafbde3c68a1c138d537ff797298211905bd162b3a858cf70bf0e8988c5",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-keyboard": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "cc62c21263339fcb919c5b5b0e2c5261b35e813fb0f04a06cf6d863fcf82155c",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-multi-sort": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "1810e0c675182f4eef8689369461df822c1768ca441614cc5304bd3ed61b2e94",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
+            }
+        },
+        "table--datatable-server": {
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "09b0d8068ff5248e1708a38a033a9c027dc05d3702bdf7e49f461d67403a0a13",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2357,6 +3327,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "94d2a1787e4d185111af63ca1b1b9c01030cd3765910140dca8cec661aed387c",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "table--datatable-sticky": {
@@ -2374,6 +3352,14 @@
                     "hash": "befe4f164b7c8afa9a154c3e0bb0a94c1cb1bd71a1bc1de67a1dd3ba972cef29",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "rejected",
+                    "hash": "aa2b17a2155c8b700d9f8348f950377245306ff2f3f50fec99143f2ceede100b",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2401,6 +3387,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "2ee9702cd49eba11a7d4aacd10faf93f16df5fb5c9ca908b6ba2935fde1f2fc6",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "table--long": {
@@ -2426,6 +3420,14 @@
                     "hash": "0c4ed956e123ca64a865c6af0a1dd185eb6d1b89587649605e312069c274a5f0",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "593aa613120db38b4ae28b13e0463daafdf05ccfddc73b669e810bb7ef6a0a80",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2453,6 +3455,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "acf3c57d9534c1b5e7bc08811a1a25ee162099125b973f1b0fc0fa623aa01757",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "table--numbers": {
@@ -2478,6 +3488,14 @@
                     "hash": "ce17aa7d0954c0b2996e521a520a5c5e9fc0e23aa1bf1296b3e07a75838fc86e",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "e5b247bce81609bc6c5fa6192e03addd5c747a35637c2e8ac344a501c4e13c0c",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2505,6 +3523,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "4e16f51615586f3b8ef8b27eeb7c3a05e02a249173ee440d8f2b8647b2c1b26b",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "table--wide": {
@@ -2531,6 +3557,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "f00bd0caeaa60c3e0592435493bf4c7b3c4ff4cb8df35bddb0b99f98f02ccba0",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "upload--dragging": {
@@ -2540,6 +3574,14 @@
                     "hash": "6c4894a117a119b990aec7c4b0d96fe22d81e876b9c788e36847834cdfe1d06b",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "730bd5da45df5a66d419a89eef2728094aa71f6e4d57e449d6c92fb5363e7460",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2551,6 +3593,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "bd0a42c21063bf1afbbf0f3c13dcaa2e0095488de5556718eb4d90c1fd56927f",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "upload--errors": {
@@ -2560,6 +3610,14 @@
                     "hash": "35b4f7d4ca08e394eccd16e370a7d95c4536367b53e59cf05e3a591aa80901ea",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "dfa13b8bab48b379e804e1885cdca153ebdd6b93bbb1fc3d383268e299671ad4",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         },
@@ -2571,6 +3629,14 @@
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
                 }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "922a598b517e72f7e93acc24b96346bd3c13869d4e55d4b13d60ea4cb69ac212",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
+                }
             }
         },
         "upload--narrow": {
@@ -2580,6 +3646,14 @@
                     "hash": "c13ed3f15a21070702658ebcf19d7ce8db5a8ef0a75edc1f8641dc04b1eff79a",
                     "commit": "2a327919b8a59cfcf4f580fd2ec4248a0f0a1f34",
                     "given": "2026-09-13"
+                }
+            },
+            "solstice": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "015816618b2746b906f8e6a8211d10ba655baa6049cfe63ab7b9c34d877c863d",
+                    "commit": "6dd76c6c970a0728525a3787485c86ce68cd87a6",
+                    "given": "2026-09-15"
                 }
             }
         }
