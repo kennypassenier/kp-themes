@@ -1538,3 +1538,15 @@ package sizes a register may not override (e-scope "Met B" of `scope-83`), and
 brackets, dispatch console, LCARS elbow frame, case file) is withdrawn and
 nothing of it is built; `research/futuristic/` stays under "Archived research"
 as the record of what was considered.
+
+**scope-88 · Option B's open questions.** Kenny, 2026-09-15, the option B
+form (commit `7c707d54`). combobox-flip "Klopt": `fix-30` is approved as
+proposed — every overlay raised into the top layer opens upward when there is
+too little room below and more above, with a capped, scrolling list when
+neither side has room; the same run covers `.kp-nav__link--cta`,
+`.kp-field__error` and `.kp-sidenav__title` with package sizes. solstice-hero
+"De pakketmaat houden": solstice's hero headline keeps the package's
+`--kp-text-display` (48px at 1920px wide, where it was 168px); no `MAY_KEEP`
+exception. trail-numerals "Cijfers van gelijke breedte houden": light,
+shade-light and pastel keep `font-variant-numeric: tabular-nums` on the
+breadcrumb and the pagination. step-timing "Akkoord".

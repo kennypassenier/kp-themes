@@ -3227,3 +3227,47 @@ and read against `render()` in `catalogue/judging.js`: whatever else holds it
 becomes a correction of its own.
 
 **9 · When we review the measure.** At Kenny's next catalogue review.
+
+## fix-30 · A raised overlay never opens upward, so a list below the fold cannot be reached (2026-09-15)
+
+**1 · What went wrong.** After option B (`7c707d54`) made the page above the
+framework-free tag field 14px shorter in formal,
+`tests/nostromo-second-pass.spec.mjs:121` ("a click on an option adds that
+tag — framework-free") failed: the combobox list, raised into the top layer
+and fixed to the window, opened below the window's bottom edge, did not flip
+up, and the click on "Bug" timed out (`locator.click: Test timeout of 30000ms
+exceeded`). A fixed box outside the viewport cannot be scrolled into view, so
+a person could not reach it either.
+
+**2 · Which gate let it through.** None. No test places a field with a
+raised overlay at the bottom of the window; the test passed only because
+there happened to be room below the field.
+
+**3 · Where the same fault sits.** The property: an overlay fixed to the
+window by `js/top-layer.js`, placed without reading the window's height.
+Searched with `grep -rn "raiseInPlace(\|raiseOverlay(" js/*.js | grep -v
+"^js/top-layer.js"`: `js/combobox.js:184` (tag field and combobox list),
+`js/combobox.js:614` (select list), `js/datepicker.js:152` (datepicker
+panel). None flips upward; `placeDatePanel` reads `clientWidth` only.
+
+**4 · How we prevent recurrence.** One placement in `js/top-layer.js` for
+all three: below when it fits, above when the room below is too small and
+the room above larger, and a `max-block-size` with the list scrolling itself
+when neither fits.
+
+**5 · What the remedy costs.** One placement function and six browser tests
+(three overlays, two channels); the time was not measured beforehand.
+
+**6 · Who enforces it.** Code: the six tests, tagged for their components,
+first made to fail on `7c707d54`, run at the commit level.
+
+**7 · How we measure it works, and when.** At the commit of the fix: the six
+new tests red on `7c707d54` and green after, and
+`tests/nostromo-second-pass.spec.mjs:121` green, in the commit-level run.
+
+**8 · If the measurement fails.** If the flip does not hold in both
+channels, opening the overlay scrolls its field into view instead, and that
+returns to Kenny as a correction of its own.
+
+**9 · When we review the measure.** At the next version raise, once the
+tests have gone a round without failing.

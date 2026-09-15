@@ -166,3 +166,5 @@ register's colours are.
 | fix-17-M1 | Does the loose-selector assertion catch page-level furniture before a person does? Measured at the next theme that draws a frame or a sweep on the root. | open |
 
 | fix-18-M1 | Does the stop hook block, or does it not have to because the next phase had already begun? Measured at the next phase close. | open |
+
+| fix-30-M1 | Does a raised overlay open upward when the room below is too small? Measured at the commit of the fix: six new tests red on `7c707d54` and green after, and `tests/nostromo-second-pass.spec.mjs:121` green at the commit level. | open |
