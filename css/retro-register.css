@@ -444,6 +444,7 @@
         box-shadow: var(--kp-raised);
         font-weight: 700;
         padding-inline: 0.9rem;
+        position: relative;
     }
 
     [data-theme='retro'] .kp-nav__link--cta:hover,
@@ -460,15 +461,31 @@
             var(--kp-raised);
     }
 
+    /* Pressed, the label steps one pixel down and right, as the original's
+       did — painted, never laid out, the way the buttons below press (Kenny,
+       2026-09-15 [scope-93]; see "Pressed" under Buttons for the
+       mechanism). It used to move a pixel of block and inline padding from
+       one side to the other: the box kept its size, but its baseline moved,
+       and it was the one block metric this register was allowed to keep
+       for it. Now the whole link is translated a pixel and its face —
+       ground, border and the pressed bevel — is repainted by `::before` a
+       pixel up and left, where it was at rest, so only the words move. The
+       link's own face is hidden in the last rule of this file. */
     [data-theme='retro'] .kp-nav__link--cta:active {
+        translate: 1px 1px;
+    }
+
+    [data-theme='retro'] .kp-nav__link--cta:active::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -2px 0 0 -2px;
+        box-sizing: border-box;
+        background-color: inherit;
+        border: 1px solid;
+        border-color: inherit;
         box-shadow: var(--kp-pressed);
-        /* The label steps one pixel down and one toward the inline end, as the
-         * original did: a pixel of the package's block padding [scope-88] and
-         * one of the inline padding move across, so the box keeps its size
-         * [scope-89]. */
-        padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
-        padding-block: calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) + 1px)
-            max(0px, calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) - 1px));
+        pointer-events: none;
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -1027,6 +1044,11 @@
        and the drawing is this register's. It is painted as background
        layers, which a scroll box keeps still while its content moves.
 
+       A tooltip draws none (Kenny, 2026-09-15, retro-scrollbars "Tooltips
+       zonder scrollbalk" [scope-93]): a line of description is not a
+       window, and never scrolls. Dialogs, menus and confirmations keep
+       theirs.
+
        Enabled and disabled come from js/overlays.js `watchScrollbar`,
        theme-neutral: `data-kp-popover-overflowing` while the content is taller
        than the box, with the view's height, the part in view and the
@@ -1040,7 +1062,7 @@
        styles only a scrollbar's two colours and its width, never its
        arrows, and chromium stops reading ::-webkit-scrollbar the moment
        `scrollbar-color` is set, which this register sets on the root. */
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
         --kp-scrollbar-size: 16px;
         --kp-scrollbar-button: 16px;
         --kp-scrollbar-ink: var(--border);
@@ -1186,8 +1208,10 @@
         padding-inline-end: calc(0.25rem + 18px);
     }
 
+    /* A tooltip draws no bar, so it takes no room for one: the package's
+       own end padding, as before the bar [scope-93]. */
     [data-theme='retro'] .kp-popover.kp-tooltip {
-        padding-inline-end: calc(0.5rem + 18px);
+        padding-inline-end: 0.5rem;
     }
 
     [data-theme='retro'] .kp-dialog {
@@ -1212,13 +1236,13 @@
         border-radius: 0;
     }
 
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
         display: none;
     }
 
     /* Enabled: ink arrows and the thumb. The thumb is at least eight pixels
        long, as the platform's is, and both lengths are whole pixels. */
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
         --kp-scrollbar-ink: var(--foreground);
         --kp-scrollbar-emboss: transparent;
         --kp-scrollbar-thumb: round(
@@ -2251,11 +2275,21 @@
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing.
+
+       Not the base layer's values any more (Kenny, 2026-09-15 [scope-93]):
+       this register's destructive button is a grey face with a dark-red
+       label, and the base's pressed ground, --destructive-active, put that
+       label on its own dark red — measured at 1.38:1.
+       Pressed, the destructive button is what every other button here is:
+       the same face with its bevel inverted and its label stepped a pixel
+       (the pressed state under "Buttons" paints both), the label on the
+       grey at the contrast it has at rest. */
 
     [data-theme='retro'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--destructive-active);
-        border-color: var(--destructive-active);
+        background-color: var(--card);
+        border-color: var(--border-strong);
+        color: var(--destructive);
     }
 
     /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
@@ -2373,6 +2407,17 @@
        the pressed state under "Buttons". */
     [data-theme='retro'] .kp-button:active:not(:disabled),
     [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+        background-clip: text;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
+    }
+
+    /* The call to action in the bar presses the same way [scope-93]. A
+       pressed link has focus, so the menu strip's selection rule
+       (`.kp-nav__links > li:focus-within > .kp-nav__link`, a heavier
+       selector) paints its ground with the shorthand too; the doubled class
+       outweighs it, so the face hidden here stays hidden. */
+    [data-theme='retro'] .kp-nav__link.kp-nav__link--cta:active:active {
         background-clip: text;
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;

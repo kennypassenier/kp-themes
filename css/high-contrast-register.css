@@ -362,6 +362,42 @@
         transform: translateY(0);
     }
 
+    /* The filled two take the ghost's gesture (Kenny, 2026-09-15,
+       hc-filled-hover "De opstijgende balk van Cancel" [scope-93]). Their
+       hover ground is their own border colour, which is their fill, so
+       under the pointer nothing changed at all. Now the same bar rises
+       from the bottom edge, and the same inset bars stand down each side
+       (in the hover rule below), both in the variant's own ink — white on
+       the blue and on the red — because the ghost's black bar would be
+       lost on either fill. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive) {
+        overflow: hidden;
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 3px;
+        background: var(--kp-hc-bar-ink);
+        transform: translateY(100%);
+        pointer-events: none;
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary {
+        --kp-hc-bar-ink: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive {
+        --kp-hc-bar-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled)::after,
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):focus-visible::after {
+        transform: translateY(0);
+    }
+
     [data-theme='high-contrast'] .kp-icon-button {
         border-width: 2px;
     }
@@ -924,7 +960,8 @@
             transition: none;
         }
 
-        [data-theme='high-contrast'] .kp-button--ghost::after {
+        [data-theme='high-contrast'] .kp-button--ghost::after,
+        [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
             transition: transform var(--kp-ghost-bar) var(--fx-ease);
         }
 
@@ -1036,8 +1073,10 @@
        border it already draws, with the ink paired to that ground: the
        bare, secondary and mirror buttons (border-strong) print white on
        black, the primary and destructive keep their own plate. The inset
-       side bars stay on the ghost button alone, where the rising bottom
-       bar cuts them into the bracket that is the ghost's own gesture.
+       side bars and the rising bottom bar are the ghost's gesture, and
+       since scope-93 the primary's and the destructive's too, whose
+       plate alone showed no hover; the bare, secondary and mirror buttons
+       change their ground and carry no bars.
        The mirror keeps its offset shadow from the rule above; the bars
        were never its to carry (S49). Not while pressed: the press paints
        below. */
@@ -1060,6 +1099,23 @@
         box-shadow:
             inset 0.35rem 0 0 var(--background),
             inset -0.35rem 0 0 var(--background);
+    }
+
+    /* Cancel's inset bars on the filled two, in their own ink [scope-93]. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled):not(:active) {
+        box-shadow:
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
+    }
+
+    /* Pointed at while focused: the ring is kept in front of the bars, since
+       the rule above replaces the focus ring's box-shadow. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:focus-visible:not(:disabled):not(:active) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
     }
 
     /* ── The pressed state the register had been cancelling [fix-12] ───

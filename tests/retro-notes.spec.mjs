@@ -290,7 +290,9 @@ test.describe('retro: an overlay draws one whole scrollbar, disabled unless it s
         // (the popover and its list both matched).
         await openCatalogue(page, '/catalogue/overlays.html');
         const report = [];
-        for (const id of ['confirm', 'menu', 'menu-extremes', 'tooltip']) {
+        // Not #tooltip since scope-93: a tooltip draws no bar
+        // (tests/scope-93-notes.spec.mjs).
+        for (const id of ['confirm', 'menu', 'menu-extremes']) {
             const overlays = page.locator(`#${id} .cat-stage :is(.kp-popover, .kp-dialog):visible`);
             for (let i = 0; i < (await overlays.count()); i++) {
                 const overlay = overlays.nth(i);

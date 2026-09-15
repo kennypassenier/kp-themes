@@ -1,0 +1,398 @@
+// Kenny's per-theme answers of 2026-09-15 [scope-93], read where he read them.
+//
+// hc-filled-hover "De opstijgende balk van Cancel": high-contrast's filled
+// Save changes and Delete account showed no hover, because their hover ground
+// was their border colour, which is their fill. light-indigo "Ook daar weg",
+// and on navigation#app-shell "blauw moet uit navbar": no indigo left in a
+// navigation in light. retro-scrollbars "Tooltips zonder scrollbalk". Retro's
+// pressed destructive button, dark red on dark red. Retro's call to action,
+// which still stepped with padding when pressed. cta-plates "Gelijktrekken":
+// room between a call to action's words and its plate. Each is a measured
+// property here, never a picture (scope-32, scope-73).
+//
+// Drilled per KT3 on 2026-09-15 in firefox against the registers of
+// 74d9ac73, each red with the value beside it below.
+
+import { expect, test } from '@playwright/test';
+import { contrast, distance } from '../gates/colour.mjs';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
+
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {string} url
+ * @param {string} theme
+ */
+const open = async (page, url, theme) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await useEmptyRegister(page.context());
+    await page.goto(url);
+    await waitForJudging(page);
+    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+    await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+    await page.evaluate(() => {
+        const ctx = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d', { willReadFrequently: true }));
+        /** Any CSS colour as [r, g, b, a], channels 0..1. @param {string} css */
+        const rgba = (css) => {
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.fillStyle = '#000';
+            ctx.fillStyle = css;
+            ctx.fillRect(0, 0, 1, 1);
+            const d = ctx.getImageData(0, 0, 1, 1).data;
+            return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+        };
+        /** The opaque colour an element's box shows, its translucent ancestors composited. @param {Element | null} el */
+        const ground = (el) => {
+            const layers = [];
+            for (let e = el; e; e = e.parentElement) {
+                const c = rgba(getComputedStyle(e).backgroundColor);
+                if (c[3] === 0) continue;
+                layers.push(c);
+                if (c[3] >= 1) break;
+            }
+            let acc = [1, 1, 1];
+            for (const c of layers.reverse()) acc = acc.map((v, i) => c[i] * c[3] + v * (1 - c[3]));
+            return acc;
+        };
+        Object.assign(window, { kpRgba: rgba, kpGround: ground });
+    });
+};
+
+/** @param {number[]} c */
+const rgb = (c) => /** @type {[number, number, number]} */ (c.slice(0, 3));
+
+/* ───────────────────────────── 1 · high-contrast: the filled two hover */
+
+test.describe(
+    'high-contrast: Save changes and Delete account take Cancel’s bar [button#variants]',
+    { tag: ['@theme:high-contrast', '@component:button'] },
+    () => {
+        test('under the pointer the filled buttons paint differently from rest: the rising bar and the side bars, in an ink that reads on the fill', async ({
+            page,
+        }) => {
+            // Before: rest and hover identical on both — box-shadow
+            // "rgb(0, 0, 0) 0px 0px 0px 0px" at both, no ::after, grounds
+            // rgb(0, 51, 153) and rgb(163, 0, 0) at rest and on hover.
+            await open(page, '/catalogue/button.html', 'high-contrast');
+            const faults = [];
+            for (const variant of ['primary', 'destructive']) {
+                const button = page.locator(`#variants .cat-stage .kp-button--${variant}`).first();
+                const read = () =>
+                    button.evaluate((el) => {
+                        const w = /** @type {any} */ (window);
+                        const cs = getComputedStyle(el);
+                        const bar = getComputedStyle(el, '::after');
+                        const r = el.getBoundingClientRect();
+                        return {
+                            shadow: cs.boxShadow,
+                            ground: w.kpRgba(cs.backgroundColor),
+                            barContent: bar.content,
+                            barInk: w.kpRgba(bar.backgroundColor),
+                            barTransform: bar.transform,
+                            barHeight: parseFloat(bar.height),
+                            rect: `${r.x},${r.y},${r.width},${r.height}`,
+                        };
+                    });
+                await page.mouse.move(0, 0);
+                const rest = await read();
+                await button.hover();
+                const hover = await read();
+                await page.mouse.move(0, 0);
+                if (rest.rect !== hover.rect) faults.push(`${variant}: the box moved on hover, ${rest.rect} → ${hover.rect}`);
+                if (hover.shadow === rest.shadow) faults.push(`${variant}: hover box-shadow is the rest one (${rest.shadow})`);
+                if (!/inset/.test(hover.shadow)) faults.push(`${variant}: no inset side bars on hover (${hover.shadow})`);
+                if (hover.barContent === 'none' || !(hover.barHeight >= 3))
+                    faults.push(`${variant}: no bar (content ${hover.barContent}, ${hover.barHeight}px)`);
+                if (!/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(hover.barTransform))
+                    faults.push(`${variant}: the bar has not risen (${hover.barTransform})`);
+                if (hover.barTransform === rest.barTransform) faults.push(`${variant}: the bar stands the same at rest and on hover`);
+                const legible = contrast(rgb(hover.barInk), rgb(hover.ground));
+                if (legible < 4.5) faults.push(`${variant}: the bar reads ${legible.toFixed(2)}:1 on its fill`);
+            }
+            expect(faults).toEqual([]);
+        });
+
+        test('pointed at while focused, the filled buttons keep the two-channel ring in front of the bars', async ({ page }) => {
+            await open(page, '/catalogue/button.html', 'high-contrast');
+            for (const variant of ['primary', 'destructive']) {
+                const button = page.locator(`#variants .cat-stage .kp-button--${variant}`).first();
+                await button.hover();
+                await page.keyboard.press('Shift');
+                await button.evaluate((el) => /** @type {HTMLElement} */ (el).focus({ focusVisible: true }));
+                // Reached with the keyboard where focus() alone does not set :focus-visible.
+                if (!(await button.evaluate((el) => el.matches(':focus-visible')))) {
+                    await page.keyboard.press('Shift+Tab');
+                    await page.keyboard.press('Tab');
+                }
+                await expect.poll(() => button.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
+                const shadow = await button.evaluate((el) => getComputedStyle(el).boxShadow);
+                expect(shadow, `${variant} hovered and focused`).toMatch(/0px 0px 0px 4px/);
+                expect(shadow, `${variant} hovered and focused`).toMatch(/inset/);
+                await button.blur();
+                await page.mouse.move(0, 0);
+            }
+        });
+    },
+);
+
+/* ───────────────────────────── 2 · light: no indigo in a navigation */
+
+test.describe(
+    'light: no indigo anywhere in a navigation [navigation, page-effects#nav-cta]',
+    { tag: ['@theme:light', '@component:navigation'] },
+    () => {
+        /**
+         * Every paint of every element under `roots` that computes to the primary
+         * or the link colour: ink, ground, a drawn border, an underline, a shadow.
+         *
+         * @param {import('@playwright/test').Page} page
+         * @param {string} roots
+         * @param {string} state
+         */
+        const indigo = (page, roots, state) =>
+            page.evaluate(
+                ([roots, state]) => {
+                    /** The elements to read: every match of `roots`, or the pointed-at element's item and what is in it. */
+                    const pointed = document.querySelector('[data-kp-test-pointed]');
+                    const scope = pointed
+                        ? [...[pointed.closest('li') ?? pointed].flatMap((p) => [p, ...p.querySelectorAll('*')])]
+                        : document.querySelectorAll(roots);
+                    const w = /** @type {any} */ (window);
+                    const root = getComputedStyle(document.documentElement);
+                    const blues = ['--primary', '--link'].map((t) =>
+                        w
+                            .kpRgba(root.getPropertyValue(t))
+                            .slice(0, 3)
+                            .map((/** @type {number} */ v) => Math.round(v * 255)),
+                    );
+                    /** @param {string} css */
+                    const is = (css) => {
+                        const c = w.kpRgba(css);
+                        if (c[3] === 0) return false;
+                        const px = c.slice(0, 3).map((/** @type {number} */ v) => Math.round(v * 255));
+                        return blues.some((b) => b.every((v, i) => Math.abs(v - px[i]) <= 2));
+                    };
+                    const found = [];
+                    for (const el of scope) {
+                        if (!(/** @type {HTMLElement} */ (el).offsetParent) && getComputedStyle(el).position !== 'fixed') continue;
+                        const s = getComputedStyle(el);
+                        const label = `${el.closest('section')?.id} ${el.className} "${(el.textContent ?? '').trim().slice(0, 20)}"`;
+                        /** @type {[string, string][]} */
+                        const paints = [
+                            ['color', s.color],
+                            ['background', s.backgroundColor],
+                            .../** @type {const} */ (['Top', 'Right', 'Bottom', 'Left']).flatMap((side) =>
+                                parseFloat(s.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0
+                                    ? [[`border-${side}`, s.getPropertyValue(`border-${side.toLowerCase()}-color`)]]
+                                    : [],
+                            ),
+                        ];
+                        if (s.textDecorationLine !== 'none') paints.push(['underline', s.textDecorationColor]);
+                        if (s.outlineStyle !== 'none') paints.push(['outline', s.outlineColor]);
+                        for (const m of s.boxShadow.match(/rgba?\([^)]*\)/g) ?? []) paints.push(['shadow', m]);
+                        for (const [what, css] of paints) if (is(css)) found.push(`${state} ${label} ${what}`);
+                    }
+                    return found;
+                },
+                [roots, state],
+            );
+
+        const NAV = ':is(.kp-nav-wrap, .kp-nav-wrap *, .kp-sidenav, .kp-sidenav *)';
+
+        test('the bars, the call to action and the side navigation: not the primary nor the link colour at rest, under the pointer or as the current page', async ({
+            page,
+        }) => {
+            // Before: the current rail row "All invoices" in rgb(53, 46, 184) with a
+            // leading rule in it (navigation#app-shell, #sidenav and its kin), and the
+            // call to action on page-effects#nav-cta a plate of rgb(53, 46, 184).
+            test.setTimeout(180_000);
+            const faults = [];
+            for (const [url, block] of [
+                ['/catalogue/navigation.html', 'main'],
+                ['/catalogue/page-effects.html', '#nav-cta'],
+            ]) {
+                await open(page, url, 'light');
+                await page.mouse.move(0, 0);
+                faults.push(...(await indigo(page, `${block} ${NAV}`, `${url} rest`)));
+                const targets = page.locator(`${block} :is(.kp-nav-wrap, .kp-sidenav) :is(a, button)`);
+                const count = await targets.count();
+                for (let i = 0; i < count; i++) {
+                    const target = targets.nth(i);
+                    if (!(await target.isVisible())) continue;
+                    await target.hover({ force: true, timeout: 2000 }).catch(() => {});
+                    await target.evaluate((el) => el.setAttribute('data-kp-test-pointed', ''));
+                    faults.push(...(await indigo(page, NAV, `${url} hover`)));
+                    await target.evaluate((el) => el.removeAttribute('data-kp-test-pointed'));
+                    await page.mouse.move(0, 0);
+                }
+            }
+            expect([...new Set(faults)]).toEqual([]);
+        });
+
+        test('the call to action still reads as one: a drawn pill, its words at 4.5:1 at rest and under the pointer, and a plate that changes', async ({
+            page,
+        }) => {
+            await open(page, '/catalogue/page-effects.html', 'light');
+            const cta = page.locator('#nav-cta .kp-nav__link--cta').first();
+            const read = () =>
+                cta.evaluate((el) => {
+                    const w = /** @type {any} */ (window);
+                    const s = getComputedStyle(el);
+                    return { ink: w.kpRgba(s.color), ground: w.kpGround(el), shadow: s.boxShadow, bg: s.backgroundColor };
+                });
+            await page.mouse.move(0, 0);
+            const rest = await read();
+            expect(rest.shadow, 'a ring drawn around the words').toMatch(/inset/);
+            expect(contrast(rgb(rest.ink), rgb(rest.ground)), 'rest').toBeGreaterThanOrEqual(4.5);
+            await cta.hover();
+            const hover = await read();
+            expect(contrast(rgb(hover.ink), rgb(hover.ground)), 'hover').toBeGreaterThanOrEqual(4.5);
+            expect(distance(rgb(hover.ground), rgb(rest.ground)), 'the pill fills under the pointer').toBeGreaterThan(20);
+        });
+    },
+);
+
+/* ───────────────────────────── 3 · retro: tooltips draw no scrollbar */
+
+test.describe('retro: a tooltip draws no scrollbar [overlays#tooltip]', { tag: ['@theme:retro', '@component:overlays'] }, () => {
+    test('the tooltips wear no drawn bar and take no room for one, while the menu beside them keeps its bar', async ({ page }) => {
+        // Before: both open tooltips painted the 1995 bar (35 gradient layers)
+        // with 26px of end padding against 8px at the start, 18px of it for the bar.
+        await open(page, '/catalogue/overlays.html', 'retro');
+        const read = (/** @type {string} */ selector) =>
+            page.locator(selector).evaluateAll((els) =>
+                els
+                    .filter((el) => /** @type {HTMLElement} */ (el).offsetParent !== null)
+                    .map((el) => {
+                        const s = getComputedStyle(el);
+                        return {
+                            layers: (s.backgroundImage.match(/linear-gradient\(/g) ?? []).length,
+                            end: s.paddingInlineEnd,
+                            start: s.paddingInlineStart,
+                        };
+                    }),
+            );
+        const tips = await read('#tooltip .cat-stage .kp-tooltip');
+        expect(tips.length).toBeGreaterThanOrEqual(2);
+        for (const tip of tips) {
+            expect(tip.layers, 'drawn scrollbar layers on a tooltip').toBe(0);
+            expect(tip.end, "the tooltip's end padding is its start padding").toBe(tip.start);
+        }
+        const menus = await read('#menu .cat-stage .kp-popover');
+        expect(menus.length).toBeGreaterThan(0);
+        for (const menu of menus) expect(menu.layers, 'a menu keeps its bar').toBeGreaterThanOrEqual(30);
+    });
+});
+
+/* ───────────────────────────── 4 · retro: the pressed destructive button reads */
+
+test.describe('retro: a pressed destructive button stays readable [button#variants]', { tag: ['@theme:retro', '@component:button'] }, () => {
+    test('held down, the dark-red label reads at 4.5:1 on the face drawn behind it', async ({ page }) => {
+        // Before: rgb(128, 0, 0) on the pressed face rgb(82, 7, 4), 1.38:1, on all three (Delete account, Delete, Discard).
+        await open(page, '/catalogue/button.html', 'retro');
+        const buttons = page.locator('.cat-stage .kp-button--destructive:not(:disabled)');
+        const faults = [];
+        for (let i = 0; i < (await buttons.count()); i++) {
+            const button = buttons.nth(i);
+            if (!(await button.isVisible())) continue;
+            await button.scrollIntoViewIfNeeded();
+            const box = await button.boundingBox();
+            if (!box) continue;
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.mouse.down();
+            const read = await button.evaluate((el) => {
+                const w = /** @type {any} */ (window);
+                const s = getComputedStyle(el);
+                // The face is repainted by ::before; the control's own ground is clipped to its glyphs.
+                const face = getComputedStyle(el, '::before');
+                const ground = face.content !== 'none' ? w.kpRgba(face.backgroundColor) : w.kpRgba(s.backgroundColor);
+                return { label: (el.textContent ?? '').trim(), ink: w.kpRgba(s.color), ground };
+            });
+            await page.mouse.up();
+            await page.mouse.move(0, 0);
+            const ratio = contrast(rgb(read.ink), rgb(read.ground));
+            if (ratio < 4.5) faults.push(`${read.label}: ${ratio.toFixed(2)}:1 pressed`);
+        }
+        expect(faults).toEqual([]);
+    });
+});
+
+/* ───────────────────────────── 5 · retro: the call to action presses in paint */
+
+test.describe(
+    'retro: pressing the call to action moves its words, not the bar [page-effects#nav-cta]',
+    { tag: ['@theme:retro', '@component:navigation'] },
+    () => {
+        test('held down, the link and every neighbour keep their boxes, the label steps 1px, and the padding is the rest padding', async ({
+            page,
+        }) => {
+            // Before: padding 9px 13.4px 7px 15.4px pressed against 8px 14.4px at
+            // rest, translate "none".
+            await open(page, '/catalogue/page-effects.html', 'retro');
+            const cta = page.locator('#nav-cta .kp-nav__link--cta').first();
+            await cta.scrollIntoViewIfNeeded();
+            const read = () =>
+                cta.evaluate((el) => {
+                    const self = /** @type {HTMLElement} */ (el);
+                    const s = getComputedStyle(self);
+                    const bar = /** @type {HTMLElement} */ (self.closest('.kp-nav'));
+                    return {
+                        padding: s.padding,
+                        translate: s.translate,
+                        boxes: [
+                            `self ${self.offsetLeft},${self.offsetTop},${self.offsetWidth},${self.offsetHeight}`,
+                            ...[...bar.querySelectorAll('.kp-nav__brand, .kp-nav__link:not(.kp-nav__link--cta)')].map((n) => {
+                                const r = n.getBoundingClientRect();
+                                return `${n.textContent?.trim()} ${r.x.toFixed(2)},${r.y.toFixed(2)},${r.width.toFixed(2)},${r.height.toFixed(2)}`;
+                            }),
+                            `bar ${bar.getBoundingClientRect().height.toFixed(2)}`,
+                        ],
+                    };
+                });
+            const rest = await read();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await cta.boundingBox());
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.mouse.down();
+            const pressed = await read();
+            await page.mouse.up();
+            await page.mouse.move(0, 0);
+            expect(pressed.boxes).toEqual(rest.boxes);
+            expect(pressed.padding, 'no padding moves on press').toBe(rest.padding);
+            expect(pressed.translate, 'the label steps a pixel down and right').toBe('1px 1px');
+        });
+    },
+);
+
+/* ───────────────────────────── 6 · room around a call to action's plate */
+
+for (const theme of ['forest', 'solstice', 'shade-dark', 'lapis', 'nostromo']) {
+    test.describe(
+        `${theme}: the call to action’s words keep off its plate [page-effects#nav-cta]`,
+        { tag: [`@theme:${theme}`, '@component:navigation'] },
+        () => {
+            test('where the link draws a plate, at least 12px lie between the words and each inline edge', async ({ page }) => {
+                // Before: 0px on both sides in all five (padding-inline 0px).
+                await open(page, '/catalogue/page-effects.html', theme);
+                const read = await page
+                    .locator('#nav-cta .kp-nav__link--cta')
+                    .first()
+                    .evaluate((el) => {
+                        const s = getComputedStyle(el);
+                        const r = el.getBoundingClientRect();
+                        const range = document.createRange();
+                        range.selectNodeContents(el);
+                        const words = range.getBoundingClientRect();
+                        return {
+                            plate: s.backgroundColor !== 'rgba(0, 0, 0, 0)' || parseFloat(s.borderLeftWidth) > 0 || s.backgroundImage !== 'none',
+                            start: words.left - r.left,
+                            end: r.right - words.right,
+                        };
+                    });
+                expect(read.plate, 'the link draws a plate').toBe(true);
+                expect(read.start, 'room at the start').toBeGreaterThanOrEqual(12);
+                expect(read.end, 'room at the end').toBeGreaterThanOrEqual(12);
+            });
+        },
+    );
+}

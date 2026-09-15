@@ -252,9 +252,12 @@
        the current page — one indigo for four states. Now the resting link
        is the slate muted ink, and pointing at it, focusing it or being on
        its page brings it up to the full ink; the current page keeps the
-       base layer's weight and thick underline besides [DI4]. The indigo
-       stays where it is an action — the call to action's plate — and in
-       the side navigation. */
+       base layer's weight and thick underline besides [DI4]. Since Kenny's
+       second note ("Ook daar weg", and on navigation#app-shell "blauw moet
+       uit navbar", 2026-09-15 [scope-93]) the indigo has left the call to
+       action and the side navigation too: no part of a navigation in this
+       theme computes to --primary or --link at rest, under the pointer or
+       as the current page. */
     [data-theme='light'] .kp-nav__link {
         border-radius: var(--radius, 0.5rem);
         color: var(--muted-foreground);
@@ -274,9 +277,17 @@
         font-size: var(--kp-text-xs, 0.75rem);
     }
 
+    /* The call to action, without the indigo [scope-93]: a pill drawn in
+       the full ink — a one-and-a-half-pixel ring painted inside the box, so
+       the bar's height and the link's baseline stay what they were — which
+       fills with the ink under the pointer or the focus. Before, an indigo
+       plate (--primary) that turned to the ink on hover. The ring is a
+       shadow rather than a border: a border would add to the box. */
     [data-theme='light'] .kp-nav__link--cta {
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: none;
+        color: var(--foreground);
+        box-shadow: inset 0 0 0 1.5px var(--foreground);
+        font-weight: 600;
         border-radius: var(--kp-radius-pill, 999px);
         padding-inline: var(--kp-space-lg, 1rem);
     }
@@ -285,6 +296,14 @@
     [data-theme='light'] .kp-nav__link--cta:focus-visible {
         background: var(--foreground);
         color: var(--background);
+    }
+
+    /* The ring above replaced the package's focus shadow (_rules.css) in a
+       later layer; the focus ring is composed in front of it again. */
+    [data-theme='light'] .kp-nav__link--cta:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 1.5px var(--foreground);
     }
 
     /* The dropdown [KT14]: the demo's own panel — white, a strong hairline,
@@ -580,7 +599,7 @@
         font-size: 0.9em;
     }
 
-    /* The accordion [gap-12]: quiet at rest; open takes the primary ink its side navigation gives the current page. */
+    /* The accordion [gap-12]: quiet at rest; open takes the primary ink. */
     [data-theme='light'] .kp-accordion__summary::marker {
         color: var(--muted-foreground);
     }
@@ -834,7 +853,7 @@
 
     /* ── The side navigation [feat-nav-3] ────────────────────────────
        Kenny asked for this one to stay simple, so it does: the row you
-       are on is named in the accent and carries a short rule at its
+       are on is named in the full ink and carries a short rule at its
        leading edge. Nothing else changes. */
     [data-theme='light'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
@@ -845,10 +864,15 @@
         border-inline-start: 2px solid transparent;
     }
 
+    /* The current row in the full ink with its leading rule in the same
+       ink, not the indigo (Kenny, 2026-09-15, navigation#app-shell: "blauw
+       moet uit navbar" [scope-93]); the base layer's weight stays, so the
+       row is marked by the rule and the weight, never by a colour alone
+       [DI4]. */
     [data-theme='light'] .kp-sidenav__link[aria-current='page'] {
-        color: var(--primary);
+        color: var(--foreground);
         background: none;
-        border-inline-start-color: var(--primary);
+        border-inline-start-color: var(--foreground);
     }
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────

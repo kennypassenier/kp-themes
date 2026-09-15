@@ -195,9 +195,8 @@ export const PACKAGE_TOKENS = [
 export const MAY_KEEP = {
     // The button's own entry went on 2026-09-15 (Kenny's retro notes): its
     // pressed step is painted now, not padded, so it keeps no block metric.
-    // scope-89: "Dezelfde uitzondering als de knop".
-    "retro-register.css [data-theme='retro'] .kp-nav__link--cta:active padding-block":
-        "the pressed call to action steps one pixel down, as the button does and as the original did: a pixel of the package's block padding moved from the bottom to the top, so the link keeps its height.",
+    // The call to action's entry followed the same day [scope-93]: its press
+    // is painted the button's way.
     // Option B [scope-87]: block padding that is a painted bar's or a frame's inset, not the heading's size.
     "_rules.css [data-theme='retro'] h1 padding":
         "the h1 is a 1995 window's title bar, a gradient plate: its inset is the plate's, and without it the words touch the bar's edges.",

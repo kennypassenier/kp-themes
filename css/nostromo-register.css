@@ -177,10 +177,15 @@
         opacity: 0.85;
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='nostromo'] .kp-nav__link--cta {
         background: var(--selected);
         color: var(--primary-foreground);
         border-radius: 0.2rem;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,

@@ -295,6 +295,10 @@
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
+        /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+           page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): 0px
+           before, the plate ended at the first and last letter. Formal's 16px. */
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='lapis'] .kp-nav__link--cta:hover,

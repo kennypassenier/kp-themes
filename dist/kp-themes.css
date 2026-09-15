@@ -11505,6 +11505,7 @@
         box-shadow: var(--kp-raised);
         font-weight: 700;
         padding-inline: 0.9rem;
+        position: relative;
     }
 
     [data-theme='retro'] .kp-nav__link--cta:hover,
@@ -11521,15 +11522,31 @@
             var(--kp-raised);
     }
 
+    /* Pressed, the label steps one pixel down and right, as the original's
+       did — painted, never laid out, the way the buttons below press (Kenny,
+       2026-09-15 [scope-93]; see "Pressed" under Buttons for the
+       mechanism). It used to move a pixel of block and inline padding from
+       one side to the other: the box kept its size, but its baseline moved,
+       and it was the one block metric this register was allowed to keep
+       for it. Now the whole link is translated a pixel and its face —
+       ground, border and the pressed bevel — is repainted by `::before` a
+       pixel up and left, where it was at rest, so only the words move. The
+       link's own face is hidden in the last rule of this file. */
     [data-theme='retro'] .kp-nav__link--cta:active {
+        translate: 1px 1px;
+    }
+
+    [data-theme='retro'] .kp-nav__link--cta:active::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -2px 0 0 -2px;
+        box-sizing: border-box;
+        background-color: inherit;
+        border: 1px solid;
+        border-color: inherit;
         box-shadow: var(--kp-pressed);
-        /* The label steps one pixel down and one toward the inline end, as the
-         * original did: a pixel of the package's block padding [scope-88] and
-         * one of the inline padding move across, so the box keeps its size
-         * [scope-89]. */
-        padding-inline: calc(0.9rem + 1px) calc(0.9rem - 1px);
-        padding-block: calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) + 1px)
-            max(0px, calc(var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) - 1px));
+        pointer-events: none;
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -12088,6 +12105,11 @@
        and the drawing is this register's. It is painted as background
        layers, which a scroll box keeps still while its content moves.
 
+       A tooltip draws none (Kenny, 2026-09-15, retro-scrollbars "Tooltips
+       zonder scrollbalk" [scope-93]): a line of description is not a
+       window, and never scrolls. Dialogs, menus and confirmations keep
+       theirs.
+
        Enabled and disabled come from js/overlays.js `watchScrollbar`,
        theme-neutral: `data-kp-popover-overflowing` while the content is taller
        than the box, with the view's height, the part in view and the
@@ -12101,7 +12123,7 @@
        styles only a scrollbar's two colours and its width, never its
        arrows, and chromium stops reading ::-webkit-scrollbar the moment
        `scrollbar-color` is set, which this register sets on the root. */
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
         --kp-scrollbar-size: 16px;
         --kp-scrollbar-button: 16px;
         --kp-scrollbar-ink: var(--border);
@@ -12247,8 +12269,10 @@
         padding-inline-end: calc(0.25rem + 18px);
     }
 
+    /* A tooltip draws no bar, so it takes no room for one: the package's
+       own end padding, as before the bar [scope-93]. */
     [data-theme='retro'] .kp-popover.kp-tooltip {
-        padding-inline-end: calc(0.5rem + 18px);
+        padding-inline-end: 0.5rem;
     }
 
     [data-theme='retro'] .kp-dialog {
@@ -12273,13 +12297,13 @@
         border-radius: 0;
     }
 
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
         display: none;
     }
 
     /* Enabled: ink arrows and the thumb. The thumb is at least eight pixels
        long, as the platform's is, and both lengths are whole pixels. */
-    [data-theme='retro'] :is(.kp-popover, .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
         --kp-scrollbar-ink: var(--foreground);
         --kp-scrollbar-emboss: transparent;
         --kp-scrollbar-thumb: round(
@@ -13312,11 +13336,21 @@
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing.
+
+       Not the base layer's values any more (Kenny, 2026-09-15 [scope-93]):
+       this register's destructive button is a grey face with a dark-red
+       label, and the base's pressed ground, --destructive-active, put that
+       label on its own dark red — measured at 1.38:1.
+       Pressed, the destructive button is what every other button here is:
+       the same face with its bevel inverted and its label stepped a pixel
+       (the pressed state under "Buttons" paints both), the label on the
+       grey at the contrast it has at rest. */
 
     [data-theme='retro'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--destructive-active);
-        border-color: var(--destructive-active);
+        background-color: var(--card);
+        border-color: var(--border-strong);
+        color: var(--destructive);
     }
 
     /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
@@ -13434,6 +13468,17 @@
        the pressed state under "Buttons". */
     [data-theme='retro'] .kp-button:active:not(:disabled),
     [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+        background-clip: text;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
+    }
+
+    /* The call to action in the bar presses the same way [scope-93]. A
+       pressed link has focus, so the menu strip's selection rule
+       (`.kp-nav__links > li:focus-within > .kp-nav__link`, a heavier
+       selector) paints its ground with the shorthand too; the doubled class
+       outweighs it, so the face hidden here stays hidden. */
+    [data-theme='retro'] .kp-nav__link.kp-nav__link--cta:active:active {
         background-clip: text;
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;
@@ -24872,10 +24917,15 @@
         font-size: 0.75rem;
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='forest'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         border-bottom: none;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='forest'] .kp-nav__link--cta:hover,
@@ -27381,9 +27431,12 @@
        the current page — one indigo for four states. Now the resting link
        is the slate muted ink, and pointing at it, focusing it or being on
        its page brings it up to the full ink; the current page keeps the
-       base layer's weight and thick underline besides [DI4]. The indigo
-       stays where it is an action — the call to action's plate — and in
-       the side navigation. */
+       base layer's weight and thick underline besides [DI4]. Since Kenny's
+       second note ("Ook daar weg", and on navigation#app-shell "blauw moet
+       uit navbar", 2026-09-15 [scope-93]) the indigo has left the call to
+       action and the side navigation too: no part of a navigation in this
+       theme computes to --primary or --link at rest, under the pointer or
+       as the current page. */
     [data-theme='light'] .kp-nav__link {
         border-radius: var(--radius, 0.5rem);
         color: var(--muted-foreground);
@@ -27403,9 +27456,17 @@
         font-size: var(--kp-text-xs, 0.75rem);
     }
 
+    /* The call to action, without the indigo [scope-93]: a pill drawn in
+       the full ink — a one-and-a-half-pixel ring painted inside the box, so
+       the bar's height and the link's baseline stay what they were — which
+       fills with the ink under the pointer or the focus. Before, an indigo
+       plate (--primary) that turned to the ink on hover. The ring is a
+       shadow rather than a border: a border would add to the box. */
     [data-theme='light'] .kp-nav__link--cta {
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: none;
+        color: var(--foreground);
+        box-shadow: inset 0 0 0 1.5px var(--foreground);
+        font-weight: 600;
         border-radius: var(--kp-radius-pill, 999px);
         padding-inline: var(--kp-space-lg, 1rem);
     }
@@ -27414,6 +27475,14 @@
     [data-theme='light'] .kp-nav__link--cta:focus-visible {
         background: var(--foreground);
         color: var(--background);
+    }
+
+    /* The ring above replaced the package's focus shadow (_rules.css) in a
+       later layer; the focus ring is composed in front of it again. */
+    [data-theme='light'] .kp-nav__link--cta:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 1.5px var(--foreground);
     }
 
     /* The dropdown [KT14]: the demo's own panel — white, a strong hairline,
@@ -27709,7 +27778,7 @@
         font-size: 0.9em;
     }
 
-    /* The accordion [gap-12]: quiet at rest; open takes the primary ink its side navigation gives the current page. */
+    /* The accordion [gap-12]: quiet at rest; open takes the primary ink. */
     [data-theme='light'] .kp-accordion__summary::marker {
         color: var(--muted-foreground);
     }
@@ -27963,7 +28032,7 @@
 
     /* ── The side navigation [feat-nav-3] ────────────────────────────
        Kenny asked for this one to stay simple, so it does: the row you
-       are on is named in the accent and carries a short rule at its
+       are on is named in the full ink and carries a short rule at its
        leading edge. Nothing else changes. */
     [data-theme='light'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
@@ -27974,10 +28043,15 @@
         border-inline-start: 2px solid transparent;
     }
 
+    /* The current row in the full ink with its leading rule in the same
+       ink, not the indigo (Kenny, 2026-09-15, navigation#app-shell: "blauw
+       moet uit navbar" [scope-93]); the base layer's weight stays, so the
+       row is marked by the rule and the weight, never by a colour alone
+       [DI4]. */
     [data-theme='light'] .kp-sidenav__link[aria-current='page'] {
-        color: var(--primary);
+        color: var(--foreground);
         background: none;
-        border-inline-start-color: var(--primary);
+        border-inline-start-color: var(--foreground);
     }
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
@@ -31106,10 +31180,15 @@
         opacity: 0.85;
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='nostromo'] .kp-nav__link--cta {
         background: var(--selected);
         color: var(--primary-foreground);
         border-radius: 0.2rem;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,
@@ -36438,11 +36517,16 @@
         color: var(--primary);
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='solstice'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='solstice'] .kp-nav__link--cta:hover {
@@ -37650,6 +37734,42 @@
         transform: translateY(0);
     }
 
+    /* The filled two take the ghost's gesture (Kenny, 2026-09-15,
+       hc-filled-hover "De opstijgende balk van Cancel" [scope-93]). Their
+       hover ground is their own border colour, which is their fill, so
+       under the pointer nothing changed at all. Now the same bar rises
+       from the bottom edge, and the same inset bars stand down each side
+       (in the hover rule below), both in the variant's own ink — white on
+       the blue and on the red — because the ghost's black bar would be
+       lost on either fill. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive) {
+        overflow: hidden;
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 3px;
+        background: var(--kp-hc-bar-ink);
+        transform: translateY(100%);
+        pointer-events: none;
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary {
+        --kp-hc-bar-ink: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive {
+        --kp-hc-bar-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled)::after,
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):focus-visible::after {
+        transform: translateY(0);
+    }
+
     [data-theme='high-contrast'] .kp-icon-button {
         border-width: 2px;
     }
@@ -38212,7 +38332,8 @@
             transition: none;
         }
 
-        [data-theme='high-contrast'] .kp-button--ghost::after {
+        [data-theme='high-contrast'] .kp-button--ghost::after,
+        [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
             transition: transform var(--kp-ghost-bar) var(--fx-ease);
         }
 
@@ -38324,8 +38445,10 @@
        border it already draws, with the ink paired to that ground: the
        bare, secondary and mirror buttons (border-strong) print white on
        black, the primary and destructive keep their own plate. The inset
-       side bars stay on the ghost button alone, where the rising bottom
-       bar cuts them into the bracket that is the ghost's own gesture.
+       side bars and the rising bottom bar are the ghost's gesture, and
+       since scope-93 the primary's and the destructive's too, whose
+       plate alone showed no hover; the bare, secondary and mirror buttons
+       change their ground and carry no bars.
        The mirror keeps its offset shadow from the rule above; the bars
        were never its to carry (S49). Not while pressed: the press paints
        below. */
@@ -38348,6 +38471,23 @@
         box-shadow:
             inset 0.35rem 0 0 var(--background),
             inset -0.35rem 0 0 var(--background);
+    }
+
+    /* Cancel's inset bars on the filled two, in their own ink [scope-93]. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled):not(:active) {
+        box-shadow:
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
+    }
+
+    /* Pointed at while focused: the ring is kept in front of the bars, since
+       the rule above replaces the focus ring's box-shadow. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:focus-visible:not(:disabled):not(:active) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
     }
 
     /* ── The pressed state the register had been cancelling [fix-12] ───
@@ -38694,6 +38834,10 @@
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
+        /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+           page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): 0px
+           before, the plate ended at the first and last letter. Formal's 16px. */
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='lapis'] .kp-nav__link--cta:hover,
@@ -39898,10 +40042,15 @@
         background: none;
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='shade-dark'] .kp-nav__link--cta {
         color: var(--accent-foreground);
         background: var(--accent);
         border-radius: var(--radius);
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='shade-dark'] .kp-nav__link--cta:hover,

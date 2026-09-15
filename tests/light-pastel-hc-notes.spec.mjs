@@ -91,6 +91,8 @@ for (const theme of ['light', 'pastel']) {
 
 test.describe('light: no indigo in the nav bars [navigation#bar-collapsed]', { tag: ['@theme:light', '@component:navigation'] }, () => {
     test('every bar link, dropdown link and search trigger reads in the ink, not the primary, and pointing at it still shows', async ({ page }) => {
+        // Eight bars, every link hovered: 30 s alone, so more under a parallel run.
+        test.setTimeout(120_000);
         // Before: every bar link rgb(53, 46, 184) — --primary — at rest, on
         // hover, on focus and as the current page, in all eight bars.
         await open(page, '/catalogue/navigation.html', 'light');
@@ -139,7 +141,9 @@ test.describe('light: no indigo in the nav bars [navigation#bar-collapsed]', { t
 });
 
 test.describe('high-contrast: the hover takes the border colour [button#variants]', { tag: ['@theme:high-contrast', '@component:button'] }, () => {
-    test("every variant's hover ground is its own border colour, readable, with the inset bars on Cancel alone", async ({ page }) => {
+    test("every variant's hover ground is its own border colour, readable, with the inset bars on Cancel, Save changes and Delete account alone [scope-93]", async ({
+        page,
+    }) => {
         // Before: every variant but the mirror hovered to rgb(0, 0, 0) — the
         // primary under a rgb(0, 51, 153) border, the destructive under
         // rgb(163, 0, 0) — each with a white inset bar down both sides.
@@ -154,7 +158,7 @@ test.describe('high-contrast: the hover takes the border colour [button#variants
                 const cs = getComputedStyle(el);
                 return {
                     label: el.textContent?.trim(),
-                    ghost: el.classList.contains('kp-button--ghost'),
+                    bars: ['kp-button--ghost', 'kp-button--primary', 'kp-button--destructive'].some((c) => el.classList.contains(c)),
                     ground: w.kpRgba(cs.backgroundColor),
                     border: w.kpRgba(cs.borderTopColor),
                     ink: w.kpRgba(cs.color),
@@ -167,7 +171,7 @@ test.describe('high-contrast: the hover takes the border colour [button#variants
                 );
             if (contrast(rgb(read.ink), rgb(read.ground)) < 4.5)
                 faults.push(`${read.label}: ink ${contrast(rgb(read.ink), rgb(read.ground)).toFixed(2)}:1 on hover`);
-            if (read.insetBars !== read.ghost) faults.push(`${read.label}: inset bars ${read.insetBars ? 'drawn' : 'missing'}`);
+            if (read.insetBars !== read.bars) faults.push(`${read.label}: inset bars ${read.insetBars ? 'drawn' : 'missing'}`);
         }
         await page.mouse.move(0, 0);
         expect(faults).toEqual([]);
