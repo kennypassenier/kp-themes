@@ -1736,3 +1736,15 @@ demo next to what ships; no register changes until Kenny chooses.
 cyberpunk-flicker "Ondieper, en opnieuw kijken": cyberpunk's alarm flicker gets
 a shallower dip until the flash report reads under 2.5 per second, and its
 alarm returns for review. fix-38 "Klopt". step-timing "Akkoord".
+
+**scope-101 · The scope-25 gestures are built, and dark's dialog shadow gets a
+demo.** Kenny, 2026-09-16, the gestures-and-shadows form. scope25-build, all
+four: sepia's ink spreading from the press point and its rule thickest in the
+middle, the pointer as the light in shade-light and shade-dark, and cards
+carrying a shadow at rest (which the approved concept demo left flat), each
+implemented as the research demo draws it. dark-dialog-shadow, his own answer:
+"toon alle opties in een demo" — black with more depth, the oxide film's colour
+and the demo's own near-invisible shadow are shown side by side before anything
+is chosen. shade-light-contrast "Donkerder maken": shade-light's muted text is
+darkened until every pair clears 4.5:1 (now 3.61, 3.99 and 4.13).
+step-timing "Akkoord".
