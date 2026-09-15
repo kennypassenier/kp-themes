@@ -2875,6 +2875,7 @@ __export(overlays_exports, {
   attachTabs: () => attachTabs,
   attachTooltips: () => attachTooltips,
   closeLabel: () => closeLabel,
+  openAtTop: () => openAtTop,
   revealTab: () => revealTab,
   selectTab: () => selectTab,
   toast: () => toast,
@@ -2887,6 +2888,13 @@ var DIALOG_OPEN_EVENT = "kp-dialog-open";
 var TAB_CHANGE_EVENT = "kp-tab-change";
 var TOAST_SHOW_EVENT = "kp-toast-show";
 var TOAST_HIDE_EVENT = "kp-toast-hide";
+function openAtTop(dialog) {
+  const body = dialog.querySelector(":scope > .kp-dialog__body");
+  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
+  const focused = document.activeElement;
+  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
+    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
 function attachDialogs(root = document, { modal = true } = {}) {
   const cleanups = [];
   for (const el2 of root.querySelectorAll("[data-kp-dialog]")) {
@@ -2903,6 +2911,7 @@ function attachDialogs(root = document, { modal = true } = {}) {
       if (dialog.open) return;
       if (asModal) dialog.showModal();
       else dialog.show();
+      openAtTop(dialog);
       dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
     };
     trigger.addEventListener("click", open);
@@ -10779,6 +10788,7 @@ export {
   noFlashSnippet,
   noiseGlyph,
   onThemeChange,
+  openAtTop,
   openConfirmation,
   outsideRange,
   overlays_exports as overlaysExports,

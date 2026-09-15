@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
+import { openAtTop, revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -87,6 +87,8 @@ function DialogInner(
         if (open && !dialog.open) {
             if (modal) dialog.showModal();
             else dialog.show();
+            // At the top every time it opens, as the framework-free channel [scope-96].
+            openAtTop(dialog);
             initialFocus?.current?.focus();
         }
         if (!open && dialog.open) dialog.close();

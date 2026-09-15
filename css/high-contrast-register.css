@@ -622,6 +622,18 @@
         color: inherit;
     }
 
+    /* On a toast the ghost's rising bar is drawn in the toast's own ink
+       (Kenny, 2026-09-15, hc-bar "De drie knoppen, en Undo in de neutrale
+       toast zwart" [scope-96]). The hover ground there is a veil over the
+       plate, not the page's black, so the white bar of the three buttons
+       vanished on the plain toast: white on a grey of 229 in each channel,
+       1.26:1. The ink is the colour the plate was drawn for and the veil
+       only deepens the plate away from it, so the bar is black on the
+       plain toast and white on the four of meaning. */
+    [data-theme='high-contrast'] .kp-toast .kp-button--ghost {
+        --kp-hc-bar-ink: currentColor;
+    }
+
     [data-theme='high-contrast'] .kp-menu__item:hover,
     [data-theme='high-contrast'] .kp-menu__item:focus-visible {
         background: var(--muted);

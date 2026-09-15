@@ -372,6 +372,9 @@ tab list its roving tabindex:
 The keyboard behaviour is the browser's, not ours: `<dialog>` traps focus,
 closes on Escape and returns focus to whatever opened it. A hand-written
 focus trap is how focus traps break, so there is none here.
+A dialog opened by a `data-kp-dialog` trigger or the React `Dialog` opens
+at the top every time, the dialog and its `.kp-dialog__body` scrolled back
+to 0, unless the element it focuses lies further down [scope-96].
 
 Both channels also say whether an overlay's box scrolls: `attachScrollbars`
 (in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and

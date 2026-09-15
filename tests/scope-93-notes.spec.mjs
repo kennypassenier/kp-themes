@@ -151,6 +151,66 @@ test.describe(
             expect(faults).toEqual([]);
         });
 
+        test(
+            'on every toast the ghost button’s rising bar reads at 7:1 or better on its own hover ground [feedback#toasts, scope-96]',
+            { tag: '@component:feedback' },
+            async ({ page }) => {
+                // Kenny, 2026-09-15, hc-bar "De drie knoppen, en Undo in de neutrale
+                // toast zwart". Before (b9dc0afb): the plain toast's Undo raised a
+                // white bar rgb(255, 255, 255) on its hover ground rgb(229, 229, 229),
+                // 1.26:1; the four toasts of meaning read 9.12:1 or better. Success and
+                // warning carry only a close button, so each gets a ghost action
+                // button of the package's own markup to be hovered like the others.
+                await open(page, '/catalogue/feedback.html', 'high-contrast');
+                const toasts = page.locator('#toasts .cat-stage .kp-toast');
+                expect(await toasts.count(), 'the plain toast and the four of meaning').toBe(5);
+                await toasts.evaluateAll((els) => {
+                    for (const toast of els) {
+                        if (toast.querySelector('.kp-button--ghost')) continue;
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'kp-button kp-button--ghost';
+                        button.textContent = 'Action';
+                        toast.insertBefore(button, toast.querySelector('.kp-toast__close'));
+                    }
+                });
+                const faults = [];
+                for (let i = 0; i < 5; i++) {
+                    const toast = toasts.nth(i);
+                    const button = toast.locator('.kp-button--ghost').first();
+                    await page.mouse.move(0, 0);
+                    await button.hover();
+                    const read = async () =>
+                        button.evaluate((el) => {
+                            const w = /** @type {any} */ (window);
+                            const bar = getComputedStyle(el, '::after');
+                            return {
+                                toast: /** @type {Element} */ (el.closest('.kp-toast')).className,
+                                label: (el.textContent ?? '').trim(),
+                                content: bar.content,
+                                transform: bar.transform,
+                                barInk: w.kpRgba(bar.backgroundColor),
+                                ground: w.kpGround(el),
+                            };
+                        });
+                    // KT16: the hover ground and the bar arrive, so read until the bar has risen.
+                    await expect.poll(async () => (await read()).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+                    const hover = await read();
+                    if (hover.content === 'none') {
+                        faults.push(`${hover.toast} "${hover.label}": no bar`);
+                        continue;
+                    }
+                    const ratio = contrast(rgb(hover.barInk), rgb(hover.ground));
+                    if (ratio < 7)
+                        faults.push(
+                            `${hover.toast} "${hover.label}": the bar ${hover.barInk.map((/** @type {number} */ v) => Math.round(v * 255))} reads ${ratio.toFixed(2)}:1 on ${hover.ground.map((/** @type {number} */ v) => Math.round(v * 255))}`,
+                        );
+                }
+                await page.mouse.move(0, 0);
+                expect(faults).toEqual([]);
+            },
+        );
+
         test('pointed at while focused, the filled buttons keep the two-channel ring in front of the bars', async ({ page }) => {
             await open(page, '/catalogue/button.html', 'high-contrast');
             for (const variant of ['primary', 'destructive']) {
