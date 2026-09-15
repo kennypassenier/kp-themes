@@ -61,7 +61,10 @@ export const PAGES = [
     },
     {
         group: 'Research to look at',
-        pages: [{ href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' }],
+        pages: [
+            { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
+            { href: 'research/cyberpunk-dividers/demo.html', label: 'A new divider for cyberpunk, six options' },
+        ],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

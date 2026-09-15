@@ -340,8 +340,13 @@
        of the text in the DOM; the shared Button renderer emits one
        [finding, S49]. Kept instead: a bar rises from the bottom edge on
        hover/focus, the same "something arrives from below" gesture,
-       CSS-only and content-free. */
+       CSS-only and content-free.
+       The bar is white on every variant that carries it (Kenny,
+       2026-09-15, button#variants: "de balk die naar boven komt moet
+       overal in het wit"). Before, Cancel's bar was --foreground, black on
+       its own black hover ground, so it rose unseen. */
     [data-theme='high-contrast'] .kp-button--ghost {
+        --kp-hc-bar-ink: var(--background);
         border-color: var(--border-strong);
         overflow: hidden;
         position: relative;
@@ -353,7 +358,7 @@
         inset-inline: 0;
         inset-block-end: 0;
         block-size: 3px;
-        background: var(--foreground);
+        background: var(--kp-hc-bar-ink);
         transform: translateY(100%);
     }
 

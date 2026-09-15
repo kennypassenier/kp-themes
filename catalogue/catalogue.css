@@ -454,10 +454,16 @@
        size, 92% of the window wide and 90% high, whatever block it holds.
        The header on top; the block's stage on the left, the note and the
        verdicts on the right. The class sits on the package's own dialog, so
-       its surface, border and backdrop are the theme's. */
+       its surface, border and backdrop are the theme's.
+
+       Its size is set on its own properties, never through the package's
+       `--kp-dialog-max-width` / `--kp-dialog-max-height` [fix-36]: a custom
+       property inherits, and `none` set here reached every dialog of the
+       block under review. The sixty-row dialog then opened 2574px tall with
+       no cap, centred on a 900px window (top at -837px, "02:19" the first
+       row in sight) and its body never scrolled. This layer comes after the
+       package's, so the properties below win over `.kp-dialog[open]`. */
     .cat-review-dialog {
-        --kp-dialog-max-width: none;
-        --kp-dialog-max-height: none;
         box-sizing: border-box;
         inline-size: 92vw;
         block-size: 90vh;

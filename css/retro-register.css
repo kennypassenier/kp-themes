@@ -1217,6 +1217,23 @@
     [data-theme='retro'] .kp-dialog {
         --kp-scrollbar-inset: 0px;
         --kp-scrollbar-ground: var(--popover);
+        --kp-retro-close-room: 0px;
+    }
+
+    /* The close button stands beside the bar, never on it [retro notes,
+       2026-09-15, overlays--dialog-parts]. A dialog without a body draws its
+       bar down the whole end edge of its padding box, from the very top, and
+       the package pins the close button half a rem in from that same edge:
+       the button's last 8px lay over the bar's up arrow. Here it moves in by
+       the bar's width, and the title's room for it grows by the same. Reset
+       to zero on every dialog above, so the value never inherits into a
+       dialog inside this one. */
+    [data-theme='retro'] .kp-dialog:not(:has(> .kp-dialog__body)):has(> .kp-dialog__close) {
+        --kp-retro-close-room: var(--kp-scrollbar-size);
+    }
+
+    [data-theme='retro'] .kp-dialog > .kp-dialog__close {
+        inset-inline-end: calc(var(--kp-space-sm, 0.5rem) + var(--kp-retro-close-room));
     }
 
     [data-theme='retro'] .kp-dialog__body {
@@ -1364,6 +1381,16 @@
         color: var(--primary-foreground);
         padding: 3px 0.5rem;
         margin: 0 0 0.75rem;
+    }
+
+    /* The title bar's words stop short of the close button [retro notes,
+       2026-09-15, overlays--dialog-parts]. The `padding` above restates the
+       inline end too, and this layer comes after the package's, so the
+       package's room for the button (css/components.css, scope-60) was
+       lost: the words ran 16px under the button. The plate itself still
+       runs under the button, as a 1995 title bar does. */
+    [data-theme='retro'] .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__title {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem + var(--kp-retro-close-room, 0px));
     }
 
     /* The keyboard highlight is the selection bar with its own ink (KT8:

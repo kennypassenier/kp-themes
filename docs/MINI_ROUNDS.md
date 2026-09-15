@@ -172,3 +172,4 @@ register's colours are.
 | fix-31-M1 | Does the marquee run after the review page has judged? Measured at the commit of fix-31: the new test in `tests/catalogue-review.spec.mjs` read `paused`, time 0, on `a051db4d` and runs after; `verdicts.mjs compare --against-browser --all` identical line for line before and after; commit level 1364 passed, 3 skipped, 0 failed. | closed |
 
 | fix-32-M1 | Does row text still show above the sticky data-table header? Measured at Kenny's next review of `#table--datatable-sticky` in FireDragon, wheel-scrolling in three themes. | open |
+| fix-36-M1 | Does the long dialog open inside the window and scroll when opened from the review dialog? Measured at Kenny's next review of `overlays--dialog-long` in retro: it opens at 02:00 and the wheel reaches 02:59. | open |

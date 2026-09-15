@@ -113,6 +113,44 @@ test.describe(
             expect(faults).toEqual([]);
         });
 
+        test('the rising bar is white on every variant that carries it, Cancel included, at 7:1 or better on the hover ground', async ({ page }) => {
+            // Kenny, 2026-09-15, button#variants: "Beter, maar de balk die naar
+            // boven komt moet overal in het wit". Before: Cancel's bar
+            // rgb(0, 0, 0) — --foreground — on its own black hover ground, 1:1,
+            // so it rose unseen; Save changes and Delete account already white.
+            await open(page, '/catalogue/button.html', 'high-contrast');
+            const buttons = page.locator('#variants .cat-stage').first().locator('.kp-button');
+            const faults = [];
+            const carriers = [];
+            for (let i = 0; i < (await buttons.count()); i++) {
+                const button = buttons.nth(i);
+                await page.mouse.move(0, 0);
+                await button.hover();
+                const read = await button.evaluate((el) => {
+                    const w = /** @type {any} */ (window);
+                    const bar = getComputedStyle(el, '::after');
+                    return {
+                        label: (el.textContent ?? '').trim(),
+                        content: bar.content,
+                        bar: bar.backgroundColor,
+                        barInk: w.kpRgba(bar.backgroundColor),
+                        ground: w.kpRgba(getComputedStyle(el).backgroundColor),
+                        transform: bar.transform,
+                    };
+                });
+                if (read.content === 'none') continue;
+                carriers.push(read.label);
+                if (read.bar !== 'rgb(255, 255, 255)') faults.push(`${read.label}: the bar is ${read.bar}`);
+                if (!/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(read.transform))
+                    faults.push(`${read.label}: the bar has not risen (${read.transform})`);
+                const ratio = contrast(rgb(read.barInk), rgb(read.ground));
+                if (ratio < 7) faults.push(`${read.label}: the bar reads ${ratio.toFixed(2)}:1 on the hover ground`);
+            }
+            await page.mouse.move(0, 0);
+            expect(carriers.sort(), 'the variants carrying the bar').toEqual(['Cancel', 'Delete account', 'Save changes']);
+            expect(faults).toEqual([]);
+        });
+
         test('pointed at while focused, the filled buttons keep the two-channel ring in front of the bars', async ({ page }) => {
             await open(page, '/catalogue/button.html', 'high-contrast');
             for (const variant of ['primary', 'destructive']) {
@@ -272,6 +310,91 @@ test.describe(
                 await crumb.evaluate((el) => el.removeAttribute('data-kp-test-pointed'));
                 await page.mouse.move(0, 0);
             }
+            expect([...new Set(faults)]).toEqual([]);
+        });
+
+        test('the application shell’s bar: no blue hue in any paint of any element or pseudo element, at rest, under the pointer, focused or current', async ({
+            page,
+        }) => {
+            // Kenny, 2026-09-15, navigation#app-shell, light: "blauw moet uit
+            // navbar. Mogelijks ben je hier nog mee bezig". The check above
+            // matches --primary and --link exactly; this one refuses any hue
+            // from 190° to 260° at more than 15% saturation, so a tint or a mix
+            // of the indigo is caught too. Paints darker than 20% lightness are
+            // the ink (--foreground, hsl(224, 25%, 12%), reads as black) and
+            // are not a blue. Drilled per KT3: light's `.kp-nav__link:hover,
+            // :focus-visible, [aria-current]` ink set back to var(--primary) went
+            // red, "rest a.kp-nav__link "Invoices" rgb(53, 46, 184) (243°, 60%)"
+            // and 18 more; restored, green.
+            test.setTimeout(120_000);
+            await open(page, '/catalogue/navigation.html', 'light');
+            const BAR = '#app-shell .kp-nav-wrap';
+            /** @param {string} state */
+            const blues = (state) =>
+                page.evaluate(
+                    ([bar, state]) => {
+                        const w = /** @type {any} */ (window);
+                        const root = /** @type {Element} */ (document.querySelector(bar));
+                        const found = [];
+                        for (const el of [root, ...root.querySelectorAll('*')])
+                            for (const pseudo of [null, '::before', '::after', '::marker']) {
+                                const s = getComputedStyle(el, pseudo);
+                                if (pseudo && s.content === 'none') continue;
+                                if (!pseudo && !(/** @type {HTMLElement} */ (el).offsetParent)) continue;
+                                const values = [
+                                    s.color,
+                                    s.backgroundColor,
+                                    s.borderTopColor,
+                                    s.borderRightColor,
+                                    s.borderBottomColor,
+                                    s.borderLeftColor,
+                                    s.textDecorationColor,
+                                    s.outlineColor,
+                                    s.fill,
+                                    s.stroke,
+                                    s.boxShadow,
+                                    s.textShadow,
+                                    s.backgroundImage,
+                                ].join(' ');
+                                for (const css of values.match(/(rgba?|color|oklch|oklab|hsla?|lab|lch)\([^)]*\)/g) ?? []) {
+                                    const [r, g, b, a] = w.kpRgba(css);
+                                    if (a === 0) continue;
+                                    const max = Math.max(r, g, b);
+                                    const min = Math.min(r, g, b);
+                                    const l = (max + min) / 2;
+                                    const d = max - min;
+                                    if (d === 0 || l < 0.2) continue;
+                                    const sat = d / (1 - Math.abs(2 * l - 1));
+                                    let hue = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+                                    hue = (hue * 60 + 360) % 360;
+                                    if (hue >= 190 && hue <= 260 && sat > 0.15)
+                                        found.push(
+                                            `${state} ${el.tagName.toLowerCase()}.${el.className}${pseudo ?? ''} "${(el.textContent ?? '').trim().slice(0, 12)}" ${css} (${Math.round(hue)}°, ${Math.round(sat * 100)}%)`,
+                                        );
+                                }
+                            }
+                        return found;
+                    },
+                    [BAR, state],
+                );
+            await page.mouse.move(0, 0);
+            expect(await page.locator(`${BAR} [aria-current="page"]`).count(), 'the current item is in the bar').toBe(1);
+            const faults = [...(await blues('rest'))];
+            const targets = page.locator(`${BAR} :is(a, button)`);
+            const count = await targets.count();
+            let visited = 0;
+            for (let i = 0; i < count; i++) {
+                const target = targets.nth(i);
+                if (!(await target.isVisible())) continue;
+                visited++;
+                await target.hover({ force: true, timeout: 2000 }).catch(() => {});
+                faults.push(...(await blues(`hover #${i}`)));
+                await page.mouse.move(0, 0);
+                await target.evaluate((el) => /** @type {HTMLElement} */ (el).focus({ focusVisible: true }));
+                faults.push(...(await blues(`focus #${i}`)));
+                await target.blur();
+            }
+            expect(visited, 'brand, four links and the dropdown’s links').toBeGreaterThanOrEqual(5);
             expect([...new Set(faults)]).toEqual([]);
         });
 

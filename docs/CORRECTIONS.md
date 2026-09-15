@@ -3680,3 +3680,23 @@ demo item's pills with the README it links.
 
 **9 · When we review the measure.** After three forms with demo items and no
 fault.
+
+## fix-36 · The review dialog took the height cap off the dialog it was showing (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon at devicePixelRatio 2.222, on `overlays--dialog-long` in retro: "de popup werkte niet ... de eerste entry helemaal boven mijn scherm was '02:19 1.60 bar Low' en ik kon niet scrollen". Measured in firefox inside the review dialog: the sixty-row dialog opened 2574px tall with no cap, top at -837px on a 1400×900 window (-1062px at 864×450), its body 2440px tall and never scrolling; formal the same (top at -1057px).
+
+**2 · Which gate let it through.** None. `tests/catalogue-review-dialog.spec.mjs` drives the review dialog's own keys and size; no test opened a block's modal inside it, and the overlays tests open the long dialog on the plain page, where it is capped.
+
+**3 · Where the same fault sits.** The property: a knob set as an inherited custom property on an element that hosts package components. Searched with `grep -rn "\-\-kp-[a-z-]*:" catalogue/*.css showcase/*.css`: `.cat-review-dialog` was the only one setting a package `--kp-dialog-*` knob; every theme shares the fault because the knob belongs to no register.
+
+**4 · How we prevent recurrence.** The review dialog sets its size on its own `max-inline-size` / `max-block-size` only (its layer comes after the package's), never through `--kp-dialog-max-*`; a retro-local offset added alongside (`--kp-retro-close-room`) is reset on every dialog so it cannot leak the same way.
+
+**5 · What the remedy costs.** Two lines removed from `catalogue/catalogue.css`; no package or register change for this fault.
+
+**6 · Who enforces it.** Code: `tests/retro-dialog-notes.spec.mjs`, four tests (retro and formal, 864×450 and 1400×900) that open the long dialog from the review dialog, tagged `@component:catalogue` and `@component:overlays`, red on 4ccbca61 and green after.
+
+**7 · How we measure it works, and when.** At the commit: the four tests green in the building level. At Kenny's next review of `overlays--dialog-long` in retro: the dialog opens at 02:00 inside the window, and the wheel reaches 02:59.
+
+**8 · If the measurement fails.** Kenny names the theme and the zoom; Claude reproduces it at that CSS viewport and the package's `.kp-dialog[open]` gets a cap that no inherited knob can remove, as a correction of its own.
+
+**9 · When we review the measure.** At that review.
