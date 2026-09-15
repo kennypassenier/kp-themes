@@ -1721,3 +1721,18 @@ possible register faults in dark, shade-dark, sepia, shade-light, lapis and
 solstice (a focus ring clipped by dark's chamfer, menus that close without their
 fade, disabled buttons that still react, scope-25 gestures never built); they
 are unverified and wait for Kenny's decision.
+
+**scope-100 · The measured register faults are fixed; the scope-25 gestures get
+a demo first.** Kenny, 2026-09-16, the register-faults form. register-faults,
+all nine: dark's focus ring (fix-38), dark's disabled and primary-hover buttons,
+dark's clipped dialog shadow; lapis without JavaScript, lapis's button
+transitions, disabled hover and stamp; shade-light's secondary press; sepia's
+two ink washes; solstice's side note and looping band; the menus of shade-dark
+and sepia that close without their fade. The invisible and comment-only faults
+in the same registers are fixed alongside. scope25-gestures "Eerst een demo":
+sepia's ink spreading on a press and its rule thickest in the middle, and the
+pointer as the light in shade-light and shade-dark, are shown in a research
+demo next to what ships; no register changes until Kenny chooses.
+cyberpunk-flicker "Ondieper, en opnieuw kijken": cyberpunk's alarm flicker gets
+a shallower dip until the flash report reads under 2.5 per second, and its
+alarm returns for review. fix-38 "Klopt". step-timing "Akkoord".

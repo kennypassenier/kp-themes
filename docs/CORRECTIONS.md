@@ -3720,3 +3720,23 @@ fault.
 **8 · If the measurement fails.** The gate reads the decision from `docs/SCOPE.md` instead of the README line.
 
 **9 · When we review the measure.** After three topics archived without a fault.
+
+## fix-38 · Dark's buttons showed no focus ring, and no test noticed (2026-09-16)
+
+**1 · What went wrong.** In dark, tabbing to a button changed 0 pixels outside the button (formal: 395–526) and 90 inside: the chamfer's `clip-path` cut the focus ring away. Found by an agent writing dark's signature, measured in Firefox.
+
+**2 · Which gate let it through.** The focus-ring invariant in `docs/DESIGN_INVARIANTS.md` is checked on the ring's CSS value, not on whether it shows on screen; a register that clips the ring away passes.
+
+**3 · Where the same fault sits.** Not yet measured beyond dark and formal. Searched with `grep -ln clip-path css/*-register.css`: 16 registers use `clip-path`, 13 within three lines of a button, field or link selector (cyberpunk, dark, titanium, shade-light, phantom, high-contrast, light, lapis, pastel, retro, blueprint, solstice, nostromo); the fix starts with the browser measurement in all 22.
+
+**4 · How we prevent recurrence.** A browser test tabs to a button, a field and a link in every theme and requires a visible change (pixels outside the box or on its edge).
+
+**5 · What the remedy costs.** One test of about 22 × 3 measurements, a few seconds per theme, tagged as a sweep.
+
+**6 · Who enforces it.** Code: the new test at the commit tag level.
+
+**7 · How we measure it works, and when.** At the fix: the test fails first on dark (and any other theme it fails on) and passes after; at Kenny's next review of dark's buttons, the ring shows.
+
+**8 · If the measurement fails.** The ring becomes its own outline outside the chamfered shape (an unclipped shadow layer) instead of `outline`.
+
+**9 · When we review the measure.** At the next theme with a button shape of its own.
