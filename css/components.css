@@ -1088,16 +1088,28 @@
     }
 
     /* The box comes before its label, because that is the order it is read in
- * and the order it is clicked in. */
+ * and the order it is clicked in. The label's words sit on the box's centre,
+ * not on its baseline [scope-92]: a checkbox's baseline is its bottom edge,
+ * so baseline alignment put the words at the height of the box's bottom in
+ * every theme; and a register that draws its own box (appearance: none, a
+ * grid whose only child is the ::before tick) has no baseline until the
+ * tick exists, so the words rose by 2 to 6px when the box was ticked
+ * (cyberpunk, dark, brutalism, retro, titanium). Centring reads no
+ * baseline, so the state cannot move the words. */
     .kp-field--check {
         flex-direction: row;
-        align-items: baseline;
+        align-items: center;
         flex-wrap: wrap;
         gap: 0.5rem;
     }
 
     .kp-field--check .kp-field__label {
         font-weight: 400;
+        /* Beside the box, and wrapping there: at its max-content width a long
+     * label went down to a line of its own, under the box, in every theme
+     * whose face is wide (cyberpunk, brutalism, deco, nostromo) [scope-92]. */
+        flex: 1 1 0;
+        min-inline-size: 0;
     }
 
     .kp-field--check .kp-field__help,
@@ -1120,9 +1132,11 @@
         padding: 0;
     }
 
+    /* The same centre as a checkbox field's, for the same two reasons
+ * [scope-92]. */
     .kp-field__option {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: 0.5rem;
         font-size: var(--kp-field-option-size, 0.875rem);
     }
@@ -1140,6 +1154,15 @@
      * css/_rules.css [KT8]. */
         accent-color: var(--kp-control-accent, var(--primary));
         flex: none;
+    }
+
+    /* The browser's margin on a radio is 3px above and none below, so a
+ * centred radio's box sat 1.5px above its words [scope-92]. Beside its
+ * words the control carries no margin across the line; the gap holds the
+ * two apart. A register that sets its own margin still wins. */
+    .kp-field--check > .kp-field__check,
+    .kp-field__option > .kp-field__check {
+        margin-block: 0;
     }
 
     /* The error text carries the message [DI4]; this only makes the control
@@ -4183,7 +4206,10 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        align-items: baseline;
+        /* Not baseline: an option's baseline is its control's, and a register
+     * that draws its own radio has none until the dot exists, so ticking
+     * one moved the whole row by 4 to 5px (cyberpunk, dark) [scope-92]. */
+        align-items: center;
         column-gap: var(--kp-space-md);
     }
 
