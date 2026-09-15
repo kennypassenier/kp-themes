@@ -252,16 +252,25 @@ for (const name of [theme('dark'), theme('titanium')]) {
     });
 }
 
-/* ───────────────────────────── 3 · synthwave's Try again keeps its frame */
+/* ───────────────────────────── 3 · synthwave's Try again keeps its frame, and only it */
 
 test.describe(
-    "synthwave: a framed button on the destructive plate [Kenny's note, 2026-09-15]",
+    "synthwave: the data table's Try again on the destructive plate [Kenny's note, 2026-09-15, narrowed in scope-94]",
     { tag: [`@theme:${theme('synthwave')}`, '@component:datatable', '@component:button'] },
     () => {
-        test("the frame of every framed button on a destructive alert is the alert label's own ink, at least 3:1 on the plate", async ({ page }) => {
-            // Before: the frame was the primary pink, rgb(255, 71, 130), on the red
-            // plate rgb(254, 67, 80): 1.06:1, on both Try again buttons of the page
-            // (#datatable-states and #empty). The label reads 5.59:1 there.
+        test("the data table's Try again frames in the alert label's own ink, at least 3:1 on the plate; every other button on a red alert keeps a button's own frame [scope-94]", async ({
+            page,
+        }) => {
+            // Before d50f11a9: the frame was the primary pink, rgb(255, 71, 130), on
+            // the red plate rgb(254, 67, 80): 1.06:1, on both Try again buttons of
+            // the page (#datatable-states and #empty). The label reads 5.59:1 there.
+            // d50f11a9 gave every framed button on any destructive alert the label's
+            // ink; Kenny narrowed that, "Alleen Try again" (scope-94), so this test's
+            // expectation narrowed with it: the label's ink reaches only the data
+            // table's retry control in its failed slot, and the plain Try again of
+            // #empty draws the frame the same button draws outside any alert.
+            // Drill [KT3]: d50f11a9's wide selector put back → red on "empty Try
+            // again: a button's own frame".
             await openCatalogue(page, '/catalogue/table.html', 'synthwave', { reducedMotion: 'reduce' });
             await installRgb(page);
             const read = await page.evaluate(() => {
@@ -269,19 +278,36 @@ test.describe(
                 return [...document.querySelectorAll('.cat-stage .kp-alert--destructive')]
                     .filter((alert) => alert.getBoundingClientRect().height > 0)
                     .flatMap((alert) =>
-                        [...alert.querySelectorAll('.kp-button:not(.kp-button--ghost)')].map((b) => ({
-                            block: b.closest('.cat-block')?.id,
-                            text: b.textContent?.trim(),
-                            frame: rgb(getComputedStyle(b).borderTopColor),
-                            label: rgb(getComputedStyle(/** @type {Element} */ (alert.querySelector('.kp-alert__label'))).color),
-                            plate: rgb(getComputedStyle(alert).backgroundColor),
-                        })),
+                        [...alert.querySelectorAll('.kp-button:not(.kp-button--ghost)')].map((b) => {
+                            // The same button beside the alert, in the same stage: the
+                            // frame a button draws when nothing narrows it.
+                            const twin = /** @type {HTMLElement} */ (b.cloneNode(true));
+                            twin.removeAttribute('data-kp-datatable-retry');
+                            /** @type {Element} */ (alert.closest('.cat-stage')).append(twin);
+                            const own = rgb(getComputedStyle(twin).borderTopColor);
+                            twin.remove();
+                            return {
+                                block: b.closest('.cat-block')?.id,
+                                retry: b.matches('[data-kp-datatable-failed] [data-kp-datatable-retry]'),
+                                text: b.textContent?.trim(),
+                                frame: rgb(getComputedStyle(b).borderTopColor),
+                                own,
+                                label: rgb(getComputedStyle(/** @type {Element} */ (alert.querySelector('.kp-alert__label'))).color),
+                                plate: rgb(getComputedStyle(alert).backgroundColor),
+                            };
+                        }),
                     );
             });
             expect(read.map((r) => r.block).sort()).toEqual(['datatable-states', 'empty']);
+            expect(read.filter((r) => r.retry).map((r) => r.block)).toEqual(['datatable-states']);
             for (const r of read) {
-                expect(r.frame, `${r.block} ${r.text}: the frame is the label's ink`).toEqual(r.label);
-                expect(contrast(r.frame, r.plate), `${r.block} ${r.text}: frame on plate`).toBeGreaterThanOrEqual(3);
+                if (r.retry) {
+                    expect(r.frame, `${r.block} ${r.text}: the frame is the label's ink`).toEqual(r.label);
+                    expect(contrast(r.frame, r.plate), `${r.block} ${r.text}: frame on plate`).toBeGreaterThanOrEqual(3);
+                } else {
+                    expect(r.frame, `${r.block} ${r.text}: a button's own frame`).toEqual(r.own);
+                    expect(r.frame, `${r.block} ${r.text}: not the label's ink`).not.toEqual(r.label);
+                }
             }
         });
     },

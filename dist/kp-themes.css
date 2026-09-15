@@ -14480,16 +14480,17 @@
         border-left-color: var(--destructive);
     }
 
-    /* A framed button on the destructive plate takes the plate's own ink
-       for its frame [Kenny's synthwave note, 2026-09-15]. The frame is the
-       primary pink, and on the red plate it measured 1.06:1 — "poorly
-       visible" on the data table's Try again. The alert's label is
-       `--destructive-foreground` on that plate, 5.59:1, so the frame is
-       drawn in it. Every framed variant, because the bare, secondary,
-       mirror, destructive and primary buttons all draw a frame on the same
-       red (the primary's pink fill is no further from it than its frame
-       was); the ghost has no frame to draw and keeps none. */
-    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-button--ghost) {
+    /* The data table's Try again takes the plate's own ink for its frame
+       [Kenny's synthwave note, 2026-09-15]. The frame is the primary pink,
+       and on the red plate of the failed state it measured 1.06:1 — "poorly
+       visible". The alert's label is `--destructive-foreground` on that
+       plate, 5.59:1, so the frame is drawn in it. Until scope-94 every
+       framed button on any destructive alert took it; Kenny narrowed it to
+       this one ("Alleen Try again"), so the retry control the data table
+       draws in its failed slot — js/datatable.js, `[data-kp-datatable-
+       retry]` inside `[data-kp-datatable-failed]`, whether the page wrote
+       the slot or the script did — is the only button it reaches. */
+    [data-theme='synthwave'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
         --kp-frame: var(--destructive-foreground);
     }
 
@@ -22043,6 +22044,16 @@
     }
 }
 
+/* The redaction plate's alpha, registered so it can be transitioned: an
+   unregistered custom property flips at the end of its transition instead
+   of passing through values, and the plate's background reads it through
+   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */
+@property --kp-redact-alpha {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/pastel-register.css
    The pastel register, 5.0.0 [S48, LIFT_PLAN row 6]: risograph printing.
@@ -22629,7 +22640,9 @@
        be a trap, not a reveal (the pattern every lifted theme's dossier
        already holds). */
     [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
+        --kp-redact-alpha: 0;
+        --kp-redact-ink: color-mix(in srgb, var(--foreground) calc(var(--kp-redact-alpha) * 100%), transparent);
+        background: linear-gradient(var(--kp-redact-ink), var(--kp-redact-ink)) left center / 0% 100% no-repeat;
         color: inherit;
         padding: 0.05em 0.15em;
         border-radius: 0.25rem;
@@ -22639,6 +22652,7 @@
     }
 
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        --kp-redact-alpha: 1;
         color: transparent;
         background-size: 100% 100%;
     }
@@ -22646,27 +22660,31 @@
     /* Opened, the plate is gone — stated here because the lede's own
        cleared mark fills in (kp-fill), and that rule would reach these too. */
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        --kp-redact-alpha: 0;
         background-size: 0% 100%;
         animation: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        /* The plate narrows back toward the phrase's start, 380ms, staggered;
-           the word switches colour 220ms in, in no time at all — the plate
-           is the word's own ink, so it reads only where the plate has gone,
-           and KT8's mid-transition colour can never be read. */
+        /* The plate fades over 220ms while it narrows back toward the
+           phrase's start over 380ms, both staggered, as the ::after bar did
+           before fix-33 [scope-94]; the word switches colour 220ms in, in no
+           time at all — the plate is the word's own ink, so it reads only
+           where the plate has gone, and KT8's mid-transition colour can
+           never be read. */
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
+                --kp-redact-alpha 220ms ease,
                 background-size 380ms var(--fx-ease),
                 color 0s linear 220ms;
         }
 
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
-            transition-delay: var(--kp-redact-stagger), 220ms;
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-stagger), 220ms;
         }
 
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
-            transition-delay: calc(2 * var(--kp-redact-stagger)), 220ms;
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(2 * var(--kp-redact-stagger)), 220ms;
         }
     }
 
@@ -27910,6 +27928,24 @@
     [data-theme='light'] .kp-breadcrumb,
     [data-theme='light'] .kp-pagination {
         font-variant-numeric: tabular-nums;
+    }
+
+    /* The breadcrumb in the bar's scheme, not the indigo --link (Kenny,
+       2026-09-15, navigation#app-shell [scope-94]): a crumb rests in the
+       slate muted ink — a visited one too — and pointing at it or focusing
+       it brings it up to the full ink, as the bar's links do since
+       scope-92 and scope-93. The page you are on is in the full ink with
+       the weight and the absent underline it already had, so it is marked
+       by more than a colour [DI4]. */
+    [data-theme='light'] .kp-breadcrumb a,
+    [data-theme='light'] .kp-breadcrumb a:visited {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-breadcrumb a:hover,
+    [data-theme='light'] .kp-breadcrumb a:focus-visible,
+    [data-theme='light'] .kp-breadcrumb [aria-current] {
+        color: var(--foreground);
     }
 
     [data-theme='light'] .kp-pagination [aria-current] {

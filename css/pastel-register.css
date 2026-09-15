@@ -1,3 +1,13 @@
+/* The redaction plate's alpha, registered so it can be transitioned: an
+   unregistered custom property flips at the end of its transition instead
+   of passing through values, and the plate's background reads it through
+   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */
+@property --kp-redact-alpha {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/pastel-register.css
    The pastel register, 5.0.0 [S48, LIFT_PLAN row 6]: risograph printing.
@@ -584,7 +594,9 @@
        be a trap, not a reveal (the pattern every lifted theme's dossier
        already holds). */
     [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
-        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% 100% no-repeat;
+        --kp-redact-alpha: 0;
+        --kp-redact-ink: color-mix(in srgb, var(--foreground) calc(var(--kp-redact-alpha) * 100%), transparent);
+        background: linear-gradient(var(--kp-redact-ink), var(--kp-redact-ink)) left center / 0% 100% no-repeat;
         color: inherit;
         padding: 0.05em 0.15em;
         border-radius: 0.25rem;
@@ -594,6 +606,7 @@
     }
 
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        --kp-redact-alpha: 1;
         color: transparent;
         background-size: 100% 100%;
     }
@@ -601,27 +614,31 @@
     /* Opened, the plate is gone — stated here because the lede's own
        cleared mark fills in (kp-fill), and that rule would reach these too. */
     [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        --kp-redact-alpha: 0;
         background-size: 0% 100%;
         animation: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        /* The plate narrows back toward the phrase's start, 380ms, staggered;
-           the word switches colour 220ms in, in no time at all — the plate
-           is the word's own ink, so it reads only where the plate has gone,
-           and KT8's mid-transition colour can never be read. */
+        /* The plate fades over 220ms while it narrows back toward the
+           phrase's start over 380ms, both staggered, as the ::after bar did
+           before fix-33 [scope-94]; the word switches colour 220ms in, in no
+           time at all — the plate is the word's own ink, so it reads only
+           where the plate has gone, and KT8's mid-transition colour can
+           never be read. */
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
+                --kp-redact-alpha 220ms ease,
                 background-size 380ms var(--fx-ease),
                 color 0s linear 220ms;
         }
 
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
-            transition-delay: var(--kp-redact-stagger), 220ms;
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-stagger), 220ms;
         }
 
         [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
-            transition-delay: calc(2 * var(--kp-redact-stagger)), 220ms;
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(2 * var(--kp-redact-stagger)), 220ms;
         }
     }
 

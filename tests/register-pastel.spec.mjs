@@ -230,6 +230,62 @@ for (const [channel, url] of CHANNELS) {
                 .toBe('0% 100%');
         });
 
+        // The fade came back [scope-94]: fix-33 moved the plate from mark::after
+        // (which faded its opacity over 220ms) to the mark's cloned background,
+        // and the fade went with it. The plate's ink is now
+        // color-mix(--foreground, alpha) over the registered number
+        // --kp-redact-alpha, transitioned beside the narrowing. Sampled every
+        // frame from the moment the phrase is cleared: somewhere in between the
+        // alpha is neither the covered 1 nor the cleared 0. Drill [KT3]: the
+        // `--kp-redact-alpha 220ms ease` transition removed, or the @property
+        // rule removed (an unregistered property flips at the end), and no
+        // sample lies between.
+        for (const reduced of [false, true]) {
+            test(`the dossier: the redaction plate ${reduced ? 'clears at once under reduced motion' : 'fades while it narrows'} [scope-94]`, async ({
+                page,
+            }) => {
+                await open(page, url, { reduced });
+                const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
+                const mark = dossier.locator('mark').first();
+                if (reduced) {
+                    // Reduced motion puts the dossier at rest, opened: no plate,
+                    // and no transition that could fade one.
+                    await expect(mark).toHaveClass(/is-cleared/);
+                    const rest = await pseudo(mark, '', ['--kp-redact-alpha', 'background-size', 'transition-property']);
+                    expect(rest['--kp-redact-alpha'].trim(), 'at rest: no plate ink').toBe('0');
+                    expect(rest['background-size']).toBe('0% 100%');
+                    expect(rest['transition-property'], 'nothing fades under reduced motion').not.toMatch(/kp-redact-alpha|background-size/);
+                    return;
+                }
+                expect((await pseudo(mark, '', ['--kp-redact-alpha']))['--kp-redact-alpha'].trim(), 'covered: the plate at full ink').toBe('1');
+                expect((await pseudo(mark, '', ['background-image']))['background-image'], 'the plate is painted').not.toBe('none');
+                await mark.evaluate((el) => {
+                    const w = /** @type {any} */ (window);
+                    w.kpAlphaSamples = [];
+                    const sample = () => w.kpAlphaSamples.push(Number(getComputedStyle(el).getPropertyValue('--kp-redact-alpha')));
+                    new MutationObserver((_, observer) => {
+                        if (!el.classList.contains('is-cleared')) return;
+                        observer.disconnect();
+                        sample();
+                        const start = performance.now();
+                        const tick = () => {
+                            sample();
+                            if (performance.now() - start < 900) requestAnimationFrame(tick);
+                        };
+                        requestAnimationFrame(tick);
+                    }).observe(el, { attributes: true, attributeFilter: ['class'] });
+                });
+                await dossier.locator('[data-kp-reveal-trigger]').click();
+                await expect(mark).toHaveClass(/is-cleared/);
+                await expect.poll(() => page.evaluate(() => /** @type {any} */ (window).kpAlphaSamples.at(-1)), 'the plate ends cleared').toBe(0);
+                await page.waitForTimeout(1000);
+                const samples = /** @type {number[]} */ (await page.evaluate(() => /** @type {any} */ (window).kpAlphaSamples));
+                const between = samples.filter((a) => a > 0.01 && a < 0.99);
+                if (reduced) expect(between, `no fade under reduced motion: ${samples.join(', ')}`).toEqual([]);
+                else expect(between.length, `mid-reveal alpha between 1 and 0: ${samples.map((a) => a.toFixed(2)).join(', ')}`).toBeGreaterThan(0);
+            });
+        }
+
         test('the wipe confirmation is a real dialog, styled in the theme’s own boundary and radius', async ({ page }) => {
             await open(page, url);
             const wipe = page.locator('[data-kp-form] [type="reset"], [data-kp-form] button:has-text("Wipe")').first();

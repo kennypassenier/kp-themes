@@ -627,6 +627,24 @@
         font-variant-numeric: tabular-nums;
     }
 
+    /* The breadcrumb in the bar's scheme, not the indigo --link (Kenny,
+       2026-09-15, navigation#app-shell [scope-94]): a crumb rests in the
+       slate muted ink — a visited one too — and pointing at it or focusing
+       it brings it up to the full ink, as the bar's links do since
+       scope-92 and scope-93. The page you are on is in the full ink with
+       the weight and the absent underline it already had, so it is marked
+       by more than a colour [DI4]. */
+    [data-theme='light'] .kp-breadcrumb a,
+    [data-theme='light'] .kp-breadcrumb a:visited {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-breadcrumb a:hover,
+    [data-theme='light'] .kp-breadcrumb a:focus-visible,
+    [data-theme='light'] .kp-breadcrumb [aria-current] {
+        color: var(--foreground);
+    }
+
     [data-theme='light'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);

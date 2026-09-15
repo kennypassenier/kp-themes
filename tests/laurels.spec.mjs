@@ -268,95 +268,124 @@ test(
     },
 );
 
-test(
-    'the platforms are store badges on one line at 1400px: an inverted ground, the name on one line, the glyph beside it, in shade-light [scope-93]',
-    { tag: ['@component:media', '@theme:shade-light'] },
-    async ({ page }) => {
-        await page.setViewportSize({ width: 1400, height: 900 });
-        await open(page);
-        const found = [];
-        for (const theme of WREATHED) {
-            await wear(page, theme);
-            const rows = await page.evaluate(() => {
-                const ctx = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d', { willReadFrequently: true }));
-                /** @param {string} css */
-                const rgb = (css) => {
-                    ctx.clearRect(0, 0, 1, 1);
-                    ctx.fillStyle = '#000';
-                    ctx.fillStyle = css;
-                    ctx.fillRect(0, 0, 1, 1);
-                    const d = ctx.getImageData(0, 0, 1, 1).data;
-                    return { rgb: [d[0] / 255, d[1] / 255, d[2] / 255], alpha: d[3] / 255 };
-                };
-                /** @param {number[]} c */
-                const lum = ([r, g, b]) => {
-                    /** @param {number} u */
-                    const f = (u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4);
-                    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
-                };
-                /** @param {number[]} a @param {number[]} b */
-                const contrast = (a, b) => {
-                    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
-                    return (hi + 0.05) / (lo + 0.05);
-                };
-                return [...document.querySelectorAll('#laurels .kp-platforms')].map((row) => {
-                    const pane = /** @type {Element} */ (row.closest('.cat-resize, .cat-stage'));
-                    const paneBox = pane.getBoundingClientRect();
-                    return {
-                        narrow: pane.classList.contains('cat-resize'),
-                        badges: [...row.children].map((badge) => {
-                            const s = getComputedStyle(badge);
-                            const ground = rgb(s.backgroundColor);
-                            const ink = rgb(s.color);
-                            const name = [...badge.childNodes]
-                                .filter((n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? '').trim() !== '')
-                                .at(-1);
-                            const range = document.createRange();
-                            if (name) range.selectNodeContents(name);
-                            const nameLines = name
-                                ? new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top))).size
-                                : 0;
-                            const nameBox = name ? range.getBoundingClientRect() : null;
-                            const glyph = badge.querySelector('svg');
-                            const g = glyph?.getBoundingClientRect();
-                            const small = badge.querySelector('small')?.getBoundingClientRect();
-                            const box = badge.getBoundingClientRect();
+for (const ratio of RATIOS)
+    test(
+        `the platforms are store badges on one line at 1400px: an inverted ground, the name on one line, the glyph beside it and the "Available on" line over it, in shade-light, devicePixelRatio ${ratio} [scope-93, scope-94]`,
+        { tag: ['@component:media', '@theme:shade-light'] },
+        async ({ playwright, browserName, baseURL }) => {
+            const { browser, page } = await pageAt(playwright[browserName], browserName, baseURL, ratio);
+            try {
+                await open(page);
+                expect(await page.evaluate(() => devicePixelRatio)).toBe(ratio);
+                const found = [];
+                for (const theme of WREATHED) {
+                    await wear(page, theme);
+                    const rows = await page.evaluate(() => {
+                        const ctx = /** @type {CanvasRenderingContext2D} */ (
+                            document.createElement('canvas').getContext('2d', { willReadFrequently: true })
+                        );
+                        /** @param {string} css */
+                        const rgb = (css) => {
+                            ctx.clearRect(0, 0, 1, 1);
+                            ctx.fillStyle = '#000';
+                            ctx.fillStyle = css;
+                            ctx.fillRect(0, 0, 1, 1);
+                            const d = ctx.getImageData(0, 0, 1, 1).data;
+                            return { rgb: [d[0] / 255, d[1] / 255, d[2] / 255], alpha: d[3] / 255 };
+                        };
+                        /** @param {number[]} c */
+                        const lum = ([r, g, b]) => {
+                            /** @param {number} u */
+                            const f = (u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4);
+                            return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+                        };
+                        /** @param {number[]} a @param {number[]} b */
+                        const contrast = (a, b) => {
+                            const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+                            return (hi + 0.05) / (lo + 0.05);
+                        };
+                        return [...document.querySelectorAll('#laurels .kp-platforms')].map((row) => {
+                            const pane = /** @type {Element} */ (row.closest('.cat-resize, .cat-stage'));
+                            const paneBox = pane.getBoundingClientRect();
                             return {
-                                name: (name?.textContent ?? '').trim(),
-                                top: box.top,
-                                ground: ground.alpha,
-                                contrast: contrast(ground.rgb, ink.rgb),
-                                nameLines,
-                                glyphBeside: g && nameBox ? g.right <= nameBox.left + 0.5 || g.left >= nameBox.right - 0.5 : null,
-                                smallAbove:
-                                    small && nameBox
-                                        ? (small.top + small.bottom) / 2 < nameBox.top && small.bottom <= (nameBox.top + nameBox.bottom) / 2
-                                        : null,
-                                overflow: Math.max(paneBox.left - box.left, box.right - paneBox.right),
+                                narrow: pane.classList.contains('cat-resize'),
+                                badges: [...row.children].map((badge) => {
+                                    const s = getComputedStyle(badge);
+                                    const ground = rgb(s.backgroundColor);
+                                    const ink = rgb(s.color);
+                                    const name = [...badge.childNodes]
+                                        .filter((n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? '').trim() !== '')
+                                        .at(-1);
+                                    const range = document.createRange();
+                                    if (name) range.selectNodeContents(name);
+                                    const nameLines = name
+                                        ? new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top))).size
+                                        : 0;
+                                    const nameBox = name ? range.getBoundingClientRect() : null;
+                                    const glyph = badge.querySelector('svg');
+                                    const g = glyph?.getBoundingClientRect();
+                                    const small = badge.querySelector('small')?.getBoundingClientRect();
+                                    const box = badge.getBoundingClientRect();
+                                    return {
+                                        name: (name?.textContent ?? '').trim(),
+                                        top: box.top,
+                                        ground: ground.alpha,
+                                        contrast: contrast(ground.rgb, ink.rgb),
+                                        nameLines,
+                                        glyphBeside: g && nameBox ? g.right <= nameBox.left + 0.5 || g.left >= nameBox.right - 0.5 : null,
+                                        glyph: g ? { width: g.width, height: g.height, top: g.top, bottom: g.bottom } : null,
+                                        small: small ? { top: small.top, bottom: small.bottom } : null,
+                                        smallLines: (() => {
+                                            const el = badge.querySelector('small');
+                                            if (!el) return 0;
+                                            const r = document.createRange();
+                                            r.selectNodeContents(el);
+                                            return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
+                                        })(),
+                                        nameBox: nameBox ? { top: nameBox.top, bottom: nameBox.bottom } : null,
+                                        bottom: box.bottom,
+                                        smallAbove:
+                                            small && nameBox
+                                                ? (small.top + small.bottom) / 2 < nameBox.top && small.bottom <= (nameBox.top + nameBox.bottom) / 2
+                                                : null,
+                                        overflow: Math.max(paneBox.left - box.left, box.right - paneBox.right),
+                                    };
+                                }),
                             };
-                        }),
-                    };
-                });
-            });
-            expect(rows.length, `${theme}: no platforms rows`).toBeGreaterThanOrEqual(2);
-            for (const row of rows) {
-                expect(row.badges.length, `${theme}: an empty platforms row`).toBeGreaterThanOrEqual(2);
-                const tops = row.badges.map((b) => b.top);
-                if (!row.narrow && Math.max(...tops) - Math.min(...tops) > 1) found.push(`${theme}: the badges wrap to a second line at 1400px`);
-                for (const b of row.badges) {
-                    const where = `${theme}${row.narrow ? ' narrow' : ''} "${b.name}"`;
-                    if (b.ground < 1) found.push(`${where}: the badge has no solid ground (alpha ${b.ground})`);
-                    if (b.contrast < 4.5) found.push(`${where}: name on ground ${b.contrast.toFixed(2)}:1`);
-                    if (b.nameLines !== 1) found.push(`${where}: the name runs over ${b.nameLines} lines`);
-                    if (b.glyphBeside === false) found.push(`${where}: the glyph is not beside the name`);
-                    if (b.smallAbove === false) found.push(`${where}: the small line is not above the name`);
-                    if (b.overflow > 0.5) found.push(`${where}: the badge runs ${b.overflow.toFixed(1)}px out of its pane`);
+                        });
+                    });
+                    expect(rows.length, `${theme}: no platforms rows`).toBeGreaterThanOrEqual(2);
+                    for (const row of rows) {
+                        expect(row.badges.length, `${theme}: an empty platforms row`).toBeGreaterThanOrEqual(2);
+                        const tops = row.badges.map((b) => b.top);
+                        if (!row.narrow && Math.max(...tops) - Math.min(...tops) > 1)
+                            found.push(`${theme}: the badges wrap to a second line at 1400px`);
+                        for (const b of row.badges) {
+                            const where = `${theme}${row.narrow ? ' narrow' : ''} "${b.name}"`;
+                            if (b.ground < 1) found.push(`${where}: the badge has no solid ground (alpha ${b.ground})`);
+                            if (b.contrast < 4.5) found.push(`${where}: name on ground ${b.contrast.toFixed(2)}:1`);
+                            if (b.nameLines !== 1) found.push(`${where}: the name runs over ${b.nameLines} lines`);
+                            if (b.glyphBeside === false) found.push(`${where}: the glyph is not beside the name`);
+                            // Since scope-94 the catalogue's badges carry the glyph and the
+                            // "Available on" line, so both must show, inside the badge: the
+                            // glyph a square spanning the two lines, the small line on one line.
+                            if (!b.glyph || b.glyph.width < 8 || Math.abs(b.glyph.width - b.glyph.height) > 0.5)
+                                found.push(`${where}: no glyph drawn (${JSON.stringify(b.glyph)})`);
+                            if (!b.small || b.smallLines !== 1) found.push(`${where}: the "Available on" line shows over ${b.smallLines} lines`);
+                            if (b.glyph && b.small && b.nameBox && !(b.glyph.top <= b.nameBox.bottom && b.glyph.bottom >= b.small.top))
+                                found.push(`${where}: the glyph does not stand beside both lines`);
+                            if (b.glyph && b.glyph.bottom > b.bottom + 0.5) found.push(`${where}: the glyph runs out of the badge`);
+                            if (b.smallAbove === false) found.push(`${where}: the small line is not above the name`);
+                            if (b.overflow > 0.5) found.push(`${where}: the badge runs ${b.overflow.toFixed(1)}px out of its pane`);
+                        }
+                    }
                 }
+                expect(found, found.join('\n')).toEqual([]);
+            } finally {
+                await browser.close();
             }
-        }
-        expect(found, found.join('\n')).toEqual([]);
-    },
-);
+        },
+    );
 
 test(
     'the other twenty-one themes wear no wreath and no store badge: their laurels and platforms are their own [scope-93]',

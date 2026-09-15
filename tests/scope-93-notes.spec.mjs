@@ -230,6 +230,51 @@ test.describe(
             expect([...new Set(faults)]).toEqual([]);
         });
 
+        test('the breadcrumb: no crumb nor separator in the primary or the link colour at rest or under the pointer, every crumb at 4.5:1 [scope-94]', async ({
+            page,
+        }) => {
+            // Kenny, 2026-09-15, navigation#app-shell: the breadcrumb was still
+            // indigo after scope-93. Before (e5458c71): every crumb link in --link
+            // at rest and under the pointer, on #breadcrumb, both trails, and on
+            // #app-shell.
+            test.setTimeout(120_000);
+            const faults = [];
+            await open(page, '/catalogue/navigation.html', 'light');
+            await page.mouse.move(0, 0);
+            const CRUMBS = ':is(#breadcrumb, #app-shell) :is(.kp-breadcrumb, .kp-breadcrumb *)';
+            expect(await page.locator(`:is(#breadcrumb, #app-shell) .kp-breadcrumb`).count(), 'three trails').toBe(3);
+            faults.push(...(await indigo(page, CRUMBS, 'rest')));
+            const crumbs = page.locator(':is(#breadcrumb, #app-shell) .kp-breadcrumb li > :is(a, [aria-current])');
+            const count = await crumbs.count();
+            expect(count).toBeGreaterThanOrEqual(13);
+            /** The crumb's ink on its ground, as the reader sees it. @param {import('@playwright/test').Locator} crumb */
+            const reads = (crumb) =>
+                crumb.evaluate((el) => {
+                    const w = /** @type {any} */ (window);
+                    return { ink: w.kpRgba(getComputedStyle(el).color), ground: w.kpGround(el), weight: getComputedStyle(el).fontWeight };
+                });
+            for (let i = 0; i < count; i++) {
+                const crumb = crumbs.nth(i);
+                if (!(await crumb.isVisible())) continue;
+                const name = ((await crumb.textContent()) ?? '').trim().slice(0, 24);
+                const rest = await reads(crumb);
+                const restRatio = contrast(rgb(rest.ink), rgb(rest.ground));
+                if (restRatio < 4.5) faults.push(`rest "${name}" ${restRatio.toFixed(2)}:1`);
+                const link = await crumb.evaluate((el) => el.tagName === 'A');
+                if (!link) continue;
+                await crumb.hover({ force: true, timeout: 2000 }).catch(() => {});
+                await crumb.evaluate((el) => el.setAttribute('data-kp-test-pointed', ''));
+                faults.push(...(await indigo(page, CRUMBS, 'hover')));
+                const hover = await reads(crumb);
+                const hoverRatio = contrast(rgb(hover.ink), rgb(hover.ground));
+                if (hoverRatio < 4.5) faults.push(`hover "${name}" ${hoverRatio.toFixed(2)}:1`);
+                if (distance(rgb(hover.ink), rgb(rest.ink)) < 10) faults.push(`hover "${name}": the ink does not come up under the pointer`);
+                await crumb.evaluate((el) => el.removeAttribute('data-kp-test-pointed'));
+                await page.mouse.move(0, 0);
+            }
+            expect([...new Set(faults)]).toEqual([]);
+        });
+
         test('the call to action still reads as one: a drawn pill, its words at 4.5:1 at rest and under the pointer, and a plate that changes', async ({
             page,
         }) => {
