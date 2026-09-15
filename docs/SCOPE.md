@@ -1550,3 +1550,19 @@ neither side has room; the same run covers `.kp-nav__link--cta`,
 exception. trail-numerals "Cijfers van gelijke breedte houden": light,
 shade-light and pastel keep `font-variant-numeric: tabular-nums` on the
 breadcrumb and the pagination. step-timing "Akkoord".
+
+**scope-89 · The solstice review's answers.** Kenny, 2026-09-15, the solstice
+review form (commit `1b9c72bd`). marquee-frozen "Klopt": `fix-31` approved.
+sticky-slivers "Klopt": `fix-32` approved. datepicker-jump "Titel opent een
+raster": a click on the calendar's month title opens a grid of twelve months,
+a second click a grid of years (twelve at a time), keyboard reachable, in both
+channels and every theme. review-dialog, his own answer: "Build a demo" of a
+large review dialog of fixed size that opens a block, where every new item
+focuses the comment input so he can type freely; Left and Right move between
+blocks, Up approves, Down rejects; Backspace stays text correction. Rejecting
+works only when the input holds text — and from now on that holds for every
+rejection on every review surface, not only in the dialog. combobox-test
+"Klopt": `tests/combobox.spec.mjs` checks "against the input on the side it
+took" (`fix-30`). retro-cta-press "Dezelfde uitzondering als de knop": retro's
+pressed call to action steps one pixel down again, with a `MAY_KEEP` entry and
+its reason. step-timing "Akkoord".

@@ -53,12 +53,36 @@
             "given": "2026-09-14"
         }
     },
+    "datepicker--closed": {
+        "solstice": {
+            "rejected": "Kenny: the date picker offers no way to choose the month or year directly, as most date pickers do today.",
+            "change": "scope-89: a click on the calendar's title (\"September 2026\") opens a grid of twelve months, a second click a grid of years; keyboard reachable, in every theme.",
+            "commit": "1b9c72bd",
+            "given": "2026-09-15"
+        }
+    },
+    "media--marquee": {
+        "solstice": {
+            "rejected": "Kenny: the marquee does not run.",
+            "change": "fix-31: the review page's hash paused every running animation and never restarted one that was already still; it now sets the time to zero, reads, and puts the time back, so the band runs again.",
+            "commit": "1b9c72bd",
+            "given": "2026-09-15"
+        }
+    },
     "table--datatable-add-filter": {
         "dark": {
             "rejected": "Als ik de filter \"hours open\" en dan hover over de cancel knop, zijn de \"[]\" haakjes op de letters van \"Cancel\"",
             "change": "Dark's buttons now keep enough inline padding for the brackets they draw on hover, in every size: the overlap on Cancel went from 6.8px to 0. Every dark button is a little wider as a result.",
             "commit": "ec3d3b9",
             "given": "2026-09-14"
+        }
+    },
+    "table--datatable-sticky": {
+        "solstice": {
+            "rejected": "Kenny: when scrolling, slivers of row text show just above the header row, sometimes also after stopping; in several themes.",
+            "change": "fix-32: the header's ground reaches 2px above the header (an unblurred shadow in its own colour), so a half pixel or a late frame no longer shows a row. Check by scrolling with the mouse in FireDragon.",
+            "commit": "1b9c72bd",
+            "given": "2026-09-15"
         }
     }
 }

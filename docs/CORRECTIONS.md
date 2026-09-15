@@ -3271,3 +3271,82 @@ returns to Kenny as a correction of its own.
 
 **9 · When we review the measure.** At the next version raise, once the
 tests have gone a round without failing.
+
+## fix-31 · The review page's hash left the marquee standing still (2026-09-15)
+
+**1 · What went wrong.** Kenny, on the review page in solstice: "I don't see
+these running from side to side?" Measured in firefox on
+`catalogue/media.html#marquee` (formal): the band's animation stayed
+`paused` at time 0 for 3 s while its CSS said `running`; one `play()` from the
+console set it moving.
+
+**2 · Which gate let it through.** None. No test follows an infinite
+animation after the review page has taken its hashes.
+
+**3 · Where the same fault sits.** The property: an infinite CSS animation
+that stands still after judging while its CSS play state is `running`.
+Searched with a Playwright script that loads `catalogue/media.html`,
+`catalogue/feedback.html` and `catalogue/index.html` in firefox, scrolls every
+target of an infinite animation into view and follows `currentTime` for
+400 ms. On the index: `kp-pulse` 15 running, `kp-spin` 4, `kp-progress-stripes`
+1, `kp-marquee-pass` 2 still. Only the two marquee bands.
+
+**4 · How we prevent recurrence.** `stillAnimations()` in
+`catalogue/block-hash.js` no longer calls `pause()`: it sets each infinite
+animation's time to 0, reads, and restores the time it had, so the CSS keeps
+control of the play state. The cause, measured with an intercepted
+`Animation.pause`: at 404 ms the hash paused a band that was already still,
+a script pause then outranks the CSS, and `release()` only restarts what was
+running.
+
+**5 · What the remedy costs.** One function and one test; the hashes stay
+the same, since the reading still happens at time 0.
+
+**6 · Who enforces it.** A test in `tests/catalogue-review.spec.mjs` that
+follows the band for a second after judging and requires it to move.
+
+**7 · How we measure it works, and when.** At the commit of the fix: the test
+red on `1b9c72bd`, green after, with the tagged catalogue tests green.
+
+**8 · If the measurement fails.** The hash skips the marquee track instead,
+and that returns as a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next review of
+`#media--marquee`.
+
+## fix-32 · Row text showed above the sticky header of the data table (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon, solstice and several other
+themes: "When scrolling down, I see slivers of the white text just above the
+header row, sometimes when I stop, I see that as well." Not reproduced in
+headless firefox: no gap between the scroll box and the header in 22 themes
+at three scroll positions, and no bright pixels above the header in solstice
+at 2× scale nor over twelve wheel steps at 1.25×. Hypothesis: the box starts
+on a half pixel (306.32px) and the header is drawn a frame late or a pixel
+low while scrolling.
+
+**2 · Which gate let it through.** The sticky-header test measures positions,
+not the pixels above the header, and never scrolls with a wheel.
+
+**3 · Where the same fault sits.** Searched with `grep -n "position: sticky"
+css/components.css`: two table headers, the plain one under
+`data-kp-max-height` and the one with fixed columns.
+
+**4 · How we prevent recurrence.** The header's ground reaches 2px above the
+header, an unblurred shadow in the header's own colour, clipped by the scroll
+box itself.
+
+**5 · What the remedy costs.** Two CSS rules and one test; the tables with a
+sticky header change their hash and return for Kenny's verdict.
+
+**6 · Who enforces it.** Code for the ground (a test reading the shadow in
+every theme); Kenny's eye for real scrolling.
+
+**7 · How we measure it works, and when.** At Kenny's next review of
+`#table--datatable-sticky` in FireDragon: wheel-scrolling in three themes of
+his choice shows no text above the header.
+
+**8 · If the measurement fails.** Kenny names the theme and screen scale, and
+Claude tries to reproduce it in FireDragon itself for a new correction.
+
+**9 · When we review the measure.** At that review.
