@@ -50,19 +50,36 @@
 // component: the section and its attributes, the stages with their classes
 // and inline styles, and a `.cat-note`, which a block may place inside a
 // stage as part of what is judged (combobox). The version-2 reading, the
-// whole section as the markup line, is still returned as `previous`, so a
+// whole section as the markup line, is still returned (`earlier[2]`), so a
 // verdict stored under version 2 carries over where the block did not change
-// (judgements.js carryOver, `node gates/verdicts.mjs migrate-v3`).
+// (judgements.js carryOver, `node gates/verdicts.mjs migrate --to 3`).
+//
+// Labels outside the stages (version 4, 2026-09-15, scope-96): a `.cat-note`
+// that stands in the block but outside every `.cat-stage` names a part of the
+// block for the reviewer ("At rest" above page-effects' `#headline` stage,
+// "Live" in the bar of its live copy), and correcting it is not a change to
+// the component, so version 4 leaves it out of the markup line. A `.cat-note`
+// INSIDE a stage stays: it is part of what is judged (combobox `#open` puts
+// one under the box for the open list to cover, the wizard writes its status
+// line into one). A stage is a `.cat-stage` element, the block itself when it
+// is one; the element lines already read only what is in the stages. A block
+// with no stage (a research demo) has no inside: its notes leave the markup
+// line too, and their computed style stays in the element lines as before.
+// The version-3 reading is returned too (`earlier[3]`), for the same carry-over.
 /**
  * The version of this recipe. catalogue/verdicts.json names the version its
  * hashes were taken with; any change to what is read below raises this, and
  * gates/check-verdicts.mjs refuses until `node gates/verdicts.mjs rehash` (or,
- * from 2 to 3, `migrate-v3`) has brought the register to it.
+ * where only the markup line changed, `migrate --to <version>`) has brought
+ * the register to it.
  */
-export const HASH_VERSION = 3;
+export const HASH_VERSION = 4;
 
-/** The version `previous` (readBlocks) is read with: the markup line as the whole section. */
-export const PREVIOUS_VERSION = 2;
+/** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
+export const EARLIER_VERSIONS = [3, 2];
+
+/** The version `previous` (readBlocks) is read with: the one before this. */
+export const PREVIOUS_VERSION = EARLIER_VERSIONS[0];
 
 export const PROPS = [
     'color',
@@ -152,19 +169,25 @@ export function stillAnimations() {
 const AROUND = '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge';
 
 /**
- * A block's markup as the hash reads it (version 3): the source without its
- * reading aids and headings (see the head of this file). Parsed and
- * serialised the same way on every surface, so a review page, a component
- * page, a compare column and a demo read one string for one block.
+ * A block's markup as the hash reads it: the source without its reading aids
+ * and headings (version 3) and without its labels outside the stages
+ * (version 4; see the head of this file). Parsed and serialised the same way
+ * on every surface, so a review page, a component page, a compare column and
+ * a demo read one string for one block.
  * @param {string} source the block's markup as written, one element
+ * @param {number} [version] the recipe to read it with: 2 is the source as written
  */
-export function componentMarkup(source) {
+export function componentMarkup(source, version = HASH_VERSION) {
+    if (version <= 2) return source;
     const template = document.createElement('template');
     template.innerHTML = source;
     const block = template.content.firstElementChild;
     if (!block) return source;
     for (const el of block.querySelectorAll(AROUND)) el.remove();
     for (const heading of block.querySelectorAll(':scope > h2, :scope > h3')) heading.remove();
+    if (version >= 4) {
+        for (const note of block.querySelectorAll('.cat-note')) if (!note.closest('.cat-stage')) note.remove();
+    }
     return block.outerHTML;
 }
 
@@ -403,8 +426,9 @@ export function blockLines(block, source, reviewed = reviewedElements(block), vi
  * block outside them (gates/verdicts.mjs), so both read the same thing.
  * @param {{ root: Element, source: string, elements?: () => Element[] }[]} items
  * @param {{ lines?: boolean }} [options] lines: also return what each hash was taken over
- * @returns {Promise<{ hash: string, previous: string, lines?: string[] }[]>}
- *   previous: the same reading under version 2 (PREVIOUS_VERSION), the whole source as the markup line
+ * @returns {Promise<{ hash: string, previous: string, earlier: Record<number, string>, lines?: string[] }[]>}
+ *   earlier: the same reading under each of EARLIER_VERSIONS, which differ only in the markup line;
+ *   previous: the one under PREVIOUS_VERSION
  */
 export async function readBlocks(items, { lines = false } = {}) {
     // The theme's own typeface arrives only once a layout asks for it, and
@@ -467,8 +491,12 @@ export async function readBlocks(items, { lines = false } = {}) {
     const out = [];
     for (const [i, read] of readings.entries()) {
         const hash = await sha256(read.join('\n'));
-        const previous = await sha256([items[i].source, ...read.slice(1)].join('\n'));
-        out.push(lines ? { hash, previous, lines: read } : { hash, previous });
+        /** @type {Record<number, string>} */
+        const earlier = {};
+        for (const version of EARLIER_VERSIONS)
+            earlier[version] = await sha256([componentMarkup(items[i].source, version), ...read.slice(1)].join('\n'));
+        const previous = earlier[PREVIOUS_VERSION];
+        out.push(lines ? { hash, previous, earlier, lines: read } : { hash, previous, earlier });
     }
     return out;
 }

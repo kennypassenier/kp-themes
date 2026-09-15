@@ -122,18 +122,42 @@ the reviewer's panel and its own headings (`componentMarkup` in
 back; the stages and everything in them still count. Every page that hashes
 a block (catalogue page, review page, compare column, research demo, and the
 tools) goes through that one function. The register was carried over with
-`node gates/verdicts.mjs migrate-v3` instead of `rehash`: each entry read at
-its commit and ratio, and only where the version-2 reading of that moment
-was its stored hash did it take the version-3 reading; 2754 of 3014 did.
-The other 260 (254 recorded at cf2c5634, five at 6dd76c6c, one at ff81ed71,
-in phantom, synthwave, titanium, deco and eight more themes) are the entries
-Kenny's browser read differently from the test browser at the time
-[fix-28]; they keep their version-2 hash, match no version-3 reading, and
-come back. A verdict still held in a reviewer's browser under version 2 is
-carried over by the page as it reads the block in that theme, where its hash
-is the version-2 reading of the block as it stands (`carryOver` in
-`catalogue/judgements.js`); where the block changed since, it shows "Changed
-since judged" as before.
+`node gates/verdicts.mjs migrate --to 3` instead of `rehash`: each entry read
+at its commit and ratio, and only where the version-2 reading of that moment
+was its stored hash did it take the version-3 reading; 2796 of 3014 did.
+The other 218 (117 recorded at cf2c5634, 98 at 62dcfba6 — Kenny's review at
+ratio 2.222 — two at 6dd76c6c, one at ff81ed71) are entries Kenny's browser
+read differently from the test browser at the time [fix-28]. On Kenny's
+answer "Vastzetten zoals de 110" [scope-96] they were re-anchored like the
+110 of scope-94, with `node gates/verdicts.mjs reanchor --commit <hash>` for
+each of the four commits: an entry whose stored hash is not the version-3
+reading at rest of its commit, at its own ratio, keeps its verdict, commit
+and date and takes that reading. The ratio each was re-anchored at is the one
+it already kept: 1 for the 120 at cf2c5634, 6dd76c6c and ff81ed71 (phantom
+44, synthwave 35, dark 13, deco 9, cyberpunk 7, terminal 3, blueprint 2,
+lapis 2, solstice 2, light, shade-dark and titanium 1 each), 2.222 for the
+98 at 62dcfba6 (lapis 28, titanium 27, synthwave 8, cyberpunk 6, and one to
+three in seventeen more themes). This paragraph is their record. A verdict
+still held in a reviewer's browser under an earlier version is carried over
+by the page as it reads the block in that theme, where its hash is that
+version's reading of the block as it stands (`carryOver` in
+`catalogue/judgements.js`, with the readings `readBlocks` returns in
+`earlier`); where the block changed since, it shows "Changed since judged"
+as before.
+
+Hash version 4 (2026-09-15, scope-96, "Ook uit de hash") also leaves a
+label out: a `.cat-note` that stands in the block but outside every
+`.cat-stage` ("At rest" above `page-effects#headline`'s stage, "Live" in the
+bar of a live copy) names a part of the block for the reviewer and is not
+the component. A `.cat-note` inside a stage still counts, because it is part
+of what is judged (combobox `#open` puts one under the box for the open list
+to cover; the wizard writes its status line into one). In a block without a
+stage (a research demo) every note leaves the markup line. The register was
+carried over with `node gates/verdicts.mjs migrate --to 4` in the same way:
+where the version-3 reading at an entry's commit and ratio was its stored
+hash, it took the version-4 reading. All 3014 did (in 6 min 48 s); the hash
+moved for the 264 entries of the twelve blocks with such a label (22 themes
+each), and stayed for the rest.
 4. The register and the recipe are committed together.
 
 The recipe reads past what differs between two browsers of one engine or

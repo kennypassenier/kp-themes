@@ -355,7 +355,7 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
                 key: entry.key,
                 theme: blockTheme(entry.root),
                 ratio,
-                previous: hashes[i].previous,
+                earlier: hashes[i].earlier,
                 hash: hashes[i].hash,
             })),
         );

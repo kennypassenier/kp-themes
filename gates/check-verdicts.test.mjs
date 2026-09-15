@@ -300,12 +300,16 @@ test('reanchor replaces the hash of an entry no ratio matches with a reading at 
     };
     const untouched = JSON.stringify([register.verdicts['button--variants'], register.verdicts['button--sizes']]);
     const other = 'b'.repeat(64);
-    const atOne = new Map([
-        ['button--variants|formal', { hash: HASH }],
-        ['button--icons|formal', { hash: other }],
-        ['button--icons|nostromo', { hash: other }],
+    // Each entry read at its own ratio; a reading at another ratio is never compared.
+    const atOwn = new Map([
+        ['button--variants|formal|1', { hash: HASH }],
+        ['button--variants|nostromo|1.25', { hash: HASH }],
+        ['button--variants|nostromo|1', { hash: other }],
+        ['button--icons|formal|1', { hash: other }],
+        ['button--icons|nostromo|1', { hash: other }],
+        ['button--sizes|nostromo|1.5', { hash: HASH }],
     ]);
-    const found = unmatchedEntries(register, atOne, { commit: 'd499b6b2' });
+    const found = unmatchedEntries(register, atOwn, { commit: 'd499b6b2' });
     assert.deepEqual(
         found.map((e) => `${e.key}|${e.theme}`),
         ['button--icons|formal', 'button--icons|nostromo'],
@@ -376,4 +380,55 @@ test('migrate-v3 carries an entry over only where its version-2 reading is its h
     assert.equal(migrationKey('k', 't', 'firefox', entry({ commit: 'abc' })), 'k|t|firefox|abc|1');
     // A register already at 3 is not carried over twice.
     assert.throws(() => migrateEntries(register, readings), /hash version 3, not 2/);
+});
+
+test('reanchor finds an entry that keeps a ratio when its own-ratio reading is another hash [scope-96]', () => {
+    const rest = 'c'.repeat(64);
+    /** @type {any} */
+    const register = {
+        hashVersion: 3,
+        verdicts: {
+            'button--variants': {
+                formal: { firefox: entry({ commit: '62dcfba6aaaa', ratio: 2.222 }) }, // equal at 2.222
+                nostromo: { firefox: entry({ commit: '62dcfba6aaaa', ratio: 2.222 }) }, // another reading at 2.222
+            },
+        },
+    };
+    const readings = new Map([
+        ['button--variants|formal|2.222', { hash: HASH }],
+        ['button--variants|nostromo|2.222', { hash: rest }],
+        ['button--variants|nostromo|1', { hash: HASH }], // at another ratio: not the entry's reading
+    ]);
+    const found = unmatchedEntries(register, readings, { commit: '62dcfba6' });
+    assert.deepEqual(
+        found.map((e) => `${e.key}|${e.theme}`),
+        ['button--variants|nostromo'],
+    );
+});
+
+test('migrate --to 4 carries an entry over only where its version-3 reading is its hash, at its own commit and ratio [scope-96]', () => {
+    const v3 = 'd'.repeat(64);
+    const v4 = 'f'.repeat(64);
+    const other = 'e'.repeat(64);
+    const register = {
+        hashVersion: 3,
+        verdicts: {
+            // page-effects#headline: only its "At rest" label moved out of the hash.
+            'page-effects--headline': { formal: { firefox: entry({ hash: v3, commit: 'aaaa111', ratio: 2.222 }) } },
+            // A block whose version-3 reading at its commit is another hash: kept.
+            'combobox--open': { formal: { firefox: entry({ hash: other, commit: 'aaaa111' }) } },
+        },
+    };
+    const readings = new Map([
+        ['page-effects--headline|formal|firefox|aaaa111|2.222', { hash: v4, previous: v3 }],
+        ['combobox--open|formal|firefox|aaaa111|1', { hash: v4, previous: v3 }],
+    ]);
+    assert.throws(() => migrateEntries(structuredClone(register), readings), /hash version 3, not 2/);
+    const result = migrateEntries(register, readings, { to: 4 });
+    assert.equal(register.hashVersion, 4);
+    assert.deepEqual(result.migrated, ['page-effects--headline · formal · firefox @2.222']);
+    assert.deepEqual(result.unreproducible, ['combobox--open · formal · firefox (recorded at aaaa111)']);
+    assert.deepEqual(register.verdicts['page-effects--headline'].formal.firefox, entry({ hash: v4, commit: 'aaaa111', ratio: 2.222 }));
+    assert.equal(register.verdicts['combobox--open'].formal.firefox.hash, other);
+    assert.throws(() => migrateEntries(register, readings, { to: 4 }), /hash version 4, not 3/);
 });
