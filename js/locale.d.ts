@@ -64,19 +64,28 @@ export declare function parseDate(text: string, locale?: string | undefined): Da
  * the dictionary already is the answer — and where Intl's "Mon" would
  * quietly change the two-letter "Mo" every English page shows.
  *
- * @param {{ months: string[], weekdays: string[] }} dictionary the strings in force; weekdays Monday first
- * @param {{ months: string[], weekdays: string[] }} defaults the package's own dictionary, to tell a consumer's names from it
+ * The short month names fill the month grid [scope-89], where twelve full
+ * names in three columns ran out of their cells in eleven themes
+ * ("September", 83px of text in a 75px cell). They follow the same rule, and
+ * a consumer who set full names of their own but no short ones sees their
+ * full names there rather than the package's English abbreviations.
+ *
+ * @param {{ months: string[], weekdays: string[], monthsShort?: string[] }} dictionary the strings in force; weekdays Monday first
+ * @param {{ months: string[], weekdays: string[], monthsShort?: string[] }} defaults the package's own dictionary, to tell a consumer's names from it
  * @param {string | undefined} [locale]
- * @returns {{ months: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
+ * @returns {{ months: string[], monthsShort: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
  */
 export declare function calendarNames(dictionary: {
     months: string[];
     weekdays: string[];
+    monthsShort?: string[];
 }, defaults: {
     months: string[];
     weekdays: string[];
+    monthsShort?: string[];
 }, locale?: string | undefined): {
     months: string[];
+    monthsShort: string[];
     weekdays: string[];
 };
 /**

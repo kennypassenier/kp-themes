@@ -282,8 +282,42 @@ export type Strings = {
     previousMonth: string;
     nextMonth: string;
     monthTitle: (month: string, year: number) => string;
+    /**
+     * The month title's name: it opens the twelve months [scope-89]
+     */
+    chooseMonth: (title: string) => string;
+    /**
+     * The year title's name: it opens twelve years [scope-89]
+     */
+    chooseYear: (year: number) => string;
+    previousYear: string;
+    nextYear: string;
+    /**
+     * Twelve years back, in the year grid
+     */
+    previousYears: string;
+    /**
+     * Twelve years on, in the year grid
+     */
+    nextYears: string;
+    /**
+     * The month grid's name, and what is said when it opens
+     */
+    monthGrid: (year: number) => string;
+    /**
+     * The year grid's name, and what is said when it opens
+     */
+    yearGrid: (from: number, to: number) => string;
+    /**
+     * The year grid's title
+     */
+    yearRange: (from: number, to: number) => string;
     weekdays: string[];
     months: string[];
+    /**
+     * The month grid's cells, where a full name does not fit [scope-89]
+     */
+    monthsShort: string[];
     dayLabel: (day: number, month: string, year: number) => string;
     uploadZone: string;
     uploadTooLarge: (size: string) => string;
@@ -509,8 +543,18 @@ export type Strings = {
  * @property {string} previousMonth
  * @property {string} nextMonth
  * @property {(month: string, year: number) => string} monthTitle
+ * @property {(title: string) => string} chooseMonth  The month title's name: it opens the twelve months [scope-89]
+ * @property {(year: number) => string} chooseYear    The year title's name: it opens twelve years [scope-89]
+ * @property {string} previousYear
+ * @property {string} nextYear
+ * @property {string} previousYears  Twelve years back, in the year grid
+ * @property {string} nextYears      Twelve years on, in the year grid
+ * @property {(year: number) => string} monthGrid           The month grid's name, and what is said when it opens
+ * @property {(from: number, to: number) => string} yearGrid The year grid's name, and what is said when it opens
+ * @property {(from: number, to: number) => string} yearRange The year grid's title
  * @property {string[]} weekdays
  * @property {string[]} months
+ * @property {string[]} monthsShort  The month grid's cells, where a full name does not fit [scope-89]
  * @property {(day: number, month: string, year: number) => string} dayLabel
  * @property {string} uploadZone
  * @property {(size: string) => string} uploadTooLarge

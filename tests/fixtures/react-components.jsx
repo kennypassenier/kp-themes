@@ -236,6 +236,10 @@ function Cases() {
                     <DatePicker label="Van" />
                 </div>
             </div>
+            <div data-test="react-date-limits" lang="nl">
+                {/* A minimum and a maximum, for the month and year grids [scope-89]. */}
+                <DatePicker label="Binnen grenzen" min="2026-03-15" max="2027-06-10" />
+            </div>
             <div data-test="react-upload">
                 <Upload maxBytes={1024} />
             </div>

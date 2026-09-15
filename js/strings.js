@@ -153,8 +153,18 @@
  * @property {string} previousMonth
  * @property {string} nextMonth
  * @property {(month: string, year: number) => string} monthTitle
+ * @property {(title: string) => string} chooseMonth  The month title's name: it opens the twelve months [scope-89]
+ * @property {(year: number) => string} chooseYear    The year title's name: it opens twelve years [scope-89]
+ * @property {string} previousYear
+ * @property {string} nextYear
+ * @property {string} previousYears  Twelve years back, in the year grid
+ * @property {string} nextYears      Twelve years on, in the year grid
+ * @property {(year: number) => string} monthGrid           The month grid's name, and what is said when it opens
+ * @property {(from: number, to: number) => string} yearGrid The year grid's name, and what is said when it opens
+ * @property {(from: number, to: number) => string} yearRange The year grid's title
  * @property {string[]} weekdays
  * @property {string[]} months
+ * @property {string[]} monthsShort  The month grid's cells, where a full name does not fit [scope-89]
  * @property {(day: number, month: string, year: number) => string} dayLabel
  * @property {string} uploadZone
  * @property {(size: string) => string} uploadTooLarge
@@ -411,8 +421,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     nextMonth: 'Next month',
     /** The calendar's heading. A function, so a locale that writes the year first can. @param {string} month @param {number} year */
     monthTitle: (month, year) => `${month} ${year}`,
+    // The title is a button since scope-89. Its name keeps the words it
+    // shows and adds what a press does, so a voice command naming what is
+    // on screen still reaches it.
+    chooseMonth: (title) => `${title}, choose a month`,
+    chooseYear: (year) => `${year}, choose a year`,
+    previousYear: 'Previous year',
+    nextYear: 'Next year',
+    previousYears: 'Previous twelve years',
+    nextYears: 'Next twelve years',
+    monthGrid: (year) => `Months of ${year}`,
+    yearGrid: (from, to) => `Years ${from} to ${to}`,
+    yearRange: (from, to) => `${from}–${to}`,
     weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     // The full date, because "4" alone tells a screen reader nothing about
     // which month it is in.
     dayLabel: (day, month, year) => `${day} ${month} ${year}`,

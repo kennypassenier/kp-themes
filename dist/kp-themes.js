@@ -322,8 +322,21 @@ var DEFAULT_STRINGS = Object.freeze({
   nextMonth: "Next month",
   /** The calendar's heading. A function, so a locale that writes the year first can. @param {string} month @param {number} year */
   monthTitle: (month, year) => `${month} ${year}`,
+  // The title is a button since scope-89. Its name keeps the words it
+  // shows and adds what a press does, so a voice command naming what is
+  // on screen still reaches it.
+  chooseMonth: (title) => `${title}, choose a month`,
+  chooseYear: (year) => `${year}, choose a year`,
+  previousYear: "Previous year",
+  nextYear: "Next year",
+  previousYears: "Previous twelve years",
+  nextYears: "Next twelve years",
+  monthGrid: (year) => `Months of ${year}`,
+  yearGrid: (from, to) => `Years ${from} to ${to}`,
+  yearRange: (from, to) => `${from}\u2013${to}`,
   weekdays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
   months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   // The full date, because "4" alone tells a screen reader nothing about
   // which month it is in.
   dayLabel: (day, month, year) => `${day} ${month} ${year}`,
@@ -2993,10 +3006,14 @@ function calendarNames(dictionary, defaults, locale) {
       return null;
     }
   };
-  const months = (same(dictionary.months, defaults.months) ? fromIntl({ month: "long" }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+  const ownMonths = same(dictionary.months, defaults.months);
+  const months = (ownMonths ? fromIntl({ month: "long" }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+  const shortDefaults = defaults.monthsShort;
+  const ownShort = shortDefaults !== void 0 && same(dictionary.monthsShort ?? shortDefaults, shortDefaults);
+  const monthsShort = !ownShort ? dictionary.monthsShort ?? months : !ownMonths ? dictionary.months : fromIntl({ month: "short" }, (i) => new Date(2001, i, 1), 12) ?? shortDefaults ?? months;
   const sundayFirst = [6, 0, 1, 2, 3, 4, 5].map((i) => dictionary.weekdays[i] ?? "");
   const weekdays = (same(dictionary.weekdays, defaults.weekdays) ? fromIntl({ weekday: "short" }, (i) => new Date(2001, 0, 7 + i), 7) : null) ?? sundayFirst;
-  return { months, weekdays };
+  return { months, monthsShort, weekdays };
 }
 function formatBytes(bytes, locale, { base = 1e3, units = ["B", "kB", "MB", "GB", "TB"] } = {}) {
   let value = bytes;
@@ -3102,13 +3119,18 @@ __export(datepicker_exports, {
   MONTH_EVENT: () => MONTH_EVENT,
   OPEN_EVENT: () => OPEN_EVENT3,
   attachDatePickers: () => attachDatePickers,
+  clampToMonth: () => clampToMonth,
   datePicker: () => datePicker,
   formatLocalDate: () => formatLocalDate,
+  jumpMove: () => jumpMove,
+  measureDateView: () => measureDateView,
+  outsideRange: () => outsideRange,
   parseDate: () => parseDate2,
   placeDatePanel: () => placeDatePanel,
   raiseDatePanel: () => raiseDatePanel,
   toDutch: () => toDutch,
-  toISO: () => toISO
+  toISO: () => toISO,
+  yearBlockStart: () => yearBlockStart
 });
 var PICKER2 = "[data-kp-datepicker]";
 var DATE_EVENT = "kp-date-change";
@@ -3163,6 +3185,43 @@ function raiseDatePanel(panel) {
     panel.style.removeProperty("left");
     panel.style.removeProperty("top");
     delete panel.dataset.kpAlign;
+  };
+}
+var JUMP_COLUMNS = 3;
+function yearBlockStart(year) {
+  return Math.floor(year / 12) * 12;
+}
+function clampToMonth(year, month, day) {
+  const first = new Date(year, month, 1);
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  return new Date(first.getFullYear(), first.getMonth(), Math.min(day, last));
+}
+function outsideRange(from, to, min, max) {
+  return min !== null && to < min || max !== null && from > max;
+}
+function jumpMove(key, index) {
+  const column = index % JUMP_COLUMNS;
+  const moves = {
+    ArrowRight: 1,
+    ArrowLeft: -1,
+    ArrowDown: JUMP_COLUMNS,
+    ArrowUp: -JUMP_COLUMNS,
+    Home: -column,
+    End: JUMP_COLUMNS - 1 - column,
+    PageDown: 12,
+    PageUp: -12
+  };
+  return moves[key] ?? null;
+}
+function measureDateView(panel) {
+  const grid2 = panel.querySelector(".kp-datepicker__grid");
+  const own = getComputedStyle(panel);
+  const cells = grid2 === null ? null : getComputedStyle(grid2);
+  return {
+    inline: own.width,
+    block: own.height,
+    gridInline: cells?.width ?? "auto",
+    gridBlock: cells?.height ?? "auto"
   };
 }
 var handles4 = /* @__PURE__ */ new WeakMap();
@@ -3222,58 +3281,132 @@ function attachDatePickers(root = document, {
     };
     const read = () => parseDate2(input.value, locale);
     let cursor = read() ?? /* @__PURE__ */ new Date();
+    let view = "days";
+    let back = [];
+    let pin = null;
+    let shown2 = "";
+    const live = document.createElement("span");
+    live.className = "kp-sr-only";
+    live.setAttribute("aria-live", "polite");
     const draw = () => {
       const year = cursor.getFullYear();
       const month = cursor.getMonth();
-      const first = new Date(year, month, 1);
-      const lead = (first.getDay() - firstDay + 7) % 7;
-      const days = new Date(year, month + 1, 0).getDate();
       const chosen = read();
       const s = getStrings();
       const names = calendarNames(s, DEFAULT_STRINGS, locale);
-      panel.textContent = "";
+      const from = yearBlockStart(year);
+      for (const child of [...panel.children]) if (child !== live) child.remove();
       const head = document.createElement("div");
       head.className = "kp-datepicker__head";
-      const back = document.createElement("button");
-      back.type = "button";
-      back.className = "kp-button kp-button--ghost";
-      back.setAttribute("aria-label", s.previousMonth);
-      back.textContent = picker.dataset.kpPreviousGlyph ?? previousGlyph;
-      back.addEventListener("click", () => {
-        cursor = new Date(year, month - 1, 1);
-        draw();
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
-      });
-      const title = document.createElement("span");
+      const step = (label, glyph, to, slot) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "kp-button kp-button--ghost";
+        button.setAttribute("aria-label", label);
+        button.textContent = glyph;
+        button.addEventListener("click", () => {
+          cursor = to();
+          redraw();
+          panel.querySelector(".kp-datepicker__head")?.children[slot]?.focus();
+        });
+        return button;
+      };
+      const day = cursor.getDate();
+      const moves = {
+        days: [s.previousMonth, s.nextMonth, () => new Date(year, month - 1, 1), () => new Date(year, month + 1, 1)],
+        months: [s.previousYear, s.nextYear, () => clampToMonth(year - 1, month, day), () => clampToMonth(year + 1, month, day)],
+        years: [s.previousYears, s.nextYears, () => clampToMonth(year - 12, month, day), () => clampToMonth(year + 12, month, day)]
+      }[view];
+      const previous = step(
+        /** @type {string} */
+        moves[0],
+        picker.dataset.kpPreviousGlyph ?? previousGlyph,
+        /** @type {() => Date} */
+        moves[2],
+        0
+      );
+      const next = step(
+        /** @type {string} */
+        moves[1],
+        picker.dataset.kpNextGlyph ?? nextGlyph,
+        /** @type {() => Date} */
+        moves[3],
+        2
+      );
+      const title = document.createElement(view === "years" ? "span" : "button");
       title.className = "kp-datepicker__title";
       title.id = `${input.id || "kp-date"}-title`;
-      title.textContent = s.monthTitle(names.months[month] ?? "", year);
-      const next = document.createElement("button");
-      next.type = "button";
-      next.className = "kp-button kp-button--ghost";
-      next.setAttribute("aria-label", s.nextMonth);
-      next.textContent = picker.dataset.kpNextGlyph ?? nextGlyph;
-      next.addEventListener("click", () => {
-        cursor = new Date(year, month + 1, 1);
-        draw();
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
-      });
-      head.append(back, title, next);
+      const monthTitle = s.monthTitle(names.months[month] ?? "", year);
+      title.textContent = view === "days" ? monthTitle : view === "months" ? String(year) : s.yearRange(from, from + 11);
+      if (title instanceof HTMLButtonElement) {
+        title.type = "button";
+        title.setAttribute("aria-label", view === "days" ? s.chooseMonth(monthTitle) : s.chooseYear(year));
+        title.addEventListener("click", () => go(view === "days" ? "months" : "years"));
+      }
+      head.append(previous, title, next);
       const grid2 = document.createElement("div");
       grid2.className = "kp-datepicker__grid";
+      grid2.dataset.kpView = view;
       grid2.setAttribute("role", "grid");
-      grid2.setAttribute("aria-labelledby", title.id);
+      if (view !== "days" && pin !== null) {
+        panel.style.minInlineSize = pin.inline;
+        panel.style.minBlockSize = pin.block;
+        grid2.style.inlineSize = pin.gridInline;
+        grid2.style.minBlockSize = pin.gridBlock;
+      } else {
+        panel.style.removeProperty("min-inline-size");
+        panel.style.removeProperty("min-block-size");
+      }
+      const jumpCell = (text, current2, off) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "kp-datepicker__day";
+        button.setAttribute("role", "gridcell");
+        button.setAttribute("aria-selected", String(current2));
+        if (off) {
+          button.setAttribute("aria-disabled", "true");
+          button.dataset.kpDisabled = "";
+        }
+        button.tabIndex = current2 ? 0 : -1;
+        button.textContent = text;
+        return button;
+      };
+      if (view === "months") {
+        grid2.setAttribute("aria-label", s.monthGrid(year));
+        for (let m = 0; m < 12; m += 1) {
+          const cell = jumpCell(
+            names.monthsShort[m] ?? "",
+            m === month,
+            outsideRange(new Date(year, m, 1), new Date(year, m + 1, 0), min, max)
+          );
+          cell.dataset.kpMonth = `${year}-${String(m + 1).padStart(2, "0")}`;
+          cell.setAttribute("aria-label", s.monthTitle(names.months[m] ?? "", year));
+          grid2.append(cell);
+        }
+        panel.prepend(head, grid2);
+        return;
+      }
+      if (view === "years") {
+        grid2.setAttribute("aria-label", s.yearGrid(from, from + 11));
+        for (let y = from; y < from + 12; y += 1) {
+          const cell = jumpCell(String(y), y === year, outsideRange(new Date(y, 0, 1), new Date(y, 11, 31), min, max));
+          cell.dataset.kpYear = String(y);
+          grid2.append(cell);
+        }
+        panel.prepend(head, grid2);
+        return;
+      }
+      shown2 = `${year}-${month}`;
+      const lead = (new Date(year, month, 1).getDay() - firstDay + 7) % 7;
+      const days = new Date(year, month + 1, 0).getDate();
+      grid2.setAttribute("aria-label", monthTitle);
       for (let i = 0; i < 7; i += 1) {
-        const day = names.weekdays[(firstDay + i) % 7] ?? "";
+        const weekday = names.weekdays[(firstDay + i) % 7] ?? "";
         const cell = document.createElement("span");
         cell.className = "kp-datepicker__weekday";
         cell.setAttribute("role", "columnheader");
-        cell.setAttribute("aria-label", day);
-        cell.textContent = day;
+        cell.setAttribute("aria-label", weekday);
+        cell.textContent = weekday;
         grid2.append(cell);
       }
       for (let i = 0; i < lead; i += 1) {
@@ -3281,34 +3414,87 @@ function attachDatePickers(root = document, {
         blank.className = "kp-datepicker__blank";
         grid2.append(blank);
       }
-      for (let day = 1; day <= days; day += 1) {
-        const date = new Date(year, month, day);
+      for (let d = 1; d <= days; d += 1) {
+        const date = new Date(year, month, d);
         const button = document.createElement("button");
         button.type = "button";
         button.className = "kp-datepicker__day";
         button.dataset.kpDay = toISO(date);
         button.setAttribute("role", "gridcell");
-        button.setAttribute("aria-label", s.dayLabel(day, names.months[month] ?? "", year));
-        button.textContent = String(day);
+        button.setAttribute("aria-label", s.dayLabel(d, names.months[month] ?? "", year));
+        button.textContent = String(d);
         const isChosen = chosen !== null && toISO(chosen) === toISO(date);
         button.setAttribute("aria-selected", String(isChosen));
         if (disabled(date)) {
           button.setAttribute("aria-disabled", "true");
           button.dataset.kpDisabled = "";
         }
-        button.tabIndex = day === cursor.getDate() ? 0 : -1;
+        button.tabIndex = d === day ? 0 : -1;
         renderDay?.(button, date);
         grid2.append(button);
       }
-      panel.append(head, grid2);
+      panel.prepend(head, grid2);
+    };
+    const redraw = () => {
+      const before2 = shown2;
+      draw();
+      if (view === "days" && shown2 !== before2)
+        picker.dispatchEvent(
+          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
+        );
+    };
+    const focusCurrent = () => (
+      /** @type {HTMLElement | null} */
+      panel.querySelector('.kp-datepicker__grid [tabindex="0"]')?.focus()
+    );
+    const settle = () => {
+      if (view === "days") pin = null;
+      redraw();
+      const s = getStrings();
+      const year = cursor.getFullYear();
+      const from = yearBlockStart(year);
+      live.textContent = view === "days" ? s.monthTitle(calendarNames(s, DEFAULT_STRINGS, locale).months[cursor.getMonth()] ?? "", year) : view === "months" ? s.monthGrid(year) : s.yearGrid(from, from + 11);
+      focusCurrent();
+    };
+    const go = (next) => {
+      if (view === "days") pin = measureDateView(panel);
+      back.push(cursor);
+      view = next;
+      settle();
+    };
+    const stepBack = () => {
+      cursor = back.pop() ?? cursor;
+      view = view === "years" ? "months" : "days";
+      settle();
+    };
+    const pick = (cell) => {
+      if (cell.getAttribute("aria-disabled") === "true") return;
+      if (cell.dataset.kpMonth !== void 0) {
+        const [y, m] = cell.dataset.kpMonth.split("-").map(Number);
+        cursor = clampToMonth(y ?? cursor.getFullYear(), (m ?? 1) - 1, cursor.getDate());
+        view = "days";
+      } else {
+        cursor = clampToMonth(Number(cell.dataset.kpYear), cursor.getMonth(), cursor.getDate());
+        view = "months";
+      }
+      back.pop();
+      settle();
     };
     let lower = () => {
     };
     const setOpen = (next) => {
       if (panel.hidden === !next) return;
+      view = "days";
+      back = [];
+      pin = null;
+      live.textContent = "";
       if (next) {
         cursor = read() ?? /* @__PURE__ */ new Date();
+        if (!panel.contains(live)) panel.append(live);
         draw();
+      } else {
+        panel.style.removeProperty("min-inline-size");
+        panel.style.removeProperty("min-block-size");
       }
       panel.hidden = !next;
       if (next) lower = raiseDatePanel(panel);
@@ -3318,7 +3504,7 @@ function attachDatePickers(root = document, {
         };
       }
       open.setAttribute("aria-expanded", String(next));
-      if (next) panel.querySelector('[tabindex="0"]')?.focus();
+      if (next) focusCurrent();
       picker.dispatchEvent(new CustomEvent(OPEN_EVENT3, { bubbles: true, detail: { open: next } }));
     };
     const show = () => setOpen(true);
@@ -3342,18 +3528,43 @@ function attachDatePickers(root = document, {
     const onOpen = () => panel.hidden ? show() : hide();
     const onInput = () => commit(read(), "typed");
     const onPanelKey = (event) => {
-      const day = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-day]")
-      );
-      if (day === null) {
-        if (event.key === "Escape") {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (view === "days") {
           hide();
           open.focus();
-        }
+        } else stepBack();
         return;
       }
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      const jump = (
+        /** @type {HTMLElement | null} */
+        target.closest("[data-kp-month], [data-kp-year]")
+      );
+      if (jump !== null) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          pick(jump);
+          return;
+        }
+        const year = cursor.getFullYear();
+        const month = cursor.getMonth();
+        const delta = jumpMove(event.key, jump.dataset.kpMonth !== void 0 ? month : year - yearBlockStart(year));
+        if (delta === null) return;
+        event.preventDefault();
+        cursor = jump.dataset.kpMonth !== void 0 ? clampToMonth(year, month + delta, cursor.getDate()) : clampToMonth(year + delta, month, cursor.getDate());
+        redraw();
+        focusCurrent();
+        return;
+      }
+      const day = (
+        /** @type {HTMLElement | null} */
+        target.closest("[data-kp-day]")
+      );
+      if (day === null) return;
       const current2 = /* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`);
       const y = current2.getFullYear();
       const m = current2.getMonth();
@@ -3374,29 +3585,29 @@ function attachDatePickers(root = document, {
         choose(current2);
         return;
       }
-      if (event.key === "Escape") {
-        event.preventDefault();
-        hide();
-        open.focus();
-        return;
-      }
       const moved = moves[event.key];
       if (moved === void 0) return;
       event.preventDefault();
-      const monthChanged = moved.getMonth() !== cursor.getMonth() || moved.getFullYear() !== cursor.getFullYear();
       cursor = moved;
-      draw();
-      if (monthChanged)
-        picker.dispatchEvent(
-          new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } })
-        );
+      redraw();
       panel.querySelector(`[data-kp-day="${toISO(moved)}"]`)?.focus();
     };
     const onPanelClick = (event) => {
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      const jump = (
+        /** @type {HTMLElement | null} */
+        target.closest("[data-kp-month], [data-kp-year]")
+      );
+      if (jump !== null) {
+        pick(jump);
+        return;
+      }
       const day = (
         /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-day]")
+        target.closest("[data-kp-day]")
       );
       if (day === null) return;
       choose(/* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`));
@@ -3436,6 +3647,8 @@ function attachDatePickers(root = document, {
       picker.removeEventListener("focusout", onFocusOut);
       lower();
       panel.textContent = "";
+      panel.style.removeProperty("min-inline-size");
+      panel.style.removeProperty("min-block-size");
       panel.hidden = before.panelHidden;
       input.placeholder = before.placeholder;
       if (before.value === void 0) delete input.dataset.kpDateValue;
@@ -10095,6 +10308,7 @@ export {
   attachUploads,
   attachWizards,
   auto_exports as autoExports,
+  clampToMonth,
   clearError,
   closeLabel,
   closeOnOutsidePress,
@@ -10139,11 +10353,13 @@ export {
   initializeTheme,
   isMac,
   isTheme,
+  jumpMove,
   layoutOf,
   lazy_register_exports as lazyRegisterExports,
   listbox_exports as listboxExports,
   luminance,
   matchesFilter,
+  measureDateView,
   meets,
   nameOf,
   nextSorts,
@@ -10151,6 +10367,7 @@ export {
   noFlashSnippet,
   onThemeChange,
   openConfirmation,
+  outsideRange,
   overlays_exports as overlaysExports,
   palette,
   palette_exports as paletteExports,
@@ -10207,5 +10424,6 @@ export {
   visibleItems,
   watchTabOverflow,
   wizard,
-  wizard_exports as wizardExports
+  wizard_exports as wizardExports,
+  yearBlockStart
 };

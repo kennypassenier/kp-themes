@@ -567,7 +567,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-datepicker'],
         exports: ['DatePicker'],
-        aliases: ['date', 'day', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale', 'align', 'overlay-side'],
+        aliases: ['date', 'day', 'month', 'year', 'view', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale', 'align', 'overlay-side'],
         intro: 'A text input that takes a typed date, with a calendar beside it for the reader who would rather look. The value is kept as an ISO date whatever the page’s locale prints, so a consumer never parses a localised string.',
         whenToUse:
             'For a date a person knows or can find in a month — a start date, a deadline. Not for a birth date far in the past, where three selects or a typed field beat paging a calendar back forty years; and not for a date the browser can own entirely, where the native date input is smaller and already localised.',
@@ -603,7 +603,8 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: '.kp-datepicker__panel', what: 'The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.' },
-            { name: '.kp-datepicker__head / __title', what: 'The month, its name, and the two controls that page it.' },
+            { name: '.kp-datepicker__head / __title', what: 'The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.' },
+            { name: 'month and year grids', what: 'Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.' },
             { name: '.kp-datepicker__grid / __weekday', what: 'Seven columns with the week starting where the locale says, unless the markup overrules it.' },
             { name: '.kp-datepicker__day', what: 'One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.' },
             { name: 'selected day', what: 'Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.' },
@@ -611,6 +612,7 @@ export const DESCRIPTORS = [
         ],
         accessibility: [
             'Built in — the grid is a real grid: arrows by day, Page keys by month, Home and End to the ends of the week, and one tab stop for the whole month.',
+            'Built in — the month and year grids take the same keys a size up, Escape steps back one grid, and the grid that opens is named and announced.',
             'Built in — typing is a complete route to a date, so nobody is forced through the calendar at all.',
             'Built in — the month and the chosen date are announced when they change, in the page’s own locale.',
             'Yours — label the input and name the button that opens the calendar.',

@@ -135,10 +135,16 @@ export function parseDate(text, locale) {
  * the dictionary already is the answer — and where Intl's "Mon" would
  * quietly change the two-letter "Mo" every English page shows.
  *
- * @param {{ months: string[], weekdays: string[] }} dictionary the strings in force; weekdays Monday first
- * @param {{ months: string[], weekdays: string[] }} defaults the package's own dictionary, to tell a consumer's names from it
+ * The short month names fill the month grid [scope-89], where twelve full
+ * names in three columns ran out of their cells in eleven themes
+ * ("September", 83px of text in a 75px cell). They follow the same rule, and
+ * a consumer who set full names of their own but no short ones sees their
+ * full names there rather than the package's English abbreviations.
+ *
+ * @param {{ months: string[], weekdays: string[], monthsShort?: string[] }} dictionary the strings in force; weekdays Monday first
+ * @param {{ months: string[], weekdays: string[], monthsShort?: string[] }} defaults the package's own dictionary, to tell a consumer's names from it
  * @param {string | undefined} [locale]
- * @returns {{ months: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
+ * @returns {{ months: string[], monthsShort: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
  */
 export function calendarNames(dictionary, defaults, locale) {
     const resolved = resolveLocale(locale);
@@ -160,13 +166,21 @@ export function calendarNames(dictionary, defaults, locale) {
             return null;
         }
     };
-    const months =
-        (same(dictionary.months, defaults.months) ? fromIntl({ month: 'long' }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+    const ownMonths = same(dictionary.months, defaults.months);
+    const months = (ownMonths ? fromIntl({ month: 'long' }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+    // Short names a consumer set win; full names they set, with no short ones, come next; then Intl's, then the dictionary's.
+    const shortDefaults = defaults.monthsShort;
+    const ownShort = shortDefaults !== undefined && same(dictionary.monthsShort ?? shortDefaults, shortDefaults);
+    const monthsShort = !ownShort
+        ? (dictionary.monthsShort ?? months)
+        : !ownMonths
+          ? dictionary.months
+          : (fromIntl({ month: 'short' }, (i) => new Date(2001, i, 1), 12) ?? shortDefaults ?? months);
     // 7 January 2001 was a Sunday, so day i of that week is getDay() === i.
     const sundayFirst = [6, 0, 1, 2, 3, 4, 5].map((i) => dictionary.weekdays[i] ?? '');
     const weekdays =
         (same(dictionary.weekdays, defaults.weekdays) ? fromIntl({ weekday: 'short' }, (i) => new Date(2001, 0, 7 + i), 7) : null) ?? sundayFirst;
-    return { months, weekdays };
+    return { months, monthsShort, weekdays };
 }
 
 /**

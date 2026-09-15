@@ -373,6 +373,46 @@ The keyboard behaviour is the browser's, not ours: `<dialog>` traps focus,
 closes on Escape and returns focus to whatever opened it. A hand-written
 focus trap is how focus traps break, so there is none here.
 
+## The date picker's month and year grids [scope-89]
+
+The calendar's title is a button in both channels. Pressing it (a click,
+Enter or Space) swaps the days for the twelve months of the shown year,
+the shown month marked and focused; in that grid the title is the year,
+and pressing it shows twelve years, the block that holds the shown year.
+Previous and next move by a month over the days, by a year over the
+months and by twelve years over the years. Choosing a year returns to its
+months, choosing a month returns to its days; neither changes the value
+in the field — only a day does.
+
+The keys are the day grid's, one size up: the arrows move by a cell and a
+row (three cells a row) and cross into the next year or block at the
+edge, Home and End go to the ends of the row, PageUp and PageDown move by
+twelve, and one cell is the tab stop. Escape steps back one grid, to where
+the calendar was when that grid opened; from the days it still closes the
+calendar. A month or year that lies wholly before `min` or after `max`
+(`data-kp-min`, `data-kp-max`) is disabled the way a day is: in the grid,
+`aria-disabled`, and no way in. The disabled weekdays and
+`isDateDisabled` decide days only.
+
+Nothing is needed to style them. A month or year cell carries
+`.kp-datepicker__day`, `aria-selected` and `aria-disabled` like a day, so
+every register that paints days paints them; the grid says which it is
+with `data-kp-view="days" | "months" | "years"`, and a cell with
+`data-kp-month="2026-09"` or `data-kp-year="2026"`. While the months or
+years show, the panel keeps the size the days had: the module writes the
+day view's measured size as inline minimums on the panel and the grid,
+and removes them when the days return.
+
+The words come from the dictionary: `chooseMonth` and `chooseYear` name
+the title button (the words it shows, then what it opens),
+`previousYear`, `nextYear`, `previousYears`, `nextYears` name the arrows,
+`monthGrid` and `yearGrid` name the grids and are said through a polite
+live region when one opens, `yearRange` is the year grid's title, and
+`monthsShort` fills the month cells — a full "September" ran out of a
+third of the grid in eleven themes. Under a non-English `lang` the short
+names come from `Intl`; a consumer who set `months` but not `monthsShort`
+sees their own full names in the cells.
+
 ## Showing data [TH33]
 
 Seven patterns that are not components but that every data-heavy page

@@ -218,10 +218,13 @@
                             <tr><td><code>data-kp-max</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-min</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-month</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-next-glyph</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-overlay-side</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-previous-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-view</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-week-starts-on</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-year</code></td><td>selector, written, read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -281,6 +284,7 @@
                     <h2 class="kp-fw-semibold">Accessibility</h2>
                     <ul class="kp-stack">
                         <li>Built in — the grid is a real grid: arrows by day, Page keys by month, Home and End to the ends of the week, and one tab stop for the whole month.</li>
+                        <li>Built in — the month and year grids take the same keys a size up, Escape steps back one grid, and the grid that opens is named and announced.</li>
                         <li>Built in — typing is a complete route to a date, so nobody is forced through the calendar at all.</li>
                         <li>Built in — the month and the chosen date are announced when they change, in the page’s own locale.</li>
                         <li>Yours — label the input and name the button that opens the calendar.</li>
@@ -292,7 +296,8 @@
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-datepicker__panel</code></td><td>The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.</td></tr>
-                            <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it.</td></tr>
+                            <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.</td></tr>
+                            <tr><td><code>month and year grids</code></td><td>Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.</td></tr>
                             <tr><td><code>.kp-datepicker__grid / __weekday</code></td><td>Seven columns with the week starting where the locale says, unless the markup overrules it.</td></tr>
                             <tr><td><code>.kp-datepicker__day</code></td><td>One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.</td></tr>
                             <tr><td><code>selected day</code></td><td>Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.</td></tr>
