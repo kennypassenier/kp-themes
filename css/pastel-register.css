@@ -26,9 +26,9 @@
    type; the hooks of S45 — the headline whose overprint duplicate springs
    into register, the mark as a fill (the lede's mint/violet pair, the
    dossier's ink redaction), the rule that draws itself, the pearls
-   divider (a torn tab until scope-93); the hero and dossier; the navbar with its dropdown; the
-   buttons with their hover lift and press settle; the fields; the dialog;
-   and one answer per component root (TH124). The reveals have their rest
+   divider (a torn tab until scope-93); the hero and dossier; the navbar
+   with its dropdown; the buttons with their hover lift and press settle;
+   the fields; the dialog; and one answer per component root (TH124). The reveals have their rest
    state here and their motion in js/effects.js; without the script every
    one of them stands at rest.
 
@@ -209,24 +209,20 @@
        this rule drew before: "The sawtooth isn't really fitting with
        'Pastel' which is fluffier and rounder", and his answer to the form,
        "ik wil pearls". Beads on a thread with no bar, spread evenly so no
-       bead is ever cut, the same drawing css/layout.css gives
-       data-kp-divider-shape='pearls', written out here because a register
-       loads without the layout layer. The plain divider in plum, the alt
-       divider in the mint ink, so the two seams still read as two sheets.
-       The two inks are the knobs the shape knob reads, so a page that names
-       another shape keeps pastel's mint on its footer seam. */
-    [data-theme='pastel'] {
-        --kp-divider-ink-alt: var(--accent-foreground);
-    }
-
+       bead is ever cut: `space` repeats only whole beads and spreads the
+       room left over between them. The plain divider in plum,
+       the alt divider in the mint ink, so the two seams still read as two
+       sheets. Pastel's own drawing; no other theme and no page knob draws
+       it [scope-95]. Knob: --kp-divider-height (3rem), as dark and titanium
+       read it. */
     [data-theme='pastel'] [data-kp-divider] {
         display: block;
         block-size: var(--kp-divider-height, 3rem);
-        background: var(--kp-divider-ink, var(--primary));
+        background: var(--primary);
         mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
         mask-size:
             100% 2px,
-            var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+            1.5rem 0.75rem;
         mask-position: center;
         mask-repeat:
             no-repeat,
@@ -234,7 +230,7 @@
     }
 
     [data-theme='pastel'] [data-kp-divider='alt'] {
-        background: var(--kp-divider-ink-alt);
+        background: var(--accent-foreground);
     }
 
     /* ── The hero: the rounded outer clip [B, measured] ───────────────── */

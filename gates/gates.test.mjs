@@ -743,7 +743,7 @@ test('R5-BADGE: every status has a badge rule, and every badge rule has a status
 // ── Round six, C0: the six new gates, each proven on in-memory input
 // before its on-disk drill [rule 7d, AR36, AR37, AR39, AR40, AR41, AR46].
 
-import { audit as auditHooks, auditShapes } from './check-hooks.mjs';
+import { audit as auditHooks } from './check-hooks.mjs';
 import { audit as auditCoverage, missingParts } from './check-register-coverage.mjs';
 import { audit as auditFonts, declaredFamilies } from './check-fonts.mjs';
 import { block as tearBlock, ridge, withBlock } from './generate-tear.mjs';
@@ -794,49 +794,6 @@ test('AR36: a hook nobody answers, a quiet answer without a reason, and an unsco
     );
     assert.ok(
         problems.some((p) => p.includes("not scoped to [data-theme='y']")),
-        problems.join('\n'),
-    );
-});
-
-test('scope-93: a shape with no scope or no name rule, a shape the matrix does not name, and a theme default that draws another mask all fail', () => {
-    const a = 'data-kp-divider-shape';
-    const layout = `@layer kp.layout {
-  @scope ([${a}]:not([${a}='theme'])) to ([${a}='theme']) { [data-kp-divider] { mask-position: top; mask-repeat: no-repeat; } }
-  @scope ([${a}='dots']) to ([${a}]:not([${a}='dots'])) { [data-kp-divider] { mask-image: radial-gradient(black, transparent); mask-size: 1rem; } }
-  @scope ([${a}='stray']) to ([${a}]:not([${a}='stray'])) { [data-kp-divider] { mask-image: none; } }
-  [${a}='dots'] { --kp-divider-shape: dots; }
-  [${a}='stray'] { --kp-divider-shape: stray; }
-  [${a}='theme'] { --kp-divider-shape: theme; }
-}`;
-    const register = (/** @type {string} */ image) =>
-        `@layer kp.register { [data-theme='x'] [data-kp-divider] { mask-image: ${image}; mask-size: 1rem; mask-position: top; mask-repeat: no-repeat; } }`;
-    const matrix = (/** @type {Record<string, string>} */ values) => ({
-        hooks: { divider: 'divider' },
-        default: {},
-        themes: { x: { divider: { css: 'x.css', selector: "[data-theme='x'] [data-kp-divider]" } } },
-        dividerShapes: { attribute: a, css: 'layout.css', restore: 'theme', values, defaults: { x: 'dots' } },
-    });
-    /** @param {string} image */
-    const reader = (image) => (/** @type {string} */ css) => (css === 'layout.css' ? layout : css === 'x.css' ? register(image) : null);
-
-    const good = auditShapes(matrix({ dots: 'dots', stray: 'stray' }), ['x'], reader('radial-gradient(black, transparent)'));
-    assert.deepEqual(good.problems, []);
-
-    const { problems } = auditShapes(matrix({ dots: 'dots', wave: 'wave' }), ['x'], reader('linear-gradient(black 0 0)'));
-    assert.ok(
-        problems.some((p) => p.includes("the shape 'wave' has no scope")),
-        problems.join('\n'),
-    );
-    assert.ok(
-        problems.some((p) => p.includes("draws the shape 'stray'")),
-        problems.join('\n'),
-    );
-    assert.ok(
-        problems.some((p) => p.includes("x: its divider draws mask-image: linear-gradient(black 0 0), but the shape 'dots'")),
-        problems.join('\n'),
-    );
-    assert.ok(
-        problems.some((p) => p.includes(`no rule [${a}='wave'] { --kp-divider-shape: wave; }`)),
         problems.join('\n'),
     );
 });

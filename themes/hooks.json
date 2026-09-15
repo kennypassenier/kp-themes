@@ -8,24 +8,6 @@
         "accent": "the heading accent: h1 and h2 inside a surface [TH122]",
         "arrival": "--kp-arrival on the root — how a page arrives; js/effects.js performs the theme's answer once per session [SW2]"
     },
-    "dividerShapes": {
-        "//": "The divider's shape knob [scope-93]. A page names a shape with the attribute on html, on any ancestor or on one divider, and the nearest one wins; the restore value brings the theme's own drawing back under it. gates/check-hooks.mjs refuses a value with no @scope rule in the named stylesheet, a value that stylesheet draws and this list does not name, a missing restore scope, and a theme default whose register does not draw exactly the shape's mask.",
-        "attribute": "data-kp-divider-shape",
-        "css": "css/layout.css",
-        "restore": "theme",
-        "values": {
-            "zigzag": "a bar cut by fixed-size teeth",
-            "scallop": "a bar edged with half circles",
-            "wave": "a bar with a smooth wave edge",
-            "cloud": "a bar edged with bumps of two sizes",
-            "pearls": "beads on a thread, no bar",
-            "line": "a soft rule fading at both ends, three beads at its centre",
-            "none": "room only, nothing drawn"
-        },
-        "defaults": {
-            "pastel": "pearls"
-        }
-    },
     "default": {
         "surface": {
             "css": "css/_rules.css",

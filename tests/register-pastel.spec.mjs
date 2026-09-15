@@ -11,8 +11,10 @@
 // buttons' spring lift on hover and settle on press, the dossier's rotated
 // stamp swapping its word when the file opens and its redactions fading
 // and narrowing away on the trigger, and the whole approved inventory on
-// the page. The torn-tab dividers are judged by eye on the catalogue since
-// scope-73 (page-effects#dividers).
+// the page. The dividers are pearls since scope-93, drawn by this register
+// alone since scope-95: their mask and inks are read here, their thread's
+// crispness measured below, and their look judged by eye on the catalogue
+// (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -296,6 +298,37 @@ for (const [channel, url] of CHANNELS) {
             await style(dialog, 'background-color').toBe(await paint(page, '--card'));
         });
 
+        test('the dividers are pearls: beads on a thread with no bar, plum then mint [scope-93, scope-95]', async ({ page }) => {
+            // Before scope-93: mask-image none under a polygon clip path, the
+            // torn tab. Since scope-95 the drawing lives in
+            // css/pastel-register.css alone, with no page knob over it.
+            await open(page, url, { reduced: true });
+            const read = (/** @type {string} */ selector) =>
+                page
+                    .locator(selector)
+                    .first()
+                    .evaluate((el) => {
+                        const s = getComputedStyle(el);
+                        return {
+                            image: s.maskImage,
+                            size: s.maskSize,
+                            repeat: s.maskRepeat,
+                            clip: s.clipPath,
+                            height: s.height,
+                            background: s.backgroundColor,
+                        };
+                    });
+            const pearls = {
+                image: 'linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px), radial-gradient(circle closest-side, rgb(0, 0, 0) calc(100% - 0.6px), rgba(0, 0, 0, 0) 100%)',
+                size: '100% 2px, 24px 12px',
+                repeat: 'no-repeat, space no-repeat',
+                clip: 'none',
+                height: '48px',
+            };
+            expect(await read('[data-kp-divider]:not([data-kp-divider="alt"])')).toEqual({ ...pearls, background: await paint(page, '--primary') });
+            expect(await read('[data-kp-divider="alt"]')).toEqual({ ...pearls, background: await paint(page, '--accent-foreground') });
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');
@@ -305,4 +338,83 @@ for (const [channel, url] of CHANNELS) {
             }
         });
     });
+}
+
+// Kenny browses zoomed: 1.25 is a desktop scaled by a quarter. Firefox takes
+// it as a preference at launch.
+for (const ratio of [1, 1.25]) {
+    test(
+        `the pearls' thread is crisp at devicePixelRatio ${ratio}: every device pixel of it full ink or none [scope-93]`,
+        { tag: ['@theme:pastel', '@component:page-effects'] },
+        async ({ playwright, browserName, baseURL }) => {
+            // Measured 2026-09-15 on tests/fixtures/dividers.html (removed at
+            // scope-95): firefox 0 partial pixels at both ratios; chromium 0 at
+            // 1 and 2 to 3 at 1.25, where it does not snap a mask layer to the
+            // device grid. Kenny judges in FireDragon, a firefox. Drilled then:
+            // the thread drawn as a soft gradient (transparent 46%, black 50%,
+            // transparent 54%) was red at both ratios.
+            test.skip(browserName !== 'firefox', 'chromium does not snap a mask layer to device pixels at a fractional ratio (measured)');
+            const browser = await playwright.firefox.launch({ firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } });
+            try {
+                const context = await browser.newContext({ baseURL, deviceScaleFactor: ratio });
+                const page = await context.newPage();
+                await open(page, '/examples/concept-pastel.html', { reduced: true });
+                expect(await page.evaluate(() => devicePixelRatio)).toBe(ratio);
+                const partial = [];
+                for (const selector of ['[data-kp-divider]:not([data-kp-divider="alt"])', '[data-kp-divider="alt"]']) {
+                    const locator = page.locator(selector).first();
+                    await locator.scrollIntoViewIfNeeded();
+                    const clip = /** @type {{x: number, y: number, width: number, height: number}} */ (await locator.boundingBox());
+                    const shown = (await page.screenshot({ clip, scale: 'device' })).toString('base64');
+                    await locator.evaluate((el) => /** @type {HTMLElement} */ (el.style.visibility = 'hidden'));
+                    const hidden = (await page.screenshot({ clip, scale: 'device' })).toString('base64');
+                    await locator.evaluate((el) => /** @type {HTMLElement} */ (el.style.visibility = ''));
+                    // The thread alone: the column that changes the fewest
+                    // pixels and still changes some, between two beads.
+                    const column = await page.evaluate(
+                        async ({ a, b }) => {
+                            const decode = async (src) => {
+                                const image = await new Promise((resolve) => {
+                                    const im = new Image();
+                                    im.onload = () => resolve(im);
+                                    im.src = `data:image/png;base64,${src}`;
+                                });
+                                const canvas = document.createElement('canvas');
+                                canvas.width = image.width;
+                                canvas.height = image.height;
+                                const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
+                                ctx.drawImage(image, 0, 0);
+                                return { data: ctx.getImageData(0, 0, image.width, image.height).data, width: image.width, height: image.height };
+                            };
+                            const [one, two] = [await decode(a), await decode(b)];
+                            let best = null;
+                            for (let x = 0; x < one.width; x++) {
+                                const d = [];
+                                for (let y = 0; y < one.height; y++) {
+                                    const i = (y * one.width + x) * 4;
+                                    d.push(
+                                        Math.hypot(one.data[i] - two.data[i], one.data[i + 1] - two.data[i + 1], one.data[i + 2] - two.data[i + 2]),
+                                    );
+                                }
+                                const drawn = d.filter((v) => v > 8);
+                                if (drawn.length > 0 && (best === null || drawn.length < best.length)) best = drawn;
+                            }
+                            return best ?? [];
+                        },
+                        { a: shown, b: hidden },
+                    );
+                    const full = Math.max(...column);
+                    expect(column.length, `${selector}: a thread is drawn`).toBeGreaterThan(0);
+                    const soft = column.filter((v) => v < full * 0.85);
+                    if (soft.length > 0)
+                        partial.push(
+                            `${selector}: ${soft.length} of ${column.length} device pixels of the thread are part ink (${column.map(Math.round).join(', ')})`,
+                        );
+                }
+                expect(partial, partial.join('\n')).toEqual([]);
+            } finally {
+                await browser.close();
+            }
+        },
+    );
 }

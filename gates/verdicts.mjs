@@ -854,7 +854,9 @@ async function reanchor(args) {
     }
     const result = reanchorEntries(register, targets, readings);
     writeRegister(register, file);
-    console.log(`${file}: ${result.reanchored.length} entr${result.reanchored.length === 1 ? 'y' : 'ies'} re-anchored, ${result.unread.length} not read.`);
+    console.log(
+        `${file}: ${result.reanchored.length} entr${result.reanchored.length === 1 ? 'y' : 'ies'} re-anchored, ${result.unread.length} not read.`,
+    );
     for (const row of result.reanchored) console.log(`  re-anchored: ${row}`);
     for (const row of result.unread) console.log(`  not read: ${row}`);
     console.log(`Check: ${compareCommand(full)} --at-recorded`);
