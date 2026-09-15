@@ -13,7 +13,17 @@
 // screen; a research demo's block is `research/x/demo.html#block` and its
 // notes stay under its own page.
 import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
-import { JUDGEMENT_EVENT, JUDGEMENTS_KEY, loadJudgements, registerReady, restoreVerdict, stateOf, storeVerdict, verdictOf } from './judgements.js';
+import {
+    carryOver,
+    JUDGEMENT_EVENT,
+    JUDGEMENTS_KEY,
+    loadJudgements,
+    registerReady,
+    restoreVerdict,
+    stateOf,
+    storeVerdict,
+    verdictOf,
+} from './judgements.js';
 import { readBlocks } from './block-hash.js';
 import { ENGINE, engineLabel, readPixelRatio } from './engine.js';
 import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
@@ -338,6 +348,17 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
             again = true;
             return;
         }
+        // A verdict this browser stored under the previous recipe, on a block
+        // that did not change since, takes this recipe's hash (scope-95).
+        carryOver(
+            items.map(({ entry }, i) => ({
+                key: entry.key,
+                theme: blockTheme(entry.root),
+                ratio,
+                previous: hashes[i].previous,
+                hash: hashes[i].hash,
+            })),
+        );
         current = next;
         currentRatio = ratio;
         render();

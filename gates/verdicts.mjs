@@ -41,6 +41,15 @@
 //       Never changes a hash or a verdict; lists the entries no reading
 //       matches. The readings: { "readings": { "<devPixelsPerPx>": { "<key>|<theme>": "<hash>" } } }.
 //
+//   node gates/verdicts.mjs migrate-v3 [--register <file>] [--readings <file> [--only <commit>]]
+//       One-off [scope-95]: hash version 2 read the block's whole section,
+//       Look-at text included; version 3 reads it without its reading aids.
+//       Every entry is read at its commit and ratio; where the version-2
+//       reading is its stored hash, it takes the version-3 reading (verdict,
+//       commit, date and ratio kept); where not, it stays and is listed.
+//       --readings keeps what was read in a file, --only reads one commit
+//       into it and leaves the register alone, so the run can be split.
+//
 //   node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--register <file>]
 //       One-off [scope-94]: the entries recorded at a commit that match no
 //       ratio keep their verdict and take the hash of the block at rest at
@@ -360,14 +369,38 @@ async function note(args) {
 /* ------------------------------------------------------------------ rehash */
 
 /**
+ * A temporary git worktree of `commit` for the length of `work`.
+ * @template T
+ * @param {string} commit
+ * @param {(dir: string) => Promise<T>} work
+ * @returns {Promise<T>}
+ */
+export async function atCommit(commit, work) {
+    const dir = await mkdtemp(join(tmpdir(), 'kp-verdicts-worktree-'));
+    try {
+        git('worktree', 'add', '--detach', dir, commit);
+        return await work(dir);
+    } finally {
+        try {
+            git('worktree', 'remove', '--force', dir);
+        } finally {
+            await rm(dir, { recursive: true, force: true });
+            git('worktree', 'prune');
+        }
+    }
+}
+
+/**
  * Hash blocks as they were at a commit, with the current recipe.
- * @param {{ commit?: string, root?: string, engine: string, requests: { key: string, theme: string }[], width?: number, withLines?: boolean, ratio?: number }} options
+ * @param {{ commit?: string, root?: string, engine: string, requests: { key: string, theme: string }[], width?: number, withLines?: boolean, ratio?: number, recipe?: string }} options
  *   commit: checked out into a temporary worktree; root: a directory served as it is (the working tree);
  *   ratio: the device pixel ratio to read at [fix-34] — Firefox's `layout.css.devPixelsPerPx`, and the
- *   context's deviceScaleFactor so `devicePixelRatio` agrees (Blink's borders do not follow it)
- * @returns {Promise<Map<string, { hash: string, lines?: string[] }>>} `key|theme` -> reading
+ *   context's deviceScaleFactor so `devicePixelRatio` agrees (Blink's borders do not follow it);
+ *   recipe: the block-hash.js to serve instead of the current one (a check against an older recipe)
+ * @returns {Promise<Map<string, { hash: string, previous?: string, lines?: string[] }>>} `key|theme` -> reading;
+ *   previous: the same reading under the previous hash version, where the recipe returns it
  */
-export async function hashAt({ commit, root, engine, requests, width = 1920, withLines = false, ratio = 1 }) {
+export async function hashAt({ commit, root, engine, requests, width = 1920, withLines = false, ratio = 1, recipe }) {
     const { serve, measurePlaywright } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     /** @type {Record<string, import('@playwright/test').BrowserType>} */
@@ -388,14 +421,14 @@ export async function hashAt({ commit, root, engine, requests, width = 1920, wit
         }
         const served = root ?? String(dir);
         const known = await knownBlocks(served);
-        server = await serve(served, { 'catalogue/block-hash.js': readFileSync(join(ROOT, 'catalogue/block-hash.js'), 'utf8') });
+        server = await serve(served, { 'catalogue/block-hash.js': recipe ?? readFileSync(join(ROOT, 'catalogue/block-hash.js'), 'utf8') });
         browser = await type.launch({
             headless: true,
             ...(ratio !== 1 && engine === 'firefox' ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
         });
         const context = await browser.newContext({ viewport: { width, height: 1000 }, ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}) });
         const page = await context.newPage();
-        /** @type {Map<string, { hash: string, lines?: string[] }>} */
+        /** @type {Map<string, { hash: string, previous?: string, lines?: string[] }>} */
         const out = new Map();
         /** @type {Map<string, { themes: Set<string>, keys: Set<string> }>} */
         const byPage = new Map();
@@ -417,9 +450,14 @@ export async function hashAt({ commit, root, engine, requests, width = 1920, wit
                 only: [...wanted.keys],
             });
             for (const [theme, rows] of Object.entries(
-                /** @type {Record<string, { key: string, hash: string, lines?: string[] }[]>} */ (result.results),
+                /** @type {Record<string, { key: string, hash: string, previous?: string, lines?: string[] }[]>} */ (result.results),
             )) {
-                for (const row of rows) out.set(`${row.key}|${theme}`, { hash: row.hash, ...(withLines ? { lines: row.lines } : {}) });
+                for (const row of rows)
+                    out.set(`${row.key}|${theme}`, {
+                        hash: row.hash,
+                        ...(row.previous ? { previous: row.previous } : {}),
+                        ...(withLines ? { lines: row.lines } : {}),
+                    });
             }
         }
         for (const request of requests) {
@@ -728,6 +766,99 @@ async function annotateRatio(args) {
     for (const row of byTheme(result.unread)) console.log(`  not read: ${row}`);
 }
 
+/* -------------------------------------------------------------- migrate-v3 */
+
+/** Where migrate-v3 keeps an entry's reading: its block, theme, engine, commit and ratio. @param {string} key @param {string} theme @param {string} engine @param {Entry} entry */
+export const migrationKey = (key, theme, engine, entry) => `${key}|${theme}|${engine}|${entry.commit}|${ratioOf(entry)}`;
+
+/**
+ * Carry the register over from hash version 2 to 3 [scope-95]. An entry whose
+ * stored hash is the version-2 reading of its block at its commit and ratio
+ * takes the version-3 reading of that same moment; its verdict, commit, date
+ * and ratio stay. An entry whose version-2 reading is another hash (its block
+ * could not be read back as it was judged) keeps its hash and is listed, and
+ * so is one with no reading. The register is marked version 3 either way: a
+ * kept hash matches no version-3 reading, and its block comes back.
+ * @param {Register} register changed in place
+ * @param {Map<string, { hash: string, previous?: string }>} readings migrationKey -> the reading at that commit and ratio
+ * @returns {{ migrated: string[], unreproducible: string[], unread: string[] }}
+ */
+export function migrateEntries(register, readings) {
+    if (register.hashVersion !== 2) throw new Error(`the register is at hash version ${register.hashVersion}, not 2`);
+    /** @type {{ migrated: string[], unreproducible: string[], unread: string[] }} */
+    const out = { migrated: [], unreproducible: [], unread: [] };
+    for (const { key, theme, engine, entry } of entriesAt(register, null)) {
+        const at = `${key} · ${theme} · ${engine}${ratioOf(entry) === 1 ? '' : ` @${ratioOf(entry)}`}`;
+        const reading = readings.get(migrationKey(key, theme, engine, entry));
+        if (!reading?.previous) out.unread.push(at);
+        else if (reading.previous !== entry.hash) out.unreproducible.push(`${at} (recorded at ${entry.commit.slice(0, 12)})`);
+        else {
+            entry.hash = reading.hash;
+            out.migrated.push(at);
+        }
+    }
+    register.hashVersion = 3;
+    return out;
+}
+
+/**
+ * `migrate-v3 [--register <file>] [--readings <file> [--only <commit>]]`
+ * [scope-95]: one worktree per commit, one browser per engine and ratio in
+ * it, every entry read once with the current recipe, which returns the
+ * version-2 reading (`previous`) beside its own. --readings keeps the
+ * readings in a file after each commit and reads only the commits it does not
+ * hold yet; --only reads one commit into it and leaves the register alone, so
+ * the run can be taken in parts.
+ * @param {string[]} args
+ */
+async function migrateV3(args) {
+    const started = performance.now();
+    const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
+    const file = option('--register') ?? registerPath;
+    const cache = option('--readings');
+    const only = option('--only');
+    if (only && !cache) throw new Error('--only needs --readings <file> to keep what it reads');
+    const register = readRegister(file);
+    if (hashVersion() !== 3) throw new Error(`catalogue/block-hash.js reads version ${hashVersion()}; migrate-v3 carries a register to 3`);
+    if (register.hashVersion !== 2) throw new Error(`${file} is at hash version ${register.hashVersion}, not 2`);
+    const entries = entriesAt(register, null);
+    /** @type {Map<string, { hash: string, previous?: string }>} */
+    const readings = new Map(cache && existsSync(cache) ? Object.entries(JSON.parse(readFileSync(cache, 'utf8'))) : []);
+    for (const commit of new Set(entries.map((e) => e.entry.commit))) {
+        if (only && !commit.startsWith(only)) continue;
+        const here = entries.filter((e) => e.entry.commit === commit && !readings.has(migrationKey(e.key, e.theme, e.engine, e.entry)));
+        if (!here.length) continue;
+        await atCommit(commit, async (dir) => {
+            for (const engine of new Set(here.map((e) => e.engine))) {
+                const ratios = [...new Set(here.filter((e) => e.engine === engine).map((e) => ratioOf(e.entry)))].sort((a, b) => a - b);
+                for (const ratio of ratios) {
+                    const group = here.filter((e) => e.engine === engine && ratioOf(e.entry) === ratio);
+                    console.log(`${commit.slice(0, 12)} in ${engine} at ratio ${ratio}: ${group.length} entr${group.length === 1 ? 'y' : 'ies'}…`);
+                    const read = await hashAt({ root: dir, engine, requests: group.map(({ key, theme }) => ({ key, theme })), ratio });
+                    for (const e of group) {
+                        const reading = read.get(`${e.key}|${e.theme}`);
+                        if (reading)
+                            readings.set(migrationKey(e.key, e.theme, e.engine, e.entry), { hash: reading.hash, previous: reading.previous });
+                    }
+                }
+            }
+        });
+        if (cache) writeFileSync(cache, `${JSON.stringify(Object.fromEntries(readings))}\n`);
+    }
+    if (only) {
+        console.log(`${cache}: ${readings.size} reading(s) kept; the register is left as it is until a run without --only.`);
+        return;
+    }
+    const result = migrateEntries(register, readings);
+    writeRegister(register, file);
+    console.log(
+        `${file}: ${result.migrated.length} of ${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} carried over to hash version 3, ` +
+            `${result.unreproducible.length} not reproducible, ${result.unread.length} not read — ${((performance.now() - started) / 1000).toFixed(1)} s.`,
+    );
+    for (const row of result.unreproducible) console.log(`  not reproducible, kept: ${row}`);
+    for (const row of result.unread) console.log(`  not read, kept: ${row}`);
+}
+
 /* ---------------------------------------------------------------- reanchor */
 
 /**
@@ -865,6 +996,7 @@ async function reanchor(args) {
 async function main() {
     const [command, ...args] = process.argv.slice(2);
     if (command === 'reanchor') return reanchor(args);
+    if (command === 'migrate-v3') return migrateV3(args);
     if (command === 'record') return record();
     if (command === 'note') return note(args);
     if (command === 'rehash') return rehash(args);
@@ -878,6 +1010,7 @@ async function main() {
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
             '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]\n' +
+            '       node gates/verdicts.mjs migrate-v3 [--register <file>] [--readings <file> [--only <commit>]]\n' +
             '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>]',
     );
     process.exit(2);

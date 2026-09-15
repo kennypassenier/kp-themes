@@ -13,6 +13,8 @@ import {
     entriesAt,
     geckoRatio,
     keysFromCompare,
+    migrateEntries,
+    migrationKey,
     parseVerdictLines,
     reanchorEntries,
     reanchorRatios,
@@ -330,4 +332,48 @@ test('reanchor replaces the hash of an entry no ratio matches with a reading at 
     assert.deepEqual(keysFromCompare('  differs: table--datatable · grotesk · firefox · approved (recorded 1…)\n1 equal, 1 differ'), [
         { key: 'table--datatable', theme: 'grotesk', engine: 'firefox' },
     ]);
+});
+
+test('migrate-v3 carries an entry over only where its version-2 reading is its hash, at its own commit and ratio [scope-95]', () => {
+    const v2 = 'c'.repeat(64);
+    const v3 = 'd'.repeat(64);
+    const other = 'e'.repeat(64);
+    const register = {
+        hashVersion: 2,
+        verdicts: {
+            'button--variants': {
+                formal: { firefox: entry({ hash: v2, commit: 'aaaa111' }) }, // reproduces: carried over
+                nostromo: { firefox: entry({ verdict: 'rejected', hash: v2, commit: 'bbbb222', ratio: 1.25 }) }, // reproduces at 1.25 only
+            },
+            'button--sizes': {
+                formal: { firefox: entry({ hash: other, commit: 'aaaa111' }) }, // its block reads another version-2 hash: kept
+                nostromo: { firefox: entry({ hash: v2, commit: 'aaaa111' }) }, // no version-2 reading: kept
+            },
+        },
+    };
+    const readings = new Map([
+        ['button--variants|formal|firefox|aaaa111|1', { hash: v3, previous: v2 }],
+        // The same block read at ratio 1: not the entry's ratio, never used.
+        ['button--variants|nostromo|firefox|bbbb222|1', { hash: other, previous: other }],
+        ['button--variants|nostromo|firefox|bbbb222|1.25', { hash: v3, previous: v2 }],
+        ['button--sizes|formal|firefox|aaaa111|1', { hash: v3, previous: v2 }],
+        // A reading without a version-2 hash (an older recipe) cannot vouch for anything.
+        ['button--sizes|nostromo|firefox|aaaa111|1', { hash: v3 }],
+    ]);
+    const result = migrateEntries(register, readings);
+    assert.equal(register.hashVersion, 3);
+    assert.deepEqual(result.migrated, ['button--variants · formal · firefox', 'button--variants · nostromo · firefox @1.25']);
+    assert.deepEqual(result.unreproducible, ['button--sizes · formal · firefox (recorded at aaaa111)']);
+    assert.deepEqual(result.unread, ['button--sizes · nostromo · firefox']);
+    // Verdict, commit, date and ratio kept; only the hash moves.
+    assert.deepEqual(register.verdicts['button--variants'].formal.firefox, entry({ hash: v3, commit: 'aaaa111' }));
+    assert.deepEqual(
+        register.verdicts['button--variants'].nostromo.firefox,
+        entry({ verdict: 'rejected', hash: v3, commit: 'bbbb222', ratio: 1.25 }),
+    );
+    assert.equal(register.verdicts['button--sizes'].formal.firefox.hash, other);
+    assert.equal(register.verdicts['button--sizes'].nostromo.firefox.hash, v2);
+    assert.equal(migrationKey('k', 't', 'firefox', entry({ commit: 'abc' })), 'k|t|firefox|abc|1');
+    // A register already at 3 is not carried over twice.
+    assert.throws(() => migrateEntries(register, readings), /hash version 3, not 2/);
 });

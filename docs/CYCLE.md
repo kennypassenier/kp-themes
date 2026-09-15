@@ -114,6 +114,26 @@ have (brutalism, forest, light, nostromo, retro and sepia 1.25; formal,
 pastel and shade-light 1.333; grotesk and high-contrast 1.5), and that ratio.
 The register's entries hold no provenance field, so this paragraph is the
 record of which entries were re-anchored rather than judged on that hash.
+
+Hash version 3 (2026-09-15, scope-95) stopped reading the block's reading
+aids: the markup line is the block's section without its "Look at" text,
+the reviewer's panel and its own headings (`componentMarkup` in
+`catalogue/block-hash.js`), so correcting a Look-at sentence brings no block
+back; the stages and everything in them still count. Every page that hashes
+a block (catalogue page, review page, compare column, research demo, and the
+tools) goes through that one function. The register was carried over with
+`node gates/verdicts.mjs migrate-v3` instead of `rehash`: each entry read at
+its commit and ratio, and only where the version-2 reading of that moment
+was its stored hash did it take the version-3 reading; 2754 of 3014 did.
+The other 260 (254 recorded at cf2c5634, five at 6dd76c6c, one at ff81ed71,
+in phantom, synthwave, titanium, deco and eight more themes) are the entries
+Kenny's browser read differently from the test browser at the time
+[fix-28]; they keep their version-2 hash, match no version-3 reading, and
+come back. A verdict still held in a reviewer's browser under version 2 is
+carried over by the page as it reads the block in that theme, where its hash
+is the version-2 reading of the block as it stands (`carryOver` in
+`catalogue/judgements.js`); where the block changed since, it shows "Changed
+since judged" as before.
 4. The register and the recipe are committed together.
 
 The recipe reads past what differs between two browsers of one engine or
@@ -131,9 +151,9 @@ a 40rem container) is a different look and hashes differently.
 ### A rejection's temporary note
 
 When Kenny rejects a block with a note and Claude proposes a change, the
-answer does not go into the block's "Look at:" text: changing that text
-changes the block's markup and sends all 22 themes back (Kenny,
-2026-09-14). It goes into `catalogue/review-notes.json`, per block and
+answer does not go into the block's "Look at:" text, which says what every
+theme must show (Kenny, 2026-09-14; under hash version 2 that text was also
+part of the hash and sent all 22 themes back, which version 3 no longer does). It goes into `catalogue/review-notes.json`, per block and
 theme, written with `node gates/verdicts.mjs note <block> <theme>
 --rejected "<his note, verbatim>" --change "<what changed and why>"`. The
 judging panel shows it in that theme only, as a "Rejected — what changed"

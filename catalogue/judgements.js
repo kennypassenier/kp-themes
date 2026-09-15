@@ -18,7 +18,7 @@
 // hidden only while it still looks the way it did when it was judged, so a
 // block that changed comes back to be judged again.
 import { ENGINE } from './engine.js';
-import { HASH_VERSION } from './block-hash.js';
+import { HASH_VERSION, PREVIOUS_VERSION } from './block-hash.js';
 
 export const JUDGEMENTS_KEY = 'kp-catalogue-judgements:v3';
 const LEGACY_V2 = 'kp-catalogue-judgements:v2';
@@ -79,6 +79,29 @@ export function storeVerdict(key, theme, verdict, hash, engine = ENGINE, ratio =
     themes[engine] = { verdict, hash, v: HASH_VERSION, at: Date.now(), ...(ratio && ratio !== 1 ? { ratio } : {}) };
     saveJudgements(all);
     return previous;
+}
+
+/**
+ * Carry verdicts stored under the previous recipe over to this one (scope-95).
+ * A verdict this browser stored under version 2 (`v: 2`) whose hash is the
+ * version-2 reading of the block as it stands now, at the same ratio, was
+ * given on this very block: it takes the version-3 hash and `v: 3`, and keeps
+ * its verdict and its time. One whose block changed since is left as it is,
+ * and shows "Changed since judged", as it did under version 2. Verdicts are
+ * carried over in the theme and engine a page reads, as it reads them.
+ * @param {{ key: string, theme: string, engine?: string, ratio?: number, previous: string, hash: string }[]} readings
+ * @returns {number} how many were carried over
+ */
+export function carryOver(readings, stored = loadJudgements()) {
+    let moved = 0;
+    for (const { key, theme, engine = ENGINE, ratio = 1, previous, hash } of readings) {
+        const local = stored[key]?.[theme]?.[engine];
+        if (!local || local.v !== PREVIOUS_VERSION || local.hash !== previous || (local.ratio ?? 1) !== (ratio || 1)) continue;
+        stored[key][theme][engine] = { ...local, hash, v: HASH_VERSION };
+        moved += 1;
+    }
+    if (moved) saveJudgements(stored);
+    return moved;
 }
 
 /** Put back what a verdict replaced (Undo). */

@@ -37,13 +37,32 @@
 // stayed 2. A block is read laid out and shown (judging.js), after two frames
 // for the components that measure themselves, and a data table's own first
 // request counts as busy.
+//
+// The markup without its reading aids (version 3, 2026-09-15, scope-95): the
+// markup line was the block's whole section as written, its Look-at text
+// included, so correcting pastel's sentence in `#dividers` (dce03cff) moved
+// the block's hash in all 22 themes; read from its parent to it, version 3
+// moves in pastel only. The markup is now read without what reviewedElements
+// already leaves out of the element lines: the AROUND parts (Look at, and the
+// reviewer's panel where a live section stands in for the source) and the
+// block's own headings (`:scope > h2, h3`), which name it in lists and prompts
+// and are not the component. What stays is everything that shapes the
+// component: the section and its attributes, the stages with their classes
+// and inline styles, and a `.cat-note`, which a block may place inside a
+// stage as part of what is judged (combobox). The version-2 reading, the
+// whole section as the markup line, is still returned as `previous`, so a
+// verdict stored under version 2 carries over where the block did not change
+// (judgements.js carryOver, `node gates/verdicts.mjs migrate-v3`).
 /**
  * The version of this recipe. catalogue/verdicts.json names the version its
  * hashes were taken with; any change to what is read below raises this, and
- * gates/check-verdicts.mjs refuses until `node gates/verdicts.mjs rehash` has
- * brought the register to it.
+ * gates/check-verdicts.mjs refuses until `node gates/verdicts.mjs rehash` (or,
+ * from 2 to 3, `migrate-v3`) has brought the register to it.
  */
-export const HASH_VERSION = 2;
+export const HASH_VERSION = 3;
+
+/** The version `previous` (readBlocks) is read with: the markup line as the whole section. */
+export const PREVIOUS_VERSION = 2;
 
 export const PROPS = [
     'color',
@@ -131,6 +150,23 @@ export function stillAnimations() {
 
 /** Not the component: the block's reading aids and the reviewer's own panel. */
 const AROUND = '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge';
+
+/**
+ * A block's markup as the hash reads it (version 3): the source without its
+ * reading aids and headings (see the head of this file). Parsed and
+ * serialised the same way on every surface, so a review page, a component
+ * page, a compare column and a demo read one string for one block.
+ * @param {string} source the block's markup as written, one element
+ */
+export function componentMarkup(source) {
+    const template = document.createElement('template');
+    template.innerHTML = source;
+    const block = template.content.firstElementChild;
+    if (!block) return source;
+    for (const el of block.querySelectorAll(AROUND)) el.remove();
+    for (const heading of block.querySelectorAll(':scope > h2, :scope > h3')) heading.remove();
+    return block.outerHTML;
+}
 
 /** The descendants of every outermost stage in `stages`, in document order. */
 export function stageElements(stages) {
@@ -331,7 +367,7 @@ export function viewportDependence(doc = document) {
  * @returns {string[]}
  */
 export function blockLines(block, source, reviewed = reviewedElements(block), viewport = viewportDependence()) {
-    const lines = [source];
+    const lines = [componentMarkup(source)];
     const elements = reviewed.slice(0, MAX_ELEMENTS);
     // A control whose look follows the scroll position rather than the theme
     // (back-to-top shows itself past a threshold) would mark its block changed
@@ -367,7 +403,8 @@ export function blockLines(block, source, reviewed = reviewedElements(block), vi
  * block outside them (gates/verdicts.mjs), so both read the same thing.
  * @param {{ root: Element, source: string, elements?: () => Element[] }[]} items
  * @param {{ lines?: boolean }} [options] lines: also return what each hash was taken over
- * @returns {Promise<{ hash: string, lines?: string[] }[]>}
+ * @returns {Promise<{ hash: string, previous: string, lines?: string[] }[]>}
+ *   previous: the same reading under version 2 (PREVIOUS_VERSION), the whole source as the markup line
  */
 export async function readBlocks(items, { lines = false } = {}) {
     // The theme's own typeface arrives only once a layout asks for it, and
@@ -428,9 +465,10 @@ export async function readBlocks(items, { lines = false } = {}) {
         release();
     }
     const out = [];
-    for (const read of readings) {
+    for (const [i, read] of readings.entries()) {
         const hash = await sha256(read.join('\n'));
-        out.push(lines ? { hash, lines: read } : { hash });
+        const previous = await sha256([items[i].source, ...read.slice(1)].join('\n'));
+        out.push(lines ? { hash, previous, lines: read } : { hash, previous });
     }
     return out;
 }
