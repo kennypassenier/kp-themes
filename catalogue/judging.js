@@ -15,7 +15,7 @@
 import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
 import { JUDGEMENT_EVENT, JUDGEMENTS_KEY, loadJudgements, registerReady, restoreVerdict, stateOf, storeVerdict, verdictOf } from './judgements.js';
 import { readBlocks } from './block-hash.js';
-import { ENGINE, engineLabel } from './engine.js';
+import { ENGINE, engineLabel, readPixelRatio } from './engine.js';
 import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
 import { mountReviewDialog } from './review-dialog.js';
 
@@ -200,6 +200,10 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
     }
 
     let current = new Map(); // verdict key -> hash in the theme on screen
+    // The device pixel ratio those hashes were read at (engine.js, fix-34):
+    // a verdict keeps it, so the tools read the block at the zoom it was
+    // judged at. Zooming after the reading changes nothing recorded.
+    let currentRatio = 1;
     // The block a link points at (catalogue/button.html#variants,
     // catalogue/index.html#button--variants) stays on the page even when it
     // is judged, and is scrolled to: Claude links to blocks by anchor
@@ -325,10 +329,17 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
             onRender?.();
         }
         // Laid out, fonts in, animations held still: block-hash.js's readBlocks.
+        const ratio = readPixelRatio();
         const hashes = await readBlocks(items.map(({ entry }) => ({ root: entry.root, source: entry.source, elements: entry.elements })));
         const next = new Map(items.map(({ entry }, i) => [entry.key, hashes[i].hash]));
         if (theme !== currentTheme()) return; // the theme moved while reading; the next pass counts
+        // Zoomed while reading: which ratio the hashes hold is not known; read again.
+        if (readPixelRatio() !== ratio) {
+            again = true;
+            return;
+        }
         current = next;
+        currentRatio = ratio;
         render();
     }
 
@@ -374,7 +385,7 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         if (!hash) return false;
         const theme = blockTheme(item.entry.root);
         showRefusal(item, false);
-        const previous = storeVerdict(item.entry.key, theme, verdict, hash);
+        const previous = storeVerdict(item.entry.key, theme, verdict, hash, ENGINE, currentRatio);
         // An approval answers the reviewer's note in this theme, so the
         // note goes with it and no prompt carries it on (fix-29, Kenny
         // 2026-09-15). A rejection keeps it: it says why. Undo puts it back.

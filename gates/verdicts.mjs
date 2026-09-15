@@ -29,10 +29,27 @@
 //       Whether a reviewer's own browser reads the hashes the tools read,
 //       block by block (see compare below).
 //
-//   node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded]
+//   node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--register <file>]
 //       Whether the hashes recorded at a commit (default HEAD) are the ones
 //       Playwright's browser of the same engine reads on the working tree
-//       now [fix-28]. `record` prints this command with its own commit.
+//       now [fix-28], each at the device pixel ratio it was read at
+//       [fix-34]. `record` prints this command with its own commit.
+//
+//   node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]
+//       One-off [fix-34]: gives an entry the ratio at which a reading
+//       matches its hash, for entries recorded before verdicts kept one.
+//       Never changes a hash or a verdict; lists the entries no reading
+//       matches. The readings: { "readings": { "<devPixelsPerPx>": { "<key>|<theme>": "<hash>" } } }.
+//
+// Pixel ratio [fix-34]: Gecko resolves a border width to whole device
+// pixels, so a block's hash follows the zoom it was read at. Kenny reviews
+// at a zoom other than 100% by default (2026-09-15), so a verdict keeps the
+// ratio (catalogue/engine.js reads it): a sixth field `@1.25` on its verdict
+// line and `ratio` in its register entry, both left out at 1 — five-field
+// lines and entries without a ratio stay valid and mean 1. The tools read an
+// entry at its ratio: Firefox launched with `layout.css.devPixelsPerPx`, and
+// a context with that deviceScaleFactor so `devicePixelRatio` agrees; one
+// browser per ratio.
 //
 // The register's gate is gates/check-verdicts.mjs.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -41,10 +58,10 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { hashVersion, knownBlocks, NOTES, REGISTER, VERDICTS } from './check-verdicts.mjs';
+import { hashVersion, knownBlocks, NOTES, ratioFault, REGISTER, VERDICTS } from './check-verdicts.mjs';
 
 /**
- * @typedef {{ verdict: string, hash: string, commit: string, given: string }} Entry
+ * @typedef {{ verdict: string, hash: string, commit: string, given: string, ratio?: number }} Entry
  * @typedef {{ hashVersion: number, verdicts: Record<string, Record<string, Record<string, Entry>>> }} Register
  */
 
@@ -81,7 +98,13 @@ export function sortedRegister(register) {
     for (const themes of Object.values(verdicts))
         for (const engines of Object.values(themes))
             for (const [engine, entry] of Object.entries(engines))
-                engines[engine] = { verdict: entry.verdict, hash: entry.hash, commit: entry.commit, given: entry.given };
+                engines[engine] = {
+                    verdict: entry.verdict,
+                    hash: entry.hash,
+                    commit: entry.commit,
+                    given: entry.given,
+                    ...(entry.ratio !== undefined && entry.ratio !== 1 ? { ratio: entry.ratio } : {}),
+                };
     return { hashVersion: register.hashVersion, verdicts };
 }
 
@@ -96,17 +119,30 @@ export function today(now = new Date()) {
     return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
+/** The ratio an entry was read at: its own, or 1. @param {{ ratio?: number }} entry */
+export const ratioOf = (entry) => entry.ratio ?? 1;
+
 /**
- * The verdict lines of a pasted prompt.
+ * The ratio a Playwright Firefox launched with `layout.css.devPixelsPerPx` =
+ * `pref` reads at, as a page writes it: Gecko keeps 60 app units per CSS
+ * pixel over a whole number per device pixel (1.1 is 60/55, 1.091).
+ * @param {number | string} pref
+ */
+export const geckoRatio = (pref) => Math.round((60 / Math.round(60 / Number(pref))) * 1000) / 1000;
+
+/**
+ * The verdict lines of a pasted prompt: `key · theme · engine · verdict · hash`,
+ * and a sixth field `@<ratio>` where the hash was read at a device pixel
+ * ratio other than 1 [fix-34].
  * @param {string} text
- * @returns {{ version: number | null, lines: { key: string, theme: string, engine: string, verdict: string, hash: string, raw: string }[], faults: string[] }}
+ * @returns {{ version: number | null, lines: { key: string, theme: string, engine: string, verdict: string, hash: string, ratio: number, raw: string }[], faults: string[] }}
  */
 export function parseVerdictLines(text) {
     const rows = text.split(/\r?\n/);
     const start = rows.findIndex((row) => /^\s*Verdict lines \(hash version \d+\):\s*$/.test(row));
     if (start === -1) return { version: null, lines: [], faults: ['no "Verdict lines (hash version N):" block in the input'] };
     const version = Number(/\d+/.exec(rows[start])?.[0]);
-    /** @type {{ key: string, theme: string, engine: string, verdict: string, hash: string, raw: string }[]} */
+    /** @type {{ key: string, theme: string, engine: string, verdict: string, hash: string, ratio: number, raw: string }[]} */
     const lines = [];
     /** @type {string[]} */
     const faults = [];
@@ -114,12 +150,16 @@ export function parseVerdictLines(text) {
         const raw = row.trim();
         if (!raw) break;
         const parts = raw.split(' · ').map((part) => part.trim());
-        if (parts.length !== 5) {
-            faults.push(`not five fields separated by " · ": ${raw}`);
+        if (parts.length !== 5 && parts.length !== 6) {
+            faults.push(`not five fields (or six, with @ratio) separated by " · ": ${raw}`);
             continue;
         }
-        const [key, theme, engine, verdict, hash] = parts;
-        lines.push({ key, theme, engine, verdict, hash, raw });
+        const [key, theme, engine, verdict, hash, at] = parts;
+        if (at !== undefined && !/^@\d+(?:\.\d+)?$/.test(at)) {
+            faults.push(`the sixth field is not @<ratio>: ${raw}`);
+            continue;
+        }
+        lines.push({ key, theme, engine, verdict, hash, ratio: at === undefined ? 1 : Number(at.slice(1)), raw });
     }
     if (!lines.length && !faults.length) faults.push('the "Verdict lines" block is empty');
     return { version, lines, faults };
@@ -145,17 +185,20 @@ export function applyVerdictLines(register, { version, lines }, { hashVersion: c
         if (!/^[a-z0-9]+$/.test(line.engine)) report.faults.push(`${at}: not an engine name`);
         if (!VERDICTS.includes(line.verdict)) report.faults.push(`${at}: verdict ${line.verdict} is not approved or rejected`);
         if (!/^[0-9a-f]{64}$/.test(line.hash)) report.faults.push(`${at}: the hash is not a full SHA-256`);
+        const wrong = (line.ratio ?? 1) === 1 ? null : ratioFault(line.ratio);
+        if (wrong) report.faults.push(`${at}: ${wrong}`);
     }
     if (report.faults.length) return report;
     for (const line of lines) {
         const at = `${line.key} · ${line.theme} · ${line.engine} · ${line.verdict}`;
         const engines = ((register.verdicts[line.key] ??= {})[line.theme] ??= {});
         const before = engines[line.engine];
-        if (before && before.verdict === line.verdict && before.hash === line.hash) {
+        const ratio = line.ratio ?? 1;
+        if (before && before.verdict === line.verdict && before.hash === line.hash && ratioOf(before) === ratio) {
             report.unchanged.push(at);
             continue;
         }
-        engines[line.engine] = { verdict: line.verdict, hash: line.hash, commit, given };
+        engines[line.engine] = { verdict: line.verdict, hash: line.hash, commit, given, ...(ratio !== 1 ? { ratio } : {}) };
         (before ? report.changed : report.added).push(before ? `${at} (was ${before.verdict}, ${before.hash.slice(0, 12)}…)` : at);
     }
     return report;
@@ -313,11 +356,13 @@ async function note(args) {
 
 /**
  * Hash blocks as they were at a commit, with the current recipe.
- * @param {{ commit?: string, root?: string, engine: string, requests: { key: string, theme: string }[], width?: number, withLines?: boolean }} options
- *   commit: checked out into a temporary worktree; root: a directory served as it is (the working tree)
+ * @param {{ commit?: string, root?: string, engine: string, requests: { key: string, theme: string }[], width?: number, withLines?: boolean, ratio?: number }} options
+ *   commit: checked out into a temporary worktree; root: a directory served as it is (the working tree);
+ *   ratio: the device pixel ratio to read at [fix-34] — Firefox's `layout.css.devPixelsPerPx`, and the
+ *   context's deviceScaleFactor so `devicePixelRatio` agrees (Blink's borders do not follow it)
  * @returns {Promise<Map<string, { hash: string, lines?: string[] }>>} `key|theme` -> reading
  */
-export async function hashAt({ commit, root, engine, requests, width = 1920, withLines = false }) {
+export async function hashAt({ commit, root, engine, requests, width = 1920, withLines = false, ratio = 1 }) {
     const { serve, measurePlaywright } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     /** @type {Record<string, import('@playwright/test').BrowserType>} */
@@ -339,8 +384,11 @@ export async function hashAt({ commit, root, engine, requests, width = 1920, wit
         const served = root ?? String(dir);
         const known = await knownBlocks(served);
         server = await serve(served, { 'catalogue/block-hash.js': readFileSync(join(ROOT, 'catalogue/block-hash.js'), 'utf8') });
-        browser = await type.launch({ headless: true });
-        const context = await browser.newContext({ viewport: { width, height: 1000 } });
+        browser = await type.launch({
+            headless: true,
+            ...(ratio !== 1 && engine === 'firefox' ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
+        });
+        const context = await browser.newContext({ viewport: { width, height: 1000 }, ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}) });
         const page = await context.newPage();
         /** @type {Map<string, { hash: string, lines?: string[] }>} */
         const out = new Map();
@@ -392,13 +440,14 @@ async function rehash(args) {
     const HASH_VERSION = hashVersion();
     const width = (args.includes('--width') && Number(args[args.indexOf('--width') + 1])) || 1920;
     const register = readRegister();
-    /** @type {Map<string, { commit: string, engine: string, requests: { key: string, theme: string, entry: Entry }[] }>} */
+    /** @type {Map<string, { commit: string, engine: string, ratio: number, requests: { key: string, theme: string, entry: Entry }[] }>} */
     const groups = new Map();
     for (const [key, themes] of Object.entries(register.verdicts)) {
         for (const [theme, engines] of Object.entries(themes)) {
             for (const [engine, entry] of Object.entries(engines)) {
-                const id = `${entry.commit}|${engine}`;
-                const group = groups.get(id) ?? { commit: entry.commit, engine, requests: [] };
+                // Each entry at the ratio it was read at [fix-34].
+                const id = `${entry.commit}|${engine}|${ratioOf(entry)}`;
+                const group = groups.get(id) ?? { commit: entry.commit, engine, ratio: ratioOf(entry), requests: [] };
                 group.requests.push({ key, theme, entry });
                 groups.set(id, group);
             }
@@ -406,9 +455,9 @@ async function rehash(args) {
     }
     let moved = 0;
     let total = 0;
-    for (const { commit, engine, requests } of groups.values()) {
-        console.log(`${commit.slice(0, 12)} in ${engine}: ${requests.length} entr${requests.length === 1 ? 'y' : 'ies'}…`);
-        const readings = await hashAt({ commit, engine, requests, width });
+    for (const { commit, engine, ratio, requests } of groups.values()) {
+        console.log(`${commit.slice(0, 12)} in ${engine} at ratio ${ratio}: ${requests.length} entr${requests.length === 1 ? 'y' : 'ies'}…`);
+        const readings = await hashAt({ commit, engine, requests, width, ratio });
         for (const { key, theme, entry } of requests) {
             const reading = readings.get(`${key}|${theme}`);
             if (!reading) throw new Error(`${key} in ${theme}: no reading`);
@@ -507,7 +556,7 @@ export function entriesAt(register, commit) {
 /**
  * Which recorded hashes the test browser read too.
  * @param {{ key: string, theme: string, engine: string, entry: Entry }[]} entries
- * @param {Map<string, { hash: string }>} readings `key|theme|engine` -> the test browser's reading
+ * @param {Map<string, { hash: string }>} readings `key|theme|engine` -> the test browser's reading, at the entry's ratio
  * @param {Set<string> | Map<string, unknown>} known the blocks the review pages show now
  * @returns {{ equal: string[], differ: string[], gone: string[] }}
  */
@@ -515,7 +564,7 @@ export function againstReadings(entries, readings, known) {
     /** @type {{ equal: string[], differ: string[], gone: string[] }} */
     const out = { equal: [], differ: [], gone: [] };
     for (const { key, theme, engine, entry } of entries) {
-        const at = `${key} · ${theme} · ${engine} · ${entry.verdict}`;
+        const at = `${key} · ${theme} · ${engine} · ${entry.verdict}${ratioOf(entry) === 1 ? '' : ` · @${ratioOf(entry)}`}`;
         const reading = readings.get(`${key}|${theme}|${engine}`);
         if (!known.has(key) || !reading) out.gone.push(at);
         else if (reading.hash === entry.hash) out.equal.push(at);
@@ -544,33 +593,134 @@ async function compareAgainstBrowser(args) {
     // worktree), which separates "the browser read it differently" from
     // "the block changed since".
     const atRecorded = args.includes('--at-recorded');
-    const entries = entriesAt(readRegister(), commit);
+    // --register <file>: another register than catalogue/verdicts.json (a copy to try a change on).
+    const entries = entriesAt(readRegister(option('--register') ?? registerPath), commit);
     const known = await knownBlocks(ROOT);
     /** @type {Map<string, { hash: string }>} */
     const readings = new Map();
     const engines = [...new Set(entries.map((e) => e.engine))];
     const commits = atRecorded ? [...new Set(entries.map((e) => e.entry.commit))] : [null];
+    // One browser per ratio: each entry is read at the ratio it was read at [fix-34].
+    const ratios = [...new Set(entries.map((e) => ratioOf(e.entry)))].sort((a, b) => a - b);
     for (const engine of engines) {
         for (const at of commits) {
-            const requests = entries
-                .filter((e) => e.engine === engine && (at === null ? known.has(e.key) : e.entry.commit === at))
-                .map(({ key, theme }) => ({ key, theme }));
-            if (!requests.length) continue;
-            const read = await hashAt(at === null ? { root: ROOT, engine, requests, width } : { commit: at, engine, requests, width });
-            for (const [id, reading] of read) readings.set(`${id}|${engine}`, reading);
+            for (const ratio of ratios) {
+                const requests = entries
+                    .filter((e) => e.engine === engine && ratioOf(e.entry) === ratio && (at === null ? known.has(e.key) : e.entry.commit === at))
+                    .map(({ key, theme }) => ({ key, theme }));
+                if (!requests.length) continue;
+                const read = await hashAt(
+                    at === null ? { root: ROOT, engine, requests, width, ratio } : { commit: at, engine, requests, width, ratio },
+                );
+                // Only what was asked: a page reads every asked block in every asked theme,
+                // and a block asked in another theme at another ratio must keep its own reading.
+                for (const { key, theme } of requests) {
+                    const reading = read.get(`${key}|${theme}`);
+                    if (reading) readings.set(`${key}|${theme}|${engine}`, reading);
+                }
+            }
         }
     }
     const result = againstReadings(entries, readings, atRecorded ? new Set(entries.map((e) => e.key)) : known);
     const dirty = git('status', '--porcelain').length > 0;
     console.log(
         `${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} recorded ${commit === null ? 'in the register' : `at ${commit.slice(0, 12)}`}, ` +
-            `hashed in Playwright's ${engines.join(' and ') || 'browser'} ${atRecorded ? 'at the commit each was recorded on' : `on the working tree at ${head.slice(0, 12)}${dirty ? ' (with uncommitted changes)' : ''}`}:`,
+            `hashed in Playwright's ${engines.join(' and ') || 'browser'} at ratio ${ratios.join(', ') || 1} ${atRecorded ? 'at the commit each was recorded on' : `on the working tree at ${head.slice(0, 12)}${dirty ? ' (with uncommitted changes)' : ''}`}:`,
     );
     for (const line of result.differ) console.log(`  differs: ${line}`);
     for (const line of result.gone) console.log(`  no longer a block: ${line}`);
     console.log(
         `${result.equal.length} equal, ${result.differ.length} differ, ${result.gone.length} gone — ${((performance.now() - started) / 1000).toFixed(1)} s.`,
     );
+}
+
+/* ---------------------------------------------------------- annotate-ratio */
+
+/**
+ * Give entries recorded before verdicts kept a ratio the ratio at which a
+ * reading matches their hash [fix-34]. An entry whose hash a ratio-1 reading
+ * matches, or that has a ratio already, is left as it is. Where several
+ * ratios match, the one that matches the most entries overall is taken
+ * (Kenny's default zoom), then the lowest. No hash and no verdict changes.
+ * @param {Register} register changed in place
+ * @param {Record<string, Record<string, string>>} readings `<devPixelsPerPx>` -> `key|theme` -> hash, read in `engine`
+ * @param {{ commit?: string | null, engine?: string }} [options] commit: only the entries recorded at it (a prefix)
+ * @returns {{ annotated: { key: string, theme: string, ratio: number }[], equal: number, kept: number, unmatched: { key: string, theme: string }[], unread: { key: string, theme: string }[] }}
+ */
+export function annotateRatios(register, readings, { commit = null, engine = 'firefox' } = {}) {
+    const prefs = Object.keys(readings);
+    const one = prefs.filter((pref) => geckoRatio(pref) === 1);
+    const others = prefs.filter((pref) => geckoRatio(pref) !== 1);
+    /** @type {ReturnType<typeof annotateRatios>} */
+    const out = { annotated: [], equal: 0, kept: 0, unmatched: [], unread: [] };
+    const candidates = entriesAt(register, commit).filter((e) => e.engine === engine);
+    const matches = (/** @type {string} */ pref, /** @type {{ key: string, theme: string, entry: Entry }} */ e) =>
+        readings[pref]?.[`${e.key}|${e.theme}`] === e.entry.hash;
+    // How many entries each ratio matches: the tie-break.
+    /** @type {Map<number, number>} */
+    const weight = new Map();
+    for (const e of candidates)
+        for (const ratio of new Set(others.filter((pref) => matches(pref, e)).map(geckoRatio))) weight.set(ratio, (weight.get(ratio) ?? 0) + 1);
+    for (const e of candidates) {
+        const id = { key: e.key, theme: e.theme };
+        if (e.entry.ratio !== undefined) {
+            out.kept += 1;
+            continue;
+        }
+        if (one.some((pref) => matches(pref, e))) {
+            out.equal += 1;
+            continue;
+        }
+        if (!prefs.some((pref) => `${e.key}|${e.theme}` in (readings[pref] ?? {}))) {
+            out.unread.push(id);
+            continue;
+        }
+        const ratios = [...new Set(others.filter((pref) => matches(pref, e)).map(geckoRatio))].sort(
+            (a, b) => (weight.get(b) ?? 0) - (weight.get(a) ?? 0) || a - b,
+        );
+        if (!ratios.length) {
+            out.unmatched.push(id);
+            continue;
+        }
+        e.entry.ratio = ratios[0];
+        out.annotated.push({ ...id, ratio: ratios[0] });
+    }
+    return out;
+}
+
+/** @param {string[]} args */
+async function annotateRatio(args) {
+    const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
+    const from = option('--from');
+    if (!from) throw new Error('annotate-ratio needs --from <readings.json>');
+    const file = option('--register') ?? registerPath;
+    const register = readRegister(file);
+    const { readings } = JSON.parse(readFileSync(from, 'utf8'));
+    const result = annotateRatios(register, readings, { commit: option('--commit') ?? null, engine: option('--engine') ?? 'firefox' });
+    writeRegister(register, file);
+    /** @param {{ key: string, theme: string }[]} rows */
+    const byTheme = (rows) => {
+        /** @type {Record<string, string[]>} */
+        const grouped = {};
+        for (const { key, theme } of rows) (grouped[theme] ??= []).push(key);
+        return Object.entries(grouped)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([theme, keys]) => `${theme} (${keys.length}): ${keys.sort().join(', ')}`);
+    };
+    /** @type {Record<string, number>} */
+    const perRatio = {};
+    for (const { ratio } of result.annotated) perRatio[ratio] = (perRatio[ratio] ?? 0) + 1;
+    console.log(
+        `${file}: ${result.annotated.length} entr${result.annotated.length === 1 ? 'y' : 'ies'} given a ratio (${Object.entries(perRatio)
+            .map(([ratio, n]) => `@${ratio} ${n}`)
+            .join(
+                ', ',
+            )}), ${result.equal} equal at ratio 1, ${result.kept} with a ratio already, ${result.unmatched.length} matched by no reading, ${result.unread.length} not read.`,
+    );
+    for (const row of byTheme(result.annotated.map(({ key, theme, ratio }) => ({ key: `${key} @${ratio}`, theme }))))
+        console.log(`  given a ratio: ${row}`);
+    for (const row of byTheme(result.unmatched)) console.log(`  no ratio matches: ${row}`);
+    for (const row of byTheme(result.unread)) console.log(`  not read: ${row}`);
 }
 
 async function main() {
@@ -580,12 +730,14 @@ async function main() {
     if (command === 'rehash') return rehash(args);
     if (command === 'compare' && args.includes('--against-browser')) return compareAgainstBrowser(args);
     if (command === 'compare') return compare(args);
+    if (command === 'annotate-ratio') return annotateRatio(args);
     console.error(
         'usage: node gates/verdicts.mjs record < prompt.txt\n' +
             '       node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]\n' +
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
-            '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]',
+            '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
+            '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]',
     );
     process.exit(2);
 }

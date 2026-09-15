@@ -5,7 +5,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { blockIds, knownBlocks, registerFaults } from './check-verdicts.mjs';
-import { againstReadings, applyVerdictLines, compareCommand, entriesAt, parseVerdictLines, sortedRegister } from './verdicts.mjs';
+import {
+    againstReadings,
+    annotateRatios,
+    applyVerdictLines,
+    compareCommand,
+    entriesAt,
+    geckoRatio,
+    parseVerdictLines,
+    sortedRegister,
+} from './verdicts.mjs';
 
 const HASH = 'a'.repeat(64);
 const context = (overrides = {}) => ({
@@ -151,4 +160,116 @@ test('compare --against-browser: the entries of one commit, and which the test b
     );
     assert.deepEqual(result.gone, ['button--gone · formal · chromium · approved']);
     assert.equal(compareCommand('001af2f3aaaabbbbcccc'), 'node gates/verdicts.mjs compare --against-browser --commit 001af2f3aaaa');
+});
+
+test('a verdict line may carry the pixel ratio it was read at as a sixth field; five fields mean 1 [fix-34]', () => {
+    const prompt = [
+        'Verdict lines (hash version 2):',
+        `button--variants · formal · firefox · approved · ${HASH} · @1.25`,
+        `button--variants · nostromo · firefox · approved · ${HASH}`,
+        '',
+    ].join('\n');
+    /** @type {any} */
+    const register = { hashVersion: 2, verdicts: {} };
+    const parsed = parseVerdictLines(prompt);
+    assert.deepEqual(parsed.faults, []);
+    assert.deepEqual(
+        parsed.lines.map((line) => line.ratio),
+        [1.25, 1],
+    );
+    const report = applyVerdictLines(register, parsed, { ...context(), commit: 'abc1234', given: '2026-09-15' });
+    assert.deepEqual(report.faults, []);
+    assert.equal(register.verdicts['button--variants'].formal.firefox.ratio, 1.25);
+    assert.ok(!('ratio' in register.verdicts['button--variants'].nostromo.firefox));
+    assert.deepEqual(registerFaults(register, context()), []);
+    assert.deepEqual(Object.keys(sortedRegister(register).verdicts['button--variants'].formal.firefox), [
+        'verdict',
+        'hash',
+        'commit',
+        'given',
+        'ratio',
+    ]);
+
+    // The same verdict at another ratio is a change, not "already recorded".
+    const moved = applyVerdictLines(
+        register,
+        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.5`),
+        {
+            ...context(),
+            commit: 'def5678',
+            given: '2026-09-15',
+        },
+    );
+    assert.equal(moved.changed.length, 1);
+
+    assert.match(
+        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · 1.25`).faults[0],
+        /sixth field is not @<ratio>/,
+    );
+    const bad = applyVerdictLines(
+        { hashVersion: 2, verdicts: {} },
+        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.23456`),
+        {
+            ...context(),
+            commit: 'a1b2c3d',
+            given: '2026-09-15',
+        },
+    );
+    assert.match(bad.faults[0], /more than three decimals/);
+});
+
+test('a register entry may carry a ratio other than 1, to three decimals [fix-34]', () => {
+    const faults = (/** @type {unknown} */ ratio) =>
+        registerFaults({ hashVersion: 2, verdicts: { 'button--variants': { formal: { firefox: entry({ ratio }) } } } }, context());
+    assert.deepEqual(faults(1.25), []);
+    assert.deepEqual(faults(1.091), []);
+    assert.match(faults(1)[0], /ratio 1 is not written/);
+    assert.match(faults('1.25')[0], /not a number/);
+    assert.match(faults(1.0909)[0], /more than three decimals/);
+    const extra = registerFaults({ hashVersion: 2, verdicts: { 'button--variants': { formal: { firefox: entry({ zoom: 2 }) } } } }, context());
+    assert.match(extra[0], /expected commit, given, hash, verdict and an optional ratio/);
+});
+
+test('annotate-ratio gives an entry the ratio a reading matches, never a hash or a verdict [fix-34]', () => {
+    const other = 'b'.repeat(64);
+    /** @type {any} */
+    const register = {
+        hashVersion: 2,
+        verdicts: {
+            'button--variants': {
+                formal: { firefox: entry({ commit: 'd499b6b2aaaa' }) }, // equal at 1
+                nostromo: { firefox: entry({ commit: 'd499b6b2aaaa', hash: other }) }, // matches 1.25 and 1.5
+            },
+            'button--icons': {
+                formal: { firefox: entry({ commit: 'd499b6b2aaaa', verdict: 'rejected' }) }, // matches 1.25 only
+                nostromo: { firefox: entry({ commit: 'd499b6b2aaaa' }) }, // matches nothing
+                plaid: { firefox: entry({ commit: 'd499b6b2aaaa' }) }, // not read
+            },
+            'button--sizes': { formal: { firefox: entry() } }, // another commit
+        },
+    };
+    const readings = {
+        1: { 'button--variants|formal': HASH, 'button--variants|nostromo': HASH, 'button--icons|formal': other, 'button--icons|nostromo': other },
+        1.25: { 'button--variants|nostromo': other, 'button--icons|formal': HASH, 'button--icons|nostromo': other },
+        1.5: { 'button--variants|nostromo': other },
+        1.1: { 'button--icons|nostromo': other },
+    };
+    const facts = () =>
+        JSON.stringify(Object.values(register.verdicts).flatMap((t) => Object.values(t).map((e) => [e.firefox.hash, e.firefox.verdict])));
+    const before = facts();
+    const result = annotateRatios(register, readings, { commit: 'd499b6b2' });
+    assert.equal(result.equal, 1);
+    assert.deepEqual(
+        result.annotated.map(({ key, theme, ratio }) => `${key}|${theme}|${ratio}`),
+        ['button--variants|nostromo|1.25', 'button--icons|formal|1.25'],
+    );
+    assert.deepEqual(result.unmatched, [{ key: 'button--icons', theme: 'nostromo' }]);
+    assert.deepEqual(result.unread, [{ key: 'button--icons', theme: 'plaid' }]);
+    assert.ok(!('ratio' in register.verdicts['button--sizes'].formal.firefox));
+    assert.equal(facts(), before);
+    // Run again: entries with a ratio are kept as they are.
+    assert.equal(annotateRatios(register, readings, { commit: 'd499b6b2' }).kept, 2);
+    assert.equal(geckoRatio('1.1'), 1.091);
+    assert.equal(geckoRatio('1.3333333'), 1.333);
+    assert.equal(geckoRatio(1.25), 1.25);
 });

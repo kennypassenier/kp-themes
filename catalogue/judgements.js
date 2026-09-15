@@ -8,8 +8,11 @@
 //   browser storage          the scratch pad: what was judged in this browser
 //                            and not yet recorded.
 //
-//   register  { hashVersion, verdicts: { key: { theme: { engine: { verdict, hash, commit, given } } } } }
-//   storage   { key: { theme: { engine: { verdict, hash, v, at } } } }
+//   register  { hashVersion, verdicts: { key: { theme: { engine: { verdict, hash, commit, given, ratio? } } } } }
+//   storage   { key: { theme: { engine: { verdict, hash, v, at, ratio? } } } }
+//
+// `ratio` is the device pixel ratio the hash was read at (engine.js), kept
+// only where it is not 1 (fix-34): a verdict without one was read at 1.
 //
 // The hash is what makes a verdict safe to act on later: a judged block stays
 // hidden only while it still looks the way it did when it was judged, so a
@@ -65,12 +68,15 @@ export function saveJudgements(all) {
     }
 }
 
-/** Store one verdict of this browser, in its engine; returns the entry it replaced. */
-export function storeVerdict(key, theme, verdict, hash, engine = ENGINE) {
+/**
+ * Store one verdict of this browser, in its engine; returns the entry it replaced.
+ * @param {number} [ratio] the device pixel ratio its hash was read at; 1 is not written
+ */
+export function storeVerdict(key, theme, verdict, hash, engine = ENGINE, ratio = 1) {
     const all = loadJudgements();
     const themes = ((all[key] ??= {})[theme] ??= {});
     const previous = themes[engine] ?? null;
-    themes[engine] = { verdict, hash, v: HASH_VERSION, at: Date.now() };
+    themes[engine] = { verdict, hash, v: HASH_VERSION, at: Date.now(), ...(ratio && ratio !== 1 ? { ratio } : {}) };
     saveJudgements(all);
     return previous;
 }

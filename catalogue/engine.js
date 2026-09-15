@@ -38,3 +38,35 @@ export function detectEngine(nav = navigator) {
 export const ENGINE = detectEngine();
 
 export const engineLabel = (engine) => ENGINE_LABELS[engine] ?? engine;
+
+/* ------------------------------------------------------------ pixel ratio */
+
+// The device pixel ratio a block is read at (fix-34, Kenny 2026-09-15: his
+// browser's zoom by default is not 100%, and his verdicts stay valid). Gecko
+// resolves a border width to whole device pixels, so a 3px border computes to
+// 2.4px at a ratio of 1.25 and the block's hash follows the ratio; the
+// verdict keeps the ratio it was read at, and the tools read it there
+// (gates/verdicts.mjs, `layout.css.devPixelsPerPx`).
+//
+// What the hash sees decides, so a probe reads it: a border narrower than a
+// device pixel is drawn one device pixel wide, and its computed width is one
+// over the ratio. In Gecko the probe decides, also where `devicePixelRatio`
+// is pinned to 1 (a fingerprinting guard). Blink draws such a border one CSS
+// pixel wide at any ratio; there `devicePixelRatio` stands in. Rounded to three decimals: Gecko
+// keeps a ratio as 60 app units over a whole number of them (110% zoom is
+// 60/55, 1.091), and three decimals give that number back.
+
+/** A ratio as the register writes it: three decimals. */
+export const roundRatio = (ratio) => Math.round(Number(ratio) * 1000) / 1000;
+
+/** The device pixel ratio a block's borders resolve at in this document, now. */
+export function readPixelRatio(doc = document) {
+    const probe = doc.createElement('div');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;border:0 solid;border-left-width:0.01px';
+    doc.body.append(probe);
+    const width = parseFloat(getComputedStyle(probe).borderLeftWidth);
+    probe.remove();
+    if (ENGINE === 'firefox') return roundRatio(width > 0 ? 1 / width : 1);
+    return roundRatio(typeof devicePixelRatio === 'number' && devicePixelRatio > 0 ? devicePixelRatio : 1);
+}

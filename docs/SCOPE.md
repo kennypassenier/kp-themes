@@ -1603,7 +1603,7 @@ gelden" — he reviews zoomed by default, so field 5 of `fix-34` holds: the
 review page records the zoom a verdict was read at and the comparison with the
 test browser reads at that zoom; no verdict is re-judged and the refusal at
 another zoom is not built. laurels-direction "B · Wreaths": each claim between
-two drawn laurel branches, platforms as app-store badges, for every theme.
+two drawn laurel branches, platforms as app-store badges — in shade-light only, the theme his note was on; Kenny corrected the form, whose consequence line said every theme, the same day, and the other 21 themes keep their laurels.
 divider-shape, his own answer "pearls": the shape knob `data-kp-divider-shape`
 with pearls as pastel's default; the form offered three of the five shapes,
 which he caught. hc-filled-hover "De opstijgende balk van Cancel". light-indigo

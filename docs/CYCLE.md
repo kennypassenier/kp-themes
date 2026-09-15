@@ -57,14 +57,26 @@ theme its window plays, whatever the page wears [scope-86].
    [scope-92].
 2. Kenny copies the prompt and pastes it into the conversation. Its last
    block, `Verdict lines (hash version N):`, carries one line per verdict not
-   yet in the register: `block key · theme · engine · verdict · hash`.
+   yet in the register: `block key · theme · engine · verdict · hash`, and a
+   sixth field `@1.25` when the block was read at a device pixel ratio other
+   than 1 [fix-34]. Gecko resolves a border width to whole device pixels, so
+   a hash follows the browser's zoom (and the desktop's scale): a 3px border
+   reads 2.4px at 125%. Kenny reviews at a zoom other than 100% by default
+   (scope-93), so the page reads the ratio when it reads the blocks
+   (`catalogue/engine.js`) and every verdict keeps it; the register writes it
+   as `ratio` in the entry. A line with five fields, and an entry without a
+   ratio, were read at 1. Zooming after the page has read its blocks changes
+   nothing recorded; the next reading (a theme switch, a reload) takes the
+   zoom on screen.
 3. Claude saves the pasted text and runs
    `node gates/verdicts.mjs record < prompt.txt`. The tool refuses a block
    no page shows, a theme that does not exist, and lines taken with another hash version, and prints what it
    added and changed. Claude then runs the command it prints last,
    `node gates/verdicts.mjs compare --against-browser --commit <HEAD>`: every
    entry recorded at that commit hashed again in Playwright's browser of its
-   engine, with the ones whose hash the test browser does not read listed
+   engine, at the ratio it was read at (Firefox launched with
+   `layout.css.devPixelsPerPx` and a matching deviceScaleFactor, one browser
+   per ratio), with the ones whose hash the test browser does not read listed
    (about 17 s for 158 entries). A mismatch means Kenny's browser saw
    something the tools do not — his desktop font on a control the package
    left without one was the cause of 39 of 158 on 2026-09-14 [fix-28] — and
@@ -85,8 +97,16 @@ bring anything back:
 3. `node gates/verdicts.mjs rehash` measures every entry again at the commit
    it was recorded on (a temporary git worktree, served on a free port with
    the new `block-hash.js` injected), in its own engine (Playwright's Firefox
-   or Chromium), at 1920 px, and writes the new hashes and version. The
-   verdicts, commits and dates stay as they were.
+   or Chromium), at 1920 px and at the entry's own pixel ratio, and writes
+   the new hashes and version. The verdicts, commits, dates and ratios stay
+   as they were.
+
+The entries recorded before verdicts kept a ratio (the light-theme review of
+2026-09-15, at d499b6b2) get theirs once, from readings of the blocks at
+several ratios: `node gates/verdicts.mjs annotate-ratio --from <readings.json>
+--commit d499b6b2` gives an entry the ratio whose reading matches its hash,
+never changes a hash or a verdict, and lists the entries no ratio matches
+[fix-34].
 4. The register and the recipe are committed together.
 
 The recipe reads past what differs between two browsers of one engine or

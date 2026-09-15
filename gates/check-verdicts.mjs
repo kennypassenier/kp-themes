@@ -23,6 +23,20 @@ export const VERDICTS = ['approved', 'rejected'];
 const ENTRY_FIELDS = ['commit', 'given', 'hash', 'verdict'];
 
 /**
+ * An entry's optional `ratio`: the device pixel ratio its hash was read at
+ * (fix-34), a number above 0 and at most 10, to three decimals, never 1 (an
+ * entry without one was read at 1). Null when it is one.
+ * @param {unknown} ratio
+ * @returns {string | null} what is wrong with it
+ */
+export function ratioFault(ratio) {
+    if (typeof ratio !== 'number' || !Number.isFinite(ratio) || ratio <= 0 || ratio > 10) return 'ratio is not a number above 0 and at most 10';
+    if (ratio === 1) return 'ratio 1 is not written (an entry without a ratio was read at 1)';
+    if (Math.round(ratio * 1000) / 1000 !== ratio) return 'ratio has more than three decimals';
+    return null;
+}
+
+/**
  * The blocks one page carries, the way catalogue.js finds them: every
  * `.cat-block[id]`, or on a page without one, every `section[id]` inside `<main>`.
  * @param {string} html
@@ -112,8 +126,15 @@ export function registerFaults(register, { hashVersion, known, themes, commitExi
                     faults.push(`${at}: not an entry object`);
                     continue;
                 }
-                const fields = Object.keys(entry).sort();
-                if (fields.join() !== ENTRY_FIELDS.join()) faults.push(`${at}: fields are ${fields.join(', ')}, expected ${ENTRY_FIELDS.join(', ')}`);
+                const fields = Object.keys(entry)
+                    .filter((field) => field !== 'ratio')
+                    .sort();
+                if (fields.join() !== ENTRY_FIELDS.join())
+                    faults.push(`${at}: fields are ${fields.join(', ')}, expected ${ENTRY_FIELDS.join(', ')} and an optional ratio`);
+                if ('ratio' in entry) {
+                    const wrong = ratioFault(entry.ratio);
+                    if (wrong) faults.push(`${at}: ${wrong}`);
+                }
                 if (!VERDICTS.includes(entry.verdict)) faults.push(`${at}: verdict ${JSON.stringify(entry.verdict)} is not approved or rejected`);
                 if (!/^[0-9a-f]{64}$/.test(String(entry.hash))) faults.push(`${at}: hash is not a full SHA-256`);
                 if (!/^[0-9a-f]{7,40}$/.test(String(entry.commit))) faults.push(`${at}: commit is not a commit id`);

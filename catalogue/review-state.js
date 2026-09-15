@@ -209,7 +209,7 @@ export function promptItems() {
         const panel = document.querySelector(`.cat-judge[data-cat-block="${CSS.escape(key)}"]`);
         for (const [theme, engines] of Object.entries(themes)) {
             for (const [engine, entry] of Object.entries(engines ?? {})) {
-                const { verdict, hash, v } = entry;
+                const { verdict, hash, v, ratio } = entry;
                 if (
                     engine === ENGINE &&
                     panel?.getAttribute('data-cat-state') === 'changed' &&
@@ -225,9 +225,15 @@ export function promptItems() {
                     theme,
                     engine,
                     text: titleOf(page, block),
-                    signature: `verdict|${key}|${theme}|${engine}|${verdict}|${hash}`,
-                    // Only a verdict taken with the recipe of now can be recorded.
-                    line: v === HASH_VERSION ? [key, theme, engine, verdict, hash].join(' · ') : undefined,
+                    // At a ratio of 1 the signature is the one copied prompts already hold.
+                    signature: `verdict|${key}|${theme}|${engine}|${verdict}|${hash}${ratio && ratio !== 1 ? `|@${ratio}` : ''}`,
+                    // Only a verdict taken with the recipe of now can be recorded. One
+                    // read at another device pixel ratio than 1 says which, as a sixth
+                    // field `@1.25` (fix-34); five fields mean a ratio of 1.
+                    line:
+                        v === HASH_VERSION
+                            ? [key, theme, engine, verdict, hash, ...(ratio && ratio !== 1 ? [`@${ratio}`] : [])].join(' · ')
+                            : undefined,
                 });
             }
         }
