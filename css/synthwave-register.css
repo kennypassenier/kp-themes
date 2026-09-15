@@ -940,6 +940,19 @@
         border-left-color: var(--destructive);
     }
 
+    /* A framed button on the destructive plate takes the plate's own ink
+       for its frame [Kenny's synthwave note, 2026-09-15]. The frame is the
+       primary pink, and on the red plate it measured 1.06:1 — "poorly
+       visible" on the data table's Try again. The alert's label is
+       `--destructive-foreground` on that plate, 5.59:1, so the frame is
+       drawn in it. Every framed variant, because the bare, secondary,
+       mirror, destructive and primary buttons all draw a frame on the same
+       red (the primary's pink fill is no further from it than its frame
+       was); the ghost has no frame to draw and keeps none. */
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-button--ghost) {
+        --kp-frame: var(--destructive-foreground);
+    }
+
     [data-theme='synthwave'] .kp-alert--warning {
         border-left-color: var(--warning-foreground);
     }

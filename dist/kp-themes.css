@@ -14382,6 +14382,19 @@
         border-left-color: var(--destructive);
     }
 
+    /* A framed button on the destructive plate takes the plate's own ink
+       for its frame [Kenny's synthwave note, 2026-09-15]. The frame is the
+       primary pink, and on the red plate it measured 1.06:1 — "poorly
+       visible" on the data table's Try again. The alert's label is
+       `--destructive-foreground` on that plate, 5.59:1, so the frame is
+       drawn in it. Every framed variant, because the bare, secondary,
+       mirror, destructive and primary buttons all draw a frame on the same
+       red (the primary's pink fill is no further from it than its frame
+       was); the ghost has no frame to draw and keeps none. */
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-button--ghost) {
+        --kp-frame: var(--destructive-foreground);
+    }
+
     [data-theme='synthwave'] .kp-alert--warning {
         border-left-color: var(--warning-foreground);
     }
@@ -20558,9 +20571,27 @@
 
     /* No give. The spectral instrument draws its label in on hover; metal
        does not compress, so titanium answers a press by dropping the whole
-       control one pixel and nothing else. */
+       control one pixel.
+
+       The face goes into its seat [Kenny's titanium note, 2026-09-15].
+       "There is no click effect": the one pixel ran over the theme's 60ms,
+       and on the bare, secondary, ghost and mirror buttons the pressed
+       ground was three RGB steps from the hover ground, so a click showed
+       nothing. Still no give and no glow — the face does not shrink and
+       nothing blooms — but a pressed part is out of the light: the bright
+       tool edge along its top goes out and a hairline of shadow takes its
+       place, the ground drops a full step (below, with the fix-12 rules),
+       and all of it arrives at once, because a click is shorter than a
+       transition. The release runs back over the same 60ms, linear. A
+       keyboard press keeps the focus ring, which owns the shadow while
+       it shows. */
     [data-theme='titanium'] .kp-button:active:not(:disabled) {
         translate: 0 1px;
+        transition-duration: 0s;
+    }
+
+    [data-theme='titanium'] .kp-button:active:not(:disabled):not(:focus-visible) {
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
     }
 
     /* The reading above the control: the consumer's own word, in the
@@ -20582,6 +20613,37 @@
         background: var(--kp-iris);
         background-clip: text;
         color: transparent;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the end edge (the start
+       corner is the cut one), and it stops the width of the focus ring and
+       its outline short of the control, so none of the ring the chamfer
+       cuts away reappears on top. It reaches well past both ends because
+       the readout does not wrap. */
+    [data-theme='titanium'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            100% var(--kp-readout-seam),
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
+        );
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -21784,8 +21846,14 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
+    /* Not `--secondary-active` any more: that token sits three RGB steps
+       from `--accent`, the hover ground, so the press never showed on the
+       bare, secondary, ghost and mirror buttons [Kenny's titanium note,
+       2026-09-15]. Eleven points under the hover ground, the metal in
+       shadow: ten measured 9.9 in OKLab distance, a hair under the States
+       block's floor of 10; eleven is 10.9. */
     [data-theme='titanium'] .kp-button:active:not(:disabled) {
-        background: var(--secondary-active);
+        background: hsl(from var(--accent) h s calc(l - 11));
     }
 
     /* Not `--primary-active` any more: that token is 74%, three points
@@ -32444,6 +32512,77 @@
                 opacity var(--fx-duration) var(--fx-ease),
                 translate var(--fx-duration) var(--fx-ease);
         }
+    }
+
+    /* ── The press [Kenny's dark note, 2026-09-15] ────────────────────
+       "There is no animation when I click." The press was a ground change
+       only, eased over the theme's 220ms, and a click is shorter than
+       that: the ground had barely started to move when the release sent
+       it back. So the instrument answers a press the way it answers a
+       hover, in its own notation: the brackets close the last step onto
+       the label, the label settles a little further, the edge doubles,
+       and all of it arrives at once. The release is what eases back, on
+       the theme's own curve, which is the movement the eye catches. Every
+       one of these is paint — a pseudo-element's or a child's transform,
+       an out-of-flow edge — so no box in the row moves. */
+    [data-theme='dark'] .kp-button:active:not(:disabled),
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        transition-duration: 0s;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before {
+        translate: 0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        translate: -0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label {
+        scale: 0.9;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        block-size: 4px;
+        scale: 1 1;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the start edge, and it
+       stops the width of the focus ring and its outline short of the
+       control, so none of the ring the chamfer cuts away reappears on top.
+       It reaches well past both ends because the readout does not wrap. */
+    [data-theme='dark'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            0 0,
+            0 var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            0 var(--kp-readout-seam),
+            0 0,
+            calc(100% - var(--kp-chamfer)) 0,
+            100% var(--kp-chamfer),
+            100% 100%,
+            var(--kp-chamfer) 100%,
+            0 calc(100% - var(--kp-chamfer))
+        );
     }
 
     /* ── The field's own oxide line [scope-16] ─────────────────────────── */

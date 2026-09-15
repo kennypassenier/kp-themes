@@ -912,14 +912,21 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
                     <code>js/overlays.js</code> opens a tooltip after a moment under the pointer and at once on focus, closes it when the pointer or
                     focus leaves or on Escape, and points the trigger's <code>aria-describedby</code> at it.
                 </div>
+                <!-- Held open, so js/overlays.js leaves these two alone, and the page
+                     names the anchor itself the way the React channel does: without
+                     anchor-name and position-anchor a tooltip has no anchor, and
+                     position-area falls back to the static position, beside the
+                     trigger instead of under it (Kenny's phantom note, 2026-09-15). -->
                 <div class="cat-stage" style="contain: layout; min-block-size: 11rem">
-                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue">
+                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="anchor-name: --ov-tt1">
                         <button type="button" class="kp-button" aria-describedby="ov-tt1">Recalibrate</button>
-                        <span role="tooltip" id="ov-tt1" class="kp-popover kp-tooltip">Takes about two minutes</span>
+                        <span role="tooltip" id="ov-tt1" class="kp-popover kp-tooltip" style="position-anchor: --ov-tt1"
+                            >Takes about two minutes</span
+                        >
                     </span>
-                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="margin-inline-start: 14rem">
+                    <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="margin-inline-start: 14rem; anchor-name: --ov-tt2">
                         <button type="button" class="kp-button" aria-describedby="ov-tt2">Lock out line 2</button>
-                        <span role="tooltip" id="ov-tt2" class="kp-popover kp-tooltip"
+                        <span role="tooltip" id="ov-tt2" class="kp-popover kp-tooltip" style="position-anchor: --ov-tt2"
                             >Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
                             against the sensor.</span
                         >
