@@ -550,12 +550,21 @@
        data-kp-label, synthesised on ::before as every other lifted theme
        does (retro, phantom, terminal), so it is placed as their corner
        badge is — a component constraint, not a demo choice, and named in
-       the anatomy's closing section. */
+       the anatomy's closing section.
+       It floats at the card's top end rather than being placed absolutely
+       (Kenny, 2026-09-15, stamp-cards "Op elke kaart met een label"
+       [scope-98]): an absolute stamp only landed on a card that was
+       positioned, the dossier, and in the portrait's narrow dossier it lay
+       over the title. A float lives in the card's own flow on every labelled
+       card, and the header beside it is a flex container, which never
+       overlaps a float: it narrows beside the plate, or drops below it when
+       the title's longest word no longer fits. The margins hold the -3deg
+       rotation's corners clear of the title. */
     [data-theme='pastel'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
-        position: absolute;
-        inset-inline-end: 0.9rem;
-        inset-block-start: 0.9rem;
+        float: inline-end;
+        margin-block: 0.1rem 0.4rem;
+        margin-inline: 0.6rem 0;
         rotate: -3deg;
         display: inline-flex;
         align-items: center;
@@ -567,6 +576,13 @@
         background: var(--kp-stamp);
         border-radius: 0.4rem;
         padding: 0.3rem 0.6rem;
+    }
+
+    /* The header beside the stamp keeps at least its title's longest word,
+       so where that no longer fits beside the stamp the header is placed
+       below it instead of being squeezed under it [scope-98]. */
+    [data-theme='pastel'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
     }
 
     [data-theme='pastel'] .kp-card[data-kp-open][data-kp-label-open]::before {

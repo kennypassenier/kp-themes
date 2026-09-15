@@ -152,7 +152,7 @@ test.describe(
         });
 
         test(
-            'on every toast the ghost button’s rising bar reads at 7:1 or better on its own hover ground [feedback#toasts, scope-96]',
+            'on every toast every bar the ghost button draws, the rising bar and the two side bars, reads at 7:1 or better on its own hover ground [feedback#toasts, scope-96, scope-98]',
             { tag: '@component:feedback' },
             async ({ page }) => {
                 // Kenny, 2026-09-15, hc-bar "De drie knoppen, en Undo in de neutrale
@@ -161,6 +161,10 @@ test.describe(
                 // 1.26:1; the four toasts of meaning read 9.12:1 or better. Success and
                 // warning carry only a close button, so each gets a ghost action
                 // button of the package's own markup to be hovered like the others.
+                // hc-side-bars "Ook in de tekstkleur" [scope-98]: the side bars too.
+                // Before: the plain toast's Undo drew its inset side bars in
+                // rgb(255, 255, 255) on rgb(229, 229, 229), 1.26:1, while its rising
+                // bar was already black.
                 await open(page, '/catalogue/feedback.html', 'high-contrast');
                 const toasts = page.locator('#toasts .cat-stage .kp-toast');
                 expect(await toasts.count(), 'the plain toast and the four of meaning').toBe(5);
@@ -190,6 +194,11 @@ test.describe(
                                 content: bar.content,
                                 transform: bar.transform,
                                 barInk: w.kpRgba(bar.backgroundColor),
+                                // Each inset box-shadow is a side bar; its colour leads the computed value.
+                                sides: getComputedStyle(el)
+                                    .boxShadow.split(/,(?![^(]*\))/)
+                                    .filter((layer) => /inset/.test(layer))
+                                    .map((layer) => w.kpRgba((layer.match(/rgba?\([^)]*\)/) ?? ['transparent'])[0])),
                                 ground: w.kpGround(el),
                             };
                         });
@@ -200,11 +209,18 @@ test.describe(
                         faults.push(`${hover.toast} "${hover.label}": no bar`);
                         continue;
                     }
-                    const ratio = contrast(rgb(hover.barInk), rgb(hover.ground));
-                    if (ratio < 7)
-                        faults.push(
-                            `${hover.toast} "${hover.label}": the bar ${hover.barInk.map((/** @type {number} */ v) => Math.round(v * 255))} reads ${ratio.toFixed(2)}:1 on ${hover.ground.map((/** @type {number} */ v) => Math.round(v * 255))}`,
-                        );
+                    if (hover.sides.length !== 2) faults.push(`${hover.toast} "${hover.label}": ${hover.sides.length} side bars, not 2`);
+                    const drawn = [
+                        ['the rising bar', hover.barInk],
+                        ...hover.sides.map((/** @type {number[]} */ ink, /** @type {number} */ n) => [`side bar ${n + 1}`, ink]),
+                    ];
+                    for (const [name, ink] of drawn) {
+                        const ratio = contrast(rgb(ink), rgb(hover.ground));
+                        if (ratio < 7)
+                            faults.push(
+                                `${hover.toast} "${hover.label}": ${name} ${ink.map((/** @type {number} */ v) => Math.round(v * 255))} reads ${ratio.toFixed(2)}:1 on ${hover.ground.map((/** @type {number} */ v) => Math.round(v * 255))}`,
+                            );
+                    }
                 }
                 await page.mouse.move(0, 0);
                 expect(faults).toEqual([]);

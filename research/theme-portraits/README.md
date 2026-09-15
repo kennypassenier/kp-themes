@@ -39,8 +39,7 @@ the stylesheets' own `prefers-reduced-motion` guards, so what remains is what th
   flicker, decode and jitter, which neither theme allows. Marked open, with the held designs as proposals. The replays show it as it ships.
 - **No theme has an entrance or exit for a dialog, popover or toast.** Pastel's register declares a dialog transition with nothing to move
   from; the advice check counts it, which is the limit of reading selectors.
-- **A stamp needs a dossier.** In formal and pastel `.kp-card[data-kp-label]::before` is absolutely positioned, but only the emphasis card is
-  `position: relative`; a plain labelled card's stamp lands against whatever ancestor is positioned. The banners use no stamp for that reason.
+- **A stamp needed a dossier (fixed, scope-98).** The stamp was absolutely placed and only the emphasis card was positioned, so the pilot banners used none; it now floats at the top end of every labelled card.
 - **The anatomy documents drift from the registers.** Listed in the agent report; the registers and tokens were taken as the truth here.
 
 ## Recommendation

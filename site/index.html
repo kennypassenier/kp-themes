@@ -175,27 +175,28 @@
 (<code>hsl(40, 25%, 97%)</code> — never pure white, which reads as a screen rather
 than a page), near-black text with a blue cast, and a single navy that
 carries every interactive thing. Bronze is the second voice, used for
-emphasis rather than for actions, and gold is the signal — wet ink,
-never a control.</p>
+emphasis rather than for actions, and gold is the signal — wet ink, never
+a control.</p>
 <p>The reference is editorial print: a serious document that expects to be
-read at length. Fraunces on the headings is the whole typographic
-gesture — everything else is the system face. Formal is the theme that
-stays still while the others move: restraint is its expression, not an
-absence of one. It commits to a line once and does not glitch into it.</p>
+read at length. Fraunces on the headings is the whole typographic gesture;
+everything else is set in Instrument Sans. Formal is the theme that stays
+still while the others move: restraint is its expression, not an absence
+of one. It commits to a line once and does not glitch into it.</p>
 <ol>
 <li><strong>The ground is warm and off-white.</strong> Move it to pure white and the
 theme becomes <code>light</code>. That single value is the difference.</li>
 <li><strong>One colour acts.</strong> Navy is the only hue that means &quot;you can do
-something here&quot;. Bronze never becomes a button.</li>
-<li><strong>No ornament.</strong> No glow, no texture you can see, no rounded
-flourishes. The token radius (0.375rem) is the largest concession.</li>
-<li><strong>Contrast is generous, not maximal.</strong> Ink on paper measures 15.73:1,
+something here&quot;. Bronze and gold never become a button.</li>
+<li><strong>No ornament.</strong> No glow, no texture you can see, no flourish. Boxes
+take the token radius (0.375rem); the only rounder shapes are the ones
+that are round by nature — a status dot, a timeline marker, the chosen
+day, the switch's pill.</li>
+<li><strong>Contrast is generous, not maximal.</strong> Ink on paper measures 15.75:1,
 comfortably above the floor, because reading is the point.</li>
-<li><strong>Motion commits, it does not perform.</strong> Where round six gives the
-theme a reveal, the reveal is a single, whole-hearted change — a
-fade, a rise, a rule that draws once — never a glitch, a decipher or
-a loop. A demo that opens with noise would be the wrong demo for this
-theme.</li>
+<li><strong>Motion commits, it does not perform.</strong> Every reveal is a single,
+whole-hearted change — a fade, a rise, a rule that draws once — never a
+glitch, a decipher or a loop. A demo that opens with noise would be the
+wrong demo for this theme.</li>
 </ol>
                         </div>
                         <p class="kp-mt-md"><a href="https://kennypassenier.github.io/kp-themes/review/research/theme-portraits/formal.html">See the formal portrait: its colours in their roles, type, shape, motion and the recipe for a new component</a></p>
@@ -252,30 +253,43 @@ defined by its restraint, so additions cost more here than anywhere.</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>The ordinary dark theme, done properly. A deep slate ground with a blue
-cast (<code>hsl(226, 22%, 8%)</code> — not black), soft off-white text, and a
-luminous, unsaturated violet that lifts off the ground without glaring.
-The whole job of this theme is to be the one someone reads in for two
-hours.</p>
-<p>The one ornament is a starfield of 112 irregular, once-generated points —
-&quot;a starfield you cannot quite see&quot; resolved, on Kenny's second reading, to
-one you <strong>can</strong>: still faint at this theme's own scale, but no longer
-invisible, with ten of the brightest points carrying a soft JWST-style
-diffraction shimmer.</p>
+<p>A spectral instrument. A near-black ground with a faint grid ruled on it,
+near-white ink, and one mechanism the whole theme is about: an oxide film.
+Anodising does not add pigment; it grows a film whose thickness decides
+which wavelength survives, so the colour shifts with the angle you look
+from. Here that film is a conic gradient through the four chart colours —
+cyan, violet, magenta and lime — whose start angle turns with the pointer,
+and it runs along every edge that matters: a panel's border, a button's
+bottom edge, a field's underline, a heading's rule, the divider's centre
+line.</p>
+<p>Everything else is quiet so the film can be seen. The controls are machined
+parts: corners cut at forty-five degrees rather than rounded, brackets that
+close on a button's label under the pointer, a label that draws itself in a
+little. The headline arrives the way an instrument brings a line into
+register — each word split into two of the film's wavelengths, out of
+focus, the halves converging as the blur clears.</p>
 <ol>
-<li><strong>Not black, not white.</strong> The ground is 8% lightness and the text is
-93%, giving 14.85:1 rather than the 21:1 of pure black on pure white.
-That gap is deliberate: the extreme ratio causes halation around glyphs
-and pupil fatigue.</li>
-<li><strong>The violet is light, not saturated.</strong> <code>hsl(255, 85%, 74%)</code> works on a
-dark ground because it is bright; a dark saturated violet would vibrate
-against it.</li>
-<li><strong>A blue cast throughout.</strong> Ground, border and muted text all carry the
-same hue family. A neutral grey would read as cheap.</li>
-<li><strong>The starfield is static.</strong> No <code>@keyframes</code>, no opacity cycling,
-nothing that could ever oppose luminance — a still photograph, painted
-once, of 112 literal positions from a seeded PRNG run once at build
-time (seed 20260908; nothing here is randomised in the browser).</li>
+<li><strong>Near-black, near-white, and one film.</strong> The ground is
+<code>hsl(220, 16%, 5%)</code>, the ink <code>hsl(205, 20%, 94%)</code> (17.11:1), and the
+primary is near-white too (<code>hsl(200, 22%, 93%)</code>): an action is a light
+plate on the dark, not a hue. Colour lives in the oxide film and in
+meaning (status, danger), nowhere else.</li>
+<li><strong>The film follows the hand.</strong> <code>--kp-iris</code> is a
+<code>conic-gradient(from calc(var(--kp-px) * 1turn), …)</code> of <code>--chart-1</code> to
+<code>--chart-4</code>; the register sets <code>--kp-pointer: track</code>, and <code>js/effects.js</code>
+writes the pointer's position into <code>--kp-px</code> and <code>--kp-py</code>. The
+stylesheet declares both at 0.5, so the film is valid before anything
+moves, without the module, and under reduced motion, where the module
+does not track.</li>
+<li><strong>Cut, never rounded.</strong> The token radius is 0; controls (buttons,
+fields, badges) lose two opposite corners to a 0.55rem chamfer
+(<code>--fx-notch</code>), panels (cards, dialogs, alerts) to a 1rem one, both as
+a <code>clip-path</code> because the corner is a straight edge and a radius is an
+arc.</li>
+<li><strong>Motion is notation, not colour.</strong> A hover or a press changes the
+brackets, the label's scale and the film's edge; the ground of a button
+barely moves. What moves without being touched is only what a hand
+moves: the film's angle and a faint pool of light under the pointer.</li>
 </ol>
                         </div>
                     </article>
@@ -290,32 +304,28 @@ time (seed 20260908; nothing here is randomised in the browser).</li>
                             <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
                         </ul>
                         <div class="kp-prose">
-<p>Two grounds in one theme, and a palette of four:</p>
-<ol>
-<li><strong>Signal yellow as ground and primary.</strong> <code>hsl(56, 98%, 51%)</code>, the
-frame colour read off the reference. It is the hero's ground and the
-app's primary — the one colour that is both a surface and a signal.</li>
-<li><strong>A void with a violet cast</strong> for the app surface: <code>hsl(270, 9%, 4%)</code>,
-never pure black. Cards and popovers rise from it in two steps.</li>
-<li><strong>Blood red where something is wrong.</strong> <code>hsl(353, 84%, 58%)</code> for the
-destructive plate on the void; the deeper <code>hsl(353, 84%, 42%)</code> for the
-alert and the second ink on yellow, where it reads at 4.7.</li>
-<li><strong>Cyan for what must be read.</strong> Microlabels, form labels, hairlines:
-<code>hsl(184, 100%, 50%)</code> as the accent, never as a ground.</li>
-</ol>
-<p>Violet lives only inside a glitch slice (S40), and the register at C2
-paints it there; the token file carries it as a chart colour and nowhere
-else.</p>
+<p>Signal yellow on a void. Yellow is the one colour in the theme that is both
+a surface and a signal: it grounds the hero, the navbar and the band, and it
+is the primary action everywhere else. The app surface is a void with a
+violet cast, never pure black, with a warm smoke for its text rather than
+white. Blood red means something is wrong and nothing else; cyan labels
+what must be read and is never a ground.</p>
+<p>The interface talks like a machine — uppercase, spaced, prefixed — and moves
+like a signal being acquired: text deciphers out of noise, a slice burst
+fires once and settles. Violet is the theme's glitch colour: it is the second
+copy in the headline's slice burst, a chart colour, and the plates of two
+quiet job statuses (interview and withdrawn), and it is never an action or
+a ground.</p>
 <ul>
-<li>Yellow acts and grounds; red alarms; cyan labels. Swap any two and it
-is a different theme.</li>
+<li>Yellow acts and grounds; red alarms; cyan labels. Swap any two and it is
+a different theme.</li>
 <li>The app foreground is a warm smoke, not white. White text on the void
 reads as a terminal; smoke reads as print.</li>
-<li>The radius is 0. Every corner is either square or a notch (<code>--fx-notch</code>
-14px), and the notch is the register's, not the token file's.</li>
-<li>The register is decoration: the theme is complete with <code>themes.css</code>
-alone, and <code>check-hooks</code> holds that every hook has an answer here even
-when the register is off.</li>
+<li>The radius is 0. Every corner is either square or cut by a notch: the
+token file declares the notch (<code>--fx-notch</code>, 14px) and the register cuts
+every button with it, and smaller or larger cuts from it on other parts.</li>
+<li>The register is decoration that reads tokens: it names no colour of its
+own, so every colour it paints is one <code>themes.css</code> already carries.</li>
 </ul>
                         </div>
                         <p class="kp-mt-md"><a href="https://kennypassenier.github.io/kp-themes/review/research/theme-portraits/cyberpunk.html">See the cyberpunk portrait: its colours in their roles, type, shape, motion and the recipe for a new component</a></p>
@@ -374,34 +384,33 @@ when the register is off.</li>
                         </ul>
                         <div class="kp-prose">
 <p>Risograph printing. A lavender-milk ground, plum ink, and the slight
-misregistration of a second pass that never quite lines up — not as a
-flaw dressed up as a feature, but as the theme's actual mechanism: a
-duplicate layer that springs from a wide mis-registration into its
-2px rest position once, on load. Soft without being weak: the ink
-colours are properly saturated, it is the <em>ground</em> that is pale.</p>
-<p>The largest corner radius of any theme carries through here as a full
-rounded outer clip on the hero, and a torn-tab zig-zag divider answers
-S46's razor-tear brief in the theme's own material: paper, not metal.</p>
+misregistration of a second pass that never quite lines up — not as a flaw
+dressed up as a feature, but as the theme's actual mechanism: a duplicate
+layer that springs from a wide misregistration into its 2px rest position
+once, on load. Soft without being weak: the ink colours are properly
+saturated, it is the <em>ground</em> that is pale.</p>
+<p>Everything is round and behaves like a sticker: a control sits on the page
+with a hard, flat shadow beside it, lifts a little and askew under the
+pointer, and is pressed completely flat. The seams between sections are
+pearls on a thread (scope-93) — Kenny found the torn tab this theme was
+lifted with too sharp for a theme this fluffy and round.</p>
 <ol>
 <li><strong>The ground is tinted, not white.</strong> A lavender so pale it reads as
-white until you put white next to it.</li>
-<li><strong>Plum, rose and mint</strong>, plus sky, sand and violet as the same
-base/soft system — every one of them the theme's own existing
-semantic token pair (background/foreground), shown together on the
-concept page's spec sheet as a kit, not invented for the demo.</li>
+white until you put white next to it — and the cards are that white.</li>
+<li><strong>Plum acts; mint and violet are fills.</strong> The two drums of the print
+fill in behind marked words and never become an action.</li>
 <li><strong>The overprint.</strong> The headline carries a duplicate layer in a second
-ink, held at its measured 2px offset. It is the theme's signature and
-its main accessibility risk (see &quot;may not do&quot; below); the demo adds
-one arrival on top of the always-static signature, never instead of
-it.</li>
-<li><strong>Soft geometry.</strong> Large radii everywhere, and now a full rounded
-clip on the hero and the dossier. Sharpening them makes it another
-light theme.</li>
+ink, held at its 2px offset. It is the theme's signature and its main
+accessibility risk (see &quot;may not do&quot; below); the reveal adds one arrival
+on top of the always-static signature, never instead of it.</li>
+<li><strong>Soft geometry.</strong> The largest token radius in the package (1rem), which
+the register pushes further on cards and panels, and a hero whose bottom
+corners round off. Sharpening them makes it another light theme.</li>
 <li><strong>The springy overshoot.</strong> The theme's own <code>--fx-ease</code> (an overshoot
 cubic-bezier, tuned down from Aardvark Book Club's reference for a
-gentler kit) drives the headline's spring-in, the mark fills, the
-rule draw and every hover/press transform. Nothing else in the
-package eases this way.</li>
+gentler kit) drives the headline's spring-in, the mark fills, the rule
+draw and every lift and press. Nothing else in the package eases this
+way.</li>
 </ol>
                         </div>
                         <p class="kp-mt-md"><a href="https://kennypassenier.github.io/kp-themes/review/research/theme-portraits/pastel.html">See the pastel portrait: its colours in their roles, type, shape, motion and the recipe for a new component</a></p>

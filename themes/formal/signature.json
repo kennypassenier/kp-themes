@@ -554,7 +554,7 @@
         }
     ],
     "banner": {
-        "description": "A banner that asks for attention, from existing parts only: a card on the page with a masthead line, a Fraunces title, the warning alert whose word 'Warning:' carries the meaning, the navy button with its gold impression beside a ghost button, and the docket cut under it. No stamp: on a card without a dossier reveal the stamp has nothing to anchor to (see the README).",
+        "description": "A banner that asks for attention, from existing parts only: a card on the page with a masthead line, a Fraunces title, the warning alert whose word 'Warning:' carries the meaning, the navy button with its gold impression beside a ghost button, and the docket cut under it.",
         "markup": "<section class=\"kp-section kp-stack\" data-kp-surface=\"app\"><div class=\"kp-card\" data-slot=\"card\"><div class=\"kp-card__header\"><p class=\"microlabel\">Notice · pump 2</p><h3 class=\"kp-card__title\">Coolant pressure below the floor</h3></div><div class=\"kp-card__body kp-stack\"><div class=\"kp-alert kp-alert--warning\" role=\"status\" data-kp-semantic><span class=\"kp-alert__icon\" aria-hidden=\"true\">!</span><span class=\"kp-alert__body\"><span class=\"kp-alert__label\">Warning: </span>Pressure fell at 03:12; the pump runs on the reserve loop.</span></div><div class=\"kp-row\"><button type=\"button\" class=\"kp-button kp-button--primary kp-button--mirror\">Acknowledge</button><button type=\"button\" class=\"kp-button kp-button--ghost\">Show the readings</button></div></div></div></section><div data-kp-divider></div>"
     }
 }

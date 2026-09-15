@@ -1112,10 +1112,14 @@
         color: var(--destructive-foreground);
     }
 
+    /* In the bar's ink, so a ghost on a toast draws its side bars in the
+       toast's ink as its rising bar already did (Kenny, 2026-09-15,
+       hc-side-bars "Ook in de tekstkleur" [scope-98]). Off a toast the ink is
+       --background, the white these bars always were. */
     [data-theme='high-contrast'] .kp-button--ghost:hover:not(:disabled):not(:active) {
         box-shadow:
-            inset 0.35rem 0 0 var(--background),
-            inset -0.35rem 0 0 var(--background);
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
     }
 
     /* Cancel's inset bars on the filled two, in their own ink [scope-93]. */

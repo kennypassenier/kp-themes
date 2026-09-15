@@ -393,12 +393,21 @@
     /* The stamp: a rotated brick-bordered badge, static — the demo's own
        "Draft — not for release" never changes text on reveal, so the
        package's data-kp-label-open swap is a no-op here by design (the
-       copy entry repeats the same word). */
+       copy entry repeats the same word).
+       It floats at the card's top end rather than being placed absolutely
+       (Kenny, 2026-09-15, stamp-cards "Op elke kaart met een label"
+       [scope-98]): an absolute stamp only landed on a card that was
+       positioned, the dossier, and lay over a long title on a narrow one.
+       A float lives in the card's own flow on every labelled card, and the
+       header beside it is a flex container, which never overlaps a float:
+       it narrows beside the stamp, or drops below it when the title's
+       longest word no longer fits. The margins hold the -3deg rotation's
+       corners clear of the title. */
     [data-theme='formal'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
-        position: absolute;
-        inset-block-start: 0.8rem;
-        inset-inline-end: 1.1rem;
+        float: inline-end;
+        margin-block: 0.15rem 0.4rem;
+        margin-inline: 0.6rem 0.1rem;
         display: inline-block;
         font-family: var(--theme-font-display);
         font-variation-settings: 'opsz' 40;
@@ -411,6 +420,13 @@
         border-radius: 3px;
         padding: 0.2rem 0.55rem;
         rotate: -3deg;
+    }
+
+    /* The header beside the stamp keeps at least its title's longest word,
+       so where that no longer fits beside the stamp the header is placed
+       below it instead of being squeezed under it [scope-98]. */
+    [data-theme='formal'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
     }
 
     [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] {
