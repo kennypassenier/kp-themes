@@ -3644,3 +3644,39 @@ their first differing property and return as a correction of their own.
 
 **9 · When we review the measure.** After two reviews without a zoom
 difference.
+
+## fix-35 · A form offered three of a demo's shapes and a scope wider than the note (2026-09-15)
+
+**1 · What went wrong.** In the light-theme review form, divider-shape offered
+scallop, cloud and wave while `research/dividers/README.md` names scallop,
+wave, cloud, pearls and soft rule plus zigzag and none; Kenny wanted pearls
+and asked whether answers were missing. laurels-direction's consequence lines
+said "for every theme" while his note concerned shade-light only; an agent
+first built the wreaths for 22 themes.
+
+**2 · Which gate let it through.** None: `form-lint.py` counts pronouns,
+examples and old IDs, not whether options follow their source or a scope
+follows the note.
+
+**3 · Where the same fault sits.** Searched with `grep -l "demo.html" r8-*.html`
+in the session scratchpad: six forms; in the two most recent (after scope-89
+and the light-theme review) each demo item's pills were laid beside its
+README: only divider-shape and laurels-direction were wrong; the three older
+forms were not re-checked.
+
+**4 · How we prevent recurrence.** An item resting on a demo names every option
+the demo offers as a pill, or says why one is left out; a consequence line
+states as its scope the theme of Kenny's note unless he wrote otherwise.
+
+**5 · What the remedy costs.** Longer items for demos with many options.
+
+**6 · Who enforces it.** Discipline, not code: Claude lays each demo item's
+README beside its pills before linting.
+
+**7 · How we measure it works, and when.** At the next form with a demo item.
+
+**8 · If the measurement fails.** `form-lint.py` gets a check that compares a
+demo item's pills with the README it links.
+
+**9 · When we review the measure.** After three forms with demo items and no
+fault.

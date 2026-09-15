@@ -1612,3 +1612,22 @@ and rejecting the application shell: "blauw moet uit navbar". retro-scrollbars
 "Tooltips zonder scrollbalk". cta-plates "Gelijktrekken": forest, solstice,
 shade-dark, lapis and nostromo get room around a drawn call-to-action plate.
 step-timing "Akkoord".
+
+**scope-94 · The dark-theme review and scope-93's follow-ups answered.**
+Kenny, 2026-09-15, the form after `scope-93` (commit `895fafbb`). form-scope
+"Klopt": `fix-35`. hash-recipe "Berekende stijl houden, met de zoom": the
+block hash stays hash version 2 over computed style, read at the verdict's
+recorded ratio. unmatched-110, his own answer: "ik wil gewoon die 110 oordelen
+niet meer opnieuw hoeven te maken, ze zijn goedgekeurd" — the 110 verdicts
+that match no ratio keep their verdict and are re-anchored to a reading at rest
+of the commit they were given at, so they do not return unless the block
+changed since. alarm-levels "Overal vol drama": `kp-alarm` is built with the
+full drama in all 22 themes, each in its own colours and faces. alarm-auto
+"Blokkerend, zoals de demo". press-looks "Nog niet gekeken": the dark and
+titanium presses wait for his catalogue review. redaction-costs "Aanvaarden, en
+pastel's vervaging terug": pastel's redaction fade returns through a
+registered custom property. light-breadcrumb "Ook weg". synthwave-reach
+"Alleen Try again": the dark frame is narrowed to the failed data table's
+retry button. laurels-badges "Met pictogram en Available on": the catalogue's
+platform badges carry a glyph and an "Available on" line. step-timing
+"Akkoord".
