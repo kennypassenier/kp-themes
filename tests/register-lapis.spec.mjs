@@ -195,3 +195,130 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// The measured faults of scope-100 (Kenny, 2026-09-16, register-faults): the
+// dossier's seal without JavaScript, the buttons' transitions, the disabled
+// button answering the pointer. The stamp is held in
+// tests/stamp-cards.spec.mjs. Each was made to fail first [KT3], 2026-09-16,
+// firefox, on c9f58c08's register; the reading before sits above each test.
+
+/** The WCAG contrast of an element's text against the ground painted under it. */
+const textContrast = (/** @type {import('@playwright/test').Locator} */ locator) =>
+    locator.evaluate((el) => {
+        /** @param {string} c */
+        const rgba = (c) => {
+            const m = c.match(/[\d.]+/g) ?? ['0', '0', '0', '0'];
+            return { r: +m[0], g: +m[1], b: +m[2], a: m[3] === undefined ? 1 : +m[3] };
+        };
+        /** @param {{r:number,g:number,b:number,a:number}} top @param {{r:number,g:number,b:number,a:number}} under */
+        const over = (top, under) => ({
+            r: top.r * top.a + under.r * (1 - top.a),
+            g: top.g * top.a + under.g * (1 - top.a),
+            b: top.b * top.a + under.b * (1 - top.a),
+            a: 1,
+        });
+        // The ground: every background colour from the root down to the element, composited.
+        const chain = [];
+        for (let n = /** @type {Element | null} */ (el); n; n = n.parentElement) chain.unshift(rgba(getComputedStyle(n).backgroundColor));
+        let ground = { r: 255, g: 255, b: 255, a: 1 };
+        for (const layer of chain) ground = over(layer, ground);
+        const ink = over(rgba(getComputedStyle(el).color), ground);
+        /** @param {{r:number,g:number,b:number}} c */
+        const lum = (c) =>
+            [c.r, c.g, c.b]
+                .map((v) => v / 255)
+                .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+                .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const [hi, lo] = [lum(ink), lum(ground)].sort((a, b) => b - a);
+        return (hi + 0.05) / (lo + 0.05);
+    });
+
+test.describe('the lapis register, measured faults [scope-100]', { tag: ['@theme:lapis', '@component:page-effects', '@component:button'] }, () => {
+    test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+
+        // Before: every dossier mark 1.00:1, its ink transparent on the void plate.
+        test('the dossier’s sealed phrases read at rest [scope-100]', async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto('/examples/concept-lapis.html');
+            expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('lapis');
+            expect(await page.evaluate(() => document.documentElement.hasAttribute('data-kp-effects')), 'no script ran').toBe(false);
+            const marks = page.locator('.kp-card[data-kp-reveal="emphasis"] mark');
+            const count = await marks.count();
+            expect(count).toBeGreaterThan(0);
+            for (let i = 0; i < count; i++) {
+                expect(await textContrast(marks.nth(i)), `dossier mark ${i}`).toBeGreaterThanOrEqual(4.5);
+            }
+        });
+    });
+
+    // Before: no value between rest and hover — the plate changed in one frame.
+    test('a button’s plate eases into its hover, as the package’s transition does [scope-100]', async ({ page }) => {
+        await open(page, '/examples/concept-lapis.html');
+        const button = page.locator('button.kp-button--primary[type="submit"]').first();
+        await button.scrollIntoViewIfNeeded();
+        await page.mouse.move(2, 2);
+        await settled(page);
+        await page.waitForTimeout(500);
+        const box = /** @type {{x:number,y:number,width:number,height:number}} */ (await button.boundingBox());
+        await button.evaluate((el) => {
+            const w = /** @type {any} */ (window);
+            w.kpSamples = [];
+            const rest = getComputedStyle(el).backgroundColor;
+            const start = performance.now();
+            const tick = () => {
+                const t = performance.now() - start;
+                w.kpSamples.push({ t, bg: getComputedStyle(el).backgroundColor, rest });
+                if (t < 1200) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        });
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await expect.poll(() => page.evaluate(() => /** @type {any} */ (window).kpSamples.at(-1).t)).toBeGreaterThanOrEqual(1200);
+        const samples = /** @type {{t:number,bg:string,rest:string}[]} */ (await page.evaluate(() => /** @type {any} */ (window).kpSamples));
+        const rest = samples[0].rest;
+        const end = samples.at(-1)?.bg;
+        expect(end, 'the hover changes the plate').not.toBe(rest);
+        const first = samples.find((s) => s.bg !== rest);
+        const between = new Set(samples.filter((s) => first && s.t <= first.t + 200 && s.bg !== rest && s.bg !== end).map((s) => s.bg));
+        expect(between.size, `values between ${rest} and ${end} within 200ms`).toBeGreaterThanOrEqual(3);
+    });
+
+    // Before: the plain disabled button's ink 242,233,212 → 213,165,42 on hover.
+    test('a disabled button does not answer the pointer [scope-100]', async ({ page }) => {
+        await open(page, '/examples/concept-lapis.html');
+        await page.evaluate(() => {
+            const holder = document.createElement('div');
+            holder.setAttribute('data-probe-disabled', '');
+            holder.style.cssText = 'display:flex;gap:2rem;padding:3rem;';
+            holder.innerHTML = ['', ' kp-button--primary', ' kp-button--ghost', ' kp-button--destructive', ' kp-button--mirror']
+                .map(
+                    (m) =>
+                        `<button type="button" class="kp-button${m}" disabled><span class="kp-button__edge" aria-hidden="true"></span><span class="kp-button__label">Filed</span></button>`,
+                )
+                .join('');
+            document.querySelector('[data-kp-surface="app"]')?.prepend(holder);
+        });
+        const buttons = page.locator('[data-probe-disabled] .kp-button');
+        const read = (/** @type {import('@playwright/test').Locator} */ b) =>
+            b.evaluate((el) => {
+                const props = ['color', 'background-color', 'border-top-color', 'box-shadow', 'translate'];
+                /** @param {Element} e @param {string} [p] */
+                const of = (e, p) => props.map((n) => getComputedStyle(e, p).getPropertyValue(n)).join('|');
+                return [of(el), of(el, '::before'), of(el, '::after'), ...[...el.children].map((k) => of(k))].join(' / ');
+            });
+        const count = await buttons.count();
+        for (let i = 0; i < count; i++) {
+            const b = buttons.nth(i);
+            await b.scrollIntoViewIfNeeded();
+            await page.mouse.move(2, 2);
+            await page.waitForTimeout(600);
+            const rest = await read(b);
+            const box = /** @type {{x:number,y:number,width:number,height:number}} */ (await b.boundingBox());
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            expect(await b.evaluate((el) => el.matches(':hover')), 'the pointer is on it').toBe(true);
+            await page.waitForTimeout(600);
+            expect(await read(b), `disabled button ${i} on hover`).toBe(rest);
+        }
+    });
+});

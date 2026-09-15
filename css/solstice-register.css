@@ -161,15 +161,6 @@
         letter-spacing: -0.04em;
     }
 
-    /* The emphasised word inside the headline, small-caps rather than a
-       second colour on the overlay's own band (anatomy: amber leads). */
-    [data-theme='solstice'] [data-kp-surface='hero'] h1 em {
-        font-style: normal;
-        font-variant: all-small-caps;
-        letter-spacing: -0.03em;
-        color: var(--primary);
-    }
-
     /* ── Nav: chrome, no bevel — a warm strip over the app ─────────────── */
 
     [data-theme='solstice'] .kp-nav-wrap {
@@ -299,14 +290,11 @@
     /* The demo's answer to "mirror" [S49, A7]: a thin calibration-bar
        highlight riding the top and bottom inset edges, echoing the
        headline's fg/ink pair — this theme carries no gradients
-       (anatomy.md), so this is a highlight, not a flip. */
+       (anatomy.md), so this is a highlight, not a flip. One rule for every
+       mirror button: a second, identical rule for the primary mirror was
+       merged into it [scope-100], since nothing in this layer gives the
+       primary button a box-shadow of its own to beat. */
     [data-theme='solstice'] .kp-button--mirror {
-        box-shadow:
-            inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
-            inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
-    }
-
-    [data-theme='solstice'] .kp-button--primary.kp-button--mirror {
         box-shadow:
             inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
             inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
@@ -806,6 +794,14 @@
             transform: rotate(180deg);
             max-width: none;
         }
+
+        /* The note's containing block is its own hero (Kenny, 2026-09-16,
+           register-faults [scope-100]): nothing positioned the hero, so
+           outside the catalogue's stage the note was placed against the
+           page — at y=24 while its hero stood thousands of pixels lower. */
+        [data-theme='solstice'] [data-kp-surface='hero']:has(> .kp-side-note) {
+            position: relative;
+        }
     }
 
     /* Laurels: a bold lead-in and a rust hairline either side, the way a
@@ -844,7 +840,10 @@
         font-weight: 700;
     }
 
-    /* The platforms line: a rust tick before every name. */
+    /* The platforms line: the names in the full ink and a heavier weight
+       over the line's muted ink, spaced by the package's own gap — no tick
+       or mark before a name [scope-100: this comment used to promise a
+       rust tick the rules never drew]. */
     [data-theme='solstice'] .kp-platforms {
         font-weight: 500;
         color: var(--muted-foreground);

@@ -862,8 +862,10 @@ Sans&quot; at build, because its OFL carries a Reserved Font Name clause
 not keep the original name.</li>
 <li><strong>The shadow is one token, three depths.</strong> <code>--kp-shadow-1/2/3</code> in
 <code>css/shade-light-register.css</code> are all <code>hsl(from var(--foreground) h s l / a)</code>
-at increasing blur and decreasing alpha — never a colour of the
-register's own, and never applied to a flat surface.</li>
+at increasing blur and increasing alpha (0.1, 0.3, 0.35) — never a
+colour of the register's own, and never applied to a flat surface.
+Only the second and third are carried by a surface (below);
+<code>--kp-shadow-1</code> is declared and nothing in the package uses it.</li>
 </ol>
                         </div>
                     </article>

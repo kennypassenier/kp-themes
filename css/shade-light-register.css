@@ -514,8 +514,8 @@
        finished state without the module, and a redaction a reader could
        never lift without JS working is a worse failure than showing the
        line plainly. Armed (module attached, not yet opened): covered.
-       Opened: uncovered again, through the same clip-path the demo uses,
-       staggered 90ms per line — the mechanism the demo's own DI5 entry
+       Opened: uncovered again, the plate narrowing by its background-size
+       where the demo transitions a clip-path, staggered 90ms per line — the mechanism the demo's own DI5 entry
        names "kp-redact-clear". The plate is the phrase's own background,
        cloned onto every line the phrase takes, so a phrase that wraps is
        covered line by line [fix-33, scope-93]; a plate on an absolutely
@@ -1312,6 +1312,13 @@
     [data-theme='shade-light'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+    }
+
+    /* The secondary button's press (Kenny, 2026-09-16, register-faults
+       [scope-100]): its hover above, in this layer, outranked the package's
+       `.kp-button:active`, so hover and press were one colour. */
+    [data-theme='shade-light'] .kp-button--secondary:active:not(:disabled) {
+        background: var(--secondary-active);
     }
 
     [data-theme='shade-light'] .kp-button--destructive:active:not(:disabled) {

@@ -375,9 +375,30 @@
         [data-theme='lapis'] .kp-palette__input {
             transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
         }
+
+        /* The button keeps the package's own transitions beside the ruling
+           (Kenny, 2026-09-16, register-faults [scope-100]): the list above
+           replaced them, so the plate's colour, its border and the lift
+           landed in one frame. Restated from css/components.css, with the
+           box-shadow the ruling eases in. */
+        [data-theme='lapis'] .kp-button {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 150ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
     }
 
-    [data-theme='lapis'] .kp-button:hover,
+    /* A disabled button does not answer the pointer (Kenny, 2026-09-16,
+       register-faults [scope-100]): before, its ink and its ruling turned
+       gold under the cursor. Every button hover below is guarded. The two
+       that draw the ruling (this one and the mirror's) guard inside
+       :where(), which adds no specificity, so the keyboard ring's
+       box-shadow rules still win over them as before; the variants' hovers
+       paint no box-shadow and guard with a plain :not(:disabled), which
+       keeps them level with the pressed rules at the end of this file. */
+    [data-theme='lapis'] .kp-button:hover:where(:not(:disabled)),
     [data-theme='lapis'] .kp-field__input:focus,
     [data-theme='lapis'] .kp-datatable__search:focus,
     [data-theme='lapis'] .kp-combobox__input:focus,
@@ -408,7 +429,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='lapis'] .kp-button:hover {
+    [data-theme='lapis'] .kp-button:hover:where(:not(:disabled)) {
         color: var(--primary);
     }
 
@@ -424,7 +445,7 @@
         box-shadow: var(--kp-lapis-rule), var(--kp-lapis-gloss);
     }
 
-    [data-theme='lapis'] .kp-button--mirror:hover {
+    [data-theme='lapis'] .kp-button--mirror:hover:where(:not(:disabled)) {
         box-shadow: var(--kp-lapis-rule-closed), var(--kp-lapis-gloss);
     }
 
@@ -441,7 +462,7 @@
         border-color: var(--primary);
     }
 
-    [data-theme='lapis'] .kp-button--primary:hover,
+    [data-theme='lapis'] .kp-button--primary:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--primary:focus-visible {
         background: var(--foreground);
         color: var(--background);
@@ -454,7 +475,7 @@
         color: var(--destructive);
     }
 
-    [data-theme='lapis'] .kp-button--destructive:hover,
+    [data-theme='lapis'] .kp-button--destructive:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--destructive:focus-visible {
         background: var(--destructive);
         color: var(--destructive-foreground);
@@ -465,7 +486,7 @@
         background: transparent;
     }
 
-    [data-theme='lapis'] .kp-button--ghost:hover,
+    [data-theme='lapis'] .kp-button--ghost:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--ghost:focus-visible {
         border-color: var(--border);
         color: var(--primary);
@@ -552,12 +573,21 @@
 
     /* The stamp: a vermilion plate — the boundary DI1 asks for stays
        intact, and vermilion is never used as text (anatomy.md's own rule),
-       only as this filled chip. */
+       only as this filled chip.
+       It floats at the card's top end, as formal's and pastel's do
+       (Kenny, 2026-09-16, register-faults [scope-100]; scope-98): placed
+       absolutely it only landed on the dossier, the one positioned card,
+       and on any other labelled card it anchored to the page. A float
+       lives in the card's own flow; the header beside it is a flex
+       container, which narrows beside the float or drops below it. The
+       margins hold the -8deg rotation's corners inside the card, so the
+       plate no longer hangs over the card's edge. */
     [data-theme='lapis'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
-        position: absolute;
-        inset-block-start: 0.9rem;
-        inset-inline-end: -0.5rem;
+        float: inline-end;
+        margin-block: 0.9rem;
+        margin-inline: 0.6rem 0.9rem;
+        display: inline-block;
         transform: rotate(-8deg);
         background: var(--accent);
         color: var(--accent-foreground);
@@ -571,6 +601,12 @@
         box-shadow: 0 3px 8px hsl(from var(--sidebar-background) h s l / 0.45);
     }
 
+    /* The header beside the stamp keeps its title's longest word, and
+       drops below the stamp where that no longer fits [scope-98]. */
+    [data-theme='lapis'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
+    }
+
     [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -578,8 +614,13 @@
     /* The seal lifts [§(1)/(5)]: a solid void plate covers the redacted
        phrase; the trigger clears each plate on a stagger, once, never
        autoplaying — the same double-stroke-adjacent idea as the ring
-       frame, a plate rather than a fade. */
-    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
+       frame, a plate rather than a fade.
+       The seal is laid only where the script runs (Kenny, 2026-09-16,
+       register-faults [scope-100]): without it nothing ever clears the
+       plate, and the phrases read 1:1 — ink transparent on the void. So
+       without JavaScript the dossier's marks stand at rest, like every
+       other reveal of this register. */
+    [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
         background: var(--sidebar-background);
         color: transparent;
         padding: 0 0.25em;
@@ -587,7 +628,7 @@
         border-bottom: 0;
     }
 
-    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+    [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
         background: transparent;
         color: inherit;
     }
@@ -1006,8 +1047,10 @@
     /* Every animation and transition of this register lives here, inside
        the no-preference guard, so a reader who asked for reduced motion
        never receives one: the rest states above are what they get. The
-       durations are literal because check-motion.mjs computes DI5's rate
-       from them; the matching --kp-* knobs are what js/effects.js reads. */
+       durations are the --kp-* knobs at the top of this file, which
+       js/effects.js reads too; check-motion.mjs cannot read a var()
+       duration and rates such an animation at the worst case, and DI5's
+       report takes each keyframe's row from TIMINGS in js/effects.js. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='lapis'] [data-kp-reveal='headline'].is-gilding {
             animation: kp-burnish var(--kp-burnish) var(--fx-ease) 1 both;
@@ -1027,7 +1070,7 @@
             transition-delay: var(--kp-inscribe-lead);
         }
 
-        [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
+        [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
                 background var(--kp-seal) var(--fx-ease),
                 color var(--kp-seal) var(--fx-ease);

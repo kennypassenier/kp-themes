@@ -197,3 +197,43 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// A measured fault of scope-100 (Kenny, 2026-09-16, register-faults). Made to
+// fail first [KT3], 2026-09-16, firefox, on c9f58c08's register: hover and
+// press both rgb(240, 235, 219), the register's hover beating the package's
+// pressed state.
+test.describe('the shade-light register, measured faults [scope-100]', { tag: ['@theme:shade-light', '@component:button'] }, () => {
+    test('a secondary button shows its press: --secondary-active, not the hover [scope-100]', async ({ page }) => {
+        await open(page, '/examples/concept-shade-light.html');
+        await page.evaluate(() => {
+            const holder = document.createElement('div');
+            holder.setAttribute('data-probe-secondary', '');
+            holder.style.cssText = 'padding:3rem;';
+            holder.innerHTML =
+                '<button type="button" class="kp-button kp-button--secondary"><span class="kp-button__label">Keep the draft</span></button>';
+            document.querySelector('[data-kp-surface="app"]')?.prepend(holder);
+        });
+        const button = page.locator('[data-probe-secondary] .kp-button');
+        await button.scrollIntoViewIfNeeded();
+        const box = /** @type {{x:number,y:number,width:number,height:number}} */ (await button.boundingBox());
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.waitForTimeout(600);
+        const hover = await button.evaluate((el) => getComputedStyle(el).backgroundColor);
+        const pressed = await page.evaluate(() => {
+            const s = document.createElement('span');
+            s.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-active').trim();
+            document.body.append(s);
+            const v = getComputedStyle(s).backgroundColor;
+            s.remove();
+            return v;
+        });
+        await page.mouse.down();
+        try {
+            expect(await button.evaluate((el) => el.matches(':active')), 'the button is pressed').toBe(true);
+            await style(button, 'background-color', 'the press paints --secondary-active').toBe(pressed);
+            expect(pressed, 'the press differs from the hover').not.toBe(hover);
+        } finally {
+            await page.mouse.up();
+        }
+    });
+});

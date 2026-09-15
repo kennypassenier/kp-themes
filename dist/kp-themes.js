@@ -665,7 +665,13 @@ var TIMINGS = Object.freeze({
   "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
   "kp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-slide-in": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-rule-in": { durationMs: 420, cycles: 1, property: "transform", luminanceSteps: [] },
+  // The base layer's shared rule draw. One keyframe, nine registers, each
+  // with its own duration: nostromo 280ms, blueprint 420ms, lapis 480ms
+  // (its --kp-rule knob, which is what runs), light and retro 480ms, deco
+  // 600ms, brutalism 620ms, terminal 900ms, shade-light its --fx-duration.
+  // The row carries the shortest, the worst case a rate is read at; it
+  // used to say 420ms, blueprint's alone [scope-100].
+  "kp-rule-in": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-settle": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
   "kp-blink": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
   "kp-drift": { durationMs: 4e4, cycles: Infinity, property: "background-position", luminanceSteps: [] },

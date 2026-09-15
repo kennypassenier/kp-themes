@@ -19,12 +19,18 @@
 // the fixture's stamp painted outside the card in both themes at every width
 // (formal and pastel alike, the plate against the stage, not the card), and
 // pastel's portrait dossiers at 1280px had the plate over the title.
+//
+// Lapis joined at scope-100 (Kenny, 2026-09-16, register-faults), made to fail
+// first the same day, firefox, on c9f58c08's register: its absolutely placed
+// stamp anchored to the page on a plain labelled card.
 
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
-const THEMES = ['formal', 'pastel'];
+const THEMES = ['formal', 'pastel', 'lapis'];
+/** The themes with a portrait under research/theme-portraits/; lapis has none. */
+const PORTRAITS = new Set(['formal', 'pastel']);
 const WIDTHS = [220, 360, 640];
 /** How far around the card the screenshot reaches, so a stamp placed off the card is still seen. */
 const MARGIN = 160;
@@ -145,7 +151,8 @@ for (const theme of THEMES) {
                 await quiet(page);
                 const faults = [];
                 let seen = 0;
-                for (const url of ['/catalogue/page-effects.html', `/research/theme-portraits/${theme}.html`]) {
+                const urls = ['/catalogue/page-effects.html', ...(PORTRAITS.has(theme) ? [`/research/theme-portraits/${theme}.html`] : [])];
+                for (const url of urls) {
                     await page.goto(url);
                     await waitForJudging(page);
                     await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
@@ -160,7 +167,7 @@ for (const theme of THEMES) {
                     }
                 }
                 // Three dossiers on the catalogue page, at least three on the portrait.
-                expect(seen, 'labelled cards measured').toBeGreaterThanOrEqual(6);
+                expect(seen, 'labelled cards measured').toBeGreaterThanOrEqual(PORTRAITS.has(theme) ? 6 : 3);
                 expect(faults).toEqual([]);
             });
 

@@ -245,3 +245,49 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// A measured fault of scope-100 (Kenny, 2026-09-16, register-faults). Made to
+// fail first [KT3], 2026-09-16, firefox, on c9f58c08's register: from 960px
+// the side note is absolute and nothing positioned the hero, so outside the
+// catalogue's stage the note was placed against the page, not its hero.
+test.describe(
+    'the solstice register, measured faults [scope-100]',
+    { tag: ['@theme:solstice', '@component:page-effects', '@component:examples'] },
+    () => {
+        test('from 960px the side note sits in its own hero, outside the catalogue too [scope-100]', async ({ page }) => {
+            await open(page, '/examples/concept-solstice.html', { reduced: true });
+            await page.evaluate(() => {
+                const hero = document.createElement('section');
+                hero.className = 'kp-section kp-stack';
+                hero.dataset.kpSurface = 'hero';
+                hero.setAttribute('data-probe-hero', '');
+                hero.innerHTML =
+                    '<p class="kp-side-note" aria-hidden="true">VOL. III · LOW SUN · 28°</p><h1>A second hero, further down</h1><p>One paragraph of running text beside the note.</p>';
+                document.querySelector('main')?.append(hero);
+            });
+            const faults = [];
+            const heroes = page.locator('[data-kp-surface="hero"]:has(> .kp-side-note)');
+            const count = await heroes.count();
+            expect(count, 'the concept hero and the probe').toBeGreaterThanOrEqual(2);
+            for (let i = 0; i < count; i++) {
+                const hero = heroes.nth(i);
+                await hero.scrollIntoViewIfNeeded();
+                const m = await hero.evaluate((el) => {
+                    const note = /** @type {Element} */ (el.querySelector(':scope > .kp-side-note'));
+                    const n = note.getBoundingClientRect();
+                    const h = el.getBoundingClientRect();
+                    return {
+                        position: getComputedStyle(note).position,
+                        note: [n.top + scrollY, n.bottom + scrollY],
+                        hero: [h.top + scrollY, h.bottom + scrollY],
+                    };
+                });
+                expect(m.position, 'the note is in the margin at 1280px').toBe('absolute');
+                if (m.note[0] < m.hero[0] - 0.5 || m.note[1] > m.hero[1] + 0.5) {
+                    faults.push(`hero ${i}: note ${m.note.map(Math.round).join('→')} outside hero ${m.hero.map(Math.round).join('→')}`);
+                }
+            }
+            expect(faults).toEqual([]);
+        });
+    },
+);

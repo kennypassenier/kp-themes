@@ -60,8 +60,10 @@ already carried to the whole desktop.
    not keep the original name.
 5. **The shadow is one token, three depths.** `--kp-shadow-1/2/3` in
    `css/shade-light-register.css` are all `hsl(from var(--foreground) h s l / a)`
-   at increasing blur and decreasing alpha — never a colour of the
-   register's own, and never applied to a flat surface.
+   at increasing blur and increasing alpha (0.1, 0.3, 0.35) — never a
+   colour of the register's own, and never applied to a flat surface.
+   Only the second and third are carried by a surface (below);
+   `--kp-shadow-1` is declared and nothing in the package uses it.
 
 ## The register (5.0.0)
 
@@ -116,10 +118,12 @@ The lede's ink-fill (`kp-mark-in`, a `background-size` change) and the
 dialog's rise (`kp-dialog-in`) are new keyframes with their own rows in
 `TIMINGS` and, for `kp-mark-in` (not opacity), an entry in
 `gates/check-motion.mjs`'s `OUT_OF_SCOPE`. The dossier's redaction bars
-use a plain CSS `transition` on `clip-path`, the same mechanism the demo
-itself uses, rather than a `@keyframes` — a `transition` is not scanned
-by the flash-rate table at all, and the demo was never animating it any
-other way. The rule reveal reuses the package's own shared `kp-rule-in`
+use a plain CSS `transition` rather than a `@keyframes` — a `transition`
+is not scanned by the flash-rate table at all, and the demo was never
+animating it any other way. The demo transitions `clip-path`; since
+`fix-33` (scope-93) the register transitions the plate's
+`background-size` instead, because the plate is the mark's own cloned
+background and a phrase that wraps is covered line by line. The rule reveal reuses the package's own shared `kp-rule-in`
 keyframe unchanged; nothing new was needed for it.
 
 **What the demo showed and the package now renders exactly (S49,
@@ -156,9 +160,11 @@ here, with its reason, because none of it is a silent adaptation:
   demo's own to within rounding; over any other ground it is the same
   mechanism the rest of the package already uses for a token-at-opacity
   tint.
-- The demo's redaction bars are the exact clip-path values
-  (`inset(0 0 0 0)` covered, `inset(0 100% 0 0)` clear) and the exact
-  stagger (90ms, `transition-delay`); the package's markup carries no
+- The demo's redaction bars clear by `clip-path` (`inset(0 0 0 0)`
+  covered, `inset(0 100% 0 0)` clear); the register clears the same
+  plate by its `background-size` (full width covered, `0%` clear,
+  narrowing toward the phrase's start as the clip did) since `fix-33`,
+  with the exact stagger (90ms, `transition-delay`); the package's markup carries no
   `--i` custom property per mark the way the demo's own hand-written
   HTML does, so the stagger is expressed as `:nth-of-type(2)` /
   `:nth-of-type(3)` instead of `calc(var(--i) * 90ms)` — three marks,
@@ -206,7 +212,7 @@ the headline's words (opacity 0→1, staggered 70ms, up to four landing
 within one second — well under three opposing changes per second), the
 lede's ink-fill (a size change, not luminance), the rule's draw (a
 transform), the redaction clear (a discrete, user-triggered, one-shot
-`clip-path` transition per bar, outside the per-second accounting
+`background-size` transition per bar, outside the per-second accounting
 entirely), and the dialog's rise (opacity 0→1, once). Nothing loops,
 nothing blinks. Rated in `reports/di5.md`.
 

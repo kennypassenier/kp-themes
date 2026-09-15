@@ -68,7 +68,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-slice-2` | opacity | 600 ms | 1× | 1 → 0 → 0 | 1.00/s | under |
 | `kp-charge` | transform | 520 ms | 1× | — | 0.00/s | under |
 | `kp-slide-in` | transform | 140 ms | 1× | — | 0.00/s | under |
-| `kp-rule-in` | transform | 420 ms | 1× | — | 0.00/s | under |
+| `kp-rule-in` | transform | 280 ms | 1× | — | 0.00/s | under |
 | `kp-settle` | transform | 140 ms | 1× | — | 0.00/s | under |
 | `kp-blink` | opacity | 1000 ms | loops | 1 → 1 → 0 → 0 | 1.00/s | under |
 | `kp-drift` | background-position | 40000 ms | loops | — | 0.00/s | under |
