@@ -3780,3 +3780,43 @@ fault.
 **8 · If the measurement fails.** The package stops letting a register set `position` on `.kp-sidenav` at all, by moving the layout to an inner element.
 
 **9 · When we review the measure.** At the next register that needs a positioned box for a label.
+
+## fix-41 · The oxide halo painted across the chamfered corner (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `overlays--confirm` in dark: "wat me opvalt met de gloed die we toevoegden, normaal is de hoek afgesneden, maar nu is er een niet-gekleurde streep die het terug hoekig maakt, los dat op. Mogelijk ook op andere panelen die ik al goedgekeurd heb" — and he marked the app shell, the dossier and the long dialog the same way. Measured at devicePixelRatio 2.222: 1667 of 5700 pixels past the cut on the confirmation, 1711 and 1654 on the app shell's cards, 1679/1622/1596 on the dossier's, 579 and 2850 on the long dialog.
+
+**2 · Which gate let it through.** The halo tests of scope-102 measure the separation in a 24px band around the panel; a shadow that also fills the cut corner scores better there, not worse. No test asked whether the chamfer was still a chamfer.
+
+**3 · Where the same fault sits.** The property: a shadow drawn on the box while the shape is cut somewhere else. Searched with `grep -n "clip-path\|--kp-halo" css/*-register.css`: only `.kp-card` and `.kp-dialog` in dark and titanium are chamfered; the other nine panels that carry the halo are square (`--radius: 0`), so their halo already traces the corner they have.
+
+**4 · How we prevent recurrence.** The chamfer is carried outward through the halo's reach (`--kp-halo-field` with two bounded bites of `--kp-halo-reach`) and applied to the panel itself, so the shadow is cut along the same 45°.
+
+**5 · What the remedy costs.** Two custom properties and one clip per chamfered panel; nothing a panel holds is clipped unless it reaches into one of the two corners.
+
+**6 · Who enforces it.** Code: the chamfer tests in `tests/register-dark-faults.spec.mjs`, at both ratios, red at 1713 and 1619 pixels before, 0 of 5700 after, in Firefox and Chromium.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `overlays--confirm`, `navigation--app-shell`, `page-effects--dossier` and `overlays--dialog-long` in dark: the corner is cut and no strip squares it.
+
+**8 · If the measurement fails.** The halo moves to a chamfered pseudo-element behind the panel, at the cost of a second layer per panel.
+
+**9 · When we review the measure.** At the next theme that cuts a corner.
+
+## fix-42 · A select wore the browser's arrow beside the theme's (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `field--multiline` in dark: "Rechts van de dropdown zie ik één keer onze styling van pijltje … en nog één van firefox zelf ofzo? Het staat er alelszins twee keer". Measured: 19 columns of ink over the select's right edge in dark and titanium, 8 in the twenty other themes.
+
+**2 · Which gate let it through.** None. The field tests read the select's own paint; neither engine's own dropmarker was counted, and the arrow is drawn by the register.
+
+**3 · Where the same fault sits.** The property: a register drawing a select's arrow without resetting the UA's. Searched with `grep -ln "kp-field__input" css/*-register.css` then reading each for a gradient or glyph over the select: dark and titanium, no others.
+
+**4 · How we prevent recurrence.** Both registers join the other fifteen: the gradients go and only `select.kp-field__input::picker-icon` is coloured, so the browser reserves the room for its own arrow and paints it in the theme's ink.
+
+**5 · What the remedy costs.** Three declarations removed per register; a long option no longer runs under the arrow, because the browser's room is reserved.
+
+**6 · Who enforces it.** Code: the select sweep in `tests/register-dark-faults.spec.mjs` — one arrow over the right edge in all 22 themes, red on dark and titanium before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `field--multiline` in dark and titanium: one arrow.
+
+**8 · If the measurement fails.** The package sets `appearance: none` on every select and draws the arrow itself, and the registers only colour it.
+
+**9 · When we review the measure.** At the next register that wants its own control glyph.

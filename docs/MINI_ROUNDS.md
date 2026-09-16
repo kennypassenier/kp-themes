@@ -177,3 +177,5 @@ register's colours are.
 | fix-38-M1 | Does every theme show a visible focus ring on a button, a field and a link? Measured by the focus-visibility sweep at the fix, and at Kenny's next review of dark's buttons. | open — the sweep ran at the fix: 11 of 22 themes failed first (dark and titanium buttons, six themes' fields through the package, five themes' bar links), all 22 pass after; Kenny's review of dark's buttons still to come |
 | fix-39-M1 | Is a dropdown whole at 1280, 1024 and 900px inside a clipping box? Measured at Kenny's next review of `navigation--mega-menu` and `navigation--dropdown`. | open |
 | fix-40-M1 | Is brutalism's over-the-page menu out of sight until it is opened? Measured at Kenny's next review of `navigation--sidenav-over`. | open |
+| fix-41-M1 | Is dark's chamfered corner still cut, with no strip of halo squaring it? Measured at Kenny's next review of the confirmation, the app shell, the dossier and the long dialog. | open |
+| fix-42-M1 | Does a select show one arrow in every theme? Measured at Kenny's next review of `field--multiline` in dark and titanium. | open |

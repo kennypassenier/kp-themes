@@ -1807,7 +1807,7 @@
         inset-inline-start: 0;
         z-index: var(--kp-z-popover, 20);
         /* How far the panel slides along the inline axis to stay inside the
-         * box that shows it [fix-41]. Changing edges is not always enough —
+         * box that shows it [fix-39]. Changing edges is not always enough —
          * a panel can be cut while both of its item's edges lie inside the
          * window — so the module writes the pixels here after it has
          * measured. Physical pixels, signed: negative moves it left, in a
@@ -1879,7 +1879,7 @@
      * function. Without script the panel keeps its start edge.
      *
      * The edge is chosen first and `--kp-nav-menu-shift` finishes the job
-     * [fix-41]: the box that shows a bar is not always the window. */
+     * [fix-39]: the box that shows a bar is not always the window. */
     .kp-nav__menu[data-kp-nav-menu-end] {
         inset-inline-start: auto;
         inset-inline-end: 0;

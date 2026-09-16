@@ -672,17 +672,19 @@
         border-color: var(--primary);
     }
 
-    [data-theme='titanium'] select.kp-field__input {
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
-            linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
-        background-position:
-            calc(100% - 18px) 55%,
-            calc(100% - 12px) 55%;
-        background-size:
-            6px 6px,
-            6px 6px;
-        background-repeat: no-repeat;
+    /* One arrow on a select, never two [fix-42]. The same three lines dark
+       carried, with the same fault: a chevron in two 6px gradients and
+       nothing taking the browser's own arrow away, so firefox drew its
+       dropmarker beside it (19 columns of ink over the select's right edge
+       against the 8 of a theme that leaves the arrow to the browser, and
+       still 8 with this register's own arrow forced off). Found by sweeping
+       all 22 themes for what Kenny reported in dark; these two were the
+       only pair, and the sweep is tests/register-dark-faults.spec.mjs. The arrow
+       goes back to the browser, which also reserves the room for it, and
+       the picker icon wears the theme where the page may take the list
+       over [KT8]. */
+    [data-theme='titanium'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
     }
 
     [data-theme='titanium'] .kp-field__help {

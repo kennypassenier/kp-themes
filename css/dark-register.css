@@ -102,6 +102,12 @@
            the way a milled part is relieved. */
         --kp-chamfer: var(--fx-notch, 0.55rem);
         --kp-chamfer-panel: 1rem;
+        /* How far past its own box the halo reaches, and how far past that
+           nothing of it is left [fix-41]. The furthest of the four shadows
+           travels its offset plus its blur — 10px + 18px — so 2.5rem is
+           past the last pixel of it and short of anything a panel holds. */
+        --kp-halo-reach: 2.5rem;
+        --kp-halo-field: 100rem;
     }
 
     /* ── The chamfer [scope-16] ────────────────────────────────────────
@@ -135,6 +141,72 @@
             100% 100%,
             var(--kp-chamfer-panel) 100%,
             0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    /* ── The halo stops where the corner is cut [fix-41] ────────────────
+       Kenny, 2026-09-16, on the confirmation dialog: "normaal is de hoek
+       afgesneden, maar nu is er een niet-gekleurde streep die het terug
+       hoekig maakt". Measured in firefox at dPR 2.222, over the two cut
+       corners of each panel: 1664 of the dialog's 5700 corner pixels and
+       1608 of the card's were painted by the halo *outside* the cut — a
+       glow tracing the square box while the plate traced the chamfer, with
+       the bare wedge between them reading as a strip that squared the
+       corner again. On the four blocks Kenny rejected: the confirmation
+       1667, the app shell's two cards 1711 and 1654, the dossier's three
+       1679, 1622 and 1596, the long dialog 579. After: 0, 9, 16, 0, 0, 0
+       and 0 — what is left is the clip's own edge between device pixels.
+
+       A box-shadow is the border box's shape and nothing else: it knows
+       no chamfer, and it is never painted inside the border box, so the
+       wedge could not be filled either. The three ways out were weighed:
+
+       - the halo on the plate's own layer, clipped with it — a clip-path
+         clips the element's own box-shadow (scope-100 measured that at
+         1406px), so the halo would vanish rather than follow the cut;
+       - `filter: drop-shadow()` on the plate — the plate is a
+         pseudo-element, and both surfaces that matter clip those away
+         (`.kp-popover` and a modal dialog are `overflow: auto`); on the
+         card a filter is refused outright by scope-102's own note,
+         because it would make every card the containing block of any
+         fixed descendant a consumer puts in it;
+       - the cut, extended outward through the shadow and applied to the
+         panel itself. Taken.
+
+       So the chamfer is carried past the box for the reach of the halo
+       and the panel is clipped to it: the glow is cut along the same
+       forty-five degrees the plate is, and stops dead at the corner. The
+       clip is the field rather than a box — a rectangle `--kp-halo-field`
+       out on every side with two bounded bites taken out of it, each
+       joined to the edge by a zero-width seam, the island idiom this file
+       already uses for the readout button's strip. Nothing a panel holds
+       is clipped unless it reaches into one of those two corners, and
+       nothing moves: a clip-path is paint, not layout.
+
+       The sixteen points, in order: the field's top-left corner; in along
+       its top edge to the seam and down it; round the top-right bite and
+       back up the same seam; on to the field's other two far corners;
+       then the bottom-left bite in the same three moves; and the last
+       corner closes it. */
+    [data-theme='dark'] .kp-card,
+    [data-theme='dark'] .kp-dialog {
+        clip-path: polygon(
+            calc(-1 * var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(-1 * var(--kp-halo-field)) calc(100% + var(--kp-halo-field))
         );
     }
 
@@ -782,17 +854,28 @@
         border-color: var(--primary);
     }
 
-    [data-theme='dark'] select.kp-field__input {
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
-            linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
-        background-position:
-            calc(100% - 18px) 55%,
-            calc(100% - 12px) 55%;
-        background-size:
-            6px 6px,
-            6px 6px;
-        background-repeat: no-repeat;
+    /* One arrow on a select, never two [fix-42]. Kenny, 2026-09-16, on the
+       textarea-and-select block: "Rechts van de dropdown zie ik één keer
+       onze styling van pijltje (> maar dan omgekeerd) en nog één van
+       firefox zelf ofzo?" What stood here was a chevron in two 6px
+       gradients — and nothing that took the browser's own arrow away, so
+       firefox drew its dropmarker beside it and chromium would draw its
+       ::picker-icon in the same place. Measured over the select's right
+       edge, firefox: 19 columns of ink where the twenty themes that leave
+       the arrow to the browser measure 8, and still 8 with this register's
+       own arrow forced off — two marks, not one. Titanium carried the same
+       three declarations and the same fault; the sweep found no third.
+
+       The register joins the other fifteen rather than keeping its own:
+       the browser draws the arrow and reserves the room for it (the
+       gradient had none — the package's 0.625rem end padding let a long
+       option run straight under it), and where the page may take the list
+       over the picker icon wears the theme [KT8]. The two registers that
+       do draw their own — terminal and retro — take the browser's away
+       with `appearance: none` in the same rule, which is what this one
+       never did. */
+    [data-theme='dark'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
     }
 
     [data-theme='dark'] .kp-field__help {

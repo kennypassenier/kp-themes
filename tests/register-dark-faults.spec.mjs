@@ -10,10 +10,19 @@
 // Drilled per KT3 on 2026-09-16, firefox, against c9f58c08 before the
 // fixes: every test below went red, with the measured value in its
 // "Before" line.
+//
+// Two more joined them on 2026-09-16, from Kenny's catalogue review: the
+// oxide halo painted across the chamfered corner instead of stopping where
+// it is cut [fix-41], and a select wore the browser's arrow beside the
+// register's own [fix-42]. The second is a theme sweep rather than a fault
+// of dark's alone — the fault was found in dark and the sweep is what
+// answered "check of dit bij andere thema's ook zo is" — so it lives here,
+// beside the reading that found it, rather than in a file of its own.
 
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 /** @param {import('@playwright/test').Page} page @param {string} url */
 const openDark = async (page, url) => {
@@ -427,5 +436,313 @@ for (const ratio of [1, 2.222]) {
                 await browser.close();
             }
         });
+
+        // ── The halo stops where the corner is cut [fix-41] ───────────────
+        //
+        // Kenny, 2026-09-16, rejecting four dark blocks on the catalogue —
+        // the confirmation, the app shell, the dossier and the long dialog:
+        // "normaal is de hoek afgesneden, maar nu is er een niet-gekleurde
+        // streep die het terug hoekig maakt". A box-shadow is the border
+        // box's own shape, so the halo traced a square corner while the
+        // plate traced the chamfer, and the bare wedge between the two read
+        // as a strip that squared the corner again.
+        //
+        // What is measured: the two cut corners of every panel in the probe,
+        // each a square of the chamfer plus the halo's reach, photographed
+        // with the halo on and off exactly as the band above is. Only the
+        // pixels on the far side of the cut are counted — where a chamfered
+        // panel may paint nothing at all.
+        //
+        // Made to fail first [KT3], 2026-09-16, firefox, on c4dfc1c2's
+        // register. dPR 1: the dialog painted 1713 of its 5700 corner
+        // pixels past the cut (30.1%) and the card 1619 (28.4%); dPR 2.222:
+        // 1664 (29.2%) and 1608 (28.2%). With the cut carried past the box:
+        // 0 of 5700 on both surfaces at both ratios. Read on the catalogue
+        // itself, panel by panel, the four blocks Kenny rejected went
+        // 1667 → 0 (the confirmation), 1711 → 9 and 1654 → 16 (the app
+        // shell's two cards), 1679/1622/1596 → 0 (the dossier's three) and
+        // 579 → 0 (the long dialog); what is left there is the clip's own
+        // edge landing between device pixels.
+        //
+        // The dropdown and the popover are in the reading on purpose: they
+        // wear the same halo on a corner that is not cut — dark's --radius
+        // is 0, so they are square boxes and a box-shadow already traces a
+        // square corner. The test reads which corner each panel has rather
+        // than being told, so a panel that takes the chamfer later is
+        // measured under the strict bar the day it does.
+        test('the halo paints nothing across a cut corner, and is there on a corner that is not cut', async ({ playwright }) => {
+            test.setTimeout(180_000);
+            const browser = await playwright.firefox.launch({ firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } });
+            try {
+                const context = await browser.newContext({
+                    baseURL: test.info().project.use.baseURL,
+                    deviceScaleFactor: ratio,
+                    viewport: { width: 1280, height: 900 },
+                });
+                const page = await context.newPage();
+                await openDark(page, '/catalogue/overlays.html');
+                await page.evaluate((markup) => document.body.insertAdjacentHTML('beforeend', markup), HALO_PROBE);
+                await page.evaluate(() => document.querySelector('[data-halo-probe]')?.scrollIntoView({ block: 'center' }));
+                await page.evaluate(() => document.fonts.ready);
+                await page.waitForTimeout(400);
+
+                // Each panel's box, its corner (cut or round) and how deep
+                // the cut goes — read off the page, not written down here.
+                const panels = await page.evaluate(() => {
+                    const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                    /** @type {Record<string, { x: number, y: number, width: number, height: number, cut: number, radius: number, outward: boolean }>} */
+                    const out = {};
+                    for (const cell of document.querySelectorAll('[data-halo-surface]')) {
+                        const el = /** @type {HTMLElement} */ (cell.querySelector('.kp-dialog, .kp-card, .kp-popover, .kp-nav__menu'));
+                        const style = getComputedStyle(el);
+                        // The dialog's plate is its ::before, the card's its ::after.
+                        const plate = getComputedStyle(el, el.classList.contains('kp-dialog') ? '::before' : '::after');
+                        const chamfered = plate.clipPath.startsWith('polygon') || style.clipPath.startsWith('polygon');
+                        const r = el.getBoundingClientRect();
+                        out[/** @type {string} */ (cell.getAttribute('data-halo-surface'))] = {
+                            x: r.x,
+                            y: r.y,
+                            width: r.width,
+                            height: r.height,
+                            cut: chamfered ? parseFloat(style.getPropertyValue('--kp-chamfer-panel')) * root : 0,
+                            radius: parseFloat(style.borderTopLeftRadius) || 0,
+                            // The mechanism itself: the cut carried past the
+                            // box, on the panel, so the shadow is cut with it.
+                            outward: style.clipPath.startsWith('polygon'),
+                        };
+                    }
+                    return out;
+                });
+
+                const on = (await page.screenshot({ scale: 'device', animations: 'disabled' })).toString('base64');
+                await page.evaluate((css) => {
+                    const style = document.createElement('style');
+                    style.id = 'halo-off';
+                    style.textContent = css;
+                    document.head.append(style);
+                }, HALO_OFF);
+                await page.waitForTimeout(200);
+                const off = (await page.screenshot({ scale: 'device', animations: 'disabled' })).toString('base64');
+
+                const corners = await page.evaluate(
+                    async ([source, args]) => new Function(`return ${source}`)()(args),
+                    [HALO_CORNER, { on, off, panels, ratio, reach: HALO_CORNER_REACH }],
+                );
+
+                /** @type {string[]} */
+                const faults = [];
+                for (const [name, panel] of Object.entries(panels)) {
+                    const seen = corners[name];
+                    if (panel.cut > 0) {
+                        // A chamfered panel: the mechanism, then the paint.
+                        if (!panel.outward) faults.push(`${name}: its cut is not carried past its box, so its halo cannot follow it`);
+                        // 2% of the corner, where the fault measured 29–31%:
+                        // room for the clip's own edge between device pixels
+                        // and none for a glow that traces the square box.
+                        if (!(seen.past / seen.of <= 0.02))
+                            faults.push(`${name}: ${seen.past} of ${seen.of} corner pixels painted past the cut (${seen.share}%)`);
+                    } else {
+                        // A corner that is not cut has nothing to paint
+                        // across — dark's --radius is 0, so the dropdown and
+                        // the popover are square boxes and their halo
+                        // rightly traces a square corner. What is measured
+                        // here is that the halo is there at all, and the
+                        // branch above takes over the day either takes the
+                        // cut: `cut` is read off the page, not written down.
+                        if (!(seen.past > 0)) faults.push(`${name}: no halo at its corner at all`);
+                    }
+                }
+                expect(faults, JSON.stringify({ panels, corners }, null, 2)).toEqual([]);
+            } finally {
+                await browser.close();
+            }
+        });
     });
 }
+
+/** How far past the box a corner is read: the furthest shadow travels 10px + 18px. */
+const HALO_CORNER_REACH = 30;
+
+/**
+ * The halo's paint at the two corners the chamfer cuts, on the far side of
+ * the cut. The same photograph-twice-and-subtract as HALO_DIFF, over a
+ * square of `cut + 2 * reach` at the top-right and bottom-left corners; a
+ * panel with no cut is read against the line a cut would make, so the
+ * reading says whether a halo is there at all.
+ */
+const HALO_CORNER = `async ({ on, off, panels, ratio, reach }) => {
+    const toPixels = async (src) => {
+        const image = await new Promise((resolve) => {
+            const im = new Image();
+            im.onload = () => resolve(im);
+            im.src = \`data:image/png;base64,\${src}\`;
+        });
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(image, 0, 0);
+        return ctx.getImageData(0, 0, image.width, image.height);
+    };
+    const lstar = (r, g, b) => {
+        const lin = (c) => {
+            const v = c / 255;
+            return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        };
+        const y = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+        return y > 0.008856 ? 116 * Math.cbrt(y) - 16 : 903.3 * y;
+    };
+    const [a, b] = await Promise.all([toPixels(on), toPixels(off)]);
+    const out = {};
+    for (const [key, panel] of Object.entries(panels)) {
+        const cut = panel.cut || 16;
+        const side = cut + 2 * reach;
+        let past = 0;
+        let of = 0;
+        // The two corners a chamfer relieves: top-right and bottom-left.
+        const squares = [
+            { ox: panel.x + panel.width - cut - reach, oy: panel.y - reach, tr: true },
+            { ox: panel.x - reach, oy: panel.y + panel.height - cut - reach, tr: false },
+        ];
+        for (const square of squares) {
+            for (let dy = 0; dy < side; dy++) {
+                for (let dx = 0; dx < side; dx++) {
+                    const px = square.ox + dx;
+                    const py = square.oy + dy;
+                    // The cut's own line, carried past the box in both
+                    // directions; "past" is the side the panel is not on.
+                    const beyond = square.tr
+                        ? py - panel.y < px - (panel.x + panel.width - cut)
+                        : py - (panel.y + panel.height - cut) > px - panel.x;
+                    if (!beyond) continue;
+                    const sx = Math.round(px * ratio);
+                    const sy = Math.round(py * ratio);
+                    if (sx < 0 || sy < 0 || sx >= a.width || sy >= a.height) continue;
+                    of++;
+                    const i = (sy * a.width + sx) * 4;
+                    const d = Math.abs(lstar(a.data[i], a.data[i + 1], a.data[i + 2]) - lstar(b.data[i], b.data[i + 1], b.data[i + 2]));
+                    if (d >= 3) past++;
+                }
+            }
+        }
+        out[key] = { past, of, share: of ? Math.round((past / of) * 1000) / 10 : 0 };
+    }
+    return out;
+}`;
+
+// ── One arrow on a select, never two [fix-42] ────────────────────────────
+//
+// Kenny, 2026-09-16, on dark's textarea-and-select block: "Rechts van de
+// dropdown zie ik één keer onze styling van pijltje (> maar dan omgekeerd)
+// en nog één van firefox zelf ofzo? Het staat er alelszins twee keer, check
+// of dit bij andere thema's ook zo is." It did: dark and titanium carried
+// the same three declarations — a chevron in two 6px gradients — and
+// neither took the browser's own arrow away, so both were painted.
+//
+// The reading is a comparison rather than a count, because "how wide is one
+// arrow" is a different number in every theme (retro's bevelled button is
+// 36 device pixels where firefox's dropmarker is 18). Two photographs of
+// the strip over the select's right edge: one as it stands, one with every
+// register's own arrow forced off. A theme that leaves the arrow to the
+// browser must read the same in both (the browser's is the only one); a
+// theme that draws its own must read nothing in the second (its own is the
+// only one). Anything between the two is two arrows.
+//
+// Made to fail first [KT3], 2026-09-16, firefox, on c4dfc1c2: dark and
+// titanium measured 19 columns of ink with everything on and still 8 with
+// their own arrow off — the browser's beside theirs. The other twenty were
+// already one: nineteen at 8 and 8 (pastel 9), terminal at 12 and 0, retro
+// at 16 and 0. Phantom reads 33 and 33 — its select's own ink fills the
+// strip — which is why the bar is the comparison and not a width.
+const ARROW_STRIP = `async ({ shot, rect, ratio }) => {
+    const image = await new Promise((resolve) => {
+        const im = new Image();
+        im.onload = () => resolve(im);
+        im.src = \`data:image/png;base64,\${shot}\`;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(image, 0, 0);
+    const data = ctx.getImageData(0, 0, image.width, image.height);
+    // The end of the box, inside its border and clear of the value's text.
+    const x0 = Math.round((rect.x + rect.width - 36) * ratio);
+    const x1 = Math.round((rect.x + rect.width - 3) * ratio);
+    const y0 = Math.round((rect.y + 4) * ratio);
+    const y1 = Math.round((rect.y + rect.height - 4) * ratio);
+    const at = (x, y) => {
+        const i = (y * data.width + x) * 4;
+        return [data.data[i], data.data[i + 1], data.data[i + 2]];
+    };
+    // The ground is whatever the strip is mostly made of, so a theme that
+    // grounds its fields in anything needs no value written down here.
+    const tally = new Map();
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const k = at(x, y).join(','); tally.set(k, (tally.get(k) ?? 0) + 1); }
+    const ground = [...tally.entries()].sort((p, q) => q[1] - p[1])[0][0].split(',').map(Number);
+    let columns = 0;
+    for (let x = x0; x < x1; x++) {
+        let ink = false;
+        for (let y = y0; y < y1 && !ink; y++) {
+            const p = at(x, y);
+            if (Math.max(Math.abs(p[0] - ground[0]), Math.abs(p[1] - ground[1]), Math.abs(p[2] - ground[2])) >= 24) ink = true;
+        }
+        if (ink) columns++;
+    }
+    return columns;
+}`;
+
+/** Every register's own arrow, taken away and nothing else. */
+const ARROW_OFF = `select.kp-field__input { background-image: none !important; }`;
+
+test('a select shows one arrow, not the browser’s beside the theme’s [fix-42]', { tag: ['@sweep', '@component:field'] }, async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await useEmptyRegister(page.context());
+    await page.goto('/catalogue/field.html');
+    await waitForJudging(page);
+    // The control Kenny rejected: the catalogue's own select, as shipped.
+    const select = page.locator('#f-severity-drawn');
+    await select.scrollIntoViewIfNeeded();
+    await page.mouse.move(0, 0);
+    const ratio = await page.evaluate(() => devicePixelRatio);
+
+    /** @param {{ x: number, y: number, width: number, height: number }} rect */
+    const strip = async (rect) => {
+        const shot = (await page.screenshot({ scale: 'device', animations: 'disabled' })).toString('base64');
+        return /** @type {Promise<number>} */ (
+            page.evaluate(async ([source, args]) => new Function(`return ${source}`)()(args), [ARROW_STRIP, { shot, rect, ratio }])
+        );
+    };
+
+    /** @type {string[]} */
+    const faults = [];
+    /** @type {Record<string, string>} */
+    const reading = {};
+    for (const theme of sweepThemes()) {
+        await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+        await page.evaluate(() => document.fonts.ready);
+        await page.waitForTimeout(150);
+        const rect = await select.evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            return { x: r.x, y: r.y, width: r.width, height: r.height };
+        });
+        const both = await strip(rect);
+        await page.evaluate((css) => {
+            const style = document.createElement('style');
+            style.id = 'kp-arrow-off';
+            style.textContent = css;
+            document.head.append(style);
+        }, ARROW_OFF);
+        await page.waitForTimeout(120);
+        const browsers = await strip(rect);
+        await page.evaluate(() => document.getElementById('kp-arrow-off')?.remove());
+        reading[theme] = `${both} columns, ${browsers} with the theme's own arrow off`;
+        // The theme draws none (both === browsers), or it draws the only
+        // one (browsers === 0). Anything in between is two arrows.
+        if (browsers !== both && browsers !== 0)
+            faults.push(`${theme}: ${both} columns of arrow, still ${browsers} with its own taken off — the browser draws one too`);
+        if (both === 0) faults.push(`${theme}: no arrow on the select at all`);
+    }
+    expect(faults, JSON.stringify(reading, null, 2)).toEqual([]);
+});
