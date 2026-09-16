@@ -12,7 +12,8 @@
 // `catalogue/index.html` + `slug--block` for its notes, wherever it is on
 // screen; a research demo's block is `research/x/demo.html#block` and its
 // notes stay under its own page.
-import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
+import { applyTheme, currentTheme, THEME_EVENT } from '../js/theme-core.js';
+import { THEMES } from '../js/theme-registry.js';
 import {
     carryOver,
     JUDGEMENT_EVENT,
@@ -476,6 +477,35 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         setTimeout(measure, 150);
     });
 
+    /**
+     * The next theme with a block left to judge, walked from the theme on
+     * screen [scope-113].
+     *
+     * Kenny, 2026-09-16: "als ik op every component, one page helemaal rond
+     * ben voor een thema, dan moet het gaan naar een nieuw thema … zodat ik
+     * vanuit 1 dialoog kan vertrekken". So the dialog does not stop at the end
+     * of a theme: this switches the page to the next theme in the menu's
+     * order, waits for the register to paint and the blocks to be read again,
+     * and answers with the first theme that still has work. A page that is one
+     * theme (a portrait, data-cat-theme-fixed) stays where it is.
+     * @returns {Promise<string | null>} the theme it stopped on, or null when the round is over
+     */
+    async function walkToNextTheme() {
+        const order = THEMES.map((theme) => theme.name);
+        const from = order.indexOf(currentTheme());
+        for (let step = 1; step <= order.length; step += 1) {
+            const theme = order[(from + step + order.length) % order.length];
+            applyTheme(theme);
+            // The theme event clears the readings and schedules its own pass;
+            // the register needs the same moment to paint that it does there.
+            await new Promise((resolve) => setTimeout(resolve, 200));
+            await measure();
+            render();
+            if (items.some((item) => !item.judged)) return theme;
+        }
+        return null;
+    }
+
     if (dialog) {
         mountReviewDialog({
             items,
@@ -484,6 +514,7 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
             themeOf: (item) => blockTheme(item.entry.root),
             hashOf: (item) => current.get(item.entry.key),
             refusal: REJECT_NEEDS_NOTE,
+            nextTheme: document.documentElement.hasAttribute('data-cat-theme-fixed') ? null : walkToNextTheme,
         });
     }
 

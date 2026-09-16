@@ -51,9 +51,10 @@ const FOCUSABLE =
  *   themeOf: (item: DialogItem) => string,
  *   hashOf: (item: DialogItem) => string | undefined,
  *   refusal: string,
+ *   nextTheme?: (() => Promise<string | null>) | null,
  * }} options
  */
-export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, refusal }) {
+export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, refusal, nextTheme = null }) {
     if (!items.length) return;
 
     const dialog = document.createElement('dialog');
@@ -131,6 +132,8 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
 
     /** @type {DialogItem | null} */
     let current = null;
+    /** True while the dialog is switching themes: the keys wait for it [scope-113]. */
+    let walking = false;
     /** Where the block stands on the page while it is in the dialog. */
     const away = document.createElement('p');
     away.className = 'cat-note cat-review-dialog__away';
@@ -245,6 +248,7 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
     });
 
     function give(verdict) {
+        if (walking) return;
         const item = /** @type {DialogItem} */ (current);
         if (verdict === 'rejected' && !note.value.trim()) {
             showRefusal(true);
@@ -264,15 +268,47 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
             const next = items[(at + step) % items.length];
             if (!next.judged) return show(next);
         }
-        // None left: the dialog stays open on this block and says so.
+        // None left in this theme: on to the next one that has work [scope-113].
+        if (nextTheme) return walkOn(item);
+        rest(item, endMessage(item));
+    }
+
+    /** The dialog stays open on `item`, with `message` in the live region. */
+    function rest(item, message) {
+        if (current !== item) show(item);
         note.value = noteFor(item.entry.notePage, item.entry.noteBlock, themeOf(item));
         showRefusal(false);
         showReviewNote(item);
         paint();
-        live.textContent = endMessage(item);
+        live.textContent = message;
+    }
+
+    /**
+     * The theme on screen is done: walk to the next theme with a block left to
+     * judge and go on in the same dialog [scope-113]. Kenny judges a whole
+     * round from one dialog, and the end of it says the round is over.
+     * @param {DialogItem} item the block that finished the theme
+     */
+    async function walkOn(item) {
+        const done = themeLabel(themeOf(item));
+        live.textContent = `Every block is judged in ${done}. Looking for the next theme…`;
+        walking = true;
+        try {
+            const theme = await /** @type {() => Promise<string | null>} */ (nextTheme)();
+            const next = theme ? items.find((i) => !i.judged) : null;
+            if (next) {
+                show(next);
+                live.textContent = `${done} is done. Now judging in ${themeLabel(themeOf(next))}.`;
+                return;
+            }
+            rest(item, 'Every block is judged in every theme: the round is over. Escape closes the dialog.');
+        } finally {
+            walking = false;
+        }
     }
 
     function go(step) {
+        if (walking) return;
         const list = sequence();
         const at = list.indexOf(/** @type {DialogItem} */ (current));
         live.textContent = '';

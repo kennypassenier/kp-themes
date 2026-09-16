@@ -46,12 +46,21 @@ const root = new URL('../', import.meta.url);
  * working tree reads a hash the approving entry was not given on, the pair is
  * open again, "changed since judged" [scope-112]. Without a snapshot, or
  * without a reading for that pair, the verdict is taken as it is.
+ *
+ * A reading only judges a verdict older than itself (Kenny, 2026-09-16:
+ * "Welke 78? … Ik zag geen openstaande items"). His 28 fresh approvals were
+ * read at a commit the snapshot had never seen, so every one of them differed
+ * from a reading taken before the block moved — and the count called them
+ * open although he had just judged them. `comparable` answers whether a
+ * verdict's commit is in the snapshot's history; a verdict newer than the
+ * reading is left to stand.
  * @param {Map<string, { component: boolean, theme?: string }>} known every block a verdict can name
  * @param {string[]} themes the themes in their order
  * @param {any} register the parsed catalogue/verdicts.json
  * @param {any} [snapshot] the parsed catalogue/hashes-now.json
+ * @param {(commit: string) => boolean} [comparable] is this verdict's commit at or before the snapshot's
  */
-export function openPairs(known, themes, register, snapshot) {
+export function openPairs(known, themes, register, snapshot, comparable = () => true) {
     const verdicts = register?.verdicts ?? {};
     const readings = snapshot?.readings ?? {};
     /** @type {{ key: string, theme: string, state: 'rejected' | 'never judged' | 'changed since judged' }[]} */
@@ -68,6 +77,7 @@ export function openPairs(known, themes, register, snapshot) {
                 const stands = approvals.some(([engine, entry]) => {
                     const now = readings[key]?.[theme]?.[engine];
                     if (!now || (now.ratio ?? 1) !== (entry.ratio ?? 1)) return true;
+                    if (!comparable(entry.commit)) return true;
                     return now.hash === entry.hash;
                 });
                 if (stands) approved += 1;
@@ -113,6 +123,30 @@ export function snapshotLine(snapshot, moved) {
 }
 
 /**
+ * Which verdict commits the snapshot can speak about: those in its history
+ * [scope-112]. A verdict given after the reading was taken is newer than the
+ * measurement and is left to stand.
+ * @param {string} snapshotCommit
+ * @param {URL} at the repository
+ * @returns {(commit: string) => boolean}
+ */
+function comparableTo(snapshotCommit, at) {
+    const answers = new Map();
+    return (commit) => {
+        if (!commit) return false;
+        if (!answers.has(commit)) {
+            try {
+                execFileSync('git', ['merge-base', '--is-ancestor', commit, snapshotCommit], { cwd: fileURLToPath(at), stdio: 'ignore' });
+                answers.set(commit, true);
+            } catch {
+                answers.set(commit, false);
+            }
+        }
+        return Boolean(answers.get(commit));
+    };
+}
+
+/**
  * The files under SOURCES that changed since `commit`, the working tree
  * included.
  * @param {string} commit
@@ -142,7 +176,7 @@ async function main() {
     const register = JSON.parse(readFileSync(new URL('catalogue/verdicts.json', root), 'utf8'));
     const file = new URL(SNAPSHOT, root);
     const snapshot = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
-    const { open, approved, pairs } = openPairs(known, themes, register, snapshot);
+    const { open, approved, pairs } = openPairs(known, themes, register, snapshot, snapshot ? comparableTo(snapshot.commit, root) : undefined);
     const counted = (/** @type {string} */ state) => open.filter((pair) => pair.state === state);
     const rejected = counted('rejected');
     const changed = counted('changed since judged');

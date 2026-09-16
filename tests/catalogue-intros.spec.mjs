@@ -90,6 +90,13 @@ test.describe('the intro words per theme [scope-84]', { tag: ['@component:page-e
 });
 
 test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalogue', '@component:page-effects'] }, () => {
+    // A register of the test's own: since Kenny approved the four intros, the
+    // repository's verdicts would hide these blocks as judged before the test
+    // can touch them.
+    test.beforeEach(async ({ context }) => {
+        await useEmptyRegister(context);
+    });
+
     test('Play plays the arrival, and plays it again although it is once per session', { tag: ['@theme:terminal'] }, async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto('/catalogue/intros.html');

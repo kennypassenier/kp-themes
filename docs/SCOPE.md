@@ -1923,3 +1923,20 @@ minutes more), the 66 reopened pairs travel with Kenny's ordinary review
 rather than in a list of their own (changed-again), and the readings stay in
 the repository, about 591 KB per measurement, so every checkout counts the
 same (snapshot-kept).
+
+**scope-113 · One dialog for a whole round: a finished theme walks on to the
+next.** Kenny, 2026-09-16: "als ik op every component, one page helemaal rond
+ben voor een thema, dan moet het gaan naar een nieuw thema en daarvan alle
+componenten geven in die dialoog zodat ik vanuit 1 dialoog kan vertrekken en
+alles wat mogelijk goedgekeurd moet worden, kan goedkeuren. Op het einde mag er
+dan een boodschap komen dat zegt dat ik rond ben." Until now the review dialog
+stopped at the end of a theme ("Every block is judged in Formal") and he had to
+close it, pick the next theme in the menu and open it again, 22 times.
+
+Now `catalogue/judging.js` hands the dialog a walk: at the end of a theme it
+switches the page to the next theme in the menu's order, waits for the register
+to paint and the blocks to be read again, and stops at the first theme that
+still has a block to judge — "Formal is done. Now judging in Titanium." The
+keys do nothing while the walk runs, so a held arrow cannot skip a block. When
+no theme has anything left the dialog stays open and says the round is over.
+A page that is one theme (a portrait, `data-cat-theme-fixed`) never walks.

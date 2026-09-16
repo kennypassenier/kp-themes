@@ -67,3 +67,27 @@ test('a rejection and a block never judged are both open, and research is left o
         { key: 'button--variants', theme: 'light', state: 'never judged' },
     ]);
 });
+
+test('a verdict newer than the reading is left to stand [scope-112]', () => {
+    const register = {
+        verdicts: {
+            'button--variants': {
+                dark: { firefox: { verdict: 'approved', hash: 'fresh', commit: 'newer', ratio: 2.222 } },
+                light: { firefox: { verdict: 'approved', hash: 'old', commit: 'older', ratio: 2.222 } },
+            },
+        },
+    };
+    const snapshot = {
+        readings: {
+            'button--variants': {
+                dark: { firefox: { hash: 'read-before-the-verdict', ratio: 2.222 } },
+                light: { firefox: { hash: 'moved', ratio: 2.222 } },
+            },
+        },
+    };
+    // Only 'older' is in the snapshot's history, so only that pair can be called changed.
+    const comparable = (/** @type {string} */ commit) => commit === 'older';
+    const { open, approved } = openPairs(known, ['dark', 'light'], register, snapshot, comparable);
+    assert.equal(approved, 1);
+    assert.deepEqual(open, [{ key: 'button--variants', theme: 'light', state: 'changed since judged' }]);
+});

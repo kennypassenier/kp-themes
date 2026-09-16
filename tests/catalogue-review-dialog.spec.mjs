@@ -175,18 +175,57 @@ test(
         await expect(titleOf(page)).not.toHaveText('Switch › A long label');
         await page.keyboard.type('Focus ring too thin');
         await page.keyboard.press('ArrowUp');
-        // Every block has its verdict: the dialog stays on the last one and says so.
+        // Every block has its verdict in formal, so the dialog walks on to the
+        // next theme by itself [scope-113]; it no longer stops here.
         const dialog = dialogOf(page);
         await expect(dialog).toBeVisible();
-        await expect(dialog.locator('[data-cat-dialog-live]')).toHaveText('Every block is judged in Formal. Escape closes the dialog.');
+        await expect(dialog.locator('[data-cat-dialog-theme]')).not.toContainText('Formal', { timeout: 30_000 });
         await expect(noteOf(page)).toHaveValue('');
-        await expect(dialog.locator('[data-cat-dialog-state]')).toContainText('Approved');
         for (const id of ['states', 'invalid', 'extremes', 'keyboard']) {
             expect(await storedHash(page, `switch--${id}`, browserName), id).toMatch(/^[0-9a-f]{64}$/);
         }
         await page.keyboard.press('Escape');
         await expect(dialog).toBeHidden();
-        await expect(page.locator('.cat-bar [data-cat-dialog-open]')).toBeFocused();
+        // The dialog left on a block of the next theme, which is still on the
+        // page, so the way back is that block's own button [scope-113].
+        await expect(page.locator('.cat-block:not([hidden]) [data-cat-dialog-block]:focus')).toHaveCount(1);
+    },
+);
+
+// One dialog for the whole round [scope-113]. Kenny, 2026-09-16: "als ik op
+// every component, one page helemaal rond ben voor een thema, dan moet het
+// gaan naar een nieuw thema en daarvan alle componenten geven in die dialoog
+// zodat ik vanuit 1 dialoog kan vertrekken … Op het einde mag er dan een
+// boodschap komen dat zegt dat ik rond ben."
+test(
+    'a theme finished in the dialog walks on to the next theme, and the last one says the round is over [scope-113]',
+    { tag: ['@component:catalogue'] },
+    async ({ page }) => {
+        await openPage(page, '/catalogue/switch.html');
+        const dialog = dialogOf(page);
+        const themeBadge = dialog.locator('[data-cat-dialog-theme]');
+        const live = dialog.locator('[data-cat-dialog-live]');
+        await page.locator('.cat-bar [data-cat-dialog-open]').click();
+        await expect(themeBadge).toContainText('Formal');
+
+        // Four blocks on the switch page: the fourth approval empties formal.
+        for (let i = 0; i < 4; i += 1) await page.keyboard.press('ArrowUp');
+        await expect(live).toContainText('Every block is judged in Formal', { timeout: 30_000 });
+        await expect(themeBadge).not.toContainText('Formal', { timeout: 30_000 });
+        // The page itself is in the new theme, and the dialog is on one of its blocks.
+        const moved = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+        expect(moved).not.toBe('formal');
+        await expect(dialog.locator('[data-cat-dialog-state]')).toContainText('Not yet judged');
+        await expect(noteOf(page)).toBeFocused();
+
+        // Judging every block of every theme ends the round, in the same dialog.
+        for (let press = 0; press < 260; press += 1) {
+            if ((await live.textContent())?.includes('the round is over')) break;
+            await page.keyboard.press('ArrowUp');
+            await expect(noteOf(page)).toBeFocused({ timeout: 30_000 });
+        }
+        await expect(live).toContainText('Every block is judged in every theme: the round is over.', { timeout: 30_000 });
+        await expect(dialog).toBeVisible();
     },
 );
 
