@@ -1806,3 +1806,15 @@ first commit of each day and whenever `GATE_FULL=1` is set.
 skips. Two unit tests moved with this: KT7 now reads a `&&` chain half by
 half, and the README gate count is read from the `gate` lines rather than
 from the `echo` headings the hook no longer prints.
+
+**scope-105 · A look is compared, not described.** Kenny, 2026-09-16, the
+after-the-tests form. hash-tool "Weg": the measurement script for a hash-driven
+test selection is not kept; its numbers stay in scope-103. features-shade
+"Cijfer bijwerken": FEATURES.md's TH67 row carries a dated amendment with
+shade-light's new figures (5.86 on the page ground, 6.07 on a card).
+dark-menu, his own answer: "maak een demo om het verschil te zien. Doe dit in
+het vervolg nog als er zulke keuzes zijn. Het is veel beter om dingen met het
+oog te vergelijken dan een tekst te lezen en mijn verbeelding te moeten
+gebruiken" — so dark's dropdown menu gets a demo of the two shadows side by
+side, and from now on every choice about how something looks comes with a demo
+the form links to (docs/RULES.md). step-timing "Akkoord".

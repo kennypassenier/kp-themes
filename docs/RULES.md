@@ -339,3 +339,16 @@ elements, is the gate every new theme passes before integration (S46).
 The demo lives at
 <https://claude.ai/code/artifact/f1cb3978-0bd7-4108-a329-971b0a2afe89>
 until it becomes a template in the repository.
+
+## Kenny's answer of 2026-09-16 (scope-105) — a look is compared, not described
+
+Kenny, answering a form that asked in prose whether dark's dropdown menu
+should take the oxide halo: *"maak een demo om het verschil te zien. Doe
+dit in het vervolg nog als er zulke keuzes zijn. Het is veel beter om
+dingen met het oog te vergelijken dan een tekst te lezen en mijn
+verbeelding te moeten gebruiken"*. So: a choice about how something looks
+— a colour, a shadow, a shape, a motion — comes with a demo page showing
+the options side by side on the real stylesheets, and the form links to
+it. The prose says what each option costs and what it measures; the eye
+does the comparing. A choice with no visible difference (a selector, a
+gate, a test level) stays prose.
