@@ -20,6 +20,7 @@
 // on every treeitem.
 
 import { getStrings } from './strings.js';
+import { paintRemembered, treeItemId } from './remember.js';
 
 const TREE = '[data-kp-tree]';
 const REORDER = '[data-kp-reorder]';
@@ -116,6 +117,10 @@ export function attachStructure(
         const tree = /** @type {HTMLElement} */ (element);
         if (tree.dataset.kpTreeAttached !== undefined) continue;
         tree.dataset.kpTreeAttached = '';
+        // Which branches were open, when the tree asked to be remembered
+        // [Kenny, 2026-09-16]. Painted before the first read below, so the
+        // starting state is the markup either way.
+        const memory = paintRemembered(tree, 'tree');
         const finds = tree.dataset.kpTypeahead === undefined ? typeahead : tree.dataset.kpTypeahead !== 'false';
         const clickMode = tree.dataset.kpClick ?? (clickToggles ? 'toggle' : 'select');
         const selects = tree.dataset.kpSelectable !== undefined || selectable;
@@ -137,6 +142,13 @@ export function attachStructure(
             if (!item.hasAttribute('aria-expanded')) return;
             if ((item.getAttribute('aria-expanded') === 'true') === expanded) return;
             item.setAttribute('aria-expanded', String(expanded));
+            if (memory !== null) {
+                /** @type {Record<string, boolean>} */
+                const branches = {};
+                for (const branch of tree.querySelectorAll('[role="treeitem"][aria-expanded]'))
+                    branches[treeItemId(branch)] = branch.getAttribute('aria-expanded') === 'true';
+                memory.write('branches', branches);
+            }
             tree.dispatchEvent(new CustomEvent(TREE_EXPAND_EVENT, { bubbles: true, detail: { item, id: idOf(item), expanded } }));
         };
         /** @param {HTMLElement | null} item */
@@ -419,6 +431,10 @@ export function attachStructure(
         const split = /** @type {HTMLElement} */ (element);
         if (split.dataset.kpSplitAttached !== undefined) continue;
         split.dataset.kpSplitAttached = '';
+        // Where the divider was left, when the pane asked to be remembered
+        // [Kenny, 2026-09-16]. The painter writes aria-valuenow, which is
+        // where the starting position is read from three lines below.
+        const memory = paintRemembered(split, 'split');
         const separator = /** @type {HTMLElement | null} */ (split.querySelector('[role="separator"]'));
         if (separator === null) continue;
         // A separator between left and right is "vertical" in ARIA terms;
@@ -443,6 +459,7 @@ export function attachStructure(
             // separator that moves silently is a separator only a mouse
             // can use.
             separator.setAttribute('aria-valuenow', String(value));
+            memory?.write('value', value);
             split.dispatchEvent(new CustomEvent(SPLIT_EVENT, { bubbles: true, detail: { value } }));
         };
         setValue(value);

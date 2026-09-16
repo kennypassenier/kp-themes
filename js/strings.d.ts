@@ -436,6 +436,10 @@ export type Strings = {
     themeGroupDark: string;
     themeUnknown: (requested: string, applied: string) => string;
     /**
+     * The console warning when two elements of one component ask to be remembered under the same name
+     */
+    rememberClash: (name: string, component: string) => string;
+    /**
      * The console error when a lazily loaded register did not arrive; the theme stays what it was [scope-50]
      */
     registerLoadFailed: (theme: string, href: string) => string;
@@ -646,6 +650,7 @@ export type Strings = {
  * @property {string} themeGroupLight
  * @property {string} themeGroupDark
  * @property {(requested: string, applied: string) => string} themeUnknown
+ * @property {(name: string, component: string) => string} rememberClash  The console warning when two elements of one component ask to be remembered under the same name
  * @property {(theme: string, href: string) => string} registerLoadFailed  The console error when a lazily loaded register did not arrive; the theme stays what it was [scope-50]
  * @property {string} diagnosticsHeading
  * @property {string} diagnosticsStylesheet

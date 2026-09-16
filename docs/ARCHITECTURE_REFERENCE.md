@@ -31,6 +31,7 @@ js/theme-registry.js the generated list: name, label, whether it is dark
 js/no-flash.js       the snippet for <head>: before the stylesheet, or below
                      css/themes.css when it also writes the register
 js/lazy-register.js  the active theme's register, fetched at runtime (opt-in)
+js/remember.js       the one memory: what a reader chose, put back
 js/strings.js        every user-visible string, English by default [KT5]
 js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one
@@ -109,6 +110,53 @@ click in either picker
              ├→ React's useSyncExternalStore re-renders
              └→ the fx components re-read the theme
 ```
+
+## Where remembered state lives
+
+On the ELEMENT, as a name, and in `localStorage` under a key composed from
+it — never under a key written in a module [Kenny, 2026-09-16: *"die key in
+localStorage moet niet hardcoded zijn, stel dat we twee van dezelfde
+elementen naast mekaar op de pagina willen ofzo"*].
+
+```text
+kp-remember : <component> : <name> : <slot>
+   prefix      the package    data-kp-remember   which piece of state
+   (settable)  names the kind on the element     groups · open · rail ·
+                                                 branches · value ·
+                                                 columns · sort · density
+```
+
+The page is not in the key, on purpose: the case this exists for is a group
+that stays folded after following a link.
+
+`js/remember.js` is the only file that knows about storage. What keeps it
+ONE mechanism rather than five is that it paints MARKUP: the stored state
+goes back on the element as the attributes an author could have written by
+hand — `data-kp-sidenav-expanded`, `open`, `aria-valuenow`, `aria-sort`,
+`data-kp-column-hidden`, `data-density` — and every module goes on reading
+its own markup exactly as it did before. No module gained a second way to
+start up.
+
+```
+js/auto.js (deferred, before DOMContentLoaded)
+   └→ restoreRemembered(document)
+        └→ paintRemembered(element, component)   attributes only
+             └→ attachSidenavs / attachStructure / attachDataTables
+                  read the markup, as they always did, and write
+                  memory.write(slot, value) when the reader changes it
+```
+
+A name is claimed by the first element that asks for it: a second element
+of the same component with the same name gets no memory, keeps its markup
+default and reports `kp-remember-clash`. Sharing one key between two panels
+would make them mirror each other, which is the fault the name prevents.
+
+Not everything remembers. The components that do are the ones a reader
+arranges — the side navigation's groups and rail, the accordion, the tree,
+the split pane, the data table's columns, sort and density. Dialogs,
+popovers, menus, tooltips, toasts, the combobox, the date picker, the
+wizard's step and the alarm deliberately do not: each is opened for a
+moment, and a page that reopens one by itself is arguing with its reader.
 
 ## Colour, and the four numbers that are not ours
 

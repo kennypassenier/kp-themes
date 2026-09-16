@@ -1693,6 +1693,109 @@ sideways; the breadcrumb comes
 before `<main>`, so the skip link passes it along with both navigations.
 No page stylesheet is involved.
 
+## What a page remembers [Kenny, 2026-09-16]
+
+Some state belongs to the reader rather than to the page. A group of links
+the reader folded away should still be folded on the page the link led to;
+a divider they dragged should be where they left it. Kenny's words, after
+closing the review site's Components group and clicking a link: *"de
+sidenav moet zijn state onthouden … Dit gedrag moet tellen voor alle
+elementen waar dit verwacht wordt door een user."*
+
+**It is opt-in, and the element names itself.** Write
+`data-kp-remember="<name>"` on the component and it remembers; leave it off
+and this package writes nothing at all into your storage.
+
+```html
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-remember="main-nav">
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="components">
+                <button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__label">Components</span></button>
+                <div class="kp-sidenav__submenu">
+                    <ul class="kp-sidenav__list">
+                        <li><a class="kp-sidenav__link" href="/button"><span class="kp-sidenav__label">Button</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+```
+
+Fold that group away, follow the link, and it is still folded. Nothing
+else is needed: `js/auto.js` restores every remembering element before the
+first frame, and each module goes on reading the markup. A page that
+attaches modules itself calls `restoreRemembered()` once, as early as it
+can, and `attachRemembered()` for its `<details>` disclosures.
+
+**The key is composed, never hardcoded**:
+
+```text
+kp-remember:<component>:<name>:<slot>
+kp-remember:sidenav:main-nav:groups
+```
+
+`<component>` is the package's own word for the kind of thing, `<name>` is
+what the element wrote, `<slot>` is which piece of state. The page is
+deliberately not part of it — the state has to cross a navigation, which is
+the whole case. An author who wants a per-page memory gives the element a
+per-page name. A group inside a side navigation may carry its own
+`data-kp-remember` too; without one it is known by the words in its toggle,
+so a group renamed starts fresh rather than inheriting a stranger's state.
+
+What each component keeps:
+
+| Component | `data-kp-remember` on | Slots |
+| --- | --- | --- |
+| side navigation | `.kp-sidenav` | `groups` (which categories are folded), `open`, `rail` |
+| accordion, any disclosure | a `<details>` | `open` |
+| tree | `[data-kp-tree]` | `branches` |
+| split pane | `[data-kp-split]` | `value` |
+| data table | `[data-kp-datatable]` | `columns`, `sort`, `density` |
+
+Everything transient is deliberately left out: dialogs, popovers, menus,
+tooltips, toasts, the combobox, the date picker, a wizard's step and the
+alarm. Each of those is a thing the reader opened for a moment, and a page
+that reopens one by itself on the next load is a page arguing with its
+reader. A reorder list is left out for a different reason: the order is the
+app's data, and `kp-reorder` hands it over so the app can store it where
+its data lives.
+
+**Two elements, one name.** Two of the same component with different names
+keep separate state — that is what naming them buys. Two with the SAME name
+are a fault: the first to attach owns the key, the second is refused a
+memory entirely (it works, at its markup default, and writes nothing), and
+the clash is reported once in the console and as `kp-remember-clash` on the
+element that was refused.
+
+**When there is no storage** — a private window, a browser set to refuse
+site data — every read and write fails quietly and every component works at
+its markup default. Nothing throws.
+
+**The way out** [KT6]: `configureRemember({ prefix, storage })` sets the
+first key segment and where the values go for the whole document
+(`storage: null` turns the mechanism off without touching a component), and
+`memoryFor(element, component)` hands you the composed key and its
+`read` / `write` / `forget`, so a consumer can clear or migrate what this
+package wrote.
+
+```js
+import { configureRemember, memoryFor } from '@kp-soft/themes/js/remember';
+
+configureRemember({ prefix: 'acme' });
+memoryFor(document.querySelector('#nav'), 'sidenav')?.forget('groups');
+```
+
+One thing this cannot do: a frame the browser paints between the end of the
+parse and the deferred module — the window before any script can address an
+element that has just been parsed. `js/auto.js` restores at the earliest
+moment a DOM-dependent restore exists, which is before `DOMContentLoaded`.
+A page that builds its navigation with script calls
+`paintRemembered(element, 'sidenav')` before it puts it in the document, so
+the restored state is the first thing drawn; the review site does exactly
+that.
+
 ## Numbers that count up [feat-count-1]
 
 Write the final number. The module reads it, counts to it, and puts the

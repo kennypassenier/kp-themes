@@ -116,6 +116,10 @@
             "types": "./js/sidenav.d.ts",
             "default": "./js/sidenav.js"
         },
+        "./js/remember": {
+            "types": "./js/remember.d.ts",
+            "default": "./js/remember.js"
+        },
         "./js/datepicker": {
             "types": "./js/datepicker.d.ts",
             "default": "./js/datepicker.js"

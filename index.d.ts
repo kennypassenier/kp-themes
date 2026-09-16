@@ -29,6 +29,7 @@ export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachF
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
 export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
+export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, attachRemembered, configureRemember, forgetClaims, memoryFor, paintRemembered, restoreRemembered, } from './js/remember.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
 export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
 export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';

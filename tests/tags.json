@@ -129,6 +129,11 @@
         { "path": "js/colorpicker.js", "tags": ["@component:colorpicker"] },
         { "path": "js/contrast.js", "tags": ["@component:colorpicker"] },
         { "path": "js/sidenav.js", "tags": ["@component:navigation"] },
+        {
+            "path": "js/remember.js",
+            "tags": ["@component:navigation", "@component:structure", "@component:datatable"],
+            "why": "the one memory: the side navigation's groups and rail, the tree, the split, the accordion and the data table's view"
+        },
         { "path": "js/alarm.js", "tags": ["@component:alarm"] },
         { "path": "js/overlays.js", "tags": ["@component:overlays", "@component:feedback", "@component:navigation", "@component:data"] },
         {

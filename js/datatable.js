@@ -101,6 +101,7 @@ import { collator, parseNumber, resolveLocale } from './locale.js';
 import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
 import { attachSelect, drawsSelect } from './combobox.js';
+import { columnId, paintRemembered } from './remember.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -731,6 +732,12 @@ export function attachDataTables(
         const table = /** @type {HTMLTableElement | null} */ (wrap.querySelector('table'));
         const body = table?.tBodies[0];
         if (table === undefined || table === null || body === undefined) continue;
+        // The density, the columns and the sort this reader chose last time,
+        // when the table asked to be remembered [Kenny, 2026-09-16]. The
+        // painter writes them as the markup a server would have rendered —
+        // `data-density`, `data-kp-column-hidden`, `aria-sort` — so
+        // everything below goes on reading the markup and nothing else moves.
+        const memory = paintRemembered(wrap, 'datatable');
         wrap.dataset.kpDatatableAttached = '';
         instances += 1;
         const id = `kp-datatable-${instances}`;
@@ -841,6 +848,8 @@ export function attachDataTables(
         const headersWereHidden = headers.map((h) => h.hidden);
         /** The column names, read once: the sort order a header shows later is not part of its name. */
         const labels = headers.map((h) => (h.textContent ?? '').trim());
+        /** What a remembered column or sort key is stored under: never the index, which the control columns shift. */
+        const columnIds = headers.map((h) => columnId(h));
         /** @param {number} at */
         const labelOf = (at) => labels[at] ?? '';
         const orders = headers.map((h) => (h.dataset.kpSortOrder === undefined ? null : splitList(h.dataset.kpSortOrder)));
@@ -2289,6 +2298,7 @@ export function attachDataTables(
             if (next === 'compact') wrap.setAttribute('data-density', 'compact');
             else wrap.removeAttribute('data-density');
             if (densitySelect !== null) densitySelect.value = next;
+            memory?.write('density', next);
             render();
         };
         const onPanel = () => {
@@ -2341,6 +2351,10 @@ export function attachDataTables(
         /** @param {SortKey[]} next @param {Sort} [announced] */
         const commitSorts = (next, announced) => {
             sorts = next.filter((key) => headers[key.column] !== undefined);
+            memory?.write(
+                'sort',
+                sorts.map((key) => ({ column: columnIds[key.column], direction: key.direction })),
+            );
             wrap.dispatchEvent(new CustomEvent(SORT_EVENT, { bubbles: true, detail: announced === undefined ? (sorts[0] ?? null) : announced }));
             // A new sort starts at the first page, as the approved mock does:
             // the rows the reader was looking at are somewhere else now.
@@ -2415,6 +2429,10 @@ export function attachDataTables(
         /** @param {Iterable<number>} next */
         const setHidden = (next) => {
             hiddenColumns = new Set([...next].filter((at) => headers[at] !== undefined && !locked[at] && !controlColumn(at)));
+            memory?.write(
+                'columns',
+                [...hiddenColumns].sort((a, b) => a - b).map((at) => columnIds[at]),
+            );
             syncColumns();
             wrap.dispatchEvent(new CustomEvent(COLUMNS_EVENT, { bubbles: true, detail: { hidden: [...hiddenColumns].sort((a, b) => a - b) } }));
             render();

@@ -50,7 +50,7 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @property {boolean} [lockScroll]
  * @property {boolean} [focusTrap]
  * @property {string} [contentSelector]  What `push` moves over.
- * @property {string} [remember]  A storage key, so the narrow state survives a reload.
+ * @property {string} [remember]  A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
  * @property {import('react').ElementType} [linkComponent]  What renders a link [TH62]. Default 'a'.
  * @property {string} [label]  The accessible name of the navigation landmark.
  * @property {boolean} [autoAttach]  Hand the rendered markup to js/sidenav.js on mount. Default true.
@@ -143,7 +143,7 @@ function SidenavInner(
         ...flag('data-kp-sidenav-lock-scroll', lockScroll),
         ...flag('data-kp-sidenav-focus-trap', focusTrap),
         ...value('data-kp-sidenav-content', contentSelector),
-        ...value('data-kp-sidenav-remember', remember),
+        ...value('data-kp-remember', remember),
     };
 
     // js/auto.js attaches on load; React mounts after that, so a

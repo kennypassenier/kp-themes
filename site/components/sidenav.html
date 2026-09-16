@@ -233,6 +233,40 @@
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A navigation that remembers what the reader folded</figcaption>
+                        <p class="kp-text-muted">Kenny, 2026-09-16: a group he closed and then clicked a link in must still be closed on the page the link led to. data-kp-remember on the panel turns that on, and the name is the element’s — two navigations on one page with different names keep separate state, and two with the SAME name are a fault the module reports rather than a memory they share. A group with a data-kp-remember of its own keeps its state under that name; without one it is known by the words in its toggle. The same attribute is read by the accordion, the tree, the split pane and the data table; docs/USER_GUIDE.md has the whole table.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<nav class="kp-sidenav" id="kept-nav" aria-label="Sections" data-kp-remember="main-nav">
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="components">
+                <button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__label">Components</span></button>
+                <div class="kp-sidenav__submenu">
+                    <ul class="kp-sidenav__list">
+                        <li><a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Side navigation</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;kept-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Sections&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;main-nav&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-expanded</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;components&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category-toggle&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Components&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__submenu&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Side navigation&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Over the page, with a toggler</figcaption>
                         <p class="kp-text-muted">data-kp-sidenav-mode=&quot;over&quot; puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -260,6 +294,8 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-remember</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-remember-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-sidenav-</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-sidenav-accordion</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-attached</code></td><td>read, written</td></tr>
@@ -268,7 +304,7 @@
                             <tr><td><code>data-kp-sidenav-close-on-esc</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-content</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-expand-on-hover</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-sidenav-expanded</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-sidenav-expanded</code></td><td>written, selector, read</td></tr>
                             <tr><td><code>data-kp-sidenav-focus-trap</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-lock-scroll</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-mode</code></td><td>written</td></tr>
@@ -314,7 +350,7 @@
                             <tr><td><code>lockScroll</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>focusTrap</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>contentSelector</code></td><td><code>string</code></td><td>optional</td><td>What `push` moves over.</td></tr>
-                            <tr><td><code>remember</code></td><td><code>string</code></td><td>optional</td><td>A storage key, so the narrow state survives a reload.</td></tr>
+                            <tr><td><code>remember</code></td><td><code>string</code></td><td>optional</td><td>A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].</td></tr>
                             <tr><td><code>linkComponent</code></td><td><code>import('react').ElementType</code></td><td>optional</td><td>What renders a link [TH62]. Default 'a'.</td></tr>
                             <tr><td><code>label</code></td><td><code>string</code></td><td>optional</td><td>The accessible name of the navigation landmark.</td></tr>
                             <tr><td><code>autoAttach</code></td><td><code>boolean</code></td><td>optional</td><td>Hand the rendered markup to js/sidenav.js on mount. Default true.</td></tr>
@@ -338,6 +374,7 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-remember-clash</code></td><td>Fired on the element that was refused a memory because its name was taken: `{ name, component, other }`.</td></tr>
                             <tr><td><code>kp-sidenav-toggle</code></td><td></td></tr>
                             <tr><td><code>kp-sidenav-slim</code></td><td></td></tr>
                             <tr><td><code>kp-sidenav-mode</code></td><td></td></tr>
@@ -395,7 +432,9 @@
                             <tr><td><code>data-kp-sidenav-accordion</code></td><td>One category open at a time. Without it they are independent.</td></tr>
                             <tr><td><code>data-kp-sidenav-backdrop</code></td><td>false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.</td></tr>
                             <tr><td><code>data-kp-sidenav-close-on-esc</code></td><td>false keeps Escape from closing it. data-kp-sidenav-focus-trap=&quot;false&quot; lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.</td></tr>
-                            <tr><td><code>data-kp-sidenav-remember</code></td><td>A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.</td></tr>
+                            <tr><td><code>data-kp-remember</code></td><td>A name. Name the panel and its folded groups, its open state and its rail survive a reload; name a .kp-sidenav__category as well and that group keeps its state under its own name. The same attribute is what the accordion, the tree, the split pane and the data table remember by — one mechanism, js/remember.js, and the key it composes is kp-remember:&lt;component&gt;:&lt;name&gt;:&lt;slot&gt;. Leave it off and this package writes nothing into your storage.</td></tr>
+                            <tr><td><code>data-kp-sidenav-remember</code></td><td>The older spelling of data-kp-remember, still read. New markup uses data-kp-remember.</td></tr>
+                            <tr><td><code>kp-remember-clash</code></td><td>On the element refused a memory because another element of the same component already answers to that name: `{ name, component, other }`. It keeps its markup default and writes nothing; the first one to attach owns the key.</td></tr>
                             <tr><td><code>--kp-sidenav-inset-block</code></td><td>Where a covering panel starts and ends, one value or two. A page that keeps its own bar says `3rem 0` and the panel begins under it instead of sliding beneath it.</td></tr>
                             <tr><td><code>never sideways</code></td><td>The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.</td></tr>
                             <tr><td><code>.kp-sidenav__scroll</code></td><td>The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.</td></tr>

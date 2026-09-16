@@ -1858,7 +1858,7 @@ export const DESCRIPTORS = [
         group: 'Navigation',
         classes: ['kp-sidenav'],
         exports: ['Sidenav', 'SidenavToggle', 'SidenavSlimToggle'],
-        aliases: ['sidenav'],
+        aliases: ['sidenav', 'remember'],
         intro: 'A navigation that stands beside the content instead of above it. Three modes — beside the page, over it, or pushing it aside — a slim rail that keeps the icons and drops the words, categories that fold, and either edge.',
         whenToUse:
             'For an application with more places than a bar can hold, or a hierarchy two levels deep. Not for the five links every page can reach — that is the bar at the top. Not as a drawer for content: a panel that slides in carrying a form is a dialog, and it wants a dialog’s focus handling and a dialog’s dismissal.',
@@ -1941,6 +1941,26 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A navigation that remembers what the reader folded',
+                why: 'Kenny, 2026-09-16: a group he closed and then clicked a link in must still be closed on the page the link led to. data-kp-remember on the panel turns that on, and the name is the element\u2019s — two navigations on one page with different names keep separate state, and two with the SAME name are a fault the module reports rather than a memory they share. A group with a data-kp-remember of its own keeps its state under that name; without one it is known by the words in its toggle. The same attribute is read by the accordion, the tree, the split pane and the data table; docs/USER_GUIDE.md has the whole table.',
+                markup: `
+<nav class="kp-sidenav" id="kept-nav" aria-label="Sections" data-kp-remember="main-nav">
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="components">
+<button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__label">Components</span></button>
+<div class="kp-sidenav__submenu">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Side navigation</span></a></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</nav>
+`,
+            },
+            {
                 title: 'Over the page, with a toggler',
                 why: 'data-kp-sidenav-mode="over" puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.',
                 markup: `
@@ -1965,7 +1985,9 @@ export const DESCRIPTORS = [
             { name: 'data-kp-sidenav-accordion', what: 'One category open at a time. Without it they are independent.' },
             { name: 'data-kp-sidenav-backdrop', what: 'false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.' },
             { name: 'data-kp-sidenav-close-on-esc', what: 'false keeps Escape from closing it. data-kp-sidenav-focus-trap="false" lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.' },
-            { name: 'data-kp-sidenav-remember', what: 'A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.' },
+            { name: 'data-kp-remember', what: 'A name. Name the panel and its folded groups, its open state and its rail survive a reload; name a .kp-sidenav__category as well and that group keeps its state under its own name. The same attribute is what the accordion, the tree, the split pane and the data table remember by — one mechanism, js/remember.js, and the key it composes is kp-remember:<component>:<name>:<slot>. Leave it off and this package writes nothing into your storage.' },
+            { name: 'data-kp-sidenav-remember', what: 'The older spelling of data-kp-remember, still read. New markup uses data-kp-remember.' },
+            { name: 'kp-remember-clash', what: 'On the element refused a memory because another element of the same component already answers to that name: `{ name, component, other }`. It keeps its markup default and writes nothing; the first one to attach owns the key.' },
             { name: '--kp-sidenav-inset-block', what: 'Where a covering panel starts and ends, one value or two. A page that keeps its own bar says `3rem 0` and the panel begins under it instead of sliding beneath it.' },
             { name: 'never sideways', what: 'The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.' },
             { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },

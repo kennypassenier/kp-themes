@@ -27,6 +27,7 @@ export declare const OPTIONS: {
     lockScroll: string;
     focusTrap: string;
     content: string;
+    /** The older spelling of `data-kp-remember`, still read [js/remember.js]. */
     remember: string;
     toggle: string;
     slimToggle: string;
@@ -38,9 +39,18 @@ export declare const OPTIONS: {
 };
 export type Sidenav = {
     element: HTMLElement;
-    open: () => void;
-    close: () => void;
-    toggle: () => void;
+    open: (options?: {
+        remember?: boolean;
+    }) => void;
+    /**
+     * `{ remember: false }` for a close the reader did not ask for — a layout adapting to the room it has
+     */
+    close: (options?: {
+        remember?: boolean;
+    }) => void;
+    toggle: (options?: {
+        remember?: boolean;
+    }) => void;
     setMode: (mode: 'over' | 'side' | 'push') => void;
     setSlim: (collapsed?: boolean) => void;
     isOpen: () => boolean;
@@ -49,9 +59,9 @@ export type Sidenav = {
 /**
  * @typedef {object} Sidenav
  * @property {HTMLElement} element
- * @property {() => void} open
- * @property {() => void} close
- * @property {() => void} toggle
+ * @property {(options?: { remember?: boolean }) => void} open
+ * @property {(options?: { remember?: boolean }) => void} close  `{ remember: false }` for a close the reader did not ask for — a layout adapting to the room it has
+ * @property {(options?: { remember?: boolean }) => void} toggle
  * @property {(mode: 'over' | 'side' | 'push') => void} setMode
  * @property {(collapsed?: boolean) => void} setSlim
  * @property {() => boolean} isOpen

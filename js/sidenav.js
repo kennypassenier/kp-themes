@@ -21,6 +21,7 @@
 // and the detach.
 
 import { getStrings } from './strings.js';
+import { paintRemembered, sidenavGroups } from './remember.js';
 
 export const SIDENAV_TOGGLE_EVENT = 'kp-sidenav-toggle';
 export const SIDENAV_SLIM_EVENT = 'kp-sidenav-slim';
@@ -53,6 +54,7 @@ export const OPTIONS = {
     lockScroll: 'data-kp-sidenav-lock-scroll',
     focusTrap: 'data-kp-sidenav-focus-trap',
     content: 'data-kp-sidenav-content',
+    /** The older spelling of `data-kp-remember`, still read [js/remember.js]. */
     remember: 'data-kp-sidenav-remember',
     toggle: 'data-kp-sidenav-toggle',
     slimToggle: 'data-kp-sidenav-slim-toggle',
@@ -77,9 +79,9 @@ const handles = new WeakMap();
 /**
  * @typedef {object} Sidenav
  * @property {HTMLElement} element
- * @property {() => void} open
- * @property {() => void} close
- * @property {() => void} toggle
+ * @property {(options?: { remember?: boolean }) => void} open
+ * @property {(options?: { remember?: boolean }) => void} close  `{ remember: false }` for a close the reader did not ask for — a layout adapting to the room it has
+ * @property {(options?: { remember?: boolean }) => void} toggle
  * @property {(mode: 'over' | 'side' | 'push') => void} setMode
  * @property {(collapsed?: boolean) => void} setSlim
  * @property {() => boolean} isOpen
@@ -94,16 +96,6 @@ const handles = new WeakMap();
  */
 export function sidenavOf(element) {
     return element === null ? undefined : handles.get(element);
-}
-
-/** localStorage where there is one, null where reaching it throws. */
-function storage() {
-    try {
-        return globalThis.localStorage ?? null;
-    } catch {
-        // A browser set to refuse site data throws on the property itself.
-        return null;
-    }
 }
 
 /**
@@ -137,7 +129,6 @@ const FOCUSABLE =
 export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
     /** @type {(() => void)[]} */
     const cleanups = [];
-    const memory = store === undefined ? storage() : store;
 
     for (const element of root.querySelectorAll('.kp-sidenav')) {
         const panel = /** @type {HTMLElement} */ (element);
@@ -151,7 +142,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             const value = read(attribute);
             return value === null ? fallback : value !== 'false';
         };
-        const key = read(OPTIONS.remember);
+        // What this panel remembers, and where: the name comes off the
+        // element, never from here [Kenny, 2026-09-16]. The paint happens
+        // before anything below reads the markup, so the starting state is
+        // read from the memory the same way it is read from the markup.
+        const memory = paintRemembered(panel, 'sidenav', { storage: store });
 
         /** @type {HTMLElement | null} */
         let backdrop = null;
@@ -240,8 +235,15 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
         };
 
-        /** @param {boolean} open @param {boolean} [moveFocus] */
-        const set = (open, moveFocus = true) => {
+        /**
+         * @param {boolean} open
+         * @param {boolean} [moveFocus]
+         * @param {boolean} [save] whether this is a state to remember — a
+         *   person's choice is, an adaptation to the room the panel is in is
+         *   not. A window narrowed past the step closes the panel; widening
+         *   it again must not find it closed because of that [Kenny, 2026-09-16].
+         */
+        const set = (open, moveFocus = true, save = true) => {
             panel.setAttribute(OPTIONS.open, String(open));
             say(open);
             const offset = offsetContent(open);
@@ -260,19 +262,15 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 }
             }
 
-            if (key && memory) {
-                try {
-                    memory.setItem(key, String(open));
-                } catch {
-                    // A full or refused quota loses the memory, never the panel.
-                }
-            }
+            if (save) memory?.write('open', open);
             panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
             panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset } }));
         };
 
-        const close = () => set(false);
-        const open = () => set(true);
+        /** @param {{ remember?: boolean }} [options] */
+        const close = ({ remember = true } = {}) => set(false, true, remember);
+        /** @param {{ remember?: boolean }} [options] */
+        const open = ({ remember = true } = {}) => set(true, true, remember);
 
         /**
          * The buttons that collapse and expand this rail without a line of
@@ -307,24 +305,26 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
             panel.toggleAttribute(OPTIONS.slimCollapsed, next);
             saySlim(next);
-            if (key && memory) {
-                try {
-                    memory.setItem(`${key}:slim`, String(next));
-                } catch {
-                    // As above: the rail still works, it is only forgotten.
-                }
-            }
+            memory?.write('rail', next);
             panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
         };
 
         /** @param {'over' | 'side' | 'push'} next */
         const setMode = (next) => {
             panel.setAttribute(OPTIONS.mode, next);
-            set(isOpen(), false);
+            set(isOpen(), false, false);
         };
 
         // Categories. The accordion option is the reference's: with it on,
         // opening one closes the others.
+        const saveGroups = () => {
+            if (memory === null) return;
+            /** @type {Record<string, boolean>} */
+            const state = {};
+            for (const { group, id } of sidenavGroups(panel)) state[id] = group.hasAttribute(OPTIONS.expanded);
+            memory.write('groups', state);
+        };
+
         /** @param {Event} event */
         const onCategory = (event) => {
             const toggle = /** @type {HTMLElement | null} */ (
@@ -342,6 +342,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
             category.toggleAttribute(OPTIONS.expanded, !expanded);
             toggle.setAttribute('aria-expanded', String(!expanded));
+            saveGroups();
         };
 
         /** @param {Event} event */
@@ -428,7 +429,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                     panel.setAttribute(OPTIONS.narrow, '');
                     panel.removeAttribute(OPTIONS.slimCollapsed);
                     panel.setAttribute(OPTIONS.mode, 'over');
-                    set(false, false);
+                    set(false, false, false);
                 } else {
                     const was = /** @type {{ mode: string | null, slim: boolean }} */ (declared);
                     declared = null;
@@ -437,7 +438,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                     else panel.setAttribute(OPTIONS.mode, was.mode);
                     panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
                     saySlim(was.slim);
-                    set(mode() === 'side', false);
+                    set(mode() === 'side', false, false);
                 }
             });
         };
@@ -449,17 +450,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         // `hidden` default written as a mode rather than as a flag.
         let start = mode() === 'side';
         if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === 'true';
-        if (key && memory) {
-            try {
-                const remembered = memory.getItem(key);
-                if (remembered === 'true' || remembered === 'false') start = remembered === 'true';
-                if (memory.getItem(`${key}:slim`) === 'true') panel.setAttribute(OPTIONS.slimCollapsed, '');
-            } catch {
-                // Nothing remembered is a valid answer.
-            }
-        }
         if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, '');
-        set(start, false);
+        set(start, false, false);
         saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
         applyNarrow();
         if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
@@ -480,7 +472,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             element: panel,
             open,
             close,
-            toggle: () => set(!isOpen()),
+            toggle: ({ remember = true } = {}) => set(!isOpen(), true, remember),
             setMode,
             setSlim,
             isOpen,

@@ -79,7 +79,7 @@ export type SidenavProps = {
      */
     contentSelector?: string;
     /**
-     * A storage key, so the narrow state survives a reload.
+     * A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
      */
     remember?: string;
     /**

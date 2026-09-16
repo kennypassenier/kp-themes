@@ -228,6 +228,7 @@
  * @property {string} themeGroupLight
  * @property {string} themeGroupDark
  * @property {(requested: string, applied: string) => string} themeUnknown
+ * @property {(name: string, component: string) => string} rememberClash  The console warning when two elements of one component ask to be remembered under the same name
  * @property {(theme: string, href: string) => string} registerLoadFailed  The console error when a lazily loaded register did not arrive; the theme stays what it was [scope-50]
  * @property {string} diagnosticsHeading
  * @property {string} diagnosticsStylesheet
@@ -537,6 +538,8 @@ export const DEFAULT_STRINGS = Object.freeze({
      */
     themeUnknown: (requested, applied) =>
         `kp-themes: "${requested}" is not a theme this build knows, so "${applied}" was applied instead. The stored choice was left alone; open the diagnostics page to see which half is behind.`,
+    rememberClash: (name, component) =>
+        `kp-themes: two ${component} elements both ask to be remembered as "${name}", so only the first one is. Give the second a data-kp-remember of its own.`,
     registerLoadFailed: (theme, href) =>
         `kp-themes: the register for "${theme}" did not load from ${href}, so the page keeps the theme it was wearing. Check the pattern given to attachLazyRegisters().`,
     diagnosticsHeading: 'Stylesheet and JavaScript, side by side',

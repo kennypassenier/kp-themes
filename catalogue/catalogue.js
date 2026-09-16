@@ -4,6 +4,7 @@
 // js/auto.js; this file only drives the chrome around them.
 import { THEMES } from '../js/theme-registry.js';
 import { applyTheme, initializeTheme } from '../js/theme-core.js';
+import { paintRemembered } from '../js/remember.js';
 import { attachThemePickers, themeMenuMarkup } from '../js/theme-picker.js';
 import { attachLazyRegisters, registersPresent } from '../js/lazy-register.js';
 import { COMPONENT_PAGES, PAGES } from './pages.js';
@@ -23,6 +24,10 @@ function buildNavigation() {
     nav.className = 'kp-sidenav cat-nav';
     nav.id = 'cat-nav';
     nav.setAttribute('aria-label', 'Review pages');
+    // Kenny's own case: a group he closed is still closed on the page the
+    // link led to [js/remember.js]. The name is the catalogue's, not the
+    // page's — the whole point is that it survives the navigation.
+    nav.setAttribute('data-kp-remember', 'catalogue-nav');
 
     const header = document.createElement('div');
     header.className = 'kp-sidenav__header';
@@ -39,6 +44,9 @@ function buildNavigation() {
     for (const { group, pages } of PAGES) {
         const category = document.createElement('li');
         category.className = 'kp-sidenav__category';
+        // Each group keeps its own state under its own name, so adding a
+        // group does not shift what the others remembered.
+        category.setAttribute('data-kp-remember', group);
         // Open by default: a reviewer scans the whole list, and a closed
         // group is a page nobody finds.
         category.setAttribute('data-kp-sidenav-expanded', '');
@@ -114,6 +122,10 @@ function mountShell() {
     main ??= column;
 
     const nav = buildNavigation();
+    // Painted before it is in the document: this navigation is built by
+    // script, so the restore js/auto.js does at boot has nothing to paint.
+    // Doing it here means the closed group is never drawn open.
+    paintRemembered(nav, 'sidenav');
     document.body.classList.add('cat-shell');
     column.before(nav);
 
@@ -138,7 +150,8 @@ function mountShell() {
             // A panel that was open beside the page stays open when it moves
             // over it, which on a phone is a menu covering the page it came
             // to show. Over the page it starts closed; the Pages button opens it.
-            if (narrow.matches) handle?.close();
+            // Not remembered: the window got narrow, Kenny did not close it.
+            if (narrow.matches) handle?.close({ remember: false });
         };
         fit();
         narrow.addEventListener('change', fit);

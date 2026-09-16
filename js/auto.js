@@ -40,6 +40,7 @@ import { attachColorPickers } from './colorpicker.js';
 import { attachGrids } from './gridlayout.js';
 import { attachEffects } from './effects.js';
 import { attachSidenavs } from './sidenav.js';
+import { attachRemembered, restoreRemembered } from './remember.js';
 
 /**
  * Attach every behaviour under `root`. Returns one detach for all of it.
@@ -48,7 +49,12 @@ import { attachSidenavs } from './sidenav.js';
  * @returns {() => void}
  */
 export function attachAll(root = document) {
+    // Before every attach: what a reader chose last time goes back onto the
+    // markup, and each module then reads the markup it always read
+    // [js/remember.js]. A subtree rendered after the boot is restored here.
+    restoreRemembered(root);
     const detaches = [
+        attachRemembered(root),
         enforceContracts(root),
         attachConfirmations(root),
         attachSkipLinks(root),
@@ -90,6 +96,10 @@ export function attachAll(root = document) {
 
 if (typeof document !== 'undefined') {
     applyStoredTheme();
+    // The same moment, for the same reason: this module is deferred, so it
+    // runs after the parse and before the first frame. A state restored at
+    // DOMContentLoaded instead would be a state the reader saw flip.
+    restoreRemembered();
     // `?theme=<name>` picks a theme for this load without storing it
     // [AR42], on a page that opts in with `data-kp-theme-from-query` on
     // <html>: the concept demo is one page rendered under every theme, and
