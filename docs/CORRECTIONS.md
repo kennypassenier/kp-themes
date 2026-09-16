@@ -3740,3 +3740,43 @@ fault.
 **8 · If the measurement fails.** The ring becomes its own outline outside the chamfered shape (an unclipped shadow layer) instead of `outline`.
 
 **9 · When we review the measure.** At the next theme with a button shape of its own.
+
+## fix-39 · A dropdown was cut by the box that showed it, not by the window (2026-09-16)
+
+**1 · What went wrong.** Kenny, reviewing `navigation--mega-menu` in light through the review dialog: "de Account dropdown verliest een deel van het rechtergedeelte omdat het venster niet breed genoeg is". Measured: the review dialog's stage carries `contain: strict; overflow: auto`, and `placeNavMenu` read only `document.documentElement.clientWidth`, so it saw a panel 300px inside the window while the stage cut its right edge by 70px at 1280, 83px at 1024 and 83px at 900.
+
+**2 · Which gate let it through.** None. `tests/overlay-flip.spec.mjs` (fix-30) tests the flip against the window; no test placed a menu inside a clipping ancestor, which is how every block in the review dialog is shown.
+
+**3 · Where the same fault sits.** The property: code that asks the window for room when its element sits in a box that clips. Searched with `grep -rn "documentElement.clientWidth\|innerWidth\|innerHeight" js/`: `placeNavMenu` and `placeNavPanel` (fixed together, both now read `viewBox()`); `js/top-layer.js` reads the visual viewport for the top layer, where the clipping ancestor cannot apply because the panel is in the top layer.
+
+**4 · How we prevent recurrence.** `viewBox()` narrows the window by every clipping ancestor (`overflow` other than visible, or `contain` that paints), `overflowOf()` measures against that box, and `slideIntoView()` writes `--kp-nav-menu-shift` so a panel slides along the inline axis until its edge sits at the box's edge, never letting the other side out.
+
+**5 · What the remedy costs.** Three functions and one knob in the package (227 → 228 knobs in the AR21 count), and one shift per open.
+
+**6 · Who enforces it.** Code: `tests/menu-in-window.spec.mjs` with `tests/fixtures/menu-in-window.html`, which copies the review dialog's stage property for property; 35 tests, red 16 of 35 before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `navigation--mega-menu` and `navigation--dropdown`: the panel is whole at 1280, 1024 and 900px. The test measured 65/53/53px inside after the fix.
+
+**8 · If the measurement fails.** The panel moves to the top layer, where the clipping ancestor cannot reach it, as the popovers already do.
+
+**9 · When we review the measure.** At the next component that opens a panel outside the top layer.
+
+## fix-40 · Brutalism's over-the-page menu stood on the page before it opened (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `navigation--sidenav-over` in brutalism: "Hier staat het menu al meer dan volledig op de pagina voor ik het open. Het moet normaal toch 'uit het zicht' zijn?". Measured: the closed panel's right edge was 621px onto the page, where every other theme has it at 0.
+
+**2 · Which gate let it through.** `tests/sidenav.spec.mjs` opens the panel and tests what it does; no test measured the closed panel's position, and the register's own spec measures its paint, not its place.
+
+**3 · Where the same fault sits.** The property: a register setting `position` on a component whose base layout depends on `position: fixed`. Searched with `grep -n "position:" css/*-register.css | grep -iE "sidenav|dialog|popover|toast|nav__menu"`: only brutalism's `.kp-sidenav { position: relative }`, which it needs for the "thing names itself" label; the same label in the other themes uses a box that is positioned already.
+
+**4 · How we prevent recurrence.** Brutalism's rule excludes the two modes that are positioned by the package (`:not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`), and a sweep measures the closed panel in every theme.
+
+**5 · What the remedy costs.** One selector.
+
+**6 · Who enforces it.** Code: the closed-panel sweep in `tests/menu-in-window.spec.mjs`, red on brutalism before (504px onto the screen in the fixture), green in all 22 after.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `navigation--sidenav-over` in brutalism: nothing of the panel shows until he opens it.
+
+**8 · If the measurement fails.** The package stops letting a register set `position` on `.kp-sidenav` at all, by moving the layout to an inner element.
+
+**9 · When we review the measure.** At the next register that needs a positioned box for a label.

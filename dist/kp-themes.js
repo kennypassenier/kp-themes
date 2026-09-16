@@ -2852,22 +2852,52 @@ function stickyNav(wrap, after) {
   };
 }
 var DROPDOWN = ":scope > .kp-nav__menu:not(.kp-nav__menu--wide)";
-var overflowOf = (box) => Math.max(0, -box.left) + Math.max(0, box.right - document.documentElement.clientWidth);
+var viewBox = (element) => {
+  let left = 0;
+  let right = document.documentElement.clientWidth;
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const style = getComputedStyle(node);
+    if (style.overflowX === "visible" && !/\b(paint|strict|content)\b/.test(style.contain)) continue;
+    const box = node.getBoundingClientRect();
+    left = Math.max(left, box.left + node.clientLeft);
+    right = Math.min(right, box.left + node.clientLeft + node.clientWidth);
+  }
+  return { left, right };
+};
+var overflowOf = (box, view) => Math.max(0, view.left - box.left) + Math.max(0, box.right - view.right);
+var slideIntoView = (panel, view) => {
+  const element = (
+    /** @type {HTMLElement} */
+    panel
+  );
+  element.style.removeProperty("--kp-nav-menu-shift");
+  const box = element.getBoundingClientRect();
+  if (box.width === 0) return;
+  let shift = Math.min(0, view.right - box.right);
+  if (box.left + shift < view.left) shift = view.left - box.left;
+  if (Math.abs(shift) < 1) return;
+  element.style.setProperty("--kp-nav-menu-shift", `${Math.round(shift * 100) / 100}px`);
+};
 function placeNavMenu(item, retry = true) {
   const menu = item.querySelector(DROPDOWN);
   if (!menu) return false;
   menu.removeAttribute("data-kp-nav-menu-end");
+  menu.style.removeProperty("--kp-nav-menu-shift");
   const start = menu.getBoundingClientRect();
   if (start.width === 0) {
     if (retry) requestAnimationFrame(() => placeNavMenu(item, false));
     return false;
   }
-  const fromStart = overflowOf(start);
-  if (fromStart === 0) return false;
-  menu.setAttribute("data-kp-nav-menu-end", "");
-  if (overflowOf(menu.getBoundingClientRect()) < fromStart) return true;
-  menu.removeAttribute("data-kp-nav-menu-end");
-  return false;
+  const view = viewBox(menu);
+  const fromStart = overflowOf(start, view);
+  let end = false;
+  if (fromStart > 0) {
+    menu.setAttribute("data-kp-nav-menu-end", "");
+    end = overflowOf(menu.getBoundingClientRect(), view) < fromStart;
+    if (!end) menu.removeAttribute("data-kp-nav-menu-end");
+  }
+  slideIntoView(menu, view);
+  return end;
 }
 function placeNavPanel(panel) {
   const element = (
@@ -2876,6 +2906,7 @@ function placeNavPanel(panel) {
   );
   const bar = element.closest(".kp-nav");
   const box = element.offsetParent;
+  element.style.removeProperty("--kp-nav-menu-shift");
   if (!bar || !box || element.getBoundingClientRect().width === 0) return;
   const b = bar.getBoundingClientRect();
   const c = box.getBoundingClientRect();
@@ -2884,6 +2915,7 @@ function placeNavPanel(panel) {
   const rtl = getComputedStyle(element).direction === "rtl";
   element.style.setProperty("--kp-nav-mega-start", `${rtl ? right : left}px`);
   element.style.setProperty("--kp-nav-mega-end", `${rtl ? left : right}px`);
+  slideIntoView(element, viewBox(element));
 }
 function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
   const cleanups = [];
@@ -2999,6 +3031,9 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         for (const name of stamped) button.removeAttribute(name);
       }
       for (const menu of nav.querySelectorAll("[data-kp-nav-menu-end]")) menu.removeAttribute("data-kp-nav-menu-end");
+      for (const menu of nav.querySelectorAll(".kp-nav__menu")) {
+        menu.style.removeProperty("--kp-nav-menu-shift");
+      }
       for (const panel of nav.querySelectorAll(".kp-nav__menu--wide")) {
         panel.style.removeProperty("--kp-nav-mega-start");
         panel.style.removeProperty("--kp-nav-mega-end");

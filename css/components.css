@@ -1806,6 +1806,15 @@
         top: 100%;
         inset-inline-start: 0;
         z-index: var(--kp-z-popover, 20);
+        /* How far the panel slides along the inline axis to stay inside the
+         * box that shows it [fix-41]. Changing edges is not always enough —
+         * a panel can be cut while both of its item's edges lie inside the
+         * window — so the module writes the pixels here after it has
+         * measured. Physical pixels, signed: negative moves it left, in a
+         * right-to-left page too, which is what "inside the window" means
+         * on either axis direction. Nothing but js/components.js writes it;
+         * unset, the panel sits exactly where the stylesheet put it. */
+        translate: var(--kp-nav-menu-shift, 0) 0;
         min-width: 12rem;
         margin: 0;
         padding: 0.25rem 0;
@@ -1867,7 +1876,10 @@
      * know where the window ends relative to an item, so the module that
      * wires the bar (js/components.js, placeNavMenu) measures the panel as
      * it opens and writes this attribute; the React NavBar calls the same
-     * function. Without script the panel keeps its start edge. */
+     * function. Without script the panel keeps its start edge.
+     *
+     * The edge is chosen first and `--kp-nav-menu-shift` finishes the job
+     * [fix-41]: the box that shows a bar is not always the window. */
     .kp-nav__menu[data-kp-nav-menu-end] {
         inset-inline-start: auto;
         inset-inline-end: 0;

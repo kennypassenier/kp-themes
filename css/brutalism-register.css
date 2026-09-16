@@ -1505,8 +1505,24 @@
     [data-theme='brutalism'] .kp-field__input,
     [data-theme='brutalism'] .kp-card,
     [data-theme='brutalism'] .kp-alert,
-    [data-theme='brutalism'] .kp-badge,
-    [data-theme='brutalism'] .kp-sidenav {
+    [data-theme='brutalism'] .kp-badge {
+        position: relative;
+    }
+
+    /* The side navigation says where it sits, and this tag may not argue
+       with it [fix-42]. A register wins over the base layer whatever its
+       specificity, so `position: relative` here took the `position: fixed`
+       an `over` or `push` panel gets from css/components.css away with it
+       and put the closed panel back in the flow, standing on the page
+       before it was opened — Kenny, 2026-09-16, brutalism's over-the-page
+       menu: "Hier staat het menu al meer dan volledig op de pagina voor ik
+       het open. Het moet normaal toch 'uit het zicht' zijn?" Measured on
+       catalogue/navigation.html#sidenav-over in firefox: the closed panel's
+       right edge stood 621px onto the page where every other theme has it
+       at 0. Those two modes are positioned already, and a positioned box is
+       all the tag needs; only the `side` panel, a flex item of the page's
+       own layout, has to be given one. */
+    [data-theme='brutalism'] .kp-sidenav:not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
         position: relative;
     }
 

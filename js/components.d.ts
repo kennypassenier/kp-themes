@@ -231,6 +231,12 @@ export declare function stickyNav(wrap: HTMLElement, after?: number): () => void
  * `data-kp-nav-menu-end` on the panel for the other. Both channels call it:
  * the module on hover and focus, the React NavBar from its item.
  *
+ * Changing edges is not always enough, because the box that shows the bar
+ * is not always the window [fix-39]: in a box that clips, both of an item's
+ * edges can lie inside the window while the panel under it is cut. So the
+ * edge is chosen against the box the panel is really seen in, and what
+ * still hangs out afterwards is slid back in (`slideIntoView`).
+ *
  * @param {Element} item the `.kp-nav__links > li` that holds the dropdown
  * @param {boolean} [retry] measure once more on the next frame when the panel is not open yet; default true
  * @returns {boolean} whether the panel now hangs from the end edge
@@ -245,6 +251,11 @@ export declare function placeNavMenu(item: Element, retry?: boolean): boolean;
  * must stay positioned because its cut-corner plate hangs from it. So the
  * bar is measured against that box, and the two offsets are written as
  * `--kp-nav-mega-start` and `--kp-nav-mega-end` on the panel.
+ *
+ * Lined up with its bar the panel is normally inside whatever shows the
+ * bar, but it is placed against a box and judged against another, so it is
+ * held to the same question the dropdown is [fix-39]: a bar wider than the
+ * box that shows it would otherwise carry its panel out with it.
  *
  * @param {Element} panel the `.kp-nav__menu--wide`, open
  */
