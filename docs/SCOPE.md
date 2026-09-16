@@ -1829,3 +1829,22 @@ zelf": a comparison demo is Claude filling `research/_compare/template.html` —
 no agent, no measurement, no spec of its own — unless the choice turns on a
 number, and then Claude says so before building it. The nine minutes that
 prompted this were the research around the page, not the page.
+
+**scope-107 · Nothing is released while an element is not approved.** Kenny,
+2026-09-16, answering what Claude should do while he reviews: "eerst alle
+problemen die er nog zijn oplossen, we releasen pas als elk element approved is.
+Dit is een vaste regel vanaf nu". So a release waits until every block in the
+catalogue carries an approval for every theme it is shown in; open rejections
+and blocks never judged both block it, and the retrospective and the version
+bump come after. His review of the whole catalogue the same evening recorded 566
+verdicts, of which thirteen are rejections: light's mega menu clipped at the
+window's edge; dark's app shell, dossier, long dialog and confirmation, where
+the new halo leaves an uncoloured strip that squares the chamfered corner, and
+its select with two arrows; high-contrast's app shell, bar search and shrinking
+header, where blue is still in the navigation and "Search" keeps the old ink;
+sepia's failed data table, whose "Try again" must read white; blueprint's
+laurels, which should sit in the theme's measure frame; brutalism's auto alarm,
+whose text breaks out of its frame, and its over-the-page menu, which stands on
+the page before it is opened; phantom's React theme menu, which shows almost
+nothing; shade-light's primary button, with no visible press; and retro's two
+alarms, whose face is too coarse to read.

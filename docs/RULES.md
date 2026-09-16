@@ -364,3 +364,12 @@ zelf er in moeten geplaatst worden?"*. So the page is fixed once, in
 filling four slots. No agent, no measurement, no spec of its own — a
 measurement only when the choice turns on a number, said out loud before
 it is built.
+
+## Kenny's answer of 2026-09-16 (scope-107) — approved first, released after
+
+Kenny: *"eerst alle problemen die er nog zijn oplossen, we releasen pas als
+elk element approved is. Dit is een vaste regel vanaf nu"*. A release waits
+for the catalogue: every block, in every theme it is shown in, carries an
+approval. A rejection or a block never judged holds the version where it
+is, and the work in between is fixing what Kenny's eye found, not writing
+the round up.
