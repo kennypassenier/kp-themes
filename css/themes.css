@@ -1929,11 +1929,11 @@
 [data-theme='shade-light'] {
     /* Shade, the light half: a book read in the shade, not in the sun. Solarized-derived, medium contrast, accents as plates. */
     --background: hsl(44, 87%, 94%);
-    --foreground: hsl(194, 14%, 40%);
+    --foreground: hsl(194, 14%, 36%);
     --card: hsl(44, 87%, 97%);
-    --card-foreground: hsl(194, 14%, 40%);
+    --card-foreground: hsl(194, 14%, 36%);
     --popover: hsl(44, 90%, 99%);
-    --popover-foreground: hsl(194, 14%, 40%);
+    --popover-foreground: hsl(194, 14%, 36%);
     --primary: hsl(205, 70%, 38%);
     --primary-foreground: hsl(44, 87%, 96%);
     --secondary: hsl(46, 42%, 88%);
@@ -2019,7 +2019,7 @@
 
     /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
     --surface-hero-bg: hsl(44, 87%, 94%);
-    --surface-hero-fg: hsl(194, 14%, 40%);
+    --surface-hero-fg: hsl(194, 14%, 36%);
     --surface-hero-fg-2: hsl(205, 70%, 38%);
     --surface-hero-muted: hsl(194, 14%, 40%);
     --surface-hero-border: hsl(180, 8%, 48%);
@@ -2028,7 +2028,7 @@
     --surface-hero-danger: hsl(1, 71%, 42%);
     --surface-hero-danger-foreground: hsl(44, 87%, 96%);
     --surface-hero-card: hsl(44, 87%, 97%);
-    --surface-hero-card-foreground: hsl(194, 14%, 40%);
+    --surface-hero-card-foreground: hsl(194, 14%, 36%);
 
     /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
     --kp-text-display: clamp(2rem, 4vw, 3rem);
@@ -2036,7 +2036,7 @@
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 70%, 38%);
     --link-visited: hsl(269, 31%, 40%);
-    --focus-ring: hsl(194, 14%, 40%);
+    --focus-ring: hsl(194, 14%, 36%);
     --focus-ring-contrast: hsl(44, 87%, 94%);
     --primary-hover: hsl(203, 100%, 29%);
     --primary-active: hsl(205, 100%, 25%);

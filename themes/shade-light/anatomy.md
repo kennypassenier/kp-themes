@@ -36,9 +36,22 @@ already carried to the whole desktop.
 
 1. **The ink is base01, not base00.** Solarized's own light-mode text
    colour `#657b83` measures 4.13:1 on `#fdf6e3` and fails AA; the
-   darker `#586e75` — `hsl(194, 14%, 40%)` — measures 4.99:1 and is the
+   darker `#586e75` — `hsl(194, 14%, 40%)` — measures 4.99:1 and was the
    text. That is the whole meaning of "medium contrast" here: as low as
-   AA allows, and not lower.
+   AA allows, and not lower. **Deepened to `hsl(194, 14%, 36%)` at
+   `scope-102`** (Kenny, 2026-09-16, shade-light-muted "Gewone tekst ook
+   donkerder"), the same hue and saturation four steps down: base01 at
+   40% left no room under it for a muted ink, because `scope-101` had to
+   push `--muted-foreground` to 39% to clear AA at all, and the quiet
+   text then read stronger than the running text. The body ink now
+   measures 5.30 on `--muted`, 5.86 on `--background` and 6.07 on
+   `--card`, against the muted ink's 4.71, 5.21 and 5.39 — 0.59 to 0.68
+   of separation, with both over 4.5:1 everywhere. One ink, one value:
+   `--card-foreground`, `--popover-foreground`, `--surface-hero-fg` and
+   `--surface-hero-card-foreground` carry the same colour and moved with
+   it. `--surface-hero-muted` stayed at 40% and so became the hero's own
+   quiet ink (4.99 against the hero body's 5.86), which it had never
+   been.
 2. **Accents are plates, never words.** Solarized's blue, cyan, yellow,
    magenta and red were drawn for syntax highlighting, where 3:1 is
    normal. As text they fail, so each is deepened where it carries text
@@ -206,7 +219,9 @@ channel — `--focus-ring`/`--focus-ring-contrast` already resolve to
 exactly `--foreground`/`--background` for this theme in `css/themes.css`
 (measured: `hsl(194, 14%, 40%)` / `hsl(44, 87%, 94%)`, the demo's own
 hardcoded values to the digit), so the register makes no change here at
-all — DI2 was already answered before this lift began.
+all — DI2 was already answered before this lift began. Since `scope-102`
+the ring follows `--foreground` down to `hsl(194, 14%, 36%)`: the same
+token, one shade deeper, and nothing about the ring's own rule changed.
 
 **DI3 — states you can see.** Derived by lightness; the register adds
 one lightness step of its own, `--kp-primary-pressed`, for the one hover
@@ -260,15 +275,18 @@ hazard in its own right, refused the same way its other hazards are.
 - Add a second texture. The blurred seam is the one felt effect this
   theme carries; a grain, a halftone or a scanline would be the loud
   half's job, not this one's.
-- **No black.** The darkest text is 40% lightness; the darkest value
-  anywhere is the sidebar, which wears the dark half's ground.
-  **Crossed at `scope-101`, and reported rather than worked around:**
-  `--muted-foreground` went to 39% so that its three pairs clear 4.5:1
-  (4.71 on muted, 5.21 on background, 5.39 on card, from 3.61 / 3.99 /
-  4.13). It is arithmetic, not taste — `--foreground` itself reaches only
-  4.52 on `--muted`, so no colour clears the floor on all three grounds
-  while staying lighter than the body ink. The cost is that the muted ink
-  is now 0.19 to 0.22 stronger than the body text instead of quieter; see
-  the `why` on the token in `tokens.json`.
+- **No black.** The darkest text is 36% lightness; the darkest value
+  anywhere is the sidebar, which wears the dark half's ground. The line
+  read 40% until `scope-102`, and the two moves that changed it are one
+  story: `scope-101` darkened `--muted-foreground` to 39% so its three
+  pairs clear 4.5:1 (4.71 on muted, 5.21 on background, 5.39 on card,
+  from 3.61 / 3.99 / 4.13), which left the muted ink 0.19 to 0.22
+  STRONGER than a body ink still at 40%; `scope-102` (Kenny, 2026-09-16,
+  shade-light-muted "Gewone tekst ook donkerder") answered that by
+  taking the body ink to 36% rather than lifting the muted one back over
+  the floor. The order is right again — muted 0.59 to 0.68 quieter than
+  body, both over 4.5:1 on every ground — and 36% is still a blue-grey,
+  not a black: `rgb(79, 99, 105)`, twenty-five points of lightness above
+  the sidebar's ground. See the `why` on `--foreground` in `tokens.json`.
 - **No warm accent.** The scheme's warmth is in the paper; every accent
   is cool or primary.

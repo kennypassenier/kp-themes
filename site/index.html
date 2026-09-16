@@ -838,9 +838,22 @@ already carried to the whole desktop.</p>
 <ol>
 <li><strong>The ink is base01, not base00.</strong> Solarized's own light-mode text
 colour <code>#657b83</code> measures 4.13:1 on <code>#fdf6e3</code> and fails AA; the
-darker <code>#586e75</code> — <code>hsl(194, 14%, 40%)</code> — measures 4.99:1 and is the
+darker <code>#586e75</code> — <code>hsl(194, 14%, 40%)</code> — measures 4.99:1 and was the
 text. That is the whole meaning of &quot;medium contrast&quot; here: as low as
-AA allows, and not lower.</li>
+AA allows, and not lower. <strong>Deepened to <code>hsl(194, 14%, 36%)</code> at
+<code>scope-102</code></strong> (Kenny, 2026-09-16, shade-light-muted &quot;Gewone tekst ook
+donkerder&quot;), the same hue and saturation four steps down: base01 at
+40% left no room under it for a muted ink, because <code>scope-101</code> had to
+push <code>--muted-foreground</code> to 39% to clear AA at all, and the quiet
+text then read stronger than the running text. The body ink now
+measures 5.30 on <code>--muted</code>, 5.86 on <code>--background</code> and 6.07 on
+<code>--card</code>, against the muted ink's 4.71, 5.21 and 5.39 — 0.59 to 0.68
+of separation, with both over 4.5:1 everywhere. One ink, one value:
+<code>--card-foreground</code>, <code>--popover-foreground</code>, <code>--surface-hero-fg</code> and
+<code>--surface-hero-card-foreground</code> carry the same colour and moved with
+it. <code>--surface-hero-muted</code> stayed at 40% and so became the hero's own
+quiet ink (4.99 against the hero body's 5.86), which it had never
+been.</li>
 <li><strong>Accents are plates, never words.</strong> Solarized's blue, cyan, yellow,
 magenta and red were drawn for syntax highlighting, where 3:1 is
 normal. As text they fail, so each is deepened where it carries text

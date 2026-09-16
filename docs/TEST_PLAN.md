@@ -253,14 +253,28 @@ visible difference under the floor and no difference at all.
 and the three pairs measure 4.71, 5.21 and 5.39. Its two entries in
 `tests/surfaces.spec.mjs` are gone — that list refuses an entry for a
 pair the package no longer paints under the floor, which is how the
-cleanup was found. What the change costs is recorded rather than hidden:
-`--foreground` itself reaches only 4.52 on `--muted`, so no colour clears
-4.5 on all three grounds while staying lighter than the body ink (the
-best that exists is 0.02:1 quieter). The muted ink is therefore 0.19 to
-0.22 STRONGER than the body text now instead of quieter, and 39% passes
-this theme's own "the darkest text is 40% lightness" line. Both are
-findings for Kenny, written into `themes/shade-light/tokens.json` and
-`themes/shade-light/anatomy.md`.
+cleanup was found. That move cleared the floor and left one cost behind:
+the body ink was still at 40% and reached only 4.52 on `--muted`, so the
+quiet text read 0.19 to 0.22 STRONGER than the running text on all three
+grounds. It was reported rather than worked around, and Kenny answered
+it.
+
+**And the order put back at `scope-102`, the same day** (Kenny,
+shade-light-muted "Gewone tekst ook donkerder"): the answer was to darken
+the body ink rather than lift the muted one, because no colour lighter
+than the old 40% ink clears 4.5 on all three grounds (the best that
+existed was 0.02:1 quieter). `--foreground` went to `hsl(194, 14%, 36%)`
+— with `--card-foreground`, `--popover-foreground`, `--surface-hero-fg`
+and `--surface-hero-card-foreground`, which carry the same ink — and
+`--muted-foreground` stayed at 39%. The muted ink is now the quieter of
+the two on every ground: 4.71 against 5.30 on `--muted`, 5.21 against
+5.86 on `--background`, 5.39 against 6.07 on `--card`, 0.59 to 0.68 of
+separation with both over 4.5:1. `tests/register-shade-light.spec.mjs`
+holds all three grounds, the floor and the separation in one test ("the
+two inks"), drilled red on `223e1597` before the tokens moved. The
+theme's "no black" line now reads 36%; `--surface-hero-muted`, left at
+40%, became the hero's own quiet ink (4.99 against the hero body's 5.86),
+which it had never been. Nothing here is an open finding any more.
 
 `blueprint`'s witness lines moved inside the control rather than outside
 it, so the six pixels of scrollable overflow on every one of its buttons

@@ -100,9 +100,27 @@ focus, the halves converging as the blur clears.
 - **Fields.** The same panel and edge; focus turns the border to the
   primary and draws a 1px line of the film under the field from the left.
 - **Panels.** Cards and dialogs wear the film as their 1px border (the
-  card ground painted over it on the padding box). Popovers, menus, toasts,
-  tooltips, confirmations, pickers and the palette share the card ground,
-  the boundary edge and a shadow made from the background token.
+  card ground painted over it on the padding box). Since `scope-102` that
+  plate — the ground, the film edge and the chamfer — is on a
+  pseudo-element for both of them, `.kp-dialog::before` and
+  `.kp-card::after`, because a `clip-path` clips the element's own
+  box-shadow and a chamfered panel could otherwise cast nothing at all.
+  Popovers, menus, toasts, tooltips, confirmations, pickers and the
+  palette share the card ground and the boundary edge.
+- **The halo** (`scope-102`, Kenny, 2026-09-16, dark-shadow "Gloed van de
+  oxidefilm"). A raised panel stands off the ground in the film's own four
+  wavelengths rather than in a shadow made from the background token,
+  which on a ground at 5 % lightness moved 0.4 % of the band past a
+  just-noticeable step. `--kp-halo` is four fixed shadows — `--chart-2`
+  below, `--chart-1` left, `--chart-3` right, `--chart-4` above, where the
+  conic gradient puts each colour — carried by the dialog, the card and
+  the popover family. Four shadows rather than the film itself, blurred,
+  because `.kp-popover` is `overflow: auto` and a modal dialog is
+  `overflow: auto` by the UA stylesheet: both clip a pseudo-element, and
+  the blurred film measured zero on both. The cost, stated: unlike the
+  border, the halo does not turn with the pointer. The nav's dropdown
+  (`.kp-nav__menu`) is the one panel left on the old background-token
+  shadow — `scope-102` names the dialog, the card and the popover.
 - **The stamp.** A near-white pill in the primary with the consumer's
   label in mono capitals, on the dossier card.
 - **Small parts of the film.** The boot overlay's bar carries the film.

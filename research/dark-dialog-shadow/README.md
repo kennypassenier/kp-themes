@@ -1,5 +1,14 @@
 # dark's dialog shadow: five options
 
+**Decided (scope-102): the oxide halo, painted as four fixed shadows.**
+
+Kenny, 2026-09-16, the shadow-and-ink form, dark-shadow "Gloed van de oxidefilm": option 3, on the dialog, the card and the popover family, in
+the fixed four-shadow form this page measured — because `.kp-popover` and a modal dialog are both `overflow: auto` and clip a blurred halo
+away. Built into `css/dark-register.css` as `--kp-halo`. Measured there, in the package's own catalogue, at dPR 1 → 2.222: dialog 47.6 % →
+46.7 % of the band past ΔL\* 3 (peak 31.79 → 31.94), card 60.6 % → 60.3 % (31.45 → 31.87), popover 56.4 % → 55.6 % (32.32 → 32.69), modal
+dialog 60.3 % → 57.4 % (32.49). Against the blurred film on the same probe: 71.0 % → 70.0 % on the dialog and 86.7 % → 86.5 % on the card, and
+0 % on the popover and the modal dialog, which clip it. The page below is kept as it was measured.
+
 Kenny, 2026-09-16, the gestures-and-shadows form (`scope-101`), asked for the options rather than an answer: _"toon alle opties in een
 demo"_. Demo: [`demo.html`](demo.html) (78837 bytes, `wc -c`), in the catalogue under "Research to look at". A firefox check sits beside it:
 [`verify.spec.mjs`](verify.spec.mjs) with [`playwright.config.mjs`](playwright.config.mjs), run from the repository root as

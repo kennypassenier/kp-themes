@@ -237,3 +237,81 @@ test.describe('the shade-light register, measured faults [scope-100]', { tag: ['
         }
     });
 });
+
+// shade-light's two inks, and the order between them [scope-102]. Kenny,
+// 2026-09-16, the shadow-and-ink form, shade-light-muted "Gewone tekst ook
+// donkerder": the body ink darkens, so that the muted ink is measurably
+// QUIETER than it again while both still clear 4.5:1 on all three grounds.
+//
+// Made to fail first [KT3], 2026-09-16, firefox, on 223e1597's tokens
+// (--foreground and --card-foreground at 40% lightness, --muted-foreground at
+// 39%): the muted ink measured STRONGER than the body ink on every ground, so
+// each separation read negative — -0.18 on the muted panel, -0.21 on the page
+// and -0.21 on a card — and the body ink itself reached only 4.54 on --muted,
+// a twentieth of a step above the floor.
+test.describe('the shade-light register, the two inks [scope-102]', { tag: ['@theme:shade-light', '@component:page-effects'] }, () => {
+    // What the change had to reach on every ground: both inks over the
+    // floor, and the body ink at least this much stronger than the muted one.
+    const FLOOR = 4.5;
+    const SEPARATION = 0.5;
+    /** The three grounds a piece of running text sits on in this theme. */
+    const GROUNDS = [
+        ['--muted', 'the muted panel'],
+        ['--background', 'the page'],
+        ['--card', 'a card'],
+    ];
+
+    test(`the muted ink is at least ${SEPARATION} quieter than the body ink on every ground, both over ${FLOOR}:1`, async ({ page }) => {
+        await open(page, '/examples/concept-shade-light.html');
+        const measured = await page.evaluate((grounds) => {
+            /** The painted value of a token, as `rgb(r, g, b)`. */
+            const paint = (/** @type {string} */ token) => {
+                const s = document.createElement('span');
+                s.style.color = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+                document.body.append(s);
+                const v = getComputedStyle(s).color;
+                s.remove();
+                return v;
+            };
+            const luminance = (/** @type {string} */ rgb) => {
+                const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                if (!m) throw new Error(`not a colour: ${rgb}`);
+                const [r, g, b] = m.slice(1, 4).map((v) => {
+                    const c = Number(v) / 255;
+                    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+                });
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            };
+            const ratio = (/** @type {string} */ a, /** @type {string} */ b) => {
+                const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+                return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+            };
+            // The body ink of a ground is the token a component actually
+            // reads there: --card-foreground on a card, --foreground on the
+            // page and on the muted panel.
+            /** @type {Record<string, string>} */
+            const body = { '--card': '--card-foreground', '--background': '--foreground', '--muted': '--foreground' };
+            return grounds.map(([token, where]) => {
+                const ground = paint(token);
+                const bodyRatio = ratio(paint(body[token]), ground);
+                const mutedRatio = ratio(paint('--muted-foreground'), ground);
+                return {
+                    where,
+                    ground: token,
+                    body: bodyRatio,
+                    muted: mutedRatio,
+                    separation: Math.round((bodyRatio - mutedRatio) * 100) / 100,
+                };
+            });
+        }, GROUNDS);
+        /** @type {string[]} */
+        const faults = [];
+        for (const row of measured) {
+            const line = `${row.where} (${row.ground}): body ${row.body}, muted ${row.muted}, separation ${row.separation}`;
+            if (row.body < FLOOR) faults.push(`${line} — the body ink is under ${FLOOR}`);
+            if (row.muted < FLOOR) faults.push(`${line} — the muted ink is under ${FLOOR}`);
+            if (row.separation < SEPARATION) faults.push(`${line} — the muted ink is not ${SEPARATION} quieter than the body ink`);
+        }
+        expect(faults, JSON.stringify(measured, null, 2)).toEqual([]);
+    });
+});

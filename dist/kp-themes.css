@@ -1934,11 +1934,11 @@
 [data-theme='shade-light'] {
     /* Shade, the light half: a book read in the shade, not in the sun. Solarized-derived, medium contrast, accents as plates. */
     --background: hsl(44, 87%, 94%);
-    --foreground: hsl(194, 14%, 40%);
+    --foreground: hsl(194, 14%, 36%);
     --card: hsl(44, 87%, 97%);
-    --card-foreground: hsl(194, 14%, 40%);
+    --card-foreground: hsl(194, 14%, 36%);
     --popover: hsl(44, 90%, 99%);
-    --popover-foreground: hsl(194, 14%, 40%);
+    --popover-foreground: hsl(194, 14%, 36%);
     --primary: hsl(205, 70%, 38%);
     --primary-foreground: hsl(44, 87%, 96%);
     --secondary: hsl(46, 42%, 88%);
@@ -2024,7 +2024,7 @@
 
     /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
     --surface-hero-bg: hsl(44, 87%, 94%);
-    --surface-hero-fg: hsl(194, 14%, 40%);
+    --surface-hero-fg: hsl(194, 14%, 36%);
     --surface-hero-fg-2: hsl(205, 70%, 38%);
     --surface-hero-muted: hsl(194, 14%, 40%);
     --surface-hero-border: hsl(180, 8%, 48%);
@@ -2033,7 +2033,7 @@
     --surface-hero-danger: hsl(1, 71%, 42%);
     --surface-hero-danger-foreground: hsl(44, 87%, 96%);
     --surface-hero-card: hsl(44, 87%, 97%);
-    --surface-hero-card-foreground: hsl(194, 14%, 40%);
+    --surface-hero-card-foreground: hsl(194, 14%, 36%);
 
     /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
     --kp-text-display: clamp(2rem, 4vw, 3rem);
@@ -2041,7 +2041,7 @@
     /* Derived interaction states — see gates/generate-themes.mjs. */
     --link: hsl(205, 70%, 38%);
     --link-visited: hsl(269, 31%, 40%);
-    --focus-ring: hsl(194, 14%, 40%);
+    --focus-ring: hsl(194, 14%, 36%);
     --focus-ring-contrast: hsl(44, 87%, 94%);
     --primary-hover: hsl(203, 100%, 29%);
     --primary-active: hsl(205, 100%, 25%);
@@ -34318,6 +34318,32 @@
         --kp-px: 0.5;
         --kp-py: 0.5;
         --kp-iris: conic-gradient(from calc(var(--kp-px) * 1turn), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+
+        /* ── The halo: the film, spilled onto the ground [scope-102] ────
+           Kenny, 2026-09-16, the shadow-and-ink form, dark-shadow "Gloed
+           van de oxidefilm": a raised panel is separated from the ground
+           by the film's own four wavelengths rather than by a shadow in
+           the ground's own colour, which on a 5%-lightness ground had
+           almost nowhere to go (measured 0.4% of the band past ΔL* 3;
+           research/dark-dialog-shadow/README.md, option 1).
+
+           Four fixed shadows, not the blurred film itself. The research
+           measured the blurred version higher (88.3% of the band at dPR
+           1 against this one's share), but it cannot be worn by the two
+           surfaces this decision is mostly about: `.kp-popover` is
+           `overflow: auto` and a modal dialog is `overflow: auto` by the
+           UA stylesheet (HTML Standard §15.3.3), and overflow clips a
+           pseudo-element — the blurred halo measured 0 of 17616 band
+           pixels on the popover. A box-shadow is not a descendant and is
+           not clipped, so the same idea is painted as four of them, one
+           per wavelength, placed where the conic gradient puts that
+           colour: chart-2 below, chart-1 to the left, chart-3 to the
+           right, chart-4 above. The cost, stated rather than hidden: a
+           fixed shadow does not turn with the pointer as the film's own
+           border does. */
+        --kp-halo:
+            0 10px 18px hsl(from var(--chart-2) h s l / 0.3), -10px 4px 16px hsl(from var(--chart-1) h s l / 0.26),
+            10px 4px 16px hsl(from var(--chart-3) h s l / 0.26), 0 -6px 14px hsl(from var(--chart-4) h s l / 0.2);
         /* The machined corner: cut, never rounded. Two opposite corners,
            the way a milled part is relieved. */
         --kp-chamfer: var(--fx-notch, 0.55rem);
@@ -34341,7 +34367,11 @@
         );
     }
 
-    [data-theme='dark'] .kp-card,
+    /* The card's cut moved to its own ::after with the plate it belongs to
+       [scope-102], for the reason the dialog's did at scope-100: a
+       clip-path clips the element's own box-shadow, so a chamfered card
+       could not cast the halo (or anything else) at all. */
+    [data-theme='dark'] .kp-card::after,
     [data-theme='dark'] .kp-alert,
     [data-theme='dark'] .kp-dialog::before {
         clip-path: polygon(
@@ -35075,10 +35105,24 @@
 
     /* ── Cards, the dossier: a quiet panel, the redact bar ─────────────── */
 
+    /* The plate is on the ::after since scope-102 (below); the card itself
+       keeps the border box it always had, so nothing moves, and carries
+       nothing but the halo.
+
+       `position: relative` makes the card the containing block of that
+       plate, and `isolation: isolate` the stacking context the plate's
+       negative z-index needs — without it a card standing on a panel with
+       a ground of its own would have its plate painted behind that ground.
+       Neither is a filter: the dialog needs one because its plate is
+       `position: fixed`, and a filter would also make every card the
+       containing block of any fixed descendant a consumer puts in one. */
     [data-theme='dark'] .kp-card {
-        background: var(--card);
-        border: 1px solid var(--border-strong);
+        position: relative;
+        isolation: isolate;
+        background: transparent;
+        border: 1px solid transparent;
         border-radius: calc(var(--radius) * 1.5);
+        box-shadow: var(--kp-halo);
     }
 
     [data-theme='dark'] .kp-card__title {
@@ -35158,7 +35202,11 @@
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: calc(var(--radius) * 1.5);
-        box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+        /* The oxide halo [scope-102], where the shadow in the ground's own
+           colour used to be. A box-shadow rather than the blurred film,
+           because `.kp-popover` is `overflow: auto` and clips a
+           pseudo-element away — see --kp-halo. */
+        box-shadow: var(--kp-halo);
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -35805,12 +35853,33 @@
     /* ── The panels' edge is the film itself [scope-16] ────────────────
        A gradient border, drawn by painting the panel's own ground over
        the oxide and letting only the border box show through. */
-    [data-theme='dark'] .kp-card,
+    [data-theme='dark'] .kp-card::after,
     [data-theme='dark'] .kp-dialog::before {
         border: 1px solid transparent;
         background:
             linear-gradient(var(--card), var(--card)) padding-box,
             var(--kp-iris) border-box;
+    }
+
+    /* ── The card's plate, and its halo [scope-102] ───────────────────────
+       The dialog's scope-100 restructure, applied to the card for the same
+       measured reason: its chamfer is a clip-path, a clip-path clips the
+       element's own box-shadow, and the card could therefore cast nothing
+       at all. The plate — the ground, the film edge and the cut — moves to
+       the ::after; the card keeps its own border box (`border: 1px solid
+       transparent`, so no box moves) and carries the halo.
+
+       `inset: -1px` is the border's width: the containing block is the
+       card's padding box, and the plate has to reach back over the 1px
+       border it paints the film into. The same inset the dialog's plate
+       carries, for the same reason. */
+    [data-theme='dark'] .kp-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: calc(var(--radius) * 1.5);
+        pointer-events: none;
     }
 
     /* ── The dialog's plate under its content, the shadow outside it [scope-100]
@@ -35825,12 +35894,24 @@
        scroll away with a dialog whose content scrolls; the popovers a
        dialog can hold open in the top layer, which no containing block
        reaches. The inset is the border's width, because that containing
-       block is the padding box. */
+       block is the padding box.
+
+       Since scope-102 the shadow is the oxide halo, and a box-shadow
+       rather than a drop-shadow: a modal dialog is `overflow: auto` by
+       the UA stylesheet and clips its own pseudo-elements, so the
+       blurred film could not be worn here at all, and the four fixed
+       shadows are what the decision asks for on every one of the three
+       surfaces. The filter stays, emptied to a no-op: it is what makes
+       this dialog the containing block of its fixed plate, and losing it
+       would let the plate scroll away. A box-shadow is painted with the
+       element's own background and border, so the opaque plate on the
+       ::before covers nothing of it — an outer shadow lies outside the
+       border box by definition. */
     [data-theme='dark'] .kp-dialog {
         border: 1px solid transparent;
         background: transparent;
-        box-shadow: none;
-        filter: drop-shadow(0 12px 28px hsl(from var(--background) h s l / 0.45));
+        box-shadow: var(--kp-halo);
+        filter: drop-shadow(0 0 0 transparent);
     }
 
     [data-theme='dark'] .kp-dialog::before {
