@@ -330,9 +330,9 @@
             },
             "retro": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "2de9cee1b97edbcb89ec0863d0c3c8d56ff18cf24faa23a38b785a526790c995",
-                    "commit": "edb0f1c86a33878eaeede9216af58da0efcb7043",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -796,8 +796,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "25aa46f8073e54222255f6135d70b462fd5b95a11baca6af88ae2239bae9c9ad",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "2b6352695dca6c45c0d6cd5f153cc536c37109c1a118c8bf0b476dced78372dc",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -1345,10 +1345,10 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "414f28a87d2de60075070c8cbe383864b81b1bedac73854e3cd95d61e1699749",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16"
                 }
             },
             "deco": {
@@ -1617,10 +1617,10 @@
             },
             "retro": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "d2fb98b9f89f06999cb9375de8c67a2853e061e518b14449fea77cde042f173c",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16"
                 }
             },
             "sepia": {
@@ -1713,8 +1713,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "210962e8287b59940e30aff5c4a993b200e186416d75b9366e77a10eb5b5d066",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "c2c52f4469e5159b8a4bccd2169b5bf56ec635fddf31c746e6d2570e32dc3fa7",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -2619,8 +2619,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "ff4b57658c5d35934fc7cb947db122210a23dd1a540324af809088d5fee4ccf6",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "71bd33112b2cc99aaa039579ca054c2c1f0d36ffd3d5304f2096e7131e617e8a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -7419,8 +7419,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "36923b765953641098c58b92840e8fdb45065ec04dd0e97760597aba5d3db00b",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "c064387d002ec2c16a4ab6332d45de3a59b6883c4d38603061611f61df081b12",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8156,8 +8156,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7eceaddecb39a6aa38ba94f44b1a652025674d8b60e23026862edef317bc2595",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "d6946052c2bc73f9c253fdbf211f6349451f9b195fc2a906145237a8ef94c905",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8535,8 +8535,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "11262ba74a2d1deebf17a25ec16d2c96998113a098006ac2d97710b531630230",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "068b998d60b3fda57000fcc0f5fac5750ae31f7520d008f1933eaed54725b281",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8718,8 +8718,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "914746d1273c9440e473690ebc79b43318bbff25a347831b48f45415545b58a0",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "4bac4e2247264abcc5d425392170f0dad1ba9b653a4fb70c66c33572e4efbdc1",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8885,17 +8885,17 @@
             "brutalism": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "64732ecc8b6f56d92d1225ff7a852ebc46121a6515faeea19ef3fb106b094273",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "1d701f1e5f6f17980e74ab9319de801b83d346cf93543961178f27b9b2dd4012",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7c10d0e4fac8e50a6c95ac8f0b23d327555e45ee525ee6e06cf67bacafa1be50",
-                    "commit": "edb0f1c86a33878eaeede9216af58da0efcb7043",
+                    "hash": "7f69b63d96b9a53a0684c494012e3f97ebb3d89227cfa55442ab5bb2a8abea75",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8903,8 +8903,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "2e4a2b52dad5216375326781da4d2f4f0456c10c2749643e53a9d381e0ebced6",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "2b65c10ca43ff45b4474c4a9272781be48f0c4e900a33b7ab7774054d08fdeff",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -8921,9 +8921,9 @@
             "forest": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "c11ddb9ca33d7ad90e1cfd7402a3474ea4a83918e7f52f1b15f5b7973fd7554e",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "8cedde7f88f34e77b1c06c8ec466385a8836ffe7f13afa025aa8ba5bd0ddf1c9",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -8939,27 +8939,27 @@
             "grotesk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "d3049343acd4c148357b133d1a0f2ec3e776565da6ec1eb75dfb1566cd4c3d77",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "463250e23a0f90b474da699c68a0d604447422e85b0d2710fc939f3f7edae43a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "8d4a4f7a45576f00d9580302f9cb010ea9f470ac96c63527f87f7cf0a03826e8",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "62a1ac53e8eaed871925912ad9e43f049bc964b277d7a31e2c516178d33da49d",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a3e4cb78eb65456d403bb267e72b0c927b3555fa7f927156d39d87017cc7bf6f",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "6e6d8f2cf336f8adea5a91ab2529d07fb08af082eac9d0f1d6a81bcb20a4f1a6",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -8975,18 +8975,18 @@
             "nostromo": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "9d21ff6cd2f6af14d24befda7af3bbeb38f5dc20e416fb4b929ad9c7be366eff",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "63ad680c4737acfc13b3d3ff6f596bc142743dec70493c47f2ef11b7873b14ce",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "4003e9e616d6643959d9ee3a5c43abf4f16ddf2a8c9470b0a57b987ab7ab61af",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "e6ec35efe32e17e494045413dc31c07da815a4366efbace0a1440808a170166a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -9002,9 +9002,9 @@
             "retro": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "3a59154b945b00b9d7affc5302248538777c5f97b1fe6ddf8d29a797e8d01347",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "80c6031225f6a7816ad55301f68089910bf6626a37e23cf3607b3ab2426d1a9b",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -9038,27 +9038,28 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "e0537c463afc7591d2c4f749df28b73ee5d590cca6cdaf4e1cc4480347f3adbf",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "30a417786e717d6f760f319c5c47f2f93b1d3692b0ba33d366edd0323f7f1efe",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "71931f3bbb4ef85e34484eaaf62fe142bd04b310fb959f91ebeb1f2401ed0710",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "1e888b659137f29dcfad712b0111f37c4d501dfd4bb93568148c712ea4cb770e",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7bbcc1acc3ce11ca409615422d56d081ef9bb370f435888767f1c0bd4eafe95d",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "828163e4a3eba9226d1b49a680d26cfb6dc9a0e6d0f0f2c0df7750d4a726bd52",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "titanium": {
@@ -9099,9 +9100,9 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "a9936ac72874a7534d3799aea92e259dab16071ccc34b5b178fc0f4e77383478",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "verdict": "approved",
+                    "hash": "35cbe741bdc61457d1fe2b2bc4e1a0a27c11677bf0c8907205154c7a68699ce7",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9287,8 +9288,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "68b5de1e1473da706cac78d69a2b4900970fecb73bbb39abf809e78d05f955a9",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "5cb2ecb75dfb3f7cd5d1f9609add2c301a34eb374806f3d448af0d80eb2bfff5",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9460,25 +9461,26 @@
             "blueprint": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "379fd2a9e0b40360b1ecf469690b5fafc4b1dcda2019456896a98bc6a610019d",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "aabb324f088d4e71575540abf4c161da12792300059fd700a23e11f86c356f8e",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "8df45244411165019be13e08b82f657d384ee42c590b3ce21d51278b52644898",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.25
+                    "hash": "2ed9cc8a6fa6afce4d7484a596c70330fb4371a01625859fffe5d0b1bd752807",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a53a4b406d676e061e5553933bddb3ab0cdb05c1736d851591ea83ae5c0bbcb0",
-                    "commit": "edb0f1c86a33878eaeede9216af58da0efcb7043",
+                    "hash": "e48498f318a90577fbb8fd6732c5de6734151d11d8d277a42016859c94478afe",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9486,8 +9488,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "58eccfcafc125fa5199d61ee5077e317a824cdaf87c558abddef786feedc4383",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "47657cf5b4ba6d47b1c35f880f1db3d3b691cf3ee0cdcf7d6d4eca59652e97ec",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9495,17 +9497,19 @@
             "deco": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "10479705834b3a153e570ed1075c0be59866b7e5b8ffbc898613636d80d1abdd",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "16782aff2de9bcad536701155e8d69e067bec9395e4d363434d6a292a226baed",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a00ba7c65e11a4ad761fd02b94839abbd3c163d746914a50b73e9a64fa751c9a",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "8778df9d3997fb1b5d9393bf7739e64236c2607c491bc919c906932bacea361a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "formal": {
@@ -9520,52 +9524,55 @@
             "grotesk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "6690ad0dc3b935a426f731ed82ea85bde3773e0d7dcbc44df09311985f3c2e42",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.091
+                    "hash": "76aa25fbc5f35c218c3c03187e073d8c8160857aae4fc8d38d83d2cb986be4b8",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "ed9848471e217baaa1f45ff2630f1af09be1b05f927306e0bf29474816559fbf",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "ca299b913be6b4b91838182ef175ae7ac216646207b1b950ec38107c7a3e6818",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "8e97573923c53396eeb13094dced716db5a78040dc46fe2fa01acd618ad90b10",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "c2bbf236242aefca3251996b41ddad8bf9891bc065a2615cd9a5eb9f1f8a9965",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "2b0ce353b78955582678b4b53c228e26beeca28b6cf82d033b6b398a7a5b8870",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "66d3d20d43705eaa8a313dee6a2232cb532f100683bc9685ef59d622aa038153",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "6399dc435127ea6863f05afef4e0932aa9fd2c466c1ac0f32f27d8cfad7e0037",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.25
+                    "hash": "e01491c02aafeccf92cff8c563035e855ce1167930962376c47387cd335a54e4",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "891c50fe89e51ae9edf8f021f17cc8a0de4d78cf972e1f968282bc4f4c2604ee",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "277d15c25c93946ec83e9a25e89723ced901c89e89d5cb17054571d5ba4905c6",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "phantom": {
@@ -9580,16 +9587,17 @@
             "retro": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "9b2eaf4884abd4f386bf86b2f1ccfb6357349256966b5acaf2b6c11746e4ee4c",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "09b5927c552c5bf84de5e79338c339f057537192f75ebf5617d22b089e1267ee",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "de8ce47392a8d4d4926f8a24d300119fda944008dbea5f99b95a17f4a450a102",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "ddbf05e735fc2a53d241f30713675768e80a18e94f9c9866f1eaa6da096e0d54",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9615,17 +9623,17 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "81c32300b494e9e76c3b5a85b2d4ddbdbf9d678cd8f85fb49a188ecfd6de07c1",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "1253ee7a684c3b8d8b02106246078b889c736668b0935189f3801ecaf3e12de7",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "10f9fcfc86763777e686f44201f49537e424c29a124a67762fa3f6acb4ab1b6c",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "8f9460700ccb55b04eeb0b391dbe41fe13998d59bcc50eac89cb3d1a53060d39",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9633,9 +9641,10 @@
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "3a41ca6696faf0f95ae0cac894c2fe31284a43a25ad794efdb2bff32ed788a41",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "58c6bbca7366897cf5a9d973dea369de0717d01d614a4498371b65be044fb3ab",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "titanium": {
@@ -9660,17 +9669,17 @@
             "brutalism": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a7844046ee7dba2959f1511cd1aecc756dd07ce944bfc8e990f88208d329dd59",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.25
+                    "hash": "33aff705e856fca36bf4b2ac07d5da4f6bf289089ce48e3b9f8fddc1f988b5f3",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7385bbe8a17deb6746b83a97bda33f298ad17f0ed2933c09d0ec1f49d374f88c",
-                    "commit": "edb0f1c86a33878eaeede9216af58da0efcb7043",
+                    "hash": "44ba99b562b3057ba0e39f70c96eed06f048d43a70e3e300088d2c2ea6d565bf",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9678,8 +9687,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "d2ef160b8695ffa7d2ca5b129bc29694b2e8eeb003c89adbebc6d281bc316248",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "add7a36b0d511e77ca167cbaed64a45365102b243503353f1d3a562cd9ec8b7c",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -9695,9 +9704,10 @@
             "forest": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "86d002b9cf11ee3ba8f334e057a40aca4e08c86568f4882d78b336d6f4786afb",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "4cb540a936a314c5520c14a17ffc7ad6ffd8aa265924c96afc00270ea70cb357",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "formal": {
@@ -9712,25 +9722,27 @@
             "grotesk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "8b5c79315b3401ad07c30aca0ca88bac6bf02e19dfc13544c428871ba2893be8",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "98f0bad2f32bdb5f1d3d020037bd036685c8e794e0b4728d09940f6581cc3b6d",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "cc49d8f06ba6b74560b34940d983c5e2da92857e1f7310ab46543497e8f33e9c",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "4673704ae412d46d06375efe5d259e437aacb5a924496809a8e811e4d233f9a5",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "d7a95bd061bb075408369be6fa734c265f998bc5bd755d78851a54cbd23aacdd",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "efdf03976b8938d2ed1eada40a15b638360693c4868acd55275cf69877a0b148",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -9745,18 +9757,19 @@
             "nostromo": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "91c2092c84f502225d6a4eb8b6343193b85207b591250124c390802137cb13ab",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.25
+                    "hash": "41b1edb48e0fb03f25566bad6df6793b2e6af7d6c3fe6208bbe80103a63dd0e9",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "e6a7680f719eff682c78ab455395a662429cd7f24b2c7033c56f18b461a3ace4",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "d896877b74738a816ba3e033ceb2c01e9c538c255ced1e39bd52cb4d3dc9ee7a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "phantom": {
@@ -9770,9 +9783,10 @@
             "retro": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7123bfd9f5305ee3240df62bb76011352f2bff3ad9c5eac988b973fa9eac7cb1",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "ef3982eb9ab017b1c1a8c4cc85e29b1813ada02366018d4fa586ccbda52d8ed1",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "sepia": {
@@ -9803,26 +9817,28 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "be3daf7046de72905511e125563a1179c865565054a078e64fc78940cf05055c",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "a7d9421895faa5b99dcbcbbb00734469263a7d9e863cf7788ed3a3b4f322b48b",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "a36bbaff035e34efe02c1abff59a00da268fab6d4179ac5f828eeb8bc30eec2a",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "09d3dd3f567c7eccdf089587839d99942471d8e0fcde36970e96cd21851acb52",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "711defde2ea742ace45e23699167bc66cde380856b7c50030bc5bb7c93f4059c",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "f165b864115314f0c636b61c7fd75a9364c5758f50243042f9b77b1ae99baa72",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "titanium": {
@@ -9865,8 +9881,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "05dad848b530cf42b86777caa275974aa35d132dbdd840ec8b321748e2b70125",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "cae9032de02b91a18c27f49b6830d3ecaf1a09e75b9c541ab512a2914b111ab7",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -11355,8 +11371,8 @@
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "702e22ecfb798455f9cd5a6626d6cb8d82e644720146558f4082e0d418187b4c",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "edb4d504db97641b520c4e5b8d55572275d259ea122c0e161ef25aa8353b6f59",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -11398,9 +11414,9 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "e5451faccdb417835e13430b8a7a4b4e60403d90720170925e78941c8f38c351",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "verdict": "approved",
+                    "hash": "eeca4cbe0f799eff02cb2559424265e36d0dde38cc7d1d287f1a797459c375bf",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -11459,10 +11475,10 @@
             },
             "light": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "f17c20057a54cfbd3d8cdc801e32cdf61c68719300360655b3a370618979f017",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -12937,9 +12953,9 @@
             },
             "light": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "d652f763cfdbe061f8241390ad9268a3012f4ffe01ff88a8fdaeb4a00e86ac08",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -13236,9 +13252,9 @@
             },
             "brutalism": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "5073d46a0f6af36770f8cd5d63c9ba1e13e923feba2929d4e7456faee63b1c81",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -14544,9 +14560,9 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "29c9070a2a372cb34738f3a591491ef7badbf868e16f89e321f0052a4059d21c",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "verdict": "approved",
+                    "hash": "fe115d127495bc21b7ac39ff3387cff1fe30c65561b58dd243a4410dfe636413",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -14735,8 +14751,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "1c88c5ea52be11d17efe09c2d1a1806d4f9e46cc16410c815fb1d55bb0261413",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "0c251118d53cc92f8c721cd20f3dbfa736e65f4fc5d92a1432a025aa502c0150",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -14924,9 +14940,9 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "8d67e3d932abc0b2e2fbd481f67929c6959c1accf5a023098adc5c56e50afdec",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "verdict": "approved",
+                    "hash": "2fa79201a4747b6a1ba1308e692b676a2f8cee20a90d5dd21c2e44ae6e82bcad",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -15017,10 +15033,10 @@
             },
             "retro": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "ffe07325c4373ba99798dfc4c273e13e5673bbce19c411fcb7a5d99b6d344123",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -15115,8 +15131,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "b863cff96096090b6159402474ae767f1a56d87311dd77e78080b13ba437b546",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "dca7d784105fb46385b318366203eb4382b8bd5c4f928ceb50efe9a869d9e570",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17348,8 +17364,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "016efd4d6d6069863766f8cfa571cb68470a376ce9a93780627dfa486776fedb",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "68d0befeabc1dcc2c154a5575db579b08cc6df8ad60d27bf94fb421953079252",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17526,8 +17542,8 @@
             "cyberpunk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "374e3a1b1d7af8bf1527326acf80a0eb2cb6e02556106ecb8cae00bd40d16353",
-                    "commit": "edb0f1c86a33878eaeede9216af58da0efcb7043",
+                    "hash": "bedc7e379d39ff2517365b98ae46167a80da00b0f6aab138a7db6651c1151218",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17535,8 +17551,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "197d2038f7892ed581bce4899d97c716c1eefee4e36b0f7d771fd855e7ea0866",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "1757422a7881faedbf10136298980b49080b8f8cd8b78fdaa27e68ddfafc8078",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17553,9 +17569,10 @@
             "forest": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "b848335910c820567698f5e817fbac43a3b5b52f3b526d53906183e416415bfd",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "6ca3110852fcbcf85d1a659bb8b8d0aa6818538b669a0568d712fe354db89b96",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "formal": {
@@ -17570,25 +17587,28 @@
             "grotesk": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "5e18cb0774bae7e78785ee28448ae6ff0e12dfa70c8836b66f3c7866e3d7c818",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "049c4ef3a4e1218ac4875035072fdc11a088e25a02d3207d172a18281c3211d6",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "aca8a530058924c35f3c86fba6f4cb1a57562f8936a8d686986ddf9a1b8d7885",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "266e09ae16f616e10762fc324e0d365ee5d626fc46a6441c600988c0a4f1b933",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "68137e081e3f4322625509fed7e1ce4b55bf7957c59ff66ed2de0e694f39aa13",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "cdcc354f61c0e34954509cec0f9d7881f2a7606c548c1f08359951cffc57bfa9",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "light": {
@@ -17602,26 +17622,28 @@
             "nostromo": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "f8b512b71527ca5dbc5212f98ba320d1999a842c94353dcfdf291c02ce872e01",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15",
-                    "ratio": 1.25
+                    "hash": "39fba3f1ff7fcd57ce54e9de34e913e0c82d8c878f3cef57c14a7d6e3448a3b9",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "72882c13ddf414e9052c1c0471e14b29fa8810b76c3db760e0d839eeb866d7a5",
-                    "commit": "d499b6b278129201c87a9a82ca7422cc94e3603e",
-                    "given": "2026-09-15"
+                    "hash": "ebe71270dfd6dd6b3a9663e7264309c36c6d3c71cb0bbf048016e06ab1bbcc23",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "e8306ac6bfabdbba2d35bb0dbfbcb6cf681ff4fdf220be6703b2c1eea44b394b",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "7f7fbb128f7fb4a59fcc6271230e7c21b3080cee8ab85fdd8c5c6fdf481b3005",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "retro": {
@@ -17645,8 +17667,8 @@
             "shade-dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "65d76115a42df2772c4c19004da41aa84ddeca69f67b292940517c3d931353a1",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "24a3b224a63f5e20386185f73657e7780776285854fb14b91e91309569a0842f",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17654,8 +17676,8 @@
             "shade-light": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "59814df7b1bca0fd8f61f9b65ba4c65f90da89dffdfd48f7022bbec19fa69bc7",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "952ac751eedab75c4d0b225046ddd2d5bb734c80c23894e39af8b8c9475a6237",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17663,26 +17685,27 @@
             "solstice": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "3ef2fb42b51886eb80508fb5a68eac180cdeca4b47857aecaf557bbe4defc8aa",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "b1004728d2fcfe7b5d2dbd70f10c530b2ea2ddf39a5472d63eacefa01c66726d",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "15bbe0542c9b9678ecebfdd9c380b792cd404f36b84260cc5b63dafde53b6168",
-                    "commit": "cf2c5634f97367f717d0b0b5c990fc3570b10d93",
-                    "given": "2026-09-15"
+                    "hash": "e7e553c999c6bb1cc73b95d27fc3080c0f4472d1cd7ab728d93075c59c043633",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
+                    "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "33061cd1f69cba9ff02d7bc8110a6645738f0dc304a8d9c63fd0a21cb9ee8a73",
-                    "commit": "62dcfba6c810c281f0f6430801bd97b8861acdf5",
-                    "given": "2026-09-15",
+                    "hash": "d715907391a7682186f6ed9b25d3b5fc7d1f53d95e41c3c18d38b595f06747ab",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
+                    "given": "2026-09-16",
                     "ratio": 2.222
                 }
             },
@@ -17727,8 +17750,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "7f1710499e1013615201c10a450ab5d863f067bd6b7831ddac93f37a71109cd1",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "dbf8d7349c7c6c15d06e587d43ff377978013cc597f25bb7639afe72522118a9",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17871,8 +17894,8 @@
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "1fa98d9105e74054d526bfbc75c84657b1b0c85b6e35f5cad185ef330e8982af",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "5b1c1f9e549ef4179223b6c3149427e24f821f6e10cbb5e9215d99f7ea4a6475",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -17926,9 +17949,9 @@
             },
             "dark": {
                 "firefox": {
-                    "verdict": "rejected",
-                    "hash": "dc50289499f881d928bef9312896f643f3c5e3939e09ef87fd026b8500806b74",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "verdict": "approved",
+                    "hash": "09f538575a292aea245ed671a13ac52658feb8679057676d100e039ce6e1f19a",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -18071,8 +18094,8 @@
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "d81ae0696869969ab81beb4fb47badff3b6e768cf5da90f9ca7e29e24f8f19db",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "24b8f941072f1889efda3f8ca2ec1d2da8f3d98733ca87bf7b4bda2e76c6f490",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -18080,8 +18103,8 @@
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "5ca22d8befa9bd66bb5de548303dcf23c0951da728539e53021c0658a9ff3a6f",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "2468109dda3f10e5f156dfa596287bfe52b3102a46266b8cc94bad5746aa5c13",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -18271,8 +18294,8 @@
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "3eac645f4bf29819b8a86e941cb25c99fff5356ccbe8dc6503b26b56eedca855",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "24878dac67d583be9ec21988226b26fc761f31d07bf05f266dee6f152d5ac55b",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -18471,8 +18494,8 @@
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "5dfbaaa3146980fbc454307ec3bd00b927cc52f73fe535f9a910967942910efb",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "7c952871e0d2184ab89946541eb26bab9bf30b2e7656a22950ce53bfd26d8f21",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -19074,8 +19097,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "b8753c01490ee603eac407916971d2aa22aa33791c6279146816ed72f844ffb4",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "a77ef81bd5d01cba87f86a1f2f3cb49c2b6cbffa400867c82079ac58ec184349",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -19274,8 +19297,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "36f507336657abd8ca72f020485f4b7674a1adf083d2e332df7c824a320eaa9b",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "2b81f194ec13e36c682956b7b1247599834c6c5217ef2c8313b9b34036a18003",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -19418,8 +19441,8 @@
             "synthwave": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "99a9371208c36fd80df890b71422a21fd1d1022d63556e8e32bb891b9995a67d",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "fbb87cd69b1c10c852332a0acbed8f540e36abec9c22954eedb5743a67324511",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -21032,8 +21055,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "6a952444987c5d62e6909d2a2955d77317913e7b9ed5011efbb5c9db3998017c",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "ccdb38498786c95505c4bb1195c4c507b8606bc5d2b2d911c2463c964c45266d",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -21229,8 +21252,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "282b0b0e2f964216ab0e254b1763603ed9e8c481b70c280aac6cf9e8e1295a47",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "d791b3e92841c8d87e01d1cd9e11f74a6d58efe82072c874339bd49374b03028",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -21596,8 +21619,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "071b71ae673e7b88b0ecc42290543dcbbc9b609e43075dc925b596d89bdfa31f",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "5f0db491b5680be883339067f4cf2f7c80832c695e070d66319f2dcf1ca06c19",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -22140,8 +22163,8 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "69cbf6b46794e3c8d16e9143792b639304a2e618ed2729a5644d50dcf7418ba1",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "edeff96aeb935de09cfddbc07525f61001818f0573a8ecc28f3b15dc6addb519",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -24405,8 +24428,8 @@
             "blueprint": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "3c725aa06a3ef1fa5017f193230ceee67b60fb32a6e7ecc859cff736ab50a769",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "8ef811f33c161ea91bb846c02f50e8e729184f1a077ead0948be250f695c954d",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -24529,8 +24552,8 @@
             "sepia": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "f263cde9643ae3d36f7c87384ec231d436e3088e0defe5625fba3b2d5199da42",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "e5ef0aecb6f8677ac6ccdaf632fe48527f94c0a27fbdec2cc3678a4b43b23037",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
@@ -25478,8 +25501,8 @@
             "terminal": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "1df5733f0395c63a5b4dc47b7f35fa2a878fbaeaec9566824a457ad3b0bbf995",
-                    "commit": "b734bc31afbb94035928198c2c86827924bebd96",
+                    "hash": "3d0b60178aed532262e90cc61af76082124483297deb9c29833136c4ce70e0d3",
+                    "commit": "3d941c56d09aa41145406d84df202f105b0982d2",
                     "given": "2026-09-16",
                     "ratio": 2.222
                 }
