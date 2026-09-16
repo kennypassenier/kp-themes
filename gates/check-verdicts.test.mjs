@@ -324,8 +324,14 @@ test('reanchor replaces the hash of an entry no ratio matches with a reading at 
     ]);
     const result = reanchorEntries(register, targets, readings);
     assert.deepEqual(result.unread, []);
-    assert.equal(result.reanchored.length, 2);
+    // Only the entry read at ratio 1 is anchored on a reading of the tools; a
+    // zoomed one is left to the reviewer's own browser [fix-45].
+    assert.equal(result.reanchored.length, 1);
+    assert.deepEqual(result.zoomed, ['button--icons · nostromo · firefox @1.25']);
     assert.deepEqual(register.verdicts['button--icons'].formal.firefox, entry({ ...at, verdict: 'rejected', hash: rest }));
+    assert.equal(register.verdicts['button--icons'].nostromo.firefox.hash, HASH);
+    // --force writes it anyway, for the one case where the reviewer asks.
+    assert.equal(reanchorEntries(register, targets, readings, { force: true }).reanchored.length, 2);
     assert.deepEqual(register.verdicts['button--icons'].nostromo.firefox, entry({ ...at, hash: rest, ratio: 1.25 }));
     assert.equal(JSON.stringify([register.verdicts['button--variants'], register.verdicts['button--sizes']]), untouched);
     // A reading that is not there leaves the entry as it was.

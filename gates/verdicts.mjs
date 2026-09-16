@@ -1027,17 +1027,27 @@ export function keysFromCompare(text) {
  * @param {Register} register changed in place
  * @param {{ key: string, theme: string, engine: string, ratio: number }[]} targets
  * @param {Map<string, { hash: string }>} readings `key|theme|engine|ratio` -> reading
- * @returns {{ reanchored: string[], unread: string[] }}
+ * @returns {{ reanchored: string[], unread: string[], zoomed: string[] }} zoomed: left to the reviewer [fix-45]
  */
-export function reanchorEntries(register, targets, readings) {
-    /** @type {{ reanchored: string[], unread: string[] }} */
-    const out = { reanchored: [], unread: [] };
+export function reanchorEntries(register, targets, readings, { force = false } = {}) {
+    /** @type {{ reanchored: string[], unread: string[], zoomed: string[] }} */
+    const out = { reanchored: [], unread: [], zoomed: [] };
     for (const { key, theme, engine, ratio } of targets) {
         const at = `${key} · ${theme} · ${engine} @${ratio}`;
         const entry = register.verdicts[key]?.[theme]?.[engine];
         const reading = readings.get(`${key}|${theme}|${engine}|${ratio}`);
         if (!entry || !reading) {
             out.unread.push(at);
+            continue;
+        }
+        // Never anchor a zoomed entry on a reading of the tools [fix-45]. At a
+        // ratio other than 1 the tools' Firefox and the reviewer's browser do
+        // not read the same hash for every block, so such an anchor is a hash
+        // his browser never gives: the block is "Changed since judged" for him
+        // in every theme, for good. Left alone, it comes back to him once and
+        // is settled by his own reading.
+        if (ratio !== 1 && !force) {
+            out.zoomed.push(at);
             continue;
         }
         entry.hash = reading.hash;
@@ -1106,13 +1116,15 @@ async function reanchor(args) {
             if (reading) readings.set(`${t.key}|${t.theme}|${t.engine}|${ratio}`, reading);
         }
     }
-    const result = reanchorEntries(register, targets, readings);
+    const result = reanchorEntries(register, targets, readings, { force: args.includes('--force') });
     writeRegister(register, file);
     console.log(
-        `${file}: ${result.reanchored.length} entr${result.reanchored.length === 1 ? 'y' : 'ies'} re-anchored, ${result.unread.length} not read.`,
+        `${file}: ${result.reanchored.length} entr${result.reanchored.length === 1 ? 'y' : 'ies'} re-anchored, ${result.unread.length} not read, ` +
+            `${result.zoomed.length} left to the reviewer (read at a zoom the tools do not reproduce) [fix-45].`,
     );
     for (const row of result.reanchored) console.log(`  re-anchored: ${row}`);
     for (const row of result.unread) console.log(`  not read: ${row}`);
+    for (const row of result.zoomed) console.log(`  left to the reviewer: ${row}`);
     console.log(`Check: ${compareCommand(full)} --at-recorded`);
 }
 
@@ -1137,7 +1149,7 @@ async function main() {
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
             '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]\n' +
             '       node gates/verdicts.mjs migrate --to <version> [--register <file>] [--readings <file> [--only <commit>]]\n' +
-            '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>]',
+            '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>] [--force]',
     );
     process.exit(2);
 }

@@ -3860,3 +3860,23 @@ fault.
 **8 · If the measurement fails.** Targeted runs stop being typed by hand: `npm run test:tags -- --files <changed files>` selects the specs from the tag map, and a hand-typed path becomes the exception that needs a reason.
 
 **9 · When we review the measure.** At the next Playwright upgrade, in case the runner grows a strict mode of its own.
+
+## fix-45 · The same blocks came back in every theme, for good (2026-09-16)
+
+**1 · What went wrong.** Kenny, after a full round: "volgens mij ga ik in cirkels … ik bleef maar van thema veranderen en kreeg precies telkens hetzelfde voorgeschoteld". Measured on two of the blocks he kept seeing: for `field--summary · light` the register held `2b0ce353…` and his browser read `66d3d20d…`; for `page-effects--density-compact-form · terminal` the register held `33061cd1…` against his `d7159073…`. The tools read the register's hash again at every width from 1152 to 2560 px, so it is not the window: those entries carry a hash his browser never gives, so the review page calls the block "Changed since judged" in every theme, every time.
+
+**2 · Which gate let it through.** None. `migrate --to 4` only rewrites an entry whose stored hash the tools can reproduce, which is safe; `reanchor` (scope-94) writes the tools' reading over an entry they could NOT reproduce, which is exactly the case where the two browsers disagree.
+
+**3 · Where the same fault sits.** The property: a register entry whose hash was written by the tools rather than by the browser that gave the verdict, at a zoom other than 100%. Searched by measuring: `compare --browser /usr/bin/firedragon --themes light` shows FireDragon 155 and Playwright's Firefox 153 agreeing on 260 of 270 blocks at ratio 1 (the ten that differ are the portrait pages' scrollbar padding), while at ratio 2.222 the two blocks above differ — so the disagreement follows the zoom, and every entry `reanchor` wrote at a ratio other than 1 is suspect.
+
+**4 · How we prevent recurrence.** `reanchorEntries` no longer anchors an entry read at a ratio other than 1 on a reading of the tools: it leaves it alone and lists it as "left to the reviewer", so the block comes back to Kenny once and his own reading settles it. `--force` is there for the case where he asks for it.
+
+**5 · What the remedy costs.** A re-anchoring round now leaves the zoomed entries open, so they return to the review page instead of being silently settled — which is the point, but it is more work for Kenny than a number that only looked right.
+
+**6 · Who enforces it.** Code: the guard in `gates/verdicts.mjs`, with `gates/check-verdicts.test.mjs` pinning both sides (skipped by default, written with `--force`).
+
+**7 · How we measure it works, and when.** At Kenny's next pass over the review site: the nineteen pairs recorded on his instruction today ("Keur alle componenten die nog openstaan goed") carry the tools' readings. If a block among them comes back as "Changed since judged", the gap is still open and the next step is `compare --browser` at his own zoom.
+
+**8 · If the measurement fails.** `compare` gains a `--ratio`, the disagreement is measured block by block at 2.222, and the recipe reads past whatever it finds — the way it already reads past the 1/64 px font size and the percentage translate.
+
+**9 · When we review the measure.** At the next change to the hash recipe, when re-anchoring is on the table again.
