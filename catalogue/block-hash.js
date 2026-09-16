@@ -165,6 +165,61 @@ export function stillAnimations() {
     };
 }
 
+/**
+ * The blocks as written, for the length of a reading [fix-47].
+ *
+ * Kenny, 2026-09-16, after approving the same field blocks in theme after
+ * theme: "Ik ga nog altijd in cirkels!". Measured on `catalogue/field.html`:
+ * the block `#text` read 8413c69c at rest, ee6733ba with a name typed into
+ * its first input, and cf1b057a with a control inside it focused — three
+ * hashes for one block. So a verdict given after touching a field was given
+ * on a hash nothing else ever reads, and the block came back as "Changed
+ * since judged" for good.
+ *
+ * A reading is therefore taken of the block as written: whatever the reviewer
+ * typed is put back to the markup's own value, the focus leaves the block,
+ * and both are restored the moment the reading is done. Values are set
+ * directly, so no component sees an input event.
+ * @param {{ root: HTMLElement }[]} items the blocks being read
+ * @returns {() => void} puts back what the reviewer had
+ */
+export function atRest(items) {
+    const active = /** @type {HTMLElement | null} */ (document.activeElement);
+    const inside = active && items.some((item) => item.root.contains(active));
+    if (inside) active?.blur();
+    /** @type {(() => void)[]} */
+    const back = [];
+    for (const item of items) {
+        for (const control of item.root.querySelectorAll('input, textarea, select')) {
+            if (control instanceof HTMLInputElement) {
+                const { value, checked } = control;
+                back.push(() => {
+                    control.value = value;
+                    control.checked = checked;
+                });
+                control.value = control.defaultValue;
+                control.checked = control.defaultChecked;
+            } else if (control instanceof HTMLTextAreaElement) {
+                const { value } = control;
+                back.push(() => {
+                    control.value = value;
+                });
+                control.value = control.defaultValue;
+            } else if (control instanceof HTMLSelectElement) {
+                const chosen = [...control.options].map((option) => option.selected);
+                back.push(() => {
+                    for (const [i, option] of [...control.options].entries()) option.selected = chosen[i];
+                });
+                for (const option of control.options) option.selected = option.defaultSelected;
+            }
+        }
+    }
+    return () => {
+        for (const put of back) put();
+        if (inside) active?.focus({ preventScroll: true });
+    };
+}
+
 /** Not the component: the block's reading aids and the reviewer's own panel. */
 const AROUND = '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge';
 
@@ -481,11 +536,14 @@ export async function readBlocks(items, { lines = false } = {}) {
     // stretch; only then are they released and the readings hashed, since
     // sha256 waits and a running animation would move on meanwhile (fix-31).
     const release = stillAnimations();
+    // What the reviewer typed or focused is not the block [fix-47].
+    const restore = atRest(items);
     let readings;
     try {
         const viewport = viewportDependence();
         readings = items.map((item) => blockLines(item.root, item.source, item.elements?.() ?? reviewedElements(item.root), viewport));
     } finally {
+        restore();
         release();
     }
     const out = [];

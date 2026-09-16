@@ -37,6 +37,9 @@ export const PAGES = [
             // Not a component page: each block is a window playing one theme's
             // intro on demand, so the review page does not gather it [scope-84].
             { href: 'catalogue/intros.html', label: 'Theme intros', component: true },
+            // Not a component page: it carries no block under review, it counts
+            // the verdicts and says whether the round is finished [fix-48].
+            { href: 'catalogue/round.html', label: 'Am I through?' },
         ],
     },
     {

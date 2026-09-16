@@ -3900,3 +3900,43 @@ fault.
 **8 · If the measurement fails.** The review site stops following `round-six` and is pinned to the commit the round was opened at, so a push cannot reach him mid-round at all.
 
 **9 · When we review the measure.** At the first time work has to wait for a round to close and that waiting hurts.
+
+## fix-47 · A field the reviewer had touched hashed as a different block (2026-09-16)
+
+**1 · What went wrong.** Kenny, after three rounds of approving the same field blocks in theme after theme: "Ik ga nog altijd in cirkels!". Measured on `catalogue/field.html`: the block `#text` read `8413c69c…` at rest, `ee6733ba…` with a name typed into its first input, and `cf1b057a…` with a control inside it focused. A verdict given in either of those states carried a hash nothing else ever reads, so the block came back as "Changed since judged" every time — and the blocks that kept coming back were exactly the ones with real form controls: the three field blocks and the compact form.
+
+**2 · Which gate let it through.** None. The recipe was made engine-proof and window-proof (scope-95, fix-34) but never reviewer-proof: it read the block as the reviewer had left it.
+
+**3 · Where the same fault sits.** The property: a computed style in the hash that follows what the reviewer did rather than what the markup says. Searched by measuring the two states against a clean reading on the same page — a typed value (`:placeholder-shown`, `:user-invalid`) and a focused control (the focus ring) both moved the hash; a blurred, empty field read the same as the clean block again.
+
+**4 · How we prevent recurrence.** `readBlocks` now takes its reading of the block as written: `atRest` puts every input, textarea and select back to its own default, moves the focus out of the block, and restores both the moment the reading is done. Values are set directly, so no component sees an input event.
+
+**5 · What the remedy costs.** The reviewer's caret leaves the block for the length of a reading and comes back; a component that only reacts to input events sees nothing at all.
+
+**6 · Who enforces it.** Code: `tests/catalogue-hash-at-rest.spec.mjs` — a typed value and a focused control read the same hash as the untouched block, and the reviewer keeps what he had.
+
+**7 · How we measure it works, and when.** At Kenny's next pass: the field blocks he approves stay approved instead of returning in the next theme.
+
+**8 · If the measurement fails.** The hash stops reading the properties that follow a control's state at all, and the states themselves are held by the register specs, where they are already tested.
+
+**9 · When we review the measure.** At the next change to the hash recipe.
+
+## fix-48 · Nothing said "you are through" (2026-09-16)
+
+**1 · What went wrong.** Kenny, twice: "Op het einde mag er dan een boodschap komen dat zegt dat ik rond ben", and then "Er MOET een pagina komen die toont dat ik klaar ben als ik alles beoordeeld heb. Waarom moet ik dit meer dan 1 keer zeggen?". The first answer was the dialog's end message, which only appears after the walk has gone through every theme — so it never came, and the second ask had to be made.
+
+**2 · Which gate let it through.** No gate; a reading of the ask that was too narrow. The request named the end of a round, and the answer put the message inside the tool that happens to walk a round.
+
+**3 · Where the same fault sits.** The property: a thing Kenny asked for that exists only inside one tool, so it cannot be seen from anywhere else. Searched over the catalogue's pages: the count of what is left lived in the review bar ("N of M block(s) left to judge in <theme>") and in the dialog's live region, both of them per theme and neither of them reachable without starting a round.
+
+**4 · How we prevent recurrence.** `catalogue/round.html` — "Am I through?" — counts every block of every component page against every theme from the verdicts alone, prints a banner that says either "You are through" or how much is left, and names per theme what is missing. It is in the navigation of every catalogue page.
+
+**5 · What the remedy costs.** One page and one module (about 120 lines) that read the register and this browser's judgements; it hashes nothing, so it answers in a second.
+
+**6 · Who enforces it.** Code: `tests/catalogue-round.spec.mjs` — with nothing judged the page says what is left per theme; with the register as the repository holds it, it says the round is over.
+
+**7 · How we measure it works, and when.** At Kenny's next round: he opens that page instead of asking whether he is through, and it answers without him having to walk anything.
+
+**8 · If the measurement fails.** The answer moves to where he already is: a line in the review page's own bar that says the same thing across every theme.
+
+**9 · When we review the measure.** When a round is judged in two browsers at once and one page has to say something about both.
