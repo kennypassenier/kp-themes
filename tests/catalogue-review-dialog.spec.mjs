@@ -219,7 +219,7 @@ test(
         await expect(noteOf(page)).toBeFocused();
 
         // Judging every block of every theme ends the round, in the same dialog.
-        for (let press = 0; press < 260; press += 1) {
+        for (let press = 0; press < 700; press += 1) {
             if ((await live.textContent())?.includes('the round is over')) break;
             await page.keyboard.press('ArrowUp');
             await expect(noteOf(page)).toBeFocused({ timeout: 30_000 });
