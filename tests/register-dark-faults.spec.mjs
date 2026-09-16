@@ -193,9 +193,9 @@ test.describe('dark: the dialog casts its shadow [scope-100]', { tag: ['@theme:d
 // thousand. The modal test was red on its own line: a shadow of one colour,
 // not four.
 const HALO_BAND = 24;
-/** The three surfaces the decision names, as the research demo staged them. */
+/** The surfaces the decision names — the navbar's dropdown joined them at scope-106. */
 const HALO_PROBE = `
-    <div data-halo-probe style="display:grid;grid-template-columns:repeat(3,minmax(17rem,1fr));gap:4rem;padding:4rem 2rem;">
+    <div data-halo-probe style="display:grid;grid-template-columns:repeat(2,minmax(17rem,1fr));gap:4rem;padding:4rem 2rem;">
         <div data-halo-surface="dialog" style="contain:layout;min-block-size:16rem;padding:2rem 1.5rem;">
             <dialog class="kp-dialog" open aria-labelledby="halo-dialog-title">
                 <h2 class="kp-dialog__title" id="halo-dialog-title">Discard calibration run 41?</h2>
@@ -207,6 +207,12 @@ const HALO_PROBE = `
                 <h3 class="kp-card__title">Run 41</h3>
                 <p class="kp-card__body">Sodium D, 589.0 nm. Grating 1200 l/mm, slit 25 µm.</p>
             </article>
+        </div>
+        <div data-halo-surface="menu" style="contain:layout;min-block-size:16rem;padding:2rem 1.5rem;">
+            <ul class="kp-nav__menu" style="position:static;display:block;opacity:1;">
+                <li><a href="#a">Readings</a></li>
+                <li><a href="#b">Incidents</a></li>
+            </ul>
         </div>
         <div data-halo-surface="popover" style="contain:layout;min-block-size:16rem;padding:2rem 1.5rem;">
             <div class="kp-popover">
@@ -280,11 +286,12 @@ const HALO_OFF = `
     [data-halo-probe] .kp-dialog,
     [data-halo-probe] .kp-card,
     [data-halo-probe] .kp-popover,
+    [data-halo-probe] .kp-nav__menu,
     dialog.kp-dialog:modal { box-shadow: none !important; }`;
 
 for (const ratio of [1, 2.222]) {
     test.describe(`dark: the oxide halo at devicePixelRatio ${ratio} [scope-102]`, { tag: ['@theme:dark', '@component:overlays'] }, () => {
-        test(`the dialog, the card and the popover each stand off the ground`, async ({ playwright }) => {
+        test(`the dialog, the card, the popover and the navbar's dropdown each stand off the ground`, async ({ playwright }) => {
             test.setTimeout(180_000);
             const browser = await playwright.firefox.launch({ firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } });
             try {
@@ -306,7 +313,7 @@ for (const ratio of [1, 2.222]) {
                     page.evaluate(() => {
                         const out = {};
                         for (const cell of document.querySelectorAll('[data-halo-surface]')) {
-                            const el = cell.querySelector('.kp-dialog, .kp-card, .kp-popover');
+                            const el = cell.querySelector('.kp-dialog, .kp-card, .kp-popover, .kp-nav__menu');
                             const r = el.getBoundingClientRect();
                             out[cell.getAttribute('data-halo-surface')] = { x: r.x, y: r.y, width: r.width, height: r.height };
                         }
@@ -351,7 +358,7 @@ for (const ratio of [1, 2.222]) {
                 // reverting to the old shadow (0 and 3.46 above) cannot pass.
                 /** @type {string[]} */
                 const weak = [];
-                for (const name of ['dialog', 'card', 'popover']) {
+                for (const name of ['dialog', 'card', 'popover', 'menu']) {
                     const band = bands[name];
                     if (!(band.vis / band.band >= 0.25)) weak.push(`${name}: ${band.share}% of the band past ΔL* 3, under 25%`);
                     if (!(band.peak >= 10)) weak.push(`${name}: largest difference ${band.peak}, under 10`);

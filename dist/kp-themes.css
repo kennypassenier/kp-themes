@@ -34904,7 +34904,10 @@
         border-radius: var(--radius);
         padding: 0.3rem;
         min-width: 12rem;
-        box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+        /* The oxide halo, as the dialog, the card and the popover family
+           carry it [scope-106]: a shadow in the theme's own background
+           token reads about two of 255 against the ground it stands on. */
+        box-shadow: var(--kp-halo);
     }
 
     /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:

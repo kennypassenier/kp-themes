@@ -352,3 +352,15 @@ the options side by side on the real stylesheets, and the form links to
 it. The prose says what each option costs and what it measures; the eye
 does the comparing. A choice with no visible difference (a selector, a
 gate, a test level) stays prose.
+
+## Kenny's answer of 2026-09-16 (scope-106) — a comparison demo is minutes, not research
+
+Kenny, when a comparison demo took nine minutes: *"de demo duurt nu al 9
+minuten, terwijl het toch vrij simpel is? een bekende component naast een
+licht aangepaste versie ervan draaien? dat kan toch sneller"*, and
+*"kunnen we bv de demo pagina ook al vastleggen zodat enkel de componenten
+zelf er in moeten geplaatst worden?"*. So the page is fixed once, in
+`research/_compare/template.html`, and a demo is Claude copying it and
+filling four slots. No agent, no measurement, no spec of its own — a
+measurement only when the choice turns on a number, said out loud before
+it is built.

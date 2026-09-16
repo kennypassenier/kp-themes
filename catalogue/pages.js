@@ -62,7 +62,6 @@ export const PAGES = [
     {
         group: 'Research to look at',
         pages: [
-            { href: 'research/dark-menu-shadow/demo.html', label: "Dark's dropdown menu: the halo or not" },
             // The theme portraits' pilot [scope-97]: one fixed page per theme,
             // generated from themes/<theme>/signature.json.
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
@@ -93,6 +92,7 @@ export const PAGES = [
             // Decided at scope-102: the oxide halo, painted as four fixed
             // shadows on the dialog, the card and the popover family.
             { href: 'research/dark-dialog-shadow/demo.html', label: "Dark's dialog shadow, five options" },
+            { href: 'research/dark-menu-shadow/demo.html', label: "Dark's dropdown menu: the halo or not" },
         ],
     },
 ];

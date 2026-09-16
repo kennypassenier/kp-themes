@@ -1818,3 +1818,14 @@ oog te vergelijken dan een tekst te lezen en mijn verbeelding te moeten
 gebruiken" — so dark's dropdown menu gets a demo of the two shadows side by
 side, and from now on every choice about how something looks comes with a demo
 the form links to (docs/RULES.md). step-timing "Akkoord".
+
+**scope-106 · The navbar's dropdown joins the halo, and a comparison demo is
+Claude's own work.** Kenny, 2026-09-16, the menu-shadow form, after looking at
+the demo. menu-shadow "De volle gloed": dark's `.kp-nav__menu` carries
+`--kp-halo`, the same four fixed shadows as the dialog, the card and the popover
+family; measured in the same probe it went from 1.3% of the 24px band past ΔL* 3
+(peak 4.87) to above the bar the other three clear. demo-speed "Snel, Claude
+zelf": a comparison demo is Claude filling `research/_compare/template.html` —
+no agent, no measurement, no spec of its own — unless the choice turns on a
+number, and then Claude says so before building it. The nine minutes that
+prompted this were the research around the page, not the page.
