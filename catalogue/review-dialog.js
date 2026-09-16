@@ -225,7 +225,12 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
     opener.addEventListener('click', () => {
         const first = items.find((item) => !item.judged) ?? sequence()[0] ?? items[0];
         open(first);
-        if (first.judged) live.textContent = endMessage(first);
+        // Nothing left in this theme: the same walk as after a verdict, so
+        // opening the dialog on a finished theme either lands on the next
+        // theme with work or says the round is over [scope-113].
+        if (!first.judged) return;
+        if (nextTheme) void walkOn(first);
+        else live.textContent = endMessage(first);
     });
 
     const endMessage = (item) => `Every block is judged in ${themeLabel(themeOf(item))}. Escape closes the dialog.`;
