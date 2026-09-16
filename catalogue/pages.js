@@ -61,17 +61,7 @@ export const PAGES = [
     },
     {
         group: 'Research to look at',
-        pages: [
-            // The theme portraits' pilot [scope-97]: one fixed page per theme,
-            // generated from themes/<theme>/signature.json.
-            { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
-            { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
-            { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
-            // Kenny's rejection of retro's two alarms [scope-107]: "het
-            // lettertype van 'Access denied' is te grof om deftig te lezen".
-            // Four faces on the real alarm, at the size it draws them.
-            { href: 'research/retro-alarm-face/demo.html', label: "Retro's alarm headline: four faces" },
-        ],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -97,6 +87,10 @@ export const PAGES = [
             // shadows on the dialog, the card and the popover family.
             { href: 'research/dark-dialog-shadow/demo.html', label: "Dark's dialog shadow, five options" },
             { href: 'research/dark-menu-shadow/demo.html', label: "Dark's dropdown menu: the halo or not" },
+            { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
+            { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
+            { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
+            { href: 'research/retro-alarm-face/demo.html', label: "Retro's alarm headline: four faces" },
         ],
     },
 ];

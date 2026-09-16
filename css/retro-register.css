@@ -2474,6 +2474,11 @@
             inset -2px -2px 0 hsl(from var(--foreground) h s l / 0.55), inset 2px 2px 0 hsl(from var(--background) h s 100),
             6px 6px 0 var(--foreground);
         --kp-alarm-panel-padding: 0 clamp(1rem, 3cqi, 2rem) clamp(1rem, 3cqi, 2rem);
+        /* Kenny, 2026-09-16, rejecting the pixel face: "te grof om deftig te
+           lezen". He picked the theme's own body face out of the demo
+           [scope-108]; the window chrome around it carries the era, so the
+           headline does not have to. */
+        --kp-alarm-title-font: var(--theme-font-body);
         --kp-alarm-title-size: clamp(2rem, 8cqi, 6rem);
         --kp-alarm-title-tracking: 0.02em;
     }

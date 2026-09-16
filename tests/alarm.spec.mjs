@@ -728,7 +728,7 @@ const FIT_CASES = [
  *
  * @type {Record<string, number>}
  */
-const FIT_ALLOWED = { grotesk: 24, 'high-contrast': 12 };
+const FIT_ALLOWED = /** @type {Record<string, number>} */ ({});
 
 /** In the page: the worst overflow of any word past the frame, and the plate's own clipping. */
 const READ_FIT = () => {

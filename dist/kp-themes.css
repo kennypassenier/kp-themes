@@ -14335,6 +14335,11 @@
             inset -2px -2px 0 hsl(from var(--foreground) h s l / 0.55), inset 2px 2px 0 hsl(from var(--background) h s 100),
             6px 6px 0 var(--foreground);
         --kp-alarm-panel-padding: 0 clamp(1rem, 3cqi, 2rem) clamp(1rem, 3cqi, 2rem);
+        /* Kenny, 2026-09-16, rejecting the pixel face: "te grof om deftig te
+           lezen". He picked the theme's own body face out of the demo
+           [scope-108]; the window chrome around it carries the era, so the
+           headline does not have to. */
+        --kp-alarm-title-font: var(--theme-font-body);
         --kp-alarm-title-size: clamp(2rem, 8cqi, 6rem);
         --kp-alarm-title-tracking: 0.02em;
     }
@@ -31506,7 +31511,9 @@
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-bar: 0rem;
         --kp-alarm-frame: 0 solid;
-        --kp-alarm-title-size: clamp(3rem, 15cqi, 12rem);
+        /* Smaller than the poster it was: at 864x450 the headline pushed
+           20px past the frame [scope-108]. */
+        --kp-alarm-title-size: clamp(2rem, 10cqi, 8rem);
         --kp-alarm-title-tracking: -0.04em;
     }
 
@@ -38310,6 +38317,9 @@
        script did, and no other button on any alert. */
     [data-theme='sepia'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
         color: var(--destructive-foreground);
+        /* The frame follows the label [scope-108]: on the red plate the old
+           border read 1.6:1, so the button's shape was not there to see. */
+        border-color: var(--destructive-foreground);
     }
 
     [data-theme='sepia'] .kp-alert--warning {
@@ -41466,7 +41476,11 @@
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-stripe: var(--foreground);
         --kp-alarm-frame: 4px solid var(--foreground);
-        --kp-alarm-bar: 1.25rem;
+        --kp-alarm-bar: 1rem;
+        /* At 864x450 the headline stood 9px past the frame [scope-108];
+           legibility is this theme's whole point, so it loses size, not
+           weight. */
+        --kp-alarm-title-size: clamp(1.9rem, 9cqi, 7rem);
     }
 
     [data-theme='high-contrast'] .kp-alarm:focus-visible {

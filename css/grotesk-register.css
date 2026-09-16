@@ -1484,7 +1484,9 @@
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-bar: 0rem;
         --kp-alarm-frame: 0 solid;
-        --kp-alarm-title-size: clamp(3rem, 15cqi, 12rem);
+        /* Smaller than the poster it was: at 864x450 the headline pushed
+           20px past the frame [scope-108]. */
+        --kp-alarm-title-size: clamp(2rem, 10cqi, 8rem);
         --kp-alarm-title-tracking: -0.04em;
     }
 

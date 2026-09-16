@@ -1848,3 +1848,15 @@ whose text breaks out of its frame, and its over-the-page menu, which stands on
 the page before it is opened; phantom's React theme menu, which shows almost
 nothing; shade-light's primary button, with no visible press; and retro's two
 alarms, whose face is too coarse to read.
+
+**scope-108 · Retro's alarm speaks the theme's own body face; two smaller things
+close with it.** Kenny, 2026-09-16, the retro-face form, after looking at the
+demo. retro-face "Instrument Sans": the alarm headline takes
+`--theme-font-body` instead of the pixel face he called too coarse; the window
+chrome carries the era. alarm-fit "Nu meteen": grotesk's headline (20px past the
+frame in Firefox, 7 in Chromium) and high-contrast's (9px in both) come down in
+size, and the test's tolerated overflow goes to zero for every theme.
+sepia-retry-border "Rand mee in het wit": the retry button's frame follows its
+label, which read 1.6:1 on the red plate. In his remarks: "archiveer de bestanden
+in 'research to look at'" — the retro face demo and the three theme portraits
+move to "Archived research", each with its decided line.

@@ -816,6 +816,9 @@
        script did, and no other button on any alert. */
     [data-theme='sepia'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
         color: var(--destructive-foreground);
+        /* The frame follows the label [scope-108]: on the red plate the old
+           border read 1.6:1, so the button's shape was not there to see. */
+        border-color: var(--destructive-foreground);
     }
 
     [data-theme='sepia'] .kp-alert--warning {

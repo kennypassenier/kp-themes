@@ -1,5 +1,7 @@
 # Theme portraits — the pilot [scope-97]
 
+**Decided (scope-98, scope-99): the three pilots were judged and the portraits stop there.**
+
 **Scope (scope-99):** the portraits stop at these three pilots; no other theme gets one. Screenshots are taken for checking and not kept in the repository.
 
 Kenny, 2026-09-15: can the essence of a theme — what makes it unique, its mannerisms, colours and motion — be shown on a page of its own, so a

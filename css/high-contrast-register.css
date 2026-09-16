@@ -1250,7 +1250,11 @@
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-stripe: var(--foreground);
         --kp-alarm-frame: 4px solid var(--foreground);
-        --kp-alarm-bar: 1.25rem;
+        --kp-alarm-bar: 1rem;
+        /* At 864x450 the headline stood 9px past the frame [scope-108];
+           legibility is this theme's whole point, so it loses size, not
+           weight. */
+        --kp-alarm-title-size: clamp(1.9rem, 9cqi, 7rem);
     }
 
     [data-theme='high-contrast'] .kp-alarm:focus-visible {
