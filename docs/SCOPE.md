@@ -1870,3 +1870,18 @@ to commit. Measured at the moment it was built: 3037 of 3058 pairs approved, 21
 open, all of them the rejections of scope-107 waiting for Kenny's second look.
 while-review-2 "Wachten": nothing else is started while he reviews.
 step-timing "Akkoord".
+
+**scope-110 · A component remembers what the user set, under a name the author
+gives it.** Kenny, 2026-09-16: "de sidenav moet zijn state onthouden, ik heb bv
+de components dropdown gesloten en klik op een link, dan moet die nog altijd
+dicht zijn. Dit gedrag moet tellen voor alle elementen waar dit verwacht wordt
+door een user", and "die key in localStorage moet niet hardcoded zijn, stel dat
+we twee van dezelfde elementen naast mekaar op de pagina willen ofzo". So the
+package gets one mechanism, the way the theme is already remembered:
+`data-kp-remember="<name>"` opts an element in and names its key, two of the
+same component on one page keep separate state, a component without the
+attribute remembers nothing, and blocked storage leaves everything at its
+default. It covers the state a user sets and expects to find again — the side
+navigation's groups and collapsed rail, the split pane, the data table's
+columns, sort and density, the accordion and the tree — and deliberately not
+the transient overlays. The review site's own navigation is its first consumer.
