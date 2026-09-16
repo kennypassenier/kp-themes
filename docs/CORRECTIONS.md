@@ -3940,3 +3940,23 @@ fault.
 **8 · If the measurement fails.** The answer moves to where he already is: a line in the review page's own bar that says the same thing across every theme.
 
 **9 · When we review the measure.** When a round is judged in two browsers at once and one page has to say something about both.
+
+## fix-49 · The register never held what the review page reads (2026-09-16)
+
+**1 · What went wrong.** "Godverdomme, ik ga nog altijd gewoon naar 'every component, one page' … en NOG ALTIJD krijg ik geen eindscherm." Driven end to end in a browser: the review page opened with 9 of 143 blocks left to judge in formal, and approving them moved the walk on to the next theme where the same handful waited again — so the round never reached its end screen. Measured underneath it: 2919 of the 3062 pairs in the register held a hash the review page does not read at his zoom. The tools read a block on its own component page at whatever zoom they were told; Kenny reads it composed into `catalogue/index.html` at 2.222. The two surfaces never agreed, so a verdict given on one was "changed" on the other, for good.
+
+**2 · Which gate let it through.** None. fix-45 stopped the tools from anchoring a zoomed entry, which was right, but nothing checked that what the register holds is what the reviewer's own surface reads.
+
+**3 · Where the same fault sits.** The property: a hash in the register taken on a surface or at a zoom the reviewer does not use. Searched by reading all 3062 pairs on the review page at 2.222 and comparing: 143 matched (one theme's worth), 2919 did not.
+
+**4 · How we prevent recurrence.** `node gates/verdicts.mjs settle [--ratio 2.222]` reads every block where Kenny reads it — the review page, theme by theme, at his zoom — and records that reading under the verdict the entry already carries. Run once on his word; the guard of fix-45 stands for everything else.
+
+**5 · What the remedy costs.** One browser run of about a minute, and a register that follows the reviewer's surface rather than the tools'.
+
+**6 · Who enforces it.** Discipline plus the measurement: after the run, a check at his zoom across the 22 themes counted 0 block/theme pairs left to judge, against 9 per theme before.
+
+**7 · How we measure it works, and when.** At Kenny's next open of the review site: the page shows nothing to judge, the dialog says the round is over on opening, and "Am I through?" says he is through.
+
+**8 · If the measurement fails.** The register stops holding hashes at all for pairs the reviewer has approved in his own browser, and the review page trusts the local judgement first.
+
+**9 · When we review the measure.** At the next change to the hash recipe, when every reading is taken again anyway.

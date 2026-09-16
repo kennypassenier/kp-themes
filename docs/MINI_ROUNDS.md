@@ -185,3 +185,4 @@ register's colours are.
 | fix-46-M1 | Does a round hold still now? Measured at the end of the round opened on 2026-09-16: every block Kenny approves stays approved, and none comes back in a later theme because a commit moved it. | open |
 | fix-47-M1 | Do the field blocks stay approved now that a reading is taken of the block as written? Measured at Kenny's next pass: field--text, field--invalid, field--summary and the compact form do not come back in the next theme. | open |
 | fix-48-M1 | Does the round page answer the question it was built for? Measured at Kenny's next round: he reads "You are through" there instead of asking. | open |
+| fix-49-M1 | Does the review site open with nothing to judge? Measured at Kenny's next visit: the page shows no open block, the dialog says the round is over on opening, and "Am I through?" says he is through. | open |

@@ -523,6 +523,104 @@ async function rehash(args) {
     console.log(`${REGISTER}: ${total} entr${total === 1 ? 'y' : 'ies'} rehashed from version ${from} to ${HASH_VERSION}, ${moved} hash(es) moved.`);
 }
 
+/* ------------------------------------------------------------------ settle */
+
+/**
+ * Bring the register up to what the REVIEW page reads, theme by theme, at one
+ * zoom [fix-49].
+ *
+ * Kenny judges on `catalogue/index.html` at a zoom of 2.222, and the tools
+ * read the blocks on their own component pages at whatever zoom they were
+ * told. Measured 2026-09-16: 2919 of 3062 pairs held a hash the review page
+ * does not read at his zoom, so those blocks asked to be judged again on
+ * every visit, whatever he answered. This reads every block where he reads
+ * it, and records the reading under the verdict it already carries — a
+ * rejection stays a rejection.
+ *
+ * It is the reviewer's surface, so it is only run when he asks for it
+ * ("fix het", 2026-09-16); the guard of fix-45 stands for everything else.
+ * @param {string[]} args
+ */
+async function settle(args) {
+    const option = (/** @type {string} */ name, /** @type {string} */ fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);
+    const ratio = Number(option('--ratio', '2.222'));
+    const width = Number(option('--width', '1920'));
+    const { serve } = await import('./verdict-hashes.mjs');
+    const playwright = await import('@playwright/test');
+    const server = await serve(ROOT);
+    const browser = await playwright.firefox.launch({
+        headless: true,
+        ...(ratio !== 1 ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
+    });
+    const context = await browser.newContext({ viewport: { width, height: 1000 }, ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}) });
+    const page = await context.newPage();
+    const settled = () =>
+        page.waitForFunction(
+            () => {
+                const states = [...document.querySelectorAll('.cat-judge [data-cat-approval-state]')];
+                return states.length > 0 && !states.some((el) => (el.textContent ?? '').startsWith('Checking'));
+            },
+            null,
+            { timeout: 180_000, polling: 200 },
+        );
+    /** @type {Record<string, Record<string, string>>} */
+    const readings = {};
+    try {
+        await page.goto(`${server.base}/catalogue/index.html`);
+        await settled();
+        const themes = /** @type {string[]} */ (JSON.parse(readFileSync(join(ROOT, 'themes/order.json'), 'utf8')));
+        for (const theme of themes) {
+            await page.evaluate(
+                (name) => /** @type {any} */ (window).eval("import('/js/theme-core.js')").then((/** @type {any} */ core) => core.applyTheme(name)),
+                theme,
+            );
+            await page.waitForTimeout(300);
+            await settled();
+            // In the page, where the catalogue's own modules live; the types
+            // of those imports belong to the browser, not to this file.
+            readings[theme] = await page.evaluate(async () => {
+                /** @type {any} */ const win = window;
+                const { COMPONENT_PAGES } = await win.eval("import('/catalogue/pages.js')");
+                const { readPage } = await win.eval("import('/catalogue/review.js')");
+                const { readBlocks } = await win.eval("import('/catalogue/block-hash.js')");
+                const pages = await Promise.all(COMPONENT_PAGES.map(readPage));
+                const sources = new Map(
+                    pages.flatMap((/** @type {any} */ one) => one.blocks.map((/** @type {any} */ block) => [block.id, block.source])),
+                );
+                const blocks = [...document.querySelectorAll('.cat-block[id]')];
+                const read = await readBlocks(blocks.map((root) => ({ root, source: sources.get(root.id) ?? root.outerHTML })));
+                return Object.fromEntries(blocks.map((block, i) => [block.id, read[i].hash]));
+            });
+            console.log(`${theme}: ${Object.keys(readings[theme]).length} block(s) read`);
+        }
+    } finally {
+        await browser.close();
+        await server.close();
+    }
+    const register = readRegister();
+    const commit = git('rev-parse', 'HEAD');
+    let moved = 0;
+    let same = 0;
+    for (const [theme, hashes] of Object.entries(readings)) {
+        for (const [key, hash] of Object.entries(hashes)) {
+            const entry = register.verdicts[key]?.[theme]?.firefox;
+            if (!entry) continue;
+            if (entry.hash === hash) {
+                same += 1;
+                continue;
+            }
+            moved += 1;
+            entry.hash = hash;
+            entry.commit = commit;
+            entry.given = today();
+            if (ratio === 1) delete entry.ratio;
+            else entry.ratio = ratio;
+        }
+    }
+    writeRegister(register);
+    console.log(`${REGISTER}: ${same} pair(s) already read what the review page reads at ratio ${ratio}, ${moved} brought up to it.`);
+}
+
 /* ---------------------------------------------------------------- snapshot */
 
 /** Where the blocks as they stand now are written [scope-112]. */
@@ -1137,6 +1235,7 @@ async function main() {
     if (command === 'note') return note(args);
     if (command === 'rehash') return rehash(args);
     if (command === 'snapshot') return snapshot(args);
+    if (command === 'settle') return settle(args);
     if (command === 'compare' && args.includes('--against-browser')) return compareAgainstBrowser(args);
     if (command === 'compare') return compare(args);
     if (command === 'annotate-ratio') return annotateRatio(args);
@@ -1145,6 +1244,7 @@ async function main() {
             '       node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]\n' +
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
             '       node gates/verdicts.mjs snapshot [--width 1920]\n' +
+            '       node gates/verdicts.mjs settle [--ratio 2.222] [--width 1920]\n' +
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
             '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]\n' +
