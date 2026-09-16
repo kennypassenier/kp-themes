@@ -62,6 +62,7 @@ export const PAGES = [
     {
         group: 'Research to look at',
         pages: [
+            { href: 'research/dark-menu-shadow/demo.html', label: "Dark's dropdown menu: the halo or not" },
             // The theme portraits' pilot [scope-97]: one fixed page per theme,
             // generated from themes/<theme>/signature.json.
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },

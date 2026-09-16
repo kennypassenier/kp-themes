@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-cat-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>dark's dropdown menu: the halo or not · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only; NOT the package.
+
+               The navbar, its dropdown, the card and the bar's own surface are
+               the package's classes, out of css/components.css and
+               css/dark-register.css, with the markup of
+               catalogue/navigation.html. Nothing in css/*-register.css is
+               touched by this page.
+
+               Three states, each written as
+
+                 [data-theme='dark'] .dm-<state> .kp-nav__menu { box-shadow: … }
+
+               so each goes into css/dark-register.css (layer kp.register) by
+               dropping the `.dm-<state>` wrapper and replacing the one
+               box-shadow line `.kp-nav__menu` carries today (line 660). The
+               rules here are unlayered, so they beat the register.
+
+                 1 · ships  the register's line, restated character for
+                            character. The spec checks that this state's
+                            computed shadow equals what a menu with no wrapper
+                            class computes, so "as it ships" cannot drift.
+                 2 · halo   `var(--kp-halo)`, the package's own token
+                            (css/dark-register.css:98), which the dialog, the
+                            popover family and the card wear since scope-102.
+                 3 · quiet  the same four shadows, halved in alpha and pulled
+                            in by about 40 % in offset and blur. A token of
+                            this page's own, so the comparison is between three
+                            box-shadows and nothing else.
+
+               Grounds. Dark paints two: the page's own instrument grid with
+               the pointer's pool of light (`[data-theme='dark'] body`,
+               line 1595) and a panel in `var(--card)`. `.kp-nav-wrap` is
+               painted `var(--card)` in dark too, so the panel ground below is
+               the theme's own panel colour, not an invented one — it is a
+               <div> painted `var(--card)`, which is mock only in the sense
+               that no package class puts a ground on a page region.
+
+               Colour (DI9): nothing here names a colour. Every stop is a token
+               or a relative colour of one.
+
+               Motion (DI5): no keyframe, no transition of this page's own. The
+               menus declared open with `data-kp-nav-menu-open` are at rest
+               after their opening fade, which is the package's.
+               ================================================================== */
+            .dm-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .dm-tag--package {
+                color: var(--success-foreground);
+            }
+            .dm-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .dm-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .dm-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+
+            /* One state, one row: a bar with its dropdown open and enough room
+               under it that the panel's band never reaches the next row. The
+               rows are the same height in every block, so parking each of them
+               at the same viewport offset puts every state on the same patch
+               of grid and under the same amount of pointer light. */
+            .dm-row {
+                margin-block-end: 2rem;
+            }
+            .dm-row:last-child {
+                margin-block-end: 0;
+            }
+            .dm-ground {
+                min-block-size: 15rem;
+            }
+            .dm-ground--panel {
+                background: var(--card);
+            }
+            .dm-caption {
+                margin: 0 0 0.35rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.72rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            /* Page copy beside the open panel, never under it: the band is
+               measured over bare ground, and text inside it would be ground of
+               its own. 26rem clears the panel (12rem wide under the third
+               link) and its 24px band with room to spare. */
+            .dm-copy {
+                margin: 1.25rem 1.25rem 0 26rem;
+                color: var(--muted-foreground);
+                font-size: 0.9rem;
+                max-inline-size: 30rem;
+            }
+            .dm-card-bed {
+                padding: 1rem 1.25rem 1.25rem;
+                max-inline-size: 34rem;
+            }
+            .dm-measure caption {
+                text-align: start;
+                padding-block-end: 0.35rem;
+                color: var(--muted-foreground);
+                font-size: 0.8rem;
+            }
+            .dm-measure td,
+            .dm-measure th {
+                font-variant-numeric: tabular-nums;
+            }
+            .dm-measure [data-dm-cell] {
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.82rem;
+            }
+            .dm-note {
+                margin-block: 0.5rem 0;
+                color: var(--muted-foreground);
+                font-size: 0.85rem;
+            }
+            .dm-side {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+                gap: 2rem;
+            }
+            /* Room under the bar for the open panel, which is out of the flow. */
+            .dm-spacer {
+                block-size: 9rem;
+            }
+            /* Under the 40rem at which the bar folds behind its toggle. */
+            .dm-narrow {
+                inline-size: 22rem;
+                max-inline-size: 100%;
+            }
+
+            /* ── 1 · As it ships ──────────────────────────────────────────
+               css/dark-register.css line 660, restated: the shadow is the
+               theme's own background token at 45 %, and the ground it falls on
+               is that same token. Two of 255, so the panel lies flat. */
+            [data-theme='dark'] .dm-ships .kp-nav__menu {
+                box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+            }
+
+            /* ── 2 · The oxide halo ───────────────────────────────────────
+               The package's own token, no copy: four fixed shadows, one per
+               wavelength of the oxide film, placed where the conic gradient
+               puts that colour — chart-2 below, chart-1 left, chart-3 right,
+               chart-4 above. The dialog, the card and the popover family have
+               worn it since scope-102 (commit 4454584). */
+            [data-theme='dark'] .dm-halo .kp-nav__menu {
+                box-shadow: var(--kp-halo);
+            }
+
+            /* ── 3 · A quieter halo ───────────────────────────────────────
+               The same four shadows and the same four tokens, with every alpha
+               halved and every offset and blur pulled in by about 40 %: the
+               film is still there, it reaches about a third as far, and it
+               never becomes the loudest thing in the bar. This is the "yes,
+               but softer" answer, so it can be chosen by eye. */
+            [data-theme='dark'] .dm-quiet {
+                --dm-halo-quiet:
+                    0 6px 12px hsl(from var(--chart-2) h s l / 0.15), -6px 3px 11px hsl(from var(--chart-1) h s l / 0.13),
+                    6px 3px 11px hsl(from var(--chart-3) h s l / 0.13), 0 -4px 9px hsl(from var(--chart-4) h s l / 0.1);
+            }
+            [data-theme='dark'] .dm-quiet .kp-nav__menu {
+                box-shadow: var(--dm-halo-quiet);
+            }
+
+            /* ── The measuring switch ─────────────────────────────────────
+               verify.spec.mjs sets `data-dm-elevation="off"` on <html> to
+               photograph the same page with the dropdown's shadow taken away
+               and nothing else changed; the difference between the two
+               photographs is the shadow. The card keeps its own halo in both
+               photographs, so what is measured round a panel standing on a
+               card is the panel's shadow alone. */
+            [data-dm-elevation='off'][data-theme='dark'] .dm-state .kp-nav__menu {
+                box-shadow: none !important;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>dark's dropdown menu: the halo, a quieter halo, or what ships</h1>
+            <p class="cat-intro">
+                Since <code>scope-102</code> dark's dialog, card and popover family are lifted off the ground by the oxide film's own colours —
+                <code>--kp-halo</code>, four fixed shadows in chart-2, chart-1, chart-3 and chart-4. The navbar's dropdown was not in that decision,
+                so it still casts <code>0 12px 28px</code> of the theme's <b>background</b> token at 45 %, on a ground that is that same token: about
+                two of 255. The question is whether the dropdown should join the halo, and if so how loud. Kenny, 2026-09-16 (<code>scope-105</code>):
+                <i>"maak een demo om het verschil te zien … het is veel beter om dingen met het oog te vergelijken."</i>
+            </p>
+            <p class="cat-intro">
+                The bar, the dropdown, the card and their voices are <span class="dm-tag dm-tag--package">package</span>: the markup below is
+                <code>catalogue/navigation.html</code>'s dropdown bar, unchanged, with <code>data-kp-nav-menu-open</code> on the <b>Readings</b> item
+                so the panel is frozen open. The three shadows are <span class="dm-tag dm-tag--mock">mock</span>: rules in this page's
+                <code>&lt;style&gt;</code> block, written as <code>[data-theme='dark'] .dm-&lt;state&gt; .kp-nav__menu</code> so each goes into
+                <code>css/dark-register.css</code> by dropping the wrapper class. State 2 is not a copy of the halo — it is
+                <code>var(--kp-halo)</code>, the register's own token. The panel ground is a <span class="dm-tag dm-tag--mock">mock</span>
+                <code>&lt;div&gt;</code> painted <code>var(--card)</code>, which is what dark paints <code>.kp-nav-wrap</code> and every panel with.
+                Registers loaded: dark, titanium, nostromo; the rest are fetched on a switch.
+            </p>
+            <div class="dm-switcher" role="group" aria-label="Theme for this page">
+                <span class="dm-tag dm-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-dm-theme="dark" aria-pressed="true">dark</button>
+                <button type="button" class="kp-button kp-button--ghost" data-dm-theme="titanium" aria-pressed="false">titanium</button>
+                <button type="button" class="kp-button kp-button--ghost" data-dm-theme="nostromo" aria-pressed="false">nostromo</button>
+            </div>
+            <p class="dm-note">
+                Every block is judged in dark whatever the menu says — the stages carry <code>data-cat-theme="dark"</code>. The switcher is there to
+                show that these rules are dark's alone: the last block follows the menu.
+            </p>
+
+            <h2>How the numbers under each state were measured</h2>
+            <p class="cat-intro">
+                <b>Separation</b> is counted in device pixels in a 24px band around the open panel, against the ground that would be there without its
+                shadow. The page is photographed twice at the same scroll position, once as it stands and once with
+                <code>data-dm-elevation="off"</code> on <code>&lt;html&gt;</code>, which takes the dropdown's shadow away and changes nothing else;
+                the two photographs are subtracted pixel by pixel in CIE L*. The band is the panel's border box grown by 24px minus the border box
+                itself. Read at devicePixelRatio 1 and 2.222, in firefox, 1280px wide. This is the measurement of
+                <code>research/dark-dialog-shadow/verify.spec.mjs</code>, reused line for line; <code>verify.spec.mjs</code> beside this page
+                re-measures on every run and fails if the page prints anything else.
+            </p>
+            <p class="cat-intro">
+                Two thresholds. <b>Any difference (ΔL* ≥ 1)</b> is one just-noticeable step on a hard edge: it says the shadow is painted at all.
+                <b>Visible (ΔL* ≥ 3)</b> is the column to read: across a soft gradient a single step is under what an eye picks up, and three is
+                roughly where a shadow begins to lift a panel. Every state is parked at the same scroll offset, so the same patch of grid and the same
+                amount of pointer light stands behind all three.
+            </p>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="page-ground" data-cat-theme="dark">
+                <h2>1 · On the page ground <span class="dm-tag dm-tag--package">package</span> + <span class="dm-tag dm-tag--mock">shadow</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same bar three times, each with <b>Readings</b> open. Put your eye on the panel's bottom edge and on the grid
+                    lines that run under it. In <b>1 · as it ships</b> the grid runs straight under the panel and the only thing holding it off the
+                    page is its own hairline. In <b>2 · the oxide halo</b> a cyan-violet-magenta glow stands round all four sides, the same glow the
+                    card and the dialog have worn since <code>scope-102</code>. In <b>3 · a quieter halo</b> the same colours reach about a third as
+                    far. Judge two things: whether the panel needs lifting at all here, where its own ground (<code>--card</code>, 8 % lightness) is
+                    already three points lighter than the page's (5 %); and whether the halo's colour reads as the theme's oxide film or as a glow
+                    under a menu.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dm-row dm-state dm-ships" data-dm-state="ships">
+                        <p class="dm-caption">1 · as it ships</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4, as it ships">
+                                    <a class="kp-nav__brand" href="#page-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#page-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#page-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#page-ground">Pressure</a></li>
+                                                <li><a href="#page-ground">Flow rate</a></li>
+                                                <li><a href="#page-ground">Pump cycles</a></li>
+                                                <li><a href="#page-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Line 2 has been running on the standby pump since Tuesday. Pressure is holding at 4.1 bar and the flow rate has not
+                                moved more than 20 l/min in either direction.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-halo" data-dm-state="halo">
+                        <p class="dm-caption">2 · the oxide halo, var(--kp-halo)</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4, with the oxide halo">
+                                    <a class="kp-nav__brand" href="#page-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#page-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#page-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#page-ground">Pressure</a></li>
+                                                <li><a href="#page-ground">Flow rate</a></li>
+                                                <li><a href="#page-ground">Pump cycles</a></li>
+                                                <li><a href="#page-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Line 2 has been running on the standby pump since Tuesday. Pressure is holding at 4.1 bar and the flow rate has not
+                                moved more than 20 l/min in either direction.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-quiet" data-dm-state="quiet">
+                        <p class="dm-caption">3 · a quieter halo</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4, with a quieter halo">
+                                    <a class="kp-nav__brand" href="#page-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#page-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#page-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#page-ground">Pressure</a></li>
+                                                <li><a href="#page-ground">Flow rate</a></li>
+                                                <li><a href="#page-ground">Pump cycles</a></li>
+                                                <li><a href="#page-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#page-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Line 2 has been running on the standby pump since Tuesday. Pressure is holding at 4.1 bar and the flow rate has not
+                                moved more than 20 l/min in either direction.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table dm-measure">
+                    <caption>
+                        Separation on the page ground: device pixels in the 24px band round the open panel that differ from the same band with the
+                        panel's shadow taken away.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">State</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>1</td>
+                            <td data-dm-cell="page/ships/1/band">—</td>
+                            <td data-dm-cell="page/ships/1/any">—</td>
+                            <td data-dm-cell="page/ships/1/vis">—</td>
+                            <td data-dm-cell="page/ships/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="page/ships/2.222/band">—</td>
+                            <td data-dm-cell="page/ships/2.222/any">—</td>
+                            <td data-dm-cell="page/ships/2.222/vis">—</td>
+                            <td data-dm-cell="page/ships/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="page/halo/1/band">—</td>
+                            <td data-dm-cell="page/halo/1/any">—</td>
+                            <td data-dm-cell="page/halo/1/vis">—</td>
+                            <td data-dm-cell="page/halo/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="page/halo/2.222/band">—</td>
+                            <td data-dm-cell="page/halo/2.222/any">—</td>
+                            <td data-dm-cell="page/halo/2.222/vis">—</td>
+                            <td data-dm-cell="page/halo/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="page/quiet/1/band">—</td>
+                            <td data-dm-cell="page/quiet/1/any">—</td>
+                            <td data-dm-cell="page/quiet/1/vis">—</td>
+                            <td data-dm-cell="page/quiet/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="page/quiet/2.222/band">—</td>
+                            <td data-dm-cell="page/quiet/2.222/any">—</td>
+                            <td data-dm-cell="page/quiet/2.222/vis">—</td>
+                            <td data-dm-cell="page/quiet/2.222/peak">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="panel-ground" data-cat-theme="dark">
+                <h2>2 · On a panel <span class="dm-tag dm-tag--package">package</span> + <span class="dm-tag dm-tag--mock">ground, shadow</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same three bars standing on a panel — the ground painted <code>var(--card)</code>, which is the colour dark
+                    paints <code>.kp-nav-wrap</code>, every card and every popover. This is the hard case: the open panel's own background is
+                    <code>--card</code> too, so with the shipped shadow the panel is held off its ground by <b>one hairline and nothing else</b>. Look
+                    for the panel's silhouette in state 1 — you have to find the border to find the panel. In state 2 the halo draws the silhouette
+                    for you; in state 3 it does the same more quietly. Judge whether the quiet one is enough here, because this is the ground where a
+                    dropdown needs the most help.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dm-row dm-state dm-ships" data-dm-state="ships">
+                        <p class="dm-caption">1 · as it ships</p>
+                        <div class="dm-ground dm-ground--panel">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4 on a panel, as it ships">
+                                    <a class="kp-nav__brand" href="#panel-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#panel-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#panel-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#panel-ground">Pressure</a></li>
+                                                <li><a href="#panel-ground">Flow rate</a></li>
+                                                <li><a href="#panel-ground">Pump cycles</a></li>
+                                                <li><a href="#panel-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Standby pump, 41 hours in service. The night shift logged one valve correction at 02:10 and nothing since.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-halo" data-dm-state="halo">
+                        <p class="dm-caption">2 · the oxide halo, var(--kp-halo)</p>
+                        <div class="dm-ground dm-ground--panel">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4 on a panel, with the oxide halo">
+                                    <a class="kp-nav__brand" href="#panel-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#panel-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#panel-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#panel-ground">Pressure</a></li>
+                                                <li><a href="#panel-ground">Flow rate</a></li>
+                                                <li><a href="#panel-ground">Pump cycles</a></li>
+                                                <li><a href="#panel-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Standby pump, 41 hours in service. The night shift logged one valve correction at 02:10 and nothing since.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-quiet" data-dm-state="quiet">
+                        <p class="dm-caption">3 · a quieter halo</p>
+                        <div class="dm-ground dm-ground--panel">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Pump house 4 on a panel, with a quieter halo">
+                                    <a class="kp-nav__brand" href="#panel-ground">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#panel-ground">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#panel-ground" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#panel-ground">Pressure</a></li>
+                                                <li><a href="#panel-ground">Flow rate</a></li>
+                                                <li><a href="#panel-ground">Pump cycles</a></li>
+                                                <li><a href="#panel-ground">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#panel-ground">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <p class="dm-copy">
+                                Standby pump, 41 hours in service. The night shift logged one valve correction at 02:10 and nothing since.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table dm-measure">
+                    <caption>
+                        Separation on a panel ground (<code>var(--card)</code>, the open panel's own background colour).
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">State</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>1</td>
+                            <td data-dm-cell="panel/ships/1/band">—</td>
+                            <td data-dm-cell="panel/ships/1/any">—</td>
+                            <td data-dm-cell="panel/ships/1/vis">—</td>
+                            <td data-dm-cell="panel/ships/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="panel/ships/2.222/band">—</td>
+                            <td data-dm-cell="panel/ships/2.222/any">—</td>
+                            <td data-dm-cell="panel/ships/2.222/vis">—</td>
+                            <td data-dm-cell="panel/ships/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="panel/halo/1/band">—</td>
+                            <td data-dm-cell="panel/halo/1/any">—</td>
+                            <td data-dm-cell="panel/halo/1/vis">—</td>
+                            <td data-dm-cell="panel/halo/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="panel/halo/2.222/band">—</td>
+                            <td data-dm-cell="panel/halo/2.222/any">—</td>
+                            <td data-dm-cell="panel/halo/2.222/vis">—</td>
+                            <td data-dm-cell="panel/halo/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="panel/quiet/1/band">—</td>
+                            <td data-dm-cell="panel/quiet/1/any">—</td>
+                            <td data-dm-cell="panel/quiet/1/vis">—</td>
+                            <td data-dm-cell="panel/quiet/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="panel/quiet/2.222/band">—</td>
+                            <td data-dm-cell="panel/quiet/2.222/any">—</td>
+                            <td data-dm-cell="panel/quiet/2.222/vis">—</td>
+                            <td data-dm-cell="panel/quiet/2.222/peak">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="over-card" data-cat-theme="dark">
+                <h2>3 · Open over a card <span class="dm-tag dm-tag--package">package</span> + <span class="dm-tag dm-tag--mock">shadow</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the panel opens over a card, and the card already wears the halo itself (<code>scope-102</code>). This is where a
+                    halo can read as a <b>double edge</b>: two glows of the same four colours, one round the card and one round the panel, a few
+                    pixels apart along the card's top edge. Follow the card's top-left corner in each state and ask whether you see one lit edge or
+                    two. State 1 has no second glow at all; state 2 has the full one; state 3 has a third of it. The card, its title and its body are
+                    the package's, with the shadow the register gives them today.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dm-row dm-state dm-ships" data-dm-state="ships">
+                        <p class="dm-caption">1 · as it ships</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Readings over a card, as it ships">
+                                    <a class="kp-nav__brand" href="#over-card">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#over-card">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#over-card">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#over-card" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#over-card">Pressure</a></li>
+                                                <li><a href="#over-card">Flow rate</a></li>
+                                                <li><a href="#over-card">Pump cycles</a></li>
+                                                <li><a href="#over-card">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#over-card">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-card-bed">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Line 2 · standby pump</h3>
+                                    <p class="kp-card__body">
+                                        4.1 bar, 980 l/min, 41 hours in service. The last valve correction was logged at 02:10 by the night shift.
+                                    </p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-halo" data-dm-state="halo">
+                        <p class="dm-caption">2 · the oxide halo, var(--kp-halo)</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Readings over a card, with the oxide halo">
+                                    <a class="kp-nav__brand" href="#over-card">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#over-card">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#over-card">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#over-card" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#over-card">Pressure</a></li>
+                                                <li><a href="#over-card">Flow rate</a></li>
+                                                <li><a href="#over-card">Pump cycles</a></li>
+                                                <li><a href="#over-card">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#over-card">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-card-bed">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Line 2 · standby pump</h3>
+                                    <p class="kp-card__body">
+                                        4.1 bar, 980 l/min, 41 hours in service. The last valve correction was logged at 02:10 by the night shift.
+                                    </p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dm-row dm-state dm-quiet" data-dm-state="quiet">
+                        <p class="dm-caption">3 · a quieter halo</p>
+                        <div class="dm-ground">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Readings over a card, with a quieter halo">
+                                    <a class="kp-nav__brand" href="#over-card">Pump house 4</a>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#over-card">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#over-card">Incidents</a></li>
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#over-card" aria-haspopup="true" aria-current="page">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#over-card">Pressure</a></li>
+                                                <li><a href="#over-card">Flow rate</a></li>
+                                                <li><a href="#over-card">Pump cycles</a></li>
+                                                <li><a href="#over-card">Valve positions</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#over-card">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-card-bed">
+                                <article class="kp-card">
+                                    <h3 class="kp-card__title">Line 2 · standby pump</h3>
+                                    <p class="kp-card__body">
+                                        4.1 bar, 980 l/min, 41 hours in service. The last valve correction was logged at 02:10 by the night shift.
+                                    </p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="kp-table dm-measure">
+                    <caption>
+                        Separation with the panel open over a card. The card's own halo stands in both photographs, so what is counted here is the
+                        dropdown's shadow alone.
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">State</th>
+                            <th scope="col">dPR</th>
+                            <th scope="col">Band, device px</th>
+                            <th scope="col">Any difference (ΔL* ≥ 1)</th>
+                            <th scope="col">Visible (ΔL* ≥ 3)</th>
+                            <th scope="col">Largest ΔL*</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>1</td>
+                            <td data-dm-cell="card/ships/1/band">—</td>
+                            <td data-dm-cell="card/ships/1/any">—</td>
+                            <td data-dm-cell="card/ships/1/vis">—</td>
+                            <td data-dm-cell="card/ships/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1 · as it ships</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="card/ships/2.222/band">—</td>
+                            <td data-dm-cell="card/ships/2.222/any">—</td>
+                            <td data-dm-cell="card/ships/2.222/vis">—</td>
+                            <td data-dm-cell="card/ships/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="card/halo/1/band">—</td>
+                            <td data-dm-cell="card/halo/1/any">—</td>
+                            <td data-dm-cell="card/halo/1/vis">—</td>
+                            <td data-dm-cell="card/halo/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2 · the oxide halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="card/halo/2.222/band">—</td>
+                            <td data-dm-cell="card/halo/2.222/any">—</td>
+                            <td data-dm-cell="card/halo/2.222/vis">—</td>
+                            <td data-dm-cell="card/halo/2.222/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>1</td>
+                            <td data-dm-cell="card/quiet/1/band">—</td>
+                            <td data-dm-cell="card/quiet/1/any">—</td>
+                            <td data-dm-cell="card/quiet/1/vis">—</td>
+                            <td data-dm-cell="card/quiet/1/peak">—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3 · a quieter halo</th>
+                            <td>2.222</td>
+                            <td data-dm-cell="card/quiet/2.222/band">—</td>
+                            <td data-dm-cell="card/quiet/2.222/any">—</td>
+                            <td data-dm-cell="card/quiet/2.222/vis">—</td>
+                            <td data-dm-cell="card/quiet/2.222/peak">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="opened" data-cat-theme="dark">
+                <h2>4 · Opened by hand <span class="dm-tag dm-tag--package">package</span> + <span class="dm-tag dm-tag--mock">shadow</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the three bars above are frozen open with an attribute. These three are not: hover <b>Incidents</b>, or Tab onto
+                    it, and the panel opens the way it does in an application, through the package's own rules and <code>js/components.js</code>.
+                    Judge the shadow while it arrives — the panel fades in, and a shadow that is right at rest can still flash on the way. Tab once
+                    more: the focus lands on the first link inside the open panel and the panel stays open. Escape or a click outside closes it.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dm-side">
+                        <div class="dm-state dm-ships">
+                            <p class="dm-caption">1 · as it ships</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Opened by hand, as it ships">
+                                    <a class="kp-nav__brand" href="#opened">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li>
+                                            <a class="kp-nav__link" href="#opened" aria-haspopup="true">Incidents</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Incidents · open">
+                                                <li><a href="#opened">INC-4471</a></li>
+                                                <li><a href="#opened">INC-4468</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="dm-state dm-halo">
+                            <p class="dm-caption">2 · the oxide halo</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Opened by hand, with the oxide halo">
+                                    <a class="kp-nav__brand" href="#opened">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li>
+                                            <a class="kp-nav__link" href="#opened" aria-haspopup="true">Incidents</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Incidents · open">
+                                                <li><a href="#opened">INC-4471</a></li>
+                                                <li><a href="#opened">INC-4468</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="dm-state dm-quiet">
+                            <p class="dm-caption">3 · a quieter halo</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Opened by hand, with a quieter halo">
+                                    <a class="kp-nav__brand" href="#opened">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li>
+                                            <a class="kp-nav__link" href="#opened" aria-haspopup="true">Incidents</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Incidents · open">
+                                                <li><a href="#opened">INC-4471</a></li>
+                                                <li><a href="#opened">INC-4468</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-look">
+                    <b>Look at, the collapsed bar:</b> the three bars below stand in a box of 22rem, under the 40rem at which the bar folds behind its
+                    toggle, and each is frozen open. There the dropdown is not a floating panel any more but an indented list in the flow
+                    (<code>gap-12</code>): no frame, no ground and <b>no shadow</b>. None of the three states may put one back — a glow round a list
+                    item with no ground is a panel's ghost. All three must look identical here.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dm-side">
+                        <div class="dm-state dm-ships">
+                            <p class="dm-caption">1 · as it ships, collapsed</p>
+                            <div class="dm-narrow">
+                                <div class="kp-nav-wrap">
+                                    <nav class="kp-nav" aria-label="Collapsed and frozen open, as it ships" data-kp-nav-open>
+                                        <a class="kp-nav__brand" href="#opened">Pump house 4</a>
+                                        <button type="button" class="kp-nav__toggle" aria-expanded="true" aria-label="Close the navigation"></button>
+                                        <ul class="kp-nav__links">
+                                            <li><a class="kp-nav__link" href="#opened">Overview</a></li>
+                                            <li>
+                                                <a class="kp-nav__link" href="#opened" aria-haspopup="true" aria-current="page">Readings</a>
+                                                <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                    <li><a href="#opened">Pressure</a></li>
+                                                    <li><a href="#opened">Flow rate</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dm-state dm-halo">
+                            <p class="dm-caption">2 · the oxide halo, collapsed</p>
+                            <div class="dm-narrow">
+                                <div class="kp-nav-wrap">
+                                    <nav class="kp-nav" aria-label="Collapsed and frozen open, with the oxide halo" data-kp-nav-open>
+                                        <a class="kp-nav__brand" href="#opened">Pump house 4</a>
+                                        <button type="button" class="kp-nav__toggle" aria-expanded="true" aria-label="Close the navigation"></button>
+                                        <ul class="kp-nav__links">
+                                            <li><a class="kp-nav__link" href="#opened">Overview</a></li>
+                                            <li>
+                                                <a class="kp-nav__link" href="#opened" aria-haspopup="true" aria-current="page">Readings</a>
+                                                <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                    <li><a href="#opened">Pressure</a></li>
+                                                    <li><a href="#opened">Flow rate</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dm-state dm-quiet">
+                            <p class="dm-caption">3 · a quieter halo, collapsed</p>
+                            <div class="dm-narrow">
+                                <div class="kp-nav-wrap">
+                                    <nav class="kp-nav" aria-label="Collapsed and frozen open, with a quieter halo" data-kp-nav-open>
+                                        <a class="kp-nav__brand" href="#opened">Pump house 4</a>
+                                        <button type="button" class="kp-nav__toggle" aria-expanded="true" aria-label="Close the navigation"></button>
+                                        <ul class="kp-nav__links">
+                                            <li><a class="kp-nav__link" href="#opened">Overview</a></li>
+                                            <li>
+                                                <a class="kp-nav__link" href="#opened" aria-haspopup="true" aria-current="page">Readings</a>
+                                                <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                    <li><a href="#opened">Pressure</a></li>
+                                                    <li><a href="#opened">Flow rate</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="kp-nav__link" href="#opened">Rota</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="scope" data-cat-theme="dark">
+                <h2>5 · Dark only <span class="dm-tag dm-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> this is the one block that follows the theme menu at the top of the page. All three rules are written under
+                    <code>[data-theme='dark']</code>, so in titanium or nostromo these three panels must be identical to each other and to that
+                    theme's ordinary dropdown — no halo anywhere. Switch to titanium and back to dark; in dark the three differ again.
+                </div>
+                <div class="cat-stage cat-stage--block" data-dm-no-theme>
+                    <div class="dm-side">
+                        <div class="dm-state dm-ships">
+                            <p class="dm-caption">1 · as it ships</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Theme scope, as it ships">
+                                    <a class="kp-nav__brand" href="#scope">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#scope" aria-haspopup="true">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#scope">Pressure</a></li>
+                                                <li><a href="#scope">Flow rate</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-spacer"></div>
+                        </div>
+                        <div class="dm-state dm-halo">
+                            <p class="dm-caption">2 · the oxide halo</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Theme scope, with the oxide halo">
+                                    <a class="kp-nav__brand" href="#scope">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#scope" aria-haspopup="true">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#scope">Pressure</a></li>
+                                                <li><a href="#scope">Flow rate</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-spacer"></div>
+                        </div>
+                        <div class="dm-state dm-quiet">
+                            <p class="dm-caption">3 · a quieter halo</p>
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Theme scope, with a quieter halo">
+                                    <a class="kp-nav__brand" href="#scope">PH//04</a>
+                                    <ul class="kp-nav__links">
+                                        <li data-kp-nav-menu-open>
+                                            <a class="kp-nav__link" href="#scope" aria-haspopup="true">Readings</a>
+                                            <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                                <li><a href="#scope">Pressure</a></li>
+                                                <li><a href="#scope">Flow rate</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="dm-spacer"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu follows it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-dm-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.dmTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.dmTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            // The scope block is the one stage that follows the menu: judging.js
+            // pins every stage of a block with `data-cat-theme` to that theme,
+            // and this stage asks to be left alone.
+            const free = document.querySelector('[data-dm-no-theme]');
+            if (free)
+                new MutationObserver(() => free.removeAttribute('data-theme')).observe(free, { attributes: true, attributeFilter: ['data-theme'] });
+        </script>
+    </body>
+</html>
