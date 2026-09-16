@@ -1,9 +1,15 @@
 {
     "$comment": "Which browser tests a change needs [scope-33]. Every test carries @component:<name>, @theme:<name> or @sweep (gates/check-tags.mjs refuses one that does not). A changed file is matched against `rules` in order, first match wins; `selectors` turns the rules a stylesheet change touches into components. gates/tags.mjs reads this file; `npm run test:tags` runs what it selects. The measurement against the old selection is under `measured`.",
     "levels": {
-        "building": "the tags of the changed files only, firefox",
-        "commit": "building plus every @sweep test, firefox",
-        "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go"
+        "building": "the tags of the changed files only, firefox; a theme sweep runs on the three themes below",
+        "commit": "building plus every @sweep test, firefox; a theme sweep runs on the three themes below",
+        "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go; a theme sweep runs on all 22"
+    },
+    "sweepThemes": {
+        "$comment": "How wide a theme-parameterised sweep runs, per level [scope-103]. gates/run-tags.mjs sets KP_SWEEP_THEMES for the first two levels and nothing for release; tests/helpers/sweep-themes.mjs reads it and answers with every theme when it is unset, so a bare `npx playwright test` still runs all 22. Four theme loops are deliberately NOT narrowed, each with a per-theme fault behind it: focus-visible.spec.mjs (fix-38), registers.spec.mjs:91 (fix-12), reflow.spec.mjs and overflow.spec.mjs (brutalism in firefox only, sepia and solstice in chromium only).",
+        "narrow": ["formal", "dark", "cyberpunk"],
+        "why": "the default theme most fixtures and every catalogue page wear, a dark one, and the heaviest register",
+        "measured": "2026-09-16, firefox. The four loops narrowed (fixtures.spec.mjs 6 declarations, surfaces.spec.mjs, concept-confirm.spec.mjs, registers.spec.mjs:187): the whole suite 1593 → 1423 per engine, −170; `--level commit --files css/sepia-register.css` 430 → 266, −164. tests/fixtures.spec.mjs 132 tests in 26.7 s → 18 in 5.4 s; at the release level it is 132 in 25.3 s again."
     },
     "measured": {
         "date": "2026-09-14",

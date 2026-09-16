@@ -10,6 +10,7 @@ import { readdirSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { measured } from './paint.mjs';
 import { contrast } from '../gates/colour.mjs';
+import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 /** @param {string} rgb */
 const parse = (rgb) => {
@@ -75,6 +76,9 @@ for (const control of ['.kp-button', '.kp-field__input']) {
 const THEMES = readdirSync(new URL('../showcase/themes/', import.meta.url))
     .filter((n) => n.endsWith('.html'))
     .map((n) => n.slice(0, -'.html'.length));
+
+/** The themes a sweep in this file runs on at this level [scope-103]. */
+const SWEEP = sweepThemes().filter((n) => THEMES.includes(n));
 
 // Phase 7 widened this from one selector to the three the gate names.
 // gates/check-pressed-state.mjs guards `.kp-button`, `.kp-button--primary`
@@ -183,7 +187,11 @@ for (const theme of THEMES) {
 // Drilled 2026-09-12 in firefox: the `:not([class*='kp-alert--'])` removed
 // from css/grotesk-register.css and the bundle regenerated → red on
 // grotesk alone, at 1.00. Restored green.
-for (const theme of THEMES) {
+//
+// The level decides how many themes this measures [scope-103]; all 22 at
+// the release level. The fix-12 loop above stays whole on purpose — its
+// fault WAS one theme's.
+for (const theme of SWEEP) {
     test(
         `the destructive alert can be read under ${theme} [gap-1]`,
         { tag: ['@sweep', `@theme:${theme}`, '@component:feedback', '@component:showcase'] },

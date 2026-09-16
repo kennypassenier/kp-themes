@@ -12,6 +12,12 @@
 // derivative and firefox has been the odd engine here more often than
 // chromium (docs/RULES.md, correction fix-2).
 //
+// The level also decides how wide a theme sweep runs [scope-103]: at
+// building and commit this sets KP_SWEEP_THEMES, which
+// tests/helpers/sweep-themes.mjs reads, to formal, dark and cyberpunk; at
+// release it sets nothing, so every sweep runs on all 22. The variable is
+// set on the child, never on this process, so nothing else inherits it.
+//
 // Usage:
 //   npm run test:tags -- --level building                  since `git merge-base HEAD main`, plus uncommitted
 //   npm run test:tags -- --level commit --files css/x.css  those paths, against HEAD
@@ -24,6 +30,17 @@
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 import { ROOT, changes, grepFor, select } from './tags.mjs';
+import { NARROW_THEMES } from '../tests/helpers/sweep-themes.mjs';
+
+/**
+ * The environment a level runs its playwright in.
+ *
+ * @param {'building' | 'commit' | 'release'} level
+ * @returns {NodeJS.ProcessEnv}
+ */
+export function envFor(level) {
+    return level === 'release' ? { ...process.env } : { ...process.env, KP_SWEEP_THEMES: NARROW_THEMES.join(',') };
+}
 
 /** @param {string[]} argv */
 export function parse(argv) {
@@ -60,10 +77,11 @@ export function playwrightArgs(level, grep) {
     return ['playwright', 'test', ...(level === 'release' ? [] : ['--project=firefox']), ...(grep === null ? [] : ['--grep', grep])];
 }
 
-/** @param {string[]} args @returns {number | null} the count `--list` prints */
-export function count(args) {
+/** @param {string[]} args @param {NodeJS.ProcessEnv} [env] @returns {number | null} the count `--list` prints */
+export function count(args, env) {
     const run = spawnSync('npx', [...args, '--list'], {
         cwd: ROOT,
+        env: env ?? process.env,
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],
         maxBuffer: 64 * 1024 * 1024,
@@ -89,8 +107,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(
         `level ${level}: ${pw === null ? 'nothing to run' : grep === null ? `every test${level === 'release' ? ', both engines' : ', firefox'}` : `--grep ${grep}`}`,
     );
+    const env = envFor(level);
+    if (level !== 'release') console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 22 at the release level) [scope-103]`);
     if (args.dryRun) {
-        if (pw) console.log(`tests: ${count(pw)}`);
+        if (pw) console.log(`tests: ${count(pw, env)}`);
         process.exit(0);
     }
     if (pw === null) process.exit(0);
@@ -98,6 +118,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error('The release level is the whole suite in both engines, and that is Kenny’s to authorise. Pass --go only with his go.');
         process.exit(2);
     }
-    const run = spawnSync('npx', pw, { cwd: ROOT, stdio: ['ignore', 'inherit', 'inherit'] });
+    const run = spawnSync('npx', pw, { cwd: ROOT, env, stdio: ['ignore', 'inherit', 'inherit'] });
     process.exit(run.status ?? 1);
 }

@@ -53,6 +53,7 @@ import process from 'node:process';
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8')));
 
@@ -348,3 +349,89 @@ test(
         expect(faults).toEqual([]);
     },
 );
+
+// Three widths, and the width the reader arrived at rather than loaded at
+// [scope-103].
+//
+// The two tests above load the page at a width and read it; the one after
+// them narrows a paragraph by hand. None of them resizes the WINDOW, and a
+// resize is a different thing: the card is laid out once, the phrase rewraps
+// in place, and a bar drawn against the first layout stays where it was.
+// That is the shape of the fault Kenny met — a redaction beside its phrase
+// rather than over it — arrived at the way a person arrives at it, by
+// dragging the window.
+//
+// A third width comes with it: 1024, a laptop beside the two Kenny reviews
+// at. Measured in firefox, the dossier's card keeps its measure at all
+// three — every phrase is one line at 1920, 1400 and 1024 — so each phrase
+// is ALSO read at its break at each width, with narrowUntilItBreaks. Three
+// widths of the same single line would be one layout read three times.
+//
+// Three themes rather than 22: the sweep list, since a fault here is the
+// register's way of drawing a bar and the release level still reads all of
+// them. The two tests above keep their 22.
+//
+// Drilled 2026-09-16 in firefox: formal's redaction returned to the shape
+// scope-93 replaced — `background: none` on the mark and the bar back on an
+// absolutely positioned `mark::after` — → red at every width, all three
+// phrases at their break, 840, 531 and 727 glyph pixels showing through at
+// 1920×1000 and the same again at 1400×900, 1024×800 and after the resize.
+// Restored green.
+const WIDTHS = [
+    { width: 1920, height: 1000 },
+    { width: 1400, height: 900 },
+    { width: 1024, height: 800 },
+];
+
+for (const theme of sweepThemes()) {
+    test(
+        `every redaction covers its phrase at three widths and after a resize under ${theme} [fix-33]`,
+        { tag: ['@sweep', '@component:page-effects', `@theme:${theme}`] },
+        async ({ page }) => {
+            await page.setViewportSize(WIDTHS[0]);
+            await page.goto('/catalogue/page-effects.html#dossier');
+            await waitForJudging(page);
+            const card = await setTheme(page, theme);
+
+            /** @type {string[]} */
+            const faults = [];
+            /** @type {string[]} */
+            const report = [];
+            /** @param {string} where */
+            const readAll = async (where) => {
+                // The card is laid out again and the page has painted a
+                // frame before anything is measured.
+                await card.scrollIntoViewIfNeeded();
+                await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+                for (let i = 0; i < 3; i++) {
+                    const { line, fault } = judge(theme, await measureMark(card, i));
+                    report.push(`${where}: ${line}`);
+                    if (fault) faults.push(`${where}: ${fault}`);
+                    // And the same phrase at its break, at this width. The
+                    // dossier's card keeps its measure whatever the window
+                    // does — measured in firefox: every phrase is one line at
+                    // all three widths — so a width on its own never reaches
+                    // the wrapped case, and a test that only resized the
+                    // window would be reading the same layout four times.
+                    const breaks = await narrowUntilItBreaks(card, i);
+                    const broken = judge(theme, await measureMark(card, i));
+                    report.push(`${where}, ${breaks ? 'at its break' : 'never breaks'}: ${broken.line}`);
+                    if (broken.fault) faults.push(`${where}, at its break: ${broken.fault}`);
+                    await widen(card);
+                }
+            };
+
+            for (const size of WIDTHS) {
+                await page.setViewportSize(size);
+                await readAll(`${size.width}×${size.height}`);
+            }
+            // Back to the widest, from the narrowest: the phrases that wrapped
+            // unwrap, and a bar that was drawn per line has to follow.
+            await page.setViewportSize(WIDTHS[0]);
+            await readAll(`resized to ${WIDTHS[0].width}×${WIDTHS[0].height}`);
+
+            if (process.env.KP_REDACTION_REPORT) console.log(`three widths and a resize, ${theme}\n${report.join('\n')}`);
+            expect(faults).toEqual([]);
+        },
+    );
+}

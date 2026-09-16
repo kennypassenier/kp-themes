@@ -225,6 +225,20 @@ proactively" description the harness delegates on.
    `npm run test:browser` — Kenny's to authorise, asked in a form; Claude
    runs it with his go.
 
+The level also decides how wide a **theme sweep** runs (`scope-103`,
+2026-09-16). A test declared once per theme runs at the first two levels
+on three — formal, dark and cyberpunk — and at the release level on all
+22. `gates/run-tags.mjs` sets `KP_SWEEP_THEMES` for the first two;
+`tests/helpers/sweep-themes.mjs` reads it and answers with every theme
+when it is unset, so a bare `npx playwright test` still runs all 22.
+Measured 2026-09-16 in firefox over the four loops narrowed: the whole
+suite 1593 → 1423 per engine, a commit level on a register 430 → 266, and
+`tests/fixtures.spec.mjs` 26.7 s → 5.4 s. No assertion was removed. Four
+theme loops stay at 22 on purpose, each with a per-theme fault behind it
+— `focus-visible.spec.mjs` (fix-38), `registers.spec.mjs:91` (fix-12),
+`reflow.spec.mjs` and `overflow.spec.mjs`; the list is in the head of
+`tests/helpers/sweep-themes.mjs`.
+
 Every test carries `@component:<name>`, `@theme:<name>` or `@sweep`;
 `npm run check:tags` (in the gates) refuses one that does not, and a file
 no rule in the map covers. `--dry-run` prints the selection and the count

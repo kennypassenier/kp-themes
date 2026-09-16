@@ -8,6 +8,12 @@
 
 import { test, expect } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
+import { sweepThemeRecords } from './helpers/sweep-themes.mjs';
+
+// Six declarations over 22 themes are 132 tests; none of the five faults
+// behind them was ever one theme's, so the level decides the width
+// [scope-103]. All 22 at the release level.
+const SWEEP = sweepThemeRecords(THEMES);
 
 /** SC 1.4.12 Text Spacing (AA). The four values are the success criterion's own. */
 const TEXT_SPACING = `* {
@@ -20,7 +26,7 @@ p { margin-bottom: 2em !important; }`;
 /** SC 1.4.10 Reflow (AA): usable at 320 CSS px without scrolling in two directions. */
 const NARROW = { width: 320, height: 800 };
 
-for (const theme of THEMES) {
+for (const theme of SWEEP) {
     test.describe(`${theme.name} fixture`, { tag: ['@sweep', '@component:showcase', `@theme:${theme.name}`] }, () => {
         const url = `/showcase/themes/${theme.name}.html`;
 
@@ -128,7 +134,7 @@ const ALLOWED = [
     { selector: '[data-specimen="browser"] input', why: 'the specimen shows what the browser draws on its own' },
 ];
 
-for (const theme of THEMES) {
+for (const theme of SWEEP) {
     test(
         `${theme.name} paints no colour that is not its own [KT8]`,
         { tag: ['@sweep', '@component:showcase', `@theme:${theme.name}`] },

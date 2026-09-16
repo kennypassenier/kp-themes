@@ -96,11 +96,27 @@ comment-only stylesheet change and documentation select nothing.
 browser and refuses an untagged test, a tag outside the vocabulary, a
 theme walk without `@sweep`, and a file no rule covers.
 
-| Level    | Command                                   | Runs                                   |
-| -------- | ----------------------------------------- | -------------------------------------- |
-| building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox |
-| commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  |
-| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go |
+| Level    | Command                                   | Runs                                   | Theme sweeps |
+| -------- | ----------------------------------------- | -------------------------------------- | ------------ |
+| building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox | formal, dark, cyberpunk |
+| commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  | formal, dark, cyberpunk |
+| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 22 |
+
+**A theme sweep is a level too** (`scope-103`, 2026-09-16). Fourteen
+declarations loop over the 22 themes, which turned 804 written tests into
+1,593. A spec now asks `sweepThemes()` from
+`tests/helpers/sweep-themes.mjs` for the list; `gates/run-tags.mjs` sets
+`KP_SWEEP_THEMES` for the first two levels and nothing for release, and an
+unset variable means all 22, so a bare `npx playwright test` is unchanged.
+Measured 2026-09-16 in firefox over the four loops narrowed
+(`fixtures.spec.mjs`, `surfaces.spec.mjs`, `concept-confirm.spec.mjs`,
+`registers.spec.mjs`): the whole suite 1,593 → 1,423 per engine, a commit
+level on `css/sepia-register.css` 430 → 266, `tests/fixtures.spec.mjs`
+132 tests in 26.7 s → 18 in 5.4 s (132 in 25.3 s again at release). No
+assertion was removed. Four theme loops stay whole because each has a
+per-theme fault behind it — `focus-visible.spec.mjs` (fix-38),
+`registers.spec.mjs:91` (fix-12), `reflow.spec.mjs` (brutalism, firefox
+only) and `overflow.spec.mjs` (sepia and solstice, chromium only).
 
 `--dry-run` prints the selection per file, the `--grep` and the count from
 `playwright test --list`; `--files <paths>` and `--commit <sha>` change
@@ -120,6 +136,20 @@ declared in several registers is decided by load order. The commit
 level's sweeps catch the first on every sweep page; only the release level
 catches everything. The full numbers are under `measured` in
 `tests/tags.json`.
+
+## The five thin places, closed [scope-103, 2026-09-16]
+
+The same audit that counted the sweeps counted where the suite was thin:
+areas with faults behind them and few tests over them. Each got its own
+test, and each was shown red against a deliberately broken version first.
+
+| Area                          | Where it now lives                                              | What it measures                                                                                                             |
+| ----------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| fonts (fix-28)                | `tests/fonts.spec.mjs`, on `tests/fixtures/control-fonts.html`  | under a forced desktop default, every package control of all four kinds resolves the family the body resolves, in the sweep themes |
+| overlay placement (fix-30, fix-36) | `tests/overlay-flip.spec.mjs`, on `tests/fixtures/dialog-in-dialog.html` | a flipped overlay opens downward again at the top of the window; a long dialog opened from inside another dialog keeps its cap at two window sizes |
+| the cascade order             | `tests/cascade-order.spec.mjs`                                   | a utility beats the layout layer; the layout layer beats the component layer at lower specificity; the base layer's `[hidden]` beats both |
+| motion that must restart (fix-31) | `tests/still-frame-release.spec.mjs`, on `tests/fixtures/still-frame.html` | an infinite animation runs again after the still frame is lifted, including one the CSS had already stopped                     |
+| redaction (fix-33)            | `tests/redaction-cover.spec.mjs`                                 | a redaction covers its phrase at three widths and after a resize, each also at the phrase's break, in the sweep themes         |
 
 ## What a gate must be able to do
 

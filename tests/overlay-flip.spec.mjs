@@ -168,4 +168,135 @@ for (const channel of CHANNELS) {
             await expect(input).toHaveValue(/17/);
         },
     );
+
+    test(
+        `a combobox that opened upward opens downward again at the top of the window — ${channel.name} [fix-30]`,
+        { tag: ['@component:combobox'] },
+        async ({ page }) => {
+            // The six tests above prove the flip. None of them proves the
+            // flip is not permanent: an overlay that remembers where it
+            // went, or a class left on it at close, hangs off the TOP of
+            // the window the next time the field has room below it — the
+            // same fault the other way up. The audit named the reopen
+            // position as the third thin spot in this area [scope-103].
+            //
+            // Drilled 2026-09-16 in firefox: the `below` branch of
+            // placeBlockSide in js/top-layer.js made unreachable, so every
+            // open flips → red in both channels, the list at
+            // overlayTop 0 / overlayBottom 31 above a field at 35.
+            // The six tests above stayed green. Restored green.
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto(COMPONENTS);
+            const input = page.locator(channel.comboboxInput);
+            const list = `${channel.combobox} .kp-combobox__list`;
+
+            await toBottom(page, channel.combobox);
+            await input.click();
+            await expectAbove(page, list, channel.comboboxInput);
+            // Focus away rather than Escape: the framework-free combobox
+            // opens on focus and has no key that reopens it from closed, so
+            // an Escape would leave the input focused and shut for good.
+            await page.locator('h1').click();
+            await expect(page.locator(list)).toBeHidden();
+
+            // Now the other end: the field at the top, with the whole window
+            // below it.
+            await page.evaluate((selector) => {
+                const element = /** @type {HTMLElement} */ (document.querySelector(selector));
+                window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - 8, behavior: 'instant' });
+            }, channel.combobox);
+            await input.click();
+            await expect(page.locator(list)).toBeVisible();
+            await expect
+                .poll(async () => {
+                    const m = await measure(page, list, channel.comboboxInput);
+                    const fieldBottom = await page.evaluate(
+                        (f) => Math.round(/** @type {HTMLElement} */ (document.querySelector(f)).getBoundingClientRect().bottom),
+                        channel.comboboxInput,
+                    );
+                    return m.overlayTop >= 0 && m.overlayBottom <= m.window && m.overlayTop >= fieldBottom - 1 ? 'below, inside' : JSON.stringify(m);
+                })
+                .toBe('below, inside');
+
+            // And it is still a working list, not just a well-placed box.
+            const option = page.locator(`${list} [role="option"]:visible`).first();
+            const text = ((await option.textContent()) ?? '').trim();
+            await option.click();
+            await expect(input).toHaveValue(text);
+        },
+    );
+}
+
+// A dialog opened from inside a dialog keeps its cap [fix-36, gap-11].
+//
+// fix-36's own note says what was missing: "no test opened a block's modal
+// inside it, and the overlays tests open the long dialog on the plain page,
+// where it is capped". tests/retro-dialog-notes.spec.mjs covers the
+// catalogue's review dialog, which is where Kenny met the fault; this
+// covers the position itself, in the package's own markup, so the package
+// keeps the property with no catalogue in the picture.
+//
+// Both window sizes fix-36 was measured at. Under the fault the sixty-row
+// dialog opened 2574px tall with its top at -837px on 1400×900 and -1062px
+// at 864×450, and never scrolled.
+//
+// Two drills, 2026-09-16 in firefox. Setting `--kp-dialog-max-height: none`
+// on the host — fix-36's own mechanism — left both green: a modal dialog's
+// UA `max-height` still holds the box inside the window, so the knob alone
+// is not what saves the nested position, and neither is the package's
+// `max-block-size`, removed with the same result. What DOES save it is the
+// column: the `display: flex; flex-direction: column` on
+// `.kp-dialog[open]:has(> .kp-dialog__body)` removed from
+// css/components.css → red at both sizes, `bodyScrolls` false and
+// `dialogScrolls` true, the dialog 868px tall at 1400×900 and 418px at
+// 864×450, so the rows take the title and the actions with them — gap-11's
+// fault, in the nested position no test had opened. Restored green.
+const ROOMS = [
+    { width: 1400, height: 900 },
+    { width: 864, height: 450 },
+];
+
+for (const room of ROOMS) {
+    test(
+        `a long dialog opened from inside another dialog stops at the window at ${room.width}×${room.height} [fix-36]`,
+        { tag: ['@component:overlays'] },
+        async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.setViewportSize(room);
+            await page.goto('/tests/fixtures/dialog-in-dialog.html');
+            await page.locator('[data-test="host-open"]').click();
+            await expect(page.locator('[data-test="host"]')).toBeVisible();
+            await page.locator('[data-test="inner-open"]').click();
+            const inner = page.locator('[data-test="inner"]');
+            await expect(inner).toBeVisible();
+
+            const measured = await inner.evaluate((el) => {
+                const body = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__body'));
+                const actions = /** @type {HTMLElement} */ (el.querySelector('.kp-dialog__actions'));
+                const box = el.getBoundingClientRect();
+                return {
+                    fits: box.top >= 0 && box.bottom <= window.innerHeight,
+                    // The rows scroll, the title and the actions do not go
+                    // with them: that is the whole of gap-11's claim.
+                    bodyScrolls: body.scrollHeight > body.clientHeight + 1,
+                    actionsShown: actions.getBoundingClientRect().bottom <= box.bottom + 1,
+                    dialogScrolls: el.scrollHeight > el.clientHeight + 1,
+                    top: Math.round(box.top),
+                    height: Math.round(box.height),
+                };
+            });
+            expect(
+                {
+                    fits: measured.fits,
+                    bodyScrolls: measured.bodyScrolls,
+                    actionsShown: measured.actionsShown,
+                    dialogScrolls: measured.dialogScrolls,
+                },
+                `the inner dialog is ${measured.height}px tall with its top at ${measured.top}`,
+            ).toEqual({ fits: true, bodyScrolls: true, actionsShown: true, dialogScrolls: false });
+
+            // The first row is reachable, which is what Kenny could not do.
+            await expect(page.locator('[data-test="inner-rows"] tr').first()).toBeInViewport();
+        },
+    );
 }

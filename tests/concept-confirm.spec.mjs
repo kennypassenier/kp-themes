@@ -19,12 +19,21 @@
 // because the button arms instead of opening anything.
 import { readdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 const PAGES = readdirSync(new URL('../examples/', import.meta.url))
     .filter((n) => n.startsWith('concept-') && n.endsWith('.html'))
     .map((n) => n.slice('concept-'.length, -'.html'.length));
 
-for (const theme of PAGES) {
+// The generator writes a concept page per theme; the confirmation behind
+// every one of them is the same `attachConfirmations` default, so the level
+// decides how many are pressed [scope-103]. All of them at the release
+// level. cyberpunk and synthwave have no concept page at all, so a narrowed
+// run presses formal and dark.
+const SWEEP = sweepThemes().filter((n) => PAGES.includes(n));
+if (SWEEP.length === 0) throw new Error(`no concept page for any of ${sweepThemes().join(', ')}`);
+
+for (const theme of SWEEP) {
     test(
         `the wipe button opens a real confirmation under ${theme} [gap-5]`,
         { tag: ['@component:examples', '@component:overlays', '@sweep', `@theme:${theme}`] },

@@ -19,6 +19,7 @@
 //     drill is recorded as green: it guards nothing here.
 
 import { expect, test } from '@playwright/test';
+import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 const PAGE = '/examples/concept.html?theme=cyberpunk';
 
@@ -75,3 +76,86 @@ test.describe('the shipped fonts', { tag: ['@component:fonts', '@component:examp
         expect(state.scrollsSideways, 'the fallback face must not overflow the page').toBe(false);
     });
 });
+
+// Every control takes the theme's own font [fix-28, scope-103].
+//
+// The three tests above all ask whether a FACE arrives: the woff2 is
+// served, the family loads, the page holds when no file arrives at all.
+// None of them asks which family a CONTROL resolves — and that is where
+// fix-28 was. A browser's own stylesheet gives button, input, select and
+// textarea the system font rather than the page's, so a control the
+// package leaves unset shows the desktop's font: Kenny's FireDragon moved
+// 39 of his 158 verdict hashes on 2026-09-14 for exactly that reason, and
+// Playwright's Firefox reads the generic `sans-serif` in the same place.
+//
+// tests/control-font.spec.mjs finds that on the review pages, block by
+// block, in two themes. This asks the plain question on one fixture
+// carrying all four kinds, in the sweep themes: under a forced desktop
+// default declared as the lowest author layer, does every control still
+// resolve the family the body resolves — the theme's own?
+//
+// Drilled 2026-09-16 in firefox: `.kp-icon-button` removed from the
+// `font-family: inherit` list in css/components.css (the very list fix-28
+// added) → red in all three themes, each printing
+// `button.kp-icon-button → "DejaVu Serif"`. Restored green.
+
+/** The family forced underneath, as tests/control-font.spec.mjs forces it. */
+const DESKTOP = 'DejaVu Serif';
+
+/** The four kinds a browser stylesheet hands the system font to. */
+const KINDS = 'button, input, select, textarea';
+
+/** The package's own controls; #unclaimed holds the bare ones it does not style. */
+const CONTROLS = `section:not(#unclaimed) :is(${KINDS})`;
+
+/** The same four kinds wearing no package class: the proof the forced layer lands. */
+const UNCLAIMED = `#unclaimed :is(${KINDS})`;
+
+for (const theme of sweepThemes()) {
+    test(
+        `every control resolves the theme's own font under ${theme} [fix-28]`,
+        { tag: ['@sweep', '@component:fonts', '@component:field', '@component:button', `@theme:${theme}`] },
+        async ({ page }) => {
+            await page.goto('/tests/fixtures/control-fonts.html');
+            const reading = await page.evaluate(
+                async ([name, family, kinds, controls, unclaimed]) => {
+                    document.documentElement.setAttribute('data-theme', name);
+                    // The lowest author layer there is: declared before the
+                    // package's own `@layer kp.base, …` statement it loses to
+                    // every package rule and beats nothing but the browser's
+                    // stylesheet, which is where a desktop font lives.
+                    const style = document.createElement('style');
+                    style.textContent = `@layer kp-desktop-default { ${kinds} { font-family: "${family}"; } }`;
+                    document.head.prepend(style);
+                    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                    const body = getComputedStyle(document.body).fontFamily;
+                    const named = (/** @type {Element} */ el) =>
+                        `${el.localName}${el instanceof HTMLInputElement ? `[type=${el.type}]` : ''}${el.className ? `.${[...el.classList].join('.')}` : ''}`;
+                    const found = [...document.querySelectorAll(controls)];
+                    return {
+                        body,
+                        kinds: [...new Set(found.map((el) => el.localName))].sort(),
+                        // The family the body resolves is the theme's promise;
+                        // a control resolving anything else has broken it.
+                        wrong: found
+                            .filter((el) => getComputedStyle(el).fontFamily !== body)
+                            .map((el) => `${named(el)} → ${getComputedStyle(el).fontFamily}`),
+                        forced: [...document.querySelectorAll(unclaimed)].filter((el) => getComputedStyle(el).fontFamily.includes(family)).length,
+                    };
+                },
+                [theme, DESKTOP, KINDS, CONTROLS, UNCLAIMED],
+            );
+            // Without this the test would pass just as well with the forced
+            // layer never applied, which is no measurement at all.
+            expect(reading.forced, 'the forced desktop layer must reach the bare controls').toBe(4);
+            expect(reading.kinds, 'the fixture carries the package’s own controls of all four kinds').toEqual([
+                'button',
+                'input',
+                'select',
+                'textarea',
+            ]);
+            expect(reading.body, `the body must resolve ${theme}'s own font, not the desktop's`).not.toContain(DESKTOP);
+            expect(reading.wrong, `these controls do not resolve ${theme}'s font`).toEqual([]);
+        },
+    );
+}

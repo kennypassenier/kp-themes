@@ -13,6 +13,11 @@
 
 import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
+import { sweepThemeRecords } from './helpers/sweep-themes.mjs';
+
+// The contrast floor is the same claim in every theme; the level decides
+// how many of them are measured [scope-103]. All 22 at the release level.
+const SWEEP = sweepThemeRecords(THEMES);
 
 const URL = (theme) => `/examples/concept.html?theme=${theme}`;
 
@@ -170,7 +175,7 @@ test.describe('two surfaces in one theme [TH116]', { tag: ['@sweep', '@component
         ],
     };
 
-    for (const theme of THEMES) {
+    for (const theme of SWEEP) {
         test(`every text on both surfaces clears its contrast floor under ${theme.name}`, { tag: [`@theme:${theme.name}`] }, async ({ page }) => {
             await open(page, theme.name);
             await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();

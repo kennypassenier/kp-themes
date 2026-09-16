@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>A dialog opened from inside a dialog</title>
+        <!-- fix-36 was a dialog whose height cap was inherited away by the
+             element hosting it, and the note records why nothing caught it:
+             "no test opened a block's modal inside it". This is that
+             position, in the package's own markup and nothing else — a long
+             dialog opened from a button inside another dialog [scope-103]. -->
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <button type="button" class="kp-button" data-kp-dialog="host" data-test="host-open">Open the host</button>
+
+        <dialog class="kp-dialog" id="host" data-test="host">
+            <h2 class="kp-dialog__title">Host</h2>
+            <div class="kp-dialog__body">
+                <p>A dialog that shows another one, the way the review dialog shows a block's modal.</p>
+                <button type="button" class="kp-button" data-kp-dialog="inner-long" data-test="inner-open">Open the long one</button>
+            </div>
+            <div class="kp-dialog__actions">
+                <button type="button" class="kp-button" data-kp-dialog-close data-test="host-close">Close</button>
+            </div>
+        </dialog>
+
+        <!-- Sixty rows, the count gap-11 was measured on. -->
+        <dialog class="kp-dialog" id="inner-long" data-test="inner">
+            <h2 class="kp-dialog__title">Sixty readings</h2>
+            <div class="kp-dialog__body" data-test="inner-body">
+                <table class="kp-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Pressure</th>
+                            <th scope="col">State</th>
+                        </tr>
+                    </thead>
+                    <tbody data-test="inner-rows"></tbody>
+                </table>
+            </div>
+            <div class="kp-dialog__actions">
+                <button type="button" class="kp-button" data-kp-dialog-close data-test="inner-close">Close</button>
+            </div>
+        </dialog>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script>
+            // Sixty rows written here rather than in the markup: the count is
+            // what the test measures, and a loop cannot drift from it.
+            const rows = document.querySelector('[data-test="inner-rows"]');
+            for (let minute = 0; minute < 60; minute++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML =
+                    `<td class="kp-timestamp">02:${String(minute).padStart(2, '0')}</td>` +
+                    `<td class="kp-numeric">1.${String(minute).padStart(2, '0')} bar</td>` +
+                    `<td>${minute % 7 === 0 ? 'Low' : 'Normal'}</td>`;
+                rows.append(tr);
+            }
+        </script>
+    </body>
+</html>
