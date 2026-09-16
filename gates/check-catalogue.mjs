@@ -164,6 +164,31 @@ export function blocksOutsideTheReview(shell, blocksPerPage) {
         .sort();
 }
 
+/**
+ * The scripts a component page runs that the review page does not [fix-43].
+ *
+ * "Every component, one page" copies a block's markup and runs its own
+ * scripts; a block whose behaviour comes from the page's module therefore
+ * arrives dead where Kenny judges. That is how the four theme intros reached
+ * him with a Play button that did nothing. So a component page may only load
+ * what catalogue/index.html loads too.
+ * @param {Record<string, string>} sources catalogue page path -> its html
+ * @param {Set<string>} gathered the pages "Every component, one page" gathers
+ * @returns {string[]} one line per page that runs something the review page does not
+ */
+export function scriptsOutsideTheReview(sources, gathered) {
+    const REVIEW = 'catalogue/index.html';
+    /** @param {string} html */
+    const scripts = (html) => [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map((match) => match[1].replace(/^\.\//, ''));
+    const review = new Set(scripts(sources[REVIEW] ?? ''));
+    return Object.entries(sources)
+        .filter(([page]) => page !== REVIEW && gathered.has(page))
+        .map(([page, html]) => [page, scripts(html).filter((src) => !review.has(src))])
+        .filter(([, missing]) => missing.length)
+        .map(([page, missing]) => `${page} runs ${/** @type {string[]} */ (missing).join(', ')}, which ${REVIEW} does not load`)
+        .sort();
+}
+
 function main() {
     const components = read('css/components.css');
     const dir = new URL('catalogue/', root);
@@ -248,6 +273,21 @@ function main() {
         console.error(
             `${unjudgeable.length} catalogue page(s) carry blocks but are not gathered by "Every component, one page" [scope-111]:\n  ` +
                 unjudgeable.join('\n  '),
+        );
+    }
+    /** @type {Record<string, string>} */
+    const pageSources = {};
+    for (const page of reviewPages.filter((name) => name.startsWith('catalogue/'))) {
+        pageSources[page] = readFileSync(new URL(page, root), 'utf8');
+    }
+    const gathered = new Set(
+        [...shell.matchAll(/href:\s*'(catalogue\/[^']+)'([^}]*)}/g)].filter((match) => /component:\s*true/.test(match[2])).map((match) => match[1]),
+    );
+    const dead = scriptsOutsideTheReview(pageSources, gathered);
+    if (dead.length) {
+        console.error(
+            `${dead.length} gathered catalogue page(s) run a script the review page does not, so those blocks are dead where Kenny judges [fix-43]:\n  ` +
+                dead.join('\n  '),
         );
     }
     const unlisted = reviewPages.filter((page) => !listed.has(page)).sort();
@@ -382,6 +422,7 @@ function main() {
         blockable.length ||
         undecided.length ||
         unjudgeable.length ||
+        dead.length ||
         invisible.length ||
         stale.length ||
         gone.length ||

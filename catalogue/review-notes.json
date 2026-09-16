@@ -1,1 +1,34 @@
-{}
+{
+    "intros--intro-phantom": {
+        "phantom": {
+            "rejected": "er gebeurt niks als oik op play druk?",
+            "change": "The review page gathers a block's markup and runs none of the page's own scripts, so catalogue/intros.js never wired these four blocks there: Play did nothing and the words beside the window stayed empty. index.html now loads that module, it mounts gathered blocks on cat-composed, and a gate refuses a gathered page that runs a script the review page does not [fix-43].",
+            "commit": "197feb17",
+            "given": "2026-09-16"
+        }
+    },
+    "intros--intro-retro": {
+        "retro": {
+            "rejected": "er gebeurt niks als oik op play druk?",
+            "change": "The review page gathers a block's markup and runs none of the page's own scripts, so catalogue/intros.js never wired these four blocks there: Play did nothing and the words beside the window stayed empty. index.html now loads that module, it mounts gathered blocks on cat-composed, and a gate refuses a gathered page that runs a script the review page does not [fix-43].",
+            "commit": "197feb17",
+            "given": "2026-09-16"
+        }
+    },
+    "intros--intro-synthwave": {
+        "synthwave": {
+            "rejected": "er gebeurt niks als oik op play druk?",
+            "change": "The review page gathers a block's markup and runs none of the page's own scripts, so catalogue/intros.js never wired these four blocks there: Play did nothing and the words beside the window stayed empty. index.html now loads that module, it mounts gathered blocks on cat-composed, and a gate refuses a gathered page that runs a script the review page does not [fix-43].",
+            "commit": "197feb17",
+            "given": "2026-09-16"
+        }
+    },
+    "intros--intro-terminal": {
+        "terminal": {
+            "rejected": "er gebeurt niks als oik op play druk?",
+            "change": "The review page gathers a block's markup and runs none of the page's own scripts, so catalogue/intros.js never wired these four blocks there: Play did nothing and the words beside the window stayed empty. index.html now loads that module, it mounts gathered blocks on cat-composed, and a gate refuses a gathered page that runs a script the review page does not [fix-43].",
+            "commit": "197feb17",
+            "given": "2026-09-16"
+        }
+    }
+}

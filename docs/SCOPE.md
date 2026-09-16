@@ -1913,3 +1913,13 @@ matches the hash the approval was given on, and prints the commit the readings
 were taken at together with the number of files under `catalogue/`, `css/`,
 `js/` and `themes/` that moved since — an advice that names its own age.
 Nothing refuses: the snapshot is a file, not a gate.
+
+Measured the first time at `1fa18938`: 7 min 13 s for 3058 pairs, of which 73
+were no longer the block their verdict was given on, and the count went from
+3044 of 3062 approved to 2978. On the three questions that answered
+(2026-09-16): the measurement runs **only when a release is prepared**
+(snapshot-when — a commit costs 12,3 s of gates today and would cost seven
+minutes more), the 66 reopened pairs travel with Kenny's ordinary review
+rather than in a list of their own (changed-again), and the readings stay in
+the repository, about 591 KB per measurement, so every checkout counts the
+same (snapshot-kept).

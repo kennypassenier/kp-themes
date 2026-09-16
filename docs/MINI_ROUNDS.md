@@ -179,3 +179,5 @@ register's colours are.
 | fix-40-M1 | Is brutalism's over-the-page menu out of sight until it is opened? Measured at Kenny's next review of `navigation--sidenav-over`. | open |
 | fix-41-M1 | Is dark's chamfered corner still cut, with no strip of halo squaring it? Measured at Kenny's next review of the confirmation, the app shell, the dossier and the long dialog. | open |
 | fix-42-M1 | Does a select show one arrow in every theme? Measured at Kenny's next review of `field--multiline` in dark and titanium. | open |
+| fix-43-M1 | Do the four theme intros play where Kenny judges them, on "Every component, one page"? Measured at his next judgement of intros--intro-synthwave, -terminal, -retro and -phantom: Play plays and the status line reads "Played in N ms". | open |
+| fix-44-M1 | Does a test run refuse a spec path that is not a file? Measured at the next targeted browser run: a misspelt name fails in global setup, a correct one passes. | open |

@@ -197,6 +197,11 @@ the readings were taken at, and says how many files under `catalogue/`,
 own age. Nothing here refuses: the snapshot is a file, not a gate, and the
 work that earns an approval must be able to commit.
 
+It runs when a release is prepared, and not before (Kenny, 2026-09-16): the
+first measurement took 7 min 13 s for 3058 pairs, where a commit's gates
+take 12,3 s. The readings are committed, about 591 KB each time, so every
+checkout counts the same number.
+
 ### A rejection's temporary note
 
 When Kenny rejects a block with a note and Claude proposes a change, the

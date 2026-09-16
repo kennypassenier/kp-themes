@@ -16,7 +16,7 @@
 
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
-import { useRegister } from './helpers/empty-register.mjs';
+import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 
 const FRAME = '/catalogue/frame/intro.html';
 
@@ -137,6 +137,31 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
     });
 });
 
+// Gathered by "Every component, one page" [fix-43]. Kenny judges from
+// catalogue/index.html, which copies a block's markup and runs the page's own
+// scripts not at all: the four intro blocks arrived there without the module
+// that wires them, so Play did nothing and the words beside the window stayed
+// empty ("er gebeurt niks als oik op play druk?", 2026-09-16, four
+// rejections). The inspector's own page was and is green, which is why nothing
+// caught it.
+test.describe('the intro blocks work where they are judged [fix-43]', { tag: ['@component:catalogue'] }, () => {
+    test.describe.configure({ timeout: 180_000 });
+
+    test('Play plays the arrival on the review page too', { tag: ['@theme:terminal'] }, async ({ page, context }) => {
+        await useEmptyRegister(context);
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await page.goto('/catalogue/index.html');
+        await waitForJudging(page, { timeout: 120_000 });
+
+        const block = page.locator('#intros--intro-terminal');
+        await expect(block.locator('[data-cat-intro-words]')).toContainText('PHOSPHOR PROFILE');
+        await block.locator('[data-cat-intro-play]').click();
+        await expect(block).toHaveAttribute('data-cat-intro-state', 'ended', { timeout: 30_000 });
+        await expect(block.locator('[data-cat-intro-status]')).toContainText(/Played in \d+ ms/);
+        await expect(block.locator('[data-cat-intro-live]')).toContainText('READY.');
+    });
+});
+
 // Het thema van de intro [scope-86, intro-verdict-theme]: a block on the intro
 // page is judged in the theme its window plays, whatever theme the page
 // around it wears. The block declares it (`data-cat-theme`), and the verdict,
@@ -175,13 +200,15 @@ test.describe('the verdict of an intro block is kept under its own theme [scope-
 
             await block.locator('.cat-judge [data-cat-verdict="approved"]').click();
             await expect(state).toHaveText(`Approved · Synthwave · ${engine}`);
-            expect(await storedThemes(page, 'catalogue/intros.html#intro-synthwave')).toEqual(['synthwave']);
+            // Since scope-111 the intro page is a component page, so its blocks
+            // are judged under the review page's key, not under their own page.
+            expect(await storedThemes(page, 'intros--intro-synthwave')).toEqual(['synthwave']);
             // The other blocks keep their own themes and are still open.
             await expect(page.locator('#intro-terminal .cat-judge [data-cat-approval-state]')).toHaveText(`Not yet judged · Terminal · ${engine}`);
 
             const prompt = await page.evaluate(() => import('/catalogue/review-state.js').then((m) => m.buildPrompt().text));
             expect(prompt).toContain('Theme Synthwave:');
-            expect(prompt).toMatch(new RegExp(`catalogue/intros\\.html#intro-synthwave · synthwave · ${browserName} · approved · \\w+`));
+            expect(prompt).toMatch(new RegExp(`intros--intro-synthwave · synthwave · ${browserName} · approved · \\w+`));
             expect(prompt).not.toContain('· formal ·');
 
             // Another page theme: the block is still judged, in its own theme, with the same hash.

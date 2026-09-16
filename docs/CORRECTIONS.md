@@ -3820,3 +3820,43 @@ fault.
 **8 · If the measurement fails.** The package sets `appearance: none` on every select and draws the arrow itself, and the registers only colour it.
 
 **9 · When we review the measure.** At the next register that wants its own control glyph.
+
+## fix-43 · The gathered intro blocks had a Play button that did nothing (2026-09-16)
+
+**1 · What went wrong.** Kenny judged the four theme intros through "Every component, one page" and rejected all four: "er gebeurt niks als oik op play druk?" (synthwave), "same here" (terminal), "niks" (phantom), "er gebeurt niks" (retro). The review page copies a block's markup and runs none of the page's own scripts, so `catalogue/intros.js` — which wires Play, the speed slider and the word list — never ran there. On `catalogue/intros.html` itself everything worked, which is why the tests were green.
+
+**2 · Which gate let it through.** scope-111's gate, one step short. It made sure a page carrying blocks is gathered by the review page; it never asked whether those blocks still work once gathered.
+
+**3 · Where the same fault sits.** The property: a component page that loads a script `catalogue/index.html` does not load. Searched with `for f in catalogue/*.html; do grep -o '<script[^>]*src="[^"]*"' "$f"; done`: 20 pages, and `intros.html` is the only one with a module of its own (`./intros.js`); every other page loads `../js/auto.js`, `./boot-check.js` and `./catalogue.js`, all of which the review page loads too.
+
+**4 · How we prevent recurrence.** `catalogue/index.html` loads `./intros.js` as well, and that module now mounts the blocks it finds at load and again on the `cat-composed` event the review page fires, each block once (a `WeakSet`, so no attribute is added that a block hash would read). `gates/check-catalogue.mjs` gained `scriptsOutsideTheReview`, which refuses a gathered page running a script the review page does not load.
+
+**5 · What the remedy costs.** One script tag and a mount loop; the review page loads one more module (2,8 KB). The gate makes a page-specific catalogue module harder to add — deliberately, because that is the fault.
+
+**6 · Who enforces it.** Code, twice: the gate above (unit test in `gates/check-catalogue.test.mjs`, proven red by removing the script tag: "1 gathered catalogue page(s) run a script the review page does not") and a browser test in `tests/catalogue-intros.spec.mjs` that plays the terminal intro on the review page (red first: the words beside the window never arrived).
+
+**7 · How we measure it works, and when.** At Kenny's next judgement of the four intro blocks on the review page: Play plays, and the block reports how long it took.
+
+**8 · If the measurement fails.** The intro windows stop being iframes wired by a page module and become part of the package's own attachment (`js/auto.js`), so nothing about them depends on which catalogue page shows them.
+
+**9 · When we review the measure.** At the next catalogue page that wants a script of its own.
+
+## fix-44 · A test run named a file that does not exist and reported a pass (2026-09-16)
+
+**1 · What went wrong.** At `98e66738` the intro page became a component page, which moved its blocks' verdict keys from `catalogue/intros.html#intro-synthwave` to `intros--intro-synthwave`. The test that pins that key was run as `npx playwright test tests/catalogue-review.spec.mjs tests/intros.spec.mjs` — the second name does not exist (the file is `tests/catalogue-intros.spec.mjs`). Playwright reads positional arguments as filters, ran only the first file, printed "19 passed", and the spec stayed red for two commits until fix-43 brought it out.
+
+**2 · Which gate let it through.** None: the spec paths of a targeted run are typed by hand, and nothing compared them with the files on disk. `npm run test:tags` derives them from the changed files and would not have had the name at all.
+
+**3 · Where the same fault sits.** The property: a Playwright invocation naming a spec path that is not a file. Searched with a scan of this session's transcript over all 1233 `playwright test` commands, collecting every `tests/*.spec.mjs` argument and checking it against `git log --diff-filter=A` (a throwaway probe deleted afterwards did exist when it ran): three names were never in the repository — `tests/intros.spec.mjs` (this fault), `tests/catalogue-pixel-ratio.spec.mjs` and `tests/_overflow.spec.mjs`, the last two inside heredocs rather than as arguments.
+
+**4 · How we prevent recurrence.** `tests/global-setup.mjs` refuses the run: `missingSpecs` reads the command line, skips the values of the options that take one, and throws when a `*.spec.mjs` argument is not a file — "no such spec file: … — a run that names a file it cannot find measures nothing".
+
+**5 · What the remedy costs.** Eight lines in a setup that already ran, and no measurable time; it also refuses a deliberate run of a spec that is about to be written, which is a keystroke away from being written first.
+
+**6 · Who enforces it.** Code: the guard above, with `gates/spec-paths.test.mjs` on the pure part, and proven live — `npx playwright test tests/catalogue-intros.spec.mjs tests/intros.spec.mjs` now fails in global setup, the same command that used to report a pass.
+
+**7 · How we measure it works, and when.** At the next targeted browser run of this session: the misspelt name fails the run, and a correct one passes (measured once already, both ways).
+
+**8 · If the measurement fails.** Targeted runs stop being typed by hand: `npm run test:tags -- --files <changed files>` selects the specs from the tag map, and a hand-typed path becomes the exception that needs a reason.
+
+**9 · When we review the measure.** At the next Playwright upgrade, in case the runner grows a strict mode of its own.

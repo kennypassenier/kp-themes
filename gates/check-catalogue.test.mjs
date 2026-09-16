@@ -9,7 +9,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bareControls, decidedOutsideArchive, blocksOutsideTheReview } from './check-catalogue.mjs';
+import { bareControls, decidedOutsideArchive, blocksOutsideTheReview, scriptsOutsideTheReview } from './check-catalogue.mjs';
 
 /** @param {string} html */
 const faults = (html) => bareControls(html).map((f) => f.fault);
@@ -57,4 +57,18 @@ test('a catalogue page with blocks that the review does not gather is refused [s
         'catalogue/intros.html (4 block(s), listed without component: true)',
     ]);
     assert.deepEqual(blocksOutsideTheReview(shell, { 'catalogue/button.html': 7, 'catalogue/intros.html': 0 }), []);
+});
+
+test('a gathered page that runs a script the review page does not is refused [fix-43]', () => {
+    const gathered = new Set(['catalogue/intros.html', 'catalogue/button.html']);
+    const review = '<script type="module" src="../js/auto.js"></script><script src="./boot-check.js"></script><script src="./review.js"></script>';
+    const sources = {
+        'catalogue/index.html': review,
+        'catalogue/intros.html': '<script src="./boot-check.js"></script><script type="module" src="./intros.js"></script>',
+        'catalogue/button.html': '<script src="./boot-check.js"></script>',
+    };
+    assert.deepEqual(scriptsOutsideTheReview(sources, gathered), ['catalogue/intros.html runs intros.js, which catalogue/index.html does not load']);
+    // The review page loading it too is the fix, and a page nobody gathers is nobody's problem.
+    assert.deepEqual(scriptsOutsideTheReview({ ...sources, 'catalogue/index.html': `${review}<script src="./intros.js"></script>` }, gathered), []);
+    assert.deepEqual(scriptsOutsideTheReview(sources, new Set(['catalogue/button.html'])), []);
 });

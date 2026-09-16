@@ -67,8 +67,28 @@ function mount(block) {
     block.querySelector('[data-cat-intro-play]')?.addEventListener('click', () => play(block));
 }
 
-const blocks = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-cat-intro]')]);
-for (const block of blocks) mount(block);
+/**
+ * Every intro block on the page, mounted once [fix-43].
+ *
+ * This module is loaded by the inspector page and by "Every component, one
+ * page" (catalogue/index.html), which gathers the blocks as markup and then
+ * says so with `cat-composed`. Without this, Play on the review page — where
+ * Kenny judges — did nothing at all.
+ */
+const blocks = /** @type {HTMLElement[]} */ ([]);
+const mounted = new WeakSet();
+
+function mountAll() {
+    for (const block of /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-cat-intro]')])) {
+        if (mounted.has(block)) continue;
+        mounted.add(block);
+        blocks.push(block);
+        mount(block);
+    }
+}
+
+mountAll();
+document.addEventListener('cat-composed', mountAll);
 
 // The frames report what they did; each message is routed to its theme's block.
 window.addEventListener('message', (event) => {
@@ -83,7 +103,9 @@ window.addEventListener('message', (event) => {
     if (state === 'ended' && status) status.textContent = `Played in ${event.data.elapsed} ms, from the overlay's appearance to its removal.`;
     if (state === 'rested' && status)
         status.textContent = reducedQuery.matches
-            ? 'At rest: your browser asks for reduced motion. Switch on "Play anyway for inspection" above.'
+            ? force
+                ? 'At rest: your browser asks for reduced motion. Switch on "Play anyway for inspection" above.'
+                : 'At rest: your browser asks for reduced motion. The intro page (Theme intros) carries the switch that plays it anyway.'
             : 'At rest: the module did not play it.';
     if (state === 'none' && status) status.textContent = 'This theme declares no intro.';
     block.setAttribute('data-cat-intro-state', state);
