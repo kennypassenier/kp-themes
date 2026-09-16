@@ -3880,3 +3880,23 @@ fault.
 **8 · If the measurement fails.** `compare` gains a `--ratio`, the disagreement is measured block by block at 2.222, and the recipe reads past whatever it finds — the way it already reads past the 1/64 px font size and the percentage translate.
 
 **9 · When we review the measure.** At the next change to the hash recipe, when re-anchoring is on the table again.
+
+## fix-46 · The blocks moved while Kenny was judging them (2026-09-16)
+
+**1 · What went wrong.** "ik heb het gevoel dat ik nog altijd in cirkels blijf goedkeuren." Measured: he approved the 27 titanium blocks at 06:00 and the same 27 came back an hour later. `button--groups · titanium` read `09fb3a33…` in his first round and `c4f65fa3…` in his second, while the tools read `c4f65fa3…` both at `a2dbce32` and at HEAD — so the block itself did not change between those commits; what changed was the deploy he was looking at. Every push to `round-six` redeploys the review site (`.github/workflows/pages.yml`), and four commits landed while he was going through the themes.
+
+**2 · Which gate let it through.** None, and no rule either: the cycle says Claude pushes whenever it asks him to look [scope-67], and nothing said what happens to the pushes that follow while he is still looking.
+
+**3 · Where the same fault sits.** The property: a commit that changes what a block looks like, made while a review round is open. Searched with `git log --oneline --name-only 3e728bc8...a2dbce32` over the four commits of that hour: three of them touch `catalogue/*.html`, `js/` or `catalogue/*.js` — `c0ade4ba` (the intro module), `d8ddd759` (the remembered state, 9 files under js/ and components/) and `3d941c56` (the dialog and judging.js). Every one of them moved blocks under him.
+
+**4 · How we prevent recurrence.** A round is opened when Claude asks him to look and closed when he is through (`catalogue/round.json`). While it is open, `npm run gates` refuses a commit that changes `css/`, `js/`, `components/`, a `catalogue/*.html` page or a theme's tokens; the register, the notes, the documents, the tests and the gates stay free, so recording his verdicts and writing this down still commits.
+
+**5 · What the remedy costs.** Work that changes a block waits for the end of a round — which is the point, and it is also what he chose this time ("Eerst de controleronde van Kenny"). A round left open by mistake blocks the next change until it is closed, which is one command away and printed in the refusal.
+
+**6 · Who enforces it.** Code: `gates/check-round.mjs` in `npm run gates`, with `gates/check-round.test.mjs` on the rule. Proven both ways: with the round open a probe line in `css/dark-register.css` was refused by name, and the same run with nothing staged passed.
+
+**7 · How we measure it works, and when.** At the end of the round now open: the blocks Kenny approves stay approved, and none of them comes back in a later theme because a commit moved it.
+
+**8 · If the measurement fails.** The review site stops following `round-six` and is pinned to the commit the round was opened at, so a push cannot reach him mid-round at all.
+
+**9 · When we review the measure.** At the first time work has to wait for a round to close and that waiting hurts.

@@ -319,6 +319,7 @@ edit.
 | `N instance(s) of a link to a private artifact, and the recorded count is 39. … Lower the ceiling when some go; never raise it.` | `gates/check-docs-private.mjs` | a ratchet, not a ban: what is already published cannot be unpublished by deleting it here |
 | `GATES FAILED — the working tree changed while the gates ran.` `Something rewrote files after they were staged. Re-add and retry.` | `.claude/hooks/gates.sh` | a generator rewrote a tracked file mid-run; `git add` and retry. Standing rule 7 — a gate that does not predict the build is not a gate |
 | `gate-cache: N van M checks gedraaid, K overgeslagen…` | `.githooks/gate-cache.sh` | not an error — the summary of which checks ran. If you expected a check to run and it did not, its input set did not move; `GATE_FULL=1` runs everything |
+| `N file(s) change what a block looks like while Kenny's review round is open [fix-46]` | `gates/check-round.mjs` | a review round is open and this commit would swap the blocks under the reviewer; the register, the notes, the documents and the tests still commit. `node gates/check-round.mjs --close` ends the round |
 
 The three cascade messages in full, because they are the ones you will
 search for and they carry backticks of their own:

@@ -1,0 +1,6 @@
+{
+    "$comment": "The review round Kenny is in [fix-46]. While it is open, npm run gates refuses a commit that changes what a block looks like, so the review site does not move under him. Opened when Claude asks him to look, closed when he is through: node gates/check-round.mjs --open | --close.",
+    "open": true,
+    "commit": "3e728bc80b329409a5f59d7e9b6e9ddda6425026",
+    "opened": "2026-09-16"
+}
