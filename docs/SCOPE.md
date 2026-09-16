@@ -1748,3 +1748,15 @@ and the demo's own near-invisible shadow are shown side by side before anything
 is chosen. shade-light-contrast "Donkerder maken": shade-light's muted text is
 darkened until every pair clears 4.5:1 (now 3.61, 3.99 and 4.13).
 step-timing "Akkoord".
+
+**scope-102 · Dark's dialog wears the oxide halo; shade-light's ink gets its
+order back.** Kenny, 2026-09-16, the shadow-and-ink form. dark-shadow "Gloed van
+de oxidefilm": the dialog, card and popover are separated from the ground by the
+oxide film's own colours (measured 88.3% of the band past ΔL* 3 against 0.4%
+today) — a modal dialog clips a blurred halo away, so it is painted as the fixed
+four-shadow imitation the demo measured. shade-light-muted "Gewone tekst ook
+donkerder": the body ink darkens too, so muted text is measurably quieter again
+while both stay over 4.5:1 (today body 4.52 against muted 4.71 on the muted
+ground). sepia-findings "Klopt": the heading rule follows the approved demo in
+the primary colour rather than the border colour, and the ink stain's 11px reach
+is recorded in tests/reflow-findings.json. step-timing "Akkoord".
