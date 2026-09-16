@@ -188,10 +188,29 @@
         letter-spacing: 0.01em;
     }
 
-    [data-theme='high-contrast'] .kp-nav__link {
+    /* No blue in a navigation (Kenny, 2026-09-16, navigation#app-shell "ook
+       hier is nog blauw", navigation#bar-sticky "ook hier is het blauw",
+       navigation#bar-search "ik dacht dat we voor high contrast de blauwe
+       links hadden vervangen door een donkerdere versie ... Dit geldt voor
+       alle navbars" [scope-107]). Before, every bar link took the package's
+       `a { color: var(--link) }` — this theme's --link is a blue at hue 220
+       and full saturation — at rest, under the pointer, on the current page
+       and when visited, where `a:visited` put a hue-275 purple in its place.
+       The constraint of this theme is that nothing may lean on a hue, so the
+       ink is the theme's own darkest: --foreground, its black, measured at
+       21:1 on the white bar against the blue's 10.86:1. The states were never
+       the colour's to carry and are not now: the two-pixel bottom rule
+       already marks the pointer and the page you are on [DI4].
+       `:visited` is named outright. Firefox answers getComputedStyle for a
+       visited link with its unvisited style, so this is not a rule a computed
+       reading could have caught; it is measured from the cascade instead
+       (tests/high-contrast-navigation.spec.mjs). */
+    [data-theme='high-contrast'] .kp-nav__link,
+    [data-theme='high-contrast'] .kp-nav__link:visited {
         font-weight: 700;
         border-bottom: 2px solid transparent;
         border-radius: 0;
+        color: var(--foreground);
     }
 
     [data-theme='high-contrast'] .kp-nav__link:hover,
@@ -235,6 +254,16 @@
             background: transparent;
             box-shadow: none;
         }
+    }
+
+    /* A dropdown's and a mega menu's items are part of the bar, so they take
+       the bar's ink and not --link either [scope-107]. The pointer and the
+       focus keep answering with the muted plate below. */
+    [data-theme='high-contrast'] .kp-nav__menu a,
+    [data-theme='high-contrast'] .kp-nav__menu a:visited,
+    [data-theme='high-contrast'] .kp-nav__group a,
+    [data-theme='high-contrast'] .kp-nav__group a:visited {
+        color: var(--foreground);
     }
 
     [data-theme='high-contrast'] .kp-nav__menu a:hover,
@@ -843,10 +872,25 @@
         font-weight: 700;
     }
 
+    /* A crumb and a page number are navigation too, so neither is --link
+       [scope-107, the same note as the bar]. Black on the white ground,
+       21:1; the underline every link in this package carries stays, and the
+       page you are on keeps the thicker one besides [DI4]. */
+    [data-theme='high-contrast'] .kp-breadcrumb a,
+    [data-theme='high-contrast'] .kp-breadcrumb a:visited,
+    [data-theme='high-contrast'] .kp-pagination a,
+    [data-theme='high-contrast'] .kp-pagination a:visited {
+        color: var(--foreground);
+    }
+
+    /* The page you are on was the blue plate (--primary, the same hue-220
+       blue); it is the ink's own plate now — white on black, 21:1
+       [scope-107]. */
     [data-theme='high-contrast'] .kp-pagination a[aria-current],
+    [data-theme='high-contrast'] .kp-pagination a[aria-current]:visited,
     [data-theme='high-contrast'] .kp-pagination [aria-current] {
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: var(--foreground);
+        color: var(--background);
         border-radius: var(--radius);
     }
 
@@ -1163,8 +1207,11 @@
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
     /* In the voice of this register's own nav links (Kenny, 2026-09-14,
-       search-voice "Per thema"): bold words in the link ink with a two-pixel
-       rule in the full ink under them when pointed at. The link's typeface,
+       search-voice "Per thema"): bold words in the bar's ink with a two-pixel
+       rule in the full ink under them when pointed at. The word "Search" was
+       the last thing in a bar still drawn in --link, and Kenny named it when
+       he rejected navigation#bar-search — "ook de 'Search' text moet in de
+       nieuwe, donkerdere, kleur zijn" [scope-107]. The link's typeface,
        case, spacing, shape and pointer answer are restated here, because the
        trigger is a button beside the list rather than a link in it. The
        underline a plain link carries is not: it says "this is a link", and
@@ -1176,13 +1223,13 @@
         border-bottom: 2px solid transparent;
         border-radius: 0;
         background: none;
-        color: var(--link);
+        color: var(--foreground);
     }
 
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         border-bottom-color: var(--foreground);
-        color: var(--link);
+        color: var(--foreground);
     }
 
     /* ── The alarm [scope-94] ──────────────────────────────────────────────
