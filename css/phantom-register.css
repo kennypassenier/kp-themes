@@ -814,13 +814,43 @@
     [data-theme='phantom'] .kp-datepicker__panel,
     [data-theme='phantom'] .kp-combobox__list,
     [data-theme='phantom'] .kp-palette,
-    [data-theme='phantom'] .kp-theme-menu {
+    [data-theme='phantom'] .kp-theme-menu__list {
         background: var(--popover);
         border: 0;
         border-left: 4px solid var(--primary);
         border-radius: 0;
         clip-path: var(--kp-paperclip);
         box-shadow: none;
+    }
+
+    /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
+       2026-09-16, on the React theme menu: "niet veel te zien? Ook het
+       vorige item heb ik te snel approved" — both theme-menu blocks in the
+       catalogue showed the trigger and nothing else.
+
+       `.kp-theme-menu` is `display: inline-block; position: relative` in
+       css/components.css: the box the trigger stands in and the panel
+       hangs off, 40x36 px in the catalogue. It stood in the list above, so
+       it took the paperclip — and a `clip-path` clips every descendant,
+       including one positioned outside the box. Measured in firefox at
+       devicePixelRatio 2.222: the panel is 188x632 px and starts 151.6 px
+       back along the inline axis and 36 px below, so all of it fell
+       outside a 40x36 clip and nothing of the menu was painted, in both
+       channels. The wrapper also wore the popover's ground and the 4 px
+       primary edge, which is the lone red bar that stood beside the
+       trigger with nothing behind it.
+
+       So the wrapper is given its own nature back and the panels keep the
+       paperclip themselves: `.kp-popover` above already dresses the
+       markup channel's popover and the React channel's
+       `.kp-popover.kp-theme-menu__list`, which is named in the list too so
+       a consumer using the class on its own still gets the torn edge.
+       Spelled out rather than simply dropped from the list, because this
+       is the rule that says the element is not a surface. */
+    [data-theme='phantom'] .kp-theme-menu {
+        background: transparent;
+        border: 0;
+        clip-path: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

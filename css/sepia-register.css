@@ -798,6 +798,26 @@
         border-inline-start-color: var(--destructive);
     }
 
+    /* The data table's Try again reads in the plate's own ink [scope-107].
+       Kenny, 2026-09-16, on the failed data table: "De 'Try again' tekst in
+       die knop moet hier in het wit zijn". This theme's plain button is a
+       transparent plate with `color: var(--foreground)` on it, and inside
+       the failed slot that ground is the destructive plate — dark brown ink
+       on red, measured in firefox at 1.92:1, while the alert's own label
+       beside it is `--destructive-foreground` at 6.90:1 on the same plate.
+       So the button takes the ink the plate is drawn for. The ground never
+       changes under it — this register's button is transparent at rest, on
+       hover and pressed — so the one colour holds in every state.
+
+       Narrowed the way synthwave's frame was at scope-94 ("Alleen Try
+       again"): the retry control the data table draws in its failed slot,
+       js/datatable.js `[data-kp-datatable-retry]` inside
+       `[data-kp-datatable-failed]`, whether the page wrote the slot or the
+       script did, and no other button on any alert. */
+    [data-theme='sepia'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
+        color: var(--destructive-foreground);
+    }
+
     [data-theme='sepia'] .kp-alert--warning {
         border-inline-start-color: var(--warning, var(--accent));
     }

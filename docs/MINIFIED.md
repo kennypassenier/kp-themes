@@ -16,7 +16,7 @@ the selectors and their order are identical, which is what
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
 | `css/_rules.css` | 30.2 kB | 11.3 kB | 63% |
-| `css/blueprint-register.css` | 54.1 kB | 25.2 kB | 54% |
+| `css/blueprint-register.css` | 56.5 kB | 26.0 kB | 54% |
 | `css/brutalism-register.css` | 61.4 kB | 32.8 kB | 47% |
 | `css/components.css` | 206.6 kB | 78.8 kB | 62% |
 | `css/cyberpunk-register.css` | 72.9 kB | 39.7 kB | 46% |
@@ -32,22 +32,22 @@ the selectors and their order are identical, which is what
 | `css/light-register.css` | 41.4 kB | 16.7 kB | 60% |
 | `css/nostromo-register.css` | 49.1 kB | 25.8 kB | 47% |
 | `css/pastel-register.css` | 55.2 kB | 25.3 kB | 54% |
-| `css/phantom-register.css` | 64.2 kB | 34.6 kB | 46% |
+| `css/phantom-register.css` | 65.8 kB | 34.7 kB | 47% |
 | `css/retro-register.css` | 103.7 kB | 52.0 kB | 50% |
-| `css/sepia-register.css` | 59.1 kB | 26.2 kB | 56% |
+| `css/sepia-register.css` | 60.3 kB | 26.3 kB | 56% |
 | `css/shade-dark-register.css` | 50.6 kB | 23.5 kB | 54% |
-| `css/shade-light-register.css` | 56.6 kB | 27.0 kB | 52% |
+| `css/shade-light-register.css` | 58.8 kB | 27.5 kB | 53% |
 | `css/solstice-register.css` | 41.4 kB | 19.9 kB | 52% |
 | `css/synthwave-register.css` | 66.9 kB | 36.6 kB | 45% |
 | `css/terminal-register.css` | 59.7 kB | 30.8 kB | 48% |
 | `css/themes.css` | 177.9 kB | 117.6 kB | 34% |
 | `css/titanium-register.css` | 59.4 kB | 26.8 kB | 55% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 1666.5 kB | 815.6 kB | 51% |
+| `dist/kp-themes.css` | 1673.9 kB | 817.2 kB | 51% |
 | `dist/kp-themes.js` | 419.2 kB | 220.0 kB | 48% |
 
-The loose stylesheets together weigh **1722.8 kB** authored and
-**848.4 kB** minified, 51% less. A page loading one theme's
+The loose stylesheets together weigh **1730.3 kB** authored and
+**849.9 kB** minified, 51% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

@@ -1348,9 +1348,44 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
+    /* The primary button is pressed INTO the paper [scope-107]. Kenny,
+       2026-09-16, on the variants block: "de primary knop heeft geen
+       klikanimatie, of toch niet zichtbaar". The colour step below was all
+       it had, and a press always starts from hover, not from rest: hovered
+       is `--kp-primary-pressed` and pressed is `--primary-active`, and
+       measured in firefox those two grounds are 22, 9 and 2 of a channel
+       apart — a step nobody sees.
+
+       So the primary joins the gesture the theme's own plain button makes
+       (the `:active` rule above): the light is the pointer here
+       [scope-101], and a pressed thing moves one pixel WITH the light and
+       turns its drop shade into an inset one, instantly, because a click
+       is shorter than a transition. Measured in firefox at
+       devicePixelRatio 2.222: `translate` none → 1px 1px (the box's own
+       corner moves from 284.9, 610.9 to 285.9, 611.9, which is 2.22 device
+       pixels each way at his ratio), and `box-shadow` from a spread of
+       zero that paints nothing to an inset 1px 2px 3px of the ink at 0.22.
+       The ground still steps as it did. The rest and hover looks are
+       untouched. */
     [data-theme='shade-light'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+        transition-duration: 0s;
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* Held down from the keyboard, the ring stays in front of the press
+       [DI2]. `kp.register` is a later layer than `kp.components`, so the
+       rule above would otherwise replace `.kp-button:focus-visible`'s
+       box-shadow for as long as Space is down and take the ring with it —
+       the same shape of fault as `fix-12` and `gap-1`, one property over.
+       Both halves, the ring first, spelled as css/components.css spells
+       it. */
+    [data-theme='shade-light'] .kp-button--primary:active:not(:disabled):focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
     }
 
     /* The secondary button's press (Kenny, 2026-09-16, register-faults
