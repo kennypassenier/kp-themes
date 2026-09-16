@@ -133,11 +133,33 @@ keyboard work need not be — see correction fix-2 below):
 
 | Command                 | What                                                             | When                                                                                                                          |
 | ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `npm run gates`         | the blocking checks, seconds; a document whose sources moved stops the commit until `npm run drift:seen` [scope-78] | every commit, by the hook                                                                                                     |
+| `npm run gates`         | the blocking checks; a check whose inputs did not move is skipped [gate-cache, 2026-09-16], and a document whose sources moved stops the commit until `npm run drift:seen` [scope-78] | every commit, by the hook — in full on the first commit of each day and whenever `GATE_FULL=1` |
 | `npm run test:tags`     | the tests tagged with what a change touches, Firefox only        | `--level building` while building, `--level commit` once before each report or commit — scope-33, replacing `test:affected` |
 | `npm run test:browser`  | the whole suite, both engines                                    | before a release: Claude asks in a form, Kenny gives the go, Claude runs it. Outside a release: when Kenny asks               |
 | `npm run advice`        | contrast, invariants, motion, texture, variant grounds, compliance, baseline, prettier [scope-76] | when Kenny wants the reading                                                                                                  |
 | `npm run verify`        | all three in order, naming the phase it is in and what each cost | before a release, on his go — the same form                                                                                   |
+
+**A check that cannot see anything change does not run** [Kenny,
+2026-09-16]. Every check in `.claude/hooks/gates.sh` goes through
+`gate` or `gate_glob` from `.githooks/gate-cache.sh`. While a check runs
+it is loaded under `.githooks/trace-inputs.cjs`, which records every path
+it opens; the next commit hashes exactly those paths and skips the check
+when the hash has not moved. Nobody writes or maintains the list — it is
+rewritten by every green run.
+
+Measured on this repository before it was built: over the last 200
+commits, 30 checks amount to 6000 runs, of which 4239 (70%) could not
+have found anything. `gates/check-fonts.mjs` ran 200 times and was
+relevant twice; `gates/generate-ha-themes.mjs --check` once. The chain's
+8.79 s per commit falls to 4.19 s.
+
+Three properties make it safe, and none of them is configurable: only a
+green run is remembered, so a failure always runs again; the check's own
+source is part of its input set, so editing a check re-runs it; and the
+cache lives in `.git/gate-cache`, so it never travels and a fresh clone
+runs everything. On top of that the cache is ignored entirely on the
+first commit of each day and whenever `GATE_FULL=1` is set, which bounds
+an incomplete input set to one working day.
 
 The accessibility floors are **advice, not gates** [Kenny, 2026-09-09]:
 contrast, the design invariants, the flash threshold, the reduced-motion

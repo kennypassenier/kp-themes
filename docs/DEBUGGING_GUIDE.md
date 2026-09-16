@@ -114,6 +114,26 @@ seconds and the commit hook
 (`.claude/hooks/gates.sh`) runs exactly the same set — a unit test named
 `KT7: every check script runs in the gates chain, in the hook, and CI
 runs the chain` in `gates/gates.test.mjs` holds the two lists together.
+That test reads a `&&` chain half by half, because the hook gives each
+half its own line.
+
+**`npm run gates` and the hook are no longer the same cost.** Since
+2026-09-16 the hook runs each check through `gate` from
+`.githooks/gate-cache.sh`, which skips a check whose input files have not
+moved since it last passed; `npm run gates` still runs all thirty-two
+unconditionally. So a commit is fast and `npm run gates` is thorough, and
+when the two disagree the hook is the one that skipped something. To make
+the hook run everything — which is what to do when you suspect the cache
+rather than the code — set `GATE_FULL=1`:
+
+```bash
+GATE_FULL=1 ./.claude/hooks/gates.sh
+```
+
+The last line of the hook says which of the two happened, and how many
+checks were skipped. A check that reports green after a skip is reporting
+the verdict of its last real run, which is the point; a check that has
+never passed has no cache entry and always runs.
 
 Two things to know before you read its output.
 
@@ -298,6 +318,7 @@ edit.
 | `<file>:NN carries an email address: …` | `gates/check-docs-private.mjs` | nothing private in a document of a public repository |
 | `N instance(s) of a link to a private artifact, and the recorded count is 39. … Lower the ceiling when some go; never raise it.` | `gates/check-docs-private.mjs` | a ratchet, not a ban: what is already published cannot be unpublished by deleting it here |
 | `GATES FAILED — the working tree changed while the gates ran.` `Something rewrote files after they were staged. Re-add and retry.` | `.claude/hooks/gates.sh` | a generator rewrote a tracked file mid-run; `git add` and retry. Standing rule 7 — a gate that does not predict the build is not a gate |
+| `gate-cache: N van M checks gedraaid, K overgeslagen…` | `.githooks/gate-cache.sh` | not an error — the summary of which checks ran. If you expected a check to run and it did not, its input set did not move; `GATE_FULL=1` runs everything |
 
 The three cascade messages in full, because they are the ones you will
 search for and they carry backticks of their own:

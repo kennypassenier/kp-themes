@@ -16,11 +16,14 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty gates run in seconds and refuse a commit that breaks them:
-token parity, layer discipline, the hook vocabulary, the register
-coverage, the shipped fonts, the strings dictionary, the types, whether
-every command, path and quoted message a document carries is real, and
-whether every generated file still matches its source. A behaviour suite of 2,736 tests
+Thirty-two gates run in seconds and refuse a commit that breaks them: token parity, layer
+discipline, the hook vocabulary, the register coverage, the shipped
+fonts, the strings dictionary, the types, whether every command, path and
+quoted message a document carries is real, and whether every generated
+file still matches its source. A gate whose input files have not moved
+since it last passed is skipped, so a commit pays for what it touched
+rather than for everything; the full set runs on the first commit of each
+day and before every release. A behaviour suite of 2,736 tests
 runs in Chromium and Firefox on demand (`npm run test:browser`).
 
 Five checks are **advice, not gates** [Kenny, 2026-09-09]: contrast, the

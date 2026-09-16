@@ -154,10 +154,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "55b58589d5e68f56bb4f62ae732622f565646709f98c20690958d43c99c44283",
-            "doc": "233e3cb7e0555da385120b4dbafd042f0d004624935f074c7dd0cc83a90d28ee",
+            "hash": "5f89f8c6dd131dac2a479e5477e7bb3ea7b1949b11413294108f081b7cad9fba",
+            "doc": "3c0e004dfa45da42026a2ace5488fbdd3e26d214a638ebf90e347b3a63d9edfe",
             "files": {
-                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
+                ".claude/hooks/gates.sh": "b1bcf3cdab97eae4ae3ebe7e29a8aeb21741c964d3d71e11604e00aba1618f58",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
@@ -221,10 +221,10 @@
                 ".github/workflows/*.yml",
                 "playwright.config.mjs"
             ],
-            "hash": "3aa496dc85ec825110e55849db83706e95fd4cae8d6192312b9fb0fff0b03e13",
-            "doc": "7dd5ff005da310e5934a2f393c0fcb9c291091b320cbb4962c3d01f3e54329bc",
+            "hash": "22a8396785836b1331e4a9a3f3297ae124b3fe001db08cf07b9a7903f368c7f8",
+            "doc": "10db7b3adde0918261b569f58c60991a64ff094a073a5c08537154758da00d6d",
             "files": {
-                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
+                ".claude/hooks/gates.sh": "b1bcf3cdab97eae4ae3ebe7e29a8aeb21741c964d3d71e11604e00aba1618f58",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
                 "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",

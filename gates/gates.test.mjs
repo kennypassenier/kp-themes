@@ -556,9 +556,15 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     for (const name of checks) {
         assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
         // The hook runs the same file the script does; match on the
-        // command the script names, which is what the hook copies.
-        const command = pkg.scripts[name].replace(/^node /, '');
-        assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+        // command the script names, which is what the hook copies. A
+        // script that chains two commands with `&&` is checked half by
+        // half: since gate-cache (2026-09-16) the hook gives each half
+        // its own `gate` line, so each gets its own input set and its own
+        // skip decision, and the joined string no longer appears.
+        for (const part of pkg.scripts[name].split('&&')) {
+            const command = part.trim().replace(/^node /, '');
+            assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+        }
     }
     // scope-76 moved variant-ground, compliance, baseline and prettier to
     // advice. The other direction holds that: a check listed in `advice`
@@ -1478,8 +1484,13 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
     const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
     const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
 
-    const ran = hook.split('\n').filter((line) => line.startsWith('echo "→')).length;
-    assert.ok(ran >= 25, `only ${ran} gate headings in the hook, which cannot be right`);
+    // Until 2026-09-16 the hook announced each check with `echo "→ …"`
+    // and this counted those. gate-cache turned the announcements into
+    // comments — an echo printed whether or not the check ran, which is
+    // the one thing the runner now has to be honest about — so the
+    // countable thing is the `gate` line itself.
+    const ran = hook.split('\n').filter((line) => /^gate(_glob)? /.test(line)).length;
+    assert.ok(ran >= 25, `only ${ran} gate lines in the hook, which cannot be right`);
 
     /** @type {Record<string, number>} */
     const WORDS = {

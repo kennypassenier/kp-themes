@@ -1777,3 +1777,32 @@ enkel supergericht testen indien mogelijk en bij release nog is de hele suite" �
 so a hash-driven selection is measured before it is built: what it costs to read
 the blocks of the changed files' components against their recorded hash, and how
 many tests it removes compared with the tag selection. step-timing "Akkoord".
+
+**scope-104 · A gate whose inputs did not move does not run.** Kenny,
+2026-09-16, the testselectie form in the dev-procedure session — the same
+instinct as scope-103 one level down: "enkel als die hash verandert dan
+testen we daarop." Where scope-103 is about which browser tests run, this
+is about the thirty-two gates in `.claude/hooks/gates.sh`, and the two do
+not overlap.
+
+Measured on this repository before it was built: 200 commits against 30
+checks is 6000 runs, of which 4239 (70%) could not have found anything
+because no file that check reads had changed. `gates/check-fonts.mjs` ran
+200 times and was relevant twice; `gates/generate-ha-themes.mjs --check`
+once. Measured after: a full round is 12,3 s, a commit that changes one
+document is 1,3 s with 2 of 32 checks running, one that changes a theme
+file 2,6 s with 3 of 32, and a re-run with nothing changed 0,6 s.
+
+Each check is loaded under `.githooks/trace-inputs.cjs`, which records
+every path it opens, so the input set is discovered rather than written
+down — Kenny chose that over a per-check list because a list a person
+keeps goes stale exactly when it matters. `.githooks/gate-cache.sh` holds
+three properties that are not configurable: only a green run is
+remembered, the check's own source is part of its input set, and the
+cache lives in `.git` so it never travels. The cache is ignored on the
+first commit of each day and whenever `GATE_FULL=1` is set.
+
+`npm run gates` still runs all thirty-two unconditionally; only the hook
+skips. Two unit tests moved with this: KT7 now reads a `&&` chain half by
+half, and the README gate count is read from the `gate` lines rather than
+from the `echo` headings the hook no longer prints.
