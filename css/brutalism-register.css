@@ -1674,8 +1674,12 @@
            with it, and the plate narrows from 56rem to 44rem so the words
            have somewhere to wrap. The slab, the tilt and Archivo Black in
            capitals are untouched: this is the same stamp, one step smaller. */
-        --kp-alarm-title-size: clamp(1.75rem, 8cqi, 5.5rem);
-        --kp-alarm-bar: 0.7rem;
+        /* And back up a notch [Kenny, 2026-09-16, second look]: "nu is het
+           te klein, zie gewoon dat de rode kader net in het vak past". The
+           headline and the plate take the room the frame leaves, with the
+           fit test holding the overflow at zero in all 22 themes. */
+        --kp-alarm-title-size: clamp(2rem, 10cqi, 7rem);
+        --kp-alarm-bar: 0.85rem;
     }
 
     [data-theme='brutalism'] .kp-alarm:focus-visible {
@@ -1705,7 +1709,7 @@
     }
 
     [data-theme='brutalism'] .kp-alarm__panel {
-        inline-size: min(100%, 44rem);
+        inline-size: min(100%, 52rem);
         rotate: -2deg;
     }
 

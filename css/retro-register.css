@@ -2510,7 +2510,9 @@
     }
 
     [data-theme='retro'] .kp-alarm__panel {
-        inline-size: min(100%, 48rem);
+        /* Wider on Kenny's second look [2026-09-16]: "de kader mag groter" —
+           the window should own its stage the way a 1995 error box did. */
+        inline-size: min(100%, 58rem);
     }
 
     [data-theme='retro'] .kp-alarm__code {
