@@ -125,5 +125,10 @@
             }
         </script>
         <script type="module" src="../../js/auto.js"></script>
+        <!-- The catalogue shell, so the demo carries the navigation every
+             review page carries. `gates/check-catalogue.mjs` refuses a
+             research/<topic>/demo.html without it, so the template has it and
+             a copy never has to discover that from a red gate. -->
+        <script type="module" src="../../catalogue/catalogue.js"></script>
     </body>
 </html>

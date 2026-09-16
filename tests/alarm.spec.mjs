@@ -323,6 +323,62 @@ test('a declarative trigger raises the alarm it describes and hears why it close
     await expect(trigger).toBeFocused();
 });
 
+/**
+ * The headline, the reason and the button against the ground they actually
+ * sit on: the page, the plate over it and the panel over that, each composed
+ * with its own alpha. Hoisted out of the sweep below so the fit test
+ * [Kenny, 2026-09-16] reads the same numbers with the same arithmetic rather
+ * than a second copy of it that could drift.
+ *
+ * @returns {{ title: number, detail: number, button: number }}
+ */
+const READ_CONTRAST = () => {
+    const dialog = /** @type {HTMLElement} */ (document.querySelector('dialog.kp-alarm[open]'));
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1;
+    const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
+    /** @param {string} css */
+    const rgba = (css) => {
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = css;
+        ctx.fillRect(0, 0, 1, 1);
+        return [...ctx.getImageData(0, 0, 1, 1).data];
+    };
+    /** @param {number[]} top @param {number[]} under */
+    const over = (top, under) => {
+        const a = top[3] / 255;
+        return [0, 1, 2].map((i) => top[i] * a + under[i] * (1 - a));
+    };
+    // The page's ground, then the plate over it, then the panel over that.
+    let ground = over(rgba(getComputedStyle(document.documentElement).backgroundColor), [255, 255, 255]);
+    ground = over(rgba(getComputedStyle(document.body).backgroundColor), ground);
+    ground = over(rgba(getComputedStyle(dialog).backgroundColor), ground);
+    ground = over(rgba(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__panel'))).backgroundColor), ground);
+    /** @param {number[]} c */
+    const lum = (c) =>
+        [0, 1, 2]
+            .map((i) => {
+                const v = c[i] / 255;
+                return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+            })
+            .reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
+    /** @param {string} css */
+    const ratio = (css) => {
+        const [hi, lo] = [lum(over(rgba(css), ground)), lum(ground)].sort((x, y) => y - x);
+        return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+    };
+    return {
+        title: ratio(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__title'))).color),
+        detail: ratio(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__detail'))).color),
+        button: (() => {
+            const b = getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__ack')));
+            const face = over(rgba(b.backgroundColor), ground);
+            const [hi, lo] = [lum(over(rgba(b.color), face)), lum(face)].sort((x, y) => y - x);
+            return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+        })(),
+    };
+};
+
 test(
     'the headline reads at 4.5:1 or more on its ground, in every theme (7:1 in high-contrast), and the detail line and the button too',
     { tag: ['@component:alarm', '@sweep'] },
@@ -337,52 +393,7 @@ test(
                 void (/** @type {any} */ (window).showAlarm({ .../** @type {any} */ (window).kpAlarmOptions }));
             });
             await expect(page.locator(OPEN)).toBeVisible();
-            const numbers = await page.evaluate(() => {
-                const dialog = /** @type {HTMLElement} */ (document.querySelector('dialog.kp-alarm[open]'));
-                const canvas = document.createElement('canvas');
-                canvas.width = canvas.height = 1;
-                const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
-                /** @param {string} css */
-                const rgba = (css) => {
-                    ctx.clearRect(0, 0, 1, 1);
-                    ctx.fillStyle = css;
-                    ctx.fillRect(0, 0, 1, 1);
-                    return [...ctx.getImageData(0, 0, 1, 1).data];
-                };
-                /** @param {number[]} top @param {number[]} under */
-                const over = (top, under) => {
-                    const a = top[3] / 255;
-                    return [0, 1, 2].map((i) => top[i] * a + under[i] * (1 - a));
-                };
-                // The page's ground, then the plate over it, then the panel over that.
-                let ground = over(rgba(getComputedStyle(document.documentElement).backgroundColor), [255, 255, 255]);
-                ground = over(rgba(getComputedStyle(document.body).backgroundColor), ground);
-                ground = over(rgba(getComputedStyle(dialog).backgroundColor), ground);
-                ground = over(rgba(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__panel'))).backgroundColor), ground);
-                /** @param {number[]} c */
-                const lum = (c) =>
-                    [0, 1, 2]
-                        .map((i) => {
-                            const v = c[i] / 255;
-                            return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-                        })
-                        .reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
-                /** @param {string} css */
-                const ratio = (css) => {
-                    const [hi, lo] = [lum(over(rgba(css), ground)), lum(ground)].sort((x, y) => y - x);
-                    return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
-                };
-                return {
-                    title: ratio(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__title'))).color),
-                    detail: ratio(getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__detail'))).color),
-                    button: (() => {
-                        const b = getComputedStyle(/** @type {Element} */ (dialog.querySelector('.kp-alarm__ack')));
-                        const face = over(rgba(b.backgroundColor), ground);
-                        const [hi, lo] = [lum(over(rgba(b.color), face)), lum(face)].sort((x, y) => y - x);
-                        return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
-                    })(),
-                };
-            });
+            const numbers = await page.evaluate(READ_CONTRAST);
             console.log(`[alarm] contrast ${theme}: ${JSON.stringify(numbers)}`);
             const floor = theme === 'high-contrast' ? 7 : 4.5;
             if (numbers.title < floor) low.push(`${theme}: headline ${numbers.title}`);
@@ -631,6 +642,168 @@ for (const theme of FLASH_THEMES) {
             );
             expect(worst).toBeLessThanOrEqual(2);
             expect(worstRed).toBeLessThanOrEqual(2);
+        },
+    );
+}
+
+/**
+ * Nothing the alarm says leaves its frame, at the desk and at Kenny's zoom
+ * [Kenny, 2026-09-16, the catalogue review of scope-107].
+ *
+ * His rejection of brutalism's auto alarm: "De tekst wordt afgebroken omdat
+ * het te groot is om in het kader te passen. Het hele element en
+ * subelementen mogen wat minder groot zijn." Two viewports, because the
+ * fault shows differently in each: 1280x800 is the desk, and 864x450 is the
+ * CSS viewport his browser reports at devicePixelRatio 2.222, where the
+ * alarm has half the height to put the same words in.
+ *
+ * The frame is the box `.kp-alarm::before` draws — the hairline inside the
+ * hazard bars, which is what a reader sees as the edge of the thing. The
+ * measurement is the INK, not the box: every text node's client rects,
+ * which is where the browser actually put the glyphs, so a word that spills
+ * out of a nowrap `.kp-alarm__word` is caught even though its element box
+ * still measures small. The screen-reader copies are skipped: they are
+ * clipped to a pixel on purpose and their ink is nowhere.
+ *
+ * Two ways the words break, both of them brutalism's:
+ *
+ *   - sideways, when a long word is wider than the plate's content box.
+ *     `.kp-alarm__panel` then reports scrollWidth over clientWidth and the
+ *     plate cuts the word off.
+ *   - upwards, when the panel is taller than the alarm. The alarm centres
+ *     its panel (`place-items: center`), so the overflow goes both ways and
+ *     the top of it — the code line, the first row of the headline — ends
+ *     above the frame and out of reach of the scroll.
+ *
+ * Both headlines are raised: the catalogue's short one and its long one,
+ * "Intrusion detected", which is the one that broke.
+ *
+ * The loop stays at all 22 themes rather than the three of `sweepThemes()`
+ * [scope-103]: its faults have been one theme's every time — brutalism at
+ * both sizes, grotesk and high-contrast at 864x450 only — which is the case
+ * that helper's head says stays whole.
+ *
+ * Drilled red before it was trusted [KT3]: with brutalism's register as it
+ * stood at c4dfc1c2 it reported `brutalism 864x450 auto: "Perimeter · east
+ * wing" 45px out of the frame` and `brutalism 1280x800 auto: the panel clips
+ * 99px of its content`; with the smaller sizes in place both read 0.
+ */
+const FIT_VIEWPORTS = [
+    { label: '1280x800', width: 1280, height: 800 },
+    { label: '864x450', width: 864, height: 450 },
+];
+
+/** The catalogue's own two alarms, the second being the one Kenny rejected. */
+const FIT_CASES = [
+    {
+        label: 'ack',
+        options: {
+            mode: 'ack',
+            title: 'Access denied',
+            code: 'Security protocol 7 · lockout',
+            detail: 'Three failed attempts on terminal 4. This console is locked for ten minutes.',
+        },
+    },
+    {
+        label: 'auto',
+        options: {
+            mode: 'auto',
+            seconds: 30,
+            title: 'Intrusion detected',
+            code: 'Perimeter · east wing',
+            detail: 'Unrecognised key presented at the east service door. Security has been notified.',
+        },
+    },
+];
+
+/**
+ * Two registers break too, measured on 2026-09-16 at 864x450 in the auto
+ * mode and reported to Kenny as a finding rather than corrected in the same
+ * turn: grotesk, whose headline is 15cqi where the package asks 12, puts its
+ * code line 20px (firefox) / 7px (chromium) above the frame, and
+ * high-contrast leaves "Keep open" 9px under it in both engines. They are
+ * named here with a ceiling a few pixels over what they measure, so the
+ * suite stays honest about them: a worse break still fails, and a fix in
+ * their own registers makes the row read 0 without touching this list.
+ *
+ * @type {Record<string, number>}
+ */
+const FIT_ALLOWED = { grotesk: 24, 'high-contrast': 12 };
+
+/** In the page: the worst overflow of any word past the frame, and the plate's own clipping. */
+const READ_FIT = () => {
+    const dialog = /** @type {HTMLElement} */ (document.querySelector('dialog.kp-alarm[open]'));
+    const box = dialog.getBoundingClientRect();
+    const before = getComputedStyle(dialog, '::before');
+    /** @param {string} value */
+    const px = (value) => Number.parseFloat(value) || 0;
+    const frame = {
+        left: box.left + px(before.insetInlineStart || before.left),
+        top: box.top + px(before.insetBlockStart || before.top),
+        right: box.right - px(before.insetInlineEnd || before.right),
+        bottom: box.bottom - px(before.insetBlockEnd || before.bottom),
+    };
+    const walker = document.createTreeWalker(dialog, NodeFilter.SHOW_TEXT);
+    let worst = 0;
+    let where = '';
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const text = (node.nodeValue ?? '').trim();
+        // A screen-reader copy is clipped to a pixel on purpose; its ink is
+        // nowhere, and measuring it would report every theme as broken.
+        if (text === '' || node.parentElement?.closest('.kp-sr-only')) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) {
+            if (rect.width === 0 && rect.height === 0) continue;
+            const out = Math.max(frame.left - rect.left, rect.right - frame.right, frame.top - rect.top, rect.bottom - frame.bottom);
+            if (out > worst) {
+                worst = out;
+                where = text.slice(0, 32);
+            }
+        }
+    }
+    const panel = /** @type {HTMLElement} */ (dialog.querySelector('.kp-alarm__panel'));
+    return { out: Math.round(worst), where, clipped: Math.max(0, panel.scrollWidth - panel.clientWidth) };
+};
+
+for (const view of FIT_VIEWPORTS) {
+    test(
+        `no word of the alarm leaves its frame at ${view.label}, in every theme, and the words still read at their floor [scope-107]`,
+        { tag: ['@component:alarm', '@sweep'] },
+        async ({ page }) => {
+            test.setTimeout(180_000);
+            await page.setViewportSize({ width: view.width, height: view.height });
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            const errors = await open(page);
+            /** @type {string[]} */
+            const broken = [];
+            /** @type {string[]} */
+            const low = [];
+            for (const theme of THEMES) {
+                await wear(page, theme);
+                for (const alarm of FIT_CASES) {
+                    await page.evaluate(async (options) => {
+                        await document.fonts.ready;
+                        void (/** @type {any} */ (window).showAlarm(options));
+                    }, alarm.options);
+                    await expect(page.locator(OPEN)).toBeVisible();
+                    const fit = await page.evaluate(READ_FIT);
+                    const numbers = await page.evaluate(READ_CONTRAST);
+                    console.log(`[alarm] fit ${theme} ${view.label} ${alarm.label}: ${JSON.stringify(fit)} ${JSON.stringify(numbers)}`);
+                    const allowed = FIT_ALLOWED[theme] ?? 0;
+                    if (fit.out > allowed) broken.push(`${theme} ${view.label} ${alarm.label}: "${fit.where}" ${fit.out}px out of the frame`);
+                    if (fit.clipped > 1) broken.push(`${theme} ${view.label} ${alarm.label}: the panel clips ${fit.clipped}px of its content`);
+                    const floor = theme === 'high-contrast' ? 7 : 4.5;
+                    if (numbers.title < floor) low.push(`${theme} ${view.label}: headline ${numbers.title}`);
+                    if (numbers.detail < floor) low.push(`${theme} ${view.label}: detail ${numbers.detail}`);
+                    if (numbers.button < floor) low.push(`${theme} ${view.label}: button label ${numbers.button}`);
+                    await page.evaluate(() => /** @type {HTMLDialogElement} */ (document.querySelector('dialog.kp-alarm[open]'))?.close('ack'));
+                    await expect(page.locator(OPEN)).toHaveCount(0);
+                }
+            }
+            expect(broken).toEqual([]);
+            expect(low).toEqual([]);
+            expect(errors).toEqual([]);
         },
     );
 }

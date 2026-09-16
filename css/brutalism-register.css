@@ -1652,12 +1652,30 @@
         --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-stripe: var(--foreground);
-        --kp-alarm-frame: 6px solid var(--foreground);
+        --kp-alarm-frame: 4px solid var(--foreground);
         --kp-alarm-panel-ground: var(--destructive);
-        --kp-alarm-panel-border: 6px solid var(--foreground);
-        --kp-alarm-panel-shadow: 14px 14px 0 var(--foreground);
-        --kp-alarm-panel-padding: clamp(1.25rem, 4cqi, 3rem);
+        --kp-alarm-panel-border: 4px solid var(--foreground);
+        --kp-alarm-panel-shadow: 10px 10px 0 var(--foreground);
+        --kp-alarm-panel-padding: clamp(0.9rem, 2.6cqi, 2.25rem);
         --kp-alarm-title-tracking: -0.02em;
+        /* One step smaller, everywhere [Kenny, 2026-09-16]. His rejection of
+           the auto alarm: "De tekst wordt afgebroken omdat het te groot is om
+           in het kader te passen. Het hele element en subelementen mogen wat
+           minder groot zijn." Measured in firefox on the raised alarm with
+           the catalogue's own words, "Intrusion detected": at 1280x800 the
+           headline asked the slab for 983 px of content box and got 884, so
+           99 px of it was cut off by the plate; at 864x450 — the CSS viewport
+           of his 2.222 zoom — the panel stood 109 px taller than the alarm's
+           own box, and because the alarm centres its panel the overflow goes
+           BOTH ways: the code line sat 45 px above the frame and the top of
+           the headline 30 px above it, out of reach of the scroll. The
+           headline drops from the package's 12cqi to 8cqi with a 5.5rem
+           ceiling, the bars, the padding, the line and the shadow come down
+           with it, and the plate narrows from 56rem to 44rem so the words
+           have somewhere to wrap. The slab, the tilt and Archivo Black in
+           capitals are untouched: this is the same stamp, one step smaller. */
+        --kp-alarm-title-size: clamp(1.75rem, 8cqi, 5.5rem);
+        --kp-alarm-bar: 0.7rem;
     }
 
     [data-theme='brutalism'] .kp-alarm:focus-visible {
@@ -1687,7 +1705,24 @@
     }
 
     [data-theme='brutalism'] .kp-alarm__panel {
-        inline-size: min(100%, 56rem);
+        inline-size: min(100%, 44rem);
         rotate: -2deg;
+    }
+
+    /* The sub-elements come down with the plate [Kenny, 2026-09-16]: the code
+       line, the reason and the button are the package's sizes minus a step,
+       so the whole stamp shrinks together rather than the headline alone. The
+       button keeps a width a thumb can find. */
+    [data-theme='brutalism'] .kp-alarm__code {
+        font-size: clamp(0.62rem, 1.1cqi, 0.82rem);
+    }
+
+    [data-theme='brutalism'] .kp-alarm__detail {
+        font-size: clamp(0.78rem, 1.5cqi, 1.05rem);
+        line-height: 1.4;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack {
+        min-inline-size: 11rem;
     }
 }

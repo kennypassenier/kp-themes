@@ -1,0 +1,194 @@
+<!doctype html>
+<!-- The comparison page, fixed once [scope-105]. Copy this file to
+     research/<topic>/demo.html and fill the four slots marked FILL; change
+     nothing else. It loads the package and the register of the theme under
+     COMPARE-THEME, freezes every state on the same patch of ground, and gives
+     each state the same markup so the only difference is the rule being
+     compared.
+
+     FILL 1  the theme and the title (three places: <html data-theme>,
+             data-cat-theme, <title>, <h1>)
+     FILL 2  the states: one rule block per state, each written as
+             [data-theme='<theme>'] .cmp-<state> <selector> { … } so it goes
+             into the register by dropping the wrapper class
+     FILL 3  the component's markup, once, inside <template id="cmp-markup">
+     FILL 4  the sentence saying what is compared and what it costs
+
+     Nothing here measures. A number belongs in the form's text, not on this
+     page; the page is for the eye [scope-105]. -->
+<html lang="en" data-theme="retro" data-cat-theme="retro">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Retro's alarm headline: which face · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* Page chrome, this page only; never the package. */
+            .cmp-row {
+                display: grid;
+                gap: 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                margin-block: 1.5rem;
+            }
+            .cmp-state {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.25rem;
+                background: var(--background);
+            }
+            .cmp-state > h3 {
+                margin-block: 0 0.75rem;
+                font-size: 0.8125rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .cmp-ground {
+                padding: 1.5rem;
+                border-radius: 8px;
+                background: var(--card);
+            }
+            .cmp-tag {
+                font-size: 0.6875rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                padding: 0.1rem 0.5rem;
+            }
+
+            /* ── FILL 2 · one block per state ──────────────────────────────
+               Each state sets one knob the register already has:
+               --kp-alarm-title-font, which css/components.css reads on
+               .kp-alarm__title. Dropping .cmp-<state> from a selector below
+               puts that face into css/retro-register.css unchanged.
+
+               This page only: one state per row. The alarm sizes its own
+               headline from its own width (container-type: inline-size), so
+               a three-column grid would show every face at a third of the
+               size being judged, which is the whole question here. */
+            .cmp-row {
+                grid-template-columns: 1fr;
+            }
+
+            /* As it ships — Pixelify Sans, retro's --theme-font-display. The
+               face Kenny rejected: "het lettertype van 'Access denied' is te
+               grof om deftig te lezen". */
+            [data-theme='retro'] .cmp-ships .kp-alarm {
+                --kp-alarm-title-font: 'Pixelify Sans', 'Silkscreen', 'Courier New', ui-monospace, monospace;
+            }
+
+            /* A — VT323, the DOS voice this register already speaks
+               (--kp-dos, css/retro-register.css line 59: labels, help and
+               status). A scan-line face with outline strokes rather than
+               square pixels, so it keeps the old machine and loses the
+               staircase. */
+            [data-theme='retro'] .cmp-a .kp-alarm {
+                --kp-alarm-title-font: 'VT323', ui-monospace, monospace;
+                --kp-alarm-title-tracking: 0.04em;
+            }
+
+            /* B — Instrument Sans, retro's own --theme-font-body, whose
+               fallback stack is already 'Segoe UI', Tahoma: the Windows UI
+               face rather than the Windows pixel face. The error box of 1995
+               set its words in the system sans, not in a bitmap display
+               face, so this is the historically literal answer. */
+            [data-theme='retro'] .cmp-b .kp-alarm {
+                --kp-alarm-title-font: 'Instrument Sans', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+                --kp-alarm-title-tracking: 0;
+            }
+
+            /* C — Archivo, a grotesque with more weight in it than Instrument
+               Sans, for a headline that has to carry a full screen. Shipped
+               for grotesk and dark; the one option here that a retro page
+               does not already download. */
+            [data-theme='retro'] .cmp-c .kp-alarm {
+                --kp-alarm-title-font: 'Archivo', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+                --kp-alarm-title-tracking: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Retro's alarm headline: which face</h1>
+            <p class="cat-intro">
+                <span class="cmp-tag">mock</span> The same retro alarm four times, differing only in the headline's face at the size the alarm
+                actually draws it. Cost: A (VT323, 6.8 kB) and B (Instrument Sans, 75.3 kB) are already on every retro page — VT323 as the register's
+                DOS voice for labels, help and status, Instrument Sans as the body — so neither adds a byte; C (Archivo, 92.7 kB upright) is shipped
+                for grotesk and dark and would be a new download on a retro page. All four are OFL-1.1 with no Reserved Font Name, so nothing needs
+                renaming. Whichever you pick replaces Pixelify Sans on this headline only, in both alarms at once — they read the same knob — and the
+                rest of the theme keeps Pixelify Sans on its headings.
+            </p>
+
+            <!-- Each state gets the same markup from the template below, on the
+                 page ground and once on a card, so a difference that only shows
+                 on one of the two is visible. -->
+            <section class="cat-block" id="on-the-page">
+                <h2>On the page ground</h2>
+                <div class="cmp-row" data-cmp-row></div>
+            </section>
+
+            <section class="cat-block" id="on-a-card">
+                <h2>On a card</h2>
+                <div class="cmp-row" data-cmp-row data-cmp-card></div>
+            </section>
+        </main>
+
+        <!-- FILL 3 · the component, once. Package classes only. The alarm's
+             own markup, held open and still, exactly as catalogue/alarm.html
+             carries it under "Must be acknowledged". -->
+        <template id="cmp-markup">
+            <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+                <div class="kp-alarm__scan" aria-hidden="true"></div>
+                <div class="kp-alarm__bars" aria-hidden="true"></div>
+                <div class="kp-alarm__panel">
+                    <p class="kp-alarm__code">Security protocol 7 · lockout</p>
+                    <div class="kp-alarm__title" role="heading" aria-level="3">
+                        <span class="kp-alarm__glyphs" data-text="Access denied">Access denied</span>
+                    </div>
+                    <p class="kp-alarm__detail">Three failed attempts on terminal 4. This console is locked for ten minutes.</p>
+                    <div class="kp-alarm__actions">
+                        <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+                        <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <script type="module">
+            // FILL 2's state names and their labels, in the order they appear.
+            const STATES = [
+                ['ships', 'As it ships — Pixelify Sans'],
+                ['a', 'A — VT323, the register’s own DOS voice'],
+                ['b', 'B — Instrument Sans, the Windows UI face'],
+                ['c', 'C — Archivo, a heavier grotesque'],
+            ];
+            const markup = document.querySelector('#cmp-markup');
+            for (const row of document.querySelectorAll('[data-cmp-row]')) {
+                for (const [name, label] of STATES) {
+                    const state = document.createElement('div');
+                    state.className = `cmp-state cmp-${name}`;
+                    const title = document.createElement('h3');
+                    title.textContent = label;
+                    const ground = document.createElement('div');
+                    if (row.hasAttribute('data-cmp-card')) ground.className = 'cmp-ground';
+                    ground.append(markup.content.cloneNode(true));
+                    state.append(title, ground);
+                    row.append(state);
+                }
+            }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
