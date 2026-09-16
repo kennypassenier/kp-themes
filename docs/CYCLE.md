@@ -172,6 +172,31 @@ screen runs again when it comes into view [fix-31]. A window narrow
 enough to switch a component to another layout (a data table's cards below
 a 40rem container) is a different look and hashes differently.
 
+### What is approved, and still is
+
+Nothing is released while an element is not approved [scope-107], so the
+count of what is still waiting is printed by `npm run advice`
+(`gates/advice-approvals.mjs`): how many block/theme pairs carry an
+approval, and the first twenty that do not. A pair is open when it was
+rejected, when it was never judged, and — since scope-112 — when the block
+changed after the approval was given: the count follows the hash, not the
+verdict alone.
+
+That last one needs a reading of the blocks as they stand, which needs a
+browser, so it is taken on its own and kept beside the register:
+
+```
+node gates/verdicts.mjs snapshot
+```
+
+measures every judged component pair in the working tree, each at the
+engine and the device pixel ratio its verdict was read at, and writes
+`catalogue/hashes-now.json`. The advice reads that file, prints the commit
+the readings were taken at, and says how many files under `catalogue/`,
+`css/`, `js/` and `themes/` moved since — so the number always names its
+own age. Nothing here refuses: the snapshot is a file, not a gate, and the
+work that earns an approval must be able to commit.
+
 ### A rejection's temporary note
 
 When Kenny rejects a block with a note and Claude proposes a change, the

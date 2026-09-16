@@ -1897,3 +1897,19 @@ all. It is a component page now, and `gates/check-catalogue.mjs` refuses any
 catalogue page that carries blocks without being gathered. A block written for
 one theme (an intro carries `data-cat-theme`) counts in that theme alone in the
 approval advice.
+
+**scope-112 · The approval count follows the hash.** Kenny, 2026-09-16, the
+open-pairs form, item also-changed: "De telling volgt de hash". The count of
+scope-109 read the verdict alone, so a block approved before it changed — dark's
+panels before the halo was cut at the chamfer, every block with a select before
+its second arrow went — was still counted as approved; with scope-107's rule a
+release could then ship something Kenny never saw in that form. The block hash
+needs a browser, and advice must stay in seconds, so the reading is taken on its
+own: `node gates/verdicts.mjs snapshot` measures every judged component pair in
+the working tree, at the engine and the device pixel ratio its verdict was read
+at, and writes `catalogue/hashes-now.json`. `gates/advice-approvals.mjs` reads
+that file, counts a pair "changed since judged" where the reading no longer
+matches the hash the approval was given on, and prints the commit the readings
+were taken at together with the number of files under `catalogue/`, `css/`,
+`js/` and `themes/` that moved since — an advice that names its own age.
+Nothing refuses: the snapshot is a file, not a gate.

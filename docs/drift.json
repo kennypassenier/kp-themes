@@ -131,16 +131,16 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "9c02a831665adba3a5b8305d4465148da587f8a1d4847fe9a2f67263a44ec08c",
-            "doc": "b13838a094dff1ff4df754872adcdba3ba0c314c3bd1ba9dc88c4258ebdefe33",
+            "hash": "d0b1fd9c8194dac32e1404abcd37bd6bbc3d87cbf2da87ccf445e5d8b3d5567a",
+            "doc": "1d7abc1dde97f10a291371d9ce3d348e30caad93860bdd067165d811ce1f905d",
             "files": {
                 ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
                 ".claude/agents/theme-builder.md": "9133a9851f51d927dc24b9b13182c3c0cbafd7046af161b5c274cab6aecbfe07",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "526e272db58e7b6017c21da732f3888d395a49b2e6d0863479581e6065176c59",
-                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
-                "gates/verdicts.mjs": "1e62fcf69681953240c727113f7304bb07769543d5f4cbb7c39241d17ee4565d"
+                "gates/run-tags.mjs": "b585a12d860edd87e5e461e46f4b25fa0386a070e6ca6f07b5da0298a0d57397",
+                "gates/verdicts.mjs": "9a793d33956ae2a4420b6b429cba6bd431dad7e234ff90706f80a17476a1edff"
             }
         },
         "docs/DEBUGGING_GUIDE.md": {
