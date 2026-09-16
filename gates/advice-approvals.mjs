@@ -22,7 +22,11 @@ const root = new URL('../', import.meta.url);
 
 /**
  * The block/theme pairs with no approval, and the counts around them.
- * @param {Map<string, { component: boolean }>} known every block a verdict can name
+ *
+ * A block written for one theme — a theme intro, which carries
+ * `data-cat-theme` — is only ever shown in that theme, so it is counted in
+ * that theme alone [scope-111].
+ * @param {Map<string, { component: boolean, theme?: string }>} known every block a verdict can name
  * @param {string[]} themes the themes in their order
  * @param {any} register the parsed catalogue/verdicts.json
  */
@@ -33,7 +37,7 @@ export function openPairs(known, themes, register) {
     let approved = 0;
     for (const [key, block] of known) {
         if (!block.component) continue;
-        for (const theme of themes) {
+        for (const theme of block.theme ? [block.theme] : themes) {
             const engines = verdicts[key]?.[theme] ?? {};
             const says = Object.values(engines).map((entry) => /** @type {any} */ (entry)?.verdict);
             if (says.includes('approved')) {
@@ -46,8 +50,31 @@ export function openPairs(known, themes, register) {
     return { open, approved, pairs: approved + open.length };
 }
 
+/**
+ * The theme a block is written for, when it is written for one: the
+ * `data-cat-theme` on its own section [scope-111].
+ * @param {string} html the page's source
+ * @returns {Map<string, string>} block id → theme
+ */
+export function fixedThemes(html) {
+    const fixed = new Map();
+    for (const match of html.matchAll(/<section\b([^>]*)>/g)) {
+        const attributes = match[1];
+        const id = /(?:^|\s)id\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
+        const theme = /(?:^|\s)data-cat-theme\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
+        if (id && theme) fixed.set(id, theme);
+    }
+    return fixed;
+}
+
 async function main() {
     const known = await knownBlocks();
+    for (const [key, block] of known) {
+        if (!block.component) continue;
+        const html = readFileSync(new URL(block.page, root), 'utf8');
+        const theme = fixedThemes(html).get(block.block);
+        if (theme) Object.assign(block, { theme });
+    }
     const themes = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('themes/order.json', root), 'utf8')));
     const register = JSON.parse(readFileSync(new URL('catalogue/verdicts.json', root), 'utf8'));
     const { open, approved, pairs } = openPairs(known, themes, register);

@@ -36,7 +36,7 @@ export const PAGES = [
             { href: 'catalogue/page-effects.html', label: 'Page effects', component: true },
             // Not a component page: each block is a window playing one theme's
             // intro on demand, so the review page does not gather it [scope-84].
-            { href: 'catalogue/intros.html', label: 'Theme intros' },
+            { href: 'catalogue/intros.html', label: 'Theme intros', component: true },
         ],
     },
     {

@@ -1885,3 +1885,15 @@ default. It covers the state a user sets and expects to find again — the side
 navigation's groups and collapsed rail, the split pane, the data table's
 columns, sort and density, the accordion and the tree — and deliberately not
 the transient overlays. The review site's own navigation is its first consumer.
+
+**scope-111 · What Kenny must judge is gathered by "Every component, one
+page".** Kenny, 2026-09-16: "ik ben per thema alle elementen afgegaan, dus als je
+wil dat ik een oordeel geef, dan moeten die elementen via 'every component, one
+page' beoordeeld kunnen worden". The review page gathers the pages marked
+`component: true`, so a block anywhere else can never be judged. Measured when
+the rule was written: `catalogue/intros.html` carried four blocks — the theme
+intros — and was listed without that mark, so those four had no verdict key at
+all. It is a component page now, and `gates/check-catalogue.mjs` refuses any
+catalogue page that carries blocks without being gathered. A block written for
+one theme (an intro carries `data-cat-theme`) counts in that theme alone in the
+approval advice.

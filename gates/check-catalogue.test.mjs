@@ -9,7 +9,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bareControls, decidedOutsideArchive } from './check-catalogue.mjs';
+import { bareControls, decidedOutsideArchive, blocksOutsideTheReview } from './check-catalogue.mjs';
 
 /** @param {string} html */
 const faults = (html) => bareControls(html).map((f) => f.fault);
@@ -46,4 +46,15 @@ test('a decided research topic listed outside "Archived research" is refused [fi
     assert.deepEqual(decidedOutsideArchive(shell, { laurels: decided }), ['research/laurels (listed under "Research to look at")']);
     assert.deepEqual(decidedOutsideArchive(shell, { alarm: decided }), []);
     assert.deepEqual(decidedOutsideArchive(shell, { laurels: '# Laurels\n\nFour directions.\n' }), []);
+});
+
+test('a catalogue page with blocks that the review does not gather is refused [scope-111]', () => {
+    const shell = `[{ pages: [
+        { href: 'catalogue/button.html', label: 'Buttons', component: true },
+        { href: 'catalogue/intros.html', label: 'Theme intros' },
+    ] }]`;
+    assert.deepEqual(blocksOutsideTheReview(shell, { 'catalogue/button.html': 7, 'catalogue/intros.html': 4 }), [
+        'catalogue/intros.html (4 block(s), listed without component: true)',
+    ]);
+    assert.deepEqual(blocksOutsideTheReview(shell, { 'catalogue/button.html': 7, 'catalogue/intros.html': 0 }), []);
 });

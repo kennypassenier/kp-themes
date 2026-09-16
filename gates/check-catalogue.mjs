@@ -145,6 +145,25 @@ export function decidedOutsideArchive(shell, readmes) {
         .sort();
 }
 
+/**
+ * The catalogue pages that carry blocks but are not listed as component pages
+ * [scope-111]. Kenny judges through "Every component, one page", which gathers
+ * the component pages only, so a block on an unlisted page can never be judged.
+ * @param {string} shell the text of catalogue/pages.js
+ * @param {Record<string, number>} blocksPerPage catalogue page href → how many blocks it carries
+ * @returns {string[]}
+ */
+export function blocksOutsideTheReview(shell, blocksPerPage) {
+    const listed = new Map();
+    for (const match of shell.matchAll(/href:\s*'(catalogue\/[^']+)'([^}]*)}/g)) {
+        listed.set(match[1], /component:\s*true/.test(match[2]));
+    }
+    return Object.entries(blocksPerPage)
+        .filter(([href, blocks]) => blocks > 0 && listed.has(href) && !listed.get(href))
+        .map(([href, blocks]) => `${href} (${blocks} block(s), listed without component: true)`)
+        .sort();
+}
+
 function main() {
     const components = read('css/components.css');
     const dir = new URL('catalogue/', root);
@@ -217,6 +236,18 @@ function main() {
         console.error(
             `${undecided.length} decided research topic(s) are not under "Archived research" in catalogue/pages.js [fix-37]:\n  ` +
                 undecided.join('\n  '),
+        );
+    }
+    /** @type {Record<string, number>} */
+    const blocksPerPage = {};
+    for (const page of reviewPages.filter((name) => name.startsWith('catalogue/'))) {
+        blocksPerPage[page] = (readFileSync(new URL(page, root), 'utf8').match(/class="cat-block"/g) ?? []).length;
+    }
+    const unjudgeable = blocksOutsideTheReview(shell, blocksPerPage);
+    if (unjudgeable.length) {
+        console.error(
+            `${unjudgeable.length} catalogue page(s) carry blocks but are not gathered by "Every component, one page" [scope-111]:\n  ` +
+                unjudgeable.join('\n  '),
         );
     }
     const unlisted = reviewPages.filter((page) => !listed.has(page)).sort();
@@ -350,6 +381,7 @@ function main() {
     if (
         blockable.length ||
         undecided.length ||
+        unjudgeable.length ||
         invisible.length ||
         stale.length ||
         gone.length ||
