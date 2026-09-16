@@ -1,5 +1,12 @@
 # Verbatim copies from kp-soft - not reformatted here.
 docs/
+
+# Hook copies synced from ~/Projects/dev-procedure by hooks/sync-hooks.sh.
+# They are byte-compared against the canonical file, so a formatter
+# rewriting them puts this repository permanently "BEHIND" in that tool
+# and re-fights the same diff after every sync (found 2026-09-16, when
+# prettier reformatted the freshly synced trace-inputs.cjs).
+.githooks/
 node_modules/
 package-lock.json
 
