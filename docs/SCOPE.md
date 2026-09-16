@@ -1760,3 +1760,20 @@ while both stay over 4.5:1 (today body 4.52 against muted 4.71 on the muted
 ground). sepia-findings "Klopt": the heading rule follows the approved demo in
 the primary colour rather than the border colour, and the ink stain's 11px reach
 is recorded in tests/reflow-findings.json. step-timing "Akkoord".
+
+**scope-103 · The theme sweeps become a level, and the thin places get tests.**
+Kenny, 2026-09-16, the test-suite form, after "Ik heb het gevoel dat er nog veel
+teveel getest wordt waar het niet relevant is". The audit measured: 804 written
+tests become 1593 because fourteen lines loop over 22 themes, 424 of them (27%)
+restate a claim made elsewhere, and the whole firefox suite takes 5 min 12 s at
+0.196 s per test. test-scope "Thema's als laag": a theme sweep runs on formal,
+dark and cyberpunk at the commit level and on all 22 at the release level — 36 s
+saved with no assertion removed. test-thin, all five: fonts (3 tests today,
+fix-28 behind them), overlay placement (6 tests, three of this round's faults),
+the cascade order between the utilities and the layout layer, motion that must
+restart (fix-31) and redaction (fix-33). Kenny also asked, in the remarks,
+whether the tests could be selected from the catalogue's block hashes — "Ik wil
+enkel supergericht testen indien mogelijk en bij release nog is de hele suite" —
+so a hash-driven selection is measured before it is built: what it costs to read
+the blocks of the changed files' components against their recorded hash, and how
+many tests it removes compared with the tag selection. step-timing "Akkoord".
