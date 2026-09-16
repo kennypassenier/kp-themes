@@ -543,41 +543,24 @@ async function rehash(args) {
  */
 async function settle(args) {
     const option = (/** @type {string} */ name, /** @type {string} */ fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);
-    const ratio = Number(option('--ratio', '2.222'));
     const width = Number(option('--width', '1920'));
     const { serve } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     const server = await serve(ROOT);
-    const browser = await playwright.firefox.launch({
-        headless: true,
-        ...(ratio !== 1 ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
-    });
-    const context = await browser.newContext({ viewport: { width, height: 1000 }, ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}) });
+    const browser = await playwright.firefox.launch({ headless: true });
+    const context = await browser.newContext({ viewport: { width, height: 1000 } });
     const page = await context.newPage();
-    const settled = () =>
-        page.waitForFunction(
-            () => {
-                const states = [...document.querySelectorAll('.cat-judge [data-cat-approval-state]')];
-                return states.length > 0 && !states.some((el) => (el.textContent ?? '').startsWith('Checking'));
-            },
-            null,
-            { timeout: 180_000, polling: 200 },
-        );
     /** @type {Record<string, Record<string, string>>} */
     const readings = {};
     try {
         await page.goto(`${server.base}/catalogue/index.html`);
-        await settled();
+        await page.waitForFunction("document.querySelectorAll('.cat-block[id]').length > 100", null, { timeout: 180_000 });
         const themes = /** @type {string[]} */ (JSON.parse(readFileSync(join(ROOT, 'themes/order.json'), 'utf8')));
         for (const theme of themes) {
-            await page.evaluate(
-                (name) => /** @type {any} */ (window).eval("import('/js/theme-core.js')").then((/** @type {any} */ core) => core.applyTheme(name)),
-                theme,
-            );
-            await page.waitForTimeout(300);
-            await settled();
-            // In the page, where the catalogue's own modules live; the types
-            // of those imports belong to the browser, not to this file.
+            // Since scope-114 the hash reads the inputs, so the theme only has
+            // to stand on the root element: no register to paint, no reading to
+            // settle, one page load for all 22 themes.
+            await page.evaluate(`document.documentElement.setAttribute('data-theme', ${JSON.stringify(theme)})`);
             readings[theme] = await page.evaluate(async () => {
                 /** @type {any} */ const win = window;
                 const { COMPONENT_PAGES } = await win.eval("import('/catalogue/pages.js')");
@@ -613,12 +596,11 @@ async function settle(args) {
             entry.hash = hash;
             entry.commit = commit;
             entry.given = today();
-            if (ratio === 1) delete entry.ratio;
-            else entry.ratio = ratio;
+            delete entry.ratio;
         }
     }
     writeRegister(register);
-    console.log(`${REGISTER}: ${same} pair(s) already read what the review page reads at ratio ${ratio}, ${moved} brought up to it.`);
+    console.log(`${REGISTER}: ${same} pair(s) already read what the review page reads, ${moved} brought up to it.`);
 }
 
 /* ---------------------------------------------------------------- snapshot */

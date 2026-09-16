@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 4;
+export const HASH_VERSION = 5;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
-export const EARLIER_VERSIONS = [3, 2];
+export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = EARLIER_VERSIONS[0];
+export const PREVIOUS_VERSION = 4;
 
 export const PROPS = [
     'color',
@@ -485,6 +485,38 @@ export function blockLines(block, source, reviewed = reviewedElements(block), vi
  *   earlier: the same reading under each of EARLIER_VERSIONS, which differ only in the markup line;
  *   previous: the one under PREVIOUS_VERSION
  */
+/**
+ * What a block is made of, as the code says [scope-114]: the digests of
+ * gates/generate-code-version.mjs, fetched once per page.
+ * @returns {Promise<{ shared: string, themes: Record<string, string> }>}
+ */
+let codeVersion = null;
+export function readCodeVersion() {
+    codeVersion ??= fetch(new URL('./code-version.json', import.meta.url))
+        .then((response) => (response.ok ? response.json() : null))
+        .catch(() => null);
+    return codeVersion;
+}
+
+/** The theme a block is read in: its own declaration, or the page's. @param {Element} block */
+export const themeOf = (block) => block.getAttribute('data-cat-theme') || document.documentElement.getAttribute('data-theme') || 'formal';
+
+/**
+ * The lines a block is hashed over, version 5 [scope-114]: its markup as
+ * written, the theme it is judged in, and the code that shapes it. Nothing
+ * that follows the zoom, the window, the browser's own rounding or what the
+ * reviewer typed — Kenny, 2026-09-16: "Als ik iets goedkeur op 125% dan is het
+ * voor alle zoom levels goedgekeurd."
+ * @param {Element} block
+ * @param {string} source
+ * @param {{ shared: string, themes: Record<string, string> } | null} code
+ * @returns {string[]}
+ */
+export function inputLines(block, source, code) {
+    const theme = themeOf(block);
+    return [componentMarkup(source), `theme: ${theme}`, `shared: ${code?.shared ?? 'unknown'}`, `register: ${code?.themes?.[theme] ?? 'unknown'}`];
+}
+
 export async function readBlocks(items, { lines = false } = {}) {
     // The theme's own typeface arrives only once a layout asks for it, and
     // until then a width-derived value reads the fallback's: cyberpunk's
@@ -532,29 +564,16 @@ export async function readBlocks(items, { lines = false } = {}) {
     for (const started = performance.now(); items.some(busy) && performance.now() - started < 3000;) {
         await new Promise((resolve) => setTimeout(resolve, 50));
     }
-    // Every block is read while the animations are held, in one synchronous
-    // stretch; only then are they released and the readings hashed, since
-    // sha256 waits and a running animation would move on meanwhile (fix-31).
-    const release = stillAnimations();
-    // What the reviewer typed or focused is not the block [fix-47].
-    const restore = atRest(items);
-    let readings;
-    try {
-        const viewport = viewportDependence();
-        readings = items.map((item) => blockLines(item.root, item.source, item.elements?.() ?? reviewedElements(item.root), viewport));
-    } finally {
-        restore();
-        release();
-    }
+    // Version 5 reads the inputs, not the paint [scope-114]: the markup as
+    // written, the theme, and the digests of the code that shapes it. The
+    // waiting above stays, because a block that is still building its own
+    // markup (a data table filling its rows) is not yet the block.
+    const code = await readCodeVersion();
+    const readings = items.map((item) => inputLines(item.root, item.source, code));
     const out = [];
-    for (const [i, read] of readings.entries()) {
+    for (const read of readings) {
         const hash = await sha256(read.join('\n'));
-        /** @type {Record<number, string>} */
-        const earlier = {};
-        for (const version of EARLIER_VERSIONS)
-            earlier[version] = await sha256([componentMarkup(items[i].source, version), ...read.slice(1)].join('\n'));
-        const previous = earlier[PREVIOUS_VERSION];
-        out.push(lines ? { hash, previous, earlier, lines: read } : { hash, previous, earlier });
+        out.push(lines ? { hash, previous: hash, earlier: {}, lines: read } : { hash, previous: hash, earlier: {} });
     }
     return out;
 }

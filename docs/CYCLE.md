@@ -160,6 +160,16 @@ moved for the 264 entries of the twelve blocks with such a label (22 themes
 each), and stayed for the rest.
 4. The register and the recipe are committed together.
 
+**Version 5 reads the inputs, not the paint (scope-114, 2026-09-16).** A block
+is hashed over four lines: its markup as written, the theme it is judged in,
+a digest of the code every theme shares and a digest of that theme's own code
+(`catalogue/code-version.json`, written by `gates/generate-code-version.mjs`
+and held current by a gate). Kenny's words: "Als ik iets goedkeur op 125% dan
+is het voor alle zoom levels goedgekeurd." So the paragraph below — the reading
+made engine-proof, window-proof and moment-proof — is history: none of it can
+reach the hash any more. `node gates/verdicts.mjs settle` reads every block of
+every theme from one page load and writes those readings into the register.
+
 The recipe reads past what differs between two browsers of one engine or
 two window sizes, as measured on 2026-09-13 (lengths to the half pixel,
 `attr()` in `content` resolved, no translation in `transform`, lengths in

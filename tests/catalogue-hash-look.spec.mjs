@@ -76,15 +76,16 @@ test(
         expect(read.heading.hash).toBe(read.written.hash);
         expect(read.stage.hash).not.toBe(read.written.hash);
         expect(read.stageStyle.hash).not.toBe(read.written.hash);
-        // Version 2, still returned in `earlier`, read the Look-at text.
-        expect(read.look.earlier[2]).not.toBe(read.written.earlier[2]);
+        // Since scope-114 nothing is carried over: a reading is the markup,
+        // the theme and the code, so `earlier` is empty.
+        expect(read.written.earlier).toEqual({});
         // The page itself stores what readBlocks reads.
         await page.locator('#states [data-cat-verdict="approved"]').click();
         const stored = await page.evaluate(
             ([key, engine]) => JSON.parse(localStorage.getItem(key) ?? '{}')['switch--states']?.formal?.[engine],
             [JUDGEMENTS, browserName],
         );
-        expect(stored).toMatchObject({ hash: read.written.hash, v: 4 });
+        expect(stored).toMatchObject({ hash: read.written.hash, v: 5 });
     },
 );
 
@@ -102,8 +103,7 @@ test(
         expect(outside.rest.hash).toBe(outside.written.hash);
         expect(outside.live.hash).toBe(outside.written.hash);
         expect(outside.stage.hash).not.toBe(outside.written.hash);
-        // Version 3, still returned in `earlier`, read the label.
-        expect(outside.rest.earlier[3]).not.toBe(outside.written.earlier[3]);
+        expect(outside.written.earlier).toEqual({});
 
         await page.goto('/catalogue/combobox.html');
         await waitForJudging(page);
@@ -114,37 +114,6 @@ test(
     },
 );
 
-test(
-    'a verdict stored under hash version 2 or 3 carries over to version 4 where the block did not change, and not where it did [scope-95, scope-96]',
-    { tag: ['@component:catalogue'] },
-    async ({ page, browserName }) => {
-        await page.goto('/catalogue/switch.html');
-        await waitForJudging(page);
-        const read = await readVariants(page, 'states', SWITCH_EDITS);
-        const invalid = await readVariants(page, 'invalid', {});
-        const at = Date.parse('2026-09-15T12:00:00Z');
-        await page.evaluate(
-            ([key, engine, v2, v3, other, time]) => {
-                localStorage.setItem(
-                    key,
-                    JSON.stringify({
-                        // Judged as it stands under version 2: carried over.
-                        'switch--states': { formal: { [engine]: { verdict: 'rejected', hash: v2, v: 2, at: time } } },
-                        // Judged as it stands under version 3: carried over.
-                        'switch--invalid': { formal: { [engine]: { verdict: 'approved', hash: v3, v: 3, at: time } } },
-                        // Judged on another look under version 3: left at version 3.
-                        'switch--extremes': { formal: { [engine]: { verdict: 'approved', hash: other, v: 3, at: time } } },
-                    }),
-                );
-            },
-            [JUDGEMENTS, browserName, read.written.earlier[2], invalid.written.earlier[3], read.stage.earlier[3], at],
-        );
-        await page.reload();
-        await waitForJudging(page);
-        const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
-        expect(stored['switch--states'].formal[browserName]).toEqual({ verdict: 'rejected', hash: read.written.hash, v: 4, at });
-        expect(stored['switch--invalid'].formal[browserName]).toEqual({ verdict: 'approved', hash: invalid.written.hash, v: 4, at });
-        expect(stored['switch--extremes'].formal[browserName]).toEqual({ verdict: 'approved', hash: read.stage.earlier[3], v: 3, at });
-        await expect(page.locator('#states')).toHaveAttribute('data-cat-state', 'rejected');
-    },
-);
+// The carry-over test of scope-95 and scope-96 went with scope-114: a reading
+// no longer has earlier versions to carry a verdict over from, because it no
+// longer reads the paint. What replaces it is tests/catalogue-hash-inputs.spec.mjs.

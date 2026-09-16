@@ -3960,3 +3960,23 @@ fault.
 **8 · If the measurement fails.** The register stops holding hashes at all for pairs the reviewer has approved in his own browser, and the review page trusts the local judgement first.
 
 **9 · When we review the measure.** At the next change to the hash recipe, when every reading is taken again anyway.
+
+## fix-50 · The settle tool read all 22 themes as formal (2026-09-16)
+
+**1 · What went wrong.** After the register was brought up to hash version 5, the review page still showed 139 of 143 blocks as "Changed since judged" in light. Measured in the tool's own browser: the four lines it hashed read `theme: formal` in every theme, so 21 of the 22 themes had been recorded with formal's hash.
+
+**2 · Which gate let it through.** None: `settle` is a one-off tool run on Kenny's word, and its own output ("3062 brought up to it") looks the same whether the themes were applied or not.
+
+**3 · Where the same fault sits.** The property: a Playwright `evaluate` that applies a theme through a dynamic import and is never checked. Searched over the tools: `gates/verdicts.mjs` had the only such call (the compare and rehash paths ask the page for a theme through `measurePlaywright`, which sets it in the page's own markup); the browser tests use `page.evaluate((name) => import('/js/theme-core.js')…)`, which does work, and they assert on the result afterwards.
+
+**4 · How we prevent recurrence.** `settle` sets the theme as an attribute on the root element and reads it back before it hashes anything; since scope-114 nothing else about a reading depends on the theme being painted, so one page load answers for all 22.
+
+**5 · What the remedy costs.** Nothing: the run went from a minute of waiting for registers to paint to a few seconds.
+
+**6 · Who enforces it.** The measurement in `tests/catalogue-hash-inputs.spec.mjs`: a block read in another theme must give another hash. A run where the theme never changed would fail it.
+
+**7 · How we measure it works, and when.** Measured the same day, after the fix: the review page shows every block approved in formal, the dialog says the round is over on opening, and the round page says "You are through" at 3062 of 3062 — at ratio 1 and at Kenny's 2.222.
+
+**8 · If the measurement fails.** The tool stops driving a page at all and hashes the four lines in Node, where the theme is a string it passes itself.
+
+**9 · When we review the measure.** At the next tool that needs a theme applied in a browser.

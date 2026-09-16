@@ -1,9 +1,9 @@
-// The device pixel ratio a verdict was read at (fix-34, scope-93). Gecko
-// resolves a border width to whole device pixels, so a block's hash follows
-// the zoom; Kenny reviews at a zoom other than 100% by default, and his
-// verdicts stay valid. A verdict keeps the ratio its hash was read at, the
-// prompt's verdict line carries it as a sixth field `@1.25`, and the tools
-// read the block there.
+// The device pixel ratio a verdict was read at (fix-34, scope-93), and what
+// scope-114 did to it: the hash no longer follows the zoom at all — Kenny,
+// 2026-09-16: "Als ik iets goedkeur op 125% dan is het voor alle zoom levels
+// goedgekeurd." The ratio is still recorded, because it says where he stood,
+// and the prompt's verdict line still carries it as a sixth field `@1.25`;
+// what changed is that a reading at another zoom now gives the same hash.
 //
 // Red run first, on be9c034a in firefox, before the change: the stored
 // verdict had no ratio (expected 1.25, received undefined).
@@ -58,8 +58,11 @@ test(
         const requests = [{ key: 'switch--states', theme: 'brutalism' }];
         const at125 = await hashAt({ root: ROOT, engine: 'firefox', requests, ratio: 1.25 });
         expect(at125.get('switch--states|brutalism')?.hash, 'read at 1.25').toBe(hash);
+        // Since scope-114 the reading is the block's inputs, so the zoom does
+        // not enter it at all: what Kenny approves at 125% is approved at every
+        // zoom. The ratio is still written down — it says where he stood.
         const at1 = await hashAt({ root: ROOT, engine: 'firefox', requests });
-        expect(at1.get('switch--states|brutalism')?.hash, 'read at 1: the borders follow the ratio').not.toBe(hash);
+        expect(at1.get('switch--states|brutalism')?.hash, 'read at 1: the same block, the same hash').toBe(hash);
     },
 );
 

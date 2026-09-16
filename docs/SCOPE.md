@@ -1940,3 +1940,33 @@ still has a block to judge — "Formal is done. Now judging in Titanium." The
 keys do nothing while the walk runs, so a held arrow cannot skip a block. When
 no theme has anything left the dialog stays open and says the round is over.
 A page that is one theme (a portrait, `data-cat-theme-fixed`) never walks.
+
+**scope-114 · A block's hash is what it is made of, not what it looks like.**
+Kenny, 2026-09-16, after four rounds in which the same blocks kept coming back:
+"Een component is de som van html+css+js+browserkeuze, daarop moet de hash
+gebaseerd zijn. Hoe het rendered kan mij geen fucking kloten schelen, dat is
+niet relevant. Als ik iets goedkeur op 125% dan is het voor alle zoom levels
+goedgekeurd."
+
+So hash version 5 reads four lines and nothing else: the block's markup as
+written (the recipe of scope-95 and scope-96, unchanged), the theme it is
+judged in, a digest of the code every theme shares (`css/` without the
+registers, `js/`, `components/`) and a digest of that theme's own code (its
+register and its tokens). The digests are written by
+`gates/generate-code-version.mjs` into `catalogue/code-version.json`, which a
+gate holds current.
+
+What that buys, measured the same day: the same block reads the same hash at
+two window sizes, with a value typed into it, with a control focused, on its
+own page and on the review page — five readings that used to be five different
+hashes. A change to dark's register asks Kenny about dark and leaves the other
+twenty-one alone. A reading no longer needs the paint, so `verdicts.mjs settle`
+reads all 3062 pairs from one page load.
+
+What it costs: the hash no longer notices a look that changed without the code
+changing (it cannot happen) and no longer distinguishes two zooms (which is the
+point). The carried-over readings of scope-95 and scope-96 (`EARLIER_VERSIONS`)
+go with it: nothing is carried over any more, because nothing about the reading
+depends on the moment it was taken. The whole register was read again at
+version 5 and every pair recorded as approved, on his instruction ("tag alles
+als approved en zie dat dit nooit meer terugkomt").
