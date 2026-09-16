@@ -1860,3 +1860,13 @@ sepia-retry-border "Rand mee in het wit": the retry button's frame follows its
 label, which read 1.6:1 on the red plate. In his remarks: "archiveer de bestanden
 in 'research to look at'" — the retro face demo and the three theme portraits
 move to "Archived research", each with its decided line.
+
+**scope-109 · The approval count is printed, never enforced.** Kenny,
+2026-09-16, the review-again form. release-check "Een lijst in advies":
+`gates/advice-approvals.mjs` runs in `npm run advice` and prints how many
+block/theme pairs carry an approval, how many are open, and the first twenty by
+name; it always exits 0, because the work that earns an approval has to be able
+to commit. Measured at the moment it was built: 3037 of 3058 pairs approved, 21
+open, all of them the rejections of scope-107 waiting for Kenny's second look.
+while-review-2 "Wachten": nothing else is started while he reviews.
+step-timing "Akkoord".
