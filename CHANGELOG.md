@@ -19,6 +19,15 @@ chassis-rs bakes ten more files at its upgrade (MIGRATION.md has its task).
 
 **Added.**
 
+- **The 22 themes as VS Code colour themes** (`scope-125`): `vscode/kp-<theme>-color-theme.json`,
+  generated from the same tokens by `gates/generate-vscode-themes.mjs` and
+  checked in the gates chain like the Home Assistant themes. 394 colour keys,
+  17 syntax rules and 30 semantic ones per theme; each file carries its own
+  measured contrast pairs under `kpThemes.contrast`. A release attaches them as
+  `vscode-themes.tar`, the eleventh asset, and the package exports `./vscode/*`.
+  They are not in `consumer.tar`: an editor theme is not a stylesheet a page
+  serves.
+
 - **`--code-keyword` and `--code-string`, in all 22 themes** (`scope-123`,
   fix-58): the two inks a code block colours its keywords and its strings
   with. They were the chart hues, which are chosen and measured as LINES at

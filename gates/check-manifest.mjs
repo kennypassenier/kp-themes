@@ -115,7 +115,9 @@ export function copyableExports(pkg, { follow = true } = {}) {
             const dir = target.replace(/^\.\//, '').replace(/\/\*$/, '');
             // `ha/` joined at 7.0.0 [scope-120]: the Home Assistant themes are
             // files a dashboard copies exactly like a stylesheet a page does.
-            if (!/^(css|js|dist|fonts|ha)$/.test(dir)) continue;
+            // `vscode/` joined the same way [scope-125]: an editor theme is a
+            // file a user points an extension at.
+            if (!/^(css|js|dist|fonts|ha|vscode)$/.test(dir)) continue;
             for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
             continue;
         }

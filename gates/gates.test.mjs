@@ -932,7 +932,7 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
 
 // ── The consumer tarball [CF1, 2026-09-09] ───────────────────────────────
 
-test('CF1: the tarball is the manifest minus the fonts, the source maps and the Home Assistant themes', async () => {
+test('CF1: the tarball is the manifest minus the fonts, the source maps, the Home Assistant themes and the VS Code themes', async () => {
     // The point of building it from SHA256SUMS is that its contents cannot
     // go stale. This holds the two exclusions and nothing else, so a file
     // can never fall out of the tarball by being forgotten — only by
@@ -946,9 +946,13 @@ test('CF1: the tarball is the manifest minus the fonts, the source maps and the 
     // here [fix-3].
     const { checksums } = await import('./checksums.mjs');
     const files = contents(checksums());
-    // The third exclusion was that decision: ha/ ships as ha-themes.tar [scope-120].
-    assert.equal(EXCLUDED.length, 3, 'the exclusions are fonts/, *.map and ha/, and adding a fourth is a decision');
+    // The third exclusion was that decision: ha/ ships as ha-themes.tar
+    // [scope-120]; the fourth is vscode/, as vscode-themes.tar [scope-125].
+    // Neither is a stylesheet a page serves, and a web consumer unpacking
+    // the tarball has no use for either.
+    assert.equal(EXCLUDED.length, 4, 'the exclusions are fonts/, *.map, ha/ and vscode/, and adding a fifth is a decision');
     assert.ok(!files.some((f) => f.startsWith('ha/')), 'the Home Assistant themes ship as their own asset');
+    assert.ok(!files.some((f) => f.startsWith('vscode/')), 'the VS Code themes ship as their own asset');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
     assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');

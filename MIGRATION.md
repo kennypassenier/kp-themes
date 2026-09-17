@@ -68,6 +68,13 @@ await effects.ready; // every hook this attach asked for is in and has run
 section.querySelector('[data-kp-reveal-trigger]')?.click();
 ```
 
+### The editor themes are new, and optional
+
+`vscode/kp-*-color-theme.json` ships with the package from 7.0.0
+[scope-125]. Nothing imports them and nothing breaks if you ignore them; a
+release attaches them as `vscode-themes.tar`, and `README.md` says how to
+point an extension at one.
+
 ### Two new tokens: `--code-keyword` and `--code-string`
 
 Nothing breaks. Every theme gained two colours for code blocks, so a

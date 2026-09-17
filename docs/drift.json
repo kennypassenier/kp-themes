@@ -19,10 +19,10 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "f50a8bc2daa051cbaf1d0efc110c06b62fbf76588827cead216c25241ba086c5",
-            "doc": "bcb1427a59b487dfbef92fd4acf1ffb2fe7dcc87e6d945ffadcb7ddee7f3acea",
+            "hash": "a078c7d2619fed270e3ef4eda29e7945dbe3a2c6846e01e7a134cd4335d3611d",
+            "doc": "fa5c995fa87f89d85bf74bde65963cf9b110251c1faea40d35bfb5eddb93e01f",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "54702cd78109760066f6e12ced28530f770d1cb46dee982497e7163ccbb85be0",
-            "doc": "7947dc1a99a2f850e49554afe8f4dd3c628d51e0c13da138e48ffdfec2c9383f",
+            "hash": "3fba262e5ca03ce8c8468785d58c9d7e0b24fa8705c32b22ddacca7cd3a06d06",
+            "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "adcd748cbb316bbcf0db8274a9996d9adff9e78a6750ae38b27b8c34430ba127"
+                "CHANGELOG.md": "d30b2a8a867fd0bae94e10ed63c47abec04c74f07f9a5d0630bf949ce73d0fbb"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,10 +81,10 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "76843a43b534145ad35503f07000905963d175f82d778f5e5a8f3619786e6a97",
-            "doc": "3a247d067281a8cd4b736267a1d830f0165f539e0ef772590927365d624453a4",
+            "hash": "dcb353882ca140ca029375729b991ee2e7eb4a872781702c4ddf340b0008ca55",
+            "doc": "a10365d568994bbc60e04f4fae3076056c994f2f0907022a310a374ade20ce40",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
                 "gates/colour.mjs": "1de05f5f28b8f4c1970cf3df43db8b92482a2c82de04dc833fd5bac758010cfd",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
@@ -156,10 +156,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "5ee748b92d3cf87d6afd82a1f356f9b51b1c1757c7c516757005fcdd43deed03",
-            "doc": "1d01209875b434eeb4f094df55819498296f0019118218042da40378f240af87",
+            "hash": "2b74835e55ca4324ec7060484e594caf6e6c2235d3b87f1662c18e4413d81c2b",
+            "doc": "ca4da02c533132da54e7ffeab208a23fe6e63a25132c206215bc16e0af5f4c72",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
@@ -200,18 +200,18 @@
                 "gates/integrate-lift.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "cc77ee0708270ac5fef0d14b9c91308a0c7e35f0446d69e4ebc166e403e1681d",
-            "doc": "ec1654b5661fd68ceee2ed93092cbeca495048b133bff06aeca15203b867b414",
+            "hash": "8d293716a08962bf2115336f3433c81f0e6ee5f2fd043e4c03cb2e130fb61108",
+            "doc": "c83447f1de2d62601b9b9c11654871496f3b6c9a5e105879193f2dad5e69c0ca",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
                 ".githooks/check-ids.sh": "ec5484904fcfc88ee1afaca5ef756aec775a9f5df7afa6e5855b9c5fc6f99654",
                 ".githooks/commit-msg": "825b67a8bde9a8dc77ca7b3526340d67eb819d149adec126856bde9374fa4b2f",
                 ".githooks/gate-cache.sh": "0f1ec3ec548dd501439aff59bf009172a0d42b3f7a68e2bb71475d0dad4c36e9",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
-                ".githooks/trace-inputs.cjs": "2088e1ca4612e5608dcaf2bd48dcf4ce4f862f70ddd0ea59f9574de52ee674ef",
+                ".githooks/trace-inputs.cjs": "ef26bd4d00e2aa30add61d2ecc4eb873dccd80c59cd6174f84055ff62875c8aa",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                ".github/workflows/release.yml": "c5b68f79cd3a474472672cdeea17ac21e0f8ad158d308b8dc0dcd0002bc2b4fe",
-                "gates/checksums.mjs": "c084c00ff83a806f01ef10f8f8ccbd727bb723b474c5234211bb3db71b381a38",
+                ".github/workflows/release.yml": "9c4a3e6d0ed7bcd0c7331f68ec6308a6507e82e442eb839860190f9af3d8a332",
+                "gates/checksums.mjs": "472a4f7a0dc6b6ce97ba5e6b6baaca9068632725b30bf28767748c52fce07331",
                 "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"

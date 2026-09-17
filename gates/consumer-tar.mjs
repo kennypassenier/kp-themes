@@ -43,7 +43,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Left out of the tarball, with the reason in the header above. */
-export const EXCLUDED = [/^fonts\//, /\.map$/, /^ha\//];
+export const EXCLUDED = [/^fonts\//, /\.map$/, /^ha\//, /^vscode\//];
 
 /**
  * The files the tarball carries, read from the manifest itself.

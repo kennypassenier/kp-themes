@@ -4172,3 +4172,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The ink rule takes its floor at 4.6:1, so a rounding difference of 0.04 cannot decide a pass.
 
 **9 · When we review the measure.** When a gate starts measuring a colour the browser does not paint directly — a gradient, a blend, or an alpha — where rounding per channel is no longer the whole story.
+
+## fix-60 · The review navigation stacked on top of a research demo instead of beside it (2026-09-17)
+
+**1 · What went wrong.** Kenny, on the two new demos: "de sidebar is apart en pas daarna (eronder) begint de demo pagina, wat raar is, de content moet gewoon naast de sidenav staan". Measured in Firefox at 1400 px: the navigation's right edge at 240 and the page column's left edge at 8, both at the top — so the demo began below a full-height navigation. He had seen it before on other demos and not raised it.
+
+**2 · Which gate let it through.** `check:catalogue` asks whether a review page loads `catalogue/catalogue.js`, which these pages did; nothing asked whether the shell's own stylesheet was there. `body.cat-shell { display: flex }` lives in `catalogue/catalogue.css`, and the script that adds the class never checked that the file was loaded.
+
+**3 · Where the same fault sits.** The property: a page that runs the shell's script without its stylesheet. Searched with `for f in $(grep -rl "catalogue/catalogue.js" research catalogue examples --include=*.html); do grep -q catalogue.css "$f" || echo "$f"; done`: seven, all research demos — control-height, datatable, grotesk-hover, jellyfin, jellyfin-dark, uniform-size, vscode. The catalogue's own pages and the examples link it through their generator.
+
+**4 · How we prevent recurrence.** `catalogue.js` mounts its own stylesheet: `mountStyles()` adds the link when the document does not already have it. A page can forget a link; a script that brings its own cannot. No page was edited, so the next demo written by hand is right too.
+
+**5 · What the remedy costs.** Eleven lines in one script, and one extra request on pages that already had the link (none: the check is by href).
+
+**6 · Who enforces it.** Code: a browser test in `tests/catalogue-review.spec.mjs` measures, on two demos that link no catalogue stylesheet, that the page column starts at the navigation's right edge and at the top of the viewport.
+
+**7 · How we measure it works, and when.** At this commit: the test is red with `mountStyles()` commented out — "the page starts left of the navigation's edge", column x = 8 against a 240 px navigation — and green with it.
+
+**8 · If the measurement fails.** Then the shell stops depending on a stylesheet for its shape: the flex on `body.cat-shell` moves into the script as an inline style, where nothing can fail to load.
+
+**9 · When we review the measure.** When the catalogue shell gains a second stylesheet, or when a demo starts bringing its own layout for the navigation.

@@ -63,6 +63,11 @@ jobs:
       # ha/kp-*.yaml, unpacked into Home Assistant's themes/ directory.
       - name: Home Assistant themes
         run: tar -cf ha-themes.tar -C ha .
+      # The VS Code colour themes as one asset [scope-125]: the 22
+      # generated vscode/kp-*-color-theme.json, which a user points a
+      # local extension at, or copies into one.
+      - name: VS Code themes
+        run: tar -cf vscode-themes.tar -C vscode .
       # The consumer tarball [CF1, 2026-09-09]. chassis-rs pulled thirty-odd
       # files off the git tag one by one because the release attached eight
       # assets while SHA256SUMS beside them named 231 copyable files. This
@@ -82,4 +87,4 @@ jobs:
             --title "${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md \
             SHA256SUMS MIGRATION.md css/themes.css css/components.css css/fonts.css \
-            dist/kp-themes.css dist/kp-themes.js fonts.tar consumer.tar ha-themes.tar
+            dist/kp-themes.css dist/kp-themes.js fonts.tar consumer.tar ha-themes.tar vscode-themes.tar

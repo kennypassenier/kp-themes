@@ -1982,7 +1982,7 @@ Cargo.lock  Cargo.toml  notes.md  <span class="k2 b">run.sh</span>  <span class=
             ];
 
             async function load(name) {
-                const url = name === 'cyberpunk' ? 'extension/themes/kp-cyberpunk-color-theme.json' : `all/kp-${name}-color-theme.json`;
+                const url = `../../vscode/kp-${name}-color-theme.json`;
                 let theme;
                 try {
                     const response = await fetch(url);

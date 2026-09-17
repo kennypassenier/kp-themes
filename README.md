@@ -16,7 +16,7 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty-four gates run in seconds and refuse a commit that breaks them: token parity, layer
+Thirty-five gates run in seconds and refuse a commit that breaks them: token parity, layer
 discipline, the hook vocabulary, the register coverage, the shipped
 fonts, the strings dictionary, the types, whether every command, path and
 quoted message a document carries is real, and whether every generated
@@ -627,6 +627,30 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 `.fx-brackets`, `.fx-rule`, `.fx-signal-badge`, `.fx-flicker`, `.fx-pulse`,
 `.fx-glitch` + `data-text`, `.fx-media`, `.fx-cellpop`, `.glow-primary`,
 `.glow-accent`, `.glow-card`, `.gradient-text`) work on any markup.
+
+## VS Code
+
+`vscode/kp-*-color-theme.json` is the same twenty-two themes as editor
+themes, generated from the same tokens by `gates/generate-vscode-themes.mjs`
+and checked in the gates chain [scope-125]. Each file sets 394 colour keys —
+the workbench, the sixteen terminal colours and the symbol icons — plus 17
+TextMate rules and 30 semantic ones, so a language server does not repaint
+the code. The code colours come from the same table as this documentation
+site's highlighter, so a snippet here and a file in the editor agree.
+
+Every release carries them as `vscode-themes.tar`. To use one:
+
+1. Unpack the asset somewhere, or take a file from `node_modules/@kp-soft/themes/vscode/`.
+2. In an extension of your own, list it under `contributes.themes` in
+   `package.json` and point `path` at the file. `research/vscode/extension/`
+   is a working example of exactly that, with KP Cyberpunk packaged as a
+   `.vsix`.
+3. Then _Preferences: Color Theme_ and pick it.
+
+What a colour theme cannot carry: the notches, the glow, the uppercase
+labels, the motion and the fonts. Every file records what it measured under
+`kpThemes.contrast`, including the pairs that sit under their floor — VS
+Code's own defaults miss the same two.
 
 ## Home Assistant
 

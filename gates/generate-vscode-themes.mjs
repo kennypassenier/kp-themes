@@ -24,13 +24,14 @@
 //   node research/vscode/generate.mjs --report        also print the contrast table (cyberpunk)
 //   node research/vscode/generate.mjs --all --report  a one-line contrast summary per theme
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { TOKEN_TOKENS, highlight } from '../../gates/site/highlight.mjs';
-import { contrast, distance, hslToRgb, parseHsl, rgbToHsl } from '../../gates/colour.mjs';
+import { TOKEN_TOKENS, highlight } from './site/highlight.mjs';
+import { contrast, distance, hslToRgb, parseHsl, rgbToHsl } from './colour.mjs';
 
-const ROOT = new URL('../../', import.meta.url);
-const HERE = new URL('./', import.meta.url);
+const ROOT = new URL('../', import.meta.url);
+const OUT = new URL('../vscode/', import.meta.url);
+const RESEARCH = new URL('../research/vscode/', import.meta.url);
 const ORDER = JSON.parse(readFileSync(new URL('themes/order.json', ROOT), 'utf8'));
 const THEMES_CSS = readFileSync(new URL('css/themes.css', ROOT), 'utf8');
 
@@ -43,7 +44,11 @@ const DISTINCT = 10;
 function readTheme(name) {
     const raw = JSON.parse(readFileSync(new URL(`themes/${name}/tokens.json`, ROOT), 'utf8'));
     /** @type {Record<string, string>} */
-    const tokens = Object.fromEntries(raw.entries.filter((e) => e.token !== undefined).map((e) => [e.token, e.value]));
+    const tokens = Object.fromEntries(
+        raw.entries
+            .filter((/** @type {{token?: string}} */ e) => e.token !== undefined)
+            .map((/** @type {{token: string, value: string}} */ e) => [e.token, e.value]),
+    );
     // The derived states exist only in the generated stylesheet.
     const block = new RegExp(`^\\[data-theme='${name}'\\] \\{\\n([\\s\\S]*?)^\\}`, 'm').exec(THEMES_CSS);
     if (!block) throw new Error(`css/themes.css has no block for ${name}`);
@@ -514,11 +519,22 @@ const ROLE_CHAINS = {
     function: ['sidebar-accent-foreground', 'info-foreground', 'chart-5', 'foreground'],
 };
 
+/**
+ * A token that must be there. Every theme declares these, so a missing one
+ * is a broken theme rather than a colour to fall back from.
+ * @param {ReturnType<typeof readTheme>} theme @param {string} expr
+ */
+function must(theme, expr) {
+    const hex = resolve(theme, expr);
+    if (hex === null) throw new Error(`${theme.name}: --${expr} resolves to nothing`);
+    return hex;
+}
+
 /** @param {ReturnType<typeof readTheme>} theme */
 function codeRoles(theme) {
-    const bg = resolve(theme, 'background');
+    const bg = must(theme, 'background');
     /** @type {Record<string, {expr: string, hex: string, fellBack: boolean}>} */
-    const roles = { plain: { expr: 'foreground', hex: resolve(theme, 'foreground'), fellBack: false } };
+    const roles = { plain: { expr: 'foreground', hex: must(theme, 'foreground'), fellBack: false } };
     for (const [role, chain] of Object.entries(ROLE_CHAINS)) {
         const fixed = chain.length === 1;
         const pick = chain.find((expr) => {
@@ -530,10 +546,15 @@ function codeRoles(theme) {
             const apart = Object.values(roles).every((r) => distance(rgb, parseHex(r.hex).rgb) >= DISTINCT);
             return reads && apart;
         });
-        roles[role] = { expr: pick, hex: resolve(theme, pick), fellBack: pick !== chain[0] };
+        // Every chain ends in a role that always resolves, so a chain that
+        // finds nothing is a chain someone shortened by mistake.
+        const expr = pick ?? chain[chain.length - 1];
+        const hex = resolve(theme, expr);
+        if (hex === null) throw new Error(`${theme.name}: --${expr} resolves to nothing for the ${role} role`);
+        roles[role] = { expr, hex, fellBack: expr !== chain[0] };
     }
-    roles.invalid = { expr: 'destructive', hex: resolve(theme, 'destructive'), fellBack: false };
-    roles.link = { expr: 'link', hex: resolve(theme, 'link'), fellBack: false };
+    roles.invalid = { expr: 'destructive', hex: must(theme, 'destructive'), fellBack: false };
+    roles.link = { expr: 'link', hex: must(theme, 'link'), fellBack: false };
     return roles;
 }
 
@@ -756,15 +777,18 @@ const ANSI_POOL = [
 
 /** @param {ReturnType<typeof readTheme>} theme */
 function ansi(theme) {
-    const bg = parseHex(resolve(theme, 'background')).rgb;
+    const bg = parseHex(must(theme, 'background')).rgb;
     const hueGap = (/** @type {number} */ a, /** @type {number} */ b) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b));
-    const pool = ANSI_POOL.map((expr) => {
+    /** @type {{expr: string, rgb: import('./colour.mjs').Rgb, hue: number, sat: number, ratio: number}[]} */
+    const pool = [];
+    for (const expr of ANSI_POOL) {
         const h = resolve(theme, expr);
-        if (!h) return null;
+        if (!h) continue;
         const rgb = parseHex(h).rgb;
         const hsl = rgbToHsl(rgb);
-        return { expr, rgb, hue: hsl.h, sat: hsl.s, ratio: contrast(rgb, bg) };
-    }).filter((c) => c && c.sat >= 30 && c.ratio >= 4.5);
+        const candidate = { expr, rgb, hue: hsl.h, sat: hsl.s, ratio: contrast(rgb, bg) };
+        if (candidate.sat >= 30 && candidate.ratio >= 4.5) pool.push(candidate);
+    }
     /** @type {Record<string, {expr: string, note: string}>} */
     const chosen = {};
     const pairs = Object.entries(ANSI_HUES)
@@ -774,7 +798,10 @@ function ansi(theme) {
         .sort((a, b) => Math.floor(a.gap / 5) - Math.floor(b.gap / 5) || b.c.sat - a.c.sat || a.gap - b.gap);
     for (const { slot, c, gap } of pairs) {
         if (chosen[slot] || gap > 60) continue;
-        const taken = Object.values(chosen).some((x) => hueGap(pool.find((p) => p.expr === x.expr).hue, c.hue) < 20);
+        const taken = Object.values(chosen).some((x) => {
+            const already = pool.find((p) => p.expr === x.expr);
+            return already !== undefined && hueGap(already.hue, c.hue) < 20;
+        });
         if (taken) continue;
         chosen[slot] = { expr: c.expr, note: `hue ${Math.round(c.hue)}, ${gap.toFixed(0)}° from ${slot.toLowerCase()}` };
     }
@@ -791,7 +818,7 @@ function ansi(theme) {
     /** @type {Record<string, string>} */
     const sources = {};
     const set = (/** @type {string} */ key, /** @type {string} */ expr, note = '') => {
-        colors[`terminal.${key}`] = resolve(theme, expr);
+        colors[`terminal.${key}`] = must(theme, expr);
         sources[`terminal.${key}`] = expr + (note ? ` (${note})` : '');
     };
     if (theme.dark) {
@@ -829,10 +856,13 @@ export function build(theme) {
             // else the best of them.
             const ground = colors[spec.on];
             if (!ground) throw new Error(`${key} reads on ${spec.on}, which is not resolved above it`);
-            const scored = spec.pick
-                .map((expr) => ({ expr, value: resolve(theme, expr) }))
-                .filter((c) => c.value)
-                .map((c) => ({ ...c, ratio: contrast(over(c.value, ground), parseHex(ground).rgb) }));
+            /** @type {{expr: string, value: string, ratio: number}[]} */
+            const scored = [];
+            for (const expr of spec.pick) {
+                const value = resolve(theme, expr);
+                if (!value) continue;
+                scored.push({ expr, value, ratio: contrast(over(value, ground), parseHex(ground).rgb) });
+            }
             const best = scored.find((c) => c.ratio >= 4.5) ?? [...scored].sort((a, b) => b.ratio - a.ratio)[0];
             colors[key] = best.value;
             sources[key] =
@@ -840,9 +870,9 @@ export function build(theme) {
             continue;
         }
         const chain = Array.isArray(spec) ? spec : [spec];
-        const expr = chain.find((e) => resolve(theme, e));
+        const expr = chain.find((/** @type {string} */ e) => resolve(theme, e));
         if (!expr) throw new Error(`${theme.name}: nothing resolves for ${key} (${chain.join(' | ')})`);
-        colors[key] = resolve(theme, expr);
+        colors[key] = must(theme, expr);
         sources[key] = expr;
     }
     const roles = codeRoles(theme);
@@ -948,19 +978,71 @@ export function measure(t) {
 // ── Main ────────────────────────────────────────────────────────────────
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-    const all = process.argv.includes('--all');
+    const check = process.argv.includes('--check');
     const report = process.argv.includes('--report');
-    const names = all ? ORDER : ['cyberpunk'];
-    mkdirSync(new URL('extension/themes/', HERE), { recursive: true });
-    if (all) mkdirSync(new URL('all/', HERE), { recursive: true });
-    for (const name of names) {
-        const theme = build(readTheme(name));
-        theme.kpThemes.contrast = measure(theme).map((row) => ({ ...row, ratio: Number(row.ratio.toFixed(2)) }));
-        const text = `${JSON.stringify(theme, null, 4)}\n`;
-        // all/ is what demo.html switches between: compact, it is read by a script.
-        if (all) writeFileSync(new URL(`all/kp-${name}-color-theme.json`, HERE), `${JSON.stringify(theme)}\n`);
-        if (name === 'cyberpunk') writeFileSync(new URL('extension/themes/kp-cyberpunk-color-theme.json', HERE), text);
-        const rows = measure(theme);
+    const only = process.argv.includes('--report') && !process.argv.includes('--all') ? 'cyberpunk' : null;
+    /** @type {{name: string, content: string, rows: any[], theme: any}[]} */
+    const files = [];
+    for (const name of ORDER) {
+        const theme = /** @type {any} */ (build(readTheme(name)));
+        // The measured pairs ride in the file itself, so a reader can see
+        // where a theme falls short without running the generator.
+        theme.kpThemes.contrast = measure(theme).map((/** @type {{ratio: number}} */ row) => ({ ...row, ratio: Number(row.ratio.toFixed(2)) }));
+        files.push({ name: `kp-${name}-color-theme.json`, content: `${JSON.stringify(theme, null, 4)}\n`, rows: measure(theme), theme });
+    }
+
+    if (check) {
+        let stale = 0;
+        let present = [];
+        try {
+            present = readdirSync(OUT);
+        } catch {
+            console.error('gate broke: vscode/ is missing. Run `npm run generate:vscode`.');
+            process.exit(1);
+        }
+        for (const file of files) {
+            let current = '';
+            try {
+                current = readFileSync(new URL(file.name, OUT), 'utf8');
+            } catch {
+                current = '';
+            }
+            if (current !== file.content) {
+                stale++;
+                console.error(`vscode/${file.name} does not match its source.`);
+            }
+        }
+        // A theme file left behind by a theme that no longer exists would
+        // still be installable, which is worse than a stale one.
+        const expected = new Set(files.map((f) => f.name));
+        for (const file of present) {
+            if (!expected.has(file)) {
+                stale++;
+                console.error(`vscode/${file} belongs to no theme.`);
+            }
+        }
+        if (stale > 0) {
+            console.error('Run `npm run generate:vscode` and commit the result.');
+            process.exit(1);
+        }
+        const under = files.flatMap((f) => f.rows.filter((row) => row.ratio < row.floor));
+        console.log(
+            `VS Code: ${files.length} colour themes match their source (${under.length} pair(s) under their floor, listed in each theme's kpThemes.contrast).`,
+        );
+        process.exit(0);
+    }
+
+    mkdirSync(OUT, { recursive: true });
+    for (const file of readdirSync(OUT)) rmSync(new URL(file, OUT));
+    for (const file of files) writeFileSync(new URL(file.name, OUT), file.content);
+    // The extension in research/ ships one theme; it reads the same bytes.
+    mkdirSync(new URL('extension/themes/', RESEARCH), { recursive: true });
+    const cyberpunk = files.find((f) => f.name === 'kp-cyberpunk-color-theme.json');
+    if (cyberpunk) writeFileSync(new URL('extension/themes/kp-cyberpunk-color-theme.json', RESEARCH), cyberpunk.content);
+    console.log(`wrote ${files.length} VS Code colour themes to vscode/.`);
+
+    for (const file of files) {
+        const { theme, rows, name } = file;
         const under = rows.filter((row) => row.ratio < row.floor);
         const fell = Object.entries(theme.kpThemes.roles)
             .filter(([, v]) => v.fellBack)
@@ -968,12 +1050,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         const shared = Object.entries(theme.kpThemes.sources)
             .filter(([, v]) => v.includes('shared'))
             .map(([k]) => k.replace('terminal.ansi', ''));
-        if (report && !all) {
+        const short = name.replace('kp-', '').replace('-color-theme.json', '');
+        if (report && (only === null || short === only)) {
             for (const row of rows)
                 console.log(`${row.ratio < row.floor ? 'UNDER' : 'ok   '} ${row.ratio.toFixed(2).padStart(5)}:1  (floor ${row.floor})  ${row.what}`);
         }
         console.log(
-            `${name.padEnd(14)} ${Object.keys(theme.colors).length} colours, ${theme.tokenColors.length} token rules; ${under.length} of ${rows.length} pairs under their floor${under.length ? `: ${under.map((u) => `${u.what.replace(/ \(non-text\)| on editor.background| on terminal.background/g, '')} ${u.ratio.toFixed(2)}`).join('; ')}` : ''}${fell.length ? ` | fallback: ${fell.join(', ')}` : ''}${shared.length ? ` | ANSI shared: ${shared.join(', ')}` : ''}`,
+            `${short.padEnd(14)} ${Object.keys(theme.colors).length} colours, ${theme.tokenColors.length} token rules; ${under.length} of ${rows.length} pairs under their floor${under.length ? `: ${under.map((u) => `${u.what.replace(/ \(non-text\)| on editor.background| on terminal.background/g, '')} ${u.ratio.toFixed(2)}`).join('; ')}` : ''}${fell.length ? ` | fallback: ${fell.join(', ')}` : ''}${shared.length ? ` | ANSI shared: ${shared.join(', ')}` : ''}`,
         );
     }
 }

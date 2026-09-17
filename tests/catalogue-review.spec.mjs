@@ -771,3 +771,32 @@ test(
         await expect(panel.locator('[data-cat-reject-refused]')).toBeHidden();
     },
 );
+
+// fix-60: the navigation stands BESIDE the page, on every review page.
+//
+// Seven research demos loaded catalogue.js and never linked
+// catalogue/catalogue.css, so `body.cat-shell { display: flex }` was not
+// there and the injected navigation stacked on top of the demo — Kenny,
+// 2026-09-17: "de sidebar is apart en pas daarna (eronder) begint de demo
+// pagina … de content moet gewoon naast de sidenav staan". Red before the
+// fix: the column's left edge was 8, the navigation's right edge 240.
+test(
+    'the navigation stands beside the page on a research demo that links no stylesheet of its own [fix-60]',
+    { tag: ['@component:catalogue'] },
+    async ({ page }) => {
+        await page.setViewportSize({ width: 1400, height: 900 });
+        for (const path of ['/research/vscode/demo.html', '/research/jellyfin-dark/demo.html']) {
+            await page.goto(path);
+            const nav = page.locator('.cat-nav');
+            await expect(nav).toBeVisible();
+            const navBox = await nav.boundingBox();
+            const columnBox = await page.locator('.cat-column').boundingBox();
+            expect(navBox, path).not.toBeNull();
+            expect(columnBox, path).not.toBeNull();
+            // Beside, not above: the page starts where the navigation ends, and
+            // both start at the top.
+            expect(columnBox?.x ?? 0, `${path}: the page starts left of the navigation's edge`).toBeGreaterThanOrEqual((navBox?.width ?? 0) - 1);
+            expect(columnBox?.y ?? 0, `${path}: the page starts below the navigation`).toBeLessThan(40);
+        }
+    },
+);

@@ -2097,3 +2097,20 @@ for a consumer than two; `npm run verify` runs again when Kenny asks for the
 release. ratatui-buttons "Akkoord": a button is a filled plate with its label
 centred, the edge from the theme's radius, and the two crates are built on that
 shape when they come. step-timing "Akkoord".
+
+**scope-125 · The VS Code themes ship with the package.**
+Kenny, 2026-09-17: "de crates en vscode en jellyfin … dan pas release 7.0.0".
+The generator moved from `research/vscode/generate.mjs` to
+`gates/generate-vscode-themes.mjs` and writes `vscode/kp-<theme>-color-theme.json`
+for all 22, beside `ha/`. It runs in the gates chain with `--check`, like the
+Home Assistant themes; the files are in the manifest, exported as `./vscode/*`,
+kept out of `consumer.tar` and attached to a release as `vscode-themes.tar`, the
+eleventh asset. The research demo and the packaged extension read the same
+generated files instead of a second copy.
+
+**scope-126 · One "Research to look at" group, not one per topic.**
+Kenny, 2026-09-17, on the navigation: three groups with that same heading stood
+side by side, one per research topic. "Zie gewoon dat het niet meer gebeurt en
+zet ze in (liefst dezelfde) Archived research." The three demos of that day moved
+to `Archived research`, the empty group stays as the single place a new demo
+joins, and `catalogue/pages.js` says so where the group is declared.

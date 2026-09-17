@@ -86,7 +86,28 @@ function buildNavigation() {
     return nav;
 }
 
+/**
+ * The shell's own stylesheet, if the page did not link it [fix-60].
+ *
+ * `body.cat-shell { display: flex }` is what puts the navigation BESIDE the
+ * page rather than above it. Seven research demos loaded this script and not
+ * that file, so their navigation stacked on top of the demo and the content
+ * started below it — Kenny, 2026-09-17: "de content moet gewoon naast de
+ * sidenav staan". A page can forget a link; a script that brings its own
+ * stylesheet cannot.
+ */
+function mountStyles() {
+    const href = new URL('catalogue/catalogue.css', ROOT).href;
+    if ([...document.styleSheets].some((sheet) => sheet.href === href)) return;
+    if (document.querySelector(`link[rel='stylesheet'][href='${href}']`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.append(link);
+}
+
 function mountShell() {
+    mountStyles();
     let bar = document.querySelector('.cat-bar');
     let main = document.querySelector('.cat-main');
 

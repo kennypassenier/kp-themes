@@ -63,23 +63,13 @@ export const PAGES = [
         ],
     },
     {
+        // ONE group, always. Three of these stood side by side on 2026-09-17,
+        // one per topic, and Kenny found three identical headings in his
+        // navigation: "zie gewoon dat het niet meer gebeurt" [scope-126]. A
+        // new demo joins this group's list; it moves to 'Archived research'
+        // once he has decided on it [scope-81].
         group: 'Research to look at',
         pages: [],
-    },
-    {
-        // Undecided [scope-120]: Kenny asked for one kp theme in place of the
-        // third-party one his Jellyfin wears (2026-09-17).
-        group: 'Research to look at',
-        pages: [
-            { href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' },
-            { href: 'research/jellyfin-dark/demo.html', label: 'Jellyfin in dark, the paste for 10.11.11' },
-        ],
-    },
-    {
-        // Undecided: Kenny asked for a VS Code theme made from the kp themes,
-        // with a demo in cyberpunk (2026-09-17).
-        group: 'Research to look at',
-        pages: [{ href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' }],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -87,6 +77,10 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided at scope-124: the three research demos of 2026-09-17.
+            { href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' },
+            { href: 'research/jellyfin-dark/demo.html', label: 'Jellyfin in dark, the paste for 10.11.11' },
+            { href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' },
             { href: 'research/navbar/demo.html', label: 'Navigation alternatives' },
             { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },
             { href: 'research/loading/demo.html', label: 'Loading per theme' },

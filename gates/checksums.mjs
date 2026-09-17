@@ -170,6 +170,7 @@ export const FILES = [
     // and shipped as ha-themes.tar, so a dashboard verifies them like a page
     // verifies its stylesheet.
     ...haFiles(),
+    ...vscodeFiles(),
 ];
 
 /**
@@ -188,6 +189,12 @@ export function fontFiles() {
         }
     }
     return out;
+}
+
+/** Every generated VS Code colour theme, `vscode/kp-<theme>-color-theme.json`, in the registry's order. */
+export function vscodeFiles() {
+    const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    return order.map((/** @type {string} */ name) => `vscode/kp-${name}-color-theme.json`);
 }
 
 /** Every generated Home Assistant theme, `ha/kp-<theme>.yaml`, in the registry's order. */

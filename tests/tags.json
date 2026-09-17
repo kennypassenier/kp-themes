@@ -58,6 +58,7 @@
         { "path": ".githooks/**", "none": "the commit hook" },
         { "path": "reports/**", "none": "generated reports" },
         { "path": "ha/**", "none": "Home Assistant themes; no browser test loads them" },
+        { "path": "vscode/**", "none": "VS Code colour themes; no browser test loads them" },
         { "path": "**/*.d.ts", "none": "type declarations; npm run gates checks them" },
         { "path": "LICENSE", "none": "licence text" },
         { "path": ".gitignore", "none": "repository housekeeping" },

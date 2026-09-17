@@ -127,6 +127,8 @@ gate site node gates/check-site.mjs || exit 1
 
 # the Home Assistant themes match their source
 gate gen-ha-themes node gates/generate-ha-themes.mjs --check || exit 1
+# The VS Code colour themes, generated from the same tokens [scope-125].
+gate gen-vscode-themes node gates/generate-vscode-themes.mjs --check || exit 1
 
 # everything the package exports is published, and the checksum manifest holds every file a consumer can copy (TH103) [scope-76]
 gate manifest node gates/check-manifest.mjs || exit 1
