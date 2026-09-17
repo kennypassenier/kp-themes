@@ -4127,7 +4127,7 @@ One more property came out of the same reading, from a sweep over the nine theme
 
 **6 · Who enforces it.** Code: a unit test in dev-procedure that traces an ES module reading a file through `new URL(…)` and asserts the file is in the set, red on HOOK_VERSION=4.
 
-**7 · How we measure it works, and when.** At the first commit after the sync in kp-themes: a change to `docs/SCOPE.md` alone runs `docs-private`, and no traced check records fewer inputs than the files it reads.
+**7 · How we measure it works, and when.** At the first commit after the sync in kp-themes: a change to `docs/SCOPE.md` alone runs `docs-private`, and no traced check records fewer inputs than the files it reads. Measured 2026-09-17 on HOOK_VERSION=5: `docs-private` 1 → 68 inputs, `manifest` 2 → 250, `catalogue` 1 → 194, `layers` 2 → 32, and a `docs/SCOPE.md`-only change runs 3 checks where it ran none. Read the summary of the FIRST run: a commit runs the chain twice — the Claude Code hook (`check-commit.sh`) calls `gates.sh` and captures its output, then git's own `pre-commit` calls it again — so the line printed at a commit says "0 van 34" even when the first run did the work.
 
 **8 · If the measurement fails.** The cache is switched off (`GATE_FULL=1` in the hook) until the tracer is proven, trading the 4.6 s per commit rule 49 saved for checks that actually run.
 
