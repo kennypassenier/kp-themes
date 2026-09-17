@@ -2148,3 +2148,18 @@ rather than depending on this package: a Rust binary that needs a node_modules
 beside it breaks on the machine that has none. vscode-install "Kenny installeert
 de vsix". anatomy-demo "Toon mij dit": Claude sent the 22 themes as a rendered
 page. jellyfin-install was not answered and is asked again. step-timing "Akkoord".
+
+**scope-129 · dark is on the Jellyfin, and the widgets move in one go.**
+Kenny, 2026-09-17, the widgets form. jellyfin-install, his own answer: the key was
+issued long ago and Claude should look it up instead of asking again — "onthoud nu
+is fucking globaal die sleutels, ik neem de risico's op mij". It was in his central
+memory store since 2026-08-11 (`~/.config/jellyfin/api.token`, recorded in
+`home-network-services`), and that memory's own rule had said "do not go looking
+for one on disk", which is what produced the second ask. The rule is rewritten:
+look first, ask only when there is none. Claude then read the branding
+configuration, kept it as a backup beside the token, wrote the 21,096-byte paste,
+and read it back byte-identical (sha256 `1ae89030…`). Checked live in the browser:
+the grid, the near-white primary plate with dark ink, `border-radius: 0` with the
+8.18px chamfer, ElegantFin gone. widgets-first "Alles in een keer": the dashboard
+moves to kp-tui with the base widgets rather than after them. anatomy-demo
+"Akkoord": the 22 anatomy rows stand. step-timing "Akkoord".
