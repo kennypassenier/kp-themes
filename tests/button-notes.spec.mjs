@@ -99,6 +99,17 @@ test.describe('terminal: the cursor on a button [scope-80]', { tag: ['@theme:ter
     test('the cursor starts where the label starts, in every variant, state and size', async ({ page }) => {
         // Before: the cursor's top 8.8px into every button, the text's 14.7px
         // (13.2px large, 15.2px small).
+        //
+        // Read centre to centre, not top to top [fix-51]. A range's box is not
+        // the same box in the two engines: measured 2026-09-17 on the same
+        // paint, Chromium gives the label a 16.00px box and Firefox a 17.00px
+        // one half a pixel higher, so top against top read -1.28px in Chromium
+        // and -0.78px in Firefox and a 1px tolerance fitted to Firefox failed
+        // the other engine for a difference in measuring sticks. Both engines
+        // centre the glyphs in the same line box, so centre against centre
+        // reads -1.01px and -1.00px — the same paint, the same number. The
+        // fault this guards is nowhere near it: before scope-80 the cursor's
+        // centre stood 5.6px above the label's.
         await open(page, 'terminal');
         const buttons = page.locator(':is(#variants, #states, #sizes) .cat-stage .kp-button');
         const off = [];
@@ -117,10 +128,14 @@ test.describe('terminal: the cursor on a button [scope-80]', { tag: ['@theme:ter
                 }
                 const box = el.getBoundingClientRect();
                 const after = getComputedStyle(el, '::after');
-                return { label: el.textContent?.trim(), caretTop: box.top + parseFloat(after.top), textTop: text?.top ?? NaN };
+                return {
+                    label: el.textContent?.trim(),
+                    caretMiddle: box.top + parseFloat(after.top) + parseFloat(after.height) / 2,
+                    textMiddle: text ? text.top + text.height / 2 : NaN,
+                };
             });
-            const delta = read.caretTop - read.textTop;
-            if (!(Math.abs(delta) <= 1)) off.push(`${read.label}: cursor ${delta.toFixed(1)}px from the text`);
+            const delta = read.caretMiddle - read.textMiddle;
+            if (!(Math.abs(delta) <= 1.5)) off.push(`${read.label}: cursor ${delta.toFixed(1)}px from the text`);
         }
         await page.mouse.move(0, 0);
         expect(off).toEqual([]);

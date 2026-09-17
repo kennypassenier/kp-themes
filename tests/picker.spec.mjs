@@ -158,11 +158,28 @@ test('the picker is operable by keyboard end to end with every theme in it [R5]'
         const popover = option.closest('.kp-popover');
         const o = option.getBoundingClientRect();
         const p = popover.getBoundingClientRect();
-        return { option: [o.top, o.bottom], popover: [p.top, p.bottom], viewport: window.innerHeight };
+        const cs = getComputedStyle(popover);
+        return {
+            option: [o.top, o.bottom],
+            popover: [p.top, p.bottom],
+            viewport: window.innerHeight,
+            below: parseFloat(cs.paddingBlockEnd) + parseFloat(cs.borderBlockEndWidth),
+        };
     }, last);
     expect(boxes.option[0]).toBeGreaterThanOrEqual(boxes.popover[0] - 1);
     expect(boxes.option[1]).toBeLessThanOrEqual(boxes.popover[1] + 1);
-    expect(boxes.popover[1]).toBeLessThanOrEqual(boxes.viewport + 1);
+    // The window must show the option the reader has just arrowed to; under
+    // it, the menu's own padding may fall outside [fix-51]. The two engines
+    // stop their scroll in different places — measured 2026-09-17 at a window
+    // of 420px, the last option's bottom at 419.56 in Chromium and 414.62 in
+    // Firefox, the menu's at 424.56 and 419.62, with the same 4px of padding
+    // and 1px of border under the option. Chromium scrolls the option to the
+    // edge, Firefox carries on to the container's edge; neither hides
+    // anything the reader needs. Asking for the menu's own box put the whole
+    // suite red in one engine for a scroll neither the package nor the theme
+    // chooses.
+    expect(boxes.option[1]).toBeLessThanOrEqual(boxes.viewport + 1);
+    expect(boxes.popover[1]).toBeLessThanOrEqual(boxes.viewport + boxes.below + 1);
     // And every option lies inside the popover's width, with nothing on
     // top of it. The first CI run of 3.1.0 clicked "pastel" and hit
     // "terminal": a wrapping flex column in a height-limited popover had

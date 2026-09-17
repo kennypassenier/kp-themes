@@ -146,10 +146,20 @@ for (const theme of SWEEP) {
             // blend of two of the theme's own colours as a foreign one —
             // measured at rgb(63, 41, 22) between the accent's ink and the
             // page's, 2026-09-08, which is neither token and is nobody's fault.
+            // A view- or scroll-driven animation has no end of its own [fix-51]:
+            // its progress is where the element stands in the window, so
+            // `finished` never resolves while the page does not move. dark and
+            // titanium light a cleared mark that way since scope-107 —
+            // `animation: kp-ignite linear both` on `animation-timeline:
+            // view()`, which reports `iterations: 1` and `duration: auto` —
+            // and waiting for it timed both tests out at 30s in Chromium,
+            // measured 2026-09-17. Firefox does not carry view() at all, so
+            // this was red in one engine only.
             await page.evaluate(() =>
                 Promise.all(
                     document
                         .getAnimations()
+                        .filter((a) => a.timeline === document.timeline)
                         .filter((a) => a.effect?.getTiming().iterations !== Infinity)
                         .map((a) => a.finished.catch(() => {})),
                 ),

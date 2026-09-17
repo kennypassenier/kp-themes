@@ -65,6 +65,31 @@ const wear = (page, theme) => page.evaluate((t) => document.documentElement.setA
 /** Whether focus is inside the open alarm. @param {import('@playwright/test').Page} page */
 const focusInside = (page) => page.evaluate(() => !!document.activeElement?.closest('dialog.kp-alarm[open]'));
 
+/**
+ * Whether focus has escaped to something BEHIND the open alarm [fix-51].
+ *
+ * Not the same question as `focusInside`. An ack alarm holds one focusable
+ * element, and Chromium's ring for a modal dialog is that element and the
+ * document: Tab reads `button.kp-alarm__ack`, `body`, `button`, `body`,
+ * measured 2026-09-17 in tests/tmp-alarm-probe.spec.mjs. Firefox keeps the
+ * button. Neither browser reaches the page behind — `showModal()` made it
+ * inert — so the promise the decision made is that nothing behind takes the
+ * focus, which is what this asks. The document itself is not behind anything.
+ *
+ * Drilled 2026-09-17 in both engines: `dialog.showModal()` in js/alarm.js
+ * replaced by `dialog.show()`, which leaves the page behind reachable → red
+ * in both channels, "after 2 Tab presses" and "the ring returns into the
+ * alarm". Restored green.
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+const focusEscaped = (page) =>
+    page.evaluate(() => {
+        const el = document.activeElement;
+        if (!el || el === document.body || el === document.documentElement) return false;
+        return !el.closest('dialog.kp-alarm[open]');
+    });
+
 for (const channel of CHANNELS) {
     const p = channel.prefix;
     test.describe(`alarm — ${channel.name}`, { tag: ['@component:alarm'] }, () => {
@@ -196,12 +221,18 @@ for (const channel of CHANNELS) {
                 if (id.endsWith('auto')) await page.locator(`${OPEN} .kp-alarm__keep`).focus();
                 for (let i = 0; i < 6; i++) {
                     await page.keyboard.press(i % 2 ? 'Shift+Tab' : 'Tab');
-                    expect(await focusInside(page), `after ${i + 1} Tab presses`).toBe(true);
+                    expect(await focusEscaped(page), `after ${i + 1} Tab presses`).toBe(false);
                 }
+                // Six presses cannot leave focus parked on the document: the
+                // ring comes back into the alarm, which is the other half of
+                // "the page behind takes no Tab".
+                await page.keyboard.press('Tab');
+                if (!(await focusInside(page))) await page.keyboard.press('Tab');
+                expect(await focusInside(page), 'the ring returns into the alarm').toBe(true);
                 // A real pointer on the spot where the page's button is.
                 await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
                 await expect(page.locator(at('behind-count'))).toHaveText('0');
-                expect(await focusInside(page)).toBe(true);
+                expect(await focusEscaped(page)).toBe(false);
                 await page.keyboard.press('Escape');
                 if (await page.locator(OPEN).count()) {
                     await page.locator(`${OPEN} .kp-alarm__ack`).focus();

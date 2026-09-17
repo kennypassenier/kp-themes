@@ -106,12 +106,38 @@ function contrast(/** @type {string} */ a, /** @type {string} */ b) {
  * The clip is in CSS pixels and the shot comes back at the ratio the page
  * is rendered at, so the scale is read off the bitmap rather than assumed.
  *
+ * The rectangle is scrolled into the window and shot from there, never with
+ * `fullPage` [fix-51]. Chromium's full-page capture does not line up with
+ * `getBoundingClientRect()` far down a long page: measured 2026-09-17 on
+ * catalogue/media.html, where the laurel block sits 5574px down, the paint
+ * came back five pixels lower than the DOM said, so the two brackets along
+ * the top edge fell outside the clip and the measure frame read as open on
+ * three claims — in Chromium only. From the window the same rectangle lands
+ * on the pixel: the top arm is the first inked row of the clip.
+ *
  * @param {import('@playwright/test').Page} page
- * @param {{ x: number, y: number, width: number, height: number }} clip
+ * @param {{ x: number, y: number, width: number, height: number }} clip in page coordinates
  * @returns {Promise<{ at: (x: number, y: number) => number[], width: number, height: number, scale: number }>}
  */
 async function pixels(page, clip) {
-    const shot = (await page.screenshot({ clip, fullPage: true, animations: 'disabled', caret: 'hide' })).toString('base64');
+    const seen = await page.evaluate(
+        ([x, y, width, height]) => {
+            scrollTo({
+                left: Math.max(0, Math.round(x - (innerWidth - width) / 2)),
+                top: Math.max(0, Math.round(y - (innerHeight - height) / 2)),
+                behavior: 'instant',
+            });
+            return { scrollX, scrollY, innerWidth, innerHeight };
+        },
+        [clip.x, clip.y, clip.width, clip.height],
+    );
+    const inWindow = { x: clip.x - seen.scrollX, y: clip.y - seen.scrollY, width: clip.width, height: clip.height };
+    // A rectangle taller or wider than the window cannot be shot from it; the
+    // full-page path stays for that case, which no measurement here reaches.
+    const fits = inWindow.x >= 0 && inWindow.y >= 0 && inWindow.x + inWindow.width <= seen.innerWidth && inWindow.y + inWindow.height <= seen.innerHeight;
+    const shot = (
+        await page.screenshot(fits ? { clip: inWindow, animations: 'disabled', caret: 'hide' } : { clip, fullPage: true, animations: 'disabled', caret: 'hide' })
+    ).toString('base64');
     const { data, width, height } = await page.evaluate(async (b64) => {
         const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
         const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);

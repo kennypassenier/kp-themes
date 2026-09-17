@@ -187,3 +187,4 @@ register's colours are.
 | fix-48-M1 | Does the round page answer the question it was built for? Measured at Kenny's next round: he reads "You are through" there instead of asking. | open |
 | fix-49-M1 | Does the review site open with nothing to judge? Measured at Kenny's next visit: the page shows no open block, the dialog says the round is over on opening, and "Am I through?" says he is through. | open |
 | fix-50-M1 | Does a round stay finished? Measured at Kenny's next visit after scope-114: the review site opens with nothing to judge, at his zoom and at 100%. | open |
+| fix-51-M1 | Does the other engine get asked before the release? Measured at the close of the next layer: `npm run test:tags -- --level engines` runs, and whatever it finds is found there and not at the release form. | open |

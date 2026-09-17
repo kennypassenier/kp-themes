@@ -3980,3 +3980,35 @@ fault.
 **8 · If the measurement fails.** The tool stops driving a page at all and hashes the four lines in Node, where the theme is a string it passes itself.
 
 **9 · When we review the measure.** At the next tool that needs a theme applied in a browser.
+
+## fix-51 · Eighteen tests were red in Chromium, and nothing said so (2026-09-17)
+
+**1 · What went wrong.** The release run of 6.1.0 stopped at the browser phase: 18 failed, 3612 passed, 22:58. Fourteen of the eighteen were Chromium's alone, and none of them was new that day — they had been red for as long as the code they measure has existed, because the building and the commit levels run firefox only and the whole suite in both engines runs at a release. One of them, `site.spec.mjs` on the media page, has been red in Chromium since `e6567608` and went out in v6.0.0: measured in a v6.0.0 worktree on 2026-09-17, same failure, same line.
+
+**2 · Which gate let it through.** The levels themselves [scope-103, `gates/run-tags.mjs`]: `building` and `commit` pass `--project=firefox`, for the good reason that Kenny reads the work in a firefox derivative. Nothing between the commit level and the release asks the other engine, so a fault that is Chromium's alone waits for the release to be found — which is the worst moment to find fourteen of them.
+
+**3 · Where the same fault sits.** The property: a test whose answer depends on the engine, written and drilled in one of them. The release run named all of them, and each was measured on its own afterwards:
+- `fonts.spec.mjs:115` — a control had to resolve the family the BODY resolves; terminal, nostromo and phantom give `.kp-button` their own mono or display face on purpose, and Kenny approved all three in the catalogue. Now: no control may resolve the forced DESKTOP family, which is the fault fix-28 was.
+- `control-font.spec.mjs:68` — a real find, both engines: the intro page's speed slider is the catalogue's own control, so no package rule gave it a font and the browser's did. Fixed in `catalogue/catalogue.css`.
+- `site.spec.mjs:22` — the media page names `/hero.jpg`, the reader's own picture, which nothing serves; Chromium writes the 404 into the console and Firefox says nothing. Failed requests are read by address now, with that one named.
+- `alarm.spec.mjs:188` — Chromium's tab ring for a modal dialog with one focusable element is that button and the document; Firefox keeps the button. Neither reaches the page behind, which is what the decision promised and what is asked now.
+- `catalogue-round.spec.mjs:28` — a verdict is per engine, and the register holds Kenny's Gecko verdicts; asking Chromium whether the round is over asks about a round nobody walked there. The test now skips in an engine the register does not hold.
+- `blueprint-…-notes.spec.mjs:136` — Chromium's full-page screenshot does not line up with `getBoundingClientRect()` far down a page: 5px out at y=5574, which cut the two brackets along the top edge of three claims. The paint is read from the window now.
+- `button-notes.spec.mjs:99` — a text range's box is 16.00px in Chromium and 17.00px in Firefox on the same paint, so top against top read -1.28px and -0.78px against a 1px tolerance. Centre against centre reads -1.01 and -1.00.
+- `picker.spec.mjs:126` — Chromium scrolls the focused option to the window's edge, Firefox carries on to the menu's own padding, so the menu's box hung 4.56px below the window in one engine. What must be visible is the option.
+- `datatable-add-filter.spec.mjs:250` — two races: three keys fired before the menu had the focus (one Chromium run in four chose the first column) and three Tabs fired while the ticked box was re-rendering. Every press now waits for the stop it is meant to reach.
+- `fixtures.spec.mjs:138` — dark and titanium light a cleared mark on `animation-timeline: view()` since scope-107. A view-driven animation's `finished` never resolves while the page stands still, so waiting for it timed the test out; Firefox has no `view()` at all.
+
+One more property came out of the same reading, from a sweep over the nine theme-parameterised specs: an assertion that two measured values on the page must be THE SAME holds only while the narrow three themes are alike. `registers.spec.mjs:323` (the picker rests in the same place in every theme, already carrying a carve-out for terminal's bezel), `register-dark-faults.spec.mjs:743` (a select's arrow counted against itself) and `fixtures.spec.mjs:196` (every colour within 3 of a token) are the same shape as the fonts one. Left standing, named here.
+
+**4 · How we prevent recurrence.** A level between the commit level and the release: `npm run test:tags -- --level engines` — the commit level's selection, both engines — run at the close of a layer and after any fix that touches paint, focus or the keyboard. The release level stays what it is; what changes is that the other engine is asked while the work is still in hand rather than at the tag.
+
+**5 · What the remedy costs.** The commit level's selection twice instead of once. Measured on this branch, the ten specs of this correction took 2.2 minutes in Chromium alone; the whole suite in both engines is 23 minutes, which is why it is not the commit level.
+
+**6 · Who enforces it.** `gates/run-tags.mjs` carries the level and refuses an unknown one; the checker agent runs it, and the layer's close in `docs/CYCLE.md` names it.
+
+**7 · How we measure it works, and when.** At the close of the next layer: the engines level runs and either finds nothing, or finds it there instead of at the release form.
+
+**8 · If the measurement fails.** The commit level itself goes to both engines and the building level stays firefox, paying the time on every commit rather than at every layer.
+
+**9 · When we review the measure.** When a third engine is judged, or when the release run finds an engine fault the engines level did not.

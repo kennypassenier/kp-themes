@@ -209,6 +209,15 @@
         margin: 0;
     }
 
+    /* The speed slider is the catalogue's own control, not one the package
+       draws, so the `font-family: inherit` list in css/components.css never
+       reaches it and the browser's own stylesheet hands it the desktop font
+       [fix-28]. tests/control-font.spec.mjs found it on 2026-09-17, the only
+       control on any review page still taking the forced default. */
+    .cat-intro-controls input[type='range'] {
+        font-family: inherit;
+    }
+
     .cat-intro-frame {
         display: block;
         inline-size: 100%;

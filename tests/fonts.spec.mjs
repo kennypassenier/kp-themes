@@ -91,13 +91,23 @@ test.describe('the shipped fonts', { tag: ['@component:fonts', '@component:examp
 // tests/control-font.spec.mjs finds that on the review pages, block by
 // block, in two themes. This asks the plain question on one fixture
 // carrying all four kinds, in the sweep themes: under a forced desktop
-// default declared as the lowest author layer, does every control still
-// resolve the family the body resolves — the theme's own?
+// default declared as the lowest author layer, does any control the
+// package draws still show that desktop family?
+//
+// It asked a stricter question until 2026-09-17 — does every control
+// resolve the family the BODY resolves — and the release run of 6.1.0
+// found that question wrong [fix-51]: terminal, nostromo and phantom give
+// `.kp-button` the theme's mono or display face in their own registers,
+// which is the look Kenny approved in the catalogue, not a control the
+// package forgot. Equality with the body called those three red. The
+// desktop family is the fault; a second family of the theme's own is not.
 //
 // Drilled 2026-09-16 in firefox: `.kp-icon-button` removed from the
 // `font-family: inherit` list in css/components.css (the very list fix-28
 // added) → red in all three themes, each printing
-// `button.kp-icon-button → "DejaVu Serif"`. Restored green.
+// `button.kp-icon-button → "DejaVu Serif"`. Restored green. The drill was
+// repeated on the narrowed question on 2026-09-17, same removal, same
+// three reds — what it guards did not move with the wording.
 
 /** The family forced underneath, as tests/control-font.spec.mjs forces it. */
 const DESKTOP = 'DejaVu Serif';
@@ -135,10 +145,13 @@ for (const theme of sweepThemes()) {
                     return {
                         body,
                         kinds: [...new Set(found.map((el) => el.localName))].sort(),
-                        // The family the body resolves is the theme's promise;
-                        // a control resolving anything else has broken it.
+                        // The fault is the DESKTOP's font reaching a control,
+                        // not a family that differs from the body's: three
+                        // registers give .kp-button the theme's display or
+                        // mono face on purpose, and Kenny approved all three
+                        // in the catalogue.
                         wrong: found
-                            .filter((el) => getComputedStyle(el).fontFamily !== body)
+                            .filter((el) => getComputedStyle(el).fontFamily.includes(family))
                             .map((el) => `${named(el)} → ${getComputedStyle(el).fontFamily}`),
                         forced: [...document.querySelectorAll(unclaimed)].filter((el) => getComputedStyle(el).fontFamily.includes(family)).length,
                     };
@@ -155,7 +168,7 @@ for (const theme of sweepThemes()) {
                 'textarea',
             ]);
             expect(reading.body, `the body must resolve ${theme}'s own font, not the desktop's`).not.toContain(DESKTOP);
-            expect(reading.wrong, `these controls do not resolve ${theme}'s font`).toEqual([]);
+            expect(reading.wrong, `these controls take the desktop's font under ${theme}`).toEqual([]);
         },
     );
 }

@@ -15,6 +15,24 @@ import { DESCRIPTORS, GROUPS } from '../gates/site/descriptors.mjs';
 /** The nine sections S27 asks of every component page. */
 const SECTIONS = ['when', 'example', 'markup', 'react', 'props', 'events', 'knobs', 'a11y', 'variants'];
 
+/**
+ * The one address a documentation page names that nothing serves [fix-51].
+ *
+ * The media page's example is a picture the READER supplies: the frame holds
+ * its shape before the bytes land, which is the whole point of the component,
+ * and the snippet says so by pointing at `/hero.jpg`. The package ships no
+ * raster file at all — there is not one image in site/, examples/ or
+ * showcase/ — so that address 404s, and Chromium writes the failure into the
+ * console while Firefox says nothing. This test read the console, so it was
+ * red in one engine from the day the page was written (e6567608), through the
+ * release of v6.0.0, and only the release run of 6.1.0 stopped on it.
+ *
+ * Failed requests are now measured by their address rather than by a console
+ * line, which is the same in both engines and names this one exception. Any
+ * other 404 — a stylesheet, a module, a second picture — is a fault.
+ */
+const READERS_OWN = ['/hero.jpg'];
+
 for (const descriptor of DESCRIPTORS) {
     // Drill: emptying `examples` for one descriptor and regenerating
     // leaves a page with no live block at all. Drilled on `card`:
@@ -23,7 +41,14 @@ for (const descriptor of DESCRIPTORS) {
         /** @type {string[]} */
         const errors = [];
         page.on('pageerror', (e) => errors.push(String(e)));
-        page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+        // The generic line Chromium writes for a failed request carries no
+        // address, so it cannot be judged; the response listener below reads
+        // the same failures with the address in hand, in both engines.
+        page.on('console', (m) => m.type() === 'error' && !m.text().startsWith('Failed to load resource') && errors.push(m.text()));
+        page.on('response', (r) => {
+            const path = new URL(r.url()).pathname;
+            if (r.status() >= 400 && !READERS_OWN.includes(path)) errors.push(`${r.status()} ${path}`);
+        });
 
         await page.goto(`/site/components/${descriptor.id}.html`);
 
