@@ -193,3 +193,4 @@ register's colours are.
 | fix-54-M1 | Do only the blocks that carry a change come back? Measured at the fix: loader 0, data table module 264, a `.kp-button` rule 1236, the same rule in dark 89 of 3062. Measured again at the next change that reaches Kenny's review. | open |
 | fix-55-M1 | Does the vendored copy carry the hooks? Measured at the fix: 41 imported files walked, all checksummed. Again at the next release: `consumer.tar` carries `js/effects/`. | open |
 | fix-56-M1 | Does chassis-rs bake what the closure gate names? Measured at its kp-themes 7.0.0 upgrade: 17 modules in its ASSETS, the terminal caret loads with no 404. | open — correction approved by Kenny 2026-09-17 |
+| fix-57-M1 | Does the gate cache see data changes? Measured at the first kp-themes commit after the fixed tracer is synced: a docs/SCOPE.md-only change runs docs-private. Until then Claude runs npm run gates uncached before each commit. | open |

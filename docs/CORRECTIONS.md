@@ -4112,3 +4112,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The gate reads chassis-rs's `assets.rs` list from a pinned copy committed here at each upgrade, instead of a hand-kept list.
 
 **9 · When we review the measure.** At the next file chassis-rs starts or stops baking.
+
+## fix-57 · The gate cache skipped checks whose data had changed (2026-09-17)
+
+**1 · What went wrong.** Commit `8b7981b5` wrote the media stack's address into `docs/SCOPE.md`; `check:docs-private` refuses exactly that, and the commit hook printed "0 van 34 checks gedraaid" and let it through. An uncached `npm run gates` refused it an hour later. Measured: the gate cache's recorded input set for `docs-private` is one file, the check's own script; 14 of the 33 traced checks record two files or fewer.
+
+**2 · Which gate let it through.** The gate cache itself (rule 49, `.githooks/trace-inputs.cjs`, canonical in `~/Projects/dev-procedure/hooks/`): it patches `require('fs')`, but an ES module's `import { readFileSync } from 'node:fs'` keeps the unpatched binding unless `syncBuiltinESMExports()` is called, and a `new URL(…)` path was dropped because only strings and `.path` objects were read. So a check recorded the modules it loaded and none of the data it read.
+
+**3 · Where the same fault sits.** The property: a copy of `trace-inputs.cjs` at HOOK_VERSION=4. Searched with `ls -d ~/Projects/*/.githooks/trace-inputs.cjs`: sixteen projects carry it, byte-identical to the canonical file. Every node gate there that imports `fs` as an ES module or reads through a URL skips on data changes; Rust gates run uncached and are not affected.
+
+**4 · How we prevent recurrence.** In the canonical tracer: convert a `URL` with `fileURLToPath`, and call `require('module').syncBuiltinESMExports()` after patching; then sync to the sixteen projects and clear each `.git/gate-cache`. Measured with the fixed copy: `docs-private` 1 → 66 inputs, `manifest` 2 → 250, `catalogue` 1 → 192, `layers` 2 → 32. Until then Claude runs `npm run gates` uncached before every commit here.
+
+**5 · What the remedy costs.** Two lines in one shared file and a sync; the next commit in each project runs every check once.
+
+**6 · Who enforces it.** Code: a unit test in dev-procedure that traces an ES module reading a file through `new URL(…)` and asserts the file is in the set, red on HOOK_VERSION=4.
+
+**7 · How we measure it works, and when.** At the first commit after the sync in kp-themes: a change to `docs/SCOPE.md` alone runs `docs-private`, and no traced check records fewer inputs than the files it reads.
+
+**8 · If the measurement fails.** The cache is switched off (`GATE_FULL=1` in the hook) until the tracer is proven, trading the 4.6 s per commit rule 49 saved for checks that actually run.
+
+**9 · When we review the measure.** At the next change to how a gate reads files (a worker thread, a child process, a new fs API).
