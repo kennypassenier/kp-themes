@@ -498,9 +498,10 @@ Two facts decide the shape of this procedure, and both are in the code:
 - **Pushing a `v*` tag fires `.github/workflows/release.yml`.** That
   workflow runs `npm ci`, `npm run gates`, `npm run checksums`,
   `tar -cf fonts.tar fonts`, `tar -cf ha-themes.tar -C ha .`,
-  `tar -cf vscode-themes.tar -C vscode .`, `npm run consumer-tar`, and then
-  `gh release create` with `--draft` and eleven assets (nine until 7.0.0 added
-  `ha-themes.tar` at scope-120 and `vscode-themes.tar` at scope-125). Do not rebuild
+  `tar -cf vscode-themes.tar -C vscode .`, `cp tui/palette.rs kp-tui-palette.rs`,
+  `npm run consumer-tar`, and then `gh release create` with `--draft` and twelve
+  assets (nine until 7.0.0 added `ha-themes.tar` at scope-120,
+  `vscode-themes.tar` at scope-125 and `kp-tui-palette.rs` at scope-128). Do not rebuild
   any of that by hand: doing exactly that is the fault recorded as KT9
   in `docs/CORRECTIONS.md`, where a hand-built release published a
   `SHA256SUMS` covering three files instead of ten.
@@ -598,7 +599,7 @@ Two facts decide the shape of this procedure, and both are in the code:
     read `skipped`, so no release object was created at all. The next run
     on the same tag built it.
 
-10. Check the draft has all eleven assets:
+10. Check the draft has all twelve assets:
 
     ```sh
     gh release view v5.2.0 --json tagName,isDraft,assets --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'
@@ -607,7 +608,7 @@ Two facts decide the shape of this procedure, and both are in the code:
     Correct, from 7.0.0 on:
 
     ```
-    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","ha-themes.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css","vscode-themes.tar"],"draft":true,"tag":"v5.2.0"}
+    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","ha-themes.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css","vscode-themes.tar","kp-tui-palette.rs"],"draft":true,"tag":"v5.2.0"}
     ```
 
 11. Verify every published checksum against the tagged tree. This is

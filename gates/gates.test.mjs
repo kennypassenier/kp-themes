@@ -950,9 +950,10 @@ test('CF1: the tarball is the manifest minus the fonts, the source maps, the Hom
     // [scope-120]; the fourth is vscode/, as vscode-themes.tar [scope-125].
     // Neither is a stylesheet a page serves, and a web consumer unpacking
     // the tarball has no use for either.
-    assert.equal(EXCLUDED.length, 4, 'the exclusions are fonts/, *.map, ha/ and vscode/, and adding a fifth is a decision');
+    assert.equal(EXCLUDED.length, 5, 'the exclusions are fonts/, *.map, ha/, vscode/ and tui/, and adding a sixth is a decision');
     assert.ok(!files.some((f) => f.startsWith('ha/')), 'the Home Assistant themes ship as their own asset');
     assert.ok(!files.some((f) => f.startsWith('vscode/')), 'the VS Code themes ship as their own asset');
+    assert.ok(!files.some((f) => f.startsWith('tui/')), 'the Rust palette is vendored by kp-tui, not served by a page');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
     assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');

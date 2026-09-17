@@ -16,7 +16,7 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty-five gates run in seconds and refuse a commit that breaks them: token parity, layer
+Thirty-six gates run in seconds and refuse a commit that breaks them: token parity, layer
 discipline, the hook vocabulary, the register coverage, the shipped
 fonts, the strings dictionary, the types, whether every command, path and
 quoted message a document carries is real, and whether every generated
@@ -651,6 +651,25 @@ What a colour theme cannot carry: the notches, the glow, the uppercase
 labels, the motion and the fonts. Every file records what it measured under
 `kpThemes.contrast`, including the pairs that sit under their floor — VS
 Code's own defaults miss the same two.
+
+## Ratatui, in Rust
+
+`tui/palette.rs` is the same twenty-two themes as Rust: a `Palette<C>` of 36
+colours, a `Role` per field so a sixteen-colour terminal can fall back, and
+`THEMES`, in the package's own order [scope-128]. It is data and nothing
+else — the anatomy a terminal needs beyond colour (border glyphs, case,
+prefixes, the cursor, the reveal) is judgement, and lives in `kp-tui`.
+
+A release attaches the file as `kp-tui-palette.rs`. A crate vendors it the
+way chassis-rs vendors the stylesheets:
+
+```sh
+curl -sSLO https://github.com/kennypassenier/kp-themes/releases/download/v7.0.0/kp-tui-palette.rs
+mv kp-tui-palette.rs src/palette.rs
+```
+
+`KP_THEMES_VERSION` in the file says which release it came from, so a
+vendored copy can say so too.
 
 ## Home Assistant
 

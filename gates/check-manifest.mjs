@@ -117,7 +117,7 @@ export function copyableExports(pkg, { follow = true } = {}) {
             // files a dashboard copies exactly like a stylesheet a page does.
             // `vscode/` joined the same way [scope-125]: an editor theme is a
             // file a user points an extension at.
-            if (!/^(css|js|dist|fonts|ha|vscode)$/.test(dir)) continue;
+            if (!/^(css|js|dist|fonts|ha|vscode|tui)$/.test(dir)) continue;
             for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
             continue;
         }

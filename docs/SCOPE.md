@@ -2133,3 +2133,18 @@ installeren" — which is a misreading Claude corrected: it made two unauthentic
 GETs and never wrote anything; the ElegantFin import was already in the field.
 Writing Branding needs an admin credential, so the next form asks for an API key.
 step-timing "Akkoord", with a request for VS Code install instructions.
+
+**scope-128 · kp-themes generates the Rust palette; kp-tui vendors it.**
+Kenny, 2026-09-17, the install form. kp-tui-start "Het onderzoek is de scope":
+`~/Projects/kp-tui` started from `research/ratatui/README.md` and
+`ANATOMY_PROPOSAL.md` instead of a fresh Phase 0, because the research had
+answered a scope round's questions with measurements. This repository's half is
+`gates/generate-tui-palette.mjs`, which writes `tui/palette.rs`: 22 themes, 36
+colours each, a `Role` per field for a sixteen-colour terminal, and
+`KP_THEMES_VERSION`. It runs in the gates chain with `--check` like `ha/` and
+`vscode/`, is exported as `./tui/*`, stays out of `consumer.tar`, and is attached
+to a release as `kp-tui-palette.rs`, the twelfth asset. kp-tui copies that file
+rather than depending on this package: a Rust binary that needs a node_modules
+beside it breaks on the machine that has none. vscode-install "Kenny installeert
+de vsix". anatomy-demo "Toon mij dit": Claude sent the 22 themes as a rendered
+page. jellyfin-install was not answered and is asked again. step-timing "Akkoord".

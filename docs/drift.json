@@ -19,10 +19,10 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "a078c7d2619fed270e3ef4eda29e7945dbe3a2c6846e01e7a134cd4335d3611d",
-            "doc": "fa5c995fa87f89d85bf74bde65963cf9b110251c1faea40d35bfb5eddb93e01f",
+            "hash": "c613bcf7fbd9671b1fdcc079d1468c48f01e435fe527ee46d4cee1700ef9d96b",
+            "doc": "5bf8fd2225438eca37fff036f543e11d1a964cc14df75d28cff4a096147d18f9",
             "files": {
-                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -81,10 +81,10 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "dcb353882ca140ca029375729b991ee2e7eb4a872781702c4ddf340b0008ca55",
-            "doc": "a10365d568994bbc60e04f4fae3076056c994f2f0907022a310a374ade20ce40",
+            "hash": "5ef7ab06357c05093560519c60629cd3d93e762021188fa35feb080f677e4abe",
+            "doc": "5b43da0e51d30223c330ea2e3d2e9b565d98c4e87952ab32735877c3da9e71e2",
             "files": {
-                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
                 "gates/colour.mjs": "1de05f5f28b8f4c1970cf3df43db8b92482a2c82de04dc833fd5bac758010cfd",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
@@ -156,10 +156,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "2b74835e55ca4324ec7060484e594caf6e6c2235d3b87f1662c18e4413d81c2b",
-            "doc": "ca4da02c533132da54e7ffeab208a23fe6e63a25132c206215bc16e0af5f4c72",
+            "hash": "eef7f0dbdb57f2322a96827bfabdf653cdd4bdb1f2a8125a2fa246971b5b0f8c",
+            "doc": "dc7a3769afb4145668c0ee22b73ae414707f60fed52fef7723e4ad61a4d65e76",
             "files": {
-                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
@@ -200,18 +200,18 @@
                 "gates/integrate-lift.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "8d293716a08962bf2115336f3433c81f0e6ee5f2fd043e4c03cb2e130fb61108",
-            "doc": "c83447f1de2d62601b9b9c11654871496f3b6c9a5e105879193f2dad5e69c0ca",
+            "hash": "ad4fc291ebfab574c6dfe2badc825bc73ba76a19a020472d249b2aede85031d7",
+            "doc": "28a3149407028eac5ee557612490d31ee6cd32023555a76b2afb86e2d67161a2",
             "files": {
-                ".claude/hooks/gates.sh": "75dfb3d704191a30d3916bf779d011a48ae425417f6d27ecbf365cd64fd31da7",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 ".githooks/check-ids.sh": "ec5484904fcfc88ee1afaca5ef756aec775a9f5df7afa6e5855b9c5fc6f99654",
                 ".githooks/commit-msg": "825b67a8bde9a8dc77ca7b3526340d67eb819d149adec126856bde9374fa4b2f",
                 ".githooks/gate-cache.sh": "0f1ec3ec548dd501439aff59bf009172a0d42b3f7a68e2bb71475d0dad4c36e9",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 ".githooks/trace-inputs.cjs": "ef26bd4d00e2aa30add61d2ecc4eb873dccd80c59cd6174f84055ff62875c8aa",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                ".github/workflows/release.yml": "9c4a3e6d0ed7bcd0c7331f68ec6308a6507e82e442eb839860190f9af3d8a332",
-                "gates/checksums.mjs": "472a4f7a0dc6b6ce97ba5e6b6baaca9068632725b30bf28767748c52fce07331",
+                ".github/workflows/release.yml": "1510964db9eb885344f23219a83ad158de6a590e5b7ec3b1dffd3794e1c19399",
+                "gates/checksums.mjs": "2872be0f14ee26b4dd012ecc383e65d4970e6df638dc2adb69764c72a816aeed",
                 "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"

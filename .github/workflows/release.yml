@@ -68,6 +68,10 @@ jobs:
       # local extension at, or copies into one.
       - name: VS Code themes
         run: tar -cf vscode-themes.tar -C vscode .
+      # The Rust palette kp-tui vendors [scope-128]: one file, attached on
+      # its own so a crate upgrade is a download and a copy.
+      - name: TUI palette
+        run: cp tui/palette.rs kp-tui-palette.rs
       # The consumer tarball [CF1, 2026-09-09]. chassis-rs pulled thirty-odd
       # files off the git tag one by one because the release attached eight
       # assets while SHA256SUMS beside them named 231 copyable files. This
@@ -87,4 +91,4 @@ jobs:
             --title "${GITHUB_REF_NAME}" \
             --notes-file CHANGELOG.md \
             SHA256SUMS MIGRATION.md css/themes.css css/components.css css/fonts.css \
-            dist/kp-themes.css dist/kp-themes.js fonts.tar consumer.tar ha-themes.tar vscode-themes.tar
+            dist/kp-themes.css dist/kp-themes.js fonts.tar consumer.tar ha-themes.tar vscode-themes.tar kp-tui-palette.rs

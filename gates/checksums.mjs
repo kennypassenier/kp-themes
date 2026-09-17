@@ -171,6 +171,7 @@ export const FILES = [
     // verifies its stylesheet.
     ...haFiles(),
     ...vscodeFiles(),
+    'tui/palette.rs',
 ];
 
 /**
