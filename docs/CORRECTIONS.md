@@ -4132,3 +4132,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The cache is switched off (`GATE_FULL=1` in the hook) until the tracer is proven, trading the 4.6 s per commit rule 49 saved for checks that actually run.
 
 **9 · When we review the measure.** At the next change to how a gate reads files (a worker thread, a child process, a new fs API).
+
+## fix-58 · The documentation site's code blocks colour text with chart tokens (2026-09-17)
+
+**1 · What went wrong.** The VS Code research agent noticed it while choosing syntax colours, and Claude measured it: the site's highlighter paints `.kp-code__keyword` with `--chart-1` and `.kp-code__string` with `--chart-2` on `--card`, and in nine of the 22 themes one of the two sits under 4.5:1. String / keyword: formal 3.50 / 8.06, light 3.50 / 6.65, pastel 3.40 / 4.20, forest 3.96 / 5.38, brutalism 5.39 / 3.16, shade-light 3.77 / 5.39, lapis 3.38 / 4.97, nostromo 10.58 / 4.25, titanium 4.14 / 4.92.
+
+**2 · Which gate let it through.** None measures it. `gates/check-contrast.mjs` holds the chart tokens to 3:1 as non-text pairs (SC 1.4.11, a line in a graph), and nothing records that `site/site.css` uses them as text, which needs 4.5:1. The pairing entered with `a2072786` (2026-09-06).
+
+**3 · Where the same fault sits.** The property: a token measured for one role and used in another. Searched with `grep -rn "var(--chart-" css site catalogue`: the site's two code classes are the text uses; the chart components use them as marks. Pastel has no chart token at 4.5:1 on its card at all (the best is chart-1 at 4.20), so choosing a different chart token does not close it.
+
+**4 · How we prevent recurrence.** Open, Kenny's choice: a site-only colour per theme computed by `gates/generate-site.mjs` from the same chart hue, moved in lightness until it clears 4.5:1 on `--card`; or two new theme tokens for code; or the shortfall recorded and kept.
+
+**5 · What the remedy costs.** Site-only: one generator step, 22 short blocks in the site stylesheet, the released themes untouched. New tokens: 22 `tokens.json`, the registers and a version raise.
+
+**6 · Who enforces it.** Code: `check:site` measures every colour the site stylesheet gives to text against the ground it sits on, and refuses one under 4.5:1.
+
+**7 · How we measure it works, and when.** At the commit that lands the remedy: the check is red with the current `site.css`, green after, and the nine themes each read ≥ 4.5:1 for both classes.
+
+**8 · If the measurement fails.** The two classes fall back to `--foreground` with weight alone telling keyword from string, until a colour that clears it is found.
+
+**9 · When we review the measure.** When a theme's `--card` or chart tokens change, or a new theme is added.

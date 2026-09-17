@@ -194,3 +194,4 @@ register's colours are.
 | fix-55-M1 | Does the vendored copy carry the hooks? Measured at the fix: 41 imported files walked, all checksummed. Again at the next release: `consumer.tar` carries `js/effects/`. | open |
 | fix-56-M1 | Does chassis-rs bake what the closure gate names? Measured at its kp-themes 7.0.0 upgrade: 17 modules in its ASSETS, the terminal caret loads with no 404. | open — correction approved by Kenny 2026-09-17 |
 | fix-57-M1 | Does the gate cache see data changes? Measured at the first kp-themes commit after the fixed tracer is synced: a docs/SCOPE.md-only change runs docs-private. Until then Claude runs npm run gates uncached before each commit. | open |
+| fix-58-M1 | Do the site's code blocks read at 4.5:1 in every theme? Measured at the commit that lands the remedy Kenny picks: keyword and string against --card in all 22 themes, with check:site red before and green after. | open |
