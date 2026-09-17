@@ -2032,3 +2032,14 @@ upgrade": ten files to bake, their `ASSETS` entries, its closure test taught
 repository's own record of what chassis-rs bakes still said six modules,
 while chassis-rs has baked `js/effects.js` since kp-themes 5.0.0. Then 7.0.0 is
 set up as chosen before. step-timing "Akkoord".
+
+**scope-120 · Home Assistant ships as a release asset; Jellyfin and Ratatui are researched first.**
+Kenny, 2026-09-17, the form after 7.0.0 was set up. ha-publish "Release-bestand
+ha-themes.tar in 7.0.0": the 22 `ha/kp-*.yaml` join `SHA256SUMS`, the release
+workflow attaches `ha-themes.tar` (ten assets), `consumer.tar` leaves them out,
+and the README gives three install steps. HACS was not taken: it needs a
+`themes/` directory at a repository's root, which here holds the tokens.
+jellyfin "Eerst onderzoek" and ratatui "Eerst een Ratatui-onderzoek": the
+researcher agent builds `research/jellyfin/` (a local container, nothing on the
+media stack) and `research/ratatui/` (a demo app with three themes and four
+widgets) before anything is decided. step-timing "Akkoord".

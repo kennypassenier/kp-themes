@@ -37,6 +37,9 @@ chassis-rs bakes ten more files at its upgrade (MIGRATION.md has its task).
   modules its markup carries, not every file in `css/`, `js/` and
   `components/`. Measured: a change to the data table's module brings back
   264 of 3062 block/theme pairs, the loader none.
+- **The Home Assistant themes ship with the release** (`scope-120`): the
+  22 `ha/kp-*.yaml` as `ha-themes.tar`, listed in `SHA256SUMS`, with the
+  install steps in the README.
 - **`npm run test:tags -- --level engines`** (fix-51): the commit level's
   selection in both engines, run at a layer's close.
 

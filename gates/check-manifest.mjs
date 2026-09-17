@@ -113,7 +113,9 @@ export function copyableExports(pkg, { follow = true } = {}) {
         // [T19, AR39] — so every file under it joins the expected set.
         if (name.includes('*') || target.includes('*')) {
             const dir = target.replace(/^\.\//, '').replace(/\/\*$/, '');
-            if (!/^(css|js|dist|fonts)$/.test(dir)) continue;
+            // `ha/` joined at 7.0.0 [scope-120]: the Home Assistant themes are
+            // files a dashboard copies exactly like a stylesheet a page does.
+            if (!/^(css|js|dist|fonts|ha)$/.test(dir)) continue;
             for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
             continue;
         }

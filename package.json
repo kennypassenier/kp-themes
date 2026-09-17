@@ -217,6 +217,7 @@
         "./css/fonts": "./css/fonts.css",
         "./css/fonts/min": "./dist/css/fonts.min.css",
         "./fonts/*": "./fonts/*",
+        "./ha/*": "./ha/*",
         "./dist/css/min": "./dist/kp-themes.min.css",
         "./dist/js/min": {
             "types": "./js/auto.d.ts",

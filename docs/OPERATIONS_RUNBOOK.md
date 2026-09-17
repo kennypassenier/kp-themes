@@ -497,8 +497,9 @@ Two facts decide the shape of this procedure, and both are in the code:
 
 - **Pushing a `v*` tag fires `.github/workflows/release.yml`.** That
   workflow runs `npm ci`, `npm run gates`, `npm run checksums`,
-  `tar -cf fonts.tar fonts`, `npm run consumer-tar`, and then
-  `gh release create` with `--draft` and nine assets. Do not rebuild
+  `tar -cf fonts.tar fonts`, `tar -cf ha-themes.tar -C ha .`,
+  `npm run consumer-tar`, and then `gh release create` with `--draft` and
+  ten assets (nine until 7.0.0 added `ha-themes.tar`, scope-120). Do not rebuild
   any of that by hand: doing exactly that is the fault recorded as KT9
   in `docs/CORRECTIONS.md`, where a hand-built release published a
   `SHA256SUMS` covering three files instead of ten.
@@ -596,16 +597,16 @@ Two facts decide the shape of this procedure, and both are in the code:
     read `skipped`, so no release object was created at all. The next run
     on the same tag built it.
 
-10. Check the draft has all nine assets:
+10. Check the draft has all ten assets:
 
     ```sh
     gh release view v5.2.0 --json tagName,isDraft,assets --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'
     ```
 
-    Correct, as v5.1.0 actually shipped:
+    Correct, from 7.0.0 on:
 
     ```
-    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css"],"draft":true,"tag":"v5.2.0"}
+    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","ha-themes.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css"],"draft":true,"tag":"v5.2.0"}
     ```
 
 11. Verify every published checksum against the tagged tree. This is

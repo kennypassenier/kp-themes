@@ -631,10 +631,27 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 ## Home Assistant
 
 `ha/kp-*.yaml` is the same twenty-two themes as Home Assistant themes,
-generated from the same token sources. Copy them into Home Assistant's
-`themes/` directory and reload; they appear under their Dutch names beside
-whatever you already have. The `kp-` prefix is there so a file called
-`dark.yaml` cannot land on top of one of yours.
+generated from the same token sources, and every release carries them as
+`ha-themes.tar`, listed in `SHA256SUMS` [scope-120]. To install:
+
+1. Make sure `configuration.yaml` loads a themes directory:
+
+    ```yaml
+    frontend:
+        themes: !include_dir_merge_named themes
+    ```
+
+2. Unpack the asset into that directory, beside the configuration:
+
+    ```sh
+    mkdir -p /config/themes && tar -xf ha-themes.tar -C /config/themes
+    ```
+
+3. Call the `frontend.reload_themes` action (Developer tools → Actions), then
+   pick a theme under your profile. They appear as "Blueprint", "Art Deco",
+   "Shade (dark)" and the rest, beside whatever you already have; the `kp-`
+   prefix on the file names is there so a file called `dark.yaml` cannot land
+   on top of one of yours.
 
 Where [card-mod](https://github.com/thomasloven/lovelace-card-mod) is
 installed they also carry the theme's own timing, so a dashboard in
