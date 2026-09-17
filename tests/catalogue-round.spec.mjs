@@ -23,9 +23,11 @@ test.describe.configure({ timeout: 120_000 });
  * down here, so the day a second engine is judged the test follows.
  */
 const ENGINES_IN_REGISTER = new Set(
-    Object.values(/** @type {Record<string, Record<string, Record<string, unknown>>>} */ (JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8')).verdicts)).flatMap(
-        (themes) => Object.values(themes).flatMap((engines) => Object.keys(engines)),
-    ),
+    Object.values(
+        /** @type {Record<string, Record<string, Record<string, unknown>>>} */ (
+            JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8')).verdicts
+        ),
+    ).flatMap((themes) => Object.values(themes).flatMap((engines) => Object.keys(engines))),
 );
 
 const status = (page) => page.locator('[data-cat-round-status]');
@@ -45,7 +47,10 @@ test.describe('the round page [fix-48]', { tag: ['@component:catalogue'] }, () =
     });
 
     test('with the register as the repository holds it, it says the round is over', async ({ page, browserName }) => {
-        test.skip(!ENGINES_IN_REGISTER.has(browserName), `the register holds no verdict in ${browserName}; the round was judged in ${[...ENGINES_IN_REGISTER].join(', ')}`);
+        test.skip(
+            !ENGINES_IN_REGISTER.has(browserName),
+            `the register holds no verdict in ${browserName}; the round was judged in ${[...ENGINES_IN_REGISTER].join(', ')}`,
+        );
         await page.setViewportSize({ width: 1440, height: 900 });
         await page.goto('/catalogue/round.html');
         await expect(status(page)).toContainText(/of \d+ block\/theme pair\(s\) carry a verdict/, { timeout: 60_000 });

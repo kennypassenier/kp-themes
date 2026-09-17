@@ -134,9 +134,12 @@ async function pixels(page, clip) {
     const inWindow = { x: clip.x - seen.scrollX, y: clip.y - seen.scrollY, width: clip.width, height: clip.height };
     // A rectangle taller or wider than the window cannot be shot from it; the
     // full-page path stays for that case, which no measurement here reaches.
-    const fits = inWindow.x >= 0 && inWindow.y >= 0 && inWindow.x + inWindow.width <= seen.innerWidth && inWindow.y + inWindow.height <= seen.innerHeight;
+    const fits =
+        inWindow.x >= 0 && inWindow.y >= 0 && inWindow.x + inWindow.width <= seen.innerWidth && inWindow.y + inWindow.height <= seen.innerHeight;
     const shot = (
-        await page.screenshot(fits ? { clip: inWindow, animations: 'disabled', caret: 'hide' } : { clip, fullPage: true, animations: 'disabled', caret: 'hide' })
+        await page.screenshot(
+            fits ? { clip: inWindow, animations: 'disabled', caret: 'hide' } : { clip, fullPage: true, animations: 'disabled', caret: 'hide' },
+        )
     ).toString('base64');
     const { data, width, height } = await page.evaluate(async (b64) => {
         const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
