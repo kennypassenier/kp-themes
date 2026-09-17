@@ -71,6 +71,9 @@
     --chart-3: hsl(80, 30%, 38%);
     --chart-4: hsl(15, 55%, 45%);
     --chart-5: hsl(220, 15%, 55%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(218, 45%, 35%);
+    --code-string: hsl(35, 55%, 38%);
     --sidebar-background: hsl(220, 32%, 13%);
     --sidebar-foreground: hsl(40, 25%, 92%);
     --sidebar-primary: hsl(38, 55%, 62%);
@@ -197,6 +200,9 @@
     --chart-3: hsl(150, 55%, 38%);
     --chart-4: hsl(30, 80%, 48%);
     --chart-5: hsl(330, 60%, 50%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(243, 60%, 55%);
+    --code-string: hsl(190, 70%, 34%);
     --sidebar-background: hsl(220, 18%, 97%);
     --sidebar-foreground: hsl(224, 25%, 15%);
     --sidebar-primary: hsl(243, 60%, 45%);
@@ -326,6 +332,9 @@
     --chart-3: hsl(318, 92%, 66%);
     --chart-4: hsl(78, 88%, 60%);
     --chart-5: hsl(200, 22%, 93%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(188, 96%, 62%);
+    --code-string: hsl(268, 90%, 70%);
     --sidebar-background: hsl(220, 16%, 7%);
     --sidebar-foreground: hsl(210, 12%, 74%);
     --sidebar-primary: hsl(200, 22%, 93%);
@@ -453,6 +462,9 @@
     --chart-3: hsl(353, 84%, 62%);
     --chart-4: hsl(263, 100%, 70%);
     --chart-5: hsl(50, 12%, 82%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(56, 98%, 51%);
+    --code-string: hsl(184, 100%, 50%);
     --sidebar-background: hsl(270, 9%, 3%);
     --sidebar-foreground: hsl(50, 12%, 82%);
     --sidebar-primary: hsl(56, 98%, 51%);
@@ -576,6 +588,9 @@
     --chart-3: hsl(48, 98%, 68%);
     --chart-4: hsl(258, 100%, 72%);
     --chart-5: hsl(260, 100%, 91%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(341, 100%, 64%);
+    --code-string: hsl(179, 94%, 59%);
     --sidebar-background: hsl(260, 87%, 4%);
     --sidebar-foreground: hsl(260, 100%, 91%);
     --sidebar-primary: hsl(341, 100%, 64%);
@@ -699,6 +714,9 @@
     --chart-3: hsl(210, 60%, 55%);
     --chart-4: hsl(41, 100%, 36%);
     --chart-5: hsl(270, 50%, 60%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(330, 55%, 52%);
+    --code-string: hsl(160, 45%, 35%);
     --sidebar-background: hsl(285, 35%, 94%);
     --sidebar-foreground: hsl(285, 25%, 22%);
     --sidebar-primary: hsl(330, 55%, 42%);
@@ -825,6 +843,9 @@
     --chart-3: hsl(65, 85%, 55%);
     --chart-4: hsl(180, 60%, 55%);
     --chart-5: hsl(120, 20%, 70%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(120, 90%, 50%);
+    --code-string: hsl(160, 70%, 55%);
     --sidebar-background: hsl(120, 18%, 3%);
     --sidebar-foreground: hsl(120, 60%, 70%);
     --sidebar-primary: hsl(120, 90%, 50%);
@@ -951,6 +972,9 @@
     --chart-3: hsl(200, 50%, 42%);
     --chart-4: hsl(88, 35%, 38%);
     --chart-5: hsl(35, 25%, 45%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(158, 42%, 32%);
+    --code-string: hsl(24, 70%, 41%);
     --sidebar-background: hsl(160, 30%, 13%);
     --sidebar-foreground: hsl(42, 30%, 92%);
     --sidebar-primary: hsl(38, 60%, 62%);
@@ -1077,6 +1101,9 @@
     --chart-3: hsl(140, 100%, 20%);
     --chart-4: hsl(30, 100%, 28%);
     --chart-5: hsl(285, 100%, 32%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(220, 100%, 32%);
+    --code-string: hsl(0, 100%, 32%);
     --sidebar-background: hsl(0, 0%, 100%);
     --sidebar-foreground: hsl(0, 0%, 0%);
     --sidebar-primary: hsl(220, 100%, 30%);
@@ -1203,6 +1230,9 @@
     --chart-3: hsl(200, 40%, 34%);
     --chart-4: hsl(340, 35%, 40%);
     --chart-5: hsl(45, 65%, 32%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(24, 55%, 38%);
+    --code-string: hsl(95, 35%, 30%);
     --sidebar-background: hsl(38, 40%, 91%);
     --sidebar-foreground: hsl(28, 45%, 18%);
     --sidebar-primary: hsl(24, 55%, 32%);
@@ -1329,6 +1359,9 @@
     --chart-3: hsl(160, 55%, 55%);
     --chart-4: hsl(280, 60%, 70%);
     --chart-5: hsl(2, 70%, 66%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(190, 80%, 62%);
+    --code-string: hsl(35, 85%, 60%);
     --sidebar-background: hsl(215, 68%, 10%);
     --sidebar-foreground: hsl(190, 50%, 90%);
     --sidebar-primary: hsl(190, 80%, 62%);
@@ -1455,6 +1488,9 @@
     --chart-3: hsl(45, 70%, 55%);
     --chart-4: hsl(95, 40%, 52%);
     --chart-5: hsl(320, 40%, 62%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(28, 85%, 58%);
+    --code-string: hsl(12, 65%, 58%);
     --sidebar-background: hsl(20, 16%, 8%);
     --sidebar-foreground: hsl(35, 28%, 88%);
     --sidebar-primary: hsl(28, 85%, 58%);
@@ -1581,6 +1617,9 @@
     --chart-3: hsl(255, 60%, 52%);
     --chart-4: hsl(205, 90%, 36%);
     --chart-5: hsl(140, 60%, 28%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(45, 100%, 29%);
+    --code-string: hsl(0, 85%, 45%);
     --sidebar-background: hsl(0, 0%, 7%);
     --sidebar-foreground: hsl(50, 100%, 97%);
     --sidebar-primary: hsl(48, 100%, 60%);
@@ -1708,6 +1747,9 @@
     --chart-3: hsl(210, 70%, 60%);
     --chart-4: hsl(355, 75%, 60%);
     --chart-5: hsl(40, 45%, 72%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(43, 65%, 55%);
+    --code-string: hsl(165, 55%, 45%);
     --sidebar-background: hsl(200, 28%, 6%);
     --sidebar-foreground: hsl(42, 55%, 88%);
     --sidebar-primary: hsl(43, 65%, 52%);
@@ -1834,6 +1876,9 @@
     --chart-3: hsl(0, 0%, 55%);
     --chart-4: hsl(355, 80%, 45%);
     --chart-5: hsl(45, 100%, 55%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(355, 100%, 58%);
+    --code-string: hsl(0, 0%, 90%);
     --sidebar-background: hsl(355, 100%, 45%);
     --sidebar-foreground: hsl(0, 0%, 98%);
     --sidebar-primary: hsl(0, 0%, 98%);
@@ -1960,6 +2005,9 @@
     --chart-3: hsl(331, 64%, 48%);
     --chart-4: hsl(175, 59%, 34%);
     --chart-5: hsl(237, 43%, 56%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(205, 70%, 38%);
+    --code-string: hsl(45, 100%, 28%);
     --sidebar-background: hsl(192, 100%, 11%);
     --sidebar-foreground: hsl(180, 7%, 70%);
     --sidebar-primary: hsl(205, 69%, 55%);
@@ -2086,6 +2134,9 @@
     --chart-3: hsl(331, 64%, 58%);
     --chart-4: hsl(175, 59%, 40%);
     --chart-5: hsl(237, 43%, 65%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(205, 72%, 60%);
+    --code-string: hsl(45, 100%, 45%);
     --sidebar-background: hsl(192, 100%, 9%);
     --sidebar-foreground: hsl(186, 8%, 60%);
     --sidebar-primary: hsl(205, 72%, 60%);
@@ -2212,6 +2263,9 @@
     --chart-3: hsl(0, 100%, 25%);
     --chart-4: hsl(300, 100%, 25%);
     --chart-5: hsl(120, 100%, 20%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(240, 100%, 25%);
+    --code-string: hsl(180, 100%, 20%);
     --sidebar-background: hsl(240, 100%, 25%);
     --sidebar-foreground: hsl(0, 0%, 100%);
     --sidebar-primary: hsl(0, 0%, 100%);
@@ -2338,6 +2392,9 @@
     --chart-3: hsl(0, 0%, 45%);
     --chart-4: hsl(220, 70%, 40%);
     --chart-5: hsl(40, 100%, 38%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(355, 95%, 45%);
+    --code-string: hsl(0, 0%, 7%);
     --sidebar-background: hsl(0, 0%, 7%);
     --sidebar-foreground: hsl(0, 0%, 100%);
     --sidebar-primary: hsl(0, 0%, 100%);
@@ -2464,6 +2521,9 @@
     --chart-3: hsl(170, 50%, 50%);
     --chart-4: hsl(42, 55%, 80%);
     --chart-5: hsl(330, 50%, 65%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(43, 67%, 50%);
+    --code-string: hsl(5, 80%, 72%);
     --sidebar-background: hsl(228, 65%, 18%);
     --sidebar-foreground: hsl(42, 55%, 89%);
     --sidebar-primary: hsl(43, 67%, 50%);
@@ -2590,6 +2650,9 @@
     --chart-3: hsl(38, 60%, 35%);
     --chart-4: hsl(140, 35%, 30%);
     --chart-5: hsl(205, 45%, 35%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(17, 74%, 36%);
+    --code-string: hsl(24, 12%, 15%);
     --sidebar-background: hsl(24, 12%, 15%);
     --sidebar-foreground: hsl(38, 30%, 88%);
     --sidebar-primary: hsl(22, 87%, 55%);
@@ -2722,6 +2785,9 @@
     --chart-3: hsl(186, 78%, 58%);
     --chart-4: hsl(12, 88%, 62%);
     --chart-5: hsl(212, 16%, 87%);
+    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
+    --code-keyword: hsl(214, 84%, 62%);
+    --code-string: hsl(268, 76%, 69%);
     --sidebar-background: hsl(216, 15%, 13%);
     --sidebar-foreground: hsl(212, 10%, 76%);
     --sidebar-primary: hsl(212, 16%, 87%);

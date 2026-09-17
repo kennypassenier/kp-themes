@@ -17,6 +17,19 @@ chassis-rs bakes ten more files at its upgrade (MIGRATION.md has its task).
 - **A vendored `js/effects.js` needs `js/effects/` and `js/as-of.js` beside
   it** (`scope-117`, fix-55, fix-56): `SHA256SUMS` lists them.
 
+**Added.**
+
+- **`--code-keyword` and `--code-string`, in all 22 themes** (`scope-123`,
+  fix-58): the two inks a code block colours its keywords and its strings
+  with. They were the chart hues, which are chosen and measured as LINES at
+  3:1, and nine themes came out under the 4.5:1 text asks — strings in
+  formal, light, pastel, forest, shade-light, lapis and titanium, keywords
+  in pastel, brutalism and nostromo. Each new token is its theme's chart hue
+  and saturation with the lightness moved until it reads: ten of the 44
+  moved, by 2 to 10 points, and the other 34 are the chart colour unchanged.
+  `check:site` now measures every colour `site/site.css` gives to text
+  against the surface under it and refuses anything below 4.5:1.
+
 **Changed.**
 
 - **`js/auto.js` fetches only what the page carries** (`scope-115`): the

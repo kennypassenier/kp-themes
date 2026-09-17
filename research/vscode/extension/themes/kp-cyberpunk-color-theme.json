@@ -685,12 +685,12 @@
                 "fellBack": false
             },
             "keyword": {
-                "token": "chart-1",
+                "token": "code-keyword",
                 "hex": "#FDEC08",
                 "fellBack": false
             },
             "string": {
-                "token": "chart-2",
+                "token": "code-string",
                 "hex": "#00EEFF",
                 "fellBack": false
             },
@@ -752,7 +752,7 @@
             "sash.hoverBorder": "primary",
             "textLink.foreground": "link",
             "textLink.activeForeground": "primary-hover",
-            "textPreformat.foreground": "chart-2",
+            "textPreformat.foreground": "code-string",
             "textPreformat.background": "muted",
             "textCodeBlock.background": "muted",
             "textBlockQuote.background": "card",
@@ -870,9 +870,9 @@
             "editorGhostText.foreground": "muted-foreground",
             "editorBracketMatch.background": "accent/0.15",
             "editorBracketMatch.border": "accent",
-            "editorBracketHighlight.foreground1": "chart-1",
+            "editorBracketHighlight.foreground1": "code-keyword",
             "editorBracketHighlight.foreground2": "chart-4",
-            "editorBracketHighlight.foreground3": "chart-2",
+            "editorBracketHighlight.foreground3": "code-string",
             "editorBracketHighlight.unexpectedBracket.foreground": "destructive",
             "editorError.foreground": "destructive",
             "editorWarning.foreground": "warning-foreground",
@@ -1137,8 +1137,8 @@
         },
         "highlighter": {
             "tokens": {
-                "keyword": "--chart-1",
-                "string": "--chart-2",
+                "keyword": "--code-keyword",
+                "string": "--code-string",
                 "comment": "--muted-foreground"
             },
             "sample": "// Pick the first theme whose ink reads on its ground.\nexport async function pickTheme(names, floor = 4.5) {\n    for (const name of names) {\n        const ratio = await measure(name, 'foreground');\n        if (ratio >= floor) return { name, ratio };\n    }\n    return null;\n}",
@@ -1156,12 +1156,12 @@
                 "floor": 4.5
             },
             {
-                "what": "keyword (chart-1) on editor.background",
+                "what": "keyword (code-keyword) on editor.background",
                 "ratio": 16.25,
                 "floor": 4.5
             },
             {
-                "what": "string (chart-2) on editor.background",
+                "what": "string (code-string) on editor.background",
                 "ratio": 13.88,
                 "floor": 4.5
             },

@@ -68,6 +68,25 @@ await effects.ready; // every hook this attach asked for is in and has run
 section.querySelector('[data-kp-reveal-trigger]')?.click();
 ```
 
+### Two new tokens: `--code-keyword` and `--code-string`
+
+Nothing breaks. Every theme gained two colours for code blocks, so a
+consumer that shows code — a log line, a snippet — takes them from the
+package instead of choosing a chart colour that was never meant to be read:
+
+```css
+.my-code .keyword {
+    color: var(--code-keyword);
+}
+.my-code .string {
+    color: var(--code-string);
+}
+```
+
+A vendored `css/themes.css` gets them with the file. In every theme both
+read at 4.5:1 or better on `--card` (`node gates/check-site.mjs` measures
+it), where the chart hues they replace read as low as 3.38:1 [fix-58].
+
 ## Coming from 5.x to 6.0.0
 
 Two breaks, both about theme names; everything else in 6.0.0 is additive

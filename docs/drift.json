@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "b06e5a89453b8706089dfc0766b50c7130fe6be859aea7697895f0ed3926952b",
-            "doc": "53be630c1dca4c973b99dc727ff0a6b87be1aad441e32b3a05481d849d614583",
+            "hash": "54702cd78109760066f6e12ced28530f770d1cb46dee982497e7163ccbb85be0",
+            "doc": "7947dc1a99a2f850e49554afe8f4dd3c628d51e0c13da138e48ffdfec2c9383f",
             "files": {
-                "CHANGELOG.md": "bbb0330db36830681d4d60da81af4c4b37031a1fdc3c2b9d21b79f25dd57b460"
+                "CHANGELOG.md": "adcd748cbb316bbcf0db8274a9996d9adff9e78a6750ae38b27b8c34430ba127"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,12 +81,12 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "b7578fab3886edf4d3230f0fb7b3416bd64529515101e273da97ac97f76221df",
-            "doc": "ad4c43d8792f1e827b733e330265527a0d59690b4838989cbece9e62210d73c3",
+            "hash": "76843a43b534145ad35503f07000905963d175f82d778f5e5a8f3619786e6a97",
+            "doc": "3a247d067281a8cd4b736267a1d830f0165f539e0ef772590927365d624453a4",
             "files": {
                 ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
-                "gates/colour.mjs": "a937662bbb79c5125bc5eb84639f5c67c9261e498d57e7135f98a2d04988bc95",
+                "gates/colour.mjs": "1de05f5f28b8f4c1970cf3df43db8b92482a2c82de04dc833fd5bac758010cfd",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
                 "gates/generate-themes.mjs": "d4b5afbf713553bd0f39c8e82331f08deb7b7294c71bb202dfdfc34149aea052",
                 "index.js": "ebf74027f8bec52e827be1f750302ea1aa8ef39ee558e79b273a668eecf4af58",
@@ -244,7 +244,7 @@
                 "gates/verify.mjs"
             ],
             "hash": "12548a2fd7e8930d599b40c6471a0e003e0802104e84b2c89816c1e1489ae205",
-            "doc": "275266157fdbcb3d6c20c8775d1910b9ce9c8ce6f8d5e4c583cf4b7f80ec9c2b",
+            "doc": "ec8a5b6b00a78b5f3d190444ad4aff52bfa27a86bc5c15cab1dbee407962f5c4",
             "files": {
                 "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
                 "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",

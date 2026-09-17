@@ -7,10 +7,10 @@
 //
 // Three token classes, and the mapping is the whole design:
 //
-//   kp-code__keyword   --chart-1            names the language gives meaning to:
+//   kp-code__keyword   --code-keyword       names the language gives meaning to:
 //                                           JS keywords, CSS property and at-rule
 //                                           names, HTML tag and attribute names
-//   kp-code__string    --chart-2            values: strings, numbers, hex colours,
+//   kp-code__string    --code-string        values: strings, numbers, hex colours,
 //                                           HTML attribute values
 //   kp-code__comment   --muted-foreground   comments, in all three languages
 //
@@ -28,8 +28,8 @@ import process from 'node:process';
 
 /** The mapping, in one place, because the CSS and the classes must agree. */
 export const TOKEN_TOKENS = Object.freeze({
-    keyword: '--chart-1',
-    string: '--chart-2',
+    keyword: '--code-keyword',
+    string: '--code-string',
     comment: '--muted-foreground',
 });
 

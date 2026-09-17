@@ -170,6 +170,13 @@ about how a colour *looks* converts to OKLCh first. One numeric step of
 HSL lightness on terminal's saturated green and on formal's dark navy look
 nothing alike; one OKLCh step does.
 
+Two contrast functions live there, and the difference matters: `contrast()`
+measures the channels as computed, which is right for the picker, which is
+still moving a colour; `paintedContrast()` rounds each channel to the 8 bits
+the screen receives first, which is right for a gate judging a colour that
+has landed. The gates use the painted one, all of them, since two of them
+answered 4.51 and 4.47 about the same pair [fix-59].
+
 Pinned standards constants, with the reason in the code: 4.5:1 for text,
 3:1 for non-text and large text, three flashes per second, a 10%
 luminance change, the 341×256 px flash area, and WCAG's 0.03928 luminance

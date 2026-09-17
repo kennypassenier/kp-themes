@@ -4141,14 +4141,34 @@ One more property came out of the same reading, from a sweep over the nine theme
 
 **3 · Where the same fault sits.** The property: a token measured for one role and used in another. Searched with `grep -rn "var(--chart-" css site catalogue`: the site's two code classes are the text uses; the chart components use them as marks. Pastel has no chart token at 4.5:1 on its card at all (the best is chart-1 at 4.20), so choosing a different chart token does not close it.
 
-**4 · How we prevent recurrence.** Open, Kenny's choice: a site-only colour per theme computed by `gates/generate-site.mjs` from the same chart hue, moved in lightness until it clears 4.5:1 on `--card`; or two new theme tokens for code; or the shortfall recorded and kept.
+**4 · How we prevent recurrence.** Kenny chose two new theme tokens (2026-09-17, scope-123): every theme declares `--code-keyword` and `--code-string`, its chart hue and saturation with the lightness moved until the colour reads at 4.5:1 on `--card`. Ten of the 44 moved, by 2 to 10 points; the other 34 are the chart colour unchanged. `site/site.css` and `gates/site/highlight.mjs` colour code with those tokens, and a consumer showing code can take them from the package instead of picking a chart colour.
 
-**5 · What the remedy costs.** Site-only: one generator step, 22 short blocks in the site stylesheet, the released themes untouched. New tokens: 22 `tokens.json`, the registers and a version raise.
+**5 · What the remedy costs.** 22 `tokens.json` files, the generated `css/themes.css`, the bundle and the minified build, plus the version: the tokens ride in 7.0.0, which is prepared but not released. The VS Code research theme picks them up through the same table.
 
 **6 · Who enforces it.** Code: `check:site` measures every colour the site stylesheet gives to text against the ground it sits on, and refuses one under 4.5:1.
 
-**7 · How we measure it works, and when.** At the commit that lands the remedy: the check is red with the current `site.css`, green after, and the nine themes each read ≥ 4.5:1 for both classes.
+**7 · How we measure it works, and when.** At the commit that lands the remedy: the check is red with the current `site.css`, green after, and the nine themes each read ≥ 4.5:1 for both classes. Measured 2026-09-17: pointing `.kp-code__string` back at `--chart-2` makes `check:site` name seven themes from 3.38:1 to 4.14:1 and exit 1; with the tokens it reports "its 3 code inks read at 4.5:1 or better in all 22 themes".
 
 **8 · If the measurement fails.** The two classes fall back to `--foreground` with weight alone telling keyword from string, until a colour that clears it is found.
 
 **9 · When we review the measure.** When a theme's `--card` or chart tokens change, or a new theme is added.
+
+## fix-59 · Two contrast measurements of the same pair, and they disagreed (2026-09-17)
+
+**1 · What went wrong.** The new `check:site` ink rule reported titanium's code string at 4.51:1 and passed it; `npm run advice` reported the same pair at 4.47:1 and failed it, in the same tree. The gate had been written with `contrast()` from `js/contrast.js`, which works on unrounded channels; `gates/check-contrast.mjs` rounds each channel to 8 bits first, because that is what the browser paints — a difference of up to 0.04, which is the width of the pass this token sat in.
+
+**2 · Which gate let it through.** None could: both were the gate. The fault is that two functions answered the same question, and nothing laid them side by side — the same shape as KT7, where three lists of checks promised the same thing.
+
+**3 · Where the same fault sits.** The property: a second implementation of a measurement the repository already has. Searched with `grep -rn "0.2126\|luminance(" gates js | grep -v node_modules`: two, `js/contrast.js` (shipped, unrounded, and correct for the picker, which composites live colours) and the private `hslToRgb`/`luminance`/`ratio` in `check-contrast.mjs` (rounded, TH116, measured against a rendered page). No third. `themes/*/anatomy.md` quote ratios but compute none.
+
+**4 · How we prevent recurrence.** `gates/colour.mjs` exports `paintedContrast()` — `contrast()` with each channel rounded to 8 bits — and both gates call it. `check-contrast.mjs` lost its private copy of the arithmetic. titanium's `--code-string` moved one more point of lightness, to `hsl(268, 76%, 69%)`, 4.69:1 painted.
+
+**5 · What the remedy costs.** One exported function and twelve lines deleted. The picker keeps the unrounded `contrast()`, which is right for a colour it is still moving.
+
+**6 · Who enforces it.** Code: `gates/check-site-ink.test.mjs` asserts the painted measure is what the ink rule uses, with titanium's pair as the case — 4.51 unrounded, 4.47 painted — so a gate that quietly switches back to `contrast()` turns it red.
+
+**7 · How we measure it works, and when.** At this commit: `node gates/check-site.mjs` and `npm run advice` agree on every pair they share, and both say 4.5:1 or better for all 44 code inks.
+
+**8 · If the measurement fails.** The ink rule takes its floor at 4.6:1, so a rounding difference of 0.04 cannot decide a pass.
+
+**9 · When we review the measure.** When a gate starts measuring a colour the browser does not paint directly — a gradient, a blend, or an alpha — where rounding per channel is no longer the whole story.

@@ -10,6 +10,7 @@ of each one whether its assertion could ever fail.
 | --- | --- | --- | --- |
 | `gates/gates.test.mjs` | Node's built-in runner | the token source and the authored stylesheets | the gate functions themselves: theme discovery, token parity, the flash threshold, reduced-motion guards, state visibility, badge plates, layer discipline |
 | `gates/check-*.mjs` | Node, on every commit | both the token source and the generated stylesheet | contrast, the design invariants, motion, layers, and whether the generated files still match their source |
+| `gates/check-site-ink.test.mjs` | Node's built-in runner | `site/site.css` and every `themes/*/tokens.json` | that every colour the documentation site gives to text reads at 4.5:1 on the surface under it, in all 22 themes [fix-58] |
 | `tests/*.spec.mjs` | Chromium **and** Firefox, when Kenny runs them | a real browser | behaviour: the picker in both channels, the component contracts, keyboard operation of the overlays, reflow and text spacing, the printed page, the effects |
 
 The split is Kenny's decision H1: the fast gates block a commit, the
