@@ -207,7 +207,9 @@ test.describe('a browser missing what the module likes to have [G9]', { tag: ['@
         await open(page);
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            // The rule's hook arrives after attach returns [scope-117]; the
+            // 7.0.0 verify read the paint before it had, once, in Chromium.
+            await attachEffects(document).ready;
         });
         // The paint, not the class: a rule that is never drawn is the
         // failure this covers, and it shows as a collapsed pseudo-element.
