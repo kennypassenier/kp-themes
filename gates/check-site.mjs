@@ -85,7 +85,12 @@ if (uncoveredExports.length > 0) {
 // documented by the page that report is on (showcase/diagnostics.html),
 // not by a component: nothing in css/components.css styles them and no
 // component reads them.
-const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status']);
+//
+// `data-kp-auto-ready` is the same case from the other side: js/auto.js sets
+// it on <html> once the modules a page needed have attached [scope-115]. It
+// belongs to the entry, not to a component, and is documented where the entry
+// is — README.md and MIGRATION.md.
+const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status', 'data-kp-auto-ready']);
 
 // The layout layer has a page of its own — site/layout.html, generated
 // from the comments and knobs of css/layout.css rather than from a

@@ -8,6 +8,7 @@
 // (page-effects#palette-narrow).
 
 import { test, expect } from '@playwright/test';
+import { autoReady } from './helpers/auto-ready.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -59,6 +60,7 @@ for (const channel of CHANNELS) {
 
 test('Ctrl+K opens the palette and focus lands in the input [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
+    await autoReady(page);
     const palette = page.locator('[data-test="plain-palette"]');
     await expect(palette).toBeHidden();
     await page.keyboard.press('Control+k');
@@ -70,6 +72,7 @@ test('Ctrl+K opens the palette and focus lands in the input [TH40]', { tag: ['@c
 
 test('a second palette on the page does not also open [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
+    await autoReady(page);
     await page.keyboard.press('Control+k');
     // Two open modal dialogs is what happened before the key was given to
     // the first palette only — found by this suite, with one palette per
@@ -79,6 +82,7 @@ test('a second palette on the page does not also open [TH40]', { tag: ['@compone
 
 test('the shortcut sheet opens on ? and not while typing [TH49]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
+    await autoReady(page);
     const sheet = page.locator('[data-test="plain-shortcuts"]');
     await page.keyboard.press('?');
     await expect(sheet).toBeVisible();

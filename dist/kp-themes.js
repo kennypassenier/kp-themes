@@ -6,23 +6,345 @@
    Reachable only through a namespace, because more than one module
    declares them: OPEN_EVENT, MATCHERS. */
 var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res, err) => function __init() {
+  if (err) throw err[0];
+  try {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  } catch (e) {
+    throw err = [e], e;
+  }
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// js/alarm.js
-var alarm_exports = {};
-__export(alarm_exports, {
-  ALARM_CLOSE_EVENT: () => ALARM_CLOSE_EVENT,
-  ALARM_OPEN_EVENT: () => ALARM_OPEN_EVENT,
-  ALARM_SECONDS: () => ALARM_SECONDS,
-  attachAlarms: () => attachAlarms,
-  buildAlarm: () => buildAlarm,
-  glyphCells: () => glyphCells,
-  noiseGlyph: () => noiseGlyph,
-  showAlarm: () => showAlarm,
-  writeCountdown: () => writeCountdown
+// js/strings.js
+var strings_exports = {};
+__export(strings_exports, {
+  DEFAULT_STRINGS: () => DEFAULT_STRINGS,
+  getStrings: () => getStrings,
+  resolveStrings: () => resolveStrings,
+  setStrings: () => setStrings
+});
+function setStrings(next) {
+  current = Object.freeze({ ...current, ...next });
+  return current;
+}
+function getStrings() {
+  return current;
+}
+function resolveStrings(overrides) {
+  return overrides === void 0 ? current : { ...current, ...overrides };
+}
+var DEFAULT_STRINGS, current;
+var init_strings = __esm({
+  "js/strings.js"() {
+    "use strict";
+    DEFAULT_STRINGS = Object.freeze({
+      alertSuccess: "Success",
+      alertWarning: "Warning",
+      alertInfo: "Info",
+      alertError: "Error",
+      busy: "Working\u2026",
+      close: "Close",
+      // The nav toggle carries no glyph of its own — this package ships
+      // type, not icons — so its accessible name is the whole of what a
+      // screen reader gets, and the two words have to say which way the
+      // press goes rather than what the control is.
+      menu: "Open the navigation",
+      closeMenu: "Close the navigation",
+      // A mega menu's button whose content is only a glyph [scope-48]: its
+      // `aria-expanded` already says open or closed, so the name says what
+      // the panel holds rather than which way the press goes.
+      navDisclosure: "More places",
+      // Distinct from the two above on purpose: a page can carry both, and
+      // "Open the navigation" twice would leave a screen reader with two
+      // controls whose names do not tell them apart.
+      sidebar: "Open the side navigation",
+      closeSidebar: "Close the side navigation",
+      // The slim rail's own toggle [gap-12]: it narrows the panel rather
+      // than hiding it, so it must not borrow the open and close names.
+      collapseRail: "Collapse the side navigation to its icons",
+      expandRail: "Expand the side navigation",
+      // A control that appears part-way down a page and has no text of its
+      // own beyond an arrow: the accessible name is the whole of what a
+      // screen reader gets.
+      backToTop: "Back to top",
+      previous: "Previous",
+      next: "Next",
+      finish: "Finish",
+      back: "Back",
+      // Named rather than a bare ×: a column of identical remove buttons is
+      // useless to anyone who cannot see which row they are in.
+      removeNamed: (name) => `Remove ${name}`,
+      noResults: "No results",
+      oneResult: "1 result",
+      manyResults: (n) => `${n} results`,
+      noCommands: "No commands",
+      oneCommand: "1 command",
+      manyCommands: (n) => `${n} commands`,
+      commandPlaceholder: "Type a command\u2026",
+      commandsLabel: "Commands",
+      shortcutsLabel: "Keyboard shortcuts",
+      // The trigger in the bar [scope-48]: a hotkey alone is a secret, so the
+      // bar says the word and prints the key beside it, in the platform's
+      // own spelling — ⌘ is a Mac's modifier, and nowhere else's.
+      paletteTrigger: "Search",
+      paletteHotkey: (key, mac) => mac ? `\u2318${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`,
+      tableSearch: "Search\u2026",
+      tableSearchLabel: "Search the table",
+      // "On this page", because that is what it does [gap-13]: the header box
+      // used to tick every filtered row on every page while saying "visible".
+      tableSelectAll: "Select every row on this page",
+      tableSelectRow: (key) => `Select row ${key}`,
+      tableEmpty: "Nothing found.",
+      tableRows: (n) => `${n} rows`,
+      tableRowsFiltered: (shown2, total) => `${shown2} of ${total} rows`,
+      /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
+      tablePage: (at, of) => `${at} / ${of}`,
+      /**
+       * The name of the scrolling region around a table [TH95], used only
+       * when the table has no caption and the consumer named nothing: a
+       * region with no name is announced as "region" and tells a reader
+       * nothing about what they just tabbed into.
+       */
+      tableRegion: "Table",
+      tableSearchScope: "Search in",
+      tableSearchAllColumns: "All columns",
+      tableFilters: (active) => active > 0 ? `Filters (${active})` : "Filters",
+      tableFiltersLabel: "Filters",
+      tableActiveFilters: "Active filters",
+      tableFilterValue: (column, value) => `${column}: ${value}`,
+      tableFilterRange: (column, from, to) => `${column}: ${from}\u2013${to}`,
+      tableFilterOpenEnd: "any",
+      tableFilterFrom: (column) => `${column}, from`,
+      tableFilterTo: (column) => `${column}, to`,
+      tableRemoveFilter: (label) => `Remove filter ${label}`,
+      tableClearFilters: "Clear all filters",
+      tableClearSearch: "Clear the search and filters",
+      // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
+      // words of the approved mock, research/datatable/demo.html#filter-add.
+      tableAddFilter: (active) => active > 0 ? `+ Add filter (${active} active)` : "+ Add filter",
+      tableAddFilterMenu: "Filter by column",
+      tableAddFilterItem: (column) => `Filter on ${column}`,
+      tableAddFilterItemActive: (column) => `${column}, already filtered: edit that filter`,
+      tableFilterMarked: "filtered",
+      tableFilterEditor: (column) => `Filter on ${column}`,
+      tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
+      tableFilterBound: (kind, bound, column) => {
+        if (kind === "date") return bound === "from" ? `${column} on or after` : `${column} on or before`;
+        return bound === "from" ? "From" : "To";
+      },
+      tableFilterChoicePill: (column, values) => `${column}: ${values.join(", ")}`,
+      tableFilterSpanPill: (column, from, to, kind) => {
+        if (from !== "" && to !== "") return `${column}: ${from}${kind === "date" ? " to " : "\u2013"}${to}`;
+        if (from !== "") return `${column}: from ${from}`;
+        return `${column}: up to ${to}`;
+      },
+      tableEditFilter: (label) => `Edit filter ${label}`,
+      tableFilterApply: "Apply",
+      tableFilterCancel: "Cancel",
+      tableFilterClearAll: "Clear all",
+      tableFilterNotNumber: (label, value) => `${label} takes a number, like 10; "${value}" is not one.`,
+      tableFilterNotDate: (label, value) => `${label}: "${value}" is not a date this field can read; write it the way the field shows, or use the calendar.`,
+      tableFilterBackwards: (from, to) => `The range runs backwards: from ${from} to ${to}. Swap the two values.`,
+      tableDensity: "Density",
+      tableDensityComfortable: "Comfortable",
+      tableDensityCompact: "Compact",
+      tableRowsPerPage: "Rows per page",
+      /** "Showing 1–25 of 60", and where a search or filter hides rows, how many. */
+      tableShowing: (from, to, count, total) => {
+        if (count === 0) return `Showing 0 of ${total}`;
+        if (count === total) return `Showing ${from}\u2013${to} of ${total}`;
+        return `Showing ${from}\u2013${to} of ${count} (filtered from ${total})`;
+      },
+      tableSelected: (n) => `${n} selected`,
+      tableClearSelection: "Clear selection",
+      tableSortBy: "Sort by",
+      tableSortNone: "None",
+      tableSortAscending: "Ascending",
+      tableSortDescending: "Descending",
+      tableFailed: "The rows could not be loaded.",
+      tableRetry: "Try again",
+      // The seven features of 2026-09-13 ("Alle zeven, nu"), in the words the
+      // approved mocks of research/datatable/demo.html used.
+      tableSortKey: (column, direction, kind) => {
+        const up = direction === "ascending";
+        if (kind === "number" || kind === "order") return `${column} ${up ? "low to high" : "high to low"}`;
+        if (kind === "date") return `${column} ${up ? "oldest first" : "newest first"}`;
+        return `${column} ${up ? "A to Z" : "Z to A"}`;
+      },
+      tableSortedBy: (keys) => `Sorted by ${keys.join(", then ")}.`,
+      tableNotSorted: "Not sorted.",
+      tableColumns: "Columns",
+      tableColumnsLabel: "Visible columns",
+      tableColumnLocked: (column) => `${column} (always shown)`,
+      tableShowAllColumns: "Show every column",
+      tableColumnsShown: (shown2, total) => `${shown2} of ${total} columns shown`,
+      tableDetailsColumn: "Details",
+      tableRowDetails: (key) => `Details for ${key}`,
+      tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
+      tableEditField: (column, key) => `${column} of ${key}`,
+      tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
+      tableEdited: (key, column, before, after) => `${key}: ${column} changed from ${before} to ${after}.`,
+      tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
+      tableEditCancelled: "Edit cancelled; nothing changed.",
+      tableEditRequired: "A value is required.",
+      tableEditInvalid: "This value cannot be saved.",
+      tableGridStart: "Tab into the table to start.",
+      tableGridPosition: (row, rows, column, text) => `${row === 0 ? "Header row" : `Row ${row} of ${rows}`}, column ${column}: ${text}`,
+      formRequired: "required",
+      formInvalid: "This field is not filled in correctly.",
+      formSummaryOne: "1 field is not filled in correctly.",
+      formSummaryMany: (n) => `${n} fields are not filled in correctly.`,
+      fieldFallbackName: "Field",
+      // Beside the track, so a switch's state never rests on colour or the
+      // thumb's position alone [DI4]. Hidden from a screen reader, which
+      // already hears "switch, on" from the role [gap-11].
+      switchOn: "On",
+      switchOff: "Off",
+      calendarOpen: "Open the calendar",
+      // What the calendar button shows: a glyph, hidden from a screen reader,
+      // which hears calendarOpen as the button's name instead. The same glyph
+      // the date picker's own markup carries, so a picker the package builds
+      // (the data table's date filter) looks like one written by hand
+      // [Kenny's note of 2026-09-13]. Until then it was the word "Calendar".
+      calendarButton: "\u25A6",
+      dateFormatHint: "dd-mm-yyyy",
+      previousMonth: "Previous month",
+      nextMonth: "Next month",
+      /** The calendar's heading. A function, so a locale that writes the year first can. @param {string} month @param {number} year */
+      monthTitle: (month, year) => `${month} ${year}`,
+      // The title is a button since scope-89. Its name keeps the words it
+      // shows and adds what a press does, so a voice command naming what is
+      // on screen still reaches it.
+      chooseMonth: (title) => `${title}, choose a month`,
+      chooseYear: (year) => `${year}, choose a year`,
+      previousYear: "Previous year",
+      nextYear: "Next year",
+      previousYears: "Previous twelve years",
+      nextYears: "Next twelve years",
+      monthGrid: (year) => `Months of ${year}`,
+      yearGrid: (from, to) => `Years ${from} to ${to}`,
+      yearRange: (from, to) => `${from}\u2013${to}`,
+      weekdays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      // The full date, because "4" alone tells a screen reader nothing about
+      // which month it is in.
+      dayLabel: (day, month, year) => `${day} ${month} ${year}`,
+      uploadZone: "Drop files here or choose them",
+      uploadTooLarge: (size) => `Larger than ${size}`,
+      /** @param {number} max */
+      uploadTooMany: (max) => `No more than ${max} files.`,
+      /** @param {string} max */
+      uploadTotalTooLarge: (max) => `Together the files may not exceed ${max}.`,
+      /** @param {string} accept */
+      uploadWrongType: (accept) => `Only ${accept} files.`,
+      uploadProgress: (name) => `Progress of ${name}`,
+      wizardStep: (at, of) => `Step ${at} of ${of}`,
+      copy: "Copy",
+      copied: "Copied",
+      copyBlocked: "Blocked",
+      // Announced as well as shown: a button's own label changing is not
+      // something a screen reader reports on its own.
+      copiedAnnouncement: (value) => `${value} copied`,
+      copyBlockedAnnouncement: "Copying is blocked in this browser",
+      undo: "Undo",
+      deleted: "Deleted.",
+      splitLabel: "Resize the panes",
+      reorderHandle: (name) => `Move ${name}`,
+      /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
+      reorderMoved: (name, at, of) => `${name} moved to position ${at} of ${of}`,
+      tileFallbackName: "Tile",
+      tileLabel: (name, column, row, w, h) => `${name}, column ${column}, row ${row}, ${w} by ${h}`,
+      contrastMissing: (token) => `No contrast to measure: ${token} does not exist in this theme.`,
+      contrastReport: (ratio, token, verdict) => `${ratio}:1 against ${token} \u2014 ${verdict}`,
+      colourHue: "Hue",
+      colourSaturation: "Saturation",
+      colourLightness: "Lightness",
+      contrastPasses: "passes",
+      contrastFails: "too little",
+      confirm: "Confirm",
+      /** The confirmation dialog TH107 opens: its two buttons, its description, and what a screen reader hears when it opens. */
+      confirmAccept: "Yes, do it",
+      confirmCancel: "Cancel",
+      confirmDescription: "This cannot be undone. Cancel leaves everything as it is.",
+      // The alarm [scope-94]. The headline, the detail and the code line are
+      // the caller's words; these are the ones the component adds itself. The
+      // countdown and the key hint are hidden from a screen reader, which hears
+      // the sentence below them once instead of a number every second.
+      alarmAction: "Acknowledge",
+      alarmKeepOpen: "Keep open",
+      alarmHint: "Press Enter",
+      alarmCountdown: (seconds) => `Closes in ${seconds} s`,
+      alarmClosesBy: (seconds) => `Closes by itself in ${seconds} seconds.`,
+      alarmPressTo: (action) => `Press ${action} to continue.`,
+      alarmKeptOpen: (action) => `Kept open. Press ${action} to continue.`,
+      save: "Save",
+      mainNavigation: "Main navigation",
+      skipToContent: "Skip to the content",
+      classified: "Classified",
+      // The neutral words: no theme's world. Until scope-84 these were
+      // "▶ Calibrating neural uplink", "Progress" and "OK" — cyberpunk's
+      // voice, shown by synthwave's boot and by any theme that asked for one.
+      arrivalLine: "Loading",
+      // Synthwave's boot is a VCR's on-screen display and an arcade cabinet's
+      // attract screen: the tape plays, the tracking settles, press start.
+      arrivalWordsByTheme: {
+        synthwave: { line: "\u25B6 Play", progress: "Tracking", ready: "Press start" }
+      },
+      arrivalLinesByTheme: {
+        retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
+        terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
+      },
+      arrivalProgress: "Progress",
+      arrivalReady: "Ready",
+      arrivalSkip: "Skip",
+      measureLoading: "measuring\u2026",
+      measureBox: (w, h) => `${w} \xD7 ${h} px`,
+      breadcrumb: "Breadcrumb",
+      pagination: "Pagination",
+      themePicker: "Choose a theme",
+      themeSaveFailed: "This choice will not be remembered \u2014 storage is blocked in this browser.",
+      themeSaveRefused: "Not saved on the server \u2014 your choice has been put back.",
+      /** The two contract violations enforceContracts reports [DI10, DI4]. */
+      contractDestructive: 'A destructive action must offer an undo (data-kp-undo) or a confirmation (data-kp-confirm="phrase"). SC 3.3.4 accepts either; it accepts neither of them missing.',
+      contractSemantic: "A control carrying a semantic colour must also say what it means: colour is never the only carrier.",
+      /** The two sections of a grouped theme picker [TH63]. */
+      themeGroupLight: "Light",
+      themeGroupDark: "Dark",
+      /**
+       * The loud fallback and the diagnostics page [TH97, AR25].
+       *
+       * The console warning is in here for the same reason the rest is: a
+       * consumer whose users are not English speakers should be able to
+       * replace it, and a message written into theme-core.js has no door.
+       */
+      themeUnknown: (requested, applied) => `kp-themes: "${requested}" is not a theme this build knows, so "${applied}" was applied instead. The stored choice was left alone; open the diagnostics page to see which half is behind.`,
+      rememberClash: (name, component) => `kp-themes: two ${component} elements both ask to be remembered as "${name}", so only the first one is. Give the second a data-kp-remember of its own.`,
+      registerLoadFailed: (theme, href) => `kp-themes: the register for "${theme}" did not load from ${href}, so the page keeps the theme it was wearing. Check the pattern given to attachLazyRegisters().`,
+      diagnosticsHeading: "Stylesheet and JavaScript, side by side",
+      diagnosticsStylesheet: "Stylesheet (css/themes.css)",
+      diagnosticsScript: "JavaScript (js/theme-registry.js)",
+      diagnosticsVersion: "Version",
+      diagnosticsThemes: "Themes",
+      diagnosticsEffects: "Unknown effect hooks",
+      diagnosticsEffectsNone: "none reported on this page",
+      diagnosticsVerdict: "Verdict",
+      diagnosticsMatch: "The stylesheet and the JavaScript come from the same version, and they know the same themes.",
+      diagnosticsStylesheetBehind: (stylesheet, script) => `The stylesheet is behind: it is version ${stylesheet} and the JavaScript is version ${script}. Copy a newer css/themes.css.`,
+      diagnosticsScriptBehind: (stylesheet, script) => `The JavaScript is behind: the stylesheet is version ${stylesheet} and the JavaScript is version ${script}. Copy newer files from js/.`,
+      diagnosticsThemesDiffer: (version) => `Both halves say version ${version} and yet they know different themes, so at least one of the two files has been edited by hand.`,
+      diagnosticsNoVersion: "The stylesheet declares no version, so it was generated before 3.2.0 \u2014 older than the JavaScript beside it, whatever that one says.",
+      diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
+      diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
+      diagnosticsUnknownVersion: "not declared"
+    });
+    current = DEFAULT_STRINGS;
+  }
 });
 
 // js/effects.js
@@ -65,707 +387,6 @@ __export(effects_exports, {
   attachEffects: () => attachEffects,
   unknownEffects: () => unknownEffects
 });
-
-// js/strings.js
-var strings_exports = {};
-__export(strings_exports, {
-  DEFAULT_STRINGS: () => DEFAULT_STRINGS,
-  getStrings: () => getStrings,
-  resolveStrings: () => resolveStrings,
-  setStrings: () => setStrings
-});
-var DEFAULT_STRINGS = Object.freeze({
-  alertSuccess: "Success",
-  alertWarning: "Warning",
-  alertInfo: "Info",
-  alertError: "Error",
-  busy: "Working\u2026",
-  close: "Close",
-  // The nav toggle carries no glyph of its own — this package ships
-  // type, not icons — so its accessible name is the whole of what a
-  // screen reader gets, and the two words have to say which way the
-  // press goes rather than what the control is.
-  menu: "Open the navigation",
-  closeMenu: "Close the navigation",
-  // A mega menu's button whose content is only a glyph [scope-48]: its
-  // `aria-expanded` already says open or closed, so the name says what
-  // the panel holds rather than which way the press goes.
-  navDisclosure: "More places",
-  // Distinct from the two above on purpose: a page can carry both, and
-  // "Open the navigation" twice would leave a screen reader with two
-  // controls whose names do not tell them apart.
-  sidebar: "Open the side navigation",
-  closeSidebar: "Close the side navigation",
-  // The slim rail's own toggle [gap-12]: it narrows the panel rather
-  // than hiding it, so it must not borrow the open and close names.
-  collapseRail: "Collapse the side navigation to its icons",
-  expandRail: "Expand the side navigation",
-  // A control that appears part-way down a page and has no text of its
-  // own beyond an arrow: the accessible name is the whole of what a
-  // screen reader gets.
-  backToTop: "Back to top",
-  previous: "Previous",
-  next: "Next",
-  finish: "Finish",
-  back: "Back",
-  // Named rather than a bare ×: a column of identical remove buttons is
-  // useless to anyone who cannot see which row they are in.
-  removeNamed: (name) => `Remove ${name}`,
-  noResults: "No results",
-  oneResult: "1 result",
-  manyResults: (n) => `${n} results`,
-  noCommands: "No commands",
-  oneCommand: "1 command",
-  manyCommands: (n) => `${n} commands`,
-  commandPlaceholder: "Type a command\u2026",
-  commandsLabel: "Commands",
-  shortcutsLabel: "Keyboard shortcuts",
-  // The trigger in the bar [scope-48]: a hotkey alone is a secret, so the
-  // bar says the word and prints the key beside it, in the platform's
-  // own spelling — ⌘ is a Mac's modifier, and nowhere else's.
-  paletteTrigger: "Search",
-  paletteHotkey: (key, mac) => mac ? `\u2318${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`,
-  tableSearch: "Search\u2026",
-  tableSearchLabel: "Search the table",
-  // "On this page", because that is what it does [gap-13]: the header box
-  // used to tick every filtered row on every page while saying "visible".
-  tableSelectAll: "Select every row on this page",
-  tableSelectRow: (key) => `Select row ${key}`,
-  tableEmpty: "Nothing found.",
-  tableRows: (n) => `${n} rows`,
-  tableRowsFiltered: (shown2, total) => `${shown2} of ${total} rows`,
-  /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
-  tablePage: (at, of) => `${at} / ${of}`,
-  /**
-   * The name of the scrolling region around a table [TH95], used only
-   * when the table has no caption and the consumer named nothing: a
-   * region with no name is announced as "region" and tells a reader
-   * nothing about what they just tabbed into.
-   */
-  tableRegion: "Table",
-  tableSearchScope: "Search in",
-  tableSearchAllColumns: "All columns",
-  tableFilters: (active) => active > 0 ? `Filters (${active})` : "Filters",
-  tableFiltersLabel: "Filters",
-  tableActiveFilters: "Active filters",
-  tableFilterValue: (column, value) => `${column}: ${value}`,
-  tableFilterRange: (column, from, to) => `${column}: ${from}\u2013${to}`,
-  tableFilterOpenEnd: "any",
-  tableFilterFrom: (column) => `${column}, from`,
-  tableFilterTo: (column) => `${column}, to`,
-  tableRemoveFilter: (label) => `Remove filter ${label}`,
-  tableClearFilters: "Clear all filters",
-  tableClearSearch: "Clear the search and filters",
-  // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
-  // words of the approved mock, research/datatable/demo.html#filter-add.
-  tableAddFilter: (active) => active > 0 ? `+ Add filter (${active} active)` : "+ Add filter",
-  tableAddFilterMenu: "Filter by column",
-  tableAddFilterItem: (column) => `Filter on ${column}`,
-  tableAddFilterItemActive: (column) => `${column}, already filtered: edit that filter`,
-  tableFilterMarked: "filtered",
-  tableFilterEditor: (column) => `Filter on ${column}`,
-  tableFilterChoicesLegend: (column) => `Show rows whose ${column.toLowerCase()} is`,
-  tableFilterBound: (kind, bound, column) => {
-    if (kind === "date") return bound === "from" ? `${column} on or after` : `${column} on or before`;
-    return bound === "from" ? "From" : "To";
-  },
-  tableFilterChoicePill: (column, values) => `${column}: ${values.join(", ")}`,
-  tableFilterSpanPill: (column, from, to, kind) => {
-    if (from !== "" && to !== "") return `${column}: ${from}${kind === "date" ? " to " : "\u2013"}${to}`;
-    if (from !== "") return `${column}: from ${from}`;
-    return `${column}: up to ${to}`;
-  },
-  tableEditFilter: (label) => `Edit filter ${label}`,
-  tableFilterApply: "Apply",
-  tableFilterCancel: "Cancel",
-  tableFilterClearAll: "Clear all",
-  tableFilterNotNumber: (label, value) => `${label} takes a number, like 10; "${value}" is not one.`,
-  tableFilterNotDate: (label, value) => `${label}: "${value}" is not a date this field can read; write it the way the field shows, or use the calendar.`,
-  tableFilterBackwards: (from, to) => `The range runs backwards: from ${from} to ${to}. Swap the two values.`,
-  tableDensity: "Density",
-  tableDensityComfortable: "Comfortable",
-  tableDensityCompact: "Compact",
-  tableRowsPerPage: "Rows per page",
-  /** "Showing 1–25 of 60", and where a search or filter hides rows, how many. */
-  tableShowing: (from, to, count, total) => {
-    if (count === 0) return `Showing 0 of ${total}`;
-    if (count === total) return `Showing ${from}\u2013${to} of ${total}`;
-    return `Showing ${from}\u2013${to} of ${count} (filtered from ${total})`;
-  },
-  tableSelected: (n) => `${n} selected`,
-  tableClearSelection: "Clear selection",
-  tableSortBy: "Sort by",
-  tableSortNone: "None",
-  tableSortAscending: "Ascending",
-  tableSortDescending: "Descending",
-  tableFailed: "The rows could not be loaded.",
-  tableRetry: "Try again",
-  // The seven features of 2026-09-13 ("Alle zeven, nu"), in the words the
-  // approved mocks of research/datatable/demo.html used.
-  tableSortKey: (column, direction, kind) => {
-    const up = direction === "ascending";
-    if (kind === "number" || kind === "order") return `${column} ${up ? "low to high" : "high to low"}`;
-    if (kind === "date") return `${column} ${up ? "oldest first" : "newest first"}`;
-    return `${column} ${up ? "A to Z" : "Z to A"}`;
-  },
-  tableSortedBy: (keys) => `Sorted by ${keys.join(", then ")}.`,
-  tableNotSorted: "Not sorted.",
-  tableColumns: "Columns",
-  tableColumnsLabel: "Visible columns",
-  tableColumnLocked: (column) => `${column} (always shown)`,
-  tableShowAllColumns: "Show every column",
-  tableColumnsShown: (shown2, total) => `${shown2} of ${total} columns shown`,
-  tableDetailsColumn: "Details",
-  tableRowDetails: (key) => `Details for ${key}`,
-  tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
-  tableEditField: (column, key) => `${column} of ${key}`,
-  tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
-  tableEdited: (key, column, before, after) => `${key}: ${column} changed from ${before} to ${after}.`,
-  tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
-  tableEditCancelled: "Edit cancelled; nothing changed.",
-  tableEditRequired: "A value is required.",
-  tableEditInvalid: "This value cannot be saved.",
-  tableGridStart: "Tab into the table to start.",
-  tableGridPosition: (row, rows, column, text) => `${row === 0 ? "Header row" : `Row ${row} of ${rows}`}, column ${column}: ${text}`,
-  formRequired: "required",
-  formInvalid: "This field is not filled in correctly.",
-  formSummaryOne: "1 field is not filled in correctly.",
-  formSummaryMany: (n) => `${n} fields are not filled in correctly.`,
-  fieldFallbackName: "Field",
-  // Beside the track, so a switch's state never rests on colour or the
-  // thumb's position alone [DI4]. Hidden from a screen reader, which
-  // already hears "switch, on" from the role [gap-11].
-  switchOn: "On",
-  switchOff: "Off",
-  calendarOpen: "Open the calendar",
-  // What the calendar button shows: a glyph, hidden from a screen reader,
-  // which hears calendarOpen as the button's name instead. The same glyph
-  // the date picker's own markup carries, so a picker the package builds
-  // (the data table's date filter) looks like one written by hand
-  // [Kenny's note of 2026-09-13]. Until then it was the word "Calendar".
-  calendarButton: "\u25A6",
-  dateFormatHint: "dd-mm-yyyy",
-  previousMonth: "Previous month",
-  nextMonth: "Next month",
-  /** The calendar's heading. A function, so a locale that writes the year first can. @param {string} month @param {number} year */
-  monthTitle: (month, year) => `${month} ${year}`,
-  // The title is a button since scope-89. Its name keeps the words it
-  // shows and adds what a press does, so a voice command naming what is
-  // on screen still reaches it.
-  chooseMonth: (title) => `${title}, choose a month`,
-  chooseYear: (year) => `${year}, choose a year`,
-  previousYear: "Previous year",
-  nextYear: "Next year",
-  previousYears: "Previous twelve years",
-  nextYears: "Next twelve years",
-  monthGrid: (year) => `Months of ${year}`,
-  yearGrid: (from, to) => `Years ${from} to ${to}`,
-  yearRange: (from, to) => `${from}\u2013${to}`,
-  weekdays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-  months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-  monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-  // The full date, because "4" alone tells a screen reader nothing about
-  // which month it is in.
-  dayLabel: (day, month, year) => `${day} ${month} ${year}`,
-  uploadZone: "Drop files here or choose them",
-  uploadTooLarge: (size) => `Larger than ${size}`,
-  /** @param {number} max */
-  uploadTooMany: (max) => `No more than ${max} files.`,
-  /** @param {string} max */
-  uploadTotalTooLarge: (max) => `Together the files may not exceed ${max}.`,
-  /** @param {string} accept */
-  uploadWrongType: (accept) => `Only ${accept} files.`,
-  uploadProgress: (name) => `Progress of ${name}`,
-  wizardStep: (at, of) => `Step ${at} of ${of}`,
-  copy: "Copy",
-  copied: "Copied",
-  copyBlocked: "Blocked",
-  // Announced as well as shown: a button's own label changing is not
-  // something a screen reader reports on its own.
-  copiedAnnouncement: (value) => `${value} copied`,
-  copyBlockedAnnouncement: "Copying is blocked in this browser",
-  undo: "Undo",
-  deleted: "Deleted.",
-  splitLabel: "Resize the panes",
-  reorderHandle: (name) => `Move ${name}`,
-  /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
-  reorderMoved: (name, at, of) => `${name} moved to position ${at} of ${of}`,
-  tileFallbackName: "Tile",
-  tileLabel: (name, column, row, w, h) => `${name}, column ${column}, row ${row}, ${w} by ${h}`,
-  contrastMissing: (token) => `No contrast to measure: ${token} does not exist in this theme.`,
-  contrastReport: (ratio, token, verdict) => `${ratio}:1 against ${token} \u2014 ${verdict}`,
-  colourHue: "Hue",
-  colourSaturation: "Saturation",
-  colourLightness: "Lightness",
-  contrastPasses: "passes",
-  contrastFails: "too little",
-  confirm: "Confirm",
-  /** The confirmation dialog TH107 opens: its two buttons, its description, and what a screen reader hears when it opens. */
-  confirmAccept: "Yes, do it",
-  confirmCancel: "Cancel",
-  confirmDescription: "This cannot be undone. Cancel leaves everything as it is.",
-  // The alarm [scope-94]. The headline, the detail and the code line are
-  // the caller's words; these are the ones the component adds itself. The
-  // countdown and the key hint are hidden from a screen reader, which hears
-  // the sentence below them once instead of a number every second.
-  alarmAction: "Acknowledge",
-  alarmKeepOpen: "Keep open",
-  alarmHint: "Press Enter",
-  alarmCountdown: (seconds) => `Closes in ${seconds} s`,
-  alarmClosesBy: (seconds) => `Closes by itself in ${seconds} seconds.`,
-  alarmPressTo: (action) => `Press ${action} to continue.`,
-  alarmKeptOpen: (action) => `Kept open. Press ${action} to continue.`,
-  save: "Save",
-  mainNavigation: "Main navigation",
-  skipToContent: "Skip to the content",
-  classified: "Classified",
-  // The neutral words: no theme's world. Until scope-84 these were
-  // "▶ Calibrating neural uplink", "Progress" and "OK" — cyberpunk's
-  // voice, shown by synthwave's boot and by any theme that asked for one.
-  arrivalLine: "Loading",
-  // Synthwave's boot is a VCR's on-screen display and an arcade cabinet's
-  // attract screen: the tape plays, the tracking settles, press start.
-  arrivalWordsByTheme: {
-    synthwave: { line: "\u25B6 Play", progress: "Tracking", ready: "Press start" }
-  },
-  arrivalLinesByTheme: {
-    retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
-    terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
-  },
-  arrivalProgress: "Progress",
-  arrivalReady: "Ready",
-  arrivalSkip: "Skip",
-  measureLoading: "measuring\u2026",
-  measureBox: (w, h) => `${w} \xD7 ${h} px`,
-  breadcrumb: "Breadcrumb",
-  pagination: "Pagination",
-  themePicker: "Choose a theme",
-  themeSaveFailed: "This choice will not be remembered \u2014 storage is blocked in this browser.",
-  themeSaveRefused: "Not saved on the server \u2014 your choice has been put back.",
-  /** The two contract violations enforceContracts reports [DI10, DI4]. */
-  contractDestructive: 'A destructive action must offer an undo (data-kp-undo) or a confirmation (data-kp-confirm="phrase"). SC 3.3.4 accepts either; it accepts neither of them missing.',
-  contractSemantic: "A control carrying a semantic colour must also say what it means: colour is never the only carrier.",
-  /** The two sections of a grouped theme picker [TH63]. */
-  themeGroupLight: "Light",
-  themeGroupDark: "Dark",
-  /**
-   * The loud fallback and the diagnostics page [TH97, AR25].
-   *
-   * The console warning is in here for the same reason the rest is: a
-   * consumer whose users are not English speakers should be able to
-   * replace it, and a message written into theme-core.js has no door.
-   */
-  themeUnknown: (requested, applied) => `kp-themes: "${requested}" is not a theme this build knows, so "${applied}" was applied instead. The stored choice was left alone; open the diagnostics page to see which half is behind.`,
-  rememberClash: (name, component) => `kp-themes: two ${component} elements both ask to be remembered as "${name}", so only the first one is. Give the second a data-kp-remember of its own.`,
-  registerLoadFailed: (theme, href) => `kp-themes: the register for "${theme}" did not load from ${href}, so the page keeps the theme it was wearing. Check the pattern given to attachLazyRegisters().`,
-  diagnosticsHeading: "Stylesheet and JavaScript, side by side",
-  diagnosticsStylesheet: "Stylesheet (css/themes.css)",
-  diagnosticsScript: "JavaScript (js/theme-registry.js)",
-  diagnosticsVersion: "Version",
-  diagnosticsThemes: "Themes",
-  diagnosticsEffects: "Unknown effect hooks",
-  diagnosticsEffectsNone: "none reported on this page",
-  diagnosticsVerdict: "Verdict",
-  diagnosticsMatch: "The stylesheet and the JavaScript come from the same version, and they know the same themes.",
-  diagnosticsStylesheetBehind: (stylesheet, script) => `The stylesheet is behind: it is version ${stylesheet} and the JavaScript is version ${script}. Copy a newer css/themes.css.`,
-  diagnosticsScriptBehind: (stylesheet, script) => `The JavaScript is behind: the stylesheet is version ${stylesheet} and the JavaScript is version ${script}. Copy newer files from js/.`,
-  diagnosticsThemesDiffer: (version) => `Both halves say version ${version} and yet they know different themes, so at least one of the two files has been edited by hand.`,
-  diagnosticsNoVersion: "The stylesheet declares no version, so it was generated before 3.2.0 \u2014 older than the JavaScript beside it, whatever that one says.",
-  diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
-  diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
-  diagnosticsUnknownVersion: "not declared"
-});
-var current = DEFAULT_STRINGS;
-function setStrings(next) {
-  current = Object.freeze({ ...current, ...next });
-  return current;
-}
-function getStrings() {
-  return current;
-}
-function resolveStrings(overrides) {
-  return overrides === void 0 ? current : { ...current, ...overrides };
-}
-
-// js/effects.js
-var HOOKS = Object.freeze({
-  surface: "data-kp-surface",
-  reveal: "data-kp-reveal",
-  revealTrigger: "data-kp-reveal-trigger",
-  revealEvery: "data-kp-reveal-every",
-  divider: "data-kp-divider",
-  /** A row of items a theme may run [M1, 2026-09-08]. */
-  marquee: "data-kp-marquee",
-  label: "data-kp-label",
-  /** The label a stamp takes once the file is open [S49, A11]. */
-  labelOpen: "data-kp-label-open",
-  /** Set on the container while the file is open. */
-  openState: "data-kp-open",
-  navSide: "data-kp-nav-side",
-  /**
-   * A number that counts up to what it already says [feat-count-1].
-   *
-   * The element's authored text is the truth and the module never
-   * invents one: it reads the number out of that text, counts to it,
-   * and puts the text back exactly as written. A page that never
-   * attaches this module, or a reader who asked for less movement,
-   * sees the final number and nothing else — which is the frozen bar.
-   */
-  count: "data-kp-count",
-  /** `armed` | `running` | `done`, readable at any moment [KT16]. */
-  countState: "data-kp-count-state"
-});
-var SURFACES = Object.freeze(["hero", "app"]);
-var REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
-var HEADLINE_ROUTINES = Object.freeze([
-  "decipher",
-  "type",
-  "dissolve",
-  "shout",
-  "slam",
-  "focus",
-  "resolve",
-  "blur",
-  "sharpen",
-  "clip",
-  "overprint",
-  "gild",
-  "wipe",
-  "calibrate",
-  "ink",
-  "arrive",
-  "draw",
-  "tracking",
-  "popdown"
-]);
-var ARRIVALS = Object.freeze(["boot", "card"]);
-var STATE = Object.freeze({
-  // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
-  // springs from a wide mis-registration into its rest position once.
-  registering: "is-registering",
-  // The light headline [S48, A1]: the clip window opening once.
-  revealing: "is-revealing",
-  // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
-  // blur+brightness resolve, a one-shot optical sweep on the whole,
-  // unsplit line — no word-splitting, so it is its own routine rather
-  // than the shared `focus` word-stagger group shade-dark already owns.
-  sharpening: "is-sharpening",
-  in: "is-in",
-  cleared: "is-cleared",
-  deciphered: "is-deciphered",
-  glitching: "is-glitching",
-  noise: "is-noise",
-  // The synthwave routines [SW2]: the tracking wipe and the shine of a
-  // headline, and the boot overlay switching off.
-  tracking: "is-tracking",
-  shine: "is-shine",
-  off: "is-off",
-  // The lift routines [S48, LIFT_PLAN rows 2–5]: a headline whose words
-  // arrive one after another (phantom's shout, brutalism's slam), one that
-  // clears out of a dither (retro), one that types itself (terminal).
-  words: "is-words",
-  dissolving: "is-dissolving",
-  typing: "is-typing",
-  // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
-  // down under a clip-path, its text never touched.
-  popping: "is-popping",
-  // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
-  // ink-in settle, on only while the transition runs.
-  settling: "is-settling",
-  // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
-  // bands wiping away once over text that never moves.
-  calibrating: "is-calibrating",
-  // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
-  // across the whole, unsplit line once.
-  revealed: "is-revealed",
-  // The lapis headline [S48, LIFT_PLAN row 6]: a single wipe over the
-  // whole clause, once — the gilder's burnishing pass, not a per-word or
-  // per-glyph reveal, so it earns its own routine rather than reusing
-  // `dissolve` or `type` [S49].
-  gilding: "is-gilding"
-});
-var ROUTINES = Object.freeze({
-  headline: "--kp-reveal-headline",
-  emphasis: "--kp-reveal-emphasis",
-  rule: "--kp-reveal-rule",
-  // How the page arrives, read from the root [SW2]: `boot` builds the
-  // overlay below; anything else, or nothing, is quiet.
-  arrival: "--kp-arrival"
-});
-var ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip", bar: "kp-boot__bar" });
-var CARET_KNOB = "--kp-caret";
-var KNOBS = Object.freeze({
-  /** `block` builds the segmented bar retro's POST counts along. */
-  arrivalBar: "--kp-arrival-bar",
-  /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
-  arrivalCount: "--kp-arrival-count",
-  /**
-   * Whether a click anywhere on the arrival overlay ends it [CP1].
-   *
-   * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
-   * before. The overlay is `position: fixed; inset: 0`, so until now it
-   * ate every click for up to 1100ms and only the Skip button ended it —
-   * a click elsewhere did nothing and gave no sign it had been lost.
-   * JobTracker reported that as "the theme picker does not work on
-   * phantom"; the picker was fine.
-   */
-  arrivalDismiss: "--kp-arrival-dismiss",
-  /**
-   * How fast the arrival plays, as a factor [scope-84]. Default 1.
-   *
-   * Every wait of the arrival — a boot line's step, a percentage's step,
-   * the card's hold, the pause before it switches off — is divided by
-   * it, and every CSS animation on the overlay (the CRT switching off,
-   * the card's bar and its shove) plays at it as its playback rate. So
-   * `0.5` takes twice as long and `2` half as long, and the sequence
-   * stays the same sequence. A value that is not a number above zero
-   * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
-   * sets it on the root of a frame; no register declares it, and a page
-   * that never sets it plays exactly as before.
-   */
-  arrivalRate: "--kp-arrival-rate"
-});
-var COUNT_KNOB = "--kp-count";
-var COUNT_FROM_KNOB = "--kp-count-from";
-var BOOT_PROGRESS = "--kp-boot-progress";
-var MARQUEE_KNOB = "--kp-marquee";
-var MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
-var MEASURE_KNOB = "--kp-measure";
-var POINTER_KNOB = "--kp-pointer";
-var POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
-var LIGHT_KNOB = "--kp-light";
-var LIGHT = Object.freeze({
-  x: "--kp-light-x",
-  y: "--kp-light-y",
-  near: "--kp-light-near",
-  lift: "--kp-light-lift",
-  atX: "--kp-light-at-x",
-  atY: "--kp-light-at-y"
-});
-var LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
-var LIGHT_REACH = 240;
-var LIGHT_FAR = 560;
-var PRESS_KNOB = "--kp-press";
-var PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
-var ROOT_ATTRIBUTE = "data-kp-effects";
-var DONE_ATTRIBUTE = "data-kp-effects-done";
-var REVEAL_STATE = "data-kp-reveal-state";
-var TEXT_ATTRIBUTE = "data-kp-text";
-var UNKNOWN_EVENT = "kp-effect-unknown";
-var REVEAL_EVENT = "kp-reveal";
-var MEMO_PREFIX = "kp-effects:";
-var GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
-var TIMINGS = Object.freeze({
-  // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
-  // glitch (two steps, once), the headline's slice burst (one burst of
-  // six bands, once) and the charge sweep (a transform, no luminance).
-  // The synthwave register [SW1]: the tracking wipe and the shine of the
-  // chrome headline, the tube that switches on (one dip), the sun cut on
-  // a button, the bar entering, the floor's drift and the CRT switching
-  // the boot overlay off — every one once, except the drift, which moves
-  // a pattern and never changes luminance.
-  // The side navigation's backdrop [feat-nav-3]: one fade in, at the
-  // theme's own duration, on a layer that is already a dimming. It runs
-  // once because the element is created when the panel opens and removed
-  // when it closes.
-  "kp-sidenav-backdrop": { durationMs: 220, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // Solstice's raking light [scope-12]: one pass of a warm band across a
-  // control, on hover. The band is a gradient that fades to transparent at
-  // both ends, so no edge of it is an opposing luminance change.
-  "kp-rake": { durationMs: 620, cycles: 1, property: "translate", luminanceSteps: [] },
-  // Titanium's headline [scope-17]: one short linear pass as the word
-  // slides square. No blur and no chromatic split — those belong to the
-  // spectral instrument. Opacity 0 to 1 once, so no opposing change.
-  "kp-mill": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-tracking": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
-  "kp-shine": { durationMs: 1400, cycles: 1, property: "background-position", luminanceSteps: [] },
-  "kp-tube-on": { durationMs: 1100, cycles: 1, property: "color", luminanceSteps: [0, 1, 0, 1] },
-  "kp-sun-cut": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-  "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-  "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
-  // The phantom register [PH1]: the words of a headline shouting in, the
-  // film cut of a toast, the loader's bar and its shove out to the left.
-  "kp-shout": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-cut-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 1] },
-  "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
-  // The retro register [RT1]: the dither clearing off a headline and off
-  // the boot screen (four densities, one direction), the selection bar
-  // dragging across a mark, the redaction brush lifting.
-  "kp-dither-clear": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
-  "kp-dither-out": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
-  "kp-drag-select": { durationMs: 360, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  "kp-redact-lift": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  // The terminal register [TM1]: the sweep band that rests eight of ten
-  // seconds and the tube collapsing the boot screen.
-  "kp-sweep": { durationMs: 1e4, cycles: Infinity, property: "transform", luminanceSteps: [] },
-  "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-  // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
-  "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
-  // The alarm [scope-94]: the plate fading in, the frame's glow breathing
-  // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
-  // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per
-  // cell), the split copies slicing through once and then every 5 s, the
-  // headline's short dip every 5 s, the detail line fading in, the caret,
-  // the hazard stripes marching and the faint band sweeping down. Measured
-  // from rendered frames in tests/alarm.spec.mjs as well.
-  // Since scope-98 the flicker, the decode, the split, the dip, the caret,
-  // the march and the sweep are cyberpunk's alone; the package's default
-  // arrives whole: the panel settling and the headline arriving, once each.
-  // The plate's row keeps cyberpunk's 180 ms, the shorter of the two.
-  "kp-alarm-ground-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-alarm-settle": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-alarm-arrive": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-alarm-pulse": { durationMs: 1400, cycles: Infinity, property: "opacity", luminanceSteps: [0.4, 1] },
-  // Cyberpunk's panel striking like a failing tube [scope-100], in its
-  // register: 0, 0.6, a sag to 0.52 under the 10% step, 1 — one direction,
-  // where the package's kp-alarm-flicker-in (0, 1, 0.3, 1) read 3.00/s.
-  "kp-alarm-cyberpunk-flicker": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 0.52, 1, 1] },
-  "kp-alarm-jitter": { durationMs: 5e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0.6, 1] },
-  "kp-alarm-slice-in": { durationMs: 600, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  "kp-alarm-slice": { durationMs: 5e3, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
-  "kp-alarm-decode-letter": { durationMs: 180, cycles: 1, property: "color", luminanceSteps: [] },
-  "kp-alarm-decode-noise": { durationMs: 90, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
-  "kp-alarm-detail-in": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-alarm-caret": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
-  "kp-alarm-march": { durationMs: 1600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-  "kp-alarm-sweep": { durationMs: 6e3, cycles: Infinity, property: "translate", luminanceSteps: [] },
-  // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
-  // arriving out of a blur, the hero button and the dossier card settling
-  // out of the same blur once on load, and the confirmation dialog's
-  // native open/close — the last two shared with academia's, which mounts
-  // its dialog the same way.
-  // One keyframe for both grains since scope-100 (the two were identical):
-  // the words at 600ms, the hero button and dossier card at 500ms.
-  "kp-focus": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // The nostromo register [S48, LIFT_PLAN row 19]: the headline and the
-  // dossier stamp popping down under a clip-path, once, on load.
-  "kp-popdown": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // The dark register [S48, LIFT_PLAN row 15]: the headline's word-by-word
-  // resolve out of a blur, and the mark's ignite and the rule's sweep —
-  // both scroll-bound (animation-timeline: view()), not time-based, so
-  // their duration is the demo's own measured pace across the range
-  // rather than a clock the browser runs.
-  "kp-resolve": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
-  "kp-ignite": { durationMs: 600, cycles: 1, property: "color", luminanceSteps: [0, 1] },
-  "kp-sweep-in": { durationMs: 600, cycles: 1, property: "background-position", luminanceSteps: [] },
-  // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
-  // backdrop fade — a keyframe rather than a transition, because a
-  // ::backdrop needs @starting-style to transition on its own appearance
-  // and this theme does not use it.
-  "kp-confirm-in": { durationMs: 160, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
-  // over the headline, the rule draw, and the dossier's redaction lift.
-  "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  "kp-cal-rule": { durationMs: 480, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-cal-redact": { durationMs: 320, cycles: 1, property: "background-size", luminanceSteps: [] },
-  // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
-  // once across a headline (the whole line, unsplit) or a redaction bar.
-  // No luminance step: the mask moves, the content under it does not
-  // change colour.
-  "kp-wipe": { durationMs: 600, cycles: 1, property: "mask-position", luminanceSteps: [] },
-  // The lapis register [S48, LIFT_PLAN row 6]: the burnish, a single
-  // clip-path wipe over the headline once, no loop.
-  "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-  // ellipse wipe and the rule's horizontal scale, both plain CSS with no
-  // [data-kp-effects] gate — they run once on every load, not once per
-  // session (a deliberate divergence, recorded in that theme's anatomy).
-  "kp-hc-headline-wipe": { durationMs: 550, cycles: 1, property: "clip-path", luminanceSteps: [] },
-  "kp-hc-rule-wipe": { durationMs: 400, cycles: 1, property: "transform", luminanceSteps: [] },
-  // The brutalism register [BR1]: the words dropping onto their offset and
-  // the seamless marquee.
-  "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-marquee": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
-  "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-  "kp-slice-1": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
-  "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
-  "kp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-slide-in": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
-  // The base layer's shared rule draw. One keyframe, nine registers, each
-  // with its own duration: nostromo 280ms, blueprint 420ms, lapis 480ms
-  // (its --kp-rule knob, which is what runs), light and retro 480ms, deco
-  // 600ms, brutalism 620ms, terminal 900ms, shade-light its --fx-duration.
-  // The row carries the shortest, the worst case a rate is read at; it
-  // used to say 420ms, blueprint's alone [scope-100].
-  "kp-rule-in": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-settle": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-blink": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
-  "kp-drift": { durationMs: 4e4, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-  "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
-  "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
-  "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
-  // The indeterminate progress stripes [gap-11]: a background-position
-  // drift of one stripe period, no luminance change of its own.
-  "kp-progress-stripes": { durationMs: 1200, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-  // Cyberpunk's data stream [scope-96]: two dash tiles drifting by one
-  // tile width per loop (144px and 216px in 8000ms), no luminance change.
-  "kp-stream-144": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
-  "kp-stream-216": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
-  // The shared marquee [M1, 2026-09-08]: one transform across a doubled
-  // row, no luminance change of its own, and the only loop besides
-  // brutalism's hatch. The duration is a knob, so this row carries the
-  // package default the base layer declares.
-  "kp-marquee-pass": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
-  // offset — a translate only, no luminance change.
-  "kp-kento-blue": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
-  "kp-kento-red": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
-  // The pastel register [S48, LIFT_PLAN row 6]: the overprint layer's
-  // spring-in (opacity, matched against its own keyframe below) and the
-  // mark fill and the rule draw, both transform-free size changes with
-  // no luminance step of their own.
-  "kp-registration": { durationMs: 650, cycles: 1, property: "opacity", luminanceSteps: [0, 0.55] },
-  "kp-fill": { durationMs: 420, cycles: 1, property: "background-size", luminanceSteps: [] },
-  "kp-draw": { durationMs: 500, cycles: 1, property: "width", luminanceSteps: [] },
-  // The shade-light register [SL2]: the headline's words resolving out
-  // of a blur, the lede's marks filling in (a size, not a luminance
-  // change), and the dialog rising into place.
-  "kp-word-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-mark-in": { durationMs: 300, cycles: 1, property: "background-size", luminanceSteps: [] },
-  // The forest register [S48, LIFT_PLAN forest row]: the headline's own
-  // fade-in and the contour trace that draws beside it, both CSS-only
-  // (no routine — see css/forest-register.css's type section).
-  "kp-headline-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-trace": { durationMs: 1800, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
-  // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
-  // scaling in once with the headline, and the dossier's jewel plates
-  // clearing on the "Open the file" trigger, staggered 140ms apart.
-  "kp-cartouche-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  "kp-redaction-clear": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // The light register [S48, LIFT_PLAN, A1]: the headline's rounded clip
-  // window opening once (a shape and a fade, never a loop), and the lede
-  // marks' background-size sweep with its one colour swap — a highlighter
-  // reveal, not a flash.
-  "kp-clip-reveal": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
-  "kp-mark-sweep": { durationMs: 420, cycles: 1, property: "color", luminanceSteps: [0, 1] },
-  // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
-  // resolve, a monotone blur+brightness sweep, once, on the whole,
-  // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
-  // dark and shade-dark registers already own for their own, different
-  // mechanics). The confirmation dialog's one-shot open reuses the
-  // `kp-dialog-in` row above, which academia, nostromo and shade-dark
-  // already share.
-  "kp-sharpen-in": { durationMs: 640, cycles: 1, property: "filter", luminanceSteps: [] },
-  // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
-  // in, and the two dimension lines extending like a tape measure (a
-  // transform each, no luminance change) with their labels fading in.
-  // The lede's marks and the dossier's redactions are plain transitions
-  // on a later class toggle, not keyframes, so they carry no row here —
-  // the same choice terminal's own redaction made [TM1].
-  "kp-headline-fade": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-  // One fade, used twice: the brackets, then the readout behind them.
-  // The two dimension lines this replaced needed four rows [scope-18].
-  "kp-dim-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
-});
-var started = /* @__PURE__ */ new WeakSet();
-var carets = /* @__PURE__ */ new WeakSet();
-var arrivalsOnScreen = /* @__PURE__ */ new WeakMap();
-var unknownReported = /* @__PURE__ */ new Set();
 function unknownEffects() {
   return [...unknownReported];
 }
@@ -1942,20 +1563,411 @@ function attachEffects(root = document, options = {}) {
     }
   };
 }
+var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRIVAL, CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS, TIMINGS, started, carets, arrivalsOnScreen, unknownReported;
+var init_effects = __esm({
+  "js/effects.js"() {
+    "use strict";
+    init_strings();
+    HOOKS = Object.freeze({
+      surface: "data-kp-surface",
+      reveal: "data-kp-reveal",
+      revealTrigger: "data-kp-reveal-trigger",
+      revealEvery: "data-kp-reveal-every",
+      divider: "data-kp-divider",
+      /** A row of items a theme may run [M1, 2026-09-08]. */
+      marquee: "data-kp-marquee",
+      label: "data-kp-label",
+      /** The label a stamp takes once the file is open [S49, A11]. */
+      labelOpen: "data-kp-label-open",
+      /** Set on the container while the file is open. */
+      openState: "data-kp-open",
+      navSide: "data-kp-nav-side",
+      /**
+       * A number that counts up to what it already says [feat-count-1].
+       *
+       * The element's authored text is the truth and the module never
+       * invents one: it reads the number out of that text, counts to it,
+       * and puts the text back exactly as written. A page that never
+       * attaches this module, or a reader who asked for less movement,
+       * sees the final number and nothing else — which is the frozen bar.
+       */
+      count: "data-kp-count",
+      /** `armed` | `running` | `done`, readable at any moment [KT16]. */
+      countState: "data-kp-count-state"
+    });
+    SURFACES = Object.freeze(["hero", "app"]);
+    REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
+    HEADLINE_ROUTINES = Object.freeze([
+      "decipher",
+      "type",
+      "dissolve",
+      "shout",
+      "slam",
+      "focus",
+      "resolve",
+      "blur",
+      "sharpen",
+      "clip",
+      "overprint",
+      "gild",
+      "wipe",
+      "calibrate",
+      "ink",
+      "arrive",
+      "draw",
+      "tracking",
+      "popdown"
+    ]);
+    ARRIVALS = Object.freeze(["boot", "card"]);
+    STATE = Object.freeze({
+      // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
+      // springs from a wide mis-registration into its rest position once.
+      registering: "is-registering",
+      // The light headline [S48, A1]: the clip window opening once.
+      revealing: "is-revealing",
+      // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
+      // blur+brightness resolve, a one-shot optical sweep on the whole,
+      // unsplit line — no word-splitting, so it is its own routine rather
+      // than the shared `focus` word-stagger group shade-dark already owns.
+      sharpening: "is-sharpening",
+      in: "is-in",
+      cleared: "is-cleared",
+      deciphered: "is-deciphered",
+      glitching: "is-glitching",
+      noise: "is-noise",
+      // The synthwave routines [SW2]: the tracking wipe and the shine of a
+      // headline, and the boot overlay switching off.
+      tracking: "is-tracking",
+      shine: "is-shine",
+      off: "is-off",
+      // The lift routines [S48, LIFT_PLAN rows 2–5]: a headline whose words
+      // arrive one after another (phantom's shout, brutalism's slam), one that
+      // clears out of a dither (retro), one that types itself (terminal).
+      words: "is-words",
+      dissolving: "is-dissolving",
+      typing: "is-typing",
+      // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
+      // down under a clip-path, its text never touched.
+      popping: "is-popping",
+      // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+      // ink-in settle, on only while the transition runs.
+      settling: "is-settling",
+      // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
+      // bands wiping away once over text that never moves.
+      calibrating: "is-calibrating",
+      // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+      // across the whole, unsplit line once.
+      revealed: "is-revealed",
+      // The lapis headline [S48, LIFT_PLAN row 6]: a single wipe over the
+      // whole clause, once — the gilder's burnishing pass, not a per-word or
+      // per-glyph reveal, so it earns its own routine rather than reusing
+      // `dissolve` or `type` [S49].
+      gilding: "is-gilding"
+    });
+    ROUTINES = Object.freeze({
+      headline: "--kp-reveal-headline",
+      emphasis: "--kp-reveal-emphasis",
+      rule: "--kp-reveal-rule",
+      // How the page arrives, read from the root [SW2]: `boot` builds the
+      // overlay below; anything else, or nothing, is quiet.
+      arrival: "--kp-arrival"
+    });
+    ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip", bar: "kp-boot__bar" });
+    CARET_KNOB = "--kp-caret";
+    KNOBS = Object.freeze({
+      /** `block` builds the segmented bar retro's POST counts along. */
+      arrivalBar: "--kp-arrival-bar",
+      /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
+      arrivalCount: "--kp-arrival-count",
+      /**
+       * Whether a click anywhere on the arrival overlay ends it [CP1].
+       *
+       * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+       * before. The overlay is `position: fixed; inset: 0`, so until now it
+       * ate every click for up to 1100ms and only the Skip button ended it —
+       * a click elsewhere did nothing and gave no sign it had been lost.
+       * JobTracker reported that as "the theme picker does not work on
+       * phantom"; the picker was fine.
+       */
+      arrivalDismiss: "--kp-arrival-dismiss",
+      /**
+       * How fast the arrival plays, as a factor [scope-84]. Default 1.
+       *
+       * Every wait of the arrival — a boot line's step, a percentage's step,
+       * the card's hold, the pause before it switches off — is divided by
+       * it, and every CSS animation on the overlay (the CRT switching off,
+       * the card's bar and its shove) plays at it as its playback rate. So
+       * `0.5` takes twice as long and `2` half as long, and the sequence
+       * stays the same sequence. A value that is not a number above zero
+       * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+       * sets it on the root of a frame; no register declares it, and a page
+       * that never sets it plays exactly as before.
+       */
+      arrivalRate: "--kp-arrival-rate"
+    });
+    COUNT_KNOB = "--kp-count";
+    COUNT_FROM_KNOB = "--kp-count-from";
+    BOOT_PROGRESS = "--kp-boot-progress";
+    MARQUEE_KNOB = "--kp-marquee";
+    MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
+    MEASURE_KNOB = "--kp-measure";
+    POINTER_KNOB = "--kp-pointer";
+    POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
+    LIGHT_KNOB = "--kp-light";
+    LIGHT = Object.freeze({
+      x: "--kp-light-x",
+      y: "--kp-light-y",
+      near: "--kp-light-near",
+      lift: "--kp-light-lift",
+      atX: "--kp-light-at-x",
+      atY: "--kp-light-at-y"
+    });
+    LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+    LIGHT_REACH = 240;
+    LIGHT_FAR = 560;
+    PRESS_KNOB = "--kp-press";
+    PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
+    ROOT_ATTRIBUTE = "data-kp-effects";
+    DONE_ATTRIBUTE = "data-kp-effects-done";
+    REVEAL_STATE = "data-kp-reveal-state";
+    TEXT_ATTRIBUTE = "data-kp-text";
+    UNKNOWN_EVENT = "kp-effect-unknown";
+    REVEAL_EVENT = "kp-reveal";
+    MEMO_PREFIX = "kp-effects:";
+    GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
+    TIMINGS = Object.freeze({
+      // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
+      // glitch (two steps, once), the headline's slice burst (one burst of
+      // six bands, once) and the charge sweep (a transform, no luminance).
+      // The synthwave register [SW1]: the tracking wipe and the shine of the
+      // chrome headline, the tube that switches on (one dip), the sun cut on
+      // a button, the bar entering, the floor's drift and the CRT switching
+      // the boot overlay off — every one once, except the drift, which moves
+      // a pattern and never changes luminance.
+      // The side navigation's backdrop [feat-nav-3]: one fade in, at the
+      // theme's own duration, on a layer that is already a dimming. It runs
+      // once because the element is created when the panel opens and removed
+      // when it closes.
+      "kp-sidenav-backdrop": { durationMs: 220, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // Solstice's raking light [scope-12]: one pass of a warm band across a
+      // control, on hover. The band is a gradient that fades to transparent at
+      // both ends, so no edge of it is an opposing luminance change.
+      "kp-rake": { durationMs: 620, cycles: 1, property: "translate", luminanceSteps: [] },
+      // Titanium's headline [scope-17]: one short linear pass as the word
+      // slides square. No blur and no chromatic split — those belong to the
+      // spectral instrument. Opacity 0 to 1 once, so no opposing change.
+      "kp-mill": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-tracking": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+      "kp-shine": { durationMs: 1400, cycles: 1, property: "background-position", luminanceSteps: [] },
+      "kp-tube-on": { durationMs: 1100, cycles: 1, property: "color", luminanceSteps: [0, 1, 0, 1] },
+      "kp-sun-cut": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+      "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+      // The phantom register [PH1]: the words of a headline shouting in, the
+      // film cut of a toast, the loader's bar and its shove out to the left.
+      "kp-shout": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-cut-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 1] },
+      "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
+      // The retro register [RT1]: the dither clearing off a headline and off
+      // the boot screen (four densities, one direction), the selection bar
+      // dragging across a mark, the redaction brush lifting.
+      "kp-dither-clear": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
+      "kp-dither-out": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
+      "kp-drag-select": { durationMs: 360, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-redact-lift": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      // The terminal register [TM1]: the sweep band that rests eight of ten
+      // seconds and the tube collapsing the boot screen.
+      "kp-sweep": { durationMs: 1e4, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+      // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
+      "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
+      // The alarm [scope-94]: the plate fading in, the frame's glow breathing
+      // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
+      // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per
+      // cell), the split copies slicing through once and then every 5 s, the
+      // headline's short dip every 5 s, the detail line fading in, the caret,
+      // the hazard stripes marching and the faint band sweeping down. Measured
+      // from rendered frames in tests/alarm.spec.mjs as well.
+      // Since scope-98 the flicker, the decode, the split, the dip, the caret,
+      // the march and the sweep are cyberpunk's alone; the package's default
+      // arrives whole: the panel settling and the headline arriving, once each.
+      // The plate's row keeps cyberpunk's 180 ms, the shorter of the two.
+      "kp-alarm-ground-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-alarm-settle": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-alarm-arrive": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-alarm-pulse": { durationMs: 1400, cycles: Infinity, property: "opacity", luminanceSteps: [0.4, 1] },
+      // Cyberpunk's panel striking like a failing tube [scope-100], in its
+      // register: 0, 0.6, a sag to 0.52 under the 10% step, 1 — one direction,
+      // where the package's kp-alarm-flicker-in (0, 1, 0.3, 1) read 3.00/s.
+      "kp-alarm-cyberpunk-flicker": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 0.52, 1, 1] },
+      "kp-alarm-jitter": { durationMs: 5e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0.6, 1] },
+      "kp-alarm-slice-in": { durationMs: 600, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-alarm-slice": { durationMs: 5e3, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
+      "kp-alarm-decode-letter": { durationMs: 180, cycles: 1, property: "color", luminanceSteps: [] },
+      "kp-alarm-decode-noise": { durationMs: 90, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+      "kp-alarm-detail-in": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-alarm-caret": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
+      "kp-alarm-march": { durationMs: 1600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      "kp-alarm-sweep": { durationMs: 6e3, cycles: Infinity, property: "translate", luminanceSteps: [] },
+      // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
+      // arriving out of a blur, the hero button and the dossier card settling
+      // out of the same blur once on load, and the confirmation dialog's
+      // native open/close — the last two shared with academia's, which mounts
+      // its dialog the same way.
+      // One keyframe for both grains since scope-100 (the two were identical):
+      // the words at 600ms, the hero button and dossier card at 500ms.
+      "kp-focus": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-dialog-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-backdrop-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // The nostromo register [S48, LIFT_PLAN row 19]: the headline and the
+      // dossier stamp popping down under a clip-path, once, on load.
+      "kp-popdown": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // The dark register [S48, LIFT_PLAN row 15]: the headline's word-by-word
+      // resolve out of a blur, and the mark's ignite and the rule's sweep —
+      // both scroll-bound (animation-timeline: view()), not time-based, so
+      // their duration is the demo's own measured pace across the range
+      // rather than a clock the browser runs.
+      "kp-resolve": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
+      "kp-ignite": { durationMs: 600, cycles: 1, property: "color", luminanceSteps: [0, 1] },
+      "kp-sweep-in": { durationMs: 600, cycles: 1, property: "background-position", luminanceSteps: [] },
+      // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
+      // backdrop fade — a keyframe rather than a transition, because a
+      // ::backdrop needs @starting-style to transition on its own appearance
+      // and this theme does not use it.
+      "kp-confirm-in": { durationMs: 160, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
+      // over the headline, the rule draw, and the dossier's redaction lift.
+      "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-cal-rule": { durationMs: 480, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-cal-redact": { durationMs: 320, cycles: 1, property: "background-size", luminanceSteps: [] },
+      // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+      // once across a headline (the whole line, unsplit) or a redaction bar.
+      // No luminance step: the mask moves, the content under it does not
+      // change colour.
+      "kp-wipe": { durationMs: 600, cycles: 1, property: "mask-position", luminanceSteps: [] },
+      // The lapis register [S48, LIFT_PLAN row 6]: the burnish, a single
+      // clip-path wipe over the headline once, no loop.
+      "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
+      // ellipse wipe and the rule's horizontal scale, both plain CSS with no
+      // [data-kp-effects] gate — they run once on every load, not once per
+      // session (a deliberate divergence, recorded in that theme's anatomy).
+      "kp-hc-headline-wipe": { durationMs: 550, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-hc-rule-wipe": { durationMs: 400, cycles: 1, property: "transform", luminanceSteps: [] },
+      // The brutalism register [BR1]: the words dropping onto their offset and
+      // the seamless marquee.
+      "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-marquee": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+      "kp-slice-1": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
+      "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
+      "kp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-slide-in": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
+      // The base layer's shared rule draw. One keyframe, nine registers, each
+      // with its own duration: nostromo 280ms, blueprint 420ms, lapis 480ms
+      // (its --kp-rule knob, which is what runs), light and retro 480ms, deco
+      // 600ms, brutalism 620ms, terminal 900ms, shade-light its --fx-duration.
+      // The row carries the shortest, the worst case a rate is read at; it
+      // used to say 420ms, blueprint's alone [scope-100].
+      "kp-rule-in": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-settle": { durationMs: 140, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-blink": { durationMs: 1e3, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
+      "kp-drift": { durationMs: 4e4, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      "kp-ember": { durationMs: 840, cycles: 1, property: "box-shadow", luminanceSteps: [] },
+      "kp-spin": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-pulse": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [1, 0.6, 1] },
+      // The indeterminate progress stripes [gap-11]: a background-position
+      // drift of one stripe period, no luminance change of its own.
+      "kp-progress-stripes": { durationMs: 1200, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      // Cyberpunk's data stream [scope-96]: two dash tiles drifting by one
+      // tile width per loop (144px and 216px in 8000ms), no luminance change.
+      "kp-stream-144": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
+      "kp-stream-216": { durationMs: 8e3, cycles: Infinity, property: "mask-position", luminanceSteps: [] },
+      // The shared marquee [M1, 2026-09-08]: one transform across a doubled
+      // row, no luminance change of its own, and the only loop besides
+      // brutalism's hatch. The duration is a knob, so this row carries the
+      // package default the base layer declares.
+      "kp-marquee-pass": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      // offset — a translate only, no luminance change.
+      "kp-kento-blue": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
+      "kp-kento-red": { durationMs: 700, cycles: 1, property: "transform", luminanceSteps: [] },
+      // The pastel register [S48, LIFT_PLAN row 6]: the overprint layer's
+      // spring-in (opacity, matched against its own keyframe below) and the
+      // mark fill and the rule draw, both transform-free size changes with
+      // no luminance step of their own.
+      "kp-registration": { durationMs: 650, cycles: 1, property: "opacity", luminanceSteps: [0, 0.55] },
+      "kp-fill": { durationMs: 420, cycles: 1, property: "background-size", luminanceSteps: [] },
+      "kp-draw": { durationMs: 500, cycles: 1, property: "width", luminanceSteps: [] },
+      // The shade-light register [SL2]: the headline's words resolving out
+      // of a blur, the lede's marks filling in (a size, not a luminance
+      // change), and the dialog rising into place.
+      "kp-word-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-mark-in": { durationMs: 300, cycles: 1, property: "background-size", luminanceSteps: [] },
+      // The forest register [S48, LIFT_PLAN forest row]: the headline's own
+      // fade-in and the contour trace that draws beside it, both CSS-only
+      // (no routine — see css/forest-register.css's type section).
+      "kp-headline-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-trace": { durationMs: 1800, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
+      // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
+      // scaling in once with the headline, and the dossier's jewel plates
+      // clearing on the "Open the file" trigger, staggered 140ms apart.
+      "kp-cartouche-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-redaction-clear": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // The light register [S48, LIFT_PLAN, A1]: the headline's rounded clip
+      // window opening once (a shape and a fade, never a loop), and the lede
+      // marks' background-size sweep with its one colour swap — a highlighter
+      // reveal, not a flash.
+      "kp-clip-reveal": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
+      "kp-mark-sweep": { durationMs: 420, cycles: 1, property: "color", luminanceSteps: [0, 1] },
+      // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
+      // resolve, a monotone blur+brightness sweep, once, on the whole,
+      // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
+      // dark and shade-dark registers already own for their own, different
+      // mechanics). The confirmation dialog's one-shot open reuses the
+      // `kp-dialog-in` row above, which academia, nostromo and shade-dark
+      // already share.
+      "kp-sharpen-in": { durationMs: 640, cycles: 1, property: "filter", luminanceSteps: [] },
+      // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
+      // in, and the two dimension lines extending like a tape measure (a
+      // transform each, no luminance change) with their labels fading in.
+      // The lede's marks and the dossier's redactions are plain transitions
+      // on a later class toggle, not keyframes, so they carry no row here —
+      // the same choice terminal's own redaction made [TM1].
+      "kp-headline-fade": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      // One fade, used twice: the brackets, then the readout behind them.
+      // The two dimension lines this replaced needed four rows [scope-18].
+      "kp-dim-label": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 1] }
+    });
+    started = /* @__PURE__ */ new WeakSet();
+    carets = /* @__PURE__ */ new WeakSet();
+    arrivalsOnScreen = /* @__PURE__ */ new WeakMap();
+    unknownReported = /* @__PURE__ */ new Set();
+  }
+});
 
 // js/alarm.js
-var ALARM_CLOSE_EVENT = "kp-alarm-close";
-var ALARM_OPEN_EVENT = "kp-alarm-open";
-var ALARM_SECONDS = 8;
-var TICK_MS = 100;
-var serial = 0;
+var alarm_exports = {};
+__export(alarm_exports, {
+  ALARM_CLOSE_EVENT: () => ALARM_CLOSE_EVENT,
+  ALARM_OPEN_EVENT: () => ALARM_OPEN_EVENT,
+  ALARM_SECONDS: () => ALARM_SECONDS,
+  attachAlarms: () => attachAlarms,
+  buildAlarm: () => buildAlarm,
+  glyphCells: () => glyphCells,
+  noiseGlyph: () => noiseGlyph,
+  showAlarm: () => showAlarm,
+  writeCountdown: () => writeCountdown
+});
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text !== void 0) node.textContent = text;
   return node;
 }
-var noiseGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
 function glyphCells(text) {
   const parts = [];
   let i = 0;
@@ -2146,271 +2158,804 @@ function attachAlarms(root = document, { strings } = {}) {
     for (const c of cleanups) c();
   };
 }
-
-// js/auto.js
-var auto_exports = {};
-__export(auto_exports, {
-  attachAll: () => attachAll
+var ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, TICK_MS, serial, noiseGlyph;
+var init_alarm = __esm({
+  "js/alarm.js"() {
+    "use strict";
+    init_effects();
+    init_strings();
+    ALARM_CLOSE_EVENT = "kp-alarm-close";
+    ALARM_OPEN_EVENT = "kp-alarm-open";
+    ALARM_SECONDS = 8;
+    TICK_MS = 100;
+    serial = 0;
+    noiseGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+  }
 });
 
-// js/no-flash.js
-var no_flash_exports = {};
-__export(no_flash_exports, {
-  EFFECTS_ATTRIBUTE: () => EFFECTS_ATTRIBUTE,
-  NO_FLASH_SNIPPET: () => NO_FLASH_SNIPPET,
-  REGISTER_PATTERN_DEFAULT: () => REGISTER_PATTERN_DEFAULT,
-  THEME_ATTRIBUTE: () => THEME_ATTRIBUTE,
-  applyStoredTheme: () => applyStoredTheme,
-  noFlashSnippet: () => noFlashSnippet
+// js/remember.js
+var remember_exports = {};
+__export(remember_exports, {
+  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
+  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
+  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
+  attachRemembered: () => attachRemembered,
+  columnId: () => columnId,
+  configureRemember: () => configureRemember,
+  forgetClaims: () => forgetClaims,
+  memoryFor: () => memoryFor,
+  paintRemembered: () => paintRemembered,
+  rememberedName: () => rememberedName,
+  restoreRemembered: () => restoreRemembered,
+  sidenavGroups: () => sidenavGroups,
+  treeItemId: () => treeItemId
 });
-
-// js/theme-registry.js
-var theme_registry_exports = {};
-__export(theme_registry_exports, {
-  DEFAULT_THEME: () => DEFAULT_THEME,
-  STORAGE_KEY: () => STORAGE_KEY,
-  THEMES: () => THEMES,
-  VERSION: () => VERSION
-});
-var THEMES = Object.freeze([
-  { name: "formal", label: "Formal", dark: false },
-  { name: "light", label: "Light", dark: false },
-  { name: "dark", label: "Dark", dark: true },
-  { name: "cyberpunk", label: "Cyberpunk", dark: true },
-  { name: "synthwave", label: "Synthwave", dark: true },
-  { name: "pastel", label: "Pastel", dark: false },
-  { name: "terminal", label: "Terminal", dark: true },
-  { name: "forest", label: "Forest", dark: false },
-  { name: "high-contrast", label: "High contrast", dark: false },
-  { name: "sepia", label: "Sepia", dark: false },
-  { name: "blueprint", label: "Blueprint", dark: true },
-  { name: "solstice", label: "Solstice", dark: true },
-  { name: "brutalism", label: "Brutalism", dark: false },
-  { name: "deco", label: "Art Deco", dark: true },
-  { name: "phantom", label: "Phantom", dark: true },
-  { name: "shade-light", label: "Shade (light)", dark: false },
-  { name: "shade-dark", label: "Shade (dark)", dark: true },
-  { name: "retro", label: "Retro", dark: false },
-  { name: "grotesk", label: "Grotesk", dark: false },
-  { name: "lapis", label: "Lapis", dark: true },
-  { name: "nostromo", label: "Nostromo", dark: false },
-  { name: "titanium", label: "Titanium", dark: true }
-]);
-var DEFAULT_THEME = "formal";
-var STORAGE_KEY = "theme";
-var VERSION = "6.1.0";
-
-// js/no-flash.js
-var THEME_ATTRIBUTE = "data-theme";
-var EFFECTS_ATTRIBUTE = "data-kp-effects";
-function jsString(value) {
-  return JSON.stringify(value).replace(/</g, "\\u003c");
+function configureRemember(next) {
+  if (next.prefix !== void 0) config2.prefix = next.prefix;
+  if (next.storage !== void 0) config2.storage = next.storage;
 }
-var REGISTER_PATTERN_DEFAULT = "/css/{theme}-register.css";
-var attributeText = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, register = false } = {}) {
-  if (register) return registerSnippet({ key, attribute, effects, ...register === true ? {} : register });
-  const arm = effects ? `
-        document.documentElement.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
-  return `(function () {
-    try {
-        var t = localStorage.getItem(${jsString(key)});
-        if (t) document.documentElement.setAttribute(${jsString(attribute)}, t);${arm}
-    } catch (e) {}
-})();`;
-}
-function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_DEFAULT, fallback: fallback2 = DEFAULT_THEME }) {
-  const names = THEMES.map((t) => t.name);
-  if (!names.includes(
-    /** @type {import('./theme-registry.js').ThemeName} */
-    fallback2
-  ))
-    throw new RangeError(`kp-themes: the register fallback "${fallback2}" is not a theme`);
-  const [before, ...rest] = pattern.split("{theme}");
-  const after = rest.join("{theme}");
-  const arm = effects ? `
-    d.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
-  return `(function () {
-    var d = document.documentElement;
-    try {
-        var t = localStorage.getItem(${jsString(key)});
-        if (t) d.setAttribute(${jsString(attribute)}, t);
-    } catch (e) {}${arm}
-    var n = d.getAttribute(${jsString(attribute)});
-    if (${JSON.stringify(names).replace(/</g, "\\u003c")}.indexOf(n) < 0) n = ${jsString(fallback2)};
-    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
-})();`;
-}
-var NO_FLASH_SNIPPET = noFlashSnippet();
-function applyStoredTheme({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, root } = {}) {
-  if (typeof document === "undefined") return null;
+function storage(given) {
+  if (given !== void 0) return given;
+  if (config2.storage !== void 0) return config2.storage;
   try {
-    const stored = localStorage.getItem(key);
-    if (!stored) return null;
-    (root ?? document.documentElement).setAttribute(attribute, stored);
-    return stored;
+    return globalThis.localStorage ?? null;
   } catch {
     return null;
   }
 }
-
-// js/theme-core.js
-var theme_core_exports = {};
-__export(theme_core_exports, {
-  BEFORE_THEME_EVENT: () => BEFORE_THEME_EVENT,
-  DEFAULT_THEME: () => DEFAULT_THEME,
-  PENDING_THEME_ATTRIBUTE: () => PENDING_THEME_ATTRIBUTE,
-  STORAGE_KEY: () => STORAGE_KEY,
-  THEMES: () => THEMES,
-  THEME_EVENT: () => THEME_EVENT,
-  UNKNOWN_THEME_EVENT: () => UNKNOWN_THEME_EVENT,
-  applyTheme: () => applyTheme,
-  configureTheme: () => configureTheme,
-  currentTheme: () => currentTheme,
-  initializeTheme: () => initializeTheme,
-  isTheme: () => isTheme,
-  onThemeChange: () => onThemeChange,
-  pendingTheme: () => pendingTheme,
-  storeTheme: () => storeTheme,
-  storedTheme: () => storedTheme
-});
-var THEME_EVENT = "kp-theme-change";
-var BEFORE_THEME_EVENT = "kp-theme-before-change";
-var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
-var PENDING_THEME_ATTRIBUTE = "data-theme-pending";
-var config = { root: (
-  /** @type {Element | null} */
-  null
-), darkClass: (
-  /** @type {string | null} */
-  "dark"
-), storageKey: STORAGE_KEY };
-function configureTheme(next) {
-  if (next.root !== void 0) config.root = next.root;
-  if (next.darkClass !== void 0) config.darkClass = next.darkClass;
-  if (next.storageKey !== void 0) config.storageKey = next.storageKey;
+function rememberedName(element, component) {
+  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
+  if (own !== null && own !== "") return own;
+  const alias = ALIASES[component];
+  const older = alias === void 0 ? null : element.getAttribute(alias);
+  return older === null || older === "" ? null : older;
 }
-var rootOf = (root) => root ?? config.root ?? document.documentElement;
-var NAMES = (
-  /** @type {readonly string[]} */
-  THEMES.map((t) => t.name)
-);
-var DARK = new Set(THEMES.filter((t) => t.dark).map((t) => t.name));
-var isTheme = (value) => typeof value === "string" && NAMES.includes(value);
-var asTheme = (value) => isTheme(value) ? value : null;
-var REPORT_KEY = "kp-themes-unknown-reported";
-var reported = /* @__PURE__ */ new Set();
-function alreadyReported(name) {
-  if (reported.has(name)) return true;
-  try {
-    const raw = sessionStorage.getItem(REPORT_KEY);
-    if (raw !== null && raw.split(" ").includes(name)) {
-      reported.add(name);
-      return true;
+function forgetClaims() {
+  claims.clear();
+  reported2.clear();
+}
+function reportClash(element, component, name, other) {
+  const claim = `${component}:${name}`;
+  if (!reported2.has(claim)) {
+    reported2.add(claim);
+    console.warn(getStrings().rememberClash(name, component));
+  }
+  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
+}
+function memoryFor(element, component, { storage: given } = {}) {
+  const name = rememberedName(element, component);
+  if (name === null) return null;
+  const claim = `${component}:${name}`;
+  const holder = claims.get(claim);
+  if (holder !== void 0 && holder !== element && holder.isConnected) {
+    reportClash(element, component, name, holder);
+    return null;
+  }
+  claims.set(claim, element);
+  const key = (slot) => `${config2.prefix}:${component}:${name}:${slot}`;
+  return {
+    name,
+    key,
+    read: (slot, fallback2) => {
+      const store = storage(given);
+      if (store === null) return fallback2;
+      try {
+        const raw = store.getItem(key(slot));
+        if (raw === null) return fallback2;
+        return JSON.parse(raw);
+      } catch {
+        return fallback2;
+      }
+    },
+    write: (slot, value) => {
+      const store = storage(given);
+      if (store === null) return false;
+      try {
+        store.setItem(key(slot), JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    forget: (slot) => {
+      const store = storage(given);
+      if (store === null) return;
+      try {
+        store.removeItem(key(slot));
+      } catch {
+      }
     }
-  } catch {
-  }
-  return false;
-}
-function remember(name) {
-  reported.add(name);
-  try {
-    const raw = sessionStorage.getItem(REPORT_KEY);
-    const names = raw === null || raw === "" ? [] : raw.split(" ");
-    if (!names.includes(name)) sessionStorage.setItem(REPORT_KEY, [...names, name].join(" "));
-  } catch {
-  }
-}
-function reportUnknown(requested, applied, source, root) {
-  const name = String(requested);
-  if (alreadyReported(name)) return false;
-  remember(name);
-  console.warn(getStrings().themeUnknown(name, applied));
-  if (typeof document === "undefined") return true;
-  const element = root ?? rootOf(void 0);
-  element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
-  return true;
-}
-var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
-function currentTheme({ root } = {}) {
-  if (typeof document === "undefined") return DEFAULT_THEME;
-  const element = rootOf(root);
-  const raw = element.getAttribute("data-theme");
-  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "current", element);
-  return asTheme(raw) ?? DEFAULT_THEME;
-}
-function pendingTheme({ root } = {}) {
-  if (typeof document === "undefined") return null;
-  return asTheme(rootOf(root).getAttribute(PENDING_THEME_ATTRIBUTE));
-}
-function applyTheme(theme, { root, darkClass, strict = false, announce = true } = {}) {
-  const known = asTheme(theme);
-  if (known === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
-  const next = known ?? DEFAULT_THEME;
-  const element = rootOf(root);
-  if (known === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next, "apply", element);
-  const previous = asTheme(element.getAttribute("data-theme"));
-  if (announce && previous !== next) {
-    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next, previous } });
-    if (!element.dispatchEvent(ask)) return previous ?? DEFAULT_THEME;
-  }
-  element.setAttribute("data-theme", next);
-  element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-  const cls = darkClass === void 0 ? config.darkClass : darkClass;
-  if (cls) element.classList.toggle(cls, DARK.has(next));
-  if (announce && previous !== next) {
-    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next, previous, root: element } }));
-  }
-  return next;
-}
-function storeTheme(theme, { key, storage: storage2 } = {}) {
-  try {
-    (storage2 ?? localStorage).setItem(key ?? config.storageKey, theme);
-    return true;
-  } catch {
-    return false;
-  }
-}
-function storedTheme({ key, storage: storage2 } = {}) {
-  let raw = null;
-  try {
-    raw = (storage2 ?? localStorage).getItem(key ?? config.storageKey);
-  } catch {
-    return null;
-  }
-  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "stored");
-  return asTheme(raw);
-}
-function initializeTheme(fallback2 = DEFAULT_THEME, { root, key } = {}) {
-  return applyTheme(storedTheme({ key }) ?? fallback2, { root });
-}
-function onThemeChange(listener, { crossTab = true, root, key } = {}) {
-  if (typeof document === "undefined") return () => {
   };
-  const target = root ?? document;
-  const onEvent = (e) => {
-    const detail = (
-      /** @type {CustomEvent} */
-      e.detail
+}
+function sidenavGroups(panel) {
+  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
+    const toggle = group.querySelector(".kp-sidenav__category-toggle");
+    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
+    const words = (toggle?.textContent ?? "").trim();
+    return { group, toggle, id: own !== null && own !== "" ? own : words !== "" ? words : String(at) };
+  });
+}
+function treeItemId(item) {
+  return (
+    /** @type {HTMLElement} */
+    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
+  );
+}
+function columnId(header) {
+  return (
+    /** @type {HTMLElement} */
+    header.dataset.kpField ?? (header.textContent ?? "").trim()
+  );
+}
+function paintSidenav(panel, memory) {
+  const open = memory.read("open", null);
+  if (typeof open === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open));
+  const rail = memory.read("rail", null);
+  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
+  const groups = memory.read("groups", null);
+  if (!isFlags(groups)) return;
+  for (const { group, toggle, id } of sidenavGroups(panel)) {
+    const state = groups[id];
+    if (typeof state !== "boolean") continue;
+    group.toggleAttribute("data-kp-sidenav-expanded", state);
+    toggle?.setAttribute("aria-expanded", String(state));
+  }
+}
+function paintDisclosure(element, memory) {
+  const open = memory.read("open", null);
+  if (typeof open === "boolean") element.toggleAttribute("open", open);
+}
+function paintTree(tree, memory) {
+  const branches = memory.read("branches", null);
+  if (!isFlags(branches)) return;
+  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
+    const state = branches[treeItemId(item)];
+    if (typeof state === "boolean") item.setAttribute("aria-expanded", String(state));
+  }
+}
+function paintSplit(split, memory) {
+  const value = memory.read("value", null);
+  const separator = split.querySelector('[role="separator"]');
+  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
+  separator.setAttribute("aria-valuenow", String(Math.round(value)));
+  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
+}
+function paintDatatable(wrap, memory) {
+  const density = memory.read("density", null);
+  if (density === "compact") wrap.setAttribute("data-density", "compact");
+  else if (density === "comfortable") wrap.removeAttribute("data-density");
+  const headers = headersOf(wrap);
+  const columns = (
+    /** @type {unknown} */
+    memory.read("columns", null)
+  );
+  if (Array.isArray(columns)) {
+    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns.includes(columnId(header)));
+  }
+  const sort = (
+    /** @type {unknown} */
+    memory.read("sort", null)
+  );
+  if (!Array.isArray(sort)) return;
+  for (const header of headers) {
+    if (header.dataset.kpSort === void 0) continue;
+    const at = sort.findIndex((key) => key?.column === columnId(header));
+    if (at === -1) {
+      header.setAttribute("aria-sort", "none");
+      delete header.dataset.kpSortPriority;
+    } else {
+      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
+      header.dataset.kpSortPriority = String(at + 1);
+    }
+  }
+}
+function paintRemembered(element, component, options) {
+  const memory = memoryFor(element, component, options);
+  if (memory !== null) PAINTERS[component](element, memory);
+  return memory;
+}
+function restoreRemembered(root = document) {
+  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
+  for (const element of root.querySelectorAll(selector)) {
+    for (const [component, mark] of KINDS) {
+      if (!element.matches(mark)) continue;
+      paintRemembered(element, component);
+      break;
+    }
+  }
+}
+function attachRemembered(root = document) {
+  const cleanups = [];
+  for (const element of root.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)) {
+    const details = (
+      /** @type {HTMLDetailsElement} */
+      element
     );
-    listener(detail.theme, { previous: detail.previous, root: detail.root });
+    if (details.dataset.kpRememberAttached !== void 0) continue;
+    details.dataset.kpRememberAttached = "";
+    const memory = paintRemembered(details, "disclosure");
+    if (memory === null) {
+      delete details.dataset.kpRememberAttached;
+      continue;
+    }
+    const onToggle = () => memory.write("open", details.open);
+    details.addEventListener("toggle", onToggle);
+    cleanups.push(() => {
+      details.removeEventListener("toggle", onToggle);
+      delete details.dataset.kpRememberAttached;
+    });
+  }
+  return () => {
+    for (const cleanup of cleanups) cleanup();
   };
-  const onStorage = (e) => {
-    if (e.key !== (key ?? config.storageKey)) return;
-    if (isDropped(e.newValue)) {
-      reportUnknown(e.newValue, currentTheme({ root }), "cross-tab", rootOf(root));
+}
+var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config2, ALIASES, claims, reported2, headersOf, isFlags, PAINTERS, KINDS;
+var init_remember = __esm({
+  "js/remember.js"() {
+    "use strict";
+    init_strings();
+    REMEMBER_ATTRIBUTE = "data-kp-remember";
+    REMEMBER_CLASH_EVENT = "kp-remember-clash";
+    REMEMBER_PREFIX = "kp-remember";
+    config2 = { prefix: REMEMBER_PREFIX, storage: (
+      /** @type {Storage | null | undefined} */
+      void 0
+    ) };
+    ALIASES = { sidenav: "data-kp-sidenav-remember" };
+    claims = /* @__PURE__ */ new Map();
+    reported2 = /* @__PURE__ */ new Set();
+    headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
+    isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
+    PAINTERS = {
+      sidenav: paintSidenav,
+      disclosure: paintDisclosure,
+      tree: paintTree,
+      split: paintSplit,
+      datatable: paintDatatable
+    };
+    KINDS = [
+      ["sidenav", ".kp-sidenav"],
+      ["tree", "[data-kp-tree]"],
+      ["split", "[data-kp-split]"],
+      ["datatable", "[data-kp-datatable]"],
+      ["disclosure", "details"]
+    ];
+  }
+});
+
+// js/overlays.js
+var overlays_exports = {};
+__export(overlays_exports, {
+  ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
+  DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
+  DISMISS_OWNED: () => DISMISS_OWNED,
+  SCROLL_BOXES: () => SCROLL_BOXES,
+  SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
+  TABS_OVERFLOW: () => TABS_OVERFLOW,
+  TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
+  TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
+  TOAST_MS: () => TOAST_MS,
+  TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
+  TOOLTIP_EVENT: () => TOOLTIP_EVENT,
+  TOOLTIP_OWNED: () => TOOLTIP_OWNED,
+  attachDialogs: () => attachDialogs,
+  attachDismissals: () => attachDismissals,
+  attachScrollbars: () => attachScrollbars,
+  attachTabs: () => attachTabs,
+  attachTooltips: () => attachTooltips,
+  closeLabel: () => closeLabel,
+  openAtTop: () => openAtTop,
+  revealTab: () => revealTab,
+  selectTab: () => selectTab,
+  toast: () => toast,
+  toastRegion: () => toastRegion,
+  watchScrollbar: () => watchScrollbar,
+  watchTabOverflow: () => watchTabOverflow
+});
+function openAtTop(dialog) {
+  const body = dialog.querySelector(":scope > .kp-dialog__body");
+  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
+  const focused = document.activeElement;
+  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
+    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+function attachDialogs(root = document, { modal = true } = {}) {
+  const cleanups = [];
+  for (const el2 of root.querySelectorAll("[data-kp-dialog]")) {
+    const trigger = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    if (trigger.dataset.kpDialogAttached !== void 0) continue;
+    const dialog = document.getElementById(trigger.dataset.kpDialog ?? "");
+    if (!(dialog instanceof HTMLDialogElement)) continue;
+    trigger.dataset.kpDialogAttached = "";
+    const open = () => {
+      const asModal = trigger.dataset.kpDialogMode === void 0 ? modal : trigger.dataset.kpDialogMode !== "non-modal";
+      if (dialog.open) return;
+      if (asModal) dialog.showModal();
+      else dialog.show();
+      openAtTop(dialog);
+      dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
+    };
+    trigger.addEventListener("click", open);
+    cleanups.push(() => {
+      trigger.removeEventListener("click", open);
+      delete trigger.dataset.kpDialogAttached;
+    });
+  }
+  for (const el2 of root.querySelectorAll("[data-kp-dialog-close]")) {
+    const button = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    if (button.dataset.kpDialogCloseAttached !== void 0) continue;
+    button.dataset.kpDialogCloseAttached = "";
+    const close = () => button.closest("dialog")?.close(button.dataset.kpDialogClose || void 0);
+    button.addEventListener("click", close);
+    cleanups.push(() => {
+      button.removeEventListener("click", close);
+      delete button.dataset.kpDialogCloseAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+function selectTab(list, which) {
+  const handle = handles.get(list);
+  if (handle === void 0) return;
+  const tabs = handle.tabs();
+  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
+  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
+}
+function revealTab(list, tab) {
+  if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
+  const row = list.getBoundingClientRect();
+  const box = tab.getBoundingClientRect();
+  if (box.left < row.left) list.scrollLeft -= row.left - box.left;
+  else if (box.right > row.right) list.scrollLeft += box.right - row.right;
+}
+function watchTabOverflow(list, selected) {
+  const measure = () => {
+    const over = list.scrollWidth > list.clientWidth + 1;
+    if (over === list.hasAttribute(TABS_OVERFLOW)) return;
+    list.toggleAttribute(TABS_OVERFLOW, over);
+    if (over) revealTab(list, selected());
+  };
+  measure();
+  if (typeof ResizeObserver === "undefined") return () => list.removeAttribute(TABS_OVERFLOW);
+  const observer = new ResizeObserver(measure);
+  observer.observe(list);
+  for (const tab of list.children) observer.observe(tab);
+  return () => {
+    observer.disconnect();
+    list.removeAttribute(TABS_OVERFLOW);
+  };
+}
+function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
+  const cleanups = [];
+  for (const el2 of root.querySelectorAll('[role="tablist"]')) {
+    const list = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    if (list.dataset.kpTabsAttached !== void 0) continue;
+    const tabs = () => [.../** @type {NodeListOf<HTMLElement>} */
+    list.querySelectorAll('[role="tab"]')];
+    if (tabs().length === 0) continue;
+    list.dataset.kpTabsAttached = "";
+    const manual = (list.dataset.kpActivation ?? activation) === "manual";
+    const wraps = list.dataset.kpLoop === void 0 ? loop : list.dataset.kpLoop !== "false";
+    const vertical = list.getAttribute("aria-orientation") === "vertical";
+    const before = tabs().map((tab) => ({
+      tab,
+      tabIndex: tab.getAttribute("tabindex"),
+      selected: tab.getAttribute("aria-selected"),
+      panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
+      hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
+    }));
+    const select = (index, { focus = true } = {}) => {
+      const all = tabs();
+      const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
+      all.forEach((tab, i) => {
+        const selected = i === index;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
+        if (panel) panel.hidden = !selected;
+      });
+      if (focus) all[index]?.focus();
+      revealTab(list, all[index]);
+      if (previous !== index) {
+        const tab = all[index];
+        list.dispatchEvent(
+          new CustomEvent(TAB_CHANGE_EVENT, {
+            bubbles: true,
+            detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous }
+          })
+        );
+      }
+    };
+    const roam = (index) => {
+      const all = tabs();
+      all.forEach((tab, i) => {
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      all[index]?.focus();
+    };
+    const onKey = (e) => {
+      const all = tabs();
+      const current2 = all.indexOf(
+        /** @type {HTMLElement} */
+        document.activeElement
+      );
+      if (current2 === -1) return;
+      const next = vertical ? "ArrowDown" : "ArrowRight";
+      const prev = vertical ? "ArrowUp" : "ArrowLeft";
+      if (manual && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        select(current2);
+        return;
+      }
+      const move = { [next]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
+      if (move === void 0) return;
+      e.preventDefault();
+      let target = current2 + move;
+      if (wraps) target = (target + all.length) % all.length;
+      else target = Math.max(0, Math.min(all.length - 1, target));
+      if (manual) roam(target);
+      else select(target);
+    };
+    const onClick = (e) => {
+      const tab = (
+        /** @type {HTMLElement} */
+        e.target.closest('[role="tab"]')
+      );
+      if (tab) select(tabs().indexOf(
+        /** @type {HTMLElement} */
+        tab
+      ));
+    };
+    const initial = Math.max(
+      0,
+      tabs().findIndex((t) => t.getAttribute("aria-selected") === "true")
+    );
+    tabs().forEach((tab, i) => {
+      tab.tabIndex = i === initial ? 0 : -1;
+    });
+    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
+    revealTab(list, tabs()[initial]);
+    list.addEventListener("keydown", onKey);
+    list.addEventListener("click", onClick);
+    handles.set(list, { tabs, select });
+    cleanups.push(() => {
+      list.removeEventListener("keydown", onKey);
+      list.removeEventListener("click", onClick);
+      stopWatching();
+      handles.delete(list);
+      delete list.dataset.kpTabsAttached;
+      for (const b of before) {
+        if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
+        else b.tab.setAttribute("tabindex", b.tabIndex);
+        if (b.selected === null) b.tab.removeAttribute("aria-selected");
+        else b.tab.setAttribute("aria-selected", b.selected);
+        if (b.panel) b.panel.hidden = b.hidden;
+      }
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+function toastRegion({ region = null, role = "status", live = "polite", className = "kp-toasts" } = {}) {
+  if (region) return region;
+  let found = (
+    /** @type {HTMLElement | null} */
+    document.querySelector(`.${className.split(/\s+/)[0]}`)
+  );
+  if (!found) {
+    found = document.createElement("div");
+    found.className = className;
+    found.setAttribute("role", role);
+    found.setAttribute("aria-live", live);
+    document.body.append(found);
+  }
+  return found;
+}
+function toast(content, { ms = TOAST_MS, region = null, live, className = "kp-toast", action, max } = {}) {
+  const host = live === "assertive" ? toastRegion({ role: "alert", live: "assertive", className: "kp-toasts kp-toasts--assertive" }) : toastRegion({ region });
+  const el2 = (
+    /** @type {HTMLElement & { dismiss: () => void }} */
+    /** @type {unknown} */
+    document.createElement("div")
+  );
+  el2.className = className;
+  const body = document.createElement("span");
+  body.className = "kp-toast__body";
+  if (typeof content === "string") body.textContent = content;
+  else body.append(content);
+  el2.append(body);
+  if (action) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "kp-button kp-button--ghost";
+    button.textContent = action.label;
+    button.addEventListener("click", action.onClick);
+    el2.append(button);
+  }
+  let timer = 0;
+  el2.dismiss = () => {
+    clearTimeout(timer);
+    if (!el2.isConnected) return;
+    el2.remove();
+    host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el2 } }));
+  };
+  host.append(el2);
+  if (max !== void 0)
+    while (host.children.length > max) host.firstElementChild?.dismiss?.();
+  host.dispatchEvent(
+    new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el2, text: typeof content === "string" ? content : el2.textContent } })
+  );
+  if (ms > 0) timer = window.setTimeout(el2.dismiss, ms);
+  return el2;
+}
+function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
+  const onClick = (event) => {
+    if (dismissHandled.has(event)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const button = target?.closest(".kp-alert__close, .kp-toast__close");
+    if (!button) return;
+    if (ownedBy !== "" && button.matches(ownedBy)) return;
+    dismissHandled.add(event);
+    const toastEl = (
+      /** @type {(HTMLElement & { dismiss?: () => void }) | null} */
+      button.closest(".kp-toast")
+    );
+    if (button.classList.contains("kp-toast__close") && toastEl) {
+      if (typeof toastEl.dismiss === "function") {
+        toastEl.dismiss();
+        return;
+      }
+      const region = toastEl.parentElement;
+      toastEl.remove();
+      region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } }));
       return;
     }
-    const next = asTheme(e.newValue);
-    if (next && next !== currentTheme({ root })) applyTheme(next, { root });
+    const alert = (
+      /** @type {HTMLElement | null} */
+      button.closest(".kp-alert")
+    );
+    if (!alert) return;
+    const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
+    if (proceed) alert.hidden = true;
   };
-  target.addEventListener(THEME_EVENT, onEvent);
-  if (crossTab) window.addEventListener("storage", onStorage);
+  root.addEventListener("click", onClick);
+  return () => root.removeEventListener("click", onClick);
+}
+function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
+  const cleanups = [];
+  let count = 0;
+  for (const el2 of root.querySelectorAll(".kp-tooltip-anchor")) {
+    const anchor = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    if (ownedBy !== "" && anchor.matches(ownedBy)) continue;
+    if (anchor.dataset.kpTooltipAttached !== void 0) continue;
+    const tooltip = (
+      /** @type {HTMLElement | null} */
+      anchor.querySelector('[role="tooltip"], .kp-tooltip')
+    );
+    const trigger = (
+      /** @type {HTMLElement | null} */
+      [...anchor.children].find((child) => child !== tooltip) ?? null
+    );
+    if (tooltip === null || trigger === null) continue;
+    anchor.dataset.kpTooltipAttached = "";
+    count += 1;
+    const before = {
+      id: tooltip.getAttribute("id"),
+      hidden: tooltip.hidden,
+      describedby: trigger.getAttribute("aria-describedby"),
+      anchorName: anchor.style.getPropertyValue("anchor-name"),
+      positionAnchor: tooltip.style.getPropertyValue("position-anchor")
+    };
+    if (!tooltip.id) tooltip.id = `kp-tooltip-${count}-${Math.random().toString(36).slice(2, 8)}`;
+    const ids = (before.describedby ?? "").split(/\s+/).filter(Boolean);
+    if (!ids.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids, tooltip.id].join(" "));
+    if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
+    if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
+    const number = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
+    const openDelay = number(anchor.dataset.kpOpenDelay, openDelayMs);
+    const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
+    const escapes = anchor.dataset.kpCloseOnEscape === void 0 ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== "false";
+    let timer = 0;
+    const set = (open) => {
+      clearTimeout(timer);
+      if (tooltip.hidden === !open) return;
+      tooltip.hidden = !open;
+      anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
+    };
+    const schedule = (open, delay) => {
+      clearTimeout(timer);
+      if (delay <= 0) set(open);
+      else timer = window.setTimeout(() => set(open), delay);
+    };
+    const onEnter = () => schedule(true, openDelay);
+    const onLeave = () => {
+      if (!anchor.contains(document.activeElement)) schedule(false, closeDelay);
+    };
+    const onFocusIn = () => schedule(true, 0);
+    const onFocusOut = () => schedule(false, 0);
+    const onKey = (event) => {
+      if (escapes && event.key === "Escape" && !tooltip.hidden) set(false);
+    };
+    tooltip.hidden = true;
+    anchor.addEventListener("pointerenter", onEnter);
+    anchor.addEventListener("pointerleave", onLeave);
+    anchor.addEventListener("focusin", onFocusIn);
+    anchor.addEventListener("focusout", onFocusOut);
+    document.addEventListener("keydown", onKey);
+    cleanups.push(() => {
+      clearTimeout(timer);
+      anchor.removeEventListener("pointerenter", onEnter);
+      anchor.removeEventListener("pointerleave", onLeave);
+      anchor.removeEventListener("focusin", onFocusIn);
+      anchor.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("keydown", onKey);
+      tooltip.hidden = before.hidden;
+      if (before.id === null) tooltip.removeAttribute("id");
+      if (before.describedby === null) trigger.removeAttribute("aria-describedby");
+      else trigger.setAttribute("aria-describedby", before.describedby);
+      if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
+      if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
+      delete anchor.dataset.kpTooltipAttached;
+    });
+  }
   return () => {
-    target.removeEventListener(THEME_EVENT, onEvent);
-    if (crossTab) window.removeEventListener("storage", onStorage);
+    for (const c of cleanups) c();
   };
 }
+function watchScrollbar(box) {
+  const PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
+  const measure = () => {
+    const view = box.clientHeight;
+    const size = box.scrollHeight;
+    const over = view > 0 && size > view + 1;
+    box.toggleAttribute(SCROLL_OVERFLOW, over);
+    if (!over) {
+      for (const p of PROPS) box.style.removeProperty(p);
+      return;
+    }
+    box.style.setProperty("--kp-scroll-view", `${view}px`);
+    box.style.setProperty("--kp-scroll-ratio", (view / size).toFixed(4));
+    box.style.setProperty("--kp-scroll-progress", Math.min(1, Math.max(0, box.scrollTop / (size - view))).toFixed(4));
+  };
+  const length = (name) => parseFloat(getComputedStyle(box).getPropertyValue(name));
+  const onPointerDown = (event) => {
+    const bar = length("--kp-scrollbar-size");
+    if (event.button !== 0 || !(bar > 0)) return;
+    const inset = length("--kp-scrollbar-inset") || 0;
+    const rect = box.getBoundingClientRect();
+    const right = rect.left + box.clientLeft + box.clientWidth - inset;
+    const top = rect.top + box.clientTop + inset;
+    const bottom = rect.top + box.clientTop + box.clientHeight - inset;
+    if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
+    event.preventDefault();
+    if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
+    const button = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
+    const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
+    if (event.clientY < top + button) box.scrollTop -= line;
+    else if (event.clientY > bottom - button) box.scrollTop += line;
+    else {
+      const track = bottom - top - 2 * button;
+      const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
+      const travel = track - thumb;
+      const range = box.scrollHeight - box.clientHeight;
+      const start = top + button + travel * (box.scrollTop / range);
+      if (event.clientY < start) box.scrollTop -= box.clientHeight;
+      else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
+      else if (travel > 0) {
+        const from = { y: event.clientY, scroll: box.scrollTop };
+        const onMove = (move) => {
+          box.scrollTop = from.scroll + (move.clientY - from.y) / travel * range;
+        };
+        const onUp = () => {
+          box.removeEventListener("pointermove", onMove);
+          box.removeEventListener("pointerup", onUp);
+          box.removeEventListener("pointercancel", onUp);
+        };
+        box.setPointerCapture?.(event.pointerId);
+        box.addEventListener("pointermove", onMove);
+        box.addEventListener("pointerup", onUp);
+        box.addEventListener("pointercancel", onUp);
+      }
+    }
+    measure();
+  };
+  measure();
+  box.addEventListener("scroll", measure, { passive: true });
+  box.addEventListener("pointerdown", onPointerDown);
+  let resize = null;
+  let mutation = null;
+  if (typeof ResizeObserver !== "undefined") {
+    resize = new ResizeObserver(measure);
+    const observe = () => {
+      resize?.disconnect();
+      resize?.observe(box);
+      for (const child of box.children) resize?.observe(child);
+    };
+    observe();
+    mutation = new MutationObserver(() => {
+      observe();
+      measure();
+    });
+    mutation.observe(box, { childList: true });
+  }
+  return () => {
+    resize?.disconnect();
+    mutation?.disconnect();
+    box.removeEventListener("scroll", measure);
+    box.removeEventListener("pointerdown", onPointerDown);
+    box.removeAttribute(SCROLL_OVERFLOW);
+    for (const p of PROPS) box.style.removeProperty(p);
+  };
+}
+function attachScrollbars(root = document) {
+  const watched = /* @__PURE__ */ new Map();
+  const scan = (scope) => {
+    const found = [...scope.querySelectorAll(SCROLL_BOXES)];
+    if (scope instanceof Element && scope.matches(SCROLL_BOXES)) found.push(scope);
+    for (const el2 of found) {
+      const box = (
+        /** @type {HTMLElement} */
+        el2
+      );
+      if (watched.has(box) || scrollbarsWatched.has(box)) continue;
+      scrollbarsWatched.add(box);
+      const stop = watchScrollbar(box);
+      watched.set(box, () => {
+        stop();
+        scrollbarsWatched.delete(box);
+      });
+    }
+  };
+  scan(root);
+  const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver((records) => {
+    for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
+  });
+  const target = root instanceof Document ? root.documentElement : root;
+  if (observer && target instanceof Node) observer.observe(target, { childList: true, subtree: true });
+  return () => {
+    observer?.disconnect();
+    for (const stop of watched.values()) stop();
+    watched.clear();
+  };
+}
+var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, handles, TABS_OVERFLOW, ALERT_DISMISS_EVENT, DISMISS_OWNED, dismissHandled, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES, scrollbarsWatched, closeLabel;
+var init_overlays = __esm({
+  "js/overlays.js"() {
+    "use strict";
+    init_strings();
+    TOAST_MS = 5e3;
+    DIALOG_OPEN_EVENT = "kp-dialog-open";
+    TAB_CHANGE_EVENT = "kp-tab-change";
+    TOAST_SHOW_EVENT = "kp-toast-show";
+    TOAST_HIDE_EVENT = "kp-toast-hide";
+    handles = /* @__PURE__ */ new WeakMap();
+    TABS_OVERFLOW = "data-kp-tabs-overflow";
+    ALERT_DISMISS_EVENT = "kp-alert-dismiss";
+    DISMISS_OWNED = "[data-kp-dismiss-owner]";
+    dismissHandled = /* @__PURE__ */ new WeakSet();
+    TOOLTIP_EVENT = "kp-tooltip";
+    TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
+    SCROLL_OVERFLOW = "data-kp-popover-overflowing";
+    SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
+    scrollbarsWatched = /* @__PURE__ */ new WeakSet();
+    closeLabel = () => getStrings().close;
+  }
+});
 
 // js/components.js
 var components_exports = {};
@@ -2440,15 +2985,6 @@ __export(components_exports, {
   skipTo: () => skipTo,
   stickyNav: () => stickyNav
 });
-var VIOLATION_EVENT = "kp-contract-violation";
-var CONFIRM_WINDOW_MS = 4e3;
-var CONFIRM_MODES = (
-  /** @type {const} */
-  ["dialog", "inline"]
-);
-var CONFIRM_OWNED = "[data-kp-confirm-owner]";
-var unlocked = null;
-var dialogSeq = 0;
 function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel" } = {}) {
   const s = { ...getStrings(), ...strings };
   const text = phrase ?? button.getAttribute("data-kp-confirm") ?? s.confirm;
@@ -2498,7 +3034,6 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
   (initialFocus === "accept" ? accept : cancel).focus();
   return dialog;
 }
-var EXEMPT = "[data-kp-contract-ignore]";
 function findViolations(root = document, { rules = ["DI10", "DI4"], exempt = EXEMPT } = {}) {
   const violations = [];
   const s = getStrings();
@@ -2520,7 +3055,6 @@ function findViolations(root = document, { rules = ["DI10", "DI4"], exempt = EXE
     }
   return violations;
 }
-var changed = /* @__PURE__ */ new WeakMap();
 function enforceContracts(root = document, { disable = true, rules, exempt, log = (message, element) => console.error(message, element) } = {}) {
   for (const el2 of root.querySelectorAll("[data-kp-contract-error]")) restore(el2);
   const violations = findViolations(root, { rules, exempt });
@@ -2634,8 +3168,6 @@ function skipTo(href, root = document) {
   target.focus();
   return true;
 }
-var TO_TOP_EVENT = "kp-to-top";
-var TO_TOP = "[data-kp-to-top]";
 function attachToTop(root = document, { strings, after } = {}) {
   const cleanups = [];
   for (const el2 of root.querySelectorAll(TO_TOP)) {
@@ -2700,8 +3232,6 @@ function attachToTop(root = document, { strings, after } = {}) {
     for (const c of cleanups) c();
   };
 }
-var NAV_TOGGLE_EVENT = "kp-nav-toggle";
-var NAV_OWNED = "[data-kp-nav-owner]";
 function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
   const cleanups = [];
   for (const el2 of root.querySelectorAll("[data-kp-nav-toggle]")) {
@@ -2771,8 +3301,6 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
     for (const c of cleanups) c();
   };
 }
-var NAV_COMPACT_EVENT = "kp-nav-compact";
-var NAV_STICKY_OWNED = "[data-kp-nav-sticky-owner]";
 function scrollerOf(el2) {
   const doc = el2.ownerDocument;
   for (let at = el2.parentElement; at !== null && at !== doc.body && at !== doc.documentElement; at = at.parentElement) {
@@ -2852,33 +3380,6 @@ function stickyNav(wrap, after) {
     delete wrap.dataset.kpNavStickyAttached;
   };
 }
-var DROPDOWN = ":scope > .kp-nav__menu:not(.kp-nav__menu--wide)";
-var viewBox = (element) => {
-  let left = 0;
-  let right = document.documentElement.clientWidth;
-  for (let node = element.parentElement; node; node = node.parentElement) {
-    const style = getComputedStyle(node);
-    if (style.overflowX === "visible" && !/\b(paint|strict|content)\b/.test(style.contain)) continue;
-    const box = node.getBoundingClientRect();
-    left = Math.max(left, box.left + node.clientLeft);
-    right = Math.min(right, box.left + node.clientLeft + node.clientWidth);
-  }
-  return { left, right };
-};
-var overflowOf = (box, view) => Math.max(0, view.left - box.left) + Math.max(0, box.right - view.right);
-var slideIntoView = (panel, view) => {
-  const element = (
-    /** @type {HTMLElement} */
-    panel
-  );
-  element.style.removeProperty("--kp-nav-menu-shift");
-  const box = element.getBoundingClientRect();
-  if (box.width === 0) return;
-  let shift = Math.min(0, view.right - box.right);
-  if (box.left + shift < view.left) shift = view.left - box.left;
-  if (Math.abs(shift) < 1) return;
-  element.style.setProperty("--kp-nav-menu-shift", `${Math.round(shift * 100) / 100}px`);
-};
 function placeNavMenu(item, retry = true) {
   const menu = item.querySelector(DROPDOWN);
   if (!menu) return false;
@@ -3068,667 +3569,435 @@ function attachSkipLinks(root = document) {
     for (const c of cleanups) c();
   };
 }
-
-// js/overlays.js
-var overlays_exports = {};
-__export(overlays_exports, {
-  ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
-  DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
-  DISMISS_OWNED: () => DISMISS_OWNED,
-  SCROLL_BOXES: () => SCROLL_BOXES,
-  SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
-  TABS_OVERFLOW: () => TABS_OVERFLOW,
-  TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
-  TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
-  TOAST_MS: () => TOAST_MS,
-  TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
-  TOOLTIP_EVENT: () => TOOLTIP_EVENT,
-  TOOLTIP_OWNED: () => TOOLTIP_OWNED,
-  attachDialogs: () => attachDialogs,
-  attachDismissals: () => attachDismissals,
-  attachScrollbars: () => attachScrollbars,
-  attachTabs: () => attachTabs,
-  attachTooltips: () => attachTooltips,
-  closeLabel: () => closeLabel,
-  openAtTop: () => openAtTop,
-  revealTab: () => revealTab,
-  selectTab: () => selectTab,
-  toast: () => toast,
-  toastRegion: () => toastRegion,
-  watchScrollbar: () => watchScrollbar,
-  watchTabOverflow: () => watchTabOverflow
+var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, unlocked, dialogSeq, EXEMPT, changed, TO_TOP_EVENT, TO_TOP, NAV_TOGGLE_EVENT, NAV_OWNED, NAV_COMPACT_EVENT, NAV_STICKY_OWNED, DROPDOWN, viewBox, overflowOf, slideIntoView;
+var init_components = __esm({
+  "js/components.js"() {
+    "use strict";
+    init_strings();
+    VIOLATION_EVENT = "kp-contract-violation";
+    CONFIRM_WINDOW_MS = 4e3;
+    CONFIRM_MODES = /** @type {const} */
+    ["dialog", "inline"];
+    CONFIRM_OWNED = "[data-kp-confirm-owner]";
+    unlocked = null;
+    dialogSeq = 0;
+    EXEMPT = "[data-kp-contract-ignore]";
+    changed = /* @__PURE__ */ new WeakMap();
+    TO_TOP_EVENT = "kp-to-top";
+    TO_TOP = "[data-kp-to-top]";
+    NAV_TOGGLE_EVENT = "kp-nav-toggle";
+    NAV_OWNED = "[data-kp-nav-owner]";
+    NAV_COMPACT_EVENT = "kp-nav-compact";
+    NAV_STICKY_OWNED = "[data-kp-nav-sticky-owner]";
+    DROPDOWN = ":scope > .kp-nav__menu:not(.kp-nav__menu--wide)";
+    viewBox = (element) => {
+      let left = 0;
+      let right = document.documentElement.clientWidth;
+      for (let node = element.parentElement; node; node = node.parentElement) {
+        const style = getComputedStyle(node);
+        if (style.overflowX === "visible" && !/\b(paint|strict|content)\b/.test(style.contain)) continue;
+        const box = node.getBoundingClientRect();
+        left = Math.max(left, box.left + node.clientLeft);
+        right = Math.min(right, box.left + node.clientLeft + node.clientWidth);
+      }
+      return { left, right };
+    };
+    overflowOf = (box, view) => Math.max(0, view.left - box.left) + Math.max(0, box.right - view.right);
+    slideIntoView = (panel, view) => {
+      const element = (
+        /** @type {HTMLElement} */
+        panel
+      );
+      element.style.removeProperty("--kp-nav-menu-shift");
+      const box = element.getBoundingClientRect();
+      if (box.width === 0) return;
+      let shift = Math.min(0, view.right - box.right);
+      if (box.left + shift < view.left) shift = view.left - box.left;
+      if (Math.abs(shift) < 1) return;
+      element.style.setProperty("--kp-nav-menu-shift", `${Math.round(shift * 100) / 100}px`);
+    };
+  }
 });
-var TOAST_MS = 5e3;
-var DIALOG_OPEN_EVENT = "kp-dialog-open";
-var TAB_CHANGE_EVENT = "kp-tab-change";
-var TOAST_SHOW_EVENT = "kp-toast-show";
-var TOAST_HIDE_EVENT = "kp-toast-hide";
-function openAtTop(dialog) {
-  const body = dialog.querySelector(":scope > .kp-dialog__body");
-  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
-  const focused = document.activeElement;
-  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
-    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
-}
-function attachDialogs(root = document, { modal = true } = {}) {
-  const cleanups = [];
-  for (const el2 of root.querySelectorAll("[data-kp-dialog]")) {
-    const trigger = (
-      /** @type {HTMLElement} */
-      el2
-    );
-    if (trigger.dataset.kpDialogAttached !== void 0) continue;
-    const dialog = document.getElementById(trigger.dataset.kpDialog ?? "");
-    if (!(dialog instanceof HTMLDialogElement)) continue;
-    trigger.dataset.kpDialogAttached = "";
-    const open = () => {
-      const asModal = trigger.dataset.kpDialogMode === void 0 ? modal : trigger.dataset.kpDialogMode !== "non-modal";
-      if (dialog.open) return;
-      if (asModal) dialog.showModal();
-      else dialog.show();
-      openAtTop(dialog);
-      dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
-    };
-    trigger.addEventListener("click", open);
-    cleanups.push(() => {
-      trigger.removeEventListener("click", open);
-      delete trigger.dataset.kpDialogAttached;
-    });
-  }
-  for (const el2 of root.querySelectorAll("[data-kp-dialog-close]")) {
-    const button = (
-      /** @type {HTMLElement} */
-      el2
-    );
-    if (button.dataset.kpDialogCloseAttached !== void 0) continue;
-    button.dataset.kpDialogCloseAttached = "";
-    const close = () => button.closest("dialog")?.close(button.dataset.kpDialogClose || void 0);
-    button.addEventListener("click", close);
-    cleanups.push(() => {
-      button.removeEventListener("click", close);
-      delete button.dataset.kpDialogCloseAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-function selectTab(list, which) {
-  const handle = handles.get(list);
-  if (handle === void 0) return;
-  const tabs = handle.tabs();
-  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
-  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
-}
-var handles = /* @__PURE__ */ new WeakMap();
-function revealTab(list, tab) {
-  if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
-  const row = list.getBoundingClientRect();
-  const box = tab.getBoundingClientRect();
-  if (box.left < row.left) list.scrollLeft -= row.left - box.left;
-  else if (box.right > row.right) list.scrollLeft += box.right - row.right;
-}
-var TABS_OVERFLOW = "data-kp-tabs-overflow";
-function watchTabOverflow(list, selected) {
-  const measure = () => {
-    const over = list.scrollWidth > list.clientWidth + 1;
-    if (over === list.hasAttribute(TABS_OVERFLOW)) return;
-    list.toggleAttribute(TABS_OVERFLOW, over);
-    if (over) revealTab(list, selected());
-  };
-  measure();
-  if (typeof ResizeObserver === "undefined") return () => list.removeAttribute(TABS_OVERFLOW);
-  const observer = new ResizeObserver(measure);
-  observer.observe(list);
-  for (const tab of list.children) observer.observe(tab);
-  return () => {
-    observer.disconnect();
-    list.removeAttribute(TABS_OVERFLOW);
-  };
-}
-function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
-  const cleanups = [];
-  for (const el2 of root.querySelectorAll('[role="tablist"]')) {
-    const list = (
-      /** @type {HTMLElement} */
-      el2
-    );
-    if (list.dataset.kpTabsAttached !== void 0) continue;
-    const tabs = () => [.../** @type {NodeListOf<HTMLElement>} */
-    list.querySelectorAll('[role="tab"]')];
-    if (tabs().length === 0) continue;
-    list.dataset.kpTabsAttached = "";
-    const manual = (list.dataset.kpActivation ?? activation) === "manual";
-    const wraps = list.dataset.kpLoop === void 0 ? loop : list.dataset.kpLoop !== "false";
-    const vertical = list.getAttribute("aria-orientation") === "vertical";
-    const before = tabs().map((tab) => ({
-      tab,
-      tabIndex: tab.getAttribute("tabindex"),
-      selected: tab.getAttribute("aria-selected"),
-      panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
-      hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
-    }));
-    const select = (index, { focus = true } = {}) => {
-      const all = tabs();
-      const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
-      all.forEach((tab, i) => {
-        const selected = i === index;
-        tab.setAttribute("aria-selected", String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
-        if (panel) panel.hidden = !selected;
-      });
-      if (focus) all[index]?.focus();
-      revealTab(list, all[index]);
-      if (previous !== index) {
-        const tab = all[index];
-        list.dispatchEvent(
-          new CustomEvent(TAB_CHANGE_EVENT, {
-            bubbles: true,
-            detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous }
-          })
-        );
-      }
-    };
-    const roam = (index) => {
-      const all = tabs();
-      all.forEach((tab, i) => {
-        tab.tabIndex = i === index ? 0 : -1;
-      });
-      all[index]?.focus();
-    };
-    const onKey = (e) => {
-      const all = tabs();
-      const current2 = all.indexOf(
-        /** @type {HTMLElement} */
-        document.activeElement
-      );
-      if (current2 === -1) return;
-      const next = vertical ? "ArrowDown" : "ArrowRight";
-      const prev = vertical ? "ArrowUp" : "ArrowLeft";
-      if (manual && (e.key === "Enter" || e.key === " ")) {
-        e.preventDefault();
-        select(current2);
-        return;
-      }
-      const move = { [next]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
-      if (move === void 0) return;
-      e.preventDefault();
-      let target = current2 + move;
-      if (wraps) target = (target + all.length) % all.length;
-      else target = Math.max(0, Math.min(all.length - 1, target));
-      if (manual) roam(target);
-      else select(target);
-    };
-    const onClick = (e) => {
-      const tab = (
-        /** @type {HTMLElement} */
-        e.target.closest('[role="tab"]')
-      );
-      if (tab) select(tabs().indexOf(
-        /** @type {HTMLElement} */
-        tab
-      ));
-    };
-    const initial = Math.max(
-      0,
-      tabs().findIndex((t) => t.getAttribute("aria-selected") === "true")
-    );
-    tabs().forEach((tab, i) => {
-      tab.tabIndex = i === initial ? 0 : -1;
-    });
-    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
-    revealTab(list, tabs()[initial]);
-    list.addEventListener("keydown", onKey);
-    list.addEventListener("click", onClick);
-    handles.set(list, { tabs, select });
-    cleanups.push(() => {
-      list.removeEventListener("keydown", onKey);
-      list.removeEventListener("click", onClick);
-      stopWatching();
-      handles.delete(list);
-      delete list.dataset.kpTabsAttached;
-      for (const b of before) {
-        if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
-        else b.tab.setAttribute("tabindex", b.tabIndex);
-        if (b.selected === null) b.tab.removeAttribute("aria-selected");
-        else b.tab.setAttribute("aria-selected", b.selected);
-        if (b.panel) b.panel.hidden = b.hidden;
-      }
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-function toastRegion({ region = null, role = "status", live = "polite", className = "kp-toasts" } = {}) {
-  if (region) return region;
-  let found = (
-    /** @type {HTMLElement | null} */
-    document.querySelector(`.${className.split(/\s+/)[0]}`)
-  );
-  if (!found) {
-    found = document.createElement("div");
-    found.className = className;
-    found.setAttribute("role", role);
-    found.setAttribute("aria-live", live);
-    document.body.append(found);
-  }
-  return found;
-}
-function toast(content, { ms = TOAST_MS, region = null, live, className = "kp-toast", action, max } = {}) {
-  const host = live === "assertive" ? toastRegion({ role: "alert", live: "assertive", className: "kp-toasts kp-toasts--assertive" }) : toastRegion({ region });
-  const el2 = (
-    /** @type {HTMLElement & { dismiss: () => void }} */
-    /** @type {unknown} */
-    document.createElement("div")
-  );
-  el2.className = className;
-  const body = document.createElement("span");
-  body.className = "kp-toast__body";
-  if (typeof content === "string") body.textContent = content;
-  else body.append(content);
-  el2.append(body);
-  if (action) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "kp-button kp-button--ghost";
-    button.textContent = action.label;
-    button.addEventListener("click", action.onClick);
-    el2.append(button);
-  }
-  let timer = 0;
-  el2.dismiss = () => {
-    clearTimeout(timer);
-    if (!el2.isConnected) return;
-    el2.remove();
-    host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el2 } }));
-  };
-  host.append(el2);
-  if (max !== void 0)
-    while (host.children.length > max) host.firstElementChild?.dismiss?.();
-  host.dispatchEvent(
-    new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el2, text: typeof content === "string" ? content : el2.textContent } })
-  );
-  if (ms > 0) timer = window.setTimeout(el2.dismiss, ms);
-  return el2;
-}
-var ALERT_DISMISS_EVENT = "kp-alert-dismiss";
-var DISMISS_OWNED = "[data-kp-dismiss-owner]";
-var dismissHandled = /* @__PURE__ */ new WeakSet();
-function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
-  const onClick = (event) => {
-    if (dismissHandled.has(event)) return;
-    const target = event.target instanceof Element ? event.target : null;
-    const button = target?.closest(".kp-alert__close, .kp-toast__close");
-    if (!button) return;
-    if (ownedBy !== "" && button.matches(ownedBy)) return;
-    dismissHandled.add(event);
-    const toastEl = (
-      /** @type {(HTMLElement & { dismiss?: () => void }) | null} */
-      button.closest(".kp-toast")
-    );
-    if (button.classList.contains("kp-toast__close") && toastEl) {
-      if (typeof toastEl.dismiss === "function") {
-        toastEl.dismiss();
-        return;
-      }
-      const region = toastEl.parentElement;
-      toastEl.remove();
-      region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } }));
-      return;
-    }
-    const alert = (
-      /** @type {HTMLElement | null} */
-      button.closest(".kp-alert")
-    );
-    if (!alert) return;
-    const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
-    if (proceed) alert.hidden = true;
-  };
-  root.addEventListener("click", onClick);
-  return () => root.removeEventListener("click", onClick);
-}
-var TOOLTIP_EVENT = "kp-tooltip";
-var TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
-function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
-  const cleanups = [];
-  let count = 0;
-  for (const el2 of root.querySelectorAll(".kp-tooltip-anchor")) {
-    const anchor = (
-      /** @type {HTMLElement} */
-      el2
-    );
-    if (ownedBy !== "" && anchor.matches(ownedBy)) continue;
-    if (anchor.dataset.kpTooltipAttached !== void 0) continue;
-    const tooltip = (
-      /** @type {HTMLElement | null} */
-      anchor.querySelector('[role="tooltip"], .kp-tooltip')
-    );
-    const trigger = (
-      /** @type {HTMLElement | null} */
-      [...anchor.children].find((child) => child !== tooltip) ?? null
-    );
-    if (tooltip === null || trigger === null) continue;
-    anchor.dataset.kpTooltipAttached = "";
-    count += 1;
-    const before = {
-      id: tooltip.getAttribute("id"),
-      hidden: tooltip.hidden,
-      describedby: trigger.getAttribute("aria-describedby"),
-      anchorName: anchor.style.getPropertyValue("anchor-name"),
-      positionAnchor: tooltip.style.getPropertyValue("position-anchor")
-    };
-    if (!tooltip.id) tooltip.id = `kp-tooltip-${count}-${Math.random().toString(36).slice(2, 8)}`;
-    const ids = (before.describedby ?? "").split(/\s+/).filter(Boolean);
-    if (!ids.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids, tooltip.id].join(" "));
-    if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
-    if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
-    const number = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
-    const openDelay = number(anchor.dataset.kpOpenDelay, openDelayMs);
-    const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
-    const escapes = anchor.dataset.kpCloseOnEscape === void 0 ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== "false";
-    let timer = 0;
-    const set = (open) => {
-      clearTimeout(timer);
-      if (tooltip.hidden === !open) return;
-      tooltip.hidden = !open;
-      anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
-    };
-    const schedule = (open, delay) => {
-      clearTimeout(timer);
-      if (delay <= 0) set(open);
-      else timer = window.setTimeout(() => set(open), delay);
-    };
-    const onEnter = () => schedule(true, openDelay);
-    const onLeave = () => {
-      if (!anchor.contains(document.activeElement)) schedule(false, closeDelay);
-    };
-    const onFocusIn = () => schedule(true, 0);
-    const onFocusOut = () => schedule(false, 0);
-    const onKey = (event) => {
-      if (escapes && event.key === "Escape" && !tooltip.hidden) set(false);
-    };
-    tooltip.hidden = true;
-    anchor.addEventListener("pointerenter", onEnter);
-    anchor.addEventListener("pointerleave", onLeave);
-    anchor.addEventListener("focusin", onFocusIn);
-    anchor.addEventListener("focusout", onFocusOut);
-    document.addEventListener("keydown", onKey);
-    cleanups.push(() => {
-      clearTimeout(timer);
-      anchor.removeEventListener("pointerenter", onEnter);
-      anchor.removeEventListener("pointerleave", onLeave);
-      anchor.removeEventListener("focusin", onFocusIn);
-      anchor.removeEventListener("focusout", onFocusOut);
-      document.removeEventListener("keydown", onKey);
-      tooltip.hidden = before.hidden;
-      if (before.id === null) tooltip.removeAttribute("id");
-      if (before.describedby === null) trigger.removeAttribute("aria-describedby");
-      else trigger.setAttribute("aria-describedby", before.describedby);
-      if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
-      if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
-      delete anchor.dataset.kpTooltipAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-var SCROLL_OVERFLOW = "data-kp-popover-overflowing";
-var SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
-function watchScrollbar(box) {
-  const PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
-  const measure = () => {
-    const view = box.clientHeight;
-    const size = box.scrollHeight;
-    const over = view > 0 && size > view + 1;
-    box.toggleAttribute(SCROLL_OVERFLOW, over);
-    if (!over) {
-      for (const p of PROPS) box.style.removeProperty(p);
-      return;
-    }
-    box.style.setProperty("--kp-scroll-view", `${view}px`);
-    box.style.setProperty("--kp-scroll-ratio", (view / size).toFixed(4));
-    box.style.setProperty("--kp-scroll-progress", Math.min(1, Math.max(0, box.scrollTop / (size - view))).toFixed(4));
-  };
-  const length = (name) => parseFloat(getComputedStyle(box).getPropertyValue(name));
-  const onPointerDown = (event) => {
-    const bar = length("--kp-scrollbar-size");
-    if (event.button !== 0 || !(bar > 0)) return;
-    const inset = length("--kp-scrollbar-inset") || 0;
-    const rect = box.getBoundingClientRect();
-    const right = rect.left + box.clientLeft + box.clientWidth - inset;
-    const top = rect.top + box.clientTop + inset;
-    const bottom = rect.top + box.clientTop + box.clientHeight - inset;
-    if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
-    event.preventDefault();
-    if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
-    const button = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
-    const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
-    if (event.clientY < top + button) box.scrollTop -= line;
-    else if (event.clientY > bottom - button) box.scrollTop += line;
-    else {
-      const track = bottom - top - 2 * button;
-      const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
-      const travel = track - thumb;
-      const range = box.scrollHeight - box.clientHeight;
-      const start = top + button + travel * (box.scrollTop / range);
-      if (event.clientY < start) box.scrollTop -= box.clientHeight;
-      else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
-      else if (travel > 0) {
-        const from = { y: event.clientY, scroll: box.scrollTop };
-        const onMove = (move) => {
-          box.scrollTop = from.scroll + (move.clientY - from.y) / travel * range;
-        };
-        const onUp = () => {
-          box.removeEventListener("pointermove", onMove);
-          box.removeEventListener("pointerup", onUp);
-          box.removeEventListener("pointercancel", onUp);
-        };
-        box.setPointerCapture?.(event.pointerId);
-        box.addEventListener("pointermove", onMove);
-        box.addEventListener("pointerup", onUp);
-        box.addEventListener("pointercancel", onUp);
-      }
-    }
-    measure();
-  };
-  measure();
-  box.addEventListener("scroll", measure, { passive: true });
-  box.addEventListener("pointerdown", onPointerDown);
-  let resize = null;
-  let mutation = null;
-  if (typeof ResizeObserver !== "undefined") {
-    resize = new ResizeObserver(measure);
-    const observe = () => {
-      resize?.disconnect();
-      resize?.observe(box);
-      for (const child of box.children) resize?.observe(child);
-    };
-    observe();
-    mutation = new MutationObserver(() => {
-      observe();
-      measure();
-    });
-    mutation.observe(box, { childList: true });
-  }
-  return () => {
-    resize?.disconnect();
-    mutation?.disconnect();
-    box.removeEventListener("scroll", measure);
-    box.removeEventListener("pointerdown", onPointerDown);
-    box.removeAttribute(SCROLL_OVERFLOW);
-    for (const p of PROPS) box.style.removeProperty(p);
-  };
-}
-var scrollbarsWatched = /* @__PURE__ */ new WeakSet();
-function attachScrollbars(root = document) {
-  const watched = /* @__PURE__ */ new Map();
-  const scan = (scope) => {
-    const found = [...scope.querySelectorAll(SCROLL_BOXES)];
-    if (scope instanceof Element && scope.matches(SCROLL_BOXES)) found.push(scope);
-    for (const el2 of found) {
-      const box = (
-        /** @type {HTMLElement} */
-        el2
-      );
-      if (watched.has(box) || scrollbarsWatched.has(box)) continue;
-      scrollbarsWatched.add(box);
-      const stop = watchScrollbar(box);
-      watched.set(box, () => {
-        stop();
-        scrollbarsWatched.delete(box);
-      });
-    }
-  };
-  scan(root);
-  const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver((records) => {
-    for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
-  });
-  const target = root instanceof Document ? root.documentElement : root;
-  if (observer && target instanceof Node) observer.observe(target, { childList: true, subtree: true });
-  return () => {
-    observer?.disconnect();
-    for (const stop of watched.values()) stop();
-    watched.clear();
-  };
-}
-var closeLabel = () => getStrings().close;
 
-// js/theme-picker.js
-var theme_picker_exports = {};
-__export(theme_picker_exports, {
-  PICK_EVENT: () => PICK_EVENT,
-  THEMES: () => THEMES,
-  THEME_MENU_ICON: () => THEME_MENU_ICON,
-  attachThemePickers: () => attachThemePickers,
-  themeMenuMarkup: () => themeMenuMarkup,
-  themeOptionsMarkup: () => themeOptionsMarkup
+// js/sidenav.js
+var sidenav_exports = {};
+__export(sidenav_exports, {
+  OPTIONS: () => OPTIONS,
+  SIDENAV_MODE_EVENT: () => SIDENAV_MODE_EVENT,
+  SIDENAV_OWNED: () => SIDENAV_OWNED,
+  SIDENAV_SLIM_EVENT: () => SIDENAV_SLIM_EVENT,
+  SIDENAV_TOGGLE_EVENT: () => SIDENAV_TOGGLE_EVENT,
+  attachSidenavs: () => attachSidenavs,
+  sidenavOf: () => sidenavOf
 });
-var PICKER = "[data-kp-theme-picker]";
-var OPTION = "[data-kp-theme]";
-var STATUS = "[data-kp-theme-status]";
-var PICK_EVENT = "kp-theme-pick";
-var saveFailedText = () => getStrings().themeSaveFailed;
-function showSaveState(root, failed) {
-  for (const el2 of root.querySelectorAll(STATUS)) {
-    el2.textContent = failed ? saveFailedText() : "";
-    el2.hidden = !failed;
-  }
+function sidenavOf(element) {
+  return element === null ? void 0 : handles2.get(element);
 }
-function markSelection(root, theme) {
-  for (const el2 of root.querySelectorAll(OPTION)) {
-    const button = (
-      /** @type {HTMLElement} */
-      el2
-    );
-    const selected = button.dataset.kpTheme === theme;
-    button.setAttribute("aria-pressed", String(selected));
-    button.dataset.selected = String(selected);
-    button.classList.toggle("is-selected", selected);
-  }
+function wantsName(toggler) {
+  if (toggler.getAttribute("aria-label") !== null) return true;
+  const clone = (
+    /** @type {Element} */
+    toggler.cloneNode(true)
+  );
+  for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+  return (clone.textContent ?? "").trim() === "";
 }
-function clearMarks(root) {
-  for (const el2 of root.querySelectorAll(OPTION)) {
-    el2.removeAttribute("aria-pressed");
-    el2.removeAttribute("data-selected");
-    el2.classList.remove("is-selected");
-  }
-}
-function attachThemePickers(root = document, { persist = true, closePopover = true, status = null } = {}) {
+function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
   const cleanups = [];
-  const pickers = [];
-  for (const el2 of root.querySelectorAll(PICKER)) {
-    const picker = (
+  for (const element of root.querySelectorAll(".kp-sidenav")) {
+    const panel = (
       /** @type {HTMLElement} */
-      el2
+      element
     );
-    if (picker.dataset.kpThemeAttached === "1") continue;
-    picker.dataset.kpThemeAttached = "1";
-    pickers.push(picker);
-    const onClick = (event) => {
-      const target = (
-        /** @type {HTMLElement} */
-        event.target
-      );
-      const option = target.closest(OPTION);
-      if (!option || !picker.contains(option)) return;
-      const next = (
-        /** @type {HTMLElement} */
-        option.dataset.kpTheme
-      );
-      if (!next) return;
-      const applied = applyTheme(next);
-      const chosen = pendingTheme() ?? applied;
-      const stored = persist ? storeTheme(chosen) : true;
-      showSaveState(status ?? picker.parentNode ?? document, !stored);
-      picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
-      const popover = closePopover ? picker.closest("[popover]") : null;
-      if (popover && popover.matches(":popover-open")) popover.hidePopover();
+    if (panel.dataset.kpSidenavAttached !== void 0) continue;
+    panel.dataset.kpSidenavAttached = "";
+    if (!panel.id) panel.id = `kp-sidenav-${Math.random().toString(36).slice(2, 8)}`;
+    const doc = panel.ownerDocument;
+    const read = (attribute) => panel.getAttribute(attribute);
+    const on = (attribute, fallback2) => {
+      const value = read(attribute);
+      return value === null ? fallback2 : value !== "false";
     };
-    picker.addEventListener("click", onClick);
-    markSelection(picker, initializeTheme(currentTheme()));
-    cleanups.push(() => {
-      picker.removeEventListener("click", onClick);
-      delete picker.dataset.kpThemeAttached;
-      clearMarks(picker);
-    });
+    const memory = paintRemembered(panel, "sidenav", { storage: store });
+    let backdrop = null;
+    let restoreFocusTo = null;
+    const mode = () => read(OPTIONS.mode) ?? "side";
+    const isOpen = () => panel.getAttribute(OPTIONS.open) !== "false" && (mode() === "side" || panel.getAttribute(OPTIONS.open) === "true");
+    const covering = () => mode() === "over";
+    const togglers = () => [...doc.querySelectorAll("[data-kp-sidenav-toggle]")].filter(
+      (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
+    );
+    const contentEl = () => {
+      const selector = read(OPTIONS.content);
+      return selector === null ? null : (
+        /** @type {HTMLElement | null} */
+        doc.querySelector(selector)
+      );
+    };
+    const offsetContent = (open2) => {
+      const target = contentEl();
+      if (!target) return { property: null, value: "" };
+      const property = mode() === "push" ? "marginInlineStart" : "paddingInlineStart";
+      const value = open2 && mode() !== "over" ? getComputedStyle(panel).inlineSize : "";
+      target.style.marginInlineStart = "";
+      target.style.paddingInlineStart = "";
+      target.style[property] = value;
+      return { property, value };
+    };
+    const say = (open2) => {
+      const s = { ...getStrings(), ...strings };
+      for (const toggler of togglers()) {
+        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+        toggler.setAttribute("aria-expanded", String(open2));
+        toggler.setAttribute("aria-controls", panel.id);
+        if (wantsName(toggler)) {
+          toggler.setAttribute("aria-label", open2 ? s.closeSidebar : s.sidebar);
+        }
+      }
+    };
+    const dropBackdrop = () => {
+      backdrop?.remove();
+      backdrop = null;
+    };
+    const raiseBackdrop = () => {
+      if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
+      backdrop = doc.createElement("div");
+      backdrop.className = `kp-sidenav__backdrop ${read(OPTIONS.backdropClass) ?? ""}`.trim();
+      if (read(OPTIONS.position) === "absolute") backdrop.style.position = "absolute";
+      backdrop.addEventListener("click", () => close());
+      panel.after(backdrop);
+    };
+    const onTrap = (event) => {
+      if (event.key !== "Tab" || !covering() || !isOpen() || !on(OPTIONS.focusTrap, true)) return;
+      const stops = [.../** @type {NodeListOf<HTMLElement>} */
+      panel.querySelectorAll(FOCUSABLE)].filter((el2) => el2.offsetParent !== null);
+      if (stops.length === 0) return;
+      const first = stops[0];
+      const last = stops[stops.length - 1];
+      const active = doc.activeElement;
+      if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      }
+    };
+    const set = (open2, moveFocus = true, save = true) => {
+      panel.setAttribute(OPTIONS.open, String(open2));
+      say(open2);
+      const offset = offsetContent(open2);
+      if (open2) raiseBackdrop();
+      else dropBackdrop();
+      if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = open2 && covering() ? "hidden" : "";
+      if (moveFocus && covering()) {
+        if (open2) {
+          restoreFocusTo = doc.activeElement;
+          panel.querySelector(FOCUSABLE)?.focus();
+        } else if (restoreFocusTo instanceof HTMLElement) {
+          restoreFocusTo.focus();
+          restoreFocusTo = null;
+        }
+      }
+      if (save) memory?.write("open", open2);
+      panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open2 } }));
+      panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset } }));
+    };
+    const close = ({ remember: remember2 = true } = {}) => set(false, true, remember2);
+    const open = ({ remember: remember2 = true } = {}) => set(true, true, remember2);
+    const slimTogglers = () => [...doc.querySelectorAll(`[${OPTIONS.slimToggle}]`)].filter(
+      (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
+    );
+    const saySlim = (collapsed) => {
+      if (read(OPTIONS.slim) === null) return;
+      const s = { ...getStrings(), ...strings };
+      for (const toggler of slimTogglers()) {
+        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+        toggler.setAttribute("aria-expanded", String(!collapsed));
+        toggler.setAttribute("aria-controls", panel.id);
+        if (wantsName(toggler)) {
+          toggler.setAttribute("aria-label", collapsed ? s.expandRail : s.collapseRail);
+        }
+      }
+    };
+    const setSlim = (collapsed) => {
+      if (read(OPTIONS.slim) === null) return;
+      const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
+      panel.toggleAttribute(OPTIONS.slimCollapsed, next);
+      saySlim(next);
+      memory?.write("rail", next);
+      panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
+    };
+    const setMode = (next) => {
+      panel.setAttribute(OPTIONS.mode, next);
+      set(isOpen(), false, false);
+    };
+    const saveGroups = () => {
+      if (memory === null) return;
+      const state = {};
+      for (const { group, id } of sidenavGroups(panel)) state[id] = group.hasAttribute(OPTIONS.expanded);
+      memory.write("groups", state);
+    };
+    const onCategory = (event) => {
+      const toggle = (
+        /** @type {HTMLElement | null} */
+        event.target instanceof Element ? event.target.closest(".kp-sidenav__category-toggle") : null
+      );
+      if (!toggle || !panel.contains(toggle)) return;
+      const category = toggle.closest(".kp-sidenav__category");
+      if (!category) return;
+      const expanded = category.hasAttribute(OPTIONS.expanded);
+      if (!expanded && on(OPTIONS.accordion, false)) {
+        for (const other of panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
+          other.removeAttribute(OPTIONS.expanded);
+          other.querySelector(".kp-sidenav__category-toggle")?.setAttribute("aria-expanded", "false");
+        }
+      }
+      category.toggleAttribute(OPTIONS.expanded, !expanded);
+      toggle.setAttribute("aria-expanded", String(!expanded));
+      saveGroups();
+    };
+    const onToggleClick = (event) => {
+      const toggler = (
+        /** @type {Element | null} */
+        event.target instanceof Element ? event.target.closest("[data-kp-sidenav-toggle]") : null
+      );
+      if (!toggler) return;
+      if (ownedBy !== "" && toggler.matches(ownedBy)) return;
+      const controls = toggler.getAttribute("aria-controls");
+      if (controls !== null && controls !== panel.id) return;
+      set(!isOpen());
+    };
+    const onSlimClick = (event) => {
+      const toggler = (
+        /** @type {Element | null} */
+        event.target instanceof Element ? event.target.closest(`[${OPTIONS.slimToggle}]`) : null
+      );
+      if (!toggler) return;
+      if (ownedBy !== "" && toggler.matches(ownedBy)) return;
+      const controls = toggler.getAttribute("aria-controls");
+      if (controls !== null && controls !== panel.id) return;
+      setSlim();
+    };
+    const onEsc = (event) => {
+      if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode() === "side" || !isOpen()) return;
+      close();
+    };
+    const overBelow = read(OPTIONS.overBelow);
+    let declared = null;
+    const hiddenAtAttach = /* @__PURE__ */ new Map();
+    const hideControl = (control, hide) => {
+      if (!(control instanceof HTMLElement) || ownedBy !== "" && control.matches(ownedBy)) return;
+      if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute("hidden"));
+      control.toggleAttribute("hidden", hide);
+    };
+    const threshold = () => {
+      const length = (overBelow ?? "").trim() || NARROW_STEP;
+      const size = parseFloat(length);
+      if (length.endsWith("rem")) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
+      if (length.endsWith("em")) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
+      return size;
+    };
+    const still = (change) => {
+      const before = panel.style.transition;
+      panel.style.transition = "none";
+      change();
+      void panel.offsetWidth;
+      panel.style.transition = before;
+    };
+    const applyNarrow = () => {
+      const box = panel.parentElement;
+      if (overBelow === null || box === null) return;
+      const narrow = box.clientWidth <= threshold();
+      for (const control of togglers()) hideControl(control, !narrow);
+      if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
+      if (narrow === (declared !== null)) return;
+      still(() => {
+        if (narrow) {
+          declared = { mode: read(OPTIONS.mode), slim: panel.hasAttribute(OPTIONS.slimCollapsed) };
+          panel.setAttribute(OPTIONS.narrow, "");
+          panel.removeAttribute(OPTIONS.slimCollapsed);
+          panel.setAttribute(OPTIONS.mode, "over");
+          set(false, false, false);
+        } else {
+          const was = (
+            /** @type {{ mode: string | null, slim: boolean }} */
+            declared
+          );
+          declared = null;
+          panel.removeAttribute(OPTIONS.narrow);
+          if (was.mode === null) panel.removeAttribute(OPTIONS.mode);
+          else panel.setAttribute(OPTIONS.mode, was.mode);
+          panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
+          saySlim(was.slim);
+          set(mode() === "side", false, false);
+        }
+      });
+    };
+    const narrowWatch = overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(applyNarrow) : null;
+    let start = mode() === "side";
+    if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === "true";
+    if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, "");
+    set(start, false, false);
+    saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
+    applyNarrow();
+    if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
+    for (const toggle of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
+      const category = toggle.closest(".kp-sidenav__category");
+      toggle.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
+    }
+    doc.addEventListener("click", onToggleClick);
+    doc.addEventListener("click", onSlimClick);
+    panel.addEventListener("click", onCategory);
+    doc.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onEsc
+    );
+    panel.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onTrap
+    );
+    const handle = {
+      element: panel,
+      open,
+      close,
+      toggle: ({ remember: remember2 = true } = {}) => set(!isOpen(), true, remember2),
+      setMode,
+      setSlim,
+      isOpen,
+      destroy: () => {
+      }
+    };
+    const detach = () => {
+      narrowWatch?.disconnect();
+      if (declared !== null) {
+        panel.removeAttribute(OPTIONS.narrow);
+        if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
+        else panel.setAttribute(OPTIONS.mode, declared.mode);
+        panel.toggleAttribute(OPTIONS.slimCollapsed, declared.slim);
+        declared = null;
+      }
+      for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute("hidden", hidden);
+      doc.removeEventListener("click", onToggleClick);
+      doc.removeEventListener("click", onSlimClick);
+      panel.removeEventListener("click", onCategory);
+      doc.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onEsc
+      );
+      panel.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onTrap
+      );
+      dropBackdrop();
+      offsetContent(false);
+      if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = "";
+      panel.removeAttribute(OPTIONS.open);
+      for (const toggler of togglers()) {
+        toggler.removeAttribute("aria-expanded");
+        toggler.removeAttribute("aria-label");
+      }
+      if (read(OPTIONS.slim) !== null) {
+        for (const toggler of slimTogglers()) {
+          if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+          toggler.removeAttribute("aria-expanded");
+          toggler.removeAttribute("aria-label");
+        }
+      }
+      delete panel.dataset.kpSidenavAttached;
+      handles2.delete(panel);
+    };
+    handle.destroy = detach;
+    handles2.set(panel, handle);
+    cleanups.push(detach);
   }
-  const stop = onThemeChange((theme) => {
-    for (const el2 of (root === document ? document : root).querySelectorAll(PICKER)) markSelection(el2, theme);
-  });
-  cleanups.push(stop);
-  const detach = () => {
+  return () => {
     for (const c of cleanups) c();
   };
-  return Object.assign(detach, {
-    refresh: () => {
-      for (const picker of pickers) markSelection(picker, currentTheme());
-    }
-  });
 }
-function escapeHtml(text) {
-  return text.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch] ?? ch);
-}
-var THEME_MENU_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg>`;
-function themeOptionsMarkup({ themes = THEMES, labels = {}, grouped = true, groupLabels = {} } = {}) {
-  const s = getStrings();
-  const option = (t) => `<li><button type="button" data-kp-theme="${escapeHtml(t.name)}"><span class="kp-swatch" data-theme="${escapeHtml(t.name)}"></span>${escapeHtml(labels[t.name] ?? t.label)}</button></li>`;
-  if (!grouped) return themes.map(option).join("");
-  const light = themes.filter((t) => !t.dark);
-  const dark = themes.filter((t) => t.dark);
-  const group = (heading, list, kind) => list.length === 0 ? "" : `<li role="presentation" class="kp-theme-group" data-kp-theme-group="${kind}"><span class="kp-theme-group__label" aria-hidden="true">${escapeHtml(heading)}</span><ul class="kp-theme-group__list" aria-label="${escapeHtml(heading)}">${list.map(option).join("")}</ul></li>`;
-  return group(groupLabels.light ?? s.themeGroupLight, light, "light") + group(groupLabels.dark ?? s.themeGroupDark, dark, "dark");
-}
-function themeMenuMarkup({
-  id = "kp-theme-menu",
-  label = getStrings().themePicker,
-  icon = THEME_MENU_ICON,
-  themes,
-  labels,
-  grouped,
-  groupLabels,
-  className = ""
-} = {}) {
-  const safeId = escapeHtml(id);
-  const safeLabel = escapeHtml(label);
-  const classes = `kp-theme-menu ${escapeHtml(className)}`.trim();
-  return `<span class="${classes}"><button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">` + icon + `</button><div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
-}
-
-// js/combobox.js
-var combobox_exports = {};
-__export(combobox_exports, {
-  CHANGE_EVENT: () => CHANGE_EVENT,
-  MATCHERS: () => MATCHERS,
-  OPEN_EVENT: () => OPEN_EVENT,
-  attachComboboxes: () => attachComboboxes,
-  attachSelect: () => attachSelect,
-  attachSelects: () => attachSelects,
-  combobox: () => combobox,
-  drawnSelect: () => drawnSelect,
-  drawsSelect: () => drawsSelect
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, NARROW_STEP, handles2, FOCUSABLE;
+var init_sidenav = __esm({
+  "js/sidenav.js"() {
+    "use strict";
+    init_strings();
+    init_remember();
+    SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
+    SIDENAV_SLIM_EVENT = "kp-sidenav-slim";
+    SIDENAV_MODE_EVENT = "kp-sidenav-mode";
+    SIDENAV_OWNED = "[data-kp-sidenav-owner]";
+    OPTIONS = {
+      mode: "data-kp-sidenav-mode",
+      position: "data-kp-sidenav-position",
+      side: "data-kp-sidenav-side",
+      open: "data-kp-sidenav-open",
+      slim: "data-kp-sidenav-slim",
+      slimCollapsed: "data-kp-sidenav-slim-collapsed",
+      expandOnHover: "data-kp-sidenav-expand-on-hover",
+      accordion: "data-kp-sidenav-accordion",
+      backdrop: "data-kp-sidenav-backdrop",
+      backdropClass: "data-kp-sidenav-backdrop-class",
+      closeOnEsc: "data-kp-sidenav-close-on-esc",
+      lockScroll: "data-kp-sidenav-lock-scroll",
+      focusTrap: "data-kp-sidenav-focus-trap",
+      content: "data-kp-sidenav-content",
+      /** The older spelling of `data-kp-remember`, still read [js/remember.js]. */
+      remember: "data-kp-sidenav-remember",
+      toggle: "data-kp-sidenav-toggle",
+      slimToggle: "data-kp-sidenav-slim-toggle",
+      slimHide: "data-kp-sidenav-slim-hide",
+      slimShow: "data-kp-sidenav-slim-show",
+      expanded: "data-kp-sidenav-expanded",
+      overBelow: "data-kp-sidenav-over-below",
+      narrow: "data-kp-sidenav-narrow"
+    };
+    NARROW_STEP = "40rem";
+    handles2 = /* @__PURE__ */ new WeakMap();
+    FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  }
 });
 
 // js/listbox.js
@@ -3740,9 +4009,6 @@ __export(listbox_exports, {
   createListbox: () => createListbox,
   subsequence: () => subsequence
 });
-var OPTION_SELECTOR = "[data-kp-option]";
-var HIGHLIGHT_EVENT = "kp-listbox-highlight";
-var CHOOSE_EVENT = "kp-listbox-choose";
 function createListbox({
   input,
   list,
@@ -3958,6 +4224,15 @@ function subsequence(text, query) {
   }
   return true;
 }
+var OPTION_SELECTOR, HIGHLIGHT_EVENT, CHOOSE_EVENT;
+var init_listbox = __esm({
+  "js/listbox.js"() {
+    "use strict";
+    OPTION_SELECTOR = "[data-kp-option]";
+    HIGHLIGHT_EVENT = "kp-listbox-highlight";
+    CHOOSE_EVENT = "kp-listbox-choose";
+  }
+});
 
 // js/top-layer.js
 function raiseOverlay(element, place2) {
@@ -3984,11 +4259,6 @@ function raiseOverlay(element, place2) {
     clearBlockSide(element);
   };
 }
-var clearBlockSide = (element) => {
-  element.style.removeProperty("max-block-size");
-  element.style.removeProperty("overflow-y");
-  delete element.dataset.kpOverlaySide;
-};
 function placeBlockSide(element, field) {
   clearBlockSide(element);
   const drawn = element.getBoundingClientRect();
@@ -4035,32 +4305,34 @@ function raiseInPlace(element, anchor, field = anchor) {
     element.style.removeProperty("width");
   };
 }
-var raised = (element) => element.matches(":popover-open");
+var clearBlockSide, raised;
+var init_top_layer = __esm({
+  "js/top-layer.js"() {
+    "use strict";
+    clearBlockSide = (element) => {
+      element.style.removeProperty("max-block-size");
+      element.style.removeProperty("overflow-y");
+      delete element.dataset.kpOverlaySide;
+    };
+    raised = (element) => element.matches(":popover-open");
+  }
+});
 
 // js/combobox.js
-var COMBOBOX = "[data-kp-combobox]";
-var INPUT = 'input[role="combobox"]';
-var LIST = '[role="listbox"]';
-var STATUS2 = "[data-kp-combobox-status]";
-var TAGS = "[data-kp-tag-list]";
-var EMPTY = "[data-kp-combobox-empty]";
-var RESULTS_TEXT = (
-  /** @param {number} n */
-  (n) => {
-    const s = getStrings();
-    return n === 0 ? s.noResults : n === 1 ? s.oneResult : s.manyResults(n);
-  }
-);
-var CHANGE_EVENT = "kp-combobox-change";
-var OPEN_EVENT = "kp-combobox-open";
-var MATCHERS = {
-  substring: (text, query) => text.includes(query),
-  prefix: (text, query) => text.startsWith(query),
-  subsequence: (text, query) => subsequence(text, query)
-};
-var handles2 = /* @__PURE__ */ new WeakMap();
+var combobox_exports = {};
+__export(combobox_exports, {
+  CHANGE_EVENT: () => CHANGE_EVENT,
+  MATCHERS: () => MATCHERS,
+  OPEN_EVENT: () => OPEN_EVENT,
+  attachComboboxes: () => attachComboboxes,
+  attachSelect: () => attachSelect,
+  attachSelects: () => attachSelects,
+  combobox: () => combobox,
+  drawnSelect: () => drawnSelect,
+  drawsSelect: () => drawsSelect
+});
 function combobox(element) {
-  return handles2.get(element) ?? null;
+  return handles3.get(element) ?? null;
 }
 function attachComboboxes(root = document, {
   match = "substring",
@@ -4355,7 +4627,7 @@ function attachComboboxes(root = document, {
       },
       refresh: () => void filter()
     };
-    handles2.set(box, handle);
+    handles3.set(box, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(pending);
@@ -4377,7 +4649,7 @@ function attachComboboxes(root = document, {
       if (status) status.textContent = before.status;
       if (empty !== null && empty !== serverEmpty) empty.remove();
       if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;
-      handles2.delete(box);
+      handles3.delete(box);
       delete box.dataset.kpComboboxAttached;
     });
   }
@@ -4392,11 +4664,9 @@ function drawsSelect(element) {
   if (asked === "native") return false;
   return asked !== null || element.classList.contains("kp-field__input");
 }
-var selectHandles = /* @__PURE__ */ new WeakMap();
 function drawnSelect(element) {
   return selectHandles.get(element) ?? null;
 }
-var selectCount = 0;
 function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   const before = {
     expanded: select.getAttribute("aria-expanded"),
@@ -4585,6 +4855,36 @@ function attachSelects(root = document, options = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
+var COMBOBOX, INPUT, LIST, STATUS2, TAGS, EMPTY, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT, MATCHERS, handles3, selectHandles, selectCount;
+var init_combobox = __esm({
+  "js/combobox.js"() {
+    "use strict";
+    init_listbox();
+    init_strings();
+    init_top_layer();
+    COMBOBOX = "[data-kp-combobox]";
+    INPUT = 'input[role="combobox"]';
+    LIST = '[role="listbox"]';
+    STATUS2 = "[data-kp-combobox-status]";
+    TAGS = "[data-kp-tag-list]";
+    EMPTY = "[data-kp-combobox-empty]";
+    RESULTS_TEXT = /** @param {number} n */
+    (n) => {
+      const s = getStrings();
+      return n === 0 ? s.noResults : n === 1 ? s.oneResult : s.manyResults(n);
+    };
+    CHANGE_EVENT = "kp-combobox-change";
+    OPEN_EVENT = "kp-combobox-open";
+    MATCHERS = {
+      substring: (text, query) => text.includes(query),
+      prefix: (text, query) => text.startsWith(query),
+      subsequence: (text, query) => subsequence(text, query)
+    };
+    handles3 = /* @__PURE__ */ new WeakMap();
+    selectHandles = /* @__PURE__ */ new WeakMap();
+    selectCount = 0;
+  }
+});
 
 // js/palette.js
 var palette_exports = {};
@@ -4599,13 +4899,6 @@ __export(palette_exports, {
   isMac: () => isMac,
   palette: () => palette
 });
-var PALETTE = "[data-kp-palette]";
-var SHEET = "[data-kp-shortcuts]";
-var INPUT2 = 'input[role="combobox"]';
-var LIST2 = '[role="listbox"]';
-var STATUS3 = '[role="status"]';
-var GROUP = "[data-kp-group]";
-var OPENER = "[data-kp-palette-open]";
 function closeOnOutsidePress(dialog) {
   const outside = (event) => {
     if (event.target !== dialog) return false;
@@ -4634,7 +4927,6 @@ function openerFor(event, dialog, answersKey) {
   const name = opener.getAttribute("data-kp-palette-open") ?? "";
   return name === "" ? answersKey : name === dialog.id;
 }
-var KEYS_SLOT = "[data-kp-palette-keys]";
 function isMac() {
   if (typeof navigator === "undefined") return false;
   const platform = (
@@ -4643,21 +4935,6 @@ function isMac() {
   );
   return /mac|iphone|ipad/i.test(platform);
 }
-var RUN_EVENT = "kp-palette-run";
-var OPEN_EVENT2 = "kp-palette-open";
-var RESULTS_TEXT2 = (n) => {
-  const s = getStrings();
-  return n === 0 ? s.noCommands : n === 1 ? s.oneCommand : s.manyCommands(n);
-};
-var MATCHERS2 = {
-  // Literal by default [scope-56]: a subsequence let "read" find "Report
-  // an incident", which reads as a wrong answer rather than a clever
-  // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
-  // a palette that wants it.
-  subsequence: (text, query) => subsequence(text, query),
-  substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
-  prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
-};
 function isHotkey(event, key) {
   return event.key.toLowerCase() === key.toLowerCase() && (event.metaKey || event.ctrlKey);
 }
@@ -4665,9 +4942,8 @@ function isTyping(target, typingSelector) {
   if (!(target instanceof HTMLElement)) return false;
   return target.isContentEditable || target.matches(typingSelector);
 }
-var handles3 = /* @__PURE__ */ new WeakMap();
 function palette(element) {
-  return handles3.get(element) ?? null;
+  return handles4.get(element) ?? null;
 }
 function attachPalettes(root = document, {
   hotkey = "k",
@@ -4827,7 +5103,7 @@ function attachPalettes(root = document, {
     }
     filter();
     const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
-    handles3.set(dialog, handle);
+    handles4.set(dialog, handle);
     created.push(handle);
     cleanups.push(() => {
       listbox.destroy();
@@ -4844,7 +5120,7 @@ function attachPalettes(root = document, {
       for (const el2 of list.querySelectorAll(GROUP)) el2.hidden = false;
       for (const el2 of list.querySelectorAll("kbd[data-kp-generated]")) el2.remove();
       if (dialog.open) dialog.close();
-      handles3.delete(dialog);
+      handles4.delete(dialog);
       delete dialog.dataset.kpPaletteAttached;
     });
   }
@@ -4876,7 +5152,7 @@ function attachPalettes(root = document, {
     const releaseOutside = closeOnOutsidePress(sheet);
     const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {
     } };
-    handles3.set(sheet, handle);
+    handles4.set(sheet, handle);
     created.push(handle);
     cleanups.push(() => {
       document.removeEventListener("keydown", onKey);
@@ -4884,7 +5160,7 @@ function attachPalettes(root = document, {
       sheet.removeEventListener("close", onClose);
       releaseOutside();
       if (sheet.open) sheet.close();
-      handles3.delete(sheet);
+      handles4.delete(sheet);
       delete sheet.dataset.kpShortcutsAttached;
     });
   }
@@ -4893,36 +5169,37 @@ function attachPalettes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-
-// js/datatable.js
-var datatable_exports = {};
-__export(datatable_exports, {
-  COLUMNS_EVENT: () => COLUMNS_EVENT,
-  DETAIL: () => DETAIL,
-  EDIT_EVENT: () => EDIT_EVENT,
-  EXPAND_EVENT: () => EXPAND_EVENT,
-  GRID_PAGE_ROWS: () => GRID_PAGE_ROWS,
-  PAGE_SIZE: () => PAGE_SIZE,
-  PAGE_SIZES: () => PAGE_SIZES,
-  REQUEST_EVENT: () => REQUEST_EVENT,
-  RETRY_EVENT: () => RETRY_EVENT,
-  SELECT_EVENT: () => SELECT_EVENT,
-  SERVER_DEBOUNCE_MS: () => SERVER_DEBOUNCE_MS,
-  SORT_EVENT: () => SORT_EVENT,
-  VIEW_EVENT: () => VIEW_EVENT,
-  attachDataTables: () => attachDataTables,
-  attachGrid: () => attachGrid,
-  compare: () => compare,
-  compareByOrder: () => compareByOrder,
-  dataTable: () => dataTable,
-  filterActive: () => filterActive,
-  filterPillLabel: () => filterPillLabel,
-  filterPills: () => filterPills,
-  matchesFilter: () => matchesFilter,
-  nextSorts: () => nextSorts,
-  readFilterBounds: () => readFilterBounds,
-  syncFixedColumns: () => syncFixedColumns,
-  watchScrolled: () => watchScrolled
+var PALETTE, SHEET, INPUT2, LIST2, STATUS3, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2, MATCHERS2, handles4;
+var init_palette = __esm({
+  "js/palette.js"() {
+    "use strict";
+    init_listbox();
+    init_strings();
+    PALETTE = "[data-kp-palette]";
+    SHEET = "[data-kp-shortcuts]";
+    INPUT2 = 'input[role="combobox"]';
+    LIST2 = '[role="listbox"]';
+    STATUS3 = '[role="status"]';
+    GROUP = "[data-kp-group]";
+    OPENER = "[data-kp-palette-open]";
+    KEYS_SLOT = "[data-kp-palette-keys]";
+    RUN_EVENT = "kp-palette-run";
+    OPEN_EVENT2 = "kp-palette-open";
+    RESULTS_TEXT2 = (n) => {
+      const s = getStrings();
+      return n === 0 ? s.noCommands : n === 1 ? s.oneCommand : s.manyCommands(n);
+    };
+    MATCHERS2 = {
+      // Literal by default [scope-56]: a subsequence let "read" find "Report
+      // an incident", which reads as a wrong answer rather than a clever
+      // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
+      // a palette that wants it.
+      subsequence: (text, query) => subsequence(text, query),
+      substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
+      prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
+    };
+    handles4 = /* @__PURE__ */ new WeakMap();
+  }
 });
 
 // js/locale.js
@@ -5031,6 +5308,11 @@ function escape(s) {
 function collator(locale) {
   return new Intl.Collator(resolveLocale(locale), { numeric: true, sensitivity: "base" });
 }
+var init_locale = __esm({
+  "js/locale.js"() {
+    "use strict";
+  }
+});
 
 // js/tables.js
 var tables_exports = {};
@@ -5039,9 +5321,6 @@ __export(tables_exports, {
   WRAP_SELECTOR: () => WRAP_SELECTOR,
   attachTableRegions: () => attachTableRegions
 });
-var WRAP_SELECTOR = ".kp-table-wrap";
-var ATTACHED = "kpRegionAttached";
-var OPT_OUT = '[data-kp-region="off"]';
 function nameFor(wrap, label) {
   const table = (
     /** @type {HTMLTableElement | null} */
@@ -5104,6 +5383,16 @@ function attachTableRegions(root = document, { label, selector = WRAP_SELECTOR }
   };
   return Object.assign(detach, { handles: created });
 }
+var WRAP_SELECTOR, ATTACHED, OPT_OUT;
+var init_tables = __esm({
+  "js/tables.js"() {
+    "use strict";
+    init_strings();
+    WRAP_SELECTOR = ".kp-table-wrap";
+    ATTACHED = "kpRegionAttached";
+    OPT_OUT = '[data-kp-region="off"]';
+  }
+});
 
 // js/datepicker.js
 var datepicker_exports = {};
@@ -5125,10 +5414,6 @@ __export(datepicker_exports, {
   toISO: () => toISO,
   yearBlockStart: () => yearBlockStart
 });
-var PICKER2 = "[data-kp-datepicker]";
-var DATE_EVENT = "kp-date-change";
-var OPEN_EVENT3 = "kp-date-open";
-var MONTH_EVENT = "kp-date-month";
 function toISO(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -5180,7 +5465,6 @@ function raiseDatePanel(panel) {
     delete panel.dataset.kpAlign;
   };
 }
-var JUMP_COLUMNS = 3;
 function yearBlockStart(year) {
   return Math.floor(year / 12) * 12;
 }
@@ -5217,9 +5501,8 @@ function measureDateView(panel) {
     gridBlock: cells?.height ?? "auto"
   };
 }
-var handles4 = /* @__PURE__ */ new WeakMap();
 function datePicker(element) {
-  return handles4.get(element) ?? null;
+  return handles5.get(element) ?? null;
 }
 function attachDatePickers(root = document, {
   locale: localeOption,
@@ -5630,7 +5913,7 @@ function attachDatePickers(root = document, {
       open: show,
       close: hide
     };
-    handles4.set(picker, handle);
+    handles5.set(picker, handle);
     created.push(handle);
     cleanups.push(() => {
       open.removeEventListener("click", onOpen);
@@ -5648,7 +5931,7 @@ function attachDatePickers(root = document, {
       else input.dataset.kpDateValue = before.value;
       if (before.expanded === null) open.removeAttribute("aria-expanded");
       else open.setAttribute("aria-expanded", before.expanded);
-      handles4.delete(picker);
+      handles5.delete(picker);
       delete picker.dataset.kpDatepickerAttached;
     });
   }
@@ -5657,296 +5940,52 @@ function attachDatePickers(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-
-// js/remember.js
-var remember_exports = {};
-__export(remember_exports, {
-  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
-  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
-  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
-  attachRemembered: () => attachRemembered,
-  columnId: () => columnId,
-  configureRemember: () => configureRemember,
-  forgetClaims: () => forgetClaims,
-  memoryFor: () => memoryFor,
-  paintRemembered: () => paintRemembered,
-  rememberedName: () => rememberedName,
-  restoreRemembered: () => restoreRemembered,
-  sidenavGroups: () => sidenavGroups,
-  treeItemId: () => treeItemId
+var PICKER2, DATE_EVENT, OPEN_EVENT3, MONTH_EVENT, JUMP_COLUMNS, handles5;
+var init_datepicker = __esm({
+  "js/datepicker.js"() {
+    "use strict";
+    init_strings();
+    init_top_layer();
+    init_locale();
+    PICKER2 = "[data-kp-datepicker]";
+    DATE_EVENT = "kp-date-change";
+    OPEN_EVENT3 = "kp-date-open";
+    MONTH_EVENT = "kp-date-month";
+    JUMP_COLUMNS = 3;
+    handles5 = /* @__PURE__ */ new WeakMap();
+  }
 });
-var REMEMBER_ATTRIBUTE = "data-kp-remember";
-var REMEMBER_CLASH_EVENT = "kp-remember-clash";
-var REMEMBER_PREFIX = "kp-remember";
-var config2 = { prefix: REMEMBER_PREFIX, storage: (
-  /** @type {Storage | null | undefined} */
-  void 0
-) };
-function configureRemember(next) {
-  if (next.prefix !== void 0) config2.prefix = next.prefix;
-  if (next.storage !== void 0) config2.storage = next.storage;
-}
-function storage(given) {
-  if (given !== void 0) return given;
-  if (config2.storage !== void 0) return config2.storage;
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-var ALIASES = { sidenav: "data-kp-sidenav-remember" };
-function rememberedName(element, component) {
-  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
-  if (own !== null && own !== "") return own;
-  const alias = ALIASES[component];
-  const older = alias === void 0 ? null : element.getAttribute(alias);
-  return older === null || older === "" ? null : older;
-}
-var claims = /* @__PURE__ */ new Map();
-var reported2 = /* @__PURE__ */ new Set();
-function forgetClaims() {
-  claims.clear();
-  reported2.clear();
-}
-function reportClash(element, component, name, other) {
-  const claim = `${component}:${name}`;
-  if (!reported2.has(claim)) {
-    reported2.add(claim);
-    console.warn(getStrings().rememberClash(name, component));
-  }
-  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
-}
-function memoryFor(element, component, { storage: given } = {}) {
-  const name = rememberedName(element, component);
-  if (name === null) return null;
-  const claim = `${component}:${name}`;
-  const holder = claims.get(claim);
-  if (holder !== void 0 && holder !== element && holder.isConnected) {
-    reportClash(element, component, name, holder);
-    return null;
-  }
-  claims.set(claim, element);
-  const key = (slot) => `${config2.prefix}:${component}:${name}:${slot}`;
-  return {
-    name,
-    key,
-    read: (slot, fallback2) => {
-      const store = storage(given);
-      if (store === null) return fallback2;
-      try {
-        const raw = store.getItem(key(slot));
-        if (raw === null) return fallback2;
-        return JSON.parse(raw);
-      } catch {
-        return fallback2;
-      }
-    },
-    write: (slot, value) => {
-      const store = storage(given);
-      if (store === null) return false;
-      try {
-        store.setItem(key(slot), JSON.stringify(value));
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    forget: (slot) => {
-      const store = storage(given);
-      if (store === null) return;
-      try {
-        store.removeItem(key(slot));
-      } catch {
-      }
-    }
-  };
-}
-function sidenavGroups(panel) {
-  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
-    const toggle = group.querySelector(".kp-sidenav__category-toggle");
-    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
-    const words = (toggle?.textContent ?? "").trim();
-    return { group, toggle, id: own !== null && own !== "" ? own : words !== "" ? words : String(at) };
-  });
-}
-function treeItemId(item) {
-  return (
-    /** @type {HTMLElement} */
-    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
-  );
-}
-function columnId(header) {
-  return (
-    /** @type {HTMLElement} */
-    header.dataset.kpField ?? (header.textContent ?? "").trim()
-  );
-}
-var headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
-var isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
-function paintSidenav(panel, memory) {
-  const open = memory.read("open", null);
-  if (typeof open === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open));
-  const rail = memory.read("rail", null);
-  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
-  const groups = memory.read("groups", null);
-  if (!isFlags(groups)) return;
-  for (const { group, toggle, id } of sidenavGroups(panel)) {
-    const state = groups[id];
-    if (typeof state !== "boolean") continue;
-    group.toggleAttribute("data-kp-sidenav-expanded", state);
-    toggle?.setAttribute("aria-expanded", String(state));
-  }
-}
-function paintDisclosure(element, memory) {
-  const open = memory.read("open", null);
-  if (typeof open === "boolean") element.toggleAttribute("open", open);
-}
-function paintTree(tree, memory) {
-  const branches = memory.read("branches", null);
-  if (!isFlags(branches)) return;
-  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
-    const state = branches[treeItemId(item)];
-    if (typeof state === "boolean") item.setAttribute("aria-expanded", String(state));
-  }
-}
-function paintSplit(split, memory) {
-  const value = memory.read("value", null);
-  const separator = split.querySelector('[role="separator"]');
-  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
-  separator.setAttribute("aria-valuenow", String(Math.round(value)));
-  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
-}
-function paintDatatable(wrap, memory) {
-  const density = memory.read("density", null);
-  if (density === "compact") wrap.setAttribute("data-density", "compact");
-  else if (density === "comfortable") wrap.removeAttribute("data-density");
-  const headers = headersOf(wrap);
-  const columns = (
-    /** @type {unknown} */
-    memory.read("columns", null)
-  );
-  if (Array.isArray(columns)) {
-    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns.includes(columnId(header)));
-  }
-  const sort = (
-    /** @type {unknown} */
-    memory.read("sort", null)
-  );
-  if (!Array.isArray(sort)) return;
-  for (const header of headers) {
-    if (header.dataset.kpSort === void 0) continue;
-    const at = sort.findIndex((key) => key?.column === columnId(header));
-    if (at === -1) {
-      header.setAttribute("aria-sort", "none");
-      delete header.dataset.kpSortPriority;
-    } else {
-      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
-      header.dataset.kpSortPriority = String(at + 1);
-    }
-  }
-}
-var PAINTERS = {
-  sidenav: paintSidenav,
-  disclosure: paintDisclosure,
-  tree: paintTree,
-  split: paintSplit,
-  datatable: paintDatatable
-};
-function paintRemembered(element, component, options) {
-  const memory = memoryFor(element, component, options);
-  if (memory !== null) PAINTERS[component](element, memory);
-  return memory;
-}
-var KINDS = [
-  ["sidenav", ".kp-sidenav"],
-  ["tree", "[data-kp-tree]"],
-  ["split", "[data-kp-split]"],
-  ["datatable", "[data-kp-datatable]"],
-  ["disclosure", "details"]
-];
-function restoreRemembered(root = document) {
-  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
-  for (const element of root.querySelectorAll(selector)) {
-    for (const [component, mark] of KINDS) {
-      if (!element.matches(mark)) continue;
-      paintRemembered(element, component);
-      break;
-    }
-  }
-}
-function attachRemembered(root = document) {
-  const cleanups = [];
-  for (const element of root.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)) {
-    const details = (
-      /** @type {HTMLDetailsElement} */
-      element
-    );
-    if (details.dataset.kpRememberAttached !== void 0) continue;
-    details.dataset.kpRememberAttached = "";
-    const memory = paintRemembered(details, "disclosure");
-    if (memory === null) {
-      delete details.dataset.kpRememberAttached;
-      continue;
-    }
-    const onToggle = () => memory.write("open", details.open);
-    details.addEventListener("toggle", onToggle);
-    cleanups.push(() => {
-      details.removeEventListener("toggle", onToggle);
-      delete details.dataset.kpRememberAttached;
-    });
-  }
-  return () => {
-    for (const cleanup of cleanups) cleanup();
-  };
-}
 
 // js/datatable.js
-var TABLE = "[data-kp-datatable]";
-var SEARCH = "[data-kp-datatable-search]";
-var SCOPE = "[data-kp-datatable-scope]";
-var DENSITY = "[data-kp-datatable-density]";
-var STATUS4 = "[data-kp-datatable-status]";
-var PAGER = "[data-kp-datatable-pager]";
-var EMPTY2 = "[data-kp-datatable-empty]";
-var CLEAR = "[data-kp-datatable-clear]";
-var LOADING = "[data-kp-datatable-loading]";
-var FAILED = "[data-kp-datatable-failed]";
-var RETRY = "[data-kp-datatable-retry]";
-var ACTIONS = "[data-kp-datatable-actions]";
-var SELECTED_COUNT = "[data-kp-datatable-selected-count]";
-var CLEAR_SELECTION = "[data-kp-datatable-clear-selection]";
-var FILTERS = "[data-kp-datatable-filters]";
-var FILTER_TOGGLE = "[data-kp-datatable-filter-toggle]";
-var PILLS = "[data-kp-datatable-pills]";
-var ADD_FILTER = "[data-kp-datatable-add-filter]";
-var CARD_SORT = "[data-kp-datatable-card-sort]";
-var SELECT_ALL = "[data-kp-select-all]";
-var SELECT_ROW = "[data-kp-select-row]";
-var SORT_SUMMARY = "[data-kp-datatable-sort-summary]";
-var SORT_RESET = "[data-kp-datatable-sort-reset]";
-var EXPAND_ALL = "[data-kp-datatable-expand-all]";
-var COLLAPSE_ALL = "[data-kp-datatable-collapse-all]";
-var EXPAND_COLUMN = "[data-kp-expand-column]";
-var ROW_TOGGLE = "[data-kp-row-toggle]";
-var DETAIL = "[data-kp-row-detail]";
-var EDIT_CELL = "[data-kp-edit-cell]";
-var EDIT_VALUE = "[data-kp-edit-value]";
-var EDITOR_WRAP = "[data-kp-datatable-editor-wrap]";
-var SKELETON_ROW = "[data-kp-skeleton-row]";
-var CHECK_CLASS = "kp-field__check";
-var VIEW_EVENT = "kp-datatable-view";
-var SELECT_EVENT = "kp-datatable-select";
-var SORT_EVENT = "kp-datatable-sort";
-var RETRY_EVENT = "kp-datatable-retry";
-var COLUMNS_EVENT = "kp-datatable-columns";
-var EXPAND_EVENT = "kp-datatable-expand";
-var REQUEST_EVENT = "kp-datatable-request";
-var EDIT_EVENT = "kp-datatable-edit";
-var PAGE_SIZE = 25;
-var PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
-var SERVER_DEBOUNCE_MS = 300;
-var GRID_PAGE_ROWS = 5;
+var datatable_exports = {};
+__export(datatable_exports, {
+  COLUMNS_EVENT: () => COLUMNS_EVENT,
+  DETAIL: () => DETAIL,
+  EDIT_EVENT: () => EDIT_EVENT,
+  EXPAND_EVENT: () => EXPAND_EVENT,
+  GRID_PAGE_ROWS: () => GRID_PAGE_ROWS,
+  PAGE_SIZE: () => PAGE_SIZE,
+  PAGE_SIZES: () => PAGE_SIZES,
+  REQUEST_EVENT: () => REQUEST_EVENT,
+  RETRY_EVENT: () => RETRY_EVENT,
+  SELECT_EVENT: () => SELECT_EVENT,
+  SERVER_DEBOUNCE_MS: () => SERVER_DEBOUNCE_MS,
+  SORT_EVENT: () => SORT_EVENT,
+  VIEW_EVENT: () => VIEW_EVENT,
+  attachDataTables: () => attachDataTables,
+  attachGrid: () => attachGrid,
+  compare: () => compare,
+  compareByOrder: () => compareByOrder,
+  dataTable: () => dataTable,
+  filterActive: () => filterActive,
+  filterPillLabel: () => filterPillLabel,
+  filterPills: () => filterPills,
+  matchesFilter: () => matchesFilter,
+  nextSorts: () => nextSorts,
+  readFilterBounds: () => readFilterBounds,
+  syncFixedColumns: () => syncFixedColumns,
+  watchScrolled: () => watchScrolled
+});
 function compare(a, b, kind, locale) {
   if (kind === "number") {
     const left = parseNumber(a, locale);
@@ -5982,7 +6021,6 @@ function nextSorts(keys, column, { add = false, cycle = "two" } = {}) {
   }
   return [{ column, direction: "ascending" }];
 }
-var splitList = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
 function filterActive(kind, value) {
   if (value === void 0) return false;
   if (kind === "choice") return Array.isArray(value) && value.length > 0;
@@ -6066,8 +6104,6 @@ function filterPills(kind, column, value, s) {
   );
   return [{ label: s.tableFilterRange(column, from || s.tableFilterOpenEnd, to || s.tableFilterOpenEnd), without: void 0 }];
 }
-var shown = (element) => !/** @type {HTMLElement} */
-element.hidden && getComputedStyle(element).display !== "none";
 function syncFixedColumns(table, count) {
   const head = table.tHead?.rows[0];
   const starts = /* @__PURE__ */ new Map();
@@ -6242,12 +6278,9 @@ function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove } = {}) {
     }
   };
 }
-var defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
-var handles5 = /* @__PURE__ */ new WeakMap();
 function dataTable(element) {
-  return handles5.get(element) ?? null;
+  return handles6.get(element) ?? null;
 }
-var instances = 0;
 function attachDataTables(root = document, {
   locale: localeOption,
   compare: compareFn = compare,
@@ -8523,7 +8556,7 @@ function attachDataTables(root = document, {
         applyFilter({ keepPage: false });
       }
     };
-    handles5.set(wrap, handle);
+    handles6.set(wrap, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(pending);
@@ -8596,7 +8629,7 @@ function attachDataTables(root = document, {
       if (busyWas === null) wrap.removeAttribute("aria-busy");
       else wrap.setAttribute("aria-busy", busyWas);
       delete wrap.dataset.kpState;
-      handles5.delete(wrap);
+      handles6.delete(wrap);
       delete wrap.dataset.kpDatatableAttached;
     });
   }
@@ -8605,6 +8638,69 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
+var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList, shown, defaultFilter, handles6, instances;
+var init_datatable = __esm({
+  "js/datatable.js"() {
+    "use strict";
+    init_strings();
+    init_locale();
+    init_tables();
+    init_datepicker();
+    init_combobox();
+    init_remember();
+    TABLE = "[data-kp-datatable]";
+    SEARCH = "[data-kp-datatable-search]";
+    SCOPE = "[data-kp-datatable-scope]";
+    DENSITY = "[data-kp-datatable-density]";
+    STATUS4 = "[data-kp-datatable-status]";
+    PAGER = "[data-kp-datatable-pager]";
+    EMPTY2 = "[data-kp-datatable-empty]";
+    CLEAR = "[data-kp-datatable-clear]";
+    LOADING = "[data-kp-datatable-loading]";
+    FAILED = "[data-kp-datatable-failed]";
+    RETRY = "[data-kp-datatable-retry]";
+    ACTIONS = "[data-kp-datatable-actions]";
+    SELECTED_COUNT = "[data-kp-datatable-selected-count]";
+    CLEAR_SELECTION = "[data-kp-datatable-clear-selection]";
+    FILTERS = "[data-kp-datatable-filters]";
+    FILTER_TOGGLE = "[data-kp-datatable-filter-toggle]";
+    PILLS = "[data-kp-datatable-pills]";
+    ADD_FILTER = "[data-kp-datatable-add-filter]";
+    CARD_SORT = "[data-kp-datatable-card-sort]";
+    SELECT_ALL = "[data-kp-select-all]";
+    SELECT_ROW = "[data-kp-select-row]";
+    SORT_SUMMARY = "[data-kp-datatable-sort-summary]";
+    SORT_RESET = "[data-kp-datatable-sort-reset]";
+    EXPAND_ALL = "[data-kp-datatable-expand-all]";
+    COLLAPSE_ALL = "[data-kp-datatable-collapse-all]";
+    EXPAND_COLUMN = "[data-kp-expand-column]";
+    ROW_TOGGLE = "[data-kp-row-toggle]";
+    DETAIL = "[data-kp-row-detail]";
+    EDIT_CELL = "[data-kp-edit-cell]";
+    EDIT_VALUE = "[data-kp-edit-value]";
+    EDITOR_WRAP = "[data-kp-datatable-editor-wrap]";
+    SKELETON_ROW = "[data-kp-skeleton-row]";
+    CHECK_CLASS = "kp-field__check";
+    VIEW_EVENT = "kp-datatable-view";
+    SELECT_EVENT = "kp-datatable-select";
+    SORT_EVENT = "kp-datatable-sort";
+    RETRY_EVENT = "kp-datatable-retry";
+    COLUMNS_EVENT = "kp-datatable-columns";
+    EXPAND_EVENT = "kp-datatable-expand";
+    REQUEST_EVENT = "kp-datatable-request";
+    EDIT_EVENT = "kp-datatable-edit";
+    PAGE_SIZE = 25;
+    PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
+    SERVER_DEBOUNCE_MS = 300;
+    GRID_PAGE_ROWS = 5;
+    splitList = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
+    shown = (element) => !/** @type {HTMLElement} */
+    element.hidden && getComputedStyle(element).display !== "none";
+    defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
+    handles6 = /* @__PURE__ */ new WeakMap();
+    instances = 0;
+  }
+});
 
 // js/forms.js
 var forms_exports = {};
@@ -8620,16 +8716,6 @@ __export(forms_exports, {
   nameOf: () => nameOf,
   showError: () => showError
 });
-var FORM = "[data-kp-form]";
-var SUMMARY = "[data-kp-form-summary]";
-var FIELD_ERROR = "[data-kp-field-error]";
-var SUBMIT = "[data-kp-submit]";
-var VALID_EVENT = "kp-form-valid";
-var INVALID_EVENT = "kp-form-invalid";
-var FIELD_EVENT = "kp-field-validity";
-var DONE_EVENT = "kp-form-done";
-var fallback = () => getStrings().formInvalid;
-var counter = 0;
 function nameOf(field) {
   if (field.getAttribute("type") === "radio") {
     const legend = field.closest("fieldset")?.querySelector("legend")?.textContent?.trim();
@@ -8680,9 +8766,8 @@ function clearError(field, { wrapper = ".kp-field", invalidClass = "kp-field--in
   if (described.length > 0) marked.setAttribute("aria-describedby", described.join(" "));
   else marked.removeAttribute("aria-describedby");
 }
-var handles6 = /* @__PURE__ */ new WeakMap();
 function form(element) {
-  return handles6.get(element) ?? null;
+  return handles7.get(element) ?? null;
 }
 function attachForms(root = document, {
   validateOn = "blur",
@@ -8828,7 +8913,7 @@ function attachForms(root = document, {
       },
       done
     };
-    handles6.set(form2, handle);
+    handles7.set(form2, handle);
     created.push(handle);
     cleanups.push(() => {
       form2.removeEventListener("focusout", onFocusOut);
@@ -8836,7 +8921,7 @@ function attachForms(root = document, {
       form2.removeEventListener("submit", onSubmit);
       handle.clear();
       form2.noValidate = hadNoValidate;
-      handles6.delete(form2);
+      handles7.delete(form2);
       delete form2.dataset.kpFormAttached;
     });
   }
@@ -8874,8 +8959,6 @@ function attachForms(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var SWITCH = ".kp-switch";
-var SWITCH_STATE = ".kp-switch__state";
 function attachSwitches(root = document, { strings } = {}) {
   const s = { ...getStrings(), ...strings };
   const filled = [];
@@ -8894,6 +8977,26 @@ function attachSwitches(root = document, { strings } = {}) {
     for (const state of filled) state.replaceChildren();
   };
 }
+var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, fallback, counter, handles7, SWITCH, SWITCH_STATE;
+var init_forms = __esm({
+  "js/forms.js"() {
+    "use strict";
+    init_strings();
+    FORM = "[data-kp-form]";
+    SUMMARY = "[data-kp-form-summary]";
+    FIELD_ERROR = "[data-kp-field-error]";
+    SUBMIT = "[data-kp-submit]";
+    VALID_EVENT = "kp-form-valid";
+    INVALID_EVENT = "kp-form-invalid";
+    FIELD_EVENT = "kp-field-validity";
+    DONE_EVENT = "kp-form-done";
+    fallback = () => getStrings().formInvalid;
+    counter = 0;
+    handles7 = /* @__PURE__ */ new WeakMap();
+    SWITCH = ".kp-switch";
+    SWITCH_STATE = ".kp-switch__state";
+  }
+});
 
 // js/patterns.js
 var patterns_exports = {};
@@ -8906,14 +9009,6 @@ __export(patterns_exports, {
   UNDO_MS: () => UNDO_MS,
   attachPatterns: () => attachPatterns
 });
-var COPY = "[data-kp-copy]";
-var UNDO = "[data-kp-undo-action]";
-var UNDO_MS = 6e3;
-var COPIED_MS = 1500;
-var COMMIT_EVENT = "kp-action-commit";
-var UNDO_EVENT = "kp-action-undo";
-var COPY_EVENT = "kp-copy";
-var COPY_FAILED_EVENT = "kp-copy-failed";
 function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost" } = {}) {
   const cleanups = [];
   for (const element of root.querySelectorAll(COPY)) {
@@ -9025,6 +9120,22 @@ function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_M
     for (const c of cleanups) c();
   };
 }
+var COPY, UNDO, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT;
+var init_patterns = __esm({
+  "js/patterns.js"() {
+    "use strict";
+    init_overlays();
+    init_strings();
+    COPY = "[data-kp-copy]";
+    UNDO = "[data-kp-undo-action]";
+    UNDO_MS = 6e3;
+    COPIED_MS = 1500;
+    COMMIT_EVENT = "kp-action-commit";
+    UNDO_EVENT = "kp-action-undo";
+    COPY_EVENT = "kp-copy";
+    COPY_FAILED_EVENT = "kp-copy-failed";
+  }
+});
 
 // js/structure.js
 var structure_exports = {};
@@ -9037,13 +9148,6 @@ __export(structure_exports, {
   structure: () => structure,
   visibleItems: () => visibleItems
 });
-var TREE = "[data-kp-tree]";
-var REORDER = "[data-kp-reorder]";
-var SPLIT = "[data-kp-split]";
-var TREE_EXPAND_EVENT = "kp-tree-expand";
-var TREE_SELECT_EVENT = "kp-tree-select";
-var REORDER_EVENT = "kp-reorder";
-var SPLIT_EVENT = "kp-split";
 function visibleItems(tree) {
   return (
     /** @type {HTMLElement[]} */
@@ -9057,9 +9161,8 @@ function visibleItems(tree) {
     })
   );
 }
-var handles7 = /* @__PURE__ */ new WeakMap();
 function structure(element) {
-  return handles7.get(element) ?? null;
+  return handles8.get(element) ?? null;
 }
 function attachStructure(root = document, {
   typeahead = true,
@@ -9230,7 +9333,7 @@ function attachStructure(root = document, {
         return item ? idOf(item) : null;
       }
     };
-    handles7.set(tree, handle);
+    handles8.set(tree, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(bufferTimer);
@@ -9242,7 +9345,7 @@ function attachStructure(root = document, {
         if (b.selected === null) b.item.removeAttribute("aria-selected");
         else b.item.setAttribute("aria-selected", b.selected);
       }
-      handles7.delete(tree);
+      handles8.delete(tree);
       delete tree.dataset.kpTreeAttached;
     });
   }
@@ -9363,7 +9466,7 @@ function attachStructure(root = document, {
         list.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: order(), id: "", from: -1, to: -1 } }));
       }
     };
-    handles7.set(list, handle);
+    handles8.set(list, handle);
     created.push(handle);
     cleanups.push(() => {
       list.removeEventListener("keydown", onKey);
@@ -9371,7 +9474,7 @@ function attachStructure(root = document, {
       endDrag?.();
       list.replaceChildren(...original);
       if (madeLive) live?.remove();
-      handles7.delete(list);
+      handles8.delete(list);
       delete list.dataset.kpReorderAttached;
     });
   }
@@ -9443,7 +9546,7 @@ function attachStructure(root = document, {
     separator.addEventListener("pointerdown", onPointerDown);
     separator.addEventListener("dblclick", onDoubleClick);
     const handle = { element: split, value: () => value, setValue };
-    handles7.set(split, handle);
+    handles8.set(split, handle);
     created.push(handle);
     cleanups.push(() => {
       separator.removeEventListener("keydown", onKey);
@@ -9452,7 +9555,7 @@ function attachStructure(root = document, {
       separator.setAttribute("aria-valuenow", String(initial));
       if (hadVar === "") split.style.removeProperty("--kp-split");
       else split.style.setProperty("--kp-split", hadVar);
-      handles7.delete(split);
+      handles8.delete(split);
       delete split.dataset.kpSplitAttached;
     });
   }
@@ -9461,6 +9564,22 @@ function attachStructure(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
+var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT, SPLIT_EVENT, handles8;
+var init_structure = __esm({
+  "js/structure.js"() {
+    "use strict";
+    init_strings();
+    init_remember();
+    TREE = "[data-kp-tree]";
+    REORDER = "[data-kp-reorder]";
+    SPLIT = "[data-kp-split]";
+    TREE_EXPAND_EVENT = "kp-tree-expand";
+    TREE_SELECT_EVENT = "kp-tree-select";
+    REORDER_EVENT = "kp-reorder";
+    SPLIT_EVENT = "kp-split";
+    handles8 = /* @__PURE__ */ new WeakMap();
+  }
+});
 
 // js/upload.js
 var upload_exports = {};
@@ -9475,10 +9594,6 @@ __export(upload_exports, {
   setProgress: () => setProgress,
   upload: () => upload
 });
-var UPLOAD = "[data-kp-upload]";
-var FILE_EVENT = "kp-upload-file";
-var REJECT_EVENT = "kp-upload-reject";
-var REMOVE_EVENT = "kp-upload-remove";
 function acceptsFile(file, accept) {
   const rules = accept.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean);
   if (rules.length === 0) return true;
@@ -9490,9 +9605,8 @@ function acceptsFile(file, accept) {
     return type === rule;
   });
 }
-var handles8 = /* @__PURE__ */ new WeakMap();
 function upload(element) {
-  return handles8.get(element) ?? null;
+  return handles9.get(element) ?? null;
 }
 function attachUploads(root = document, { locale: localeOption, validate, renderRow, drop = true, removeLabel, removeClassName = "kp-button kp-button--ghost" } = {}) {
   const cleanups = [];
@@ -9651,7 +9765,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
         rows.clear();
       }
     };
-    handles8.set(upload2, handle);
+    handles9.set(upload2, handle);
     created.push(handle);
     cleanups.push(() => {
       input.removeEventListener("change", onChange);
@@ -9662,7 +9776,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
       zone.removeEventListener("drop", onDrop);
       delete zone.dataset.kpDragging;
       handle.clear();
-      handles8.delete(upload2);
+      handles9.delete(upload2);
       delete upload2.dataset.kpUploadAttached;
     });
   }
@@ -9687,6 +9801,19 @@ function setError(item, message) {
   item.dataset.error = message;
   item.querySelector(".kp-upload__message")?.replaceChildren(message);
 }
+var UPLOAD, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, handles9;
+var init_upload = __esm({
+  "js/upload.js"() {
+    "use strict";
+    init_strings();
+    init_locale();
+    UPLOAD = "[data-kp-upload]";
+    FILE_EVENT = "kp-upload-file";
+    REJECT_EVENT = "kp-upload-reject";
+    REMOVE_EVENT = "kp-upload-remove";
+    handles9 = /* @__PURE__ */ new WeakMap();
+  }
+});
 
 // js/wizard.js
 var wizard_exports = {};
@@ -9697,13 +9824,8 @@ __export(wizard_exports, {
   attachWizards: () => attachWizards,
   wizard: () => wizard
 });
-var WIZARD = "[data-kp-wizard]";
-var STEP_EVENT = "kp-wizard-step";
-var BEFORE_STEP_EVENT = "kp-wizard-before-step";
-var FINISH_EVENT = "kp-wizard-finish";
-var handles9 = /* @__PURE__ */ new WeakMap();
 function wizard(element) {
-  return handles9.get(element) ?? null;
+  return handles10.get(element) ?? null;
 }
 function attachWizards(root = document, { validate = true, focusStep = true, navigableLabels = false, beforeStep } = {}) {
   const cleanups = [];
@@ -9848,7 +9970,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
     wizard2.addEventListener("input", onFieldInput);
     show({ announce: false });
     const handle = { element: wizard2, step: () => at, goTo, next: () => goTo(at + 1), back: () => goTo(at - 1) };
-    handles9.set(wizard2, handle);
+    handles10.set(wizard2, handle);
     created.push(handle);
     cleanups.push(() => {
       next?.removeEventListener("click", onNext);
@@ -9876,7 +9998,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
       if (back !== null) back.disabled = before.back;
       if (next !== null) next.textContent = before.next;
       if (status !== null) status.textContent = before.status;
-      handles9.delete(wizard2);
+      handles10.delete(wizard2);
       delete wizard2.dataset.kpWizardAttached;
     });
   }
@@ -9885,13 +10007,18 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
   };
   return Object.assign(detach, { handles: created });
 }
-
-// js/colorpicker.js
-var colorpicker_exports = {};
-__export(colorpicker_exports, {
-  COLOR_EVENT: () => COLOR_EVENT,
-  attachColorPickers: () => attachColorPickers,
-  colorPicker: () => colorPicker
+var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT, handles10;
+var init_wizard = __esm({
+  "js/wizard.js"() {
+    "use strict";
+    init_forms();
+    init_strings();
+    WIZARD = "[data-kp-wizard]";
+    STEP_EVENT = "kp-wizard-step";
+    BEFORE_STEP_EVENT = "kp-wizard-before-step";
+    FINISH_EVENT = "kp-wizard-finish";
+    handles10 = /* @__PURE__ */ new WeakMap();
+  }
 });
 
 // js/contrast.js
@@ -9953,7 +10080,6 @@ function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
-var hsl = (text) => hslToRgb(parseHsl(text));
 function tokenColour(token, from = document.documentElement) {
   const value = getComputedStyle(from).getPropertyValue(token).trim();
   if (value === "") return null;
@@ -9966,13 +10092,23 @@ function tokenColour(token, from = document.documentElement) {
 function meets(ratio, kind = "text") {
   return ratio >= (kind === "text" ? 4.5 : 3);
 }
+var hsl;
+var init_contrast = __esm({
+  "js/contrast.js"() {
+    "use strict";
+    hsl = (text) => hslToRgb(parseHsl(text));
+  }
+});
 
 // js/colorpicker.js
-var PICKER3 = "[data-kp-colorpicker]";
-var COLOR_EVENT = "kp-color-change";
-var handles10 = /* @__PURE__ */ new WeakMap();
+var colorpicker_exports = {};
+__export(colorpicker_exports, {
+  COLOR_EVENT: () => COLOR_EVENT,
+  attachColorPickers: () => attachColorPickers,
+  colorPicker: () => colorPicker
+});
 function colorPicker(element) {
-  return handles10.get(element) ?? null;
+  return handles11.get(element) ?? null;
 }
 function attachColorPickers(root = document, { followTheme = true } = {}) {
   const cleanups = [];
@@ -10055,7 +10191,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       },
       measure: () => void update(false)
     };
-    handles10.set(picker, handle);
+    handles11.set(picker, handle);
     created.push(handle);
     cleanups.push(() => {
       for (const channel of ["h", "s", "l"]) slider(channel)?.removeEventListener("input", onInput);
@@ -10065,7 +10201,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       if (value !== null) value.textContent = before.value;
       if (report !== null) report.textContent = before.report;
       delete picker.dataset.kpContrastOk;
-      handles10.delete(picker);
+      handles11.delete(picker);
       delete picker.dataset.kpColorpickerAttached;
     });
   }
@@ -10074,6 +10210,17 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
+var PICKER3, COLOR_EVENT, handles11;
+var init_colorpicker = __esm({
+  "js/colorpicker.js"() {
+    "use strict";
+    init_contrast();
+    init_strings();
+    PICKER3 = "[data-kp-colorpicker]";
+    COLOR_EVENT = "kp-color-change";
+    handles11 = /* @__PURE__ */ new WeakMap();
+  }
+});
 
 // js/gridlayout.js
 var gridlayout_exports = {};
@@ -10087,12 +10234,6 @@ __export(gridlayout_exports, {
   grid: () => grid,
   layoutOf: () => layoutOf
 });
-var GRID = "[data-kp-grid]";
-var TILE = "[data-kp-tile]";
-var LAYOUT_EVENT = "kp-grid-layout";
-var LAYOUT_COMMIT_EVENT = "kp-grid-commit";
-var COLUMNS = 6;
-var COMMIT_MS = 400;
 function layoutOf(grid2) {
   return [...grid2.querySelectorAll(TILE)].map((element) => {
     const tile = (
@@ -10150,9 +10291,8 @@ function place(tile) {
   description.textContent = s.tileLabel(name, x + 1, y + 1, w, h);
   if (!tile.hasAttribute("aria-label") && tile.dataset.kpLabel !== void 0) tile.setAttribute("aria-label", tile.dataset.kpLabel);
 }
-var handles11 = /* @__PURE__ */ new WeakMap();
 function grid(element) {
-  return handles11.get(element) ?? null;
+  return handles12.get(element) ?? null;
 }
 function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = {}) {
   const cleanups = [];
@@ -10261,7 +10401,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       },
       refresh: placeAll
     };
-    handles11.set(grid2, handle);
+    handles12.set(grid2, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(timer);
@@ -10283,7 +10423,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       }
       if (hadColumns === "") grid2.style.removeProperty("--kp-grid-columns");
       else grid2.style.setProperty("--kp-grid-columns", hadColumns);
-      handles11.delete(grid2);
+      handles12.delete(grid2);
       delete grid2.dataset.kpGridAttached;
     });
   }
@@ -10292,423 +10432,537 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
   };
   return Object.assign(detach, { handles: created });
 }
-
-// js/sidenav.js
-var sidenav_exports = {};
-__export(sidenav_exports, {
-  OPTIONS: () => OPTIONS,
-  SIDENAV_MODE_EVENT: () => SIDENAV_MODE_EVENT,
-  SIDENAV_OWNED: () => SIDENAV_OWNED,
-  SIDENAV_SLIM_EVENT: () => SIDENAV_SLIM_EVENT,
-  SIDENAV_TOGGLE_EVENT: () => SIDENAV_TOGGLE_EVENT,
-  attachSidenavs: () => attachSidenavs,
-  sidenavOf: () => sidenavOf
-});
-var SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
-var SIDENAV_SLIM_EVENT = "kp-sidenav-slim";
-var SIDENAV_MODE_EVENT = "kp-sidenav-mode";
-var SIDENAV_OWNED = "[data-kp-sidenav-owner]";
-var OPTIONS = {
-  mode: "data-kp-sidenav-mode",
-  position: "data-kp-sidenav-position",
-  side: "data-kp-sidenav-side",
-  open: "data-kp-sidenav-open",
-  slim: "data-kp-sidenav-slim",
-  slimCollapsed: "data-kp-sidenav-slim-collapsed",
-  expandOnHover: "data-kp-sidenav-expand-on-hover",
-  accordion: "data-kp-sidenav-accordion",
-  backdrop: "data-kp-sidenav-backdrop",
-  backdropClass: "data-kp-sidenav-backdrop-class",
-  closeOnEsc: "data-kp-sidenav-close-on-esc",
-  lockScroll: "data-kp-sidenav-lock-scroll",
-  focusTrap: "data-kp-sidenav-focus-trap",
-  content: "data-kp-sidenav-content",
-  /** The older spelling of `data-kp-remember`, still read [js/remember.js]. */
-  remember: "data-kp-sidenav-remember",
-  toggle: "data-kp-sidenav-toggle",
-  slimToggle: "data-kp-sidenav-slim-toggle",
-  slimHide: "data-kp-sidenav-slim-hide",
-  slimShow: "data-kp-sidenav-slim-show",
-  expanded: "data-kp-sidenav-expanded",
-  overBelow: "data-kp-sidenav-over-below",
-  narrow: "data-kp-sidenav-narrow"
-};
-var NARROW_STEP = "40rem";
-var handles12 = /* @__PURE__ */ new WeakMap();
-function sidenavOf(element) {
-  return element === null ? void 0 : handles12.get(element);
-}
-function wantsName(toggler) {
-  if (toggler.getAttribute("aria-label") !== null) return true;
-  const clone = (
-    /** @type {Element} */
-    toggler.cloneNode(true)
-  );
-  for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
-  return (clone.textContent ?? "").trim() === "";
-}
-var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
-  const cleanups = [];
-  for (const element of root.querySelectorAll(".kp-sidenav")) {
-    const panel = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (panel.dataset.kpSidenavAttached !== void 0) continue;
-    panel.dataset.kpSidenavAttached = "";
-    if (!panel.id) panel.id = `kp-sidenav-${Math.random().toString(36).slice(2, 8)}`;
-    const doc = panel.ownerDocument;
-    const read = (attribute) => panel.getAttribute(attribute);
-    const on = (attribute, fallback2) => {
-      const value = read(attribute);
-      return value === null ? fallback2 : value !== "false";
-    };
-    const memory = paintRemembered(panel, "sidenav", { storage: store });
-    let backdrop = null;
-    let restoreFocusTo = null;
-    const mode = () => read(OPTIONS.mode) ?? "side";
-    const isOpen = () => panel.getAttribute(OPTIONS.open) !== "false" && (mode() === "side" || panel.getAttribute(OPTIONS.open) === "true");
-    const covering = () => mode() === "over";
-    const togglers = () => [...doc.querySelectorAll("[data-kp-sidenav-toggle]")].filter(
-      (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
-    );
-    const contentEl = () => {
-      const selector = read(OPTIONS.content);
-      return selector === null ? null : (
-        /** @type {HTMLElement | null} */
-        doc.querySelector(selector)
-      );
-    };
-    const offsetContent = (open2) => {
-      const target = contentEl();
-      if (!target) return { property: null, value: "" };
-      const property = mode() === "push" ? "marginInlineStart" : "paddingInlineStart";
-      const value = open2 && mode() !== "over" ? getComputedStyle(panel).inlineSize : "";
-      target.style.marginInlineStart = "";
-      target.style.paddingInlineStart = "";
-      target.style[property] = value;
-      return { property, value };
-    };
-    const say = (open2) => {
-      const s = { ...getStrings(), ...strings };
-      for (const toggler of togglers()) {
-        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-        toggler.setAttribute("aria-expanded", String(open2));
-        toggler.setAttribute("aria-controls", panel.id);
-        if (wantsName(toggler)) {
-          toggler.setAttribute("aria-label", open2 ? s.closeSidebar : s.sidebar);
-        }
-      }
-    };
-    const dropBackdrop = () => {
-      backdrop?.remove();
-      backdrop = null;
-    };
-    const raiseBackdrop = () => {
-      if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
-      backdrop = doc.createElement("div");
-      backdrop.className = `kp-sidenav__backdrop ${read(OPTIONS.backdropClass) ?? ""}`.trim();
-      if (read(OPTIONS.position) === "absolute") backdrop.style.position = "absolute";
-      backdrop.addEventListener("click", () => close());
-      panel.after(backdrop);
-    };
-    const onTrap = (event) => {
-      if (event.key !== "Tab" || !covering() || !isOpen() || !on(OPTIONS.focusTrap, true)) return;
-      const stops = [.../** @type {NodeListOf<HTMLElement>} */
-      panel.querySelectorAll(FOCUSABLE)].filter((el2) => el2.offsetParent !== null);
-      if (stops.length === 0) return;
-      const first = stops[0];
-      const last = stops[stops.length - 1];
-      const active = doc.activeElement;
-      if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      } else if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus();
-      }
-    };
-    const set = (open2, moveFocus = true, save = true) => {
-      panel.setAttribute(OPTIONS.open, String(open2));
-      say(open2);
-      const offset = offsetContent(open2);
-      if (open2) raiseBackdrop();
-      else dropBackdrop();
-      if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = open2 && covering() ? "hidden" : "";
-      if (moveFocus && covering()) {
-        if (open2) {
-          restoreFocusTo = doc.activeElement;
-          panel.querySelector(FOCUSABLE)?.focus();
-        } else if (restoreFocusTo instanceof HTMLElement) {
-          restoreFocusTo.focus();
-          restoreFocusTo = null;
-        }
-      }
-      if (save) memory?.write("open", open2);
-      panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open2 } }));
-      panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset } }));
-    };
-    const close = ({ remember: remember2 = true } = {}) => set(false, true, remember2);
-    const open = ({ remember: remember2 = true } = {}) => set(true, true, remember2);
-    const slimTogglers = () => [...doc.querySelectorAll(`[${OPTIONS.slimToggle}]`)].filter(
-      (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
-    );
-    const saySlim = (collapsed) => {
-      if (read(OPTIONS.slim) === null) return;
-      const s = { ...getStrings(), ...strings };
-      for (const toggler of slimTogglers()) {
-        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-        toggler.setAttribute("aria-expanded", String(!collapsed));
-        toggler.setAttribute("aria-controls", panel.id);
-        if (wantsName(toggler)) {
-          toggler.setAttribute("aria-label", collapsed ? s.expandRail : s.collapseRail);
-        }
-      }
-    };
-    const setSlim = (collapsed) => {
-      if (read(OPTIONS.slim) === null) return;
-      const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
-      panel.toggleAttribute(OPTIONS.slimCollapsed, next);
-      saySlim(next);
-      memory?.write("rail", next);
-      panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
-    };
-    const setMode = (next) => {
-      panel.setAttribute(OPTIONS.mode, next);
-      set(isOpen(), false, false);
-    };
-    const saveGroups = () => {
-      if (memory === null) return;
-      const state = {};
-      for (const { group, id } of sidenavGroups(panel)) state[id] = group.hasAttribute(OPTIONS.expanded);
-      memory.write("groups", state);
-    };
-    const onCategory = (event) => {
-      const toggle = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest(".kp-sidenav__category-toggle") : null
-      );
-      if (!toggle || !panel.contains(toggle)) return;
-      const category = toggle.closest(".kp-sidenav__category");
-      if (!category) return;
-      const expanded = category.hasAttribute(OPTIONS.expanded);
-      if (!expanded && on(OPTIONS.accordion, false)) {
-        for (const other of panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
-          other.removeAttribute(OPTIONS.expanded);
-          other.querySelector(".kp-sidenav__category-toggle")?.setAttribute("aria-expanded", "false");
-        }
-      }
-      category.toggleAttribute(OPTIONS.expanded, !expanded);
-      toggle.setAttribute("aria-expanded", String(!expanded));
-      saveGroups();
-    };
-    const onToggleClick = (event) => {
-      const toggler = (
-        /** @type {Element | null} */
-        event.target instanceof Element ? event.target.closest("[data-kp-sidenav-toggle]") : null
-      );
-      if (!toggler) return;
-      if (ownedBy !== "" && toggler.matches(ownedBy)) return;
-      const controls = toggler.getAttribute("aria-controls");
-      if (controls !== null && controls !== panel.id) return;
-      set(!isOpen());
-    };
-    const onSlimClick = (event) => {
-      const toggler = (
-        /** @type {Element | null} */
-        event.target instanceof Element ? event.target.closest(`[${OPTIONS.slimToggle}]`) : null
-      );
-      if (!toggler) return;
-      if (ownedBy !== "" && toggler.matches(ownedBy)) return;
-      const controls = toggler.getAttribute("aria-controls");
-      if (controls !== null && controls !== panel.id) return;
-      setSlim();
-    };
-    const onEsc = (event) => {
-      if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode() === "side" || !isOpen()) return;
-      close();
-    };
-    const overBelow = read(OPTIONS.overBelow);
-    let declared = null;
-    const hiddenAtAttach = /* @__PURE__ */ new Map();
-    const hideControl = (control, hide) => {
-      if (!(control instanceof HTMLElement) || ownedBy !== "" && control.matches(ownedBy)) return;
-      if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute("hidden"));
-      control.toggleAttribute("hidden", hide);
-    };
-    const threshold = () => {
-      const length = (overBelow ?? "").trim() || NARROW_STEP;
-      const size = parseFloat(length);
-      if (length.endsWith("rem")) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
-      if (length.endsWith("em")) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
-      return size;
-    };
-    const still = (change) => {
-      const before = panel.style.transition;
-      panel.style.transition = "none";
-      change();
-      void panel.offsetWidth;
-      panel.style.transition = before;
-    };
-    const applyNarrow = () => {
-      const box = panel.parentElement;
-      if (overBelow === null || box === null) return;
-      const narrow = box.clientWidth <= threshold();
-      for (const control of togglers()) hideControl(control, !narrow);
-      if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
-      if (narrow === (declared !== null)) return;
-      still(() => {
-        if (narrow) {
-          declared = { mode: read(OPTIONS.mode), slim: panel.hasAttribute(OPTIONS.slimCollapsed) };
-          panel.setAttribute(OPTIONS.narrow, "");
-          panel.removeAttribute(OPTIONS.slimCollapsed);
-          panel.setAttribute(OPTIONS.mode, "over");
-          set(false, false, false);
-        } else {
-          const was = (
-            /** @type {{ mode: string | null, slim: boolean }} */
-            declared
-          );
-          declared = null;
-          panel.removeAttribute(OPTIONS.narrow);
-          if (was.mode === null) panel.removeAttribute(OPTIONS.mode);
-          else panel.setAttribute(OPTIONS.mode, was.mode);
-          panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
-          saySlim(was.slim);
-          set(mode() === "side", false, false);
-        }
-      });
-    };
-    const narrowWatch = overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(applyNarrow) : null;
-    let start = mode() === "side";
-    if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === "true";
-    if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, "");
-    set(start, false, false);
-    saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
-    applyNarrow();
-    if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
-    for (const toggle of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
-      const category = toggle.closest(".kp-sidenav__category");
-      toggle.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
-    }
-    doc.addEventListener("click", onToggleClick);
-    doc.addEventListener("click", onSlimClick);
-    panel.addEventListener("click", onCategory);
-    doc.addEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onEsc
-    );
-    panel.addEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onTrap
-    );
-    const handle = {
-      element: panel,
-      open,
-      close,
-      toggle: ({ remember: remember2 = true } = {}) => set(!isOpen(), true, remember2),
-      setMode,
-      setSlim,
-      isOpen,
-      destroy: () => {
-      }
-    };
-    const detach = () => {
-      narrowWatch?.disconnect();
-      if (declared !== null) {
-        panel.removeAttribute(OPTIONS.narrow);
-        if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
-        else panel.setAttribute(OPTIONS.mode, declared.mode);
-        panel.toggleAttribute(OPTIONS.slimCollapsed, declared.slim);
-        declared = null;
-      }
-      for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute("hidden", hidden);
-      doc.removeEventListener("click", onToggleClick);
-      doc.removeEventListener("click", onSlimClick);
-      panel.removeEventListener("click", onCategory);
-      doc.removeEventListener(
-        "keydown",
-        /** @type {EventListener} */
-        onEsc
-      );
-      panel.removeEventListener(
-        "keydown",
-        /** @type {EventListener} */
-        onTrap
-      );
-      dropBackdrop();
-      offsetContent(false);
-      if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = "";
-      panel.removeAttribute(OPTIONS.open);
-      for (const toggler of togglers()) {
-        toggler.removeAttribute("aria-expanded");
-        toggler.removeAttribute("aria-label");
-      }
-      if (read(OPTIONS.slim) !== null) {
-        for (const toggler of slimTogglers()) {
-          if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-          toggler.removeAttribute("aria-expanded");
-          toggler.removeAttribute("aria-label");
-        }
-      }
-      delete panel.dataset.kpSidenavAttached;
-      handles12.delete(panel);
-    };
-    handle.destroy = detach;
-    handles12.set(panel, handle);
-    cleanups.push(detach);
+var GRID, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles12;
+var init_gridlayout = __esm({
+  "js/gridlayout.js"() {
+    "use strict";
+    init_strings();
+    GRID = "[data-kp-grid]";
+    TILE = "[data-kp-tile]";
+    LAYOUT_EVENT = "kp-grid-layout";
+    LAYOUT_COMMIT_EVENT = "kp-grid-commit";
+    COLUMNS = 6;
+    COMMIT_MS = 400;
+    handles12 = /* @__PURE__ */ new WeakMap();
   }
+});
+
+// kp-themes-entry.js
+init_alarm();
+
+// js/auto.js
+var auto_exports = {};
+__export(auto_exports, {
+  NEEDS: () => NEEDS,
+  READY_ATTRIBUTE: () => READY_ATTRIBUTE,
+  attachAll: () => attachAll
+});
+
+// js/no-flash.js
+var no_flash_exports = {};
+__export(no_flash_exports, {
+  EFFECTS_ATTRIBUTE: () => EFFECTS_ATTRIBUTE,
+  NO_FLASH_SNIPPET: () => NO_FLASH_SNIPPET,
+  REGISTER_PATTERN_DEFAULT: () => REGISTER_PATTERN_DEFAULT,
+  THEME_ATTRIBUTE: () => THEME_ATTRIBUTE,
+  applyStoredTheme: () => applyStoredTheme,
+  noFlashSnippet: () => noFlashSnippet
+});
+
+// js/theme-registry.js
+var theme_registry_exports = {};
+__export(theme_registry_exports, {
+  DEFAULT_THEME: () => DEFAULT_THEME,
+  STORAGE_KEY: () => STORAGE_KEY,
+  THEMES: () => THEMES,
+  VERSION: () => VERSION
+});
+var THEMES = Object.freeze([
+  { name: "formal", label: "Formal", dark: false },
+  { name: "light", label: "Light", dark: false },
+  { name: "dark", label: "Dark", dark: true },
+  { name: "cyberpunk", label: "Cyberpunk", dark: true },
+  { name: "synthwave", label: "Synthwave", dark: true },
+  { name: "pastel", label: "Pastel", dark: false },
+  { name: "terminal", label: "Terminal", dark: true },
+  { name: "forest", label: "Forest", dark: false },
+  { name: "high-contrast", label: "High contrast", dark: false },
+  { name: "sepia", label: "Sepia", dark: false },
+  { name: "blueprint", label: "Blueprint", dark: true },
+  { name: "solstice", label: "Solstice", dark: true },
+  { name: "brutalism", label: "Brutalism", dark: false },
+  { name: "deco", label: "Art Deco", dark: true },
+  { name: "phantom", label: "Phantom", dark: true },
+  { name: "shade-light", label: "Shade (light)", dark: false },
+  { name: "shade-dark", label: "Shade (dark)", dark: true },
+  { name: "retro", label: "Retro", dark: false },
+  { name: "grotesk", label: "Grotesk", dark: false },
+  { name: "lapis", label: "Lapis", dark: true },
+  { name: "nostromo", label: "Nostromo", dark: false },
+  { name: "titanium", label: "Titanium", dark: true }
+]);
+var DEFAULT_THEME = "formal";
+var STORAGE_KEY = "theme";
+var VERSION = "6.1.0";
+
+// js/no-flash.js
+var THEME_ATTRIBUTE = "data-theme";
+var EFFECTS_ATTRIBUTE = "data-kp-effects";
+function jsString(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+var REGISTER_PATTERN_DEFAULT = "/css/{theme}-register.css";
+var attributeText = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, register = false } = {}) {
+  if (register) return registerSnippet({ key, attribute, effects, ...register === true ? {} : register });
+  const arm = effects ? `
+        document.documentElement.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
+  return `(function () {
+    try {
+        var t = localStorage.getItem(${jsString(key)});
+        if (t) document.documentElement.setAttribute(${jsString(attribute)}, t);${arm}
+    } catch (e) {}
+})();`;
+}
+function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_DEFAULT, fallback: fallback2 = DEFAULT_THEME }) {
+  const names = THEMES.map((t) => t.name);
+  if (!names.includes(
+    /** @type {import('./theme-registry.js').ThemeName} */
+    fallback2
+  ))
+    throw new RangeError(`kp-themes: the register fallback "${fallback2}" is not a theme`);
+  const [before, ...rest] = pattern.split("{theme}");
+  const after = rest.join("{theme}");
+  const arm = effects ? `
+    d.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
+  return `(function () {
+    var d = document.documentElement;
+    try {
+        var t = localStorage.getItem(${jsString(key)});
+        if (t) d.setAttribute(${jsString(attribute)}, t);
+    } catch (e) {}${arm}
+    var n = d.getAttribute(${jsString(attribute)});
+    if (${JSON.stringify(names).replace(/</g, "\\u003c")}.indexOf(n) < 0) n = ${jsString(fallback2)};
+    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
+})();`;
+}
+var NO_FLASH_SNIPPET = noFlashSnippet();
+function applyStoredTheme({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, root } = {}) {
+  if (typeof document === "undefined") return null;
+  try {
+    const stored = localStorage.getItem(key);
+    if (!stored) return null;
+    (root ?? document.documentElement).setAttribute(attribute, stored);
+    return stored;
+  } catch {
+    return null;
+  }
+}
+
+// js/theme-core.js
+var theme_core_exports = {};
+__export(theme_core_exports, {
+  BEFORE_THEME_EVENT: () => BEFORE_THEME_EVENT,
+  DEFAULT_THEME: () => DEFAULT_THEME,
+  PENDING_THEME_ATTRIBUTE: () => PENDING_THEME_ATTRIBUTE,
+  STORAGE_KEY: () => STORAGE_KEY,
+  THEMES: () => THEMES,
+  THEME_EVENT: () => THEME_EVENT,
+  UNKNOWN_THEME_EVENT: () => UNKNOWN_THEME_EVENT,
+  applyTheme: () => applyTheme,
+  configureTheme: () => configureTheme,
+  currentTheme: () => currentTheme,
+  initializeTheme: () => initializeTheme,
+  isTheme: () => isTheme,
+  onThemeChange: () => onThemeChange,
+  pendingTheme: () => pendingTheme,
+  storeTheme: () => storeTheme,
+  storedTheme: () => storedTheme
+});
+init_strings();
+var THEME_EVENT = "kp-theme-change";
+var BEFORE_THEME_EVENT = "kp-theme-before-change";
+var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
+var PENDING_THEME_ATTRIBUTE = "data-theme-pending";
+var config = { root: (
+  /** @type {Element | null} */
+  null
+), darkClass: (
+  /** @type {string | null} */
+  "dark"
+), storageKey: STORAGE_KEY };
+function configureTheme(next) {
+  if (next.root !== void 0) config.root = next.root;
+  if (next.darkClass !== void 0) config.darkClass = next.darkClass;
+  if (next.storageKey !== void 0) config.storageKey = next.storageKey;
+}
+var rootOf = (root) => root ?? config.root ?? document.documentElement;
+var NAMES = (
+  /** @type {readonly string[]} */
+  THEMES.map((t) => t.name)
+);
+var DARK = new Set(THEMES.filter((t) => t.dark).map((t) => t.name));
+var isTheme = (value) => typeof value === "string" && NAMES.includes(value);
+var asTheme = (value) => isTheme(value) ? value : null;
+var REPORT_KEY = "kp-themes-unknown-reported";
+var reported = /* @__PURE__ */ new Set();
+function alreadyReported(name) {
+  if (reported.has(name)) return true;
+  try {
+    const raw = sessionStorage.getItem(REPORT_KEY);
+    if (raw !== null && raw.split(" ").includes(name)) {
+      reported.add(name);
+      return true;
+    }
+  } catch {
+  }
+  return false;
+}
+function remember(name) {
+  reported.add(name);
+  try {
+    const raw = sessionStorage.getItem(REPORT_KEY);
+    const names = raw === null || raw === "" ? [] : raw.split(" ");
+    if (!names.includes(name)) sessionStorage.setItem(REPORT_KEY, [...names, name].join(" "));
+  } catch {
+  }
+}
+function reportUnknown(requested, applied, source, root) {
+  const name = String(requested);
+  if (alreadyReported(name)) return false;
+  remember(name);
+  console.warn(getStrings().themeUnknown(name, applied));
+  if (typeof document === "undefined") return true;
+  const element = root ?? rootOf(void 0);
+  element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
+  return true;
+}
+var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
+function currentTheme({ root } = {}) {
+  if (typeof document === "undefined") return DEFAULT_THEME;
+  const element = rootOf(root);
+  const raw = element.getAttribute("data-theme");
+  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "current", element);
+  return asTheme(raw) ?? DEFAULT_THEME;
+}
+function pendingTheme({ root } = {}) {
+  if (typeof document === "undefined") return null;
+  return asTheme(rootOf(root).getAttribute(PENDING_THEME_ATTRIBUTE));
+}
+function applyTheme(theme, { root, darkClass, strict = false, announce = true } = {}) {
+  const known = asTheme(theme);
+  if (known === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
+  const next = known ?? DEFAULT_THEME;
+  const element = rootOf(root);
+  if (known === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next, "apply", element);
+  const previous = asTheme(element.getAttribute("data-theme"));
+  if (announce && previous !== next) {
+    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next, previous } });
+    if (!element.dispatchEvent(ask)) return previous ?? DEFAULT_THEME;
+  }
+  element.setAttribute("data-theme", next);
+  element.removeAttribute(PENDING_THEME_ATTRIBUTE);
+  const cls = darkClass === void 0 ? config.darkClass : darkClass;
+  if (cls) element.classList.toggle(cls, DARK.has(next));
+  if (announce && previous !== next) {
+    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next, previous, root: element } }));
+  }
+  return next;
+}
+function storeTheme(theme, { key, storage: storage2 } = {}) {
+  try {
+    (storage2 ?? localStorage).setItem(key ?? config.storageKey, theme);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function storedTheme({ key, storage: storage2 } = {}) {
+  let raw = null;
+  try {
+    raw = (storage2 ?? localStorage).getItem(key ?? config.storageKey);
+  } catch {
+    return null;
+  }
+  if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "stored");
+  return asTheme(raw);
+}
+function initializeTheme(fallback2 = DEFAULT_THEME, { root, key } = {}) {
+  return applyTheme(storedTheme({ key }) ?? fallback2, { root });
+}
+function onThemeChange(listener, { crossTab = true, root, key } = {}) {
+  if (typeof document === "undefined") return () => {
+  };
+  const target = root ?? document;
+  const onEvent = (e) => {
+    const detail = (
+      /** @type {CustomEvent} */
+      e.detail
+    );
+    listener(detail.theme, { previous: detail.previous, root: detail.root });
+  };
+  const onStorage = (e) => {
+    if (e.key !== (key ?? config.storageKey)) return;
+    if (isDropped(e.newValue)) {
+      reportUnknown(e.newValue, currentTheme({ root }), "cross-tab", rootOf(root));
+      return;
+    }
+    const next = asTheme(e.newValue);
+    if (next && next !== currentTheme({ root })) applyTheme(next, { root });
+  };
+  target.addEventListener(THEME_EVENT, onEvent);
+  if (crossTab) window.addEventListener("storage", onStorage);
   return () => {
-    for (const c of cleanups) c();
+    target.removeEventListener(THEME_EVENT, onEvent);
+    if (crossTab) window.removeEventListener("storage", onStorage);
   };
 }
 
 // js/auto.js
+init_remember();
+init_overlays();
+
+// js/theme-picker.js
+var theme_picker_exports = {};
+__export(theme_picker_exports, {
+  PICK_EVENT: () => PICK_EVENT,
+  THEMES: () => THEMES,
+  THEME_MENU_ICON: () => THEME_MENU_ICON,
+  attachThemePickers: () => attachThemePickers,
+  themeMenuMarkup: () => themeMenuMarkup,
+  themeOptionsMarkup: () => themeOptionsMarkup
+});
+init_strings();
+var PICKER = "[data-kp-theme-picker]";
+var OPTION = "[data-kp-theme]";
+var STATUS = "[data-kp-theme-status]";
+var PICK_EVENT = "kp-theme-pick";
+var saveFailedText = () => getStrings().themeSaveFailed;
+function showSaveState(root, failed) {
+  for (const el2 of root.querySelectorAll(STATUS)) {
+    el2.textContent = failed ? saveFailedText() : "";
+    el2.hidden = !failed;
+  }
+}
+function markSelection(root, theme) {
+  for (const el2 of root.querySelectorAll(OPTION)) {
+    const button = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    const selected = button.dataset.kpTheme === theme;
+    button.setAttribute("aria-pressed", String(selected));
+    button.dataset.selected = String(selected);
+    button.classList.toggle("is-selected", selected);
+  }
+}
+function clearMarks(root) {
+  for (const el2 of root.querySelectorAll(OPTION)) {
+    el2.removeAttribute("aria-pressed");
+    el2.removeAttribute("data-selected");
+    el2.classList.remove("is-selected");
+  }
+}
+function attachThemePickers(root = document, { persist = true, closePopover = true, status = null } = {}) {
+  const cleanups = [];
+  const pickers = [];
+  for (const el2 of root.querySelectorAll(PICKER)) {
+    const picker = (
+      /** @type {HTMLElement} */
+      el2
+    );
+    if (picker.dataset.kpThemeAttached === "1") continue;
+    picker.dataset.kpThemeAttached = "1";
+    pickers.push(picker);
+    const onClick = (event) => {
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      const option = target.closest(OPTION);
+      if (!option || !picker.contains(option)) return;
+      const next = (
+        /** @type {HTMLElement} */
+        option.dataset.kpTheme
+      );
+      if (!next) return;
+      const applied = applyTheme(next);
+      const chosen = pendingTheme() ?? applied;
+      const stored = persist ? storeTheme(chosen) : true;
+      showSaveState(status ?? picker.parentNode ?? document, !stored);
+      picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
+      const popover = closePopover ? picker.closest("[popover]") : null;
+      if (popover && popover.matches(":popover-open")) popover.hidePopover();
+    };
+    picker.addEventListener("click", onClick);
+    markSelection(picker, initializeTheme(currentTheme()));
+    cleanups.push(() => {
+      picker.removeEventListener("click", onClick);
+      delete picker.dataset.kpThemeAttached;
+      clearMarks(picker);
+    });
+  }
+  const stop = onThemeChange((theme) => {
+    for (const el2 of (root === document ? document : root).querySelectorAll(PICKER)) markSelection(el2, theme);
+  });
+  cleanups.push(stop);
+  const detach = () => {
+    for (const c of cleanups) c();
+  };
+  return Object.assign(detach, {
+    refresh: () => {
+      for (const picker of pickers) markSelection(picker, currentTheme());
+    }
+  });
+}
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch] ?? ch);
+}
+var THEME_MENU_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg>`;
+function themeOptionsMarkup({ themes = THEMES, labels = {}, grouped = true, groupLabels = {} } = {}) {
+  const s = getStrings();
+  const option = (t) => `<li><button type="button" data-kp-theme="${escapeHtml(t.name)}"><span class="kp-swatch" data-theme="${escapeHtml(t.name)}"></span>${escapeHtml(labels[t.name] ?? t.label)}</button></li>`;
+  if (!grouped) return themes.map(option).join("");
+  const light = themes.filter((t) => !t.dark);
+  const dark = themes.filter((t) => t.dark);
+  const group = (heading, list, kind) => list.length === 0 ? "" : `<li role="presentation" class="kp-theme-group" data-kp-theme-group="${kind}"><span class="kp-theme-group__label" aria-hidden="true">${escapeHtml(heading)}</span><ul class="kp-theme-group__list" aria-label="${escapeHtml(heading)}">${list.map(option).join("")}</ul></li>`;
+  return group(groupLabels.light ?? s.themeGroupLight, light, "light") + group(groupLabels.dark ?? s.themeGroupDark, dark, "dark");
+}
+function themeMenuMarkup({
+  id = "kp-theme-menu",
+  label = getStrings().themePicker,
+  icon = THEME_MENU_ICON,
+  themes,
+  labels,
+  grouped,
+  groupLabels,
+  className = ""
+} = {}) {
+  const safeId = escapeHtml(id);
+  const safeLabel = escapeHtml(label);
+  const classes = `kp-theme-menu ${escapeHtml(className)}`.trim();
+  return `<span class="${classes}"><button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">` + icon + `</button><div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
+}
+
+// js/auto.js
+init_effects();
+var NEEDS = [
+  {
+    name: "components",
+    when: [
+      "[data-kp-contract-error]",
+      "[data-kp-destructive]",
+      "[data-kp-semantic]",
+      "[data-kp-confirm]",
+      ".kp-skip-link",
+      "[data-kp-skip]",
+      "[data-kp-to-top]",
+      "[data-kp-nav-toggle]",
+      ".kp-nav-wrap--sticky",
+      ".kp-nav"
+    ].join(", "),
+    load: () => Promise.resolve().then(() => (init_components(), components_exports)),
+    attach: (m, root) => [
+      m.enforceContracts(root),
+      m.attachConfirmations(root),
+      m.attachSkipLinks(root),
+      m.attachToTop(root),
+      m.attachNavToggles(root),
+      m.attachStickyNavs(root),
+      m.attachNavMenus(root)
+    ]
+  },
+  { name: "sidenav", when: ".kp-sidenav", load: () => Promise.resolve().then(() => (init_sidenav(), sidenav_exports)), attach: (m, root) => [m.attachSidenavs(root)] },
+  { name: "alarm", when: "[data-kp-alarm]", load: () => Promise.resolve().then(() => (init_alarm(), alarm_exports)), attach: (m, root) => [m.attachAlarms(root)] },
+  {
+    name: "combobox",
+    when: "[data-kp-combobox], select",
+    load: () => Promise.resolve().then(() => (init_combobox(), combobox_exports)),
+    attach: (m, root) => [m.attachComboboxes(root), m.attachSelects(root)]
+  },
+  {
+    name: "palette",
+    when: "[data-kp-palette], [data-kp-shortcuts]",
+    load: () => Promise.resolve().then(() => (init_palette(), palette_exports)),
+    attach: (m, root) => [m.attachPalettes(root)]
+  },
+  { name: "datatable", when: "[data-kp-datatable]", load: () => Promise.resolve().then(() => (init_datatable(), datatable_exports)), attach: (m, root) => [m.attachDataTables(root)] },
+  { name: "tables", when: ".kp-table-wrap", load: () => Promise.resolve().then(() => (init_tables(), tables_exports)), attach: (m, root) => [m.attachTableRegions(root)] },
+  {
+    name: "forms",
+    when: "[data-kp-form], [data-kp-submit], .kp-switch",
+    load: () => Promise.resolve().then(() => (init_forms(), forms_exports)),
+    attach: (m, root) => [m.attachForms(root), m.attachSwitches(root)]
+  },
+  {
+    name: "patterns",
+    when: "[data-kp-copy], [data-kp-undo-action]",
+    load: () => Promise.resolve().then(() => (init_patterns(), patterns_exports)),
+    attach: (m, root) => [m.attachPatterns(root)]
+  },
+  {
+    name: "structure",
+    when: "[data-kp-tree], [data-kp-reorder], [data-kp-split]",
+    load: () => Promise.resolve().then(() => (init_structure(), structure_exports)),
+    attach: (m, root) => [m.attachStructure(root)]
+  },
+  { name: "datepicker", when: "[data-kp-datepicker]", load: () => Promise.resolve().then(() => (init_datepicker(), datepicker_exports)), attach: (m, root) => [m.attachDatePickers(root)] },
+  { name: "upload", when: "[data-kp-upload]", load: () => Promise.resolve().then(() => (init_upload(), upload_exports)), attach: (m, root) => [m.attachUploads(root)] },
+  { name: "wizard", when: "[data-kp-wizard]", load: () => Promise.resolve().then(() => (init_wizard(), wizard_exports)), attach: (m, root) => [m.attachWizards(root)] },
+  { name: "colorpicker", when: "[data-kp-colorpicker]", load: () => Promise.resolve().then(() => (init_colorpicker(), colorpicker_exports)), attach: (m, root) => [m.attachColorPickers(root)] },
+  { name: "gridlayout", when: "[data-kp-grid]", load: () => Promise.resolve().then(() => (init_gridlayout(), gridlayout_exports)), attach: (m, root) => [m.attachGrids(root)] }
+];
+var READY_ATTRIBUTE = "data-kp-auto-ready";
+var carries = (root, selector) => root instanceof Element && root.matches(selector) || root.querySelector(selector) !== null;
+function asOf(root, present, attach) {
+  const all = root.querySelectorAll;
+  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
+  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
+  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
+  try {
+    return attach();
+  } finally {
+    delete /** @type {any} */
+    root.querySelectorAll;
+    delete /** @type {any} */
+    root.querySelector;
+  }
+}
 function attachAll(root = document) {
   restoreRemembered(root);
   const detaches = [
     attachRemembered(root),
-    enforceContracts(root),
-    attachConfirmations(root),
-    attachSkipLinks(root),
-    attachToTop(root),
-    attachNavToggles(root),
-    attachStickyNavs(root),
-    attachNavMenus(root),
-    attachSidenavs(root),
     attachDialogs(root),
-    attachAlarms(root),
     attachDismissals(root),
     attachTooltips(root),
     attachScrollbars(root),
     attachTabs(root),
-    attachThemePickers(root),
-    attachComboboxes(root),
-    attachSelects(root),
-    attachPalettes(root),
-    attachDataTables(root),
-    attachTableRegions(root),
-    attachForms(root),
-    attachSwitches(root),
-    attachPatterns(root),
-    attachStructure(root),
-    attachDatePickers(root),
-    attachUploads(root),
-    attachWizards(root),
-    attachColorPickers(root),
-    attachGrids(root)
+    attachThemePickers(root)
   ];
   const effects = attachEffects(
     /** @type {Document | Element} */
     root
   );
-  return () => {
-    for (const detach of detaches) if (typeof detach === "function") detach();
+  const present = new WeakSet(root.querySelectorAll("*"));
+  let detached = false;
+  const modules = [];
+  const pending = [];
+  for (const need of NEEDS) {
+    if (!carries(root, need.when)) continue;
+    modules.push(need.name);
+    pending.push(
+      need.load().then((module) => {
+        if (detached) return;
+        detaches.push(...asOf(root, present, () => need.attach(module, root)));
+      })
+    );
+  }
+  const detach = () => {
+    detached = true;
+    for (const one of detaches) if (typeof one === "function") one();
     effects.detach();
   };
+  return Object.assign(detach, { ready: Promise.all(pending).then(() => void 0), modules });
 }
 if (typeof document !== "undefined") {
   applyStoredTheme();
@@ -10720,10 +10974,21 @@ if (typeof document !== "undefined") {
     } catch {
     }
   }
-  const start = () => attachAll();
+  const start = () => {
+    const attached = attachAll();
+    attached.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached.modules.join(" ")));
+  };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
   else start();
 }
+
+// kp-themes-entry.js
+init_colorpicker();
+init_combobox();
+init_components();
+init_contrast();
+init_datatable();
+init_datepicker();
 
 // js/diagnostics.js
 var diagnostics_exports = {};
@@ -10737,6 +11002,8 @@ __export(diagnostics_exports, {
   scriptSide: () => scriptSide,
   stylesheetSide: () => stylesheetSide
 });
+init_effects();
+init_strings();
 var VERSION_PROPERTY = "--kp-themes-version";
 var NAMES_PROPERTY = "--kp-themes-names";
 function unquote(raw) {
@@ -10866,6 +11133,11 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   return report;
 }
 
+// kp-themes-entry.js
+init_effects();
+init_forms();
+init_gridlayout();
+
 // js/lazy-register.js
 var lazy_register_exports = {};
 __export(lazy_register_exports, {
@@ -10880,6 +11152,7 @@ __export(lazy_register_exports, {
   registerLoaded: () => registerLoaded,
   registersPresent: () => registersPresent
 });
+init_strings();
 var REGISTER_ATTRIBUTE = "data-kp-register";
 var REGISTER_PATTERN = "/css/{theme}-register.css";
 var REGISTER_LOAD_EVENT = "kp-register-load";
@@ -11022,6 +11295,40 @@ function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = 
     unsubscribe();
   };
 }
+
+// kp-themes-entry.js
+init_listbox();
+init_overlays();
+init_palette();
+init_patterns();
+init_remember();
+init_sidenav();
+init_strings();
+init_structure();
+init_tables();
+init_upload();
+init_wizard();
+init_alarm();
+init_colorpicker();
+init_combobox();
+init_components();
+init_contrast();
+init_datatable();
+init_datepicker();
+init_effects();
+init_forms();
+init_gridlayout();
+init_listbox();
+init_overlays();
+init_palette();
+init_patterns();
+init_remember();
+init_sidenav();
+init_strings();
+init_structure();
+init_tables();
+init_upload();
+init_wizard();
 export {
   ALARM_CLOSE_EVENT,
   ALARM_OPEN_EVENT,
@@ -11088,6 +11395,7 @@ export {
   NAV_OWNED,
   NAV_STICKY_OWNED,
   NAV_TOGGLE_EVENT,
+  NEEDS,
   NO_FLASH_SNIPPET,
   OPENER,
   OPTIONS,
@@ -11101,6 +11409,7 @@ export {
   POINTER_KNOB,
   PRESS,
   PRESS_KNOB,
+  READY_ATTRIBUTE,
   REGISTER_ATTRIBUTE,
   REGISTER_ERROR_EVENT,
   REGISTER_LOAD_EVENT,

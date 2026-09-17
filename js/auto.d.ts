@@ -1,7 +1,35 @@
+export type Need = {
+    /**
+     * the module, as `detach.modules` reports it
+     */
+    name: string;
+    /**
+     * every selector through which the module's attach functions act
+     */
+    when: string;
+    load: () => Promise<any>;
+    attach: (module: any, root: ParentNode) => unknown[];
+};
 /**
- * Attach every behaviour under `root`. Returns one detach for all of it.
+ * @typedef {object} Need
+ * @property {string} name the module, as `detach.modules` reports it
+ * @property {string} when every selector through which the module's attach functions act
+ * @property {() => Promise<any>} load
+ * @property {(module: any, root: ParentNode) => unknown[]} attach
+ */
+/** @type {Need[]} */
+export declare const NEEDS: Need[];
+/** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */
+export declare const READY_ATTRIBUTE = "data-kp-auto-ready";
+/**
+ * Attach every behaviour under `root`, fetching only the modules it needs.
+ * Returns one detach for all of it; `ready` resolves once every needed
+ * module has attached, and `modules` names what was fetched.
  *
  * @param {ParentNode} [root]
- * @returns {() => void}
+ * @returns {(() => void) & { ready: Promise<void>, modules: string[] }}
  */
-export declare function attachAll(root?: ParentNode): () => void;
+export declare function attachAll(root?: ParentNode): (() => void) & {
+    ready: Promise<void>;
+    modules: string[];
+};

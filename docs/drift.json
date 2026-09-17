@@ -19,8 +19,8 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "f332c636ce256f9113e86b7e6cb93732e1aca43e2a68bf9ba983c5c3f84e41d9",
-            "doc": "55533585e059817d6b97117d253942a64b155bbe266ac380256578f42b78afbb",
+            "hash": "f50a8bc2daa051cbaf1d0efc110c06b62fbf76588827cead216c25241ba086c5",
+            "doc": "bcb1427a59b487dfbef92fd4acf1ffb2fe7dcc87e6d945ffadcb7ddee7f3acea",
             "files": {
                 ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
@@ -48,7 +48,7 @@
                 "fonts/families.json": "520ea80794f69ab310ed00d1d8e3a95f883edf871ff932938245edb2af6adf2a",
                 "gates/generate-ha-themes.mjs": "3dc26149391dec23ac8cb74c7215c11c7378832574ee196ae1c86f86dd076acf",
                 "index.d.ts": "8774fff3957cde93034e92915469cf0281fb154fe87d19d161fdd165c7aa27d2",
-                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/auto.d.ts": "447748a5b97cd771d2b6c10538e17e800ea8bae93f93ddff588125a7eabc8ac1",
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
                 "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "3bba3d2707f24e30bfc3b351970416b176248995fd76ab36274f8f67d9e86285",
-            "doc": "88e244a34e9651d2bdce063316dba7a3c470e0117ed1976630e6f321da3c01b3",
+            "hash": "45001c7083a4ac8fe0d436cd71eb8cf02dbbb2fdf50c14a86b025f9a6d4b5583",
+            "doc": "b64429be70be3b725eb6cd1fd28217f7362c6b28711d3c8dcea99c019754b7eb",
             "files": {
-                "CHANGELOG.md": "263231bab28b88315f2c7cb00669f38d5c6e946e608a607b02de5ae7cab05fd6"
+                "CHANGELOG.md": "1261779be43cd5d5164722250c66148301fde814b81a3292f0cd02ffc5ab7195"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {

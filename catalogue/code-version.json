@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114]: the code that shapes it, as digests. catalogue/block-hash.js reads this instead of the paint, so a verdict does not follow the zoom, the window or what the reviewer typed. Written by gates/generate-code-version.mjs.",
-    "shared": "cd7c278c1c7a92ff87b75007e1bda523",
+    "shared": "0f75d22399f36c64116bb732c81dadd5",
     "themes": {
         "formal": "48997a1eb47c0127aa040683cd8f6a4e",
         "light": "6ccd2848da8352a8dca6e443bd075e10",

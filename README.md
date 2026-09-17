@@ -412,7 +412,13 @@ one module attaches the behaviour:
 **Since 3.0.0 the modules are pure**: importing `js/theme-picker.js` (or
 any other `js/*.js`) attaches nothing. `js/auto.js` is the one entry that
 does — it attaches everything on `DOMContentLoaded`, and it is what a page
-loads when it wants what 2.x did with sixteen script tags. A page that
+loads when it wants what 2.x did with sixteen script tags. After 6.1.0 it
+fetches only the modules the page carries markup for (`scope-115`): a login
+form downloads 294,139 bytes of JavaScript where it downloaded 722,686, and a
+page with every component still gets all of them. `attachAll()` is therefore
+asynchronous — the detach it returns carries `ready`, a promise that resolves
+once every needed module has attached, and `modules`, the names fetched — and
+`<html data-kp-auto-ready>` is set when the boot's attach is complete. A page that
 renders parts of itself later calls the individual functions on that
 subtree instead:
 

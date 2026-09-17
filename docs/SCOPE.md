@@ -1970,3 +1970,13 @@ go with it: nothing is carried over any more, because nothing about the reading
 depends on the moment it was taken. The whole register was read again at
 version 5 and every pair recorded as approved, on his instruction ("tag alles
 als approved en zie dat dit nooit meer terugkomt").
+
+**scope-115 · After v6.1.0: the JavaScript split, as loose modules.** Kenny,
+2026-09-17, the next-step form after the release (commit `2b49403f`).
+next-step "JavaScript-split met losse modules": the step `scope-50` named and
+`scope-92` held until the catalogue review, built as `research/loading`'s
+strategy (c), loose. `js/auto.js` asks the document which components it carries
+and imports only those modules; `dist/kp-themes.js` stays one file, because the
+consumer who imports named functions from the bundle needs all of it and hashed
+chunks would rewrite `SHA256SUMS` on every release. fix-53 "Klopt";
+step-timing "Akkoord".

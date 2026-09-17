@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+**Changed.**
+
+- **`js/auto.js` fetches only what the page carries** (`scope-115`): the
+  document is asked first, one selector per module, and a module is
+  imported only when its markup is there. Measured in Chromium on
+  `examples/login.html`: 10 files and 294,139 bytes of JavaScript where it
+  was 28 files and 722,686. Remember, overlays, the theme picker and effects
+  are still loaded on every page, because what they do does not depend on
+  markup a load-time check can see. `attachAll()` now returns its detach with
+  `ready` and `modules`; code that read a component's state in the same tick
+  as `attachAll()` awaits `ready` first. `dist/kp-themes.js` stays one file.
+
 ## 6.1.0 — 2026-09-17
 
 A minor: one new thing a consumer can use, twenty-two themes corrected

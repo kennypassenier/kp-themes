@@ -5,6 +5,29 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
+## Unreleased: `attachAll()` finishes after it returns
+
+One change a consumer may have to act on [scope-115]. `js/auto.js` now
+fetches a module only when the page carries its markup, so the modules
+arrive after `attachAll()` has returned rather than before it. Nothing
+changes for a page that loads `js/auto.js` and lets it run: the components
+come alive once their module is in, and `<html data-kp-auto-ready>` says
+when that is.
+
+Code that calls `attachAll()` itself and reads a component's state in the
+same tick awaits `ready` first:
+
+```js
+import { attachAll } from '@kp-soft/themes/js/auto';
+
+const detach = attachAll(section);
+await detach.ready; // every module the section needed has attached
+console.log(detach.modules); // e.g. ['datatable', 'tables']
+```
+
+Calling the individual attach functions (`attachDataTables(section)` and the
+rest) is unchanged and still synchronous.
+
 ## Coming from 5.x to 6.0.0
 
 Two breaks, both about theme names; everything else in 6.0.0 is additive
