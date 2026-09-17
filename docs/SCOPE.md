@@ -2114,3 +2114,22 @@ side by side, one per research topic. "Zie gewoon dat het niet meer gebeurt en
 zet ze in (liefst dezelfde) Archived research." The three demos of that day moved
 to `Archived research`, the empty group stays as the single place a new demo
 joins, and `catalogue/pages.js` says so where the group is declared.
+
+**scope-127 · The Ratatui demo carries all twenty-two themes, and a fourth reveal.**
+Kenny, 2026-09-17, the crates form. anatomy-review "Claude bouwt het in, Kenny
+kijkt in de demo": the nineteen proposed rows are built in, and the judgement
+happens in the running demo rather than on 247 fields of paper. `ThemeId` became
+an index into `themes/order.json` and the build script generates every palette,
+so a new theme is one line there and one row in `anatomy.rs`. reveal-words
+"Words toevoegen": `Reveal::Words { ms, stagger_ms }` carries the
+`--kp-word-stagger` six registers declare — dark and titanium 28 ms, phantom 28,
+brutalism 60, shade-light 70, shade-dark 90 — which `Arrive` had thrown away.
+tab-divider "Het streepje": fourteen themes take `" │ "`, the five that draw
+their tabs as plates keep two spaces. crates-shape "Een eigen repository kp-tui":
+the two crates live in `~/Projects/kp-tui`, and kp-themes ships the generated
+palette the way it ships `ha/` and `vscode/`. fix-60 "Klopt". jellyfin-paste, his
+own answer: "jij hebt elegantfin geïnstalleerd, jij kan dit thema ook
+installeren" — which is a misreading Claude corrected: it made two unauthenticated
+GETs and never wrote anything; the ElegantFin import was already in the field.
+Writing Branding needs an admin credential, so the next form asks for an API key.
+step-timing "Akkoord", with a request for VS Code install instructions.
