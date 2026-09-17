@@ -2060,7 +2060,7 @@ step-timing "Akkoord".
 
 **scope-122 · Jellyfin in dark on Kenny's 10.11.11; a live Ratatui dashboard; a VS Code theme from cyberpunk.**
 Kenny, 2026-09-17, the Jellyfin form. jellyfin-read "Claude leest": two
-unauthenticated GETs on 10.10.10.6:8096 read Jellyfin **10.11.11** and a Custom
+unauthenticated GETs on the media stack's Jellyfin read Jellyfin **10.11.11** and a Custom
 CSS of the intro-skipper import, the ElegantFin import, `--skip-hide-duration:
 8s` and the ActorPlus badge rules. 10.11 has none of Jellyfin 12's variables, so
 the dark file is researched against that version: ElegantFin re-pointed at
