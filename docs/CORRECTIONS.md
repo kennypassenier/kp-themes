@@ -4032,3 +4032,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The commit check in `check:verdicts` skips itself when `git rev-parse --is-shallow-repository` says true, and says so in its output.
 
 **9 · When we review the measure.** When the release workflow gains a step that does not need history and the cost of the full clone becomes noticeable.
+
+## fix-53 · The fix-37 gate let a decided topic back out of the archive (2026-09-17)
+
+**1 · What went wrong.** fix-37-M1 was measured: one theme portrait (`research/theme-portraits/formal.html`) was moved back under "Research to look at" in `catalogue/pages.js`, and `node gates/check-catalogue.mjs` exited 0.
+
+**2 · Which gate let it through.** fix-37's own unit test, which only ever listed a topic with one page. `decidedOutsideArchive` recorded the group of every page of a topic in turn, so the two portraits still under "Archived research" overwrote the one outside it.
+
+**3 · Where the same fault sits.** The property: a map keyed by topic or page that is written once per match, so the last match wins. Searched with `grep -n "\.set(" gates/check-catalogue.mjs`: `blocksOutsideTheReview` keys by the page's own href, which occurs once; `decidedOutsideArchive` was the only map keyed by something several entries share.
+
+**4 · How we prevent recurrence.** One page outside the archive now puts the whole topic outside; the unit test carries a topic split across both groups.
+
+**5 · What the remedy costs.** Two lines.
+
+**6 · Who enforces it.** Code: `gates/check-catalogue.test.mjs`, red on the split topic before the change ("pass 5, fail 1"), green after; `check:catalogue` in the gates.
+
+**7 · How we measure it works, and when.** Measured at the fix: the same move of the formal portrait now exits 1 with `research/theme-portraits (listed under "Research to look at")`; restored, exit 0.
+
+**8 · If the measurement fails.** The gate lists pages rather than topics, one line per page outside the archive.
+
+**9 · When we review the measure.** When research topics stop being grouped in `catalogue/pages.js`.

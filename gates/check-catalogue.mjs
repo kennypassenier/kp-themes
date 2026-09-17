@@ -136,7 +136,11 @@ export function decidedOutsideArchive(shell, readmes) {
     const groupOf = new Map();
     for (const part of shell.split(/group:\s*'/).slice(1)) {
         const group = part.slice(0, part.indexOf("'"));
-        for (const m of part.matchAll(/href:\s*'research\/([^/']+)\//g)) groupOf.set(m[1], group);
+        // One page outside the archive puts the whole topic outside [fix-53]:
+        // a later page under "Archived research" must not overwrite it.
+        for (const m of part.matchAll(/href:\s*'research\/([^/']+)\//g)) {
+            if (groupOf.get(m[1]) === undefined || groupOf.get(m[1]) === 'Archived research') groupOf.set(m[1], group);
+        }
     }
     return Object.entries(readmes)
         .filter(([, text]) => /^\*\*Decided \(/m.test(text.split('\n').slice(0, 12).join('\n')))

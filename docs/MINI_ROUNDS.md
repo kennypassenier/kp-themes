@@ -173,7 +173,7 @@ register's colours are.
 
 | fix-32-M1 | Does row text still show above the sticky data-table header? Measured at Kenny's next review of `#table--datatable-sticky` in FireDragon, wheel-scrolling in three themes. | open |
 | fix-36-M1 | Does the long dialog open inside the window and scroll when opened from the review dialog? Measured at Kenny's next review of `overlays--dialog-long` in retro: it opens at 02:00 and the wheel reaches 02:59. | open |
-| fix-37-M1 | Does the catalogue gate refuse a decided research topic left outside "Archived research"? Measured when the three theme portraits are archived after Kenny's judgement. | open |
+| fix-37-M1 | Does the catalogue gate refuse a decided research topic left outside "Archived research"? Measured 2026-09-17, after the portraits were archived (scope-108): moving one portrait back out passed the gate — a fault, fix-53. After fix-53 the same move is refused and the restored tree passes. | closed |
 | fix-38-M1 | Does every theme show a visible focus ring on a button, a field and a link? Measured by the focus-visibility sweep at the fix, and at Kenny's next review of dark's buttons. | open — the sweep ran at the fix: 11 of 22 themes failed first (dark and titanium buttons, six themes' fields through the package, five themes' bar links), all 22 pass after; Kenny's review of dark's buttons still to come |
 | fix-39-M1 | Is a dropdown whole at 1280, 1024 and 900px inside a clipping box? Measured at Kenny's next review of `navigation--mega-menu` and `navigation--dropdown`. | open |
 | fix-40-M1 | Is brutalism's over-the-page menu out of sight until it is opened? Measured at Kenny's next review of `navigation--sidenav-over`. | open |
@@ -189,3 +189,4 @@ register's colours are.
 | fix-50-M1 | Does a round stay finished? Measured at Kenny's next visit after scope-114: the review site opens with nothing to judge, at his zoom and at 100%. | open |
 | fix-51-M1 | Does the other engine get asked before the release? Measured at the close of the next layer: `npm run test:tags -- --level engines` runs, and whatever it finds is found there and not at the release form. | open |
 | fix-52-M1 | Does the release workflow pass its gates on a tag? Measured at the second push of `v6.1.0` (run 35171511359): green, the draft carries nine assets, and 212 of 212 checksums in SHA256SUMS match the tagged tree. | closed |
+| fix-53-M1 | Does a topic split across two groups get refused? Measured at the fix: the moved formal portrait exits 1, restored exits 0. | closed |

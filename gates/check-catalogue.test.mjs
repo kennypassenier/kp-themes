@@ -46,6 +46,14 @@ test('a decided research topic listed outside "Archived research" is refused [fi
     assert.deepEqual(decidedOutsideArchive(shell, { laurels: decided }), ['research/laurels (listed under "Research to look at")']);
     assert.deepEqual(decidedOutsideArchive(shell, { alarm: decided }), []);
     assert.deepEqual(decidedOutsideArchive(shell, { laurels: '# Laurels\n\nFour directions.\n' }), []);
+    // A topic of several pages is outside as soon as ONE of them is [fix-53]:
+    // the fix-37 measurement put one theme portrait back under "Research to
+    // look at" and the gate passed, because the portraits after it in the
+    // archive overwrote the group it was read under.
+    const split =
+        "group: 'Research to look at',\n pages: [ { href: 'research/theme-portraits/formal.html' } ],\n" +
+        "group: 'Archived research',\n pages: [ { href: 'research/theme-portraits/pastel.html' } ],\n";
+    assert.deepEqual(decidedOutsideArchive(split, { 'theme-portraits': decided }), ['research/theme-portraits (listed under "Research to look at")']);
 });
 
 test('a catalogue page with blocks that the review does not gather is refused [scope-111]', () => {
