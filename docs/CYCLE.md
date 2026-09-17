@@ -87,7 +87,13 @@ theme its window plays, whatever the page wears [scope-86].
    turn.
 
 A block that changes after its verdict hashes differently and comes back to
-be judged; that is the point. A change to the hash recipe itself
+be judged; that is the point. What counts as a change is only the code that
+touches the block [scope-116]: its markup, its theme's tokens, the CSS lines of
+every family its markup carries (shared and in its theme's register), and the
+modules of the components those families belong to. A change to the data
+table's module brings back the blocks with a data table in them — measured
+2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
+1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0. A change to the hash recipe itself
 (`catalogue/block-hash.js`) is not a change to any block, so it must not
 bring anything back:
 

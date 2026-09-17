@@ -1980,3 +1980,21 @@ and imports only those modules; `dist/kp-themes.js` stays one file, because the
 consumer who imports named functions from the bundle needs all of it and hashed
 chunks would rewrite `SHA256SUMS` on every release. fix-53 "Klopt";
 step-timing "Akkoord".
+
+**scope-116 · A block's hash reads only the code that touches it.** Kenny,
+2026-09-17, the JavaScript-split form (commit `20024bb0`). review-hash, his own
+answer: "alles, dus ook js code mag alleen meetellen als het relevant is voor
+de component zelf. Enkel dingen die de component zelf raken mogen in de hash
+verwerkt worden. En er is geen enkele mogelijke piste waarbij ik alles terug ga
+reviewen." Under scope-114 one digest covered every file in `css/`, `js/` and
+`components/`, so the split — a change to the loader alone — moved all 3062
+pairs. Hash version 6 digests the code per thing a block can use: every CSS
+family (`kp-button`, `data-kp-reveal`) with the lines whose selectors name it,
+shared and per register; every component in `tests/tags.json` with its
+modules and the families those modules draw; a base of the lines that name no
+family and the dictionary; per theme its tokens. A block's hash reads its
+markup, its theme, the base, and the families and components its markup
+carries. `js/auto.js` is no input: tests/auto-lazy.spec.mjs holds that the
+loader changes no block. The register was brought to version 6 without a
+single pair going back to Kenny, because no block's code had changed.
+step-timing "Akkoord".

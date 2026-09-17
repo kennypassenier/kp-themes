@@ -4052,3 +4052,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The gate lists pages rather than topics, one line per page outside the archive.
 
 **9 · When we review the measure.** When research topics stop being grouped in `catalogue/pages.js`.
+
+## fix-54 · One digest per folder made every change a change to every block (2026-09-17)
+
+**1 · What went wrong.** The JavaScript split changed `js/auto.js` alone, and `node gates/verdicts.mjs snapshot` read "3062 pair(s) measured, 3062 of them no longer the block the verdict was given on": scope-114 digested all of `css/` (without the registers), `js/` and `components/` as one number, so any change anywhere read as a change to every block.
+
+**2 · Which gate let it through.** None could: scope-114 was measured against the change it was built for — zoom, window, typed values, a version bump — and never against an ordinary code change that touches one component.
+
+**3 · Where the same fault sits.** The property: an input to the block hash that is wider than what the block uses. Searched by reading `inputLines` in `catalogue/block-hash.js` and every digest in `gates/generate-code-version.mjs`: the shared digest (all of css/, js/, components/) and the register digest (a whole register per theme) were both that shape; the markup line and the theme were not.
+
+**4 · How we prevent recurrence.** Hash version 6 [scope-116]: digests per CSS family (shared and per register), per component (its modules and the families they draw of their own), a base of lines naming no family, and per theme its tokens; a block reads only the families and components its markup carries. `js/auto.js` is no input.
+
+**5 · What the remedy costs.** `catalogue/code-version.json` grows from 1 kB to 137 kB, fetched once per review page; the generator reads every stylesheet line by line, about a second.
+
+**6 · Who enforces it.** Code: `gates/code-version.test.mjs` (a line lands with its family, a comment and a version move nothing, the loader is no input) and `check:generated` refusing a stale `code-version.json`; the measurement below is discipline.
+
+**7 · How we measure it works, and when.** Measured at the fix with temporary changes, each restored: the loader 0 of 3062 pairs, the data table's module 264, a `.kp-button` rule in `css/components.css` 1236, the same rule in dark's register 89. Measured again at the next change that reaches Kenny's review: the pairs that come back are the blocks that carry what changed.
+
+**8 · If the measurement fails.** The digests go one step finer — per rule rather than per family — for whichever family brought back a block that does not carry it.
+
+**9 · When we review the measure.** When a block is judged that a family change did not bring back although it visibly changed; that is the one fault this recipe could have.

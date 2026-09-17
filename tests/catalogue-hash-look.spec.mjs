@@ -18,6 +18,7 @@
 import { expect, test } from '@playwright/test';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
+import { HASH_VERSION } from '../catalogue/block-hash.js';
 
 test.describe.configure({ timeout: 120_000 });
 
@@ -85,7 +86,7 @@ test(
             ([key, engine]) => JSON.parse(localStorage.getItem(key) ?? '{}')['switch--states']?.formal?.[engine],
             [JUDGEMENTS, browserName],
         );
-        expect(stored).toMatchObject({ hash: read.written.hash, v: 5 });
+        expect(stored).toMatchObject({ hash: read.written.hash, v: HASH_VERSION });
     },
 );
 

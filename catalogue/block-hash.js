@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 5;
+export const HASH_VERSION = 6;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
 export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = 4;
+export const PREVIOUS_VERSION = 5;
 
 export const PROPS = [
     'color',
@@ -486,9 +486,9 @@ export function blockLines(block, source, reviewed = reviewedElements(block), vi
  *   previous: the one under PREVIOUS_VERSION
  */
 /**
- * What a block is made of, as the code says [scope-114]: the digests of
- * gates/generate-code-version.mjs, fetched once per page.
- * @returns {Promise<{ shared: string, themes: Record<string, string> }>}
+ * What a block is made of, as the code says [scope-114, scope-116]: the
+ * digests of gates/generate-code-version.mjs, fetched once per page.
+ * @returns {Promise<CodeVersion | null>}
  */
 let codeVersion = null;
 export function readCodeVersion() {
@@ -498,23 +498,79 @@ export function readCodeVersion() {
     return codeVersion;
 }
 
+/**
+ * @typedef {object} CodeVersion
+ * @property {string} base
+ * @property {Record<string, string>} themes
+ * @property {Record<string, { shared: string, themes: Record<string, string> }>} families
+ * @property {Record<string, { modules: string, families: string[] }>} components
+ * @property {Record<string, string[]>} selectors
+ * @property {Record<string, string[]>} markers
+ */
+
 /** The theme a block is read in: its own declaration, or the page's. @param {Element} block */
 export const themeOf = (block) => block.getAttribute('data-cat-theme') || document.documentElement.getAttribute('data-theme') || 'formal';
 
 /**
- * The lines a block is hashed over, version 5 [scope-114]: its markup as
- * written, the theme it is judged in, and the code that shapes it. Nothing
- * that follows the zoom, the window, the browser's own rounding or what the
- * reviewer typed — Kenny, 2026-09-16: "Als ik iets goedkeur op 125% dan is het
- * voor alle zoom levels goedgekeurd."
+ * The families a block's markup names — gates/generate-code-version.mjs's
+ * `familiesIn`, the same expression, so the page and the generator agree on
+ * what `kp-button--primary` and `data-kp-reveal` are.
+ * @param {string} text
+ * @returns {string[]}
+ */
+export const familiesIn = (text) => [...new Set([...text.matchAll(/(?<![\w-])((?:data-)?kp-[a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => m[1]))].sort();
+
+/**
+ * The components a family belongs to, by tests/tags.json's selector map:
+ * the longest dash-separated prefix that the map names, as gates/tags.mjs
+ * reads a stylesheet.
+ * @param {string} family
+ * @param {Record<string, string[]>} selectors
+ * @returns {string[]}
+ */
+export function componentsOf(family, selectors) {
+    const segments = family.split('-');
+    for (let n = segments.length; n >= 2; n--) {
+        const found = selectors[segments.slice(0, n).join('-')];
+        if (found) return found.filter((tag) => tag.startsWith('@component:')).map((tag) => tag.slice('@component:'.length));
+    }
+    return [];
+}
+
+/**
+ * The lines a block is hashed over, version 6 [scope-116]: its markup as
+ * written, the theme it is judged in, and only the code that touches it —
+ * the CSS of each family its markup carries, shared and in this theme's
+ * register, and the modules of each component those families belong to.
+ * Kenny, 2026-09-17: "Enkel dingen die de component zelf raken mogen in de
+ * hash verwerkt worden." A change to the data table's module asks about the
+ * blocks with a data table in them, and about nothing else.
  * @param {Element} block
  * @param {string} source
- * @param {{ shared: string, themes: Record<string, string> } | null} code
+ * @param {CodeVersion | null} code
  * @returns {string[]}
  */
 export function inputLines(block, source, code) {
     const theme = themeOf(block);
-    return [componentMarkup(source), `theme: ${theme}`, `shared: ${code?.shared ?? 'unknown'}`, `register: ${code?.themes?.[theme] ?? 'unknown'}`];
+    const markup = componentMarkup(source);
+    if (!code) return [markup, `theme: ${theme}`, 'code: unknown'];
+    const families = new Set(familiesIn(markup));
+    const components = new Set();
+    for (const family of families) for (const component of componentsOf(family, code.selectors)) components.add(component);
+    for (const [marker, named] of Object.entries(code.markers ?? {}))
+        if (markup.includes(marker)) for (const component of named) components.add(component);
+    // What a component's modules write that the markup does not show — the
+    // boot screen effects.js draws over an intro — is the component's too.
+    for (const component of components) for (const family of code.components[component]?.families ?? []) families.add(family);
+    return [
+        markup,
+        `theme: ${theme}`,
+        `base: ${code.base} ${code.themes[theme] ?? '-'}`,
+        ...[...families]
+            .sort()
+            .map((family) => `${family}: ${code.families[family]?.shared ?? '-'} ${code.families[family]?.themes?.[theme] ?? '-'}`),
+        ...[...components].sort().map((component) => `${component}: ${code.components[component]?.modules ?? '-'}`),
+    ];
 }
 
 export async function readBlocks(items, { lines = false } = {}) {
