@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "0e26e5b13a86d488073c04c66516c2eba74febbe88603460991b5cf9f285ac06",
+            "hash": "b7578fab3886edf4d3230f0fb7b3416bd64529515101e273da97ac97f76221df",
             "doc": "ad4c43d8792f1e827b733e330265527a0d59690b4838989cbece9e62210d73c3",
             "files": {
                 ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
@@ -117,7 +117,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "ceb387c5d2b4730fae5d818187c19e53228a159276a1a5396cda5fa592cb0bc2",
+                "js/theme-registry.d.ts": "9d380196939f273723ad92a616c59450e16d59a01f84103c9160af64140f253d",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",

@@ -5,7 +5,7 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
-## Unreleased: `attachAll()` finishes after it returns
+## Coming from 6.x to 7.0.0: `attachAll()` finishes after it returns
 
 One change a consumer may have to act on [scope-115]. `js/auto.js` now
 fetches a module only when the page carries its markup, so the modules

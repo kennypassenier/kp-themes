@@ -1,6 +1,21 @@
 # Changelog
 
-## Unreleased
+## 7.0.0 — 2026-09-17
+
+A major for one break: `attachAll()` and `attachEffects()` finish after they
+return, because a page now downloads only the JavaScript its markup uses. A
+login page loads 241,556 bytes of it where 6.1.0 loaded 722,686 (Chromium,
+`examples/login.html`). No consumer in `~/Projects` calls `attachAll()`;
+chassis-rs bakes ten more files at its upgrade (MIGRATION.md has its task).
+
+**Breaking.**
+
+- **`attachAll()` and `attachEffects()` are asynchronous** (`scope-115`,
+  `scope-117`): both handles carry `ready`. Code that reads a component's
+  state in the same tick awaits it first; `<html data-kp-auto-ready>` marks
+  the boot's attach. The individual attach functions stay synchronous.
+- **A vendored `js/effects.js` needs `js/effects/` and `js/as-of.js` beside
+  it** (`scope-117`, fix-55, fix-56): `SHA256SUMS` lists them.
 
 **Changed.**
 
@@ -17,6 +32,13 @@
   hooks moved into `js/effects/`, each fetched the first time an element or
   a theme knob needs it; the module that every page loads went from 108,896
   to 53,877 bytes. `attachEffects()` returns `ready` on its handle.
+- **The catalogue asks only about what a change touches** (`scope-116`,
+  fix-54): a block's review hash reads the CSS families and component
+  modules its markup carries, not every file in `css/`, `js/` and
+  `components/`. Measured: a change to the data table's module brings back
+  264 of 3062 block/theme pairs, the loader none.
+- **`npm run test:tags -- --level engines`** (fix-51): the commit level's
+  selection in both engines, run at a layer's close.
 
 ## 6.1.0 — 2026-09-17
 
