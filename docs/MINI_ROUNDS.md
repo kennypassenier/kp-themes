@@ -191,3 +191,4 @@ register's colours are.
 | fix-52-M1 | Does the release workflow pass its gates on a tag? Measured at the second push of `v6.1.0` (run 35171511359): green, the draft carries nine assets, and 212 of 212 checksums in SHA256SUMS match the tagged tree. | closed |
 | fix-53-M1 | Does a topic split across two groups get refused? Measured at the fix: the moved formal portrait exits 1, restored exits 0. | closed |
 | fix-54-M1 | Do only the blocks that carry a change come back? Measured at the fix: loader 0, data table module 264, a `.kp-button` rule 1236, the same rule in dark 89 of 3062. Measured again at the next change that reaches Kenny's review. | open |
+| fix-55-M1 | Does the vendored copy carry the hooks? Measured at the fix: 41 imported files walked, all checksummed. Again at the next release: `consumer.tar` carries `js/effects/`. | open |

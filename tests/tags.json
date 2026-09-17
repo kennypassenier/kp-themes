@@ -142,6 +142,11 @@
             "tags": ["@component:button", "@component:overlays", "@component:feedback", "@component:navigation", "@component:page"]
         },
         { "path": "js/effects.js", "tags": ["@component:page-effects", "@component:media"] },
+        {
+            "path": "js/effects/*.js",
+            "tags": ["@component:page-effects", "@component:media"],
+            "why": "the hooks of js/effects.js, each in a module of its own [scope-117]"
+        },
         { "path": "js/theme-picker.js", "tags": ["@component:picker"] },
         { "path": "js/theme-core.js", "tags": ["@component:picker"] },
         { "path": "js/no-flash.js", "tags": ["@component:picker"] },
@@ -150,6 +155,7 @@
         { "path": "js/theme-registry.js", "tags": ["@sweep", "@component:picker"], "why": "generated from every theme's tokens" },
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
+        { "path": "js/as-of.js", "all": "every late module and every effects hook attaches through it [scope-117]" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },
 
         { "path": "components/alarm.jsx", "tags": ["@component:alarm"] },

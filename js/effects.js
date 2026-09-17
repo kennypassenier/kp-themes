@@ -43,6 +43,7 @@
 
 /** The attributes of the hook vocabulary [AR35]. Contract values. */
 import { getStrings } from './strings.js';
+import { asOf, presentUnder } from './as-of.js';
 
 export const HOOKS = Object.freeze({
     surface: 'data-kp-surface',
@@ -596,6 +597,22 @@ export const TIMINGS = Object.freeze({
  * @typedef {object} EffectsHandle
  * @property {() => void} detach stop everything the module started and remove the root attribute; safe to call twice
  * @property {(element: Element) => void} observe start an element rendered after attach, and its subtree [AR34]
+ * @property {Promise<void>} ready resolves once every hook this attach asked for has been fetched and run [scope-117]
+ */
+
+/**
+ * The four variables every part of attachEffects writes [scope-117].
+ * @typedef {object} EffectsState
+ * @property {boolean} detached
+ * @property {IntersectionObserver | null} io
+ * @property {IntersectionObserver | null} ioHeadline
+ * @property {number} pending
+ */
+
+/**
+ * What a hook module receives from attachEffects [scope-117]: the closure it
+ * was cut out of, by name.
+ * @typedef {Record<string, any> & { state: EffectsState }} EffectsContext
  */
 
 /** Elements this module has started, so a second attach does not start them again [AR34]. */
@@ -656,7 +673,6 @@ export function attachEffects(root = document, options = {}) {
     };
     if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, '');
 
-    let detached = false;
     /** @type {Set<ReturnType<typeof setTimeout>>} */
     const timers = new Set();
     /** @type {Set<number>} */
@@ -665,18 +681,19 @@ export function attachEffects(root = document, options = {}) {
     const cleanups = [];
     /** @type {Array<() => void>} */
     const finishers = [];
-    /** @type {IntersectionObserver | null} */
-    let io = null;
 
-    /** The headline's own on-view watcher [S48, academia, LIFT_PLAN row 10]:
-     * kept apart from `io` (the rule hook's) so a page whose rule reveal is
-     * quiet still gets a working headline draw, and the other way round. */
-    /** @type {IntersectionObserver | null} */
-    let ioHeadline = null;
-    let pending = 0;
+    /**
+     * The closure's four mutable variables as one object [scope-117]: the
+     * hooks live in modules of their own now, and every one of them must
+     * write the same binding. `ioHeadline` is the headline's own on-view
+     * watcher [S48], kept apart from `io` (the rule hook's) so a page whose
+     * rule reveal is quiet still gets a working headline draw.
+     * @type {EffectsState}
+     */
+    const state = { detached: false, io: null, ioHeadline: null, pending: 0 };
 
     const done = () => {
-        if (detached || pending > 0) return;
+        if (state.detached || state.pending > 0) return;
         html.setAttribute(DONE_ATTRIBUTE, '');
     };
     /** @param {Element} el @param {string} reveal @param {string} routine @param {boolean} skipped */
@@ -690,7 +707,7 @@ export function attachEffects(root = document, options = {}) {
     const later = (fn, ms) => {
         const id = setTimeout(() => {
             timers.delete(id);
-            if (!detached) fn();
+            if (!state.detached) fn();
         }, ms);
         timers.add(id);
     };
@@ -778,650 +795,57 @@ export function attachEffects(root = document, options = {}) {
         }
     };
 
-    // ── The headline: decipher, then one slice burst [TH119] ───────────
-    /** @param {Element} el @param {boolean} [atRest] straight to rest, as a detach does for a reveal it never started */
-    const headline = (el, atRest = false) => {
-        const text = el.textContent ?? '';
-        el.setAttribute(TEXT_ATTRIBUTE, text);
-        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);
-        const asked = routineOf(el, 'headline');
-        // A name no routine answers to is reported and then treated as
-        // silence [G6]: the chain below ends at decipher, so a typo in a
-        // register used to give that theme glyph noise over its headline
-        // rather than the rest it asked for.
-        const routine =
-            asked === '' || HEADLINE_ROUTINES.includes(asked) ? asked : reportUnknownRoutine(el, ROUTINES.headline, asked, HEADLINE_ROUTINES);
-        /** @param {boolean} skipped */
-        const rest = (skipped) => {
-            el.textContent = text;
-            el.classList.add(STATE.deciphered);
-            announce(el, 'headline', routine, skipped);
-        };
-        if (atRest || routine === '' || reduced() || seen(el, 'headline')) {
-            rest(true);
-            return;
-        }
-        if (routine === 'tracking') {
-            // The synthwave headline [SW2]: the text stays whole; one tracking
-            // wipe crosses it, then one shine. The register animates the
-            // classes; without an animation the classes come off by the
-            // table's durations, so nothing waits on an event that never comes.
-            pending++;
-            let ended = false;
-            const shine = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.tracking);
-                el.classList.add(STATE.shine);
-                const off = () => el.classList.remove(STATE.shine);
-                el.addEventListener('animationend', off, { once: true });
-                later(off, TIMINGS['kp-shine'].durationMs + 50);
-                rest(false);
-                pending--;
+    // ── The hooks, fetched when asked for [scope-117] ──────────────────
+    // Each hook lives in js/effects/<hook>.js. A page that carries no
+    // headline never downloads the decipher; a theme that declares no
+    // pointer never downloads the light. A hook's module is fetched the
+    // first time something asks for it and installed once; `state.pending`
+    // is held while it is on its way, so the done attribute still waits for
+    // every reveal that has not started yet.
+    /** @type {Record<string, () => Promise<{ install: (ctx: EffectsContext) => Record<string, any> }>>} */
+    const loaders = {
+        headline: () => import('./effects/headline.js'),
+        emphasis: () => import('./effects/emphasis.js'),
+        rule: () => import('./effects/rule.js'),
+        count: () => import('./effects/count.js'),
+        caret: () => import('./effects/caret.js'),
+        pointer: () => import('./effects/pointer.js'),
+        measure: () => import('./effects/measure.js'),
+        marquee: () => import('./effects/marquee.js'),
+        arrival: () => import('./effects/arrival.js'),
+    };
+    /** @type {Record<string, Promise<Record<string, any>>>} */
+    const installed = {};
+    /** @type {EffectsContext} */
+    let ctx;
+    /** @param {string} name */
+    const use = (name) => (installed[name] ??= loaders[name]().then((module) => module.install(ctx)));
+    /** @type {Promise<void>[]} */
+    const arriving = [];
+    /**
+     * The page as attach found it, for the hooks asked for during attach: a
+     * hook that arrives after a React component has mounted must not wire it
+     * [js/as-of.js]. Taken once scan has run; a hook asked for later, by
+     * observe(), reads the page as it is then.
+     * @type {WeakSet<Element> | null}
+     */
+    let present = null;
+    /** @param {string} name @param {(hook: Record<string, any>) => void} fn */
+    const run = (name, fn) => {
+        state.pending++;
+        const asked = present;
+        const arrived = use(name)
+            .then((hook) => {
+                if (state.detached) return;
+                if (asked) asOf(root, asked, () => fn(hook));
+                else fn(hook);
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                state.pending = Math.max(0, state.pending - 1);
                 done();
-            };
-            finishers.push(shine);
-            el.classList.add(STATE.tracking);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-tracking') return;
-                el.removeEventListener('animationend', onEnd);
-                shine();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(shine, TIMINGS['kp-tracking'].durationMs + 50);
-            return;
-        }
-        if (routine === 'popdown') {
-            // The nostromo headline [S48, LIFT_PLAN nostromo row]: the text
-            // stays whole throughout — no glyph or word is ever touched —
-            // under a clip-path the register sweeps open top-down; the
-            // class runs it, then the element rests. Without an animation
-            // the class comes off by the table's duration.
-            pending++;
-            el.classList.add(STATE.popping);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.popping);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-popdown') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-popdown'].durationMs + 50);
-            return;
-        }
-        if (routine === 'draw') {
-            // The academia headline [lift row 10]: the words are never
-            // touched — no noise, no split into words. A rule beneath the
-            // heading grows in once it enters the viewport, the exact
-            // mechanism `rule()` below already performs, generalised to
-            // h1 because the approved demo drives both off one
-            // IntersectionObserver and one class ("The Reading Room",
-            // 2026-09-08). The register paints the draw; this only
-            // watches and flips the class.
-            if (!view || typeof view.IntersectionObserver !== 'function') {
-                el.classList.add(STATE.in);
-                announce(el, 'headline', routine, true);
-                return;
-            }
-            pending++;
-            finishers.push(() => {
-                el.classList.add(STATE.in);
-                announce(el, 'headline', routine, false);
             });
-            ioHeadline ??= new view.IntersectionObserver(
-                (entries) => {
-                    for (const entry of entries) {
-                        if (!entry.isIntersecting) continue;
-                        ioHeadline?.unobserve(entry.target);
-                        entry.target.classList.add(STATE.in);
-                        announce(entry.target, 'headline', routine, false);
-                        pending--;
-                        done();
-                    }
-                },
-                { threshold: cfg.threshold },
-            );
-            ioHeadline.observe(el);
-            return;
-        }
-        if (routine === 'arrive') {
-            // The formal headline [S49, LIFT_PLAN row 16]: whole and
-            // untouched — this theme does not glitch or type, it commits.
-            // Nothing here manipulates a character; the class the register
-            // reads (STATE.deciphered, same completion marker every
-            // routine sets) is held off by one frame past the next, the
-            // same two-`requestAnimationFrame` technique the approved demo
-            // used itself, so the browser paints the hidden state before a
-            // plain CSS transition (fade, rise) carries it to rest.
-            pending++;
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const arm = () => later(finish, 500);
-            if (view) view.requestAnimationFrame(() => view.requestAnimationFrame(arm));
-            else arm();
-            return;
-        }
-        if (routine === 'ink') {
-            // The sepia headline [S48, LIFT_PLAN row 9]: no per-word
-            // stagger — the whole line is one CSS transition, a faint
-            // ghost of the ink colour settling to the full one, because
-            // this theme (anatomy.md) is "unhurried on purpose". `settling`
-            // is transient like `dissolving`/`typing`: added, then removed
-            // once the transition has run, so a quiet theme or reduced
-            // motion — which skip straight to `rest(true)` above and never
-            // add it — render the plain, already-settled headline rather
-            // than a permanent ghost. A transition, not a keyframe
-            // animation (css/sepia-register.css carries no `@keyframes`
-            // for it, so it has no TIMINGS row).
-            pending++;
-            el.classList.add(STATE.settling);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.settling);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {TransitionEvent} */ (e).propertyName !== 'filter' || e.target !== el) return;
-                el.removeEventListener('transitionend', onEnd);
-                finish();
-            };
-            el.addEventListener('transitionend', onEnd);
-            // One frame at the ghost values, painted with `settling` on,
-            // before the class comes off and the transition it guards
-            // carries the properties back to their plain, settled values
-            // over the next 1050ms — the demo's own requestAnimationFrame,
-            // not a synchronous removal a browser could coalesce into the
-            // first paint and skip the transition for.
-            const off = () => el.classList.remove(STATE.settling);
-            if (view) view.requestAnimationFrame(off);
-            else off();
-            later(finish, 1050 + 50);
-            return;
-        }
-        if (routine === 'calibrate') {
-            // The solstice headline [S49, A1]: the text is whole and solid
-            // under a mix-blend-mode overlay the register paints; the class
-            // runs the overlay's one wipe, then the element rests. Without
-            // an animation the class comes off by the table's duration.
-            pending++;
-            el.classList.add(STATE.calibrating);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.calibrating);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-cal-slide') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-cal-slide'].durationMs + 50);
-            return;
-        }
-        if (routine === 'wipe') {
-            // The mono headline [S48, LIFT_PLAN row 6]: the text stays whole,
-            // never split into words or glyphs; the register sweeps a
-            // hard-edge mask across it once, left to right — rauno.me's
-            // verticalFade, adapted from opacity to mask-position so nothing
-            // ever flashes. The class arms the register's own animation;
-            // without one the class comes off by the table's duration.
-            pending++;
-            el.classList.add(STATE.revealed);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.revealed);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-wipe') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-wipe'].durationMs + 50);
-            return;
-        }
-        if (routine === 'gild') {
-            // The lapis headline [S48, LIFT_PLAN row 6]: the text is whole
-            // and already gold; the class runs one clip-path wipe left to
-            // right (the register's `kp-burnish` keyframe), then the
-            // element rests. Without an animation the class comes off by
-            // the table's duration — same shape as `dissolve`, a different
-            // keyframe, because the demo's mechanism is neither a dither
-            // nor a per-glyph type [S49].
-            pending++;
-            el.classList.add(STATE.gilding);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.gilding);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-burnish') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-burnish'].durationMs + 50);
-            return;
-        }
-        if (routine === 'sharpen') {
-            // The grotesk headline [S49, LIFT_PLAN row 12]: the text is whole
-            // under a blur+brightness the register paints; the class runs the
-            // one-shot optical resolve, then the element rests. Without an
-            // animation the class comes off by the table's duration. Its own
-            // routine name and keyframe, distinct from the `focus` word-
-            // stagger group and `kp-focus` shade-dark already owns.
-            pending++;
-            el.classList.add(STATE.sharpening);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.sharpening);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-sharpen-in') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-sharpen-in'].durationMs + 50);
-            return;
-        }
-
-        if (routine === 'clip') {
-            // The light headline [S48, LIFT_PLAN, A1]: the text is whole the
-            // entire time — no noise, no dither, no per-word stagger — and
-            // the register opens a rounded clip window around it once. The
-            // class runs the reveal; without an animation the class comes
-            // off by the table's duration, same shape as dissolve above.
-            pending++;
-            el.classList.add(STATE.revealing);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.revealing);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-clip-reveal') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-clip-reveal'].durationMs + 50);
-            return;
-        }
-
-        if (routine === 'overprint') {
-            // The pastel headline [S48, LIFT_PLAN row 6]: the text is
-            // whole; the register's ::before duplicate (the second-ink
-            // layer, already there at its rest offset for a no-script
-            // page) springs from a wide mis-registration into that rest
-            // position once. The element's own text never changes.
-            pending++;
-            el.classList.add(STATE.registering);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.registering);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-registration') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-registration'].durationMs + 50);
-            return;
-        }
-
-        if (routine === 'shout' || routine === 'slam' || routine === 'focus' || routine === 'resolve' || routine === 'blur') {
-            // A word routine [PH2, BR2, S48 shade-dark and dark]: every word in its own span with its
-            // index, the register animates them one after another by
-            // `--kp-i`; the element ends as its own text. The keyframe is
-            // `kp-<routine>` and its row in TIMINGS says how long one word
-            // takes; the stagger is the theme's knob. One routine names its
-            // keyframe otherwise: shade-light's `blur` runs `kp-word-in`,
-            // the name its own approved demo used [SL2, S49].
-            pending++;
-            const parts = text.split(/(\s+)/);
-            let index = 0;
-            const nodes = parts.map((part) => {
-                if (part === '') return null;
-                if (/^\s+$/.test(part)) return doc.createTextNode(part);
-                const span = doc.createElement('span');
-                span.setAttribute('data-word', '');
-                span.setAttribute('aria-hidden', 'true');
-                span.style.setProperty('--kp-i', String(index++));
-                span.textContent = part;
-                return span;
-            });
-            el.replaceChildren(...nodes.filter((n) => n !== null));
-            el.classList.add(STATE.words);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.words);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const keyframe = routine === 'blur' ? 'kp-word-in' : `kp-${routine}`;
-            later(finish, TIMINGS[keyframe].durationMs + index * cfg.wordStagger + 50);
-            return;
-        }
-        if (routine === 'dissolve') {
-            // The retro headline [RT2]: the text is whole under a dither the
-            // register paints; the class runs the dither's clearing, then the
-            // element rests. Without an animation the class comes off by the
-            // table's duration.
-            pending++;
-            el.classList.add(STATE.dissolving);
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.dissolving);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const onEnd = (/** @type {Event} */ e) => {
-                if (/** @type {AnimationEvent} */ (e).animationName !== 'kp-dither-clear') return;
-                el.removeEventListener('animationend', onEnd);
-                finish();
-            };
-            el.addEventListener('animationend', onEnd);
-            later(finish, TIMINGS['kp-dither-clear'].durationMs + 50);
-            return;
-        }
-        if (routine === 'type') {
-            // The terminal headline [TM2]: typed one glyph at a time at the
-            // decipher rate, a block caret riding the last one; the caret
-            // leaves with the last glyph and the element rests as its text.
-            pending++;
-            const chars = [...text];
-            const caret = doc.createElement('span');
-            caret.setAttribute('data-caret', '');
-            caret.setAttribute('aria-hidden', 'true');
-            el.classList.add(STATE.typing);
-            el.textContent = '';
-            el.append(caret);
-            let typed = 0;
-            let ended = false;
-            const finish = () => {
-                if (ended) return;
-                ended = true;
-                el.classList.remove(STATE.typing);
-                rest(false);
-                pending--;
-                done();
-            };
-            finishers.push(finish);
-            const perChar = 1000 / Math.max(1, cfg.cps);
-            const step = () => {
-                if (ended) return;
-                typed++;
-                el.textContent = chars.slice(0, typed).join('');
-                if (typed < chars.length) {
-                    el.append(caret);
-                    later(step, perChar);
-                } else finish();
-            };
-            later(step, cfg.lead);
-            return;
-        }
-        pending++;
-        const chars = [...text];
-        const spans = chars.map((ch) => {
-            const span = doc.createElement('span');
-            span.setAttribute('data-glyph', '');
-            span.setAttribute('aria-hidden', 'true');
-            if (/\s/.test(ch)) span.textContent = ch;
-            else {
-                span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-                span.classList.add(STATE.noise);
-            }
-            return span;
-        });
-        el.replaceChildren(...spans);
-        const perChar = 1000 / Math.max(1, cfg.cps);
-        let start = 0;
-        let finished = false;
-        const finish = () => {
-            if (finished) return;
-            finished = true;
-            rest(false);
-            el.classList.add(STATE.glitching);
-            const off = () => el.classList.remove(STATE.glitching);
-            el.addEventListener('animationend', off, { once: true });
-            // No animation (a quiet register, or reduced motion switched on
-            // mid-run): the class comes off on its own.
-            later(off, TIMINGS['kp-slice-1'].durationMs + 50);
-            pending--;
-            done();
-        };
-        finishers.push(finish);
-        /** @param {number} now */
-        const tick = (now) => {
-            frames.delete(id);
-            if (detached || finished) return;
-            if (start === 0) start = now;
-            const t = now - start;
-            let all = true;
-            spans.forEach((span, i) => {
-                const ch = chars[i] ?? '';
-                if (/\s/.test(ch)) return;
-                if (t > cfg.lead + i * perChar) {
-                    if (span.classList.contains(STATE.noise)) {
-                        span.textContent = ch;
-                        span.classList.remove(STATE.noise);
-                    }
-                } else {
-                    all = false;
-                    if (Math.random() < cfg.swap) span.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-                }
-            });
-            if (all) finish();
-            else id = schedule();
-        };
-        let id = 0;
-        const schedule = () => {
-            const next = view ? view.requestAnimationFrame(tick) : 0;
-            frames.add(next);
-            return next;
-        };
-        id = schedule();
-    };
-
-    // ── Emphasis: marks clear themselves, or on a trigger [TH120] ──────
-    /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
-    const clearInSteps = (marks, first, step, on, routine) => {
-        if (marks.length === 0) return;
-        pending++;
-        finishers.push(() => {
-            for (const mark of marks) mark.classList.add(STATE.cleared);
-        });
-        marks.forEach((mark, i) => {
-            later(
-                () => {
-                    mark.classList.add(STATE.cleared);
-                    if (i === marks.length - 1) {
-                        pending--;
-                        announce(on, 'emphasis', routine, false);
-                        done();
-                    }
-                },
-                first + i * step,
-            );
-        });
-    };
-    /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
-    const emphasis = (container) => {
-        const marks = [...container.querySelectorAll('mark')];
-        // A register whose plate drags the words in with it reads them
-        // from here [S49, A11, retro]: the element's own text, copied to
-        // the same attribute a headline carries, never authored copy.
-        for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? '');
-        // The emphasis knob carries the register's own vocabulary — plate,
-        // wash, redact, ignite — because the module does the same thing
-        // whatever it is called: cover the marks, clear them on the
-        // trigger. Only a name the module branches on can be wrong, which
-        // is why the headline knob is checked and this one is not.
-        const routine = routineOf(container, 'emphasis');
-        const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
-        // A container with nothing to clear (a button that carries the hook
-        // for its own reveal) touches neither the marks nor the memo.
-        if (marks.length === 0) {
-            announce(container, 'emphasis', routine, true);
-            return;
-        }
-        const atRest = () => {
-            for (const mark of marks) mark.classList.add(STATE.cleared);
-            announce(container, 'emphasis', routine, true);
-        };
-        if (routine === '' || reduced()) {
-            atRest();
-            if (trigger) wireTrigger(trigger, marks, container, routine);
-            return;
-        }
-        if (trigger) {
-            // The dossier: the marks stay covered until the trigger opens the
-            // file; the register staggers the lift. A second press closes it.
-            wireTrigger(trigger, marks, container, routine);
-            trigger.setAttribute('aria-pressed', 'false');
-            // Armed is a state, and it was the one nobody could see: this
-            // branch announces nothing, because nothing has happened yet
-            // [TF2]. It still has to be readable, or "waiting for a click"
-            // and "never wired at all" look identical from outside.
-            container.setAttribute(REVEAL_STATE, 'armed');
-            return;
-        }
-        if (seen(container, 'emphasis')) {
-            atRest();
-            return;
-        }
-        clearInSteps(marks, cfg.delay, cfg.stagger, container, routine);
-    };
-    /** @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine */
-    const wireTrigger = (trigger, marks, container, routine) => {
-        const onClick = () => {
-            const open = trigger.getAttribute('aria-pressed') !== 'true';
-            trigger.setAttribute('aria-pressed', String(open));
-            for (const mark of marks) mark.classList.toggle(STATE.cleared, open);
-            // The stamp a theme changes when the file opens [S49, A11]:
-            // the second word is the page's (data-kp-label-open), and the
-            // register swaps to it while this attribute is set.
-            container.toggleAttribute(HOOKS.openState, open);
-            // announce() writes 'played' here, which is right: the trigger
-            // is what makes it play. Closing it again is a play too — the
-            // marks move either way [TF2].
-            announce(container, 'emphasis', routine, false);
-        };
-        trigger.addEventListener('click', onClick);
-        cleanups.push(() => trigger.removeEventListener('click', onClick));
-    };
-    /** The marks outside any emphasis container clear on load, one after another. */
-    /** @param {ParentNode} scope */
-    const looseMarks = (scope) => {
-        const marks = [...scope.querySelectorAll('mark')].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started.has(m));
-        if (marks.length === 0) return;
-        for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? '');
-        for (const m of marks) started.add(m);
-        const first = marks[0];
-        const routine = routineOf(first, 'emphasis');
-        if (routine === '' || reduced() || seen(first, 'emphasis')) {
-            for (const mark of marks) mark.classList.add(STATE.cleared);
-            announce(first, 'emphasis', routine, true);
-            return;
-        }
-        clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
-    };
-
-    // ── The rule: drawn when its heading enters the viewport [TH122] ───
-    /** @param {Element} el */
-    const rule = (el) => {
-        const routine = routineOf(el, 'rule');
-        /** @param {boolean} skipped */
-        const draw = (skipped) => {
-            el.classList.add(STATE.in);
-            announce(el, 'rule', routine, skipped);
-        };
-        if (routine === '' || reduced() || seen(el, 'rule') || !view || typeof view.IntersectionObserver !== 'function') {
-            draw(true);
-            return;
-        }
-        pending++;
-        finishers.push(() => draw(false));
-        io ??= new view.IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    if (!entry.isIntersecting) continue;
-                    io?.unobserve(entry.target);
-                    entry.target.classList.add(STATE.in);
-                    announce(entry.target, 'rule', routine, false);
-                    pending--;
-                    done();
-                }
-            },
-            { threshold: cfg.threshold },
-        );
-        io.observe(el);
+        arriving.push(arrived);
     };
 
     // ── Dispatch ──────────────────────────────────────────────────────
@@ -1440,123 +864,25 @@ export function attachEffects(root = document, options = {}) {
             // away; with no arrival on screen it starts now, as before.
             const held = arrivalsOnScreen.get(doc);
             if (!held) {
-                headline(el);
+                run('headline', (hook) => hook.headline(el));
                 return;
             }
-            pending++;
+            state.pending++;
             let waiting = true;
             const go = () => {
                 if (!waiting) return;
                 waiting = false;
                 held.delete(go);
-                pending--;
+                state.pending--;
                 // Detached while held: the text was never touched, so the
                 // element only needs its rest record.
-                if (detached) headline(el, true);
-                else headline(el);
+                if (state.detached) use('headline').then((hook) => hook.headline(el, true));
+                else run('headline', (hook) => hook.headline(el));
             };
             held.add(go);
             finishers.push(go);
-        } else if (reveal === 'emphasis') emphasis(el);
-        else rule(el);
-    };
-
-    /**
-     * A number that counts up to what it already says [feat-count-1].
-     *
-     * The authored text is the oracle, the way the headline's is: the
-     * element already reads `1 118 204,75` or `€ 1.204` or `98%`, and
-     * this reads the number out of that, counts to it, and writes the
-     * same string back. It never formats a number of its own — the
-     * separators, the currency and the fraction digits are whatever the
-     * page wrote, so the page's own locale is preserved without this
-     * module having to know what it is.
-     *
-     * @param {Element} el
-     */
-    const countUp = (el) => {
-        const text = el.textContent ?? '';
-        // The first run of digits, with whatever separators sit inside it.
-        const match = /-?[\d][\d\s.,\u00a0\u202f]*/.exec(text);
-        if (match === null) {
-            el.setAttribute(HOOKS.countState, 'done');
-            return;
-        }
-        const whole = match[0].trim();
-        const before = text.slice(0, match.index);
-        const after = text.slice(match.index + match[0].length);
-
-        // Which character groups and which one is the decimal point is NOT
-        // decidable from the string: `1.204` is one thousand two hundred
-        // and four in Dutch and one-point-two-oh-four in English. So it is
-        // not guessed — the page's own language decides, the way every
-        // other locale-shaped thing in this package does. A page that says
-        // nothing gets the browser's default locale, which is what a
-        // reader's own browser would use anyway.
-        const locale = /** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || doc?.documentElement?.lang || undefined;
-        const parts = new Intl.NumberFormat(locale).formatToParts(12345.6);
-        const groupSep = parts.find((part) => part.type === 'group')?.value ?? '';
-        const decimalSep = parts.find((part) => part.type === 'decimal')?.value ?? '.';
-
-        const cut = decimalSep === '' ? -1 : whole.lastIndexOf(decimalSep);
-        const decimals = cut < 0 ? 0 : whole.length - cut - 1;
-        const digitsOnly = (/** @type {string} */ part) => part.replace(/[^\d-]/g, '');
-        const target = Number(cut < 0 ? digitsOnly(whole) : `${digitsOnly(whole.slice(0, cut))}.${digitsOnly(whole.slice(cut + 1))}`);
-        if (!Number.isFinite(target)) {
-            el.setAttribute(HOOKS.countState, 'done');
-            return;
-        }
-        /** Whether the authored text grouped its digits at all. */
-        const grouped = groupSep !== '' && whole.includes(groupSep);
-
-        /** Put a value back in the authored shape: same grouping, same decimals. */
-        const render = (/** @type {number} */ value) => {
-            const [int, frac] = value.toFixed(decimals).split('.');
-            const body = grouped ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSep) : int;
-            return `${before}${body}${decimals ? decimalSep + frac : ''}${after}`;
-        };
-
-        const style = view?.getComputedStyle(el);
-        // `|| 900` would read a deliberate `0` as "unset" and count
-        // anyway — the absence of a value is not the value, a fifth time
-        // in this package. An empty string is unset; `0` is a choice.
-        const asked = style?.getPropertyValue(COUNT_KNOB).trim() ?? '';
-        const duration = asked === '' || !Number.isFinite(Number(asked)) ? 900 : Number(asked);
-        const askedFrom = style?.getPropertyValue(COUNT_FROM_KNOB).trim() ?? '';
-        const from = askedFrom === '' || !Number.isFinite(Number(askedFrom)) ? 0 : Number(askedFrom);
-
-        // The rest state, and the only state a reader who asked for less
-        // movement ever sees. Setting it FIRST means every early return
-        // above and every failure below still leaves the real number.
-        const rest = () => {
-            el.textContent = render(target);
-            el.setAttribute(HOOKS.countState, 'done');
-            el.dispatchEvent(new CustomEvent('kp-count', { bubbles: true, detail: { value: target, counted: false } }));
-        };
-        if (reduced() || duration <= 0 || target === from) {
-            rest();
-            return;
-        }
-
-        el.setAttribute(HOOKS.countState, 'running');
-        const startedAt = view?.performance?.now?.() ?? Date.now();
-        let frame = 0;
-        const step = () => {
-            const now = view?.performance?.now?.() ?? Date.now();
-            const t = Math.min(1, (now - startedAt) / duration);
-            // Ease out: fast at first, settling onto the real number.
-            const eased = 1 - (1 - t) ** 3;
-            el.textContent = render(from + (target - from) * eased);
-            if (t < 1 && !reduced()) frame = view?.requestAnimationFrame?.(step) ?? 0;
-            else rest();
-        };
-        frame = view?.requestAnimationFrame?.(step) ?? 0;
-        // Mid-session reduced motion, and detaching: both land on the real
-        // number rather than wherever the count had got to [DI7, KT6].
-        cleanups.push(() => {
-            if (frame) view?.cancelAnimationFrame?.(frame);
-            rest();
-        });
+        } else if (reveal === 'emphasis') run('emphasis', (hook) => hook.emphasis(el));
+        else run('rule', (hook) => hook.rule(el));
     };
 
     /** @param {ParentNode | Element} scope */
@@ -1569,14 +895,14 @@ export function attachEffects(root = document, options = {}) {
         // second time, which js/auto.js does over React.
         if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
             started.add(scope);
-            countUp(scope);
+            run('count', (hook) => hook.countUp(scope));
         }
         for (const el of scope.querySelectorAll(`[${HOOKS.count}]`)) {
             if (started.has(el)) continue;
             started.add(el);
-            countUp(el);
+            run('count', (hook) => hook.countUp(el));
         }
-        looseMarks(scope);
+        if ((scope instanceof Element && scope.matches('mark')) || scope.querySelector('mark')) run('emphasis', (hook) => hook.looseMarks(scope));
         done();
     };
 
@@ -1588,19 +914,19 @@ export function attachEffects(root = document, options = {}) {
         timers.clear();
         for (const id of frames) view?.cancelAnimationFrame(id);
         frames.clear();
-        io?.disconnect();
-        io = null;
+        state.io?.disconnect();
+        state.io = null;
         // Everything the module started, not only the rule's observer
         // [G8, 2026-09-08]. The draw routine keeps its own observer, the
         // marquee keeps one per band, and the caret and the measuring
         // lines hold listeners; leaving those running meant a reveal
         // still fired after somebody asked for the motion to stop, and
         // the count went negative when it did.
-        ioHeadline?.disconnect();
-        ioHeadline = null;
+        state.ioHeadline?.disconnect();
+        state.ioHeadline = null;
         for (const cleanup of cleanups.splice(0)) cleanup();
         for (const finish of finishers.splice(0)) finish();
-        pending = 0;
+        state.pending = 0;
         done();
     };
     // The subscription to the preference is deliberately not in
@@ -1619,533 +945,83 @@ export function attachEffects(root = document, options = {}) {
     const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, 'arrival');
     if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, new Set());
 
+    ctx = {
+        state,
+        root,
+        options,
+        doc,
+        html,
+        manageRoot,
+        view,
+        query,
+        reduced,
+        rootStyle,
+        knob,
+        cfg,
+        timers,
+        frames,
+        cleanups,
+        finishers,
+        done,
+        announce,
+        later,
+        routineOf,
+        memoKey,
+        seen,
+        reportUnknownRoutine,
+        checkValues,
+        startOne,
+        scan,
+        onPreference,
+        arrivalRoutine,
+        arrivalPerformed,
+        arrivalPlays,
+        started,
+        carets,
+        arrivalsOnScreen,
+        unknownReported,
+    };
+
+    present = presentUnder(root);
     scan(root);
 
-    // ── The caret [TM2, R6-Q7]: a block cursor inside the focused field ─
-    // A theme answers `--kp-caret: block` on the root; the module only
-    // writes the column (`--kp-col`, in the field's own ch, clamped to the
-    // field's width) that the register paints the block at, so the cursor
-    // lives in the box at the caret and never after the label — Kenny's
-    // reading of 2026-09-08. Text-like inputs only; a textarea keeps the
-    // browser's own caret.
-    const caret = () => {
-        const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : '';
-        if (routine !== 'block' || !view) return;
-        const inputs = /** @type {HTMLInputElement[]} */ ([...root.querySelectorAll('input.kp-field__input')]).filter((el) =>
-            /^(text|email|search|url|tel|password)?$/.test(el.getAttribute('type') ?? ''),
-        );
-        for (const input of inputs) {
-            // One set of listeners per field, however often the module is
-            // attached [G16]: a consumer that calls attachEffects twice —
-            // a framework remount, an explicit re-scan — used to give
-            // every field a second caret handler.
-            if (carets.has(input)) continue;
-            carets.add(input);
-            const put = () => {
-                if (!view) return;
-                const cs = view.getComputedStyle(input);
-                const probe = doc.createElement('span');
-                probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;';
-                probe.style.font = cs.font || `${cs.fontSize} ${cs.fontFamily}`;
-                probe.textContent = '0'.repeat(20);
-                doc.body?.append(probe);
-                const ch = probe.getBoundingClientRect().width / 20 || 8;
-                probe.remove();
-                const room = input.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-                const max = Math.max(0, Math.floor(room / ch) - 1);
-                const col = Math.min(input.selectionStart ?? input.value.length, max);
-                input.style.setProperty('--kp-col', String(col));
-            };
-            const clear = () => input.style.removeProperty('--kp-col');
-            const events = ['input', 'keyup', 'click', 'focus', 'select'];
-            for (const ev of events) input.addEventListener(ev, put);
-            input.addEventListener('blur', clear);
-            cleanups.push(() => {
-                for (const ev of events) input.removeEventListener(ev, put);
-                input.removeEventListener('blur', clear);
-                clear();
-            });
-        }
-    };
-    caret();
-
-    // ── The measurement frame [scope-18]: blueprint's own ─────────────
-    // A theme answers `--kp-measure: live` on the root. The module wraps
-    // its headline in a span it can measure and puts four corner brackets
-    // around that box with one readout under it, printing the box's true
-    // rendered size.
-    //
-    // It replaced two dimension lines on 2026-09-11. Kenny had asked for
-    // those in round four — "replace it entirely with our measurement
-    // lines" — and then saw the command-table demo's brackets and found
-    // them better: "dan is de demo hier niet voor niks geweest" (scope-18).
-    // The brackets report the box they hold rather than one edge of it,
-    // which is why one readout replaces two labels.
-    //
-    // Runs once, after scan() has already put the headline at its rest
-    // text, so nothing here fights the decipher/type/word routines for the
-    // same child nodes.
-    // The pointer bus [scope-16]. One listener on the document, one write
-    // per animation frame, and nothing at all unless the theme asked for it.
-    //
-    // It writes to the root rather than to each element, because the demo's
-    // gradient is declared once on the theme and inherited: every surface
-    // that paints the oxide reads the same two numbers, so they must be one
-    // pair, not one pair per element.
-    // The pointer light [scope-101, built from scope-25]. The shade pair's
-    // half of the bus: where the two numbers above are one pair for the
-    // whole page, these are six per LIT ELEMENT, because a shade falls
-    // away from the pointer and "away" is a different direction for every
-    // box on the screen.
-    //
-    // Deliberately NOT a second bus. It is armed by the same
-    // `--kp-pointer: track` declaration, fed by the one `pointermove`
-    // listener below, and written inside the same animation frame; what it
-    // adds of its own are the four ways the light goes OUT — a touch, a
-    // Tab, the pointer leaving the window, and reduced motion — plus a
-    // scroll listener, because a box that moves under a still pointer has
-    // turned relative to it.
-    //
-    // Returns null when nothing is there to light. Every value is the
-    // research demo's own arithmetic, unchanged.
-    const pointerLight = () => {
-        if (!view) return null;
-        /** @type {HTMLElement[]} */
-        let lit = [];
-        /** @type {{ x: number, y: number } | null} */
-        let at = null;
-        let recollect = 0;
-        let queued = 0;
-        /** @param {HTMLElement} el */
-        const clear = (el) => {
-            for (const prop of Object.values(LIGHT)) el.style.removeProperty(prop);
-        };
-        // Which elements this theme lights is the theme's own answer, read
-        // from the cascade rather than hard-coded here: a register that
-        // never declares `--kp-light: pointer` gets an empty list and the
-        // frame below does nothing at all.
-        const collect = () => {
-            for (const el of lit) clear(el);
-            lit = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(LIGHT_SELECTOR)]).filter(
-                (el) => view.getComputedStyle(el).getPropertyValue(LIGHT_KNOB).trim() === 'pointer',
-            );
-        };
-        const paint = () => {
-            const here = at;
-            if (!here || reduced()) {
-                for (const el of lit) clear(el);
-                return;
-            }
-            for (const el of lit) {
-                const box = el.getBoundingClientRect();
-                // Off screen: nothing to light, and one getBoundingClientRect
-                // is cheaper than six style writes.
-                if (box.bottom < 0 || box.top > view.innerHeight) {
-                    clear(el);
-                    continue;
-                }
-                const dx = box.left + box.width / 2 - here.x;
-                const dy = box.top + box.height / 2 - here.y;
-                const distance = Math.hypot(dx, dy);
-                const k = 1.4 / Math.max(distance, LIGHT_REACH);
-                const near = 1 - Math.min(distance / LIGHT_FAR, 1);
-                el.style.setProperty(LIGHT.x, (dx * k).toFixed(3));
-                el.style.setProperty(LIGHT.y, (dy * k).toFixed(3));
-                el.style.setProperty(LIGHT.near, near.toFixed(3));
-                el.style.setProperty(LIGHT.lift, (0.6 + near).toFixed(3));
-                el.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
-                el.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
-            }
-        };
-        const schedule = () => {
-            if (queued) return;
-            queued = view.requestAnimationFrame(() => {
-                frames.delete(queued);
-                queued = 0;
-                paint();
-            });
-            frames.add(queued);
-        };
-        const away = () => {
-            at = null;
-            schedule();
-        };
-        /** @param {PointerEvent} event */
-        const onDown = (event) => {
-            if (event.pointerType === 'touch') away();
-        };
-        /** @param {KeyboardEvent} event */
-        const onKey = (event) => {
-            if (event.key === 'Tab') away();
-        };
-        // A theme change re-answers the knob: the list is built again one
-        // frame later, when the new register's cascade has settled.
-        const themes = new MutationObserver(() => {
-            if (recollect) return;
-            recollect = view.requestAnimationFrame(() => {
-                frames.delete(recollect);
-                recollect = 0;
-                collect();
-                paint();
-            });
-            frames.add(recollect);
+    // The hooks a theme or the page asks for once, in the order the closure
+    // always ran them. Each module still decides for itself; the checks here
+    // only save the download when the answer is certainly no.
+    /** @param {string} name */
+    const asked = (name) => (rootStyle ? rootStyle.getPropertyValue(name).trim() : '');
+    if (asked(CARET_KNOB) === 'block' && root.querySelector('input.kp-field__input')) run('caret', (hook) => hook.caret());
+    if (asked(POINTER_KNOB) === 'track' || asked(PRESS_KNOB) === 'point')
+        run('pointer', (hook) => {
+            hook.pointerBus();
+            hook.pressBus();
         });
-        themes.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
-        doc.addEventListener('pointerdown', onDown, { passive: true });
-        doc.addEventListener('keydown', onKey, { passive: true });
-        html.addEventListener('pointerleave', away, { passive: true });
-        view.addEventListener('scroll', schedule, { passive: true });
-        cleanups.push(() => {
-            themes.disconnect();
-            doc.removeEventListener('pointerdown', onDown);
-            doc.removeEventListener('keydown', onKey);
-            html.removeEventListener('pointerleave', away);
-            view.removeEventListener('scroll', schedule);
-            // The way out [KT6]: what the module wrote, the module removes,
-            // and the register's own fallbacks take over again.
-            for (const el of lit) clear(el);
-            lit = [];
-        });
-        collect();
-        return {
-            /** @param {PointerEvent | MouseEvent} event */
-            put(event) {
-                at = 'pointerType' in event && event.pointerType === 'touch' ? null : { x: event.clientX, y: event.clientY };
-                paint();
-            },
-        };
-    };
+    if (asked(MEASURE_KNOB) === 'live' && root.querySelector(`[${HOOKS.reveal}='headline']`)) run('measure', (hook) => hook.measure());
+    if (root.querySelector(`[${HOOKS.marquee}]`)) run('marquee', (hook) => hook.marquee());
+    if (arrivalPerformed) run('arrival', (hook) => hook.arrival());
 
-    const pointerBus = () => {
-        const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : '';
-        if (routine !== 'track' || !view || reduced()) return;
-        const light = pointerLight();
-        let frame = 0;
-        /** @param {PointerEvent | MouseEvent} event */
-        const onMove = (event) => {
-            if (frame) return;
-            frame = view.requestAnimationFrame(() => {
-                frames.delete(frame);
-                frame = 0;
-                const w = view.innerWidth || 1;
-                const h = view.innerHeight || 1;
-                html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
-                html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
-                light?.put(event);
-            });
-            frames.add(frame);
-        };
-        doc.addEventListener('pointermove', onMove, { passive: true });
-        cleanups.push(() => {
-            doc.removeEventListener('pointermove', onMove);
-            // The way out [KT6]: what the module wrote, the module removes,
-            // and the stylesheet's own declared value takes over again.
-            html.style.removeProperty(POINTER.x);
-            html.style.removeProperty(POINTER.y);
-        });
-    };
-
-    // The press point [scope-101]. One delegated listener, one write per
-    // press, and nothing at all unless the theme asked for it.
-    //
-    // It writes to the button rather than to the root, because every button
-    // on the page has a press point of its own and the last one pressed
-    // must keep its stain while the next one grows.
-    const pressBus = () => {
-        const routine = rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : '';
-        if (routine !== 'point' || !view) return;
-        /** The buttons this bus has written to, so it can take it all back [KT6]. */
-        /** @type {Set<HTMLElement>} */
-        const marked = new Set();
-        /** @param {Event} event */
-        const onDown = (event) => {
-            const pointer = /** @type {PointerEvent} */ (event);
-            const target = event.target;
-            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
-            if (!button) return;
-            const box = button.getBoundingClientRect();
-            button.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
-            button.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
-            marked.add(button);
-        };
-        // A key press has no point: the stylesheet's own default takes over
-        // again, which puts the stain in the middle of the button.
-        /** @param {Event} event */
-        const onKey = (event) => {
-            const key = /** @type {KeyboardEvent} */ (event).key;
-            const target = event.target;
-            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
-            if (!button || (key !== ' ' && key !== 'Enter')) return;
-            button.style.removeProperty(PRESS.x);
-            button.style.removeProperty(PRESS.y);
-            marked.delete(button);
-        };
-        doc.addEventListener('pointerdown', onDown, { passive: true });
-        doc.addEventListener('keydown', onKey);
-        cleanups.push(() => {
-            doc.removeEventListener('pointerdown', onDown);
-            doc.removeEventListener('keydown', onKey);
-            for (const button of marked) {
-                button.style.removeProperty(PRESS.x);
-                button.style.removeProperty(PRESS.y);
-            }
-            marked.clear();
-        });
-    };
-
-    const measure = () => {
-        const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : '';
-        if (routine !== 'live' || !view) return;
-        const words = getStrings();
-        const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h) => !h.closest('[data-kp-measured]'));
-        for (const h1 of headlines) {
-            const wrap = doc.createElement('span');
-            wrap.setAttribute('data-kp-measured', '');
-            h1.replaceWith(wrap);
-            wrap.append(h1);
-
-            for (const corner of ['tl', 'tr', 'bl', 'br']) {
-                const bracket = doc.createElement('i');
-                bracket.setAttribute('data-kp-measure-bracket', corner);
-                bracket.setAttribute('aria-hidden', 'true');
-                wrap.append(bracket);
-            }
-
-            const readout = doc.createElement('span');
-            readout.setAttribute('data-kp-measure', '');
-            readout.setAttribute('aria-hidden', 'true');
-            readout.textContent = words.measureLoading;
-            wrap.append(readout);
-
-            /** @type {ReturnType<typeof setTimeout>} */
-            let timer;
-            const update = () => {
-                const box = h1.getBoundingClientRect();
-                readout.textContent = words.measureBox(Math.round(box.width), Math.round(box.height));
-                // The state a test or a consumer can read at any time, rather
-                // than a moment they had to be listening for [KT16].
-                wrap.setAttribute('data-kp-measured', 'live');
-            };
-            update();
-            const schedule = () => {
-                clearTimeout(timer);
-                timer = setTimeout(update, 100);
-            };
-            view.addEventListener('resize', schedule);
-            cleanups.push(() => {
-                clearTimeout(timer);
-                view?.removeEventListener('resize', schedule);
-            });
-            try {
-                if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(update);
-            } catch {
-                // no font-loading API: the load-time measurement stands
-            }
-        }
-    };
-    pointerBus();
-    pressBus();
-    measure();
-
-    // ── The marquee [M1, M2]: a row that runs ──────────────────────────
-    // The consumer writes the items once; a seamless loop needs the row
-    // twice, so the module builds the track, moves the items into the
-    // first run and clones it into a second the screen reader skips. The
-    // attributes it writes are what the base layer keys on, so a page
-    // without this module shows the items standing still rather than a
-    // half-built band [T17, AR34].
-    const marquee = () => {
-        for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
-            if (band.hasAttribute('data-kp-marquee-ready')) continue;
-            const items = [...band.childNodes];
-            if (items.length === 0) continue;
-            const track = doc.createElement('div');
-            track.setAttribute('data-kp-marquee-track', '');
-            const run = doc.createElement('div');
-            run.setAttribute('data-kp-marquee-run', '');
-            run.append(...items);
-            const copy = /** @type {HTMLElement} */ (run.cloneNode(true));
-            copy.setAttribute('aria-hidden', 'true');
-            track.append(run, copy);
-            band.append(track);
-            band.setAttribute('data-kp-marquee-ready', '');
-            // Two runs, so the -50% pass lands exactly where it started.
-            band.setAttribute('data-kp-marquee-runs', '2');
-
-            const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : '') || 'offscreen';
-            if (pause !== 'offscreen' || !view || !('IntersectionObserver' in view)) continue;
-            // Paused, not stopped: the animation keeps its position and
-            // carries on from it when the band comes back into view.
-            const observer = new view.IntersectionObserver(
-                (entries) => {
-                    for (const entry of entries) entry.target.toggleAttribute('data-kp-paused', !entry.isIntersecting);
-                },
-                { threshold: 0 },
-            );
-            observer.observe(band);
-            cleanups.push(() => observer.disconnect());
-        }
-    };
-    marquee();
-
-    // ── The arrival [SW2]: how the page comes on ───────────────────────
-    // A theme answers `--kp-arrival` on the root; `boot` is synthwave's:
-    // a diegetic line counting up in the overlay the register paints, a
-    // Skip button, and the CRT switching the overlay off. `card` is
-    // phantom's [PH2]: the theme's own name as the line, a bar the register
-    // runs under it, and the overlay shoved off to the left. Once per
-    // session, never under reduced motion, and every word from the
-    // dictionary [KT5] — a theme's name is data, not copy. The words are
-    // the theme's own (`arrivalWordsByTheme`, `arrivalLinesByTheme`) or the
-    // neutral ones, and `--kp-arrival-rate` scales the whole sequence
-    // [scope-84].
-    const arrival = () => {
-        const routine = arrivalRoutine;
-        if (!arrivalPerformed || !doc.body) return;
-        const card = routine === 'card';
-        if (!arrivalPlays) {
-            announce(html, 'arrival', routine, true);
-            return;
-        }
-        // The headlines held for this overlay start once it has gone
-        // [scope-86]: on its own end, on Skip, on a click, and when a
-        // detach takes it down.
-        const release = () => {
-            const held = arrivalsOnScreen.get(doc);
-            arrivalsOnScreen.delete(doc);
-            if (held) for (const go of [...held]) go();
-        };
-        const words = getStrings();
-        const theme = html.getAttribute('data-theme') ?? '';
-        // The words of this theme's own world [scope-84]: a theme with an
-        // entry reads its own, and a theme without one reads the neutral
-        // default — never another theme's.
-        const own = words.arrivalWordsByTheme?.[theme] ?? {};
-        const said = {
-            line: own.line ?? words.arrivalLine,
-            progress: own.progress ?? words.arrivalProgress,
-            ready: own.ready ?? words.arrivalReady,
-        };
-        const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? '');
-        const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
-        /** @param {() => void} fn @param {number} ms */
-        const paced = (fn, ms) => later(fn, ms / rate);
-        // The overlay's CSS animations at the same rate. Read after a style
-        // flush, so an animation a class has just started is in the list.
-        const pace = () => {
-            if (rate === 1 || typeof overlay.getAnimations !== 'function') return;
-            void view?.getComputedStyle(overlay).opacity;
-            for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
-        };
-        const overlay = doc.createElement('div');
-        overlay.className = ARRIVAL.root;
-        const line = doc.createElement('pre');
-        line.className = ARRIVAL.line;
-        line.setAttribute('aria-live', 'polite');
-        const skip = doc.createElement('button');
-        skip.type = 'button';
-        skip.className = ARRIVAL.skip;
-        skip.textContent = words.arrivalSkip;
-        // The segmented bar retro's POST counts along [S49, A11]: built
-        // only when the theme asks for one, and painted by its register.
-        const bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === 'block' ? doc.createElement('div') : null;
-        if (bar) {
-            bar.className = ARRIVAL.bar;
-            bar.setAttribute('aria-hidden', 'true');
-            bar.style.setProperty(BOOT_PROGRESS, '0');
-        }
-        overlay.append(line, ...(bar ? [bar] : []), skip);
-        doc.body.append(overlay);
-        pace();
-        pending++;
-        let ended = false;
-        let pct = 0;
-        let removed = false;
-        const remove = () => {
-            if (removed) return;
-            removed = true;
-            overlay.remove();
-            announce(html, 'arrival', routine, false);
-            pending--;
-            release();
-            done();
-        };
-        const end = () => {
-            if (ended) return;
-            ended = true;
-            if (reduced()) {
-                remove();
-                return;
-            }
-            overlay.classList.add(STATE.off);
-            pace();
-            overlay.addEventListener('animationend', remove, { once: true });
-            paced(remove, TIMINGS[card ? 'kp-load-out' : 'kp-crt-off'].durationMs + 50);
-        };
-        const step = () => {
-            if (ended) return;
-            pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
-            line.textContent = [said.line, `${said.progress} ${pct}%`.trim(), pct === 100 ? said.ready : ''].filter(Boolean).join('\n');
-            bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
-            if (pct === 100) paced(end, 220);
-            else paced(step, 110);
-        };
-
-        // The lines mode [S49, A11]: a theme whose own boot is a POST
-        // shows its lines one after another, cumulatively, rather than a
-        // percentage — retro's BIOS banner and memory test, terminal's
-        // five lines. The words are the dictionary's (KT5), the cadence
-        // the demos' own 190ms, and a `{count}` counts up to the theme's
-        // declared total the way a memory test does.
-        const lines = words.arrivalLinesByTheme?.[theme] ?? null;
-        let shown = 0;
-        const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
-        const lineStep = () => {
-            if (ended || !lines) return;
-            shown++;
-            const upto = lines.slice(0, shown);
-            line.textContent = upto
-                .map((/** @type {string} */ text, /** @type {number} */ index) =>
-                    text.replace('{count}', String(index === shown - 1 ? Math.round((total * shown) / lines.length) : total)),
-                )
-                .join('\n');
-            bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
-            if (shown === lines.length) paced(end, 320);
-            else paced(lineStep, 190);
-        };
-        skip.addEventListener('click', end);
-        // CP1, Kenny 2026-09-09: "remember it for the next version". This is
-        // that version. A click anywhere on the overlay ends it, because an
-        // overlay that covers the whole viewport and answers one 90-pixel
-        // button is indistinguishable from a page that has stopped working.
-        // A theme that wants the old behaviour sets `--kp-arrival-dismiss:
-        // skip-only`.
-        if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== 'skip-only') overlay.addEventListener('click', end);
-        finishers.push(end);
-        cleanups.push(() => {
-            overlay.remove();
-            if (!removed) release();
-        });
-        if (card) {
-            line.textContent = theme;
-            paced(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
-        } else if (lines && lines.length > 0) lineStep();
-        else step();
-    };
-    arrival();
+    // What observe() asks for later reads the page as it is then.
+    present = null;
 
     return {
+        // Every hook asked for so far has arrived and run [scope-117]. A
+        // reveal still plays over its own time after that; this is only the
+        // moment the code is in, which a caller that reads straight after
+        // attach — a test, a wrapper counting listeners — waits for.
+        get ready() {
+            return Promise.all(arriving).then(() => undefined);
+        },
         detach() {
-            if (detached) return;
-            detached = true;
+            if (state.detached) return;
+            state.detached = true;
             for (const id of timers) clearTimeout(id);
             timers.clear();
             for (const id of frames) view?.cancelAnimationFrame(id);
             frames.clear();
-            io?.disconnect();
-            io = null;
-            ioHeadline?.disconnect();
-            ioHeadline = null;
+            state.io?.disconnect();
+            state.io = null;
+            state.ioHeadline?.disconnect();
+            state.ioHeadline = null;
             for (const cleanup of cleanups.splice(0)) cleanup();
             query?.removeEventListener('change', onPreference);
             // Every reveal that was still running ends at its rest state
@@ -2155,11 +1031,11 @@ export function attachEffects(root = document, options = {}) {
             // it. A consumer's route change is not a reason to leave
             // somebody's words scrambled.
             for (const finish of finishers.splice(0)) finish();
-            pending = 0;
+            state.pending = 0;
             if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
         },
         observe(element) {
-            if (detached) return;
+            if (state.detached) return;
             scan(element);
         },
     };

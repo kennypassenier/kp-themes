@@ -26,7 +26,19 @@ console.log(detach.modules); // e.g. ['datatable', 'tables']
 ```
 
 Calling the individual attach functions (`attachDataTables(section)` and the
-rest) is unchanged and still synchronous.
+rest) is unchanged and still synchronous — except `attachEffects()`, whose
+hooks (the headline's decipher, the marks, the rule, the count, the caret, the
+pointer light, the measurement frame, the marquee, the arrival) are fetched
+the first time a page or a theme asks for them [scope-117]. Its handle carries
+`ready` the same way:
+
+```js
+import { attachEffects } from '@kp-soft/themes/js/effects';
+
+const effects = attachEffects(section);
+await effects.ready; // every hook this attach asked for is in and has run
+section.querySelector('[data-kp-reveal-trigger]')?.click();
+```
 
 ## Coming from 5.x to 6.0.0
 

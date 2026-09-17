@@ -895,6 +895,9 @@ test('AR39: a stylesheet url() is a reference the manifest walk follows; a data:
         '../fonts/x/400.woff2',
     ]);
     assert.deepEqual(references("import { a } from './b.js';"), ['./b.js']);
+    // A module fetched when asked for is a file the consumer copies too
+    // [scope-117]: js/effects.js's hooks were invisible to this walk.
+    assert.deepEqual(references("const load = () => import('./effects/headline.js');"), ['./effects/headline.js']);
 });
 
 test('AR40: a keyframe without a TIMINGS row fails; a row whose opacity steps drift fails; a matching row passes', () => {

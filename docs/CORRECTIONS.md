@@ -4072,3 +4072,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The digests go one step finer — per rule rather than per family — for whichever family brought back a block that does not carry it.
 
 **9 · When we review the measure.** When a block is judged that a family change did not bring back although it visibly changed; that is the one fault this recipe could have.
+
+## fix-55 · The manifest walk could not see a module fetched with import() (2026-09-17)
+
+**1 · What went wrong.** After the effects split, `node gates/check-manifest.mjs` passed while the nine hooks in `js/effects/` were in no manifest: the walk read `from '…'` and `import '…'` only, so `import('./effects/headline.js')` was invisible, and `consumer.tar` — what Almanac and kyu vendor — would have shipped a page whose reveals never arrive.
+
+**2 · Which gate let it through.** `check:manifest`'s own `references()`, written when every module was imported statically; nothing in the package used `import()` before scope-115.
+
+**3 · Where the same fault sits.** The property: a reader of module references that knows only the static forms. Searched with `grep -rn "from|import" gates/*.mjs` for reference readers: `gates/check-manifest.mjs` (fixed), `gates/generate-bundle.mjs` (esbuild follows `import()` itself), `gates/site/extract-attributes.mjs` (read only `js/*.js`, so the hooks' attributes fell off the documentation site — fixed in the same change).
+
+**4 · How we prevent recurrence.** `references()` reads `import('./…')` in code, with comments blanked so a JSDoc `import('./x.js')` type is not a file; the ten new files are in `FILES`.
+
+**5 · What the remedy costs.** One pattern and ten manifest lines.
+
+**6 · Who enforces it.** Code: the AR39 unit test in `gates/gates.test.mjs`, red first on `import('./effects/headline.js')` (pass 2, fail 1), and `check:manifest` in the gates.
+
+**7 · How we measure it works, and when.** At the fix: the walk finds 41 imported files, all checksummed. Again at the next release: `consumer.tar` carries `js/effects/`.
+
+**8 · If the measurement fails.** The manifest lists `js/` as a directory export, every file under it copied.
+
+**9 · When we review the measure.** When a module is loaded some other way than `import`.

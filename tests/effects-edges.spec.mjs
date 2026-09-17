@@ -233,9 +233,12 @@ test.describe('a second attach on a page that already has one [G16]', { tag: ['@
                 return original(...args);
             };
             const { attachEffects } = await import('/js/effects.js');
+            // The caret's code arrives after attach returns [scope-117].
             const first = attachEffects(document);
+            await first.ready;
             const afterFirst = listeners;
             const second = attachEffects(document);
+            await second.ready;
             const afterSecond = listeners;
             first.detach();
             second.detach();

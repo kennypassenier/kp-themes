@@ -13,6 +13,10 @@
   markup a load-time check can see. `attachAll()` now returns its detach with
   `ready` and `modules`; code that read a component's state in the same tick
   as `attachAll()` awaits `ready` first. `dist/kp-themes.js` stays one file.
+- **`js/effects.js` fetches its hooks when asked** (`scope-117`): the nine
+  hooks moved into `js/effects/`, each fetched the first time an element or
+  a theme knob needs it; the module that every page loads went from 108,896
+  to 53,877 bytes. `attachEffects()` returns `ready` on its handle.
 
 ## 6.1.0 — 2026-09-17
 

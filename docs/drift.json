@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "45001c7083a4ac8fe0d436cd71eb8cf02dbbb2fdf50c14a86b025f9a6d4b5583",
-            "doc": "b64429be70be3b725eb6cd1fd28217f7362c6b28711d3c8dcea99c019754b7eb",
+            "hash": "b06e5a89453b8706089dfc0766b50c7130fe6be859aea7697895f0ed3926952b",
+            "doc": "bc9564aed26fc800c9c411c599ef1fd38c83b6448ebe491ab6e28846b82b9091",
             "files": {
-                "CHANGELOG.md": "1261779be43cd5d5164722250c66148301fde814b81a3292f0cd02ffc5ab7195"
+                "CHANGELOG.md": "bbb0330db36830681d4d60da81af4c4b37031a1fdc3c2b9d21b79f25dd57b460"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,25 +81,26 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "4bf634680fccc38512733347299b6f119461e1adaa137c37b2e4f20727ae1f31",
-            "doc": "636bd2e81d7960cd59adcde002574c8d2f4961cd2018df62dd6e119056fb40c2",
+            "hash": "0e26e5b13a86d488073c04c66516c2eba74febbe88603460991b5cf9f285ac06",
+            "doc": "ad4c43d8792f1e827b733e330265527a0d59690b4838989cbece9e62210d73c3",
             "files": {
-                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
+                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
                 "gates/colour.mjs": "a937662bbb79c5125bc5eb84639f5c67c9261e498d57e7135f98a2d04988bc95",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
                 "gates/generate-themes.mjs": "d4b5afbf713553bd0f39c8e82331f08deb7b7294c71bb202dfdfc34149aea052",
-                "index.js": "296e4392ccba14246f0d3ee3e0f657017941652e75c43a20c1b3ffadb0a7ca54",
+                "index.js": "ebf74027f8bec52e827be1f750302ea1aa8ef39ee558e79b273a668eecf4af58",
                 "js/alarm.d.ts": "0de3c8b777f96a86283e4bd2e15cd18968763dfad6777f0acb39839f4db4d9c3",
-                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/as-of.d.ts": "16da7b81728364aef90468d203212c78447e9b1edceb4890fdf5071579df19d4",
+                "js/auto.d.ts": "447748a5b97cd771d2b6c10538e17e800ea8bae93f93ddff588125a7eabc8ac1",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
-                "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
+                "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
                 "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
-                "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
+                "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",
                 "js/forms.d.ts": "758f945ddb3ed12f6a8fc560b4abe99d6c300eb22311e387a9d498e7970678c3",
                 "js/gridlayout.d.ts": "fb845e8146a65516cd1bfec4d0123c5921f3f1875f84ad77132412c43be9b59e",
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
@@ -109,13 +110,14 @@
                 "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
                 "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",
                 "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
-                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd",
-                "js/strings.d.ts": "622284a932002bb3780b20138984e09cb2c56b6e38b9ab818a111dbc93aad31b",
+                "js/remember.d.ts": "8947c7e0e9f475497e8c978450899d25df264d9a60d54b15b2b9160fad097b27",
+                "js/sidenav.d.ts": "2269640987551034fd72c14e1de39505596f6aa0050ef51029e9cfbc8cdbcc5e",
+                "js/strings.d.ts": "09576b169dd4c2d6885a245657c3aa0aadd791335f67aa8af5ee1506066149c9",
                 "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "3c2cea67a9507c7668000cbb7905fc8221004e2333487849be7058529374ddb7",
+                "js/theme-registry.d.ts": "ceb387c5d2b4730fae5d818187c19e53228a159276a1a5396cda5fa592cb0bc2",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
@@ -198,8 +200,8 @@
                 "gates/integrate-lift.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "706e11c68fd5b3f8c19ee55ae83418d758f82ae3060bf37b3e0e69e574647d6e",
-            "doc": "f4c4c9b8c568b21da4c3b88ee0e7464c1fecc5b71d2e54468ad00810f88346a6",
+            "hash": "cc77ee0708270ac5fef0d14b9c91308a0c7e35f0446d69e4ebc166e403e1681d",
+            "doc": "ec1654b5661fd68ceee2ed93092cbeca495048b133bff06aeca15203b867b414",
             "files": {
                 ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
                 ".githooks/check-ids.sh": "ec5484904fcfc88ee1afaca5ef756aec775a9f5df7afa6e5855b9c5fc6f99654",
@@ -209,7 +211,7 @@
                 ".githooks/trace-inputs.cjs": "2088e1ca4612e5608dcaf2bd48dcf4ce4f862f70ddd0ea59f9574de52ee674ef",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 ".github/workflows/release.yml": "c5b68f79cd3a474472672cdeea17ac21e0f8ad158d308b8dc0dcd0002bc2b4fe",
-                "gates/checksums.mjs": "1ef11d65237213dc56da2a0fe86994e39ad1b7f7b8a302fc55fbc2053e38b93d",
+                "gates/checksums.mjs": "c084c00ff83a806f01ef10f8f8ccbd727bb723b474c5234211bb3db71b381a38",
                 "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"

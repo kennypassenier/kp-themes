@@ -2504,7 +2504,7 @@
         },
         "layout": { "modules": "99f3efe7728382f6", "families": ["data-kp-contrast-ok", "kp-sr-only"] },
         "media": {
-            "modules": "536b0f14a52ed139",
+            "modules": "77aeaac75eed7934",
             "families": [
                 "data-kp-divider",
                 "data-kp-effects",
@@ -2637,7 +2637,7 @@
         },
         "page": { "modules": "9420b1574fdfb686", "families": ["data-kp-disabled", "kp-palette", "kp-shortcuts", "kp-skip-link"] },
         "page-effects": {
-            "modules": "fe6a7fad86dd67cf",
+            "modules": "38f94cd9a138b43e",
             "families": [
                 "data-kp-divider",
                 "data-kp-effects",

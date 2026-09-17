@@ -81,7 +81,8 @@ test.describe('the intro words per theme [scope-84]', { tag: ['@component:page-e
         const text = await page.evaluate(async () => {
             document.documentElement.style.setProperty('--kp-arrival', 'boot');
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            // The arrival's code arrives after attach returns [scope-117].
+            await attachEffects(document).ready;
             return document.querySelector('.kp-boot__line')?.textContent ?? '';
         });
         expect(text).toMatch(/^Loading\nProgress \d+%/);

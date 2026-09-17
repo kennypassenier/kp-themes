@@ -309,6 +309,19 @@ export type EffectsHandle = {
      * start an element rendered after attach, and its subtree [AR34]
      */
     observe: (element: Element) => void;
+    /**
+     * resolves once every hook this attach asked for has been fetched and run [scope-117]
+     */
+    ready: Promise<void>;
+};
+export type EffectsState = {
+    detached: boolean;
+    io: IntersectionObserver | null;
+    ioHeadline: IntersectionObserver | null;
+    pending: number;
+};
+export type EffectsContext = Record<string, any> & {
+    state: EffectsState;
 };
 /** What has been reported as unknown on this page, for js/diagnostics.js. */
 export declare function unknownEffects(): any[];

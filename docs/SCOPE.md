@@ -1998,3 +1998,11 @@ carries. `js/auto.js` is no input: tests/auto-lazy.spec.mjs holds that the
 loader changes no block. The register was brought to version 6 without a
 single pair going back to Kenny, because no block's code had changed.
 step-timing "Akkoord".
+
+**scope-117 · The effects split next, and the release is 7.0.0.** Kenny,
+2026-09-17, the hash-version-6 form (commit `e477efed`). next-step "Eerst de
+effects-split": `js/effects.js` is cut into a core and hooks that arrive only
+when a page or a theme asks for them, the second half of strategy (c) in
+`research/loading/`. version "7.0.0": `attachAll()` finishing after it returns
+is a break for a consumer who calls it and reads state in the same tick, and a
+break raises the major. fix-54 "Klopt"; step-timing "Akkoord".

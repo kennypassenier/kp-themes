@@ -41,6 +41,7 @@ import { attachRemembered, restoreRemembered } from './remember.js';
 import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTooltips } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachEffects } from './effects.js';
+import { asOf, presentUnder } from './as-of.js';
 
 /**
  * @typedef {object} Need
@@ -125,41 +126,6 @@ export const READY_ATTRIBUTE = 'data-kp-auto-ready';
 const carries = (root, selector) => (root instanceof Element && root.matches(selector)) || root.querySelector(selector) !== null;
 
 /**
- * Run `attach` against `root` as it stood when `present` was taken.
- *
- * The order this file always had is part of its contract: it attached at
- * load, and a React component mounted after it and wires itself
- * (docs/USER_GUIDE.md, the side navigation's `autoAttach`). A module fetched
- * lazily arrives after React has mounted, and its attach function would wire
- * React's markup a second time — measured 2026-09-17, the combobox's React
- * tag input appending every tag twice, and 33 more tests of the same shape.
- * So while a late module attaches, `querySelector` and `querySelectorAll` on
- * the root answer with the elements that were there at the boot and nothing
- * rendered since. It is synchronous and put back at once: a query the module
- * makes later, on a click or a scroll, sees the page as it is, which is what
- * it saw when it was attached eagerly too.
- *
- * @template T
- * @param {ParentNode} root
- * @param {WeakSet<Element>} present
- * @param {() => T} attach
- * @returns {T}
- */
-function asOf(root, present, attach) {
-    const all = root.querySelectorAll;
-    /** @param {string} selector */
-    const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
-    Object.defineProperty(root, 'querySelectorAll', { configurable: true, value: filtered });
-    Object.defineProperty(root, 'querySelector', { configurable: true, value: (/** @type {string} */ selector) => filtered(selector)[0] ?? null });
-    try {
-        return attach();
-    } finally {
-        delete (/** @type {any} */ (root).querySelectorAll);
-        delete (/** @type {any} */ (root).querySelector);
-    }
-}
-
-/**
  * Attach every behaviour under `root`, fetching only the modules it needs.
  * Returns one detach for all of it; `ready` resolves once every needed
  * module has attached, and `modules` names what was fetched.
@@ -187,7 +153,7 @@ export function attachAll(root = document) {
     const effects = attachEffects(/** @type {Document | Element} */ (root));
     // Taken after the attaches above, so an element one of them added counts
     // as there, as it did when every module attached in one pass.
-    const present = new WeakSet(root.querySelectorAll('*'));
+    const present = presentUnder(root);
     let detached = false;
     /** @type {string[]} */
     const modules = [];

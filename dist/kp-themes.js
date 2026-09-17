@@ -347,142 +347,46 @@ var init_strings = __esm({
   }
 });
 
-// js/effects.js
-var effects_exports = {};
-__export(effects_exports, {
-  ARRIVAL: () => ARRIVAL,
-  ARRIVALS: () => ARRIVALS,
-  BOOT_PROGRESS: () => BOOT_PROGRESS,
-  CARET_KNOB: () => CARET_KNOB,
-  COUNT_FROM_KNOB: () => COUNT_FROM_KNOB,
-  COUNT_KNOB: () => COUNT_KNOB,
-  DONE_ATTRIBUTE: () => DONE_ATTRIBUTE,
-  GLYPHS: () => GLYPHS,
-  HEADLINE_ROUTINES: () => HEADLINE_ROUTINES,
-  HOOKS: () => HOOKS,
-  KNOBS: () => KNOBS,
-  LIGHT: () => LIGHT,
-  LIGHT_FAR: () => LIGHT_FAR,
-  LIGHT_KNOB: () => LIGHT_KNOB,
-  LIGHT_REACH: () => LIGHT_REACH,
-  LIGHT_SELECTOR: () => LIGHT_SELECTOR,
-  MARQUEE_KNOB: () => MARQUEE_KNOB,
-  MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
-  MEASURE_KNOB: () => MEASURE_KNOB,
-  MEMO_PREFIX: () => MEMO_PREFIX,
-  POINTER: () => POINTER,
-  POINTER_KNOB: () => POINTER_KNOB,
-  PRESS: () => PRESS,
-  PRESS_KNOB: () => PRESS_KNOB,
-  REVEALS: () => REVEALS,
-  REVEAL_EVENT: () => REVEAL_EVENT,
-  REVEAL_STATE: () => REVEAL_STATE,
-  ROOT_ATTRIBUTE: () => ROOT_ATTRIBUTE,
-  ROUTINES: () => ROUTINES,
-  STATE: () => STATE,
-  SURFACES: () => SURFACES,
-  TEXT_ATTRIBUTE: () => TEXT_ATTRIBUTE,
-  TIMINGS: () => TIMINGS,
-  UNKNOWN_EVENT: () => UNKNOWN_EVENT,
-  attachEffects: () => attachEffects,
-  unknownEffects: () => unknownEffects
-});
-function unknownEffects() {
-  return [...unknownReported];
+// js/as-of.js
+function asOf(root, present, attach) {
+  const own = {
+    querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
+    querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
+  };
+  const all = root.querySelectorAll;
+  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
+  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
+  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
+  try {
+    return attach();
+  } finally {
+    for (
+      const name of
+      /** @type {const} */
+      ["querySelectorAll", "querySelector"]
+    ) {
+      const before = own[name];
+      if (before) Object.defineProperty(root, name, before);
+      else delete /** @type {any} */
+      root[name];
+    }
+  }
 }
-function attachEffects(root = document, options = {}) {
-  const doc = root.ownerDocument ?? /** @type {Document} */
-  root;
-  const html = doc.documentElement;
-  const manageRoot = options.manageRoot ?? true;
-  const view = doc.defaultView;
-  const query = view && typeof view.matchMedia === "function" ? view.matchMedia("(prefers-reduced-motion: reduce)") : null;
-  const reduced = () => options.reduceMotion ?? (query ? query.matches : false);
-  const rootStyle = view ? view.getComputedStyle(html) : null;
-  const knob = (name, fallback2) => {
-    const n = rootStyle ? parseFloat(rootStyle.getPropertyValue(name)) : NaN;
-    return Number.isFinite(n) ? n : fallback2;
-  };
-  const cfg = {
-    threshold: options.threshold ?? knob("--kp-reveal-threshold", 0.6),
-    cps: options.cps ?? knob("--kp-decipher-cps", 26),
-    lead: knob("--kp-decipher-lead", 260),
-    swap: knob("--kp-decipher-swap", 0.5),
-    stagger: options.stagger ?? knob("--kp-reveal-stagger", 260),
-    delay: options.delay ?? knob("--kp-classified-delay", 1500),
-    // The word routines: ms between one word arriving and the next.
-    wordStagger: knob("--kp-word-stagger", 60),
-    // The card arrival: how long the word holds after its bar has run.
-    cardHold: knob("--kp-card-hold", 300)
-  };
-  if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
-  let detached = false;
-  const timers = /* @__PURE__ */ new Set();
-  const frames = /* @__PURE__ */ new Set();
-  const cleanups = [];
-  const finishers = [];
-  let io = null;
-  let ioHeadline = null;
-  let pending = 0;
-  const done = () => {
-    if (detached || pending > 0) return;
-    html.setAttribute(DONE_ATTRIBUTE, "");
-  };
-  const announce = (el2, reveal, routine, skipped) => {
-    el2.setAttribute(REVEAL_STATE, skipped ? "rest" : "played");
-    el2.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
-  };
-  const later = (fn, ms) => {
-    const id = setTimeout(() => {
-      timers.delete(id);
-      if (!detached) fn();
-    }, ms);
-    timers.add(id);
-  };
-  const routineOf = (el2, reveal) => view ? view.getComputedStyle(el2).getPropertyValue(ROUTINES[reveal]).trim() : "";
-  const memoKey = (el2, reveal) => {
-    if (reveal === "emphasis" && el2.matches("mark")) return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:loose`;
-    const id = el2.getAttribute("id");
-    const own = id || (el2.textContent ?? "").trim().slice(0, 64);
-    const siblings = id ? [] : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? "").trim().slice(0, 64) === own);
-    const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el2)}` : own;
-    return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:${kind}`;
-  };
-  const seen = (el2, reveal) => {
-    if (el2.getAttribute(HOOKS.revealEvery) === "load") return false;
-    try {
-      const key = memoKey(el2, reveal);
-      const storage2 = view?.sessionStorage;
-      if (!storage2) return false;
-      if (storage2.getItem(key)) return true;
-      storage2.setItem(key, "1");
-      return false;
-    } catch {
-      return false;
-    }
-  };
-  const reportUnknownRoutine = (el2, knob2, value, accepted) => {
-    const key = `${knob2}=${value}`;
-    if (!unknownReported.has(key)) {
-      unknownReported.add(key);
-      el2.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob2, value, accepted: [...accepted] } }));
-    }
-    return "";
-  };
-  const checkValues = (el2) => {
-    const pairs = [
-      [HOOKS.surface, SURFACES],
-      [HOOKS.reveal, REVEALS]
-    ];
-    for (const [hook, accepted] of pairs) {
-      const value = el2.getAttribute(hook);
-      if (value === null || accepted.includes(value)) continue;
-      const key = `${hook}=${value}`;
-      if (unknownReported.has(key)) continue;
-      unknownReported.add(key);
-      el2.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
-    }
-  };
+var presentUnder;
+var init_as_of = __esm({
+  "js/as-of.js"() {
+    "use strict";
+    presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
+  }
+});
+
+// js/effects/headline.js
+var headline_exports = {};
+__export(headline_exports, {
+  install: () => install
+});
+function install(ctx) {
+  const { state, doc, view, reduced, cfg, frames, finishers, done, announce, later, routineOf, seen, reportUnknownRoutine } = ctx;
   const headline = (el2, atRest = false) => {
     const text = el2.textContent ?? "";
     el2.setAttribute(TEXT_ATTRIBUTE, text);
@@ -499,7 +403,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "tracking") {
-      pending++;
+      state.pending++;
       let ended = false;
       const shine = () => {
         if (ended) return;
@@ -510,7 +414,7 @@ function attachEffects(root = document, options = {}) {
         el2.addEventListener("animationend", off, { once: true });
         later(off, TIMINGS["kp-shine"].durationMs + 50);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(shine);
@@ -528,7 +432,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "popdown") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.popping);
       let ended = false;
       const finish2 = () => {
@@ -536,7 +440,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.popping);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -558,35 +462,35 @@ function attachEffects(root = document, options = {}) {
         announce(el2, "headline", routine, true);
         return;
       }
-      pending++;
+      state.pending++;
       finishers.push(() => {
         el2.classList.add(STATE.in);
         announce(el2, "headline", routine, false);
       });
-      ioHeadline ??= new view.IntersectionObserver(
+      state.ioHeadline ??= new view.IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             if (!entry.isIntersecting) continue;
-            ioHeadline?.unobserve(entry.target);
+            state.ioHeadline?.unobserve(entry.target);
             entry.target.classList.add(STATE.in);
             announce(entry.target, "headline", routine, false);
-            pending--;
+            state.pending--;
             done();
           }
         },
         { threshold: cfg.threshold }
       );
-      ioHeadline.observe(el2);
+      state.ioHeadline?.observe(el2);
       return;
     }
     if (routine === "arrive") {
-      pending++;
+      state.pending++;
       let ended = false;
       const finish2 = () => {
         if (ended) return;
         ended = true;
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -596,7 +500,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "ink") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.settling);
       let ended = false;
       const finish2 = () => {
@@ -604,7 +508,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.settling);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -624,7 +528,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "calibrate") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.calibrating);
       let ended = false;
       const finish2 = () => {
@@ -632,7 +536,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.calibrating);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -649,7 +553,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "wipe") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.revealed);
       let ended = false;
       const finish2 = () => {
@@ -657,7 +561,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.revealed);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -674,7 +578,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "gild") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.gilding);
       let ended = false;
       const finish2 = () => {
@@ -682,7 +586,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.gilding);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -699,7 +603,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "sharpen") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.sharpening);
       let ended = false;
       const finish2 = () => {
@@ -707,7 +611,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.sharpening);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -724,7 +628,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "clip") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.revealing);
       let ended = false;
       const finish2 = () => {
@@ -732,7 +636,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.revealing);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -749,7 +653,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "overprint") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.registering);
       let ended = false;
       const finish2 = () => {
@@ -757,7 +661,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.registering);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -774,7 +678,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "shout" || routine === "slam" || routine === "focus" || routine === "resolve" || routine === "blur") {
-      pending++;
+      state.pending++;
       const parts = text.split(/(\s+)/);
       let index = 0;
       const nodes = parts.map((part) => {
@@ -795,7 +699,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.words);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -804,7 +708,7 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "dissolve") {
-      pending++;
+      state.pending++;
       el2.classList.add(STATE.dissolving);
       let ended = false;
       const finish2 = () => {
@@ -812,7 +716,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.dissolving);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -829,14 +733,14 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     if (routine === "type") {
-      pending++;
+      state.pending++;
       const chars2 = [...text];
-      const caret2 = doc.createElement("span");
-      caret2.setAttribute("data-caret", "");
-      caret2.setAttribute("aria-hidden", "true");
+      const caret = doc.createElement("span");
+      caret.setAttribute("data-caret", "");
+      caret.setAttribute("aria-hidden", "true");
       el2.classList.add(STATE.typing);
       el2.textContent = "";
-      el2.append(caret2);
+      el2.append(caret);
       let typed = 0;
       let ended = false;
       const finish2 = () => {
@@ -844,7 +748,7 @@ function attachEffects(root = document, options = {}) {
         ended = true;
         el2.classList.remove(STATE.typing);
         rest(false);
-        pending--;
+        state.pending--;
         done();
       };
       finishers.push(finish2);
@@ -854,14 +758,14 @@ function attachEffects(root = document, options = {}) {
         typed++;
         el2.textContent = chars2.slice(0, typed).join("");
         if (typed < chars2.length) {
-          el2.append(caret2);
+          el2.append(caret);
           later(step, perChar2);
         } else finish2();
       };
       later(step, cfg.lead);
       return;
     }
-    pending++;
+    state.pending++;
     const chars = [...text];
     const spans = chars.map((ch) => {
       const span = doc.createElement("span");
@@ -886,13 +790,13 @@ function attachEffects(root = document, options = {}) {
       const off = () => el2.classList.remove(STATE.glitching);
       el2.addEventListener("animationend", off, { once: true });
       later(off, TIMINGS["kp-slice-1"].durationMs + 50);
-      pending--;
+      state.pending--;
       done();
     };
     finishers.push(finish);
     const tick = (now) => {
       frames.delete(id);
-      if (detached || finished) return;
+      if (state.detached || finished) return;
       if (start === 0) start = now;
       const t = now - start;
       let all = true;
@@ -920,9 +824,25 @@ function attachEffects(root = document, options = {}) {
     };
     id = schedule();
   };
+  return { headline };
+}
+var init_headline = __esm({
+  "js/effects/headline.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/emphasis.js
+var emphasis_exports = {};
+__export(emphasis_exports, {
+  install: () => install2
+});
+function install2(ctx) {
+  const { state, reduced, cfg, cleanups, finishers, done, announce, later, routineOf, seen, started: started2 } = ctx;
   const clearInSteps = (marks, first, step, on, routine) => {
     if (marks.length === 0) return;
-    pending++;
+    state.pending++;
     finishers.push(() => {
       for (const mark of marks) mark.classList.add(STATE.cleared);
     });
@@ -931,7 +851,7 @@ function attachEffects(root = document, options = {}) {
         () => {
           mark.classList.add(STATE.cleared);
           if (i === marks.length - 1) {
-            pending--;
+            state.pending--;
             announce(on, "emphasis", routine, false);
             done();
           }
@@ -982,10 +902,10 @@ function attachEffects(root = document, options = {}) {
     cleanups.push(() => trigger.removeEventListener("click", onClick));
   };
   const looseMarks = (scope) => {
-    const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started.has(m));
+    const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
     if (marks.length === 0) return;
     for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
-    for (const m of marks) started.add(m);
+    for (const m of marks) started2.add(m);
     const first = marks[0];
     const routine = routineOf(first, "emphasis");
     if (routine === "" || reduced() || seen(first, "emphasis")) {
@@ -995,6 +915,22 @@ function attachEffects(root = document, options = {}) {
     }
     clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
   };
+  return { clearInSteps, emphasis, wireTrigger, looseMarks };
+}
+var init_emphasis = __esm({
+  "js/effects/emphasis.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/rule.js
+var rule_exports = {};
+__export(rule_exports, {
+  install: () => install3
+});
+function install3(ctx) {
+  const { state, view, reduced, cfg, finishers, done, announce, routineOf, seen } = ctx;
   const rule = (el2) => {
     const routine = routineOf(el2, "rule");
     const draw = (skipped) => {
@@ -1005,50 +941,39 @@ function attachEffects(root = document, options = {}) {
       draw(true);
       return;
     }
-    pending++;
+    state.pending++;
     finishers.push(() => draw(false));
-    io ??= new view.IntersectionObserver(
+    state.io ??= new view.IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          io?.unobserve(entry.target);
+          state.io?.unobserve(entry.target);
           entry.target.classList.add(STATE.in);
           announce(entry.target, "rule", routine, false);
-          pending--;
+          state.pending--;
           done();
         }
       },
       { threshold: cfg.threshold }
     );
-    io.observe(el2);
+    state.io?.observe(el2);
   };
-  const startOne = (el2) => {
-    if (started.has(el2)) return;
-    checkValues(el2);
-    const reveal = el2.getAttribute(HOOKS.reveal);
-    if (reveal === null || !REVEALS.includes(reveal)) return;
-    started.add(el2);
-    if (reveal === "headline") {
-      const held = arrivalsOnScreen.get(doc);
-      if (!held) {
-        headline(el2);
-        return;
-      }
-      pending++;
-      let waiting = true;
-      const go = () => {
-        if (!waiting) return;
-        waiting = false;
-        held.delete(go);
-        pending--;
-        if (detached) headline(el2, true);
-        else headline(el2);
-      };
-      held.add(go);
-      finishers.push(go);
-    } else if (reveal === "emphasis") emphasis(el2);
-    else rule(el2);
-  };
+  return { rule };
+}
+var init_rule = __esm({
+  "js/effects/rule.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/count.js
+var count_exports = {};
+__export(count_exports, {
+  install: () => install4
+});
+function install4(ctx) {
+  const { doc, view, reduced, cleanups } = ctx;
   const countUp = (el2) => {
     const text = el2.textContent ?? "";
     const match = /-?[\d][\d\s.,\u00a0\u202f]*/.exec(text);
@@ -1111,44 +1036,22 @@ function attachEffects(root = document, options = {}) {
       rest();
     });
   };
-  const scan = (scope) => {
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
-    for (const el2 of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el2);
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
-      started.add(scope);
-      countUp(scope);
-    }
-    for (const el2 of scope.querySelectorAll(`[${HOOKS.count}]`)) {
-      if (started.has(el2)) continue;
-      started.add(el2);
-      countUp(el2);
-    }
-    looseMarks(scope);
-    done();
-  };
-  const onPreference = () => {
-    if (!reduced()) return;
-    for (const id of timers) clearTimeout(id);
-    timers.clear();
-    for (const id of frames) view?.cancelAnimationFrame(id);
-    frames.clear();
-    io?.disconnect();
-    io = null;
-    ioHeadline?.disconnect();
-    ioHeadline = null;
-    for (const cleanup of cleanups.splice(0)) cleanup();
-    for (const finish of finishers.splice(0)) finish();
-    pending = 0;
-    done();
-  };
-  if (query) query.addEventListener("change", onPreference);
-  const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
-  const arrivalRoutine = arrivalAsked === "" || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
-  const arrivalPerformed = (arrivalRoutine === "boot" || arrivalRoutine === "card") && Boolean(doc.body);
-  const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, "arrival");
-  if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, /* @__PURE__ */ new Set());
-  scan(root);
+  return { countUp };
+}
+var init_count = __esm({
+  "js/effects/count.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/caret.js
+var caret_exports = {};
+__export(caret_exports, {
+  install: () => install5
+});
+function install5(ctx) {
+  const { root, doc, view, rootStyle, cleanups, carets: carets2 } = ctx;
   const caret = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
     if (routine !== "block" || !view) return;
@@ -1159,8 +1062,8 @@ function attachEffects(root = document, options = {}) {
       )
     );
     for (const input of inputs) {
-      if (carets.has(input)) continue;
-      carets.add(input);
+      if (carets2.has(input)) continue;
+      carets2.add(input);
       const put = () => {
         if (!view) return;
         const cs = view.getComputedStyle(input);
@@ -1187,7 +1090,22 @@ function attachEffects(root = document, options = {}) {
       });
     }
   };
-  caret();
+  return { caret };
+}
+var init_caret = __esm({
+  "js/effects/caret.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/pointer.js
+var pointer_exports = {};
+__export(pointer_exports, {
+  install: () => install6
+});
+function install6(ctx) {
+  const { root, doc, html, view, reduced, rootStyle, frames, cleanups } = ctx;
   const pointerLight = () => {
     if (!view) return null;
     let lit = [];
@@ -1353,6 +1271,22 @@ function attachEffects(root = document, options = {}) {
       marked.clear();
     });
   };
+  return { pointerLight, pointerBus, pressBus };
+}
+var init_pointer = __esm({
+  "js/effects/pointer.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/measure.js
+var measure_exports = {};
+__export(measure_exports, {
+  install: () => install7
+});
+function install7(ctx) {
+  const { root, doc, view, rootStyle, cleanups } = ctx;
   const measure = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
     if (routine !== "live" || !view) return;
@@ -1396,9 +1330,23 @@ function attachEffects(root = document, options = {}) {
       }
     }
   };
-  pointerBus();
-  pressBus();
-  measure();
+  return { measure };
+}
+var init_measure = __esm({
+  "js/effects/measure.js"() {
+    "use strict";
+    init_effects();
+    init_strings();
+  }
+});
+
+// js/effects/marquee.js
+var marquee_exports = {};
+__export(marquee_exports, {
+  install: () => install8
+});
+function install8(ctx) {
+  const { doc, view, rootStyle, cleanups, root } = ctx;
   const marquee = () => {
     for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
       if (band.hasAttribute("data-kp-marquee-ready")) continue;
@@ -1430,7 +1378,39 @@ function attachEffects(root = document, options = {}) {
       cleanups.push(() => observer.disconnect());
     }
   };
-  marquee();
+  return { marquee };
+}
+var init_marquee = __esm({
+  "js/effects/marquee.js"() {
+    "use strict";
+    init_effects();
+  }
+});
+
+// js/effects/arrival.js
+var arrival_exports = {};
+__export(arrival_exports, {
+  install: () => install9
+});
+function install9(ctx) {
+  const {
+    state,
+    doc,
+    html,
+    view,
+    reduced,
+    rootStyle,
+    cfg,
+    cleanups,
+    finishers,
+    done,
+    announce,
+    later,
+    arrivalRoutine,
+    arrivalPerformed,
+    arrivalPlays,
+    arrivalsOnScreen: arrivalsOnScreen2
+  } = ctx;
   const arrival = () => {
     const routine = arrivalRoutine;
     if (!arrivalPerformed || !doc.body) return;
@@ -1440,8 +1420,8 @@ function attachEffects(root = document, options = {}) {
       return;
     }
     const release = () => {
-      const held = arrivalsOnScreen.get(doc);
-      arrivalsOnScreen.delete(doc);
+      const held = arrivalsOnScreen2.get(doc);
+      arrivalsOnScreen2.delete(doc);
       if (held) for (const go of [...held]) go();
     };
     const words = getStrings();
@@ -1478,7 +1458,7 @@ function attachEffects(root = document, options = {}) {
     overlay.append(line, ...bar ? [bar] : [], skip);
     doc.body.append(overlay);
     pace();
-    pending++;
+    state.pending++;
     let ended = false;
     let pct = 0;
     let removed = false;
@@ -1487,7 +1467,7 @@ function attachEffects(root = document, options = {}) {
       removed = true;
       overlay.remove();
       announce(html, "arrival", routine, false);
-      pending--;
+      state.pending--;
       release();
       done();
     };
@@ -1538,27 +1518,318 @@ function attachEffects(root = document, options = {}) {
     } else if (lines && lines.length > 0) lineStep();
     else step();
   };
-  arrival();
+  return { arrival };
+}
+var init_arrival = __esm({
+  "js/effects/arrival.js"() {
+    "use strict";
+    init_effects();
+    init_strings();
+  }
+});
+
+// js/effects.js
+var effects_exports = {};
+__export(effects_exports, {
+  ARRIVAL: () => ARRIVAL,
+  ARRIVALS: () => ARRIVALS,
+  BOOT_PROGRESS: () => BOOT_PROGRESS,
+  CARET_KNOB: () => CARET_KNOB,
+  COUNT_FROM_KNOB: () => COUNT_FROM_KNOB,
+  COUNT_KNOB: () => COUNT_KNOB,
+  DONE_ATTRIBUTE: () => DONE_ATTRIBUTE,
+  GLYPHS: () => GLYPHS,
+  HEADLINE_ROUTINES: () => HEADLINE_ROUTINES,
+  HOOKS: () => HOOKS,
+  KNOBS: () => KNOBS,
+  LIGHT: () => LIGHT,
+  LIGHT_FAR: () => LIGHT_FAR,
+  LIGHT_KNOB: () => LIGHT_KNOB,
+  LIGHT_REACH: () => LIGHT_REACH,
+  LIGHT_SELECTOR: () => LIGHT_SELECTOR,
+  MARQUEE_KNOB: () => MARQUEE_KNOB,
+  MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
+  MEASURE_KNOB: () => MEASURE_KNOB,
+  MEMO_PREFIX: () => MEMO_PREFIX,
+  POINTER: () => POINTER,
+  POINTER_KNOB: () => POINTER_KNOB,
+  PRESS: () => PRESS,
+  PRESS_KNOB: () => PRESS_KNOB,
+  REVEALS: () => REVEALS,
+  REVEAL_EVENT: () => REVEAL_EVENT,
+  REVEAL_STATE: () => REVEAL_STATE,
+  ROOT_ATTRIBUTE: () => ROOT_ATTRIBUTE,
+  ROUTINES: () => ROUTINES,
+  STATE: () => STATE,
+  SURFACES: () => SURFACES,
+  TEXT_ATTRIBUTE: () => TEXT_ATTRIBUTE,
+  TIMINGS: () => TIMINGS,
+  UNKNOWN_EVENT: () => UNKNOWN_EVENT,
+  attachEffects: () => attachEffects,
+  unknownEffects: () => unknownEffects
+});
+function unknownEffects() {
+  return [...unknownReported];
+}
+function attachEffects(root = document, options = {}) {
+  const doc = root.ownerDocument ?? /** @type {Document} */
+  root;
+  const html = doc.documentElement;
+  const manageRoot = options.manageRoot ?? true;
+  const view = doc.defaultView;
+  const query = view && typeof view.matchMedia === "function" ? view.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  const reduced = () => options.reduceMotion ?? (query ? query.matches : false);
+  const rootStyle = view ? view.getComputedStyle(html) : null;
+  const knob = (name, fallback2) => {
+    const n = rootStyle ? parseFloat(rootStyle.getPropertyValue(name)) : NaN;
+    return Number.isFinite(n) ? n : fallback2;
+  };
+  const cfg = {
+    threshold: options.threshold ?? knob("--kp-reveal-threshold", 0.6),
+    cps: options.cps ?? knob("--kp-decipher-cps", 26),
+    lead: knob("--kp-decipher-lead", 260),
+    swap: knob("--kp-decipher-swap", 0.5),
+    stagger: options.stagger ?? knob("--kp-reveal-stagger", 260),
+    delay: options.delay ?? knob("--kp-classified-delay", 1500),
+    // The word routines: ms between one word arriving and the next.
+    wordStagger: knob("--kp-word-stagger", 60),
+    // The card arrival: how long the word holds after its bar has run.
+    cardHold: knob("--kp-card-hold", 300)
+  };
+  if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
+  const timers = /* @__PURE__ */ new Set();
+  const frames = /* @__PURE__ */ new Set();
+  const cleanups = [];
+  const finishers = [];
+  const state = { detached: false, io: null, ioHeadline: null, pending: 0 };
+  const done = () => {
+    if (state.detached || state.pending > 0) return;
+    html.setAttribute(DONE_ATTRIBUTE, "");
+  };
+  const announce = (el2, reveal, routine, skipped) => {
+    el2.setAttribute(REVEAL_STATE, skipped ? "rest" : "played");
+    el2.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
+  };
+  const later = (fn, ms) => {
+    const id = setTimeout(() => {
+      timers.delete(id);
+      if (!state.detached) fn();
+    }, ms);
+    timers.add(id);
+  };
+  const routineOf = (el2, reveal) => view ? view.getComputedStyle(el2).getPropertyValue(ROUTINES[reveal]).trim() : "";
+  const memoKey = (el2, reveal) => {
+    if (reveal === "emphasis" && el2.matches("mark")) return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:loose`;
+    const id = el2.getAttribute("id");
+    const own = id || (el2.textContent ?? "").trim().slice(0, 64);
+    const siblings = id ? [] : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? "").trim().slice(0, 64) === own);
+    const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el2)}` : own;
+    return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:${kind}`;
+  };
+  const seen = (el2, reveal) => {
+    if (el2.getAttribute(HOOKS.revealEvery) === "load") return false;
+    try {
+      const key = memoKey(el2, reveal);
+      const storage2 = view?.sessionStorage;
+      if (!storage2) return false;
+      if (storage2.getItem(key)) return true;
+      storage2.setItem(key, "1");
+      return false;
+    } catch {
+      return false;
+    }
+  };
+  const reportUnknownRoutine = (el2, knob2, value, accepted) => {
+    const key = `${knob2}=${value}`;
+    if (!unknownReported.has(key)) {
+      unknownReported.add(key);
+      el2.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob2, value, accepted: [...accepted] } }));
+    }
+    return "";
+  };
+  const checkValues = (el2) => {
+    const pairs = [
+      [HOOKS.surface, SURFACES],
+      [HOOKS.reveal, REVEALS]
+    ];
+    for (const [hook, accepted] of pairs) {
+      const value = el2.getAttribute(hook);
+      if (value === null || accepted.includes(value)) continue;
+      const key = `${hook}=${value}`;
+      if (unknownReported.has(key)) continue;
+      unknownReported.add(key);
+      el2.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
+    }
+  };
+  const loaders = {
+    headline: () => Promise.resolve().then(() => (init_headline(), headline_exports)),
+    emphasis: () => Promise.resolve().then(() => (init_emphasis(), emphasis_exports)),
+    rule: () => Promise.resolve().then(() => (init_rule(), rule_exports)),
+    count: () => Promise.resolve().then(() => (init_count(), count_exports)),
+    caret: () => Promise.resolve().then(() => (init_caret(), caret_exports)),
+    pointer: () => Promise.resolve().then(() => (init_pointer(), pointer_exports)),
+    measure: () => Promise.resolve().then(() => (init_measure(), measure_exports)),
+    marquee: () => Promise.resolve().then(() => (init_marquee(), marquee_exports)),
+    arrival: () => Promise.resolve().then(() => (init_arrival(), arrival_exports))
+  };
+  const installed = {};
+  let ctx;
+  const use = (name) => installed[name] ??= loaders[name]().then((module) => module.install(ctx));
+  const arriving = [];
+  let present = null;
+  const run = (name, fn) => {
+    state.pending++;
+    const asked2 = present;
+    const arrived = use(name).then((hook) => {
+      if (state.detached) return;
+      if (asked2) asOf(root, asked2, () => fn(hook));
+      else fn(hook);
+    }).catch((error) => console.error(error)).finally(() => {
+      state.pending = Math.max(0, state.pending - 1);
+      done();
+    });
+    arriving.push(arrived);
+  };
+  const startOne = (el2) => {
+    if (started.has(el2)) return;
+    checkValues(el2);
+    const reveal = el2.getAttribute(HOOKS.reveal);
+    if (reveal === null || !REVEALS.includes(reveal)) return;
+    started.add(el2);
+    if (reveal === "headline") {
+      const held = arrivalsOnScreen.get(doc);
+      if (!held) {
+        run("headline", (hook) => hook.headline(el2));
+        return;
+      }
+      state.pending++;
+      let waiting = true;
+      const go = () => {
+        if (!waiting) return;
+        waiting = false;
+        held.delete(go);
+        state.pending--;
+        if (state.detached) use("headline").then((hook) => hook.headline(el2, true));
+        else run("headline", (hook) => hook.headline(el2));
+      };
+      held.add(go);
+      finishers.push(go);
+    } else if (reveal === "emphasis") run("emphasis", (hook) => hook.emphasis(el2));
+    else run("rule", (hook) => hook.rule(el2));
+  };
+  const scan = (scope) => {
+    if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
+    if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
+    for (const el2 of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el2);
+    if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
+      started.add(scope);
+      run("count", (hook) => hook.countUp(scope));
+    }
+    for (const el2 of scope.querySelectorAll(`[${HOOKS.count}]`)) {
+      if (started.has(el2)) continue;
+      started.add(el2);
+      run("count", (hook) => hook.countUp(el2));
+    }
+    if (scope instanceof Element && scope.matches("mark") || scope.querySelector("mark")) run("emphasis", (hook) => hook.looseMarks(scope));
+    done();
+  };
+  const onPreference = () => {
+    if (!reduced()) return;
+    for (const id of timers) clearTimeout(id);
+    timers.clear();
+    for (const id of frames) view?.cancelAnimationFrame(id);
+    frames.clear();
+    state.io?.disconnect();
+    state.io = null;
+    state.ioHeadline?.disconnect();
+    state.ioHeadline = null;
+    for (const cleanup of cleanups.splice(0)) cleanup();
+    for (const finish of finishers.splice(0)) finish();
+    state.pending = 0;
+    done();
+  };
+  if (query) query.addEventListener("change", onPreference);
+  const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
+  const arrivalRoutine = arrivalAsked === "" || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
+  const arrivalPerformed = (arrivalRoutine === "boot" || arrivalRoutine === "card") && Boolean(doc.body);
+  const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, "arrival");
+  if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, /* @__PURE__ */ new Set());
+  ctx = {
+    state,
+    root,
+    options,
+    doc,
+    html,
+    manageRoot,
+    view,
+    query,
+    reduced,
+    rootStyle,
+    knob,
+    cfg,
+    timers,
+    frames,
+    cleanups,
+    finishers,
+    done,
+    announce,
+    later,
+    routineOf,
+    memoKey,
+    seen,
+    reportUnknownRoutine,
+    checkValues,
+    startOne,
+    scan,
+    onPreference,
+    arrivalRoutine,
+    arrivalPerformed,
+    arrivalPlays,
+    started,
+    carets,
+    arrivalsOnScreen,
+    unknownReported
+  };
+  present = presentUnder(root);
+  scan(root);
+  const asked = (name) => rootStyle ? rootStyle.getPropertyValue(name).trim() : "";
+  if (asked(CARET_KNOB) === "block" && root.querySelector("input.kp-field__input")) run("caret", (hook) => hook.caret());
+  if (asked(POINTER_KNOB) === "track" || asked(PRESS_KNOB) === "point")
+    run("pointer", (hook) => {
+      hook.pointerBus();
+      hook.pressBus();
+    });
+  if (asked(MEASURE_KNOB) === "live" && root.querySelector(`[${HOOKS.reveal}='headline']`)) run("measure", (hook) => hook.measure());
+  if (root.querySelector(`[${HOOKS.marquee}]`)) run("marquee", (hook) => hook.marquee());
+  if (arrivalPerformed) run("arrival", (hook) => hook.arrival());
+  present = null;
   return {
+    // Every hook asked for so far has arrived and run [scope-117]. A
+    // reveal still plays over its own time after that; this is only the
+    // moment the code is in, which a caller that reads straight after
+    // attach — a test, a wrapper counting listeners — waits for.
+    get ready() {
+      return Promise.all(arriving).then(() => void 0);
+    },
     detach() {
-      if (detached) return;
-      detached = true;
+      if (state.detached) return;
+      state.detached = true;
       for (const id of timers) clearTimeout(id);
       timers.clear();
       for (const id of frames) view?.cancelAnimationFrame(id);
       frames.clear();
-      io?.disconnect();
-      io = null;
-      ioHeadline?.disconnect();
-      ioHeadline = null;
+      state.io?.disconnect();
+      state.io = null;
+      state.ioHeadline?.disconnect();
+      state.ioHeadline = null;
       for (const cleanup of cleanups.splice(0)) cleanup();
       query?.removeEventListener("change", onPreference);
       for (const finish of finishers.splice(0)) finish();
-      pending = 0;
+      state.pending = 0;
       if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
     },
     observe(element) {
-      if (detached) return;
+      if (state.detached) return;
       scan(element);
     }
   };
@@ -1567,7 +1838,7 @@ var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRI
 var init_effects = __esm({
   "js/effects.js"() {
     "use strict";
-    init_strings();
+    init_as_of();
     HOOKS = Object.freeze({
       surface: "data-kp-surface",
       reveal: "data-kp-reveal",
@@ -10846,6 +11117,7 @@ function themeMenuMarkup({
 
 // js/auto.js
 init_effects();
+init_as_of();
 var NEEDS = [
   {
     name: "components",
@@ -10914,20 +11186,6 @@ var NEEDS = [
 ];
 var READY_ATTRIBUTE = "data-kp-auto-ready";
 var carries = (root, selector) => root instanceof Element && root.matches(selector) || root.querySelector(selector) !== null;
-function asOf(root, present, attach) {
-  const all = root.querySelectorAll;
-  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
-  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
-  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
-  try {
-    return attach();
-  } finally {
-    delete /** @type {any} */
-    root.querySelectorAll;
-    delete /** @type {any} */
-    root.querySelector;
-  }
-}
 function attachAll(root = document) {
   restoreRemembered(root);
   const detaches = [
@@ -10943,7 +11201,7 @@ function attachAll(root = document) {
     /** @type {Document | Element} */
     root
   );
-  const present = new WeakSet(root.querySelectorAll("*"));
+  const present = presentUnder(root);
   let detached = false;
   const modules = [];
   const pending = [];

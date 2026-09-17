@@ -43,8 +43,11 @@ import { loadMap, ruleFor, selectorChains, vocabularyOf, withoutComments } from 
 const root = new URL('../', import.meta.url);
 export const CODE_VERSION = 'catalogue/code-version.json';
 
-/** The loader: when a module arrives, not what a block is [scope-116]. */
-export const NOT_A_BLOCK_INPUT = new Set(['js/auto.js']);
+/**
+ * The loader and what it attaches through: when a module arrives, not what a
+ * block is [scope-116, scope-117]. tests/auto-lazy.spec.mjs holds both.
+ */
+export const NOT_A_BLOCK_INPUT = new Set(['js/auto.js', 'js/as-of.js']);
 
 /**
  * Blocks whose component is drawn somewhere their markup does not show: a
@@ -182,7 +185,11 @@ export function codeVersion() {
 
     /** @type {Record<string, { modules: string[], families: Set<string> }>} */
     const components = {};
-    for (const file of [...files('js/', (n) => n.endsWith('.js')), ...files('components/', (n) => n.endsWith('.jsx'))]) {
+    for (const file of [
+        ...files('js/', (n) => n.endsWith('.js')),
+        ...files('js/effects/', (n) => n.endsWith('.js')),
+        ...files('components/', (n) => n.endsWith('.jsx')),
+    ]) {
         if (NOT_A_BLOCK_INPUT.has(file)) continue;
         const hit = ruleFor(file, map, vocabulary);
         if (!hit || hit.rule.none) continue;

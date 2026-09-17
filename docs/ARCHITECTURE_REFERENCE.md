@@ -39,12 +39,15 @@ js/components.js     contracts; sticky, menus   │ attaches nothing. Only
 js/overlays.js       dialogs, tabs, toasts,     │ js/auto.js has a side
                      whether an overlay scrolls │
 js/alarm.js          the full-screen alarm      │
-js/effects.js        the hooks, the marquee,    │ effect, by design
-                     the pointer bus and its    │
-                     light, the count           │
-
-                     the pointer and press      │
-                     buses, the count           │js/sidenav.js        the side navigation        │
+js/effects.js        the reveal core; fetches   │ effect, by design
+                     its hooks when asked       │
+js/effects/*.js      the hooks: headline, marks,│
+                     rule, count, caret, the    │
+                     pointer and press buses,   │
+                     measure, marquee, arrival  │
+js/as-of.js          a late module attaches to  │
+                     the page as it was asked   │
+js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │
 js/datatable.js      search, paging             │

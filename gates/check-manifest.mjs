@@ -176,6 +176,11 @@ export function references(source) {
     /** @type {string[]} */
     const out = [];
     for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) out.push(match[1]);
+    // A module fetched when asked for [scope-117]: `import('./effects/x.js')`
+    // in code, not the `import('./theme-registry.js')` of a JSDoc type, so
+    // the comments are blanked first.
+    const code = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+    for (const match of code.matchAll(/\bimport\(\s*'(\.[^']+)'\s*\)/g)) out.push(match[1]);
     for (const match of source.matchAll(/url\(\s*['"]?(\.[^'")]+)['"]?\s*\)/g)) out.push(match[1]);
     // A minified file names its source map the same way a stylesheet
     // names a font: the consumer who copies one copies the other, or the

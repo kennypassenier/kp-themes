@@ -699,6 +699,10 @@ or something one of those imports — and is not in the manifest. Add it to
 FILES in gates/checksums.mjs.
 ```
 
+"Something one of those imports" includes a module fetched with `import('./x.js')`
+since scope-117: the hooks in `js/effects/` are loaded that way, and a vendored
+copy without them loads a page whose reveals never arrive.
+
 For symptom→cause tables, the evidence trail behind each gate and what to
 do when the message is not self-explanatory, see
 [the debugging guide](DEBUGGING_GUIDE.md). For "the page looks wrong
