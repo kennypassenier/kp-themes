@@ -2057,3 +2057,15 @@ Jellyfin runs is recorded nowhere on this machine (searched `ansible/`,
 `homelab/`, `stacks/`), so reading them needs his permission for the media
 stack. fix-56 was not answered in that form and is asked again.
 step-timing "Akkoord".
+
+**scope-122 · Jellyfin in dark on Kenny's 10.11.11; a live Ratatui dashboard; a VS Code theme from cyberpunk.**
+Kenny, 2026-09-17, the Jellyfin form. jellyfin-read "Claude leest": two
+unauthenticated GETs on 10.10.10.6:8096 read Jellyfin **10.11.11** and a Custom
+CSS of the intro-skipper import, the ElegantFin import, `--skip-hide-duration:
+8s` and the ActorPlus badge rules. 10.11 has none of Jellyfin 12's variables, so
+the dark file is researched against that version: ElegantFin re-pointed at
+dark's tokens, or a standalone file (`research/jellyfin-dark/`). jellyfin-theme
+"dark". fix-56 "Klopt". His remarks: the Ratatui demo is "wel maar wat mager" —
+he wants real data in charts, machine stats and logs streaming with colours for
+timestamps and severity (added to `research/ratatui/demo`); and a VS Code theme
+from the themes, a demo on cyberpunk (`research/vscode/`). step-timing "Akkoord".
