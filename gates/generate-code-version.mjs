@@ -22,12 +22,23 @@ import process from 'node:process';
 const root = new URL('../', import.meta.url);
 export const CODE_VERSION = 'catalogue/code-version.json';
 
+/**
+ * The version is not a change to a block [scope-114]. `css/themes.css` and
+ * `js/theme-registry.js` carry `--kp-themes-version` and `VERSION`, and both
+ * are generated from the tokens that are digested per theme anyway; a release
+ * that only raises the number must not send all 3062 pairs back to Kenny. So
+ * a version string is read as `<version>` wherever it stands.
+ * @param {string | Buffer} text
+ */
+export const withoutTheVersion = (/** @type {string | Buffer} */ text) =>
+    String(text).replace(/(?<![\w.])v?\d+\.\d+\.\d+(?:-[\w.]+)?(?![\w.])/g, '<version>');
+
 /** @param {string[]} paths repository-relative, in a fixed order */
 const digestOf = (paths) => {
     const hash = createHash('sha256');
     for (const path of [...paths].sort()) {
         hash.update(`${path}\0`);
-        hash.update(readFileSync(new URL(path, root)));
+        hash.update(withoutTheVersion(readFileSync(new URL(path, root))));
         hash.update('\n');
     }
     return hash.digest('hex').slice(0, 32);

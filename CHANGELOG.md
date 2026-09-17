@@ -1,5 +1,55 @@
 # Changelog
 
+## 6.1.0 — 2026-09-17
+
+A minor: one new thing a consumer can use, twenty-two themes corrected
+where Kenny turned a block down, and a review cycle that finally answers
+the question it was built to answer.
+
+**New.**
+
+- **A component remembers what the reader set** (`scope-110`):
+  `data-kp-remember="<name>"` opts an element in and names its key, so two
+  of the same component on one page keep separate state. The side
+  navigation's groups and rail, the accordion, the tree, the split pane
+  and the data table's columns, sort and density are covered; dialogs,
+  popovers, menus, tooltips, toasts, the combobox, the date picker, the
+  wizard and the alarm deliberately are not — each is opened for a
+  moment, and a page that reopens one by itself argues with its reader.
+  `js/remember.js` paints the stored state back as the attributes an
+  author could have written, so every module goes on reading its own
+  markup; blocked storage leaves everything at its default.
+
+**Corrected.** Every one of these came from Kenny judging the catalogue,
+and each is in `docs/CORRECTIONS.md` with the measurement behind it.
+
+- Dark's halo is cut at the chamfer instead of squaring it (`fix-41`);
+  dark and titanium show one select arrow, not two (`fix-42`); dark's
+  buttons show a focus ring again, with eleven of the twenty-two themes
+  measured in the same sweep (`fix-38`).
+- Brutalism's alarm fits its frame at every size, and retro's alarm
+  speaks the theme's own body face (`scope-108`); retro's dialog no
+  longer overlaps its own title, close button and scrollbar.
+- A menu opens inside the box that clips it (`fix-39`), and brutalism's
+  over-the-page navigation stays off screen when it is closed (`fix-40`).
+- Sepia's ink washes, its retry border and its gestures; blueprint's
+  laurels; phantom's theme menu; synthwave's, terminal's and
+  high-contrast's page effects.
+
+**The review cycle.** Not shipped code, but it is why this release could
+be cut at all.
+
+- **The block hash is what a block is made of, not what it looks like**
+  (`scope-114`): its markup as written, the theme, and digests of the
+  code that shapes it. A verdict no longer follows the zoom, the window,
+  the focus, a typed value or the page a block is shown on — and a
+  version bump is not a change to a block.
+- **Nothing is released while an element is not approved** (`scope-107`),
+  counted by `npm run advice`; at this release, 3062 of 3062 block/theme
+  pairs carry an approval.
+- **One dialog for a whole round** (`scope-113`) and a page that says
+  whether the round is finished (`fix-48`, `catalogue/round.html`).
+
 ## 6.0.0 — 2026-09-12
 
 A major because four themes are gone and a fifth was replaced outright.
