@@ -29,8 +29,13 @@
 // `attachThemePickers` — plus `applyStoredTheme` for the no-flash boot.
 // Those live in `js/components.js`, `js/theme-picker.js` and
 // `js/no-flash.js`, and their closure adds `js/theme-core.js`,
-// `js/theme-registry.js` and `js/strings.js`. Six, and the gate proves
-// the closure is still exactly six rather than trusting the sentence.
+// `js/theme-registry.js` and `js/strings.js`. Six — seventeen since fix-56,
+// with js/effects.js and what it fetches — and the gate proves the closure
+// is still exactly the list rather than trusting the sentence.
+//
+// Drilled a third time on 2026-09-17: `js/effects.js` added to the list
+// alone, as chassis-rs has baked it since kp-themes 5.0.0 → ten files
+// reported outside the set (js/as-of.js and the nine hooks), exit 1.
 //
 // Drilled red before it was trusted (standing rule 7d), twice:
 //   1. `import { toast } from './overlays.js'` added to js/components.js
@@ -70,6 +75,23 @@ export const VENDORED = [
     'js/strings.js',
     // enforceContracts(), attachConfirmations(), attachSkipLinks().
     'js/components.js',
+    // attachEffects(): the caret, the arrivals and the reveals. chassis-rs
+    // has baked this one since its K15 (kp-themes 5.0.0, 2026-09-09) and the
+    // list did not follow [fix-56]; at 5.0.0 it imported strings.js only, so
+    // the closure held by luck. Since scope-117 it fetches its hooks with
+    // import() and attaches through js/as-of.js: chassis-rs bakes all eleven
+    // at its 7.0.0 upgrade, as MIGRATION.md's task for it says.
+    'js/effects.js',
+    'js/as-of.js',
+    'js/effects/headline.js',
+    'js/effects/emphasis.js',
+    'js/effects/rule.js',
+    'js/effects/count.js',
+    'js/effects/caret.js',
+    'js/effects/pointer.js',
+    'js/effects/measure.js',
+    'js/effects/marquee.js',
+    'js/effects/arrival.js',
 ];
 
 /**

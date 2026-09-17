@@ -35,9 +35,30 @@ the first time a page or a theme asks for them [scope-117]. Its handle carries
 A vendored copy of `js/effects.js` needs its hooks beside it: copy
 `js/effects/` and `js/as-of.js` with it, or the reveals, the caret and the
 arrival are fetched from a path that is not there and never arrive (the
-release's `SHA256SUMS` lists all eleven files). chassis-rs vendors
-`static/kp/js/effects.js` and lists it in `crates/chassis/src/shell/assets.rs`;
-those ten files join that list at its next kp-themes upgrade.
+release's `SHA256SUMS` lists all eleven files).
+
+**Task for chassis-rs, at its kp-themes 7.0.0 upgrade** [scope-119]. Nothing
+in chassis-rs calls `attachAll()`, and `chassis.js` reads nothing in the same
+tick as `attachEffects(document)`, so no code there changes. What changes is
+what the binary bakes:
+
+1. Copy ten more files from the release beside `static/kp/js/effects.js`,
+   keeping their paths: `static/kp/js/as-of.js` and
+   `static/kp/js/effects/{arrival,caret,count,emphasis,headline,marquee,measure,pointer,rule}.js`.
+2. Add one `ASSETS` entry per file in `crates/chassis/src/shell/assets.rs`,
+   `"kp/js/as-of.js"` and `"kp/js/effects/<hook>.js"`, `text/javascript;
+charset=utf-8`, `include_bytes!` as for `kp/js/effects.js`.
+3. Extend `vendored_javascript_imports_only_vendored_modules` there to read
+   `import('./…')` too. It reads lines that start with `import ` or `export `;
+   the hooks are loaded with `() => import('./effects/caret.js')` inside
+   `js/effects.js`, so today's test stays green with the ten files missing.
+   Drill it by leaving `kp/js/effects/caret.js` out of `ASSETS`.
+4. Measure in a browser on a kit page under the terminal theme: the focused
+   field's block caret appears, and the network log shows
+   `/static/kp/js/effects/caret.js` answered 200.
+
+kp-themes holds its half in `gates/check-closure.mjs`: the seventeen modules
+chassis-rs bakes at 7.0.0 import nothing outside themselves (fix-56).
 
 ```js
 import { attachEffects } from '@kp-soft/themes/js/effects';

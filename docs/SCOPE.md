@@ -2022,3 +2022,13 @@ beside it at its next upgrade (kyu and Almanac serve chassis-rs's copy).
 JobTracker imports React components and stylesheets from its pinned v5.0.0 and
 calls neither. The version stays 6.1.0 until the next form. fix-55 "Klopt";
 step-timing "Akkoord".
+
+**scope-119 · A task for chassis-rs first, then 7.0.0.** Kenny, 2026-09-17, the
+7.0.0 form (commit `db69a6fd`). release "Eerst een taak voor chassis-rs": no
+chassis-rs session was running, so the task lives where that session reads
+the release — MIGRATION.md, "Task for chassis-rs, at its kp-themes 7.0.0
+upgrade": ten files to bake, their `ASSETS` entries, its closure test taught
+`import()`, and a browser measurement. Writing it found fix-56: this
+repository's own record of what chassis-rs bakes still said six modules,
+while chassis-rs has baked `js/effects.js` since kp-themes 5.0.0. Then 7.0.0 is
+set up as chosen before. step-timing "Akkoord".

@@ -4092,3 +4092,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The manifest lists `js/` as a directory export, every file under it copied.
 
 **9 · When we review the measure.** When a module is loaded some other way than `import`.
+
+## fix-56 · The closure gate's record of what chassis-rs bakes was three versions stale (2026-09-17)
+
+**1 · What went wrong.** `gates/check-closure.mjs` lists the modules chassis-rs bakes into its binary and proves they import nothing else; it listed six, while chassis-rs has baked `js/effects.js` since its K15 at kp-themes 5.0.0 (`crates/chassis/src/shell/assets.rs:69`). With the effects split the gate passed although chassis-rs's copy would 404 on ten files. Measured: `js/effects.js` added to the list alone → "10 import(s) outside the vendored closure", exit 1.
+
+**2 · Which gate let it through.** None: the list is a record of another project's build, kept by hand, and the gate's own comment says it changes "only when they start" — nobody told it they had.
+
+**3 · Where the same fault sits.** The property: a list in this repository of what a consumer takes. Searched with `grep -rn "chassis-rs\|vendor" gates/*.mjs`: `check-closure.mjs` (stale, fixed); `checksums.mjs` lists every copyable file, derived from the exports, so it cannot fall behind; chassis-rs's own closure test reads static imports only (step 3 of its task in MIGRATION.md).
+
+**4 · How we prevent recurrence.** The list names all seventeen files chassis-rs bakes at 7.0.0, and MIGRATION.md's task for chassis-rs names this gate, so an upgrade that bakes a new file is written down on both sides.
+
+**5 · What the remedy costs.** Eleven lines in a list, and one sentence per future chassis-rs upgrade.
+
+**6 · Who enforces it.** Code: `check:closure` and the AR28 unit test (`VENDORED.length` 17). Keeping the list current is discipline, on the chassis-rs upgrade.
+
+**7 · How we measure it works, and when.** At chassis-rs's 7.0.0 upgrade: its `ASSETS` carry exactly the seventeen modules this list names, and its page loads the caret with no 404.
+
+**8 · If the measurement fails.** The gate reads chassis-rs's `assets.rs` list from a pinned copy committed here at each upgrade, instead of a hand-kept list.
+
+**9 · When we review the measure.** At the next file chassis-rs starts or stops baking.

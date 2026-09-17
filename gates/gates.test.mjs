@@ -434,7 +434,9 @@ test('AR28: the vendored modules import nothing outside themselves', () => {
         [...reached.keys()].filter((file) => !VENDORED.includes(file)),
         [],
     );
-    assert.equal(VENDORED.length, 6);
+    // Six until fix-56: chassis-rs bakes js/effects.js too, and since
+    // scope-117 the eleven files it takes to run.
+    assert.equal(VENDORED.length, 17);
 });
 
 test('AR28: the closure walk reads an import it must not miss', () => {
