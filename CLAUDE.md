@@ -16,7 +16,9 @@ theme: its sixteen decisions are `scope-29` to `scope-44` in
 [docs/CYCLE.md](docs/CYCLE.md) — Bouwen → Kijken → Uitrol.
 
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
-vendor a copy of `css/themes.css`), kp-soft (via its queue item #21).
+vendor a copy of `css/themes.css`), kp-soft (via its queue item #21), and
+`~/Projects/kp-tui` from 2026-09-17, which vendors `tui/palette.rs`
+[scope-128].
 
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
@@ -56,8 +58,8 @@ Kenny.
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Current phase       | **Round eight, layer 3 (tests, tags, gates, drift, purge).** Every approved fix from the catalogue so far is on the branch: gap-11, gap-12, gap-13, the switch, the data table round, the nostromo notes (scope-54 to scope-60) and held-60 (`e387f11`). Changed blocks return to the review page on their own for Kenny to judge again                     |
 | Last completed gate | **Phase 0, 2026-09-13.** The scope form of round eight, all sixteen items answered                                                                                                                                                                                                                                                                          |
-| Next gate           | the install form: the Jellyfin key, the VS Code steps, how kp-tui starts, and the anatomy in the demo [scope-127]                                                                                                                                                                                                                                           |
-| Next action         | waiting on Kenny: the install form; all 22 anatomies and Reveal::Words are on round-six (cbe17c06)                                                                                                                                                                                                                                                          |
+| Next gate           | the widgets form: Jellyfin, which widgets move to kp-tui first, and the 22 themes Kenny has now seen [scope-128]                                                                                                                                                                                                                                            |
+| Next action         | waiting on Kenny: the widgets form; the suite over the TUI palette is green (1645 passed, 3 skipped, 12.7m)                                                                                                                                                                                                                                                 |
 | Open queue items    | Twenty-three, in docs/MINI_ROUNDS.md: `step-2`, `gap-9`, `gap-10`, `fix-9-M1`, `HA4`, `KT6-M1`, `fix-16-M1` to `fix-18-M1`, `fix-32-M1`, `fix-36-M1`, `fix-38-M1` to `fix-42-M1`, `fix-45-M1` to `fix-51-M1`; none is Claude's to close before its named moment                                                                                             |
 | Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                                                                             |
 | Step timing         | `step-timing: required` — every form carries a measured item `step-timing · …` from `~/Projects/dev-procedure/hooks/step-timing.py`; `hooks/form-lint.py` refuses a form without it [scope-69]; durations are written in minutes and seconds, and in hours past sixty minutes [scope-80]; it names what each agent worked on beside its duration [scope-83] |
