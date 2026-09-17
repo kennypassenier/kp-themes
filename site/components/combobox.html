@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html" aria-current="page">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -217,19 +219,29 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-backspace-removes</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-chosen</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-close-on-blur</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-combobox</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-combobox-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-combobox-empty</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-combobox-status</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-creatable</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-debounce</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-disabled</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-disabled</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-duplicates</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-empty-row</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-loop</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-match</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-tags</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-open-on-focus</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-option</code></td><td>prose, selector</td></tr>
+                            <tr><td><code>data-kp-option</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-overlay-side</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-remove-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-select</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-select-all</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-select-attached</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-select-list</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-select-row</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-stay-open</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-tag-list</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-tag-remove</code></td><td>selector</td></tr>
@@ -260,7 +272,7 @@
                             <tr><td><code>match</code></td><td><code>keyof typeof MATCHERS | Matcher</code></td><td>optional</td><td>Default substring.</td></tr>
                             <tr><td><code>openOnFocus</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
                             <tr><td><code>closeOnBlur</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
-                            <tr><td><code>backspaceRemoves</code></td><td><code>boolean</code></td><td>optional</td><td>Default true.</td></tr>
+                            <tr><td><code>backspaceRemoves</code></td><td><code>boolean</code></td><td>optional</td><td>Backspace in an empty field removes the last tag. Default false since 2026-09-13: a stray Backspace took a chosen tag away; each tag's remove button is the way out.</td></tr>
                             <tr><td><code>stayOpen</code></td><td><code>boolean</code></td><td>optional</td><td>Keep the list open after adding a tag. Default true.</td></tr>
                             <tr><td><code>maxTags</code></td><td><code>number</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>allowDuplicates</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
@@ -268,6 +280,7 @@
                             <tr><td><code>clearable</code></td><td><code>boolean</code></td><td>optional</td><td>A clear button on the combobox.</td></tr>
                             <tr><td><code>loop</code></td><td><code>boolean</code></td><td>optional</td><td>Arrow keys wrap. Default true.</td></tr>
                             <tr><td><code>loading</code></td><td><code>boolean</code></td><td>optional</td><td>Says so in the status line instead of a count.</td></tr>
+                            <tr><td><code>emptyRow</code></td><td><code>boolean</code></td><td>optional</td><td>A query that matches nothing keeps the list open with a &quot;no results&quot; row. Default true [gap-11].</td></tr>
                             <tr><td><code>name</code></td><td><code>string</code></td><td>optional</td><td>A hidden input carries the value(s) for a plain &lt;form&gt;.</td></tr>
                             <tr><td><code>placeholder</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>disabled</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
@@ -295,7 +308,12 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-combobox-gap</code></td><td><code>0.375rem</code></td></tr>
                             <tr><td><code>--kp-combobox-list-max-height</code></td><td><code>15rem</code></td></tr>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-control-line-height</code></td><td><code>1.25</code></td></tr>
+                            <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>

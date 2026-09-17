@@ -76,13 +76,10 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        line-height: 1.08;
         margin: 0;
     }
 
     [data-theme='deco'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         max-width: 18ch;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -221,9 +218,11 @@
 
     [data-theme='deco'] .kp-nav {
         background: var(--sidebar-background);
-        padding-block: 0.9rem;
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='deco'] .kp-nav__brand {
@@ -243,10 +242,9 @@
 
     [data-theme='deco'] .kp-nav__link {
         display: inline-block;
-        padding: 0.5rem 0.7rem;
+        padding-inline: 0.7rem;
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.8rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border-bottom: 1px solid transparent;
@@ -297,12 +295,24 @@
         min-width: 11rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='deco'] .kp-nav__menu a {
         display: block;
-        padding: 0.4rem 0.5rem;
+        padding-inline: 0.5rem;
         color: var(--popover-foreground);
         text-decoration: none;
-        font-size: 0.82rem;
         border-radius: 0;
     }
 
@@ -340,10 +350,6 @@
     [data-theme='deco'] .kp-button--lg {
         font-size: 0.95rem;
         padding-inline: 1.7rem;
-    }
-
-    [data-theme='deco'] .kp-button {
-        min-block-size: 2.9rem;
     }
 
     [data-theme='deco'] [data-kp-surface='hero'] .kp-row > .kp-button {
@@ -429,7 +435,6 @@
     /* ── Fields ────────────────────────────────────────────────────────── */
 
     [data-theme='deco'] .kp-field__label {
-        font-size: 0.78rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -444,7 +449,14 @@
         background: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        padding: 0.6rem 0.7rem;
+        padding-inline: 0.7rem;
+    }
+
+    /* The field and the combobox take their height from the package
+       [scope-80]; the search box and the palette keep their own. */
+    [data-theme='deco'] .kp-datatable__search,
+    [data-theme='deco'] .kp-palette__input {
+        padding-block: calc(var(--kp-space-sm) * 1.2);
     }
 
     [data-theme='deco'] .kp-field__input:focus-visible,
@@ -467,7 +479,6 @@
     }
 
     [data-theme='deco'] .kp-field__help {
-        font-size: 0.72rem;
         color: var(--muted-foreground);
     }
 
@@ -482,6 +493,16 @@
     [data-theme='deco'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: 0;
+    }
+
+    /* The switch [gap-11]: square, like every deco field, on its ground. */
+    [data-theme='deco'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-switch__input:not(:checked) {
+        background: var(--background);
     }
 
     [data-theme='deco'] .kp-form__summary {
@@ -502,7 +523,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        font-size: 1.3rem;
     }
 
     [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] {
@@ -574,12 +594,54 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        font-size: 1.2rem;
     }
 
     [data-theme='deco'] .kp-toast {
         background: var(--popover);
         border-color: var(--border-strong);
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='deco'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='deco'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='deco'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='deco'] .kp-toast--destructive,
+    [data-theme='deco'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='deco']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='deco'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
     }
 
     [data-theme='deco'] .kp-toasts {
@@ -644,7 +706,6 @@
     [data-theme='deco'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -696,10 +757,6 @@
         border-radius: 0;
     }
 
-    [data-theme='deco'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     /* The track is --border (the quiet hairline, not the gold boundary):
    --border-strong shares the gold hue with --primary and reads as one
    ring turning, not a head against a track [KT8]. */
@@ -748,6 +805,22 @@
         border-radius: 0;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='deco'] .kp-table {
@@ -778,6 +851,15 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    /* Compact reaches the search box [gap-13]: the well's padding above is
+     * a literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='deco'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='deco'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.35rem;
     }
 
     [data-theme='deco'] .kp-datatable__bar {
@@ -822,6 +904,20 @@
 
     [data-theme='deco'] .kp-tree {
         font-family: var(--theme-font-body);
+    }
+
+    /* The accordion [gap-12]: the spaced capitals of its tabs, the primary colour for what is open. */
+    [data-theme='deco'] .kp-accordion__summary {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-accordion__summary::marker {
+        color: var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='deco'] .kp-reorder {
@@ -920,11 +1016,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='deco'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='deco'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='deco'] .kp-combobox,
@@ -1119,7 +1215,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='deco'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         font-family: var(--theme-font-display);
         letter-spacing: 0.24em;
@@ -1244,5 +1342,94 @@
     [data-theme='deco'] .kp-button:hover:not(:disabled)::before,
     [data-theme='deco'] .kp-button:focus-visible::before {
         opacity: 1;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='deco'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): small widely spaced capitals in the muted
+       ink, a gilt hairline under them and the primary ink when pointed at.
+       The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: var(--border-strong);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A marquee gone dark: the headline in its red with wide spacing, a gold double frame, gold bars and a gold glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='deco'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 3px double var(--primary);
+        --kp-alarm-title-tracking: 0.12em;
+    }
+
+    [data-theme='deco'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        content: none;
     }
 }

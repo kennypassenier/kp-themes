@@ -3,7 +3,7 @@
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Brutalism is
 > the fifth theme lifted in 5.0.0 (S48, LIFT_PLAN row 5). The research
-> behind it is §12 of [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md);
+> behind it is §12 of [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md);
 > the concept demo Kenny approved on 2026-09-08 is "Hard Copy".
 
 ## The idea
@@ -82,7 +82,7 @@ white with the line and the shadow. One answer per component root (56 of
 Kenny's rule of 2026-09-08 is that an approved demo is implemented
 exactly, and that a test or a gate which disagrees produces a finding for
 him rather than a quiet change. The audit of this theme against its demo
-is `docs/audits/DEMO_FIDELITY_BRUTALISM_2026-09-08.md`; every deviation it
+is `docs/archive/audits/DEMO_FIDELITY_BRUTALISM_2026-09-08.md`; every deviation it
 found was put to him, and every one he answered "Demo exact" is built.
 What is left is named here, with its reason.
 

@@ -107,9 +107,9 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 | `titanium` | Titanium | yes |
 
 Eleven of these are the set 3.0.0 shipped; the thirteen from `solstice`
-on arrived in 3.1.0, chosen and researched in `THEME_CANDIDATES.md`;
+on arrived in 3.1.0, chosen and researched in `docs/archive/THEME_CANDIDATES.md`;
 `synthwave` is 5.0.0's, the first theme lifted after cyberpunk on the
-research in `RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
+research in `docs/archive/RESEARCH_2026-09.md` (LIFT_PLAN row 1); `phantom` is the
 second, rebuilt from its approved demo "Calling Card" (row 2); `retro`
 is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
@@ -252,6 +252,33 @@ Framework-free, the same markup by hand:
 <span class="kp-badge" data-kp-semantic data-status="offer">Aanbod</span>
 ```
 
+**A label beside an icon.** `.kp-button__text` is public API: the
+element that holds the words of a button label which also holds an icon
+or any other element. Use it whenever the label is more than bare text;
+a label of text alone needs none. The icon stays a hidden sibling.
+
+Why it exists: retro underlines the first letter of a label when the
+button is pointed at — its accelerator key, the way a menu bar marks one —
+and CSS cannot tell a bare run of text from the icon beside it. Without
+the element, retro's underline never finds that letter next to an icon.
+No other theme styles it, so in the button's flex row it lays out exactly
+as the bare text did. A label that marks its own letter with
+`data-kp-key` is left as written.
+
+In framework-free markup you write it yourself. `<Button>` wraps each run of text it is given
+beside an element in `.kp-button__text`, and the generated framework-free
+examples do the same [scope-83, scope-85].
+
+```html
+<button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+```
+
+```jsx
+<Button>
+    <span aria-hidden="true">↻</span> Retry
+</Button>
+```
+
 **A badge that only ever holds a label.** Five components share one rule
 that lets an unbroken value break rather than push the page sideways:
 `.kp-button`, `.kp-badge`, `.kp-tag`, `.kp-health` and `.kp-copyable` all
@@ -345,6 +372,153 @@ tab list its roving tabindex:
 The keyboard behaviour is the browser's, not ours: `<dialog>` traps focus,
 closes on Escape and returns focus to whatever opened it. A hand-written
 focus trap is how focus traps break, so there is none here.
+A dialog opened by a `data-kp-dialog` trigger or the React `Dialog` opens
+at the top every time, the dialog and its `.kp-dialog__body` scrolled back
+to 0, unless the element it focuses lies further down [scope-96].
+
+Both channels also say whether an overlay's box scrolls: `attachScrollbars`
+(in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and
+`Tooltip`) keeps `data-kp-popover-overflowing` on a `.kp-popover`, `.kp-dialog` or
+`.kp-dialog__body` while its content is taller than the box, with
+`--kp-scroll-view`, `--kp-scroll-ratio` and `--kp-scroll-progress` beside it.
+It draws nothing. A register that draws its own scrollbar reads them —
+retro does, the 1995 bar disabled until the box scrolls — and declares
+`--kp-scrollbar-size`, `--kp-scrollbar-inset` and `--kp-scrollbar-button`
+so a press on the drawn arrows, track and thumb scrolls the box.
+
+## The alarm [scope-94]
+
+Bigger than a toast: a full-screen dramatic alert with a code line, one huge
+word, the reason under it and one way out, over a plate that takes the whole
+window. It opens as a modal `<dialog role="alertdialog">`, so the page behind
+it cannot be clicked or tabbed to until it is dealt with, and focus goes back
+to the trigger when it closes. Every theme draws it in its own colours and
+faces: the plate, the ink, the frame and the bars come from each theme's
+tokens, and each register adds its voice (retro's 1995 error window,
+terminal's reversed phosphor, brutalism's slammed stamp, grotesk's red
+poster).
+
+From a script, `showAlarm()` resolves with why it closed — `'ack'`,
+`'timeout'` or `'escape'`:
+
+```js
+import { showAlarm } from '@kp-soft/themes/js/alarm';
+
+const reason = await showAlarm({
+    title: 'Access denied',
+    code: 'Security protocol 7 · lockout',
+    detail: 'Three failed attempts on terminal 4. This console is locked for ten minutes.',
+    mode: 'ack', // 'ack': only its button closes it · 'auto': closes after `seconds`
+    seconds: 8, // auto only
+    escape: false, // ack only: may Escape close it too
+    action: 'Acknowledge', // the button's label; the dictionary's alarmAction by default
+});
+```
+
+- **`mode: 'ack'`** — only the button closes it: a click, Enter or Space.
+  Escape does nothing unless `escape: true`, and a click on the plate never
+  closes it.
+- **`mode: 'auto'`** — it closes by itself after `seconds`, with a bar that
+  shrinks towards the start. Escape closes it. The alarm focuses itself, so
+  an Enter meant for the page presses nothing; the first Tab reaches **Keep
+  open**, which stops the clock and turns it into an acknowledged alarm.
+
+From markup, `attachAlarms()` (in `attachAll`, so `js/auto.js` does it)
+wires a button whose attributes describe the alarm. The close event,
+`kp-alarm-close` with `{ reason }`, is dispatched on the button:
+
+```html
+<button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-alarm="Connection lost"
+    data-kp-alarm-code="Telemetry"
+    data-kp-alarm-detail="The link to pump house 4 dropped."
+    data-kp-alarm-mode="auto"
+    data-kp-alarm-seconds="6"
+>
+    Test the timed alarm
+</button>
+```
+
+In React, `<Alarm open title=… onClose={(reason) => …} />` when the state
+lives in the component, or `useAlarm()` when the alarm is a question with an
+answer:
+
+```jsx
+import { useAlarm } from '@kp-soft/themes';
+
+function Console() {
+    const [showAlarm, alarm] = useAlarm();
+    const lock = async () => {
+        const reason = await showAlarm({ title: 'Access denied', mode: 'auto', seconds: 6 });
+        console.log(reason);
+    };
+    return (
+        <>
+            <button type="button" className="kp-button" onClick={lock}>
+                Lock
+            </button>
+            {alarm}
+        </>
+    );
+}
+```
+
+The words the alarm adds itself — the button's default label, Keep open,
+the key hint, the countdown and the sentence a screen reader hears once —
+come from `js/strings.js` (`alarmAction`, `alarmKeepOpen`, `alarmHint`,
+`alarmCountdown`, `alarmClosesBy`, `alarmPressTo`, `alarmKeptOpen`), per
+alarm through `strings` in both channels.
+
+Motion runs only when the reader has not asked for less: the plate fades in,
+the headline flickers in and decodes letter by letter, a split copy slices
+through it, the glow breathes and the bars march, all under two flashes a
+second, measured from rendered frames in `tests/alarm.spec.mjs`. Under
+reduced motion nothing moves, and the bar steps a whole second at a time.
+`data-kp-alarm-inline` holds a frame open in the flow of a page for a style
+guide; the knobs (`--kp-alarm-ground`, `--kp-alarm-ink` and the rest) are
+listed on the alarm's documentation page.
+
+## The date picker's month and year grids [scope-89]
+
+The calendar's title is a button in both channels. Pressing it (a click,
+Enter or Space) swaps the days for the twelve months of the shown year,
+the shown month marked and focused; in that grid the title is the year,
+and pressing it shows twelve years, the block that holds the shown year.
+Previous and next move by a month over the days, by a year over the
+months and by twelve years over the years. Choosing a year returns to its
+months, choosing a month returns to its days; neither changes the value
+in the field — only a day does.
+
+The keys are the day grid's, one size up: the arrows move by a cell and a
+row (three cells a row) and cross into the next year or block at the
+edge, Home and End go to the ends of the row, PageUp and PageDown move by
+twelve, and one cell is the tab stop. Escape steps back one grid, to where
+the calendar was when that grid opened; from the days it still closes the
+calendar. A month or year that lies wholly before `min` or after `max`
+(`data-kp-min`, `data-kp-max`) is disabled the way a day is: in the grid,
+`aria-disabled`, and no way in. The disabled weekdays and
+`isDateDisabled` decide days only.
+
+Nothing is needed to style them. A month or year cell carries
+`.kp-datepicker__day`, `aria-selected` and `aria-disabled` like a day, so
+every register that paints days paints them; the grid says which it is
+with `data-kp-view="days" | "months" | "years"`, and a cell with
+`data-kp-month="2026-09"` or `data-kp-year="2026"`. While the months or
+years show, the panel keeps the size the days had: the module writes the
+day view's measured size as inline minimums on the panel and the grid,
+and removes them when the days return.
+
+The words come from the dictionary: `chooseMonth` and `chooseYear` name
+the title button (the words it shows, then what it opens),
+`previousYear`, `nextYear`, `previousYears`, `nextYears` name the arrows,
+`monthGrid` and `yearGrid` name the grids and are said through a polite
+live region when one opens, `yearRange` is the year grid's title, and
+`monthsShort` fills the month cells — a full "September" ran out of a
+third of the grid in eleven themes. Under a non-English `lang` the short
+names come from `Intl`; a consumer who set `months` but not `monthsShort`
+sees their own full names in the cells.
 
 ## Showing data [TH33]
 
@@ -474,6 +648,312 @@ stopped counting: `min-inline-size: 100%` gives you the whole parent
 (measured: 800px in a flex row) and still zero as an inline-block, and
 `min-content` gives zero. Pick the floor you want to see.
 
+**The data table's bars are inset.** The search bar above a
+`.kp-datatable` and the status-and-pager bar below it carry their own
+padding, so in a theme that frames the table the row count does not sit
+on the frame. Two knobs move it, the block half and the inline half, on
+the table or anywhere above it:
+
+```css
+.my-report .kp-datatable {
+    --kp-datatable-bar-padding-block: 0.25rem; /* default var(--kp-space-sm) */
+    --kp-datatable-bar-padding-inline: 1.5rem; /* default var(--kp-space-md) */
+}
+```
+
+The filter panel, the pills, the action bar, the loading slot and the
+card layout's sort control take the same inset. The pager's Previous and
+Next are the theme's own button (`kp-button`; `pagerClassName` in
+`attachDataTables`, `classNames.pagerButton` on `<DataTable>`), and
+Previous carries `data-kp-direction="back"`, which a theme may answer —
+cyberpunk turns its notch to that side.
+
+## Eight more things a data table does [Kenny, 2026-09-13 and 2026-09-14]
+
+Each is off until the markup (or a prop) asks for it, each keeps its
+state in the handle `attachDataTables()` returns (`dataTable(element)`
+finds it again), and each looks the way its approved mock in the data
+table research demo did. The catalogue's Tables page shows every one live.
+
+### Sorting on more than one column
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-sort-multi>
+    …
+    <th data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical" aria-sort="descending" data-kp-sort-priority="1">Severity</th>
+    <th data-kp-sort="number" aria-sort="descending" data-kp-sort-priority="2">Hours open</th>
+</div>
+```
+
+A plain click sorts on that column alone. **Shift** + click — or Shift +
+Enter on a focused header — adds the column as the next key, a second
+one turns it round, a third takes it out. Each sorted header carries its
+`aria-sort` and, with two keys or more, its place in a small ring
+(`.kp-datatable__sort-order`); a line in the top bar says the whole sort in
+words, from `strings.tableSortedBy` and `strings.tableSortKey`. Headers the
+server rendered with `aria-sort` open sorted, in the order
+`data-kp-sort-priority` gives; a button with `data-kp-datatable-sort-reset`
+puts that opening sort back. A new sort goes to the first page.
+
+The handle: `sortBy([{ column, direction }, …])` sets every key, and
+`view().sorts` reads them (`view().sort` is still the first).
+`kp-datatable-sort` still announces the first key. React:
+`multiSort`, and `sorts` / `defaultSorts` / `onSortsChange` with
+`{ key, direction }` entries; `sort` and `onSortChange` keep working and
+hear the first key. Knobs: `--kp-datatable-sort-order-radius`,
+`--kp-datatable-sort-order-size`.
+
+### Choosing which columns show
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-column-menu>
+    …
+    <th>Reference</th>
+    <th data-kp-column-hidden>Note</th>
+</div>
+```
+
+A **Columns** button in the top bar (made when the markup has no top bar)
+opens a `.kp-menu` on a `.kp-popover`, anchored under the button, with one
+of the theme's checkboxes per column and **Show every column** at the
+end; beside the button the count says how many show. A column hides with
+its header and its cells together. The key column — the first that is not
+a column of checkboxes or expand buttons — is locked and says so;
+`data-kp-column-locked` locks another, `data-kp-column-locked="false"`
+unlocks the key column. `data-kp-column-hidden` starts a column hidden.
+
+The handle: `hideColumns([indices])`, `view().hidden`, and the
+`kp-datatable-columns` event with `{ hidden }`. React: `columnMenu`,
+`hiddenColumns` / `defaultHiddenColumns` / `onHiddenColumnsChange` by
+column key, and `locked` on a column (the first by default).
+
+### Rows that open to show more
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-expandable>
+    …
+    <tbody>
+        <tr data-kp-row-key="INC-4471" data-kp-expanded>…</tr>
+        <tr data-kp-row-detail hidden>
+            <td colspan="6">The whole note, the owner, the history…</td>
+        </tr>
+    </tbody>
+</div>
+```
+
+The detail is yours: a `tr data-kp-row-detail` straight after its row, or
+a `detail: (row) => Node | string` option that builds it the first time
+the row opens, or — with neither — the `kp-datatable-expand` event, whose
+`cell` you fill. The table puts a column in front (its header read by a
+screen reader only, `strings.tableDetailsColumn`) with a button per row:
+`aria-expanded`, `aria-controls` on the detail, a name from
+`strings.tableRowDetails`, Enter and Space from the keyboard. Column
+indices the handle takes count that column. An open row keeps its detail
+directly under it through a sort and onto another page, and the detail
+spans every visible column. `data-kp-expanded` opens a row from the start;
+buttons with `data-kp-datatable-expand-all` and
+`data-kp-datatable-collapse-all` open or close the page's rows.
+
+The handle: `expand([keys])`, `view().expanded`. React: `renderDetail`,
+`rowExpandable`, `expanded` / `defaultExpanded` / `onExpandedChange`,
+`expandGlyph` and `collapseGlyph` (▸ and ▾; `expandGlyph` and
+`collapseGlyph` as attach options). Knobs:
+`--kp-datatable-detail-padding-block`, `--kp-datatable-expand-size`.
+
+### A first column that stays
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-fixed-columns data-kp-max-height="22rem">…</div>
+```
+
+Scrolled sideways, the key column — and every column of checkboxes or
+expand buttons before it — stays at the left edge; `data-kp-fixed-columns="2"`
+names a count instead. With a max height the box scrolls both ways and the
+header stays too, with the corner above both. The script measures the
+columns and writes `data-kp-fixed` and `--kp-datatable-fixed-start` on
+their cells (`syncFixedColumns(table, count)` does it for a table of your
+own); the stylesheet sticks them on an opaque ground,
+`--kp-datatable-fixed-ground` (the header's ground by default), and the
+last fixed column draws a hairline, `--kp-datatable-fixed-rule` and
+`--kp-datatable-fixed-rule-width`. In the card layout nothing is fixed.
+React: `fixedColumns` (`true`, or a count).
+
+A header that stays (any `data-kp-max-height`, or React's `maxHeight`)
+stands on `--kp-datatable-head-ground` (the page's `--background` by
+default). While its box is scrolled away from the top, the script sets
+`data-kp-scrolled` on the data table (`watchScrolled(element, box)` does it
+for a table of your own) and the header's ground then reaches 2px above
+the header, `--kp-datatable-head-reach`, so no sliver of a row shows over
+it mid-scroll. Under the same attribute the box clips its own top edge
+(`clip-path`, top side only, not while it has a keyboard focus ring), so
+row text cannot paint a device pixel above it on a zoomed screen. At the
+top the attribute goes and so do the reach and the clip, which
+leaves a caption right above the header untouched; without script there
+is no reach at all.
+
+### Rows that come from a server
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-server data-kp-page-size="25">
+    …
+    <th data-kp-sort="text" data-kp-field="ref">Reference</th>
+    <th data-kp-sort="number" data-kp-field="hours" data-kp-cell-class="kp-text-end kp-numeric">Hours open</th>
+</div>
+```
+
+```js
+attachDataTables(document, {
+    load: async ({ query, sorts, filters, page, pageSize, signal }) => {
+        const response = await fetch(`/api/incidents?${params}`, { signal });
+        const { rows, total } = await response.json();
+        return { rows, total };
+    },
+});
+```
+
+The table searches, sorts, filters and pages nothing itself: every change
+asks `load` — or, without the option, whoever answers the
+`kp-datatable-request` event through its `respond(answer)` and
+`fail(error)` — for one page, and shows the rows and the `total` it
+answers. `rows` are table rows or plain objects; an object's cells are
+read through each header's `data-kp-field`, wear the header's
+`data-kp-cell-class`, and its key is the field `data-kp-row-key-field`
+names (else the key column's field, else `key` or `id`; a `rowKey`
+option decides otherwise). The search waits 300 ms after the last key
+(`data-kp-debounce`). An answer to a request that is no longer the newest
+is thrown away, and the older request's `signal` is aborted. While it
+waits the old rows stay, dimmed, and the status shows the theme's spinner;
+a first load with no loading slot of yours shows three skeleton rows; a
+failed answer shows the failed slot — made, with **Try again**, when the
+markup has none — and Try again asks again. A server-rendered first page
+with `data-kp-total` is shown without asking. Selected keys outlive the
+page they were ticked on.
+
+The handle: `reload()`. React: `load` with the same request (column keys
+instead of indices), `rows` then left out, `debounceMs` 300 by default, and
+`apiRef.current.reload()`; `totalRows` still serves a table whose page you
+fetch yourself.
+
+### Editing a value in its cell
+
+```html
+<th data-kp-edit="text" data-kp-edit-required>Site</th>
+<th data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+<th data-kp-edit="number" data-kp-edit-min="0">Hours open</th>
+<th data-kp-edit="date">Opened</th>
+```
+
+```js
+table.addEventListener('kp-datatable-edit', (event) => {
+    const { key, label, value, previous, reject, waitUntil } = event.detail;
+    if (label === 'Hours open' && Number(value) > 100) reject('No more than 100 hours.');
+    else waitUntil(save(key, label, value)); // resolve to a string or false to refuse
+});
+```
+
+Every value in an editable column becomes a button with a dashed
+underline and a pencil (`.kp-datatable__edit`; `--kp-datatable-edit-rule`,
+`--kp-datatable-edit-glyph`, a paint that stays out of the value). Pressing
+it opens the package's own control in the cell, in the compact density: a
+field, a number field, the drawn select, or the date picker. Enter saves
+(on a select, Enter on the open list takes the highlighted option and
+saves), moving away saves, Escape cancels. A required value that is empty,
+or a number that is not one, shows the field's error and saves nothing.
+Before saving, the table fires `kp-datatable-edit` (cancelable) and calls
+the `onEdit` option; `reject(message)`, `preventDefault()`, or a string or
+false from `waitUntil` or `onEdit` refuses the value and the cell shows the
+message. A saved value is written into the cell — into its badge, where
+the cell holds one — and a line under the table says what changed, with
+**Undo**, which asks again with `undo: true`. The focus returns to the
+cell.
+
+The handle: `edit(key, column)` and `cancelEdit()`. React: `edit`,
+`editOptions`, `editRequired`, `editMin` and `editMax` on a column, and
+`onCellEdit({ row, rowKey, key, label, value, previous, undo })` —
+return a string or false (or a promise of one) to refuse; accepting is
+yours to show, by updating `rows`.
+
+### Moving through cells with the arrow keys
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-grid>…</div>
+```
+
+The table becomes an ARIA grid with one tab stop. Inside it the arrow keys
+move a cell at a time, Home and End go to the start and end of the row,
+Ctrl + Home and Ctrl + End to the first and last cell, Page Up and Page
+Down five rows (`gridPageRows`). A cell that holds one control hands it
+the focus, so Enter on a sort header sorts and Enter on an editable value
+edits it; Escape from the editor comes back to the cell. Keys pressed in
+an editor stay the editor's. The focus ring is drawn inside the cell. A
+line under the table says where the focus is, from
+`strings.tableGridPosition`. `attachGrid(table)` gives a table of your own
+the same keys. React: `grid` and `gridPageRows`.
+
+### Adding a filter, one at a time [Kenny, 2026-09-14]
+
+The filters a header declares (`data-kp-filter="choice"`, `"range"`,
+`"date"`) are set in a panel by default. A table can choose the second
+design instead:
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-filter-mode="add">
+    <div class="kp-datatable__bar">
+        <!-- optional: without it the button is made and put in the top bar -->
+        <button type="button" class="kp-button" data-kp-datatable-add-filter>+ Add filter</button>
+    </div>
+    …
+    <th data-kp-filter="choice" data-kp-filter-value="Open,Watching">Status</th>
+    <th data-kp-filter="range">Hours open</th>
+    <th data-kp-filter="date">Opened</th>
+</div>
+```
+
+**+ Add filter** opens a menu (`.kp-menu` in a `.kp-popover`, under its
+button, above it where the window has no room) of every filterable column;
+the arrow keys, Home and End move through it and Escape closes it. Choosing
+a column opens an editor between the bar and the table: the package's
+checkboxes for a choice (the header's `data-kp-filter-options`, else the
+values the rows hold, read when the editor opens), two fields for a number
+range, two package date pickers for dates. **Apply** checks the bounds — a
+number that is not one, a date the picker cannot read, a range that runs
+backwards each get a message under the fields — and adds one pill for the
+filter, `Status: Open, Watching` or `Hours open: 10–30`. The pill's words
+reopen its editor with its values; its × removes it; **Clear all** shows
+from two pills. A column that is filtered already is marked in the menu and
+opens its own pill's editor rather than a second pill. Cancel and Escape
+leave everything as it was, an editor applied empty removes its filter, and
+the focus comes back to the pill or to the button.
+
+The editor's title ("Status", "Hours open") is a paragraph, not a heading.
+An editor that opens for a moment is not a section of the page, and a
+heading there would add an entry to the outline of every page that uses the
+table. The approved mock drew an `<h3>`; Kenny chose the paragraph on
+2026-09-14.
+
+The state is the panel's: `view().filters`, `filter(column, value)`,
+`clearFilters()`, `kp-datatable-view` and, in React, `filters` /
+`defaultFilters` / `onFiltersChange` hold the same shape in both modes, so
+an app that reads the filters does not know which design is on screen. The
+handle's `editFilter(column)` opens a column's editor and `editFilter(null)`
+closes it (in the panel mode it opens and closes the panel); React's
+`apiRef.current.editFilter(key)` does the same. A default for every table
+at once: `attachDataTables(root, { filterMode: 'add' })`.
+
+React: `filterMode="add"`. The words are `strings.tableAddFilter`,
+`tableAddFilterMenu`, `tableAddFilterItem`, `tableAddFilterItemActive`,
+`tableFilterMarked`, `tableFilterEditor`, `tableFilterChoicesLegend`,
+`tableFilterBound`, `tableFilterChoicePill`, `tableFilterSpanPill`,
+`tableEditFilter`, `tableFilterApply`, `tableFilterCancel`,
+`tableFilterClearAll`, `tableFilterNotNumber`, `tableFilterNotDate` and
+`tableFilterBackwards`. The editor's frame is its own rather than a card
+or a popover, because some registers clip those to a cut corner and an
+open calendar would be clipped with them; the calendar opens in the top
+layer. Knobs: `--kp-datatable-filter-editor-ground`, `-ink`, `-border`,
+`-border-width`, `-radius`, `-padding`, `-gap`, `-max-width` and
+`-title-weight`, `--kp-datatable-filter-choice-min`,
+`--kp-datatable-filter-bound-min` and `--kp-datatable-add-mark-gap`.
+
 ## What a scroll region clips [TH114]
 
 Three boxes in this package scroll sideways inside themselves rather than
@@ -531,6 +1011,25 @@ assumed:
 The clip is not a defect and there is no repair for it: `overflow-x: auto`
 is what keeps a wide table off the page's own scrollbar (SC 1.4.10, DI11).
 Use the top layer for the thing that has to escape.
+
+**The package's own calendars and lists already do.** A `clip-path` clips
+the same way an overflow does, and four registers draw a container's
+silhouette with one — the cut corners of `.kp-card`, `.kp-alert`,
+`.kp-popover`, `.kp-dialog` or `.kp-spec` in dark, cyberpunk, phantom and
+titanium. Measured on 2026-09-13 inside a `.kp-card` in those four themes:
+every day of an open date picker and every option of a combobox and of a
+drawn select was out of reach, the clipped area handing the click to what
+lay beneath. Since then the date picker's panel, the combobox's list and
+the drawn select's list become a manual popover while they are open
+(`js/top-layer.js`), placed in window coordinates beside their control and
+following it when anything scrolls. They stay where they are in the
+document, so the theme, the register rules and focus behave as before. A
+calendar that would run past the window's inline end opens toward the
+inline start instead (`data-kp-align="end"` on the panel). A list or
+calendar whose field sits near the window's bottom edge opens above the
+field when there is more room there, and says so with
+`data-kp-overlay-side="above"`; when neither side has room for all of it,
+it takes the larger side and scrolls itself [fix-30].
 
 ## The grid and the nav bar measure their own box too [TH104]
 
@@ -608,6 +1107,280 @@ In React it is the `collapsible` prop, and `toggleIcon` for what goes in
 the button. That channel wires its own button and marks it
 `data-kp-nav-owner`, so `attachNavToggles` leaves it alone; pass
 `ownedBy: ''` if you want the module over a React nav anyway.
+
+### A header that stays and shrinks [scope-48]
+
+On a long page the bar can stay at the top and give some of its height
+back once the reader has scrolled. It is opt-in by a modifier on the
+wrapper, so a bar without it behaves exactly as it did:
+
+```html
+<a class="kp-skip-link" href="#main">Skip to content</a>
+<div class="kp-nav-wrap kp-nav-wrap--sticky">
+    <nav class="kp-nav" aria-label="Main">…</nav>
+</div>
+```
+
+The stylesheet makes the wrapper `position: sticky` at the top of the box
+that scrolls it, on the bar's own layer (`--kp-z-nav`, 30). `js/auto.js`
+(or `attachStickyNavs(root)` from `js/components.js`) does two things:
+
+- once that box has scrolled further than the bar is tall, it sets
+  `data-kp-nav-compact` on the wrapper, and the bar keeps half of its own
+  block padding, top and bottom each: every theme's padding, and a
+  `--kp-nav-pad-block` you set, is multiplied by `--kp-nav-sticky-shrink`
+  (0.5). A theme whose top and bottom differ keeps that ratio, and the
+  compact bar is never taller than the bar at rest. Back within that distance less
+  the bar's height, the attribute goes again — the gap stops the bar
+  flipping between its two heights when the browser's scroll anchoring
+  moves the page. `data-kp-nav-sticky-after="200"` starts it later; a
+  value below the bar's height is raised to it. Each change fires
+  `kp-nav-compact` on the wrapper with `{ compact }`.
+- it writes the bar's current height to `--kp-nav-sticky-height` on the
+  scrolling box (the page's root, or the nearest ancestor that scrolls)
+  and marks that box `data-kp-nav-sticky-root`. Its
+  `scroll-padding-block-start` reads `--kp-scroll-offset` first and that
+  height second, so an anchor, the skip link's target and an element
+  reached with Tab land below the bar. Set `--kp-scroll-offset` yourself
+  and yours wins.
+
+The padding glides over `--kp-nav-sticky-duration` (the theme's
+`--fx-duration`) only under `prefers-reduced-motion: no-preference`;
+otherwise it changes at once. Every register reads `--kp-nav-pad-block`
+and multiplies it by `--kp-nav-pad-scale` (1 at rest, the shrink factor
+when compact — the stylesheet sets it; set `--kp-nav-sticky-shrink`
+instead), so the bar shrinks in all 22 themes. Keep the skip link before the
+wrapper: it stays the first thing Tab reaches.
+
+A sticky box sticks inside its parent, so the wrapper's parent has to be
+the page or the column that scrolls — not a mount point exactly as tall
+as the bar.
+
+In React it is the `sticky` prop, with `stickyAfter` for the distance.
+That channel wires its own wrapper and marks it
+`data-kp-nav-sticky-owner`, so `attachStickyNavs` leaves it alone.
+
+### The command palette as navigation [scope-48]
+
+A palette that only opens on a key is a secret, so the bar keeps a
+visible door to it in a slot at its far end, and the palette's commands
+can be the places themselves:
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <ul class="kp-nav__links">…</ul>
+        <div class="kp-nav__search">
+            <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="places">
+                Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+            </button>
+        </div>
+    </nav>
+</div>
+
+<dialog class="kp-palette" id="places" data-kp-palette aria-label="Go to">
+    <input class="kp-palette__input" type="text" role="combobox" aria-label="Go to"
+           aria-expanded="true" aria-controls="places-list" autocomplete="off" />
+    <ul class="kp-palette__list" id="places-list" role="listbox" aria-label="Go to">
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option
+               data-value="reports" href="/reports">Reports</a>
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+```
+
+`js/auto.js` (through `attachPalettes`) does the rest. The trigger is an
+ordinary `data-kp-palette-open` opener: pressing it opens the palette with
+the focus in its input, and Escape — or a click anywhere outside the
+palette's box — closes it and gives the focus back to the trigger. A press
+that starts inside the box and ends outside it, the way a mouse selects
+the query, does not close it [scope-80].
+What the markup leaves out the module writes — `aria-haspopup="dialog"`,
+and `aria-keyshortcuts` when the palette has a key — and it fills the empty
+`<kbd data-kp-palette-keys>` with the key in the platform's spelling, ⌘K
+on a Mac and Ctrl K elsewhere (the dictionary's `paletteHotkey`; the
+visible word is yours, or `paletteTrigger` in React).
+
+An option that is an `<a href>` is followed: on a click by the browser, on
+Enter by a click the module makes, so `target` and a router's own click
+handler behave as they would anywhere. `kp-palette-run` still fires first,
+with `{ value, option, href }`, and it is cancelable: a single-page
+application calls `preventDefault()` on it and routes itself. The module
+takes the link out of the Tab order while it is attached, because the
+highlight is virtual focus and the focus belongs in the input. Before the
+module attaches, and on a page without JavaScript, the list is a list of
+plain links that work on their own.
+
+`.kp-nav__search` pushes itself to the bar's end, and every register
+answers it in the voice of its own bar links — their typeface, case,
+spacing, shape and pointer answer, without the underline that marks a
+link [scope-80]. The one knob is `--kp-nav-search-min` (10rem), the trigger's
+minimum width, never more than the bar itself.
+
+In React, NavBar's `search` prop fills the slot and `PaletteTrigger` is the
+button; a command with an `href` is a link, and `linkComponent` hands its
+rendering to your router the way NavBar's does:
+
+```jsx
+<NavBar brand="Your app" links={links} search={<PaletteTrigger palette="places" />} />
+<CommandPalette id="places" commands={[{ value: 'reports', label: 'Reports', href: '/reports' }]} />
+```
+
+### A dropdown at the bar's end [fix-27]
+
+A `.kp-nav__menu` hangs from its item's start edge. Under an item near the
+window's end that ran it past the edge, so `js/auto.js` (through
+`attachNavMenus`) measures a dropdown as it opens — on hover and on focus —
+and again when the window changes size, and when the start edge leaves it
+outside the window and the end edge does not, it writes
+`data-kp-nav-menu-end` on the panel, which hangs it from the item's end edge
+instead. Nothing to add to your markup. The React NavBar calls the same
+`placeNavMenu(item)` from its items; a page that opens a dropdown some other
+way can call it too. Without script the panel keeps its start edge.
+
+### A mega menu [scope-48]
+
+One bar item can open a wide panel of grouped links, for a site with more
+places than a dropdown holds. It is a disclosure, not a hover dropdown: a
+button opens it, never the pointer alone, so a touch or keyboard reader
+opens it on purpose.
+
+```html
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Main">
+        <span class="kp-nav__brand">Your app</span>
+        <ul class="kp-nav__links">
+            <li>
+                <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                <div class="kp-nav__menu kp-nav__menu--wide">
+                    <div class="kp-nav__group">
+                        <h2 class="kp-nav__menu-heading">Pumps</h2>
+                        <ul>
+                            <li><a href="/pumps/main">Main line pumps</a></li>
+                            <li><a href="/pumps/boosters">Booster sets</a></li>
+                        </ul>
+                    </div>
+                    <div class="kp-nav__group">…</div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
+```
+
+`js/auto.js` (through `attachNavMenus`) wires it. The button gets
+`aria-expanded` and an `aria-controls` naming the panel (the panel gets an
+id if it has none), and the panel is shown while the button says `true`.
+Every open state has a way out: the button again, Escape while the focus is
+in the bar — the focus goes back to the button — a click outside the item,
+and the focus leaving it. Tab walks from the button through the panel's
+links in order. One panel is open at a time: opening one closes the others.
+A button with no words of its own, a glyph only, is named from the
+dictionary (`navDisclosure`).
+
+The panel is plain lists under headings — site navigation, so not
+`role="menu"` — and the heading level is yours: pick the one that fits your
+page's outline. It spans the bar's width in a grid of at most four columns,
+each at least `--kp-nav-mega-min` (11rem) wide, `--kp-nav-mega-gap` (1.5rem)
+apart. The panel is a `.kp-nav__menu` too, so every register's dropdown
+voice dresses it, and its headings speak in the voice of the register's menu
+caption. Behind a collapsed bar's toggle the panel is a nested list in one
+column, and still opens only when its button is pressed.
+`data-kp-nav-menu-open` on the item shows it open without a press, the way
+it does for a dropdown.
+
+In React, give a link `groups` instead of `links`, and NavBar renders the
+button and the panel and wires them itself; `headingLevel` (2) sets the
+headings' level. That channel marks its bar `data-kp-nav-owner`, so
+`attachNavMenus` leaves it alone; pass `ownedBy: ''` if you want the module
+over a React bar anyway.
+
+```jsx
+<NavBar
+    brand="Your app"
+    links={[
+        {
+            href: '#equipment',
+            label: 'Equipment',
+            groups: [{ label: 'Pumps', links: [{ href: '/pumps/main', label: 'Main line pumps' }] }],
+        },
+    ]}
+/>
+```
+
+### The bar's layer [scope-48]
+
+`.kp-nav-wrap` is positioned and sits on `--kp-z-nav` (30): above the
+popover layer (20), below back-to-top (50) and a covering side navigation
+(60). The whole bar is one layer, so its open dropdown stays above
+whatever follows the bar on the popover layer, in every theme. Until
+scope-48 two registers lifted the wrapper, nine the nav inside it and the
+rest nothing, so an element at `z-index: 20` after the bar covered the
+dropdown in six themes.
+
+Two consequences. A page that wants the bar sticky writes
+`position: sticky; top: 0` on `.kp-nav-wrap` in its own stylesheet, which
+wins over the package's layers. And a control inside the bar is on the
+bar's layer: a `.kp-sidenav__toggle` placed in the bar sits under an
+`over` panel (60) rather than above it, so give that panel
+`--kp-sidenav-inset-block` to start below the bar, or put its closing
+control inside the panel.
+
+### An application shell, and its rail on a phone [scope-80]
+
+`.kp-shell` is the whole window: the bar, then `.kp-shell__body`, a row
+that takes the rest of the window's height, so a rail beside the content
+runs to the bottom of the window rather than stopping where the content
+does. The page gives up the browser's 8px body margin while a shell is on
+it. Knob: `--kp-shell-min` (100dvh).
+
+On a phone that rail is in the way, so `data-kp-sidenav-over-below` turns
+it into the `over` panel while the box it lives in is 40rem wide or
+narrower — the width the bar and the table already step at — or at the
+length you give it (`data-kp-sidenav-over-below="52rem"`):
+
+```html
+<div class="kp-shell">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Main">
+            <span class="kp-nav__brand">Your app</span>
+            <ul class="kp-nav__links">…</ul>
+            <button type="button" class="kp-sidenav__toggle kp-icon-button" data-kp-sidenav-toggle aria-controls="rail" hidden>
+                <span aria-hidden="true">☰</span>
+            </button>
+        </nav>
+    </div>
+    <div class="kp-shell__body">
+        <nav class="kp-sidenav" id="rail" aria-label="Section" data-kp-sidenav-slim data-kp-sidenav-over-below>
+            <div class="kp-sidenav__scroll">…</div>
+            <div class="kp-sidenav__footer">
+                <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail">…</button>
+                <button type="button" class="kp-sidenav__toggle kp-sidenav__link" data-kp-sidenav-toggle aria-controls="rail" hidden>
+                    <span class="kp-sidenav__icon" aria-hidden="true">×</span>
+                </button>
+            </div>
+        </nav>
+        <div class="kp-flex-1">…</div>
+    </div>
+</div>
+```
+
+Narrow, the module sets `data-kp-sidenav-mode="over"` and
+`data-kp-sidenav-narrow` on the panel, closes it, and gives the labels back
+if the rail was collapsed to icons; the toggle opens it with the focus
+trap, Escape, the backdrop and the focus return `over` already has. Wide
+again, the panel is what the markup declared, slim state included. The
+controls follow through `hidden`: the panel's `data-kp-sidenav-toggle`
+buttons show only while narrow, its slim toggles only while wide, so
+write the narrow ones `hidden` and a page without JavaScript never shows a
+button that does nothing. The close inside the panel matters: the panel
+covers the bar, and the bar's toggle with it. The width is the panel's
+parent's, measured as the bar measures its wrapper. In React it is
+`<Sidenav overBelow>` (or `overBelow="52rem"`) with `SidenavToggle`, which
+passes `hidden` through.
 
 ## The page shell [TH36]
 
@@ -769,6 +1542,38 @@ reduced motion — a page without the script shows the rest states.
 `README.md` has the table of what each theme answers;
 `themes/hooks.json` is the matrix the gate reads.
 
+A surface keeps its content off its own inline edges in every theme:
+`--kp-surface-padding-inline`, the lg step, is the room between the
+ground a surface paints and its first letter; it gives way on a surface
+of 20rem or less, where the content needs every pixel, and the block axis
+is left to the section rhythm. `data-kp-surface-align="center"` sets a surface's
+content on its middle — the text centres, a narrower child takes auto
+margins, a `.kp-row` centres its controls — and is off unless a page
+writes it. A theme that covers a phrase inside
+`data-kp-reveal="emphasis"` paints the cover as the mark's own background,
+cloned onto every line the phrase takes (`box-decoration-break: clone`), so
+a redacted phrase may wrap like any other words and stays covered line by
+line [fix-33]; a theme that answers with its own pseudo-element keeps the
+phrase from wrapping.
+
+The arrival's words are the theme's own [scope-84]: synthwave's counting
+boot reads `arrivalWordsByTheme.synthwave` ("▶ Play", "Tracking",
+"Press start"), terminal's and retro's POST lines are
+`arrivalLinesByTheme`, and phantom's card is the theme's name. A theme
+that asks for `boot` with no entry shows the neutral `arrivalLine`,
+`arrivalProgress` and `arrivalReady` ("Loading", "Progress", "Ready").
+To change synthwave's words, set `arrivalWordsByTheme` with `setStrings`;
+setting `arrivalLine` alone changes only the neutral line. How fast the
+arrival plays is `--kp-arrival-rate` on the root: every wait is divided
+by it and the overlay's animations play at it, so `0.5` takes twice as
+long; unset, it is 1.
+
+The headline reveal waits for the arrival [scope-86]: while the overlay is
+on screen a `data-kp-reveal="headline"` is held, and its routine starts the
+moment the overlay is removed — at its own end, on Skip, on a click, or on
+`detach()`. Without an arrival (a theme that declares none, seen this
+session, reduced motion) the headline starts at once, as before.
+
 ## The side navigation [feat-nav-3]
 
 A navigation that stands beside the content instead of above it: three
@@ -824,6 +1629,173 @@ Without React, write the same markup and let `js/auto.js` find it:
 </nav>
 ```
 
+### A rail that collapses from its own toggle [scope-48]
+
+`data-kp-sidenav-slim` allows the rail. A button with
+`data-kp-sidenav-slim-toggle`, pointed at the panel by `aria-controls`,
+collapses it to its icons and gives the words back; without
+`aria-controls` it drives every rail on the page. No script of your own:
+the module keeps `aria-expanded` on the button (true while the rail is
+wide) and fires `kp-sidenav-slim` with `{ collapsed }` on the panel. A
+button with no words of its own — empty, or holding only an `aria-hidden`
+glyph — is named from the dictionary (`collapseRail`, `expandRail`), and
+the name says which way the press goes. The button is not replaced when
+the rail changes, so the focus stays on it.
+
+```html
+<nav class="kp-sidenav" id="rail" aria-label="Invoices" data-kp-sidenav-slim>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="/invoices" aria-current="page"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">All invoices</span></a
+                >
+            </li>
+        </ul>
+    </div>
+    <div class="kp-sidenav__footer">
+        <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail">
+            <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+            <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+        </button>
+    </div>
+</nav>
+```
+
+In React the button is `SidenavSlimToggle`, and `footer` on `Sidenav` puts
+it under the list:
+
+```jsx
+import { Sidenav, SidenavSlimToggle } from '@kp-soft/themes';
+
+<Sidenav
+    id="rail"
+    label="Invoices"
+    slim
+    items={[{ label: 'All invoices', href: '/invoices', icon: '▤', current: true }]}
+    footer={<SidenavSlimToggle controls="rail" className="kp-sidenav__link">…</SidenavSlimToggle>}
+/>;
+```
+
+The labels of a collapsed rail leave the eye and stay in the
+accessibility tree, so every link keeps its name; give every link a label
+even when the rail starts collapsed.
+
+### The application shell
+
+`examples/app-shell.html` puts the parts together, in both channels from
+one descriptor (`showcase/examples.mjs`): the bar across the top for the
+product's areas, the rail beside the content for the pages of the area the
+reader is in, and a `.kp-breadcrumb` that says where in it. The row is
+`kp-d-flex kp-flex-wrap` with the rail and a `kp-flex-1` column, so in a
+narrow window the content drops under the rail instead of pushing the page
+sideways; the breadcrumb comes
+before `<main>`, so the skip link passes it along with both navigations.
+No page stylesheet is involved.
+
+## What a page remembers [Kenny, 2026-09-16]
+
+Some state belongs to the reader rather than to the page. A group of links
+the reader folded away should still be folded on the page the link led to;
+a divider they dragged should be where they left it. Kenny's words, after
+closing the review site's Components group and clicking a link: *"de
+sidenav moet zijn state onthouden … Dit gedrag moet tellen voor alle
+elementen waar dit verwacht wordt door een user."*
+
+**It is opt-in, and the element names itself.** Write
+`data-kp-remember="<name>"` on the component and it remembers; leave it off
+and this package writes nothing at all into your storage.
+
+```html
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-remember="main-nav">
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="components">
+                <button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__label">Components</span></button>
+                <div class="kp-sidenav__submenu">
+                    <ul class="kp-sidenav__list">
+                        <li><a class="kp-sidenav__link" href="/button"><span class="kp-sidenav__label">Button</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+```
+
+Fold that group away, follow the link, and it is still folded. Nothing
+else is needed: `js/auto.js` restores every remembering element before the
+first frame, and each module goes on reading the markup. A page that
+attaches modules itself calls `restoreRemembered()` once, as early as it
+can, and `attachRemembered()` for its `<details>` disclosures.
+
+**The key is composed, never hardcoded**:
+
+```text
+kp-remember:<component>:<name>:<slot>
+kp-remember:sidenav:main-nav:groups
+```
+
+`<component>` is the package's own word for the kind of thing, `<name>` is
+what the element wrote, `<slot>` is which piece of state. The page is
+deliberately not part of it — the state has to cross a navigation, which is
+the whole case. An author who wants a per-page memory gives the element a
+per-page name. A group inside a side navigation may carry its own
+`data-kp-remember` too; without one it is known by the words in its toggle,
+so a group renamed starts fresh rather than inheriting a stranger's state.
+
+What each component keeps:
+
+| Component | `data-kp-remember` on | Slots |
+| --- | --- | --- |
+| side navigation | `.kp-sidenav` | `groups` (which categories are folded), `open`, `rail` |
+| accordion, any disclosure | a `<details>` | `open` |
+| tree | `[data-kp-tree]` | `branches` |
+| split pane | `[data-kp-split]` | `value` |
+| data table | `[data-kp-datatable]` | `columns`, `sort`, `density` |
+
+Everything transient is deliberately left out: dialogs, popovers, menus,
+tooltips, toasts, the combobox, the date picker, a wizard's step and the
+alarm. Each of those is a thing the reader opened for a moment, and a page
+that reopens one by itself on the next load is a page arguing with its
+reader. A reorder list is left out for a different reason: the order is the
+app's data, and `kp-reorder` hands it over so the app can store it where
+its data lives.
+
+**Two elements, one name.** Two of the same component with different names
+keep separate state — that is what naming them buys. Two with the SAME name
+are a fault: the first to attach owns the key, the second is refused a
+memory entirely (it works, at its markup default, and writes nothing), and
+the clash is reported once in the console and as `kp-remember-clash` on the
+element that was refused.
+
+**When there is no storage** — a private window, a browser set to refuse
+site data — every read and write fails quietly and every component works at
+its markup default. Nothing throws.
+
+**The way out** [KT6]: `configureRemember({ prefix, storage })` sets the
+first key segment and where the values go for the whole document
+(`storage: null` turns the mechanism off without touching a component), and
+`memoryFor(element, component)` hands you the composed key and its
+`read` / `write` / `forget`, so a consumer can clear or migrate what this
+package wrote.
+
+```js
+import { configureRemember, memoryFor } from '@kp-soft/themes/js/remember';
+
+configureRemember({ prefix: 'acme' });
+memoryFor(document.querySelector('#nav'), 'sidenav')?.forget('groups');
+```
+
+One thing this cannot do: a frame the browser paints between the end of the
+parse and the deferred module — the window before any script can address an
+element that has just been parsed. `js/auto.js` restores at the earliest
+moment a DOM-dependent restore exists, which is before `DOMContentLoaded`.
+A page that builds its navigation with script calls
+`paintRemembered(element, 'sidenav')` before it puts it in the document, so
+the restored state is the first thing drawn; the review site does exactly
+that.
+
 ## Numbers that count up [feat-count-1]
 
 Write the final number. The module reads it, counts to it, and puts the
@@ -874,7 +1846,7 @@ It is decoration over a control that already has a name, so it carries
 A theme that does not style it shows nothing, and a page that passes no
 `readout` renders no element at all.
 
-## The pointer, for a theme that wants it [scope-16]
+## The pointer, for a theme that wants it [scope-16, scope-101]
 
 A theme that declares `--kp-pointer: track` has `--kp-px` and `--kp-py`
 written to the root as the pointer moves, both 0 to 1. That is all: the
@@ -882,6 +1854,44 @@ theme decides what to do with them, and a theme that does not ask pays
 nothing. The bus writes once per animation frame, does not run under
 reduced motion, and removes what it wrote when the module is detached.
 
+The same bus also writes a per-ELEMENT light, for a theme that declares
+`--kp-light: pointer` as well [scope-101, from scope-25 — shade-light and
+shade-dark]. Two root numbers cannot say which way a shadow falls, because
+"away from the pointer" is a different direction for every box on the
+screen, so each card, plain button and hero surface gets six properties of
+its own:
+
+| Property | What it is |
+| --- | --- |
+| `--kp-light-x`, `--kp-light-y` | the direction away from the pointer: about 1 at 240px and beyond, shrinking to 0 directly under it |
+| `--kp-light-near` | 1 under the pointer, 0 at 560px and further |
+| `--kp-light-lift` | `0.6 + near`, for a theme that lengthens its shadow with the light |
+| `--kp-light-at-x`, `--kp-light-at-y` | where the pointer sits inside the element's own box, in px |
+
+Write every rule with the fallback it had before — `var(--kp-light-x, 1)`
+— because there is no pointer on a touch screen, none while a reader is
+tabbing, none under reduced motion and none without the module. shade-light
+multiplies its shadow offsets by `x` and `y`; shade-dark multiplies them by
+`x * lift` and paints a radial patch of the foreground at `at-x`/`at-y`,
+faded by `near`. The light goes out on a touch, on Tab, when the pointer
+leaves the window and when the module is detached.
+
+## The press point, for a theme that wants it [scope-101]
+
+A theme that declares `--kp-press: point` has `--kp-press-x` and
+`--kp-press-y` written to the button a press started on, in pixels from
+that button's own top left corner. Sepia asks for it, because its press
+grows a stain of ink and ink spreads from where the nib touched down, not
+from the middle of the plate. CSS knows a button is being pressed; it
+cannot know where.
+
+The theme declares its own default for both, so the gesture is whole
+before a pointer has ever touched it: a key press, a page with no module,
+and a detached module all fall back to that value, and sepia's is the
+middle of the button. Unlike the pointer bus this one stays armed under
+reduced motion — someone asking for less movement is not asking for the
+stain to appear in the wrong place; the register gives them the same
+stain without a transition.
 ## How a theme moves
 
 A theme's handwriting is three tokens, and every transition in the package
@@ -900,7 +1910,7 @@ the flash threshold, so they are literals rather than knobs:
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
 | `--kp-control-accent` | what the browser paints a check, a radio dot and the progress bar in — `--primary` by default; brutalism and mono set it because their primary is the ink (3.1.0) |
 
-A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+). Firefox and older browsers draw that list themselves, in the platform's highlight colour — a known limitation since 3.1.0, not a bug in a theme.
+A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+); Firefox and older browsers draw that list themselves, in the platform's highlight colour. So the package draws it: every single `<select class="kp-field__input">` gets a listbox in the combobox's look laid over it by `attachSelects` (which `auto.js` runs) and by the React `Field`, `FormField` and `DataTable`, without asking. The native select stays the control — it holds the value, submits with the form, fires `change` and is what a screen reader reads. To keep the browser's own list on one select, write `data-kp-select="native"` (React: `drawn={false}`); a `multiple` select always keeps it. A bare `data-kp-select` still asks for the drawn list on a select without the class.
 
 Each theme also has at most one gesture of its own: a rule that draws
 itself under a heading in formal, a blinking block cursor after the label

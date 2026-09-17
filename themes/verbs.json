@@ -1,0 +1,27 @@
+{
+    "$comment": "Which recipe verbs a package component performs [scope-97], read by gates/advice-signature.mjs. A component root (the `kp-` class css/components.css defines) maps to the verbs a person sees it do: hover and press are pointer states, enter and leave are it appearing and going, load is waiting, attention is asking to be noticed. Hand-kept and deliberately short; a root not listed here is not asked about.",
+    "verbs": ["enter", "leave", "press", "hover", "load", "attention"],
+    "components": {
+        "kp-button": ["press", "hover"],
+        "kp-icon-button": ["press", "hover"],
+        "kp-switch": ["press"],
+        "kp-tab": ["hover", "press"],
+        "kp-nav": ["hover", "enter", "leave"],
+        "kp-sidenav": ["hover", "enter", "leave"],
+        "kp-accordion": ["enter", "leave"],
+        "kp-dialog": ["enter", "leave"],
+        "kp-popover": ["enter", "leave"],
+        "kp-menu": ["enter", "leave"],
+        "kp-tooltip": ["enter", "leave"],
+        "kp-combobox": ["enter", "leave"],
+        "kp-datepicker": ["enter", "leave"],
+        "kp-palette": ["enter", "leave"],
+        "kp-toast": ["enter", "leave", "attention"],
+        "kp-alert": ["attention"],
+        "kp-badge": ["attention"],
+        "kp-alarm": ["enter", "leave", "attention"],
+        "kp-progress": ["load"],
+        "kp-spinner": ["load"],
+        "kp-skeleton": ["load"]
+    }
+}

@@ -88,7 +88,8 @@ if (uncoveredExports.length > 0) {
 const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status']);
 
 // The layout layer has a page of its own — site/layout.html, generated
-// from docs/LAYOUT.md rather than from a descriptor — so the slug rules
+// from the comments and knobs of css/layout.css rather than from a
+// descriptor — so the slug rules
 // above cannot see it. This is that page standing in the mapping as what
 // it already is: the owner of the layout families. It loosens nothing,
 // because the bar is unchanged — a name is documented when a page prints

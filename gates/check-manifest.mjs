@@ -59,9 +59,13 @@
 // 2026-09-07, the walk itself — an export made to import a module nothing
 // else reaches, which the gate then demanded by name.
 //
+// Since scope-76 it also runs `node gates/check-package.mjs`, which
+// refuses an export that is not on disk or not in "files".
+//
 // Usage: node gates/check-manifest.mjs
 
 import { readdirSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 import { FILES } from './checksums.mjs';
 
@@ -197,6 +201,12 @@ function normalise(path) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+    // scope-76: the package's own `check:package` line is gone, and its
+    // check runs here, first: both read the export map, one asking whether
+    // every target is published, the other whether every copyable one is
+    // checksummed. Spawned rather than inlined, so it prints and refuses
+    // with exactly what it always did.
+    const published = spawnSync(process.execPath, [new URL('check-package.mjs', import.meta.url).pathname], { stdio: 'inherit' });
     const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
     const expected = copyableExports(pkg);
     if (expected.length === 0) {
@@ -230,4 +240,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // file no export names, reached by walking what they import.
     const declared = copyableExports(pkg, { follow: false }).length;
     console.log(`Manifest: ${declared} copyable exports plus ${expected.length - declared} file(s) they import, all ${FILES.length} checksummed.`);
+    if (published.status !== 0) process.exit(1);
 }

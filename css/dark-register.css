@@ -72,10 +72,42 @@
         --kp-px: 0.5;
         --kp-py: 0.5;
         --kp-iris: conic-gradient(from calc(var(--kp-px) * 1turn), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+
+        /* ── The halo: the film, spilled onto the ground [scope-102] ────
+           Kenny, 2026-09-16, the shadow-and-ink form, dark-shadow "Gloed
+           van de oxidefilm": a raised panel is separated from the ground
+           by the film's own four wavelengths rather than by a shadow in
+           the ground's own colour, which on a 5%-lightness ground had
+           almost nowhere to go (measured 0.4% of the band past ΔL* 3;
+           research/dark-dialog-shadow/README.md, option 1).
+
+           Four fixed shadows, not the blurred film itself. The research
+           measured the blurred version higher (88.3% of the band at dPR
+           1 against this one's share), but it cannot be worn by the two
+           surfaces this decision is mostly about: `.kp-popover` is
+           `overflow: auto` and a modal dialog is `overflow: auto` by the
+           UA stylesheet (HTML Standard §15.3.3), and overflow clips a
+           pseudo-element — the blurred halo measured 0 of 17616 band
+           pixels on the popover. A box-shadow is not a descendant and is
+           not clipped, so the same idea is painted as four of them, one
+           per wavelength, placed where the conic gradient puts that
+           colour: chart-2 below, chart-1 to the left, chart-3 to the
+           right, chart-4 above. The cost, stated rather than hidden: a
+           fixed shadow does not turn with the pointer as the film's own
+           border does. */
+        --kp-halo:
+            0 10px 18px hsl(from var(--chart-2) h s l / 0.3), -10px 4px 16px hsl(from var(--chart-1) h s l / 0.26),
+            10px 4px 16px hsl(from var(--chart-3) h s l / 0.26), 0 -6px 14px hsl(from var(--chart-4) h s l / 0.2);
         /* The machined corner: cut, never rounded. Two opposite corners,
            the way a milled part is relieved. */
         --kp-chamfer: var(--fx-notch, 0.55rem);
         --kp-chamfer-panel: 1rem;
+        /* How far past its own box the halo reaches, and how far past that
+           nothing of it is left [fix-41]. The furthest of the four shadows
+           travels its offset plus its blur — 10px + 18px — so 2.5rem is
+           past the last pixel of it and short of anything a panel holds. */
+        --kp-halo-reach: 2.5rem;
+        --kp-halo-field: 100rem;
     }
 
     /* ── The chamfer [scope-16] ────────────────────────────────────────
@@ -95,9 +127,13 @@
         );
     }
 
-    [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog,
-    [data-theme='dark'] .kp-alert {
+    /* The card's cut moved to its own ::after with the plate it belongs to
+       [scope-102], for the reason the dialog's did at scope-100: a
+       clip-path clips the element's own box-shadow, so a chamfered card
+       could not cast the halo (or anything else) at all. */
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-alert,
+    [data-theme='dark'] .kp-dialog::before {
         clip-path: polygon(
             0 0,
             calc(100% - var(--kp-chamfer-panel)) 0,
@@ -105,6 +141,72 @@
             100% 100%,
             var(--kp-chamfer-panel) 100%,
             0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    /* ── The halo stops where the corner is cut [fix-41] ────────────────
+       Kenny, 2026-09-16, on the confirmation dialog: "normaal is de hoek
+       afgesneden, maar nu is er een niet-gekleurde streep die het terug
+       hoekig maakt". Measured in firefox at dPR 2.222, over the two cut
+       corners of each panel: 1664 of the dialog's 5700 corner pixels and
+       1608 of the card's were painted by the halo *outside* the cut — a
+       glow tracing the square box while the plate traced the chamfer, with
+       the bare wedge between them reading as a strip that squared the
+       corner again. On the four blocks Kenny rejected: the confirmation
+       1667, the app shell's two cards 1711 and 1654, the dossier's three
+       1679, 1622 and 1596, the long dialog 579. After: 0, 9, 16, 0, 0, 0
+       and 0 — what is left is the clip's own edge between device pixels.
+
+       A box-shadow is the border box's shape and nothing else: it knows
+       no chamfer, and it is never painted inside the border box, so the
+       wedge could not be filled either. The three ways out were weighed:
+
+       - the halo on the plate's own layer, clipped with it — a clip-path
+         clips the element's own box-shadow (scope-100 measured that at
+         1406px), so the halo would vanish rather than follow the cut;
+       - `filter: drop-shadow()` on the plate — the plate is a
+         pseudo-element, and both surfaces that matter clip those away
+         (`.kp-popover` and a modal dialog are `overflow: auto`); on the
+         card a filter is refused outright by scope-102's own note,
+         because it would make every card the containing block of any
+         fixed descendant a consumer puts in it;
+       - the cut, extended outward through the shadow and applied to the
+         panel itself. Taken.
+
+       So the chamfer is carried past the box for the reach of the halo
+       and the panel is clipped to it: the glow is cut along the same
+       forty-five degrees the plate is, and stops dead at the corner. The
+       clip is the field rather than a box — a rectangle `--kp-halo-field`
+       out on every side with two bounded bites taken out of it, each
+       joined to the edge by a zero-width seam, the island idiom this file
+       already uses for the readout button's strip. Nothing a panel holds
+       is clipped unless it reaches into one of those two corners, and
+       nothing moves: a clip-path is paint, not layout.
+
+       The sixteen points, in order: the field's top-left corner; in along
+       its top edge to the seam and down it; round the top-right bite and
+       back up the same seam; on to the field's other two far corners;
+       then the bottom-left bite in the same three moves; and the last
+       corner closes it. */
+    [data-theme='dark'] .kp-card,
+    [data-theme='dark'] .kp-dialog {
+        clip-path: polygon(
+            calc(-1 * var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(-1 * var(--kp-halo-field)) calc(100% + var(--kp-halo-field))
         );
     }
 
@@ -143,8 +245,27 @@
         translate: 0.5rem 0;
     }
 
-    [data-theme='dark'] .kp-button:hover::before,
-    [data-theme='dark'] .kp-button:hover::after,
+    /* The brackets need room of their own [scope-80]. Kenny's note on the
+       data table's add-filter editor: its small ghost Cancel is narrower
+       than the brackets, and on hover they sat on the letters (6.8px and
+       6.4px into "Cancel", firefox). The inline padding is therefore never
+       less than the bracket's inset, its glyph (0.85em of a monospace face,
+       about 0.55em wide) and a quarter rem of air; each size keeps its own
+       padding wherever that is already wider. */
+    [data-theme='dark'] .kp-button {
+        padding-inline: max(0.875rem, calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--sm {
+        padding-inline: max(var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem)), calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--lg {
+        padding-inline: max(var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem)), calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::after,
     [data-theme='dark'] .kp-button:focus-visible::before,
     [data-theme='dark'] .kp-button:focus-visible::after {
         opacity: 1;
@@ -160,7 +281,7 @@
         z-index: 1;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__edge,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__edge,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__edge {
         scale: 1 1;
     }
@@ -170,7 +291,7 @@
         z-index: 2;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__label,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__label,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__label {
         scale: 0.94;
     }
@@ -187,7 +308,7 @@
         translate: 0 0.2rem;
     }
 
-    [data-theme='dark'] .kp-button:hover .kp-button__readout,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__readout,
     [data-theme='dark'] .kp-button:focus-visible .kp-button__readout {
         opacity: 1;
         translate: 0 0;
@@ -217,6 +338,77 @@
                 opacity var(--fx-duration) var(--fx-ease),
                 translate var(--fx-duration) var(--fx-ease);
         }
+    }
+
+    /* ── The press [Kenny's dark note, 2026-09-15] ────────────────────
+       "There is no animation when I click." The press was a ground change
+       only, eased over the theme's 220ms, and a click is shorter than
+       that: the ground had barely started to move when the release sent
+       it back. So the instrument answers a press the way it answers a
+       hover, in its own notation: the brackets close the last step onto
+       the label, the label settles a little further, the edge doubles,
+       and all of it arrives at once. The release is what eases back, on
+       the theme's own curve, which is the movement the eye catches. Every
+       one of these is paint — a pseudo-element's or a child's transform,
+       an out-of-flow edge — so no box in the row moves. */
+    [data-theme='dark'] .kp-button:active:not(:disabled),
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        transition-duration: 0s;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before {
+        translate: 0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        translate: -0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label {
+        scale: 0.9;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        block-size: 4px;
+        scale: 1 1;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the start edge, and it
+       stops the width of the focus ring and its outline short of the
+       control, so none of the ring the chamfer cuts away reappears on top.
+       It reaches well past both ends because the readout does not wrap. */
+    [data-theme='dark'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            0 0,
+            0 var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            0 var(--kp-readout-seam),
+            0 0,
+            calc(100% - var(--kp-chamfer)) 0,
+            100% var(--kp-chamfer),
+            100% 100%,
+            var(--kp-chamfer) 100%,
+            0 calc(100% - var(--kp-chamfer))
+        );
     }
 
     /* ── The field's own oxide line [scope-16] ─────────────────────────── */
@@ -257,6 +449,23 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item below and cyberpunk's bevel
+       already give. The ink (--focus-ring) runs along the edge and the
+       void (--focus-ring-contrast) inside it, the same order as the ring
+       outside: on the card-grounded button the ink reads, on the
+       near-white primary the void does. The outline stays declared and
+       stays clipped. */
+    [data-theme='dark'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='dark'] h1,
@@ -264,13 +473,10 @@
     [data-theme='dark'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
         color: var(--foreground);
     }
 
     [data-theme='dark'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         letter-spacing: -0.02em;
         margin-block: 0 0.35em;
         text-wrap: balance;
@@ -284,7 +490,7 @@
         display: inline-block;
     }
 
-    /* Microlabels: a quiet dot before the label, the theme's own violet. */
+    /* Microlabels: a quiet dot before the label, in the near-white primary. */
     [data-theme='dark'] .microlabel {
         font-family: var(--theme-font-body);
         font-size: 0.7rem;
@@ -448,14 +654,12 @@
 
     [data-theme='dark'] .kp-nav-wrap {
         background: var(--card);
-        position: relative;
         border-bottom: 1px solid var(--border-strong);
-        z-index: var(--kp-z-nav, 30);
     }
 
     [data-theme='dark'] .kp-nav {
         background: var(--card);
-        padding-block: 0.7rem;
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='dark'] .kp-nav__brand {
@@ -470,10 +674,9 @@
     }
 
     [data-theme='dark'] .kp-nav__link {
-        padding: 0.5rem 0.8rem;
+        padding-inline: 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
-        font-size: 0.94rem;
         color: var(--muted-foreground);
     }
 
@@ -509,25 +712,48 @@
         color: var(--background);
     }
 
+    /* The ring above the next link's plate [fix-38]: the ring reaches 4px
+       out, and a later item — the current page's plate — painted over its
+       end side in chromium (5% of it changed on focus). The focused item
+       is lifted over its neighbours. */
+    [data-theme='dark'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
+    }
+
     /* The dropdown: a quiet dark panel, the theme's own edge, and — the
        thing every one of the first batch's demos left unstyled (KT14) —
-       its own keyboard state, the theme's own violet rather than the
-       page-wide ink outline. */
+       its own keyboard state: a 2px outline in the primary drawn inside
+       the item on the accent ground, rather than the page-wide ring. */
     [data-theme='dark'] .kp-nav__menu {
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
         padding: 0.3rem;
         min-width: 12rem;
-        box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+        /* The oxide halo, as the dialog, the card and the popover family
+           carry it [scope-106]: a shadow in the theme's own background
+           token reads about two of 255 against the ground it stands on. */
+        box-shadow: var(--kp-halo);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
     }
 
     [data-theme='dark'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
         color: var(--foreground);
-        font-size: 0.92rem;
     }
 
     [data-theme='dark'] .kp-nav__menu a:hover {
@@ -552,25 +778,30 @@
         font-weight: 600;
     }
 
-    [data-theme='dark'] .kp-button:hover {
+    /* Hover answers a live button only [scope-100]: a disabled one took the
+       accent ground, the brackets and the label's draw-in like any other
+       (ground 17 → 28, brackets 0 → 1). Every hover rule of the instrument
+       carries the same guard. */
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--accent);
     }
 
     [data-theme='dark'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.5rem;
     }
 
     [data-theme='dark'] .kp-button--primary,
-    [data-theme='dark'] .kp-button--primary:hover {
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--primary);
         border-color: var(--primary);
         color: var(--primary-foreground);
     }
 
-    [data-theme='dark'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6));
-        border-color: hsl(from var(--primary) h s calc(l + 6));
+    /* The theme's own hover step [scope-100]: `l + 6` lifted the 93% primary
+       to about 99%, past the token that names the step (86%). */
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
     }
 
     [data-theme='dark'] .kp-button--ghost {
@@ -579,7 +810,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='dark'] .kp-button--ghost:hover {
+    [data-theme='dark'] .kp-button--ghost:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--accent);
         border-color: var(--border-strong);
     }
@@ -590,7 +821,7 @@
         color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-button--destructive:hover {
+    [data-theme='dark'] .kp-button--destructive:hover:not(:disabled, [aria-disabled='true']) {
         background: var(--destructive);
         color: var(--destructive-foreground);
     }
@@ -599,11 +830,10 @@
         opacity: 0.45;
     }
 
-    /* ── Fields: a panel and an edge, the violet as focus ──────────────── */
+    /* ── Fields: a panel and an edge, the primary edge as focus ────────── */
 
     [data-theme='dark'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.9rem;
         color: var(--foreground);
     }
 
@@ -624,21 +854,31 @@
         border-color: var(--primary);
     }
 
-    [data-theme='dark'] select.kp-field__input {
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
-            linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
-        background-position:
-            calc(100% - 18px) 55%,
-            calc(100% - 12px) 55%;
-        background-size:
-            6px 6px,
-            6px 6px;
-        background-repeat: no-repeat;
+    /* One arrow on a select, never two [fix-42]. Kenny, 2026-09-16, on the
+       textarea-and-select block: "Rechts van de dropdown zie ik één keer
+       onze styling van pijltje (> maar dan omgekeerd) en nog één van
+       firefox zelf ofzo?" What stood here was a chevron in two 6px
+       gradients — and nothing that took the browser's own arrow away, so
+       firefox drew its dropmarker beside it and chromium would draw its
+       ::picker-icon in the same place. Measured over the select's right
+       edge, firefox: 19 columns of ink where the twenty themes that leave
+       the arrow to the browser measure 8, and still 8 with this register's
+       own arrow forced off — two marks, not one. Titanium carried the same
+       three declarations and the same fault; the sweep found no third.
+
+       The register joins the other fifteen rather than keeping its own:
+       the browser draws the arrow and reserves the room for it (the
+       gradient had none — the package's 0.625rem end padding let a long
+       option run straight under it), and where the page may take the list
+       over the picker icon wears the theme [KT8]. The two registers that
+       do draw their own — terminal and retro — take the browser's away
+       with `appearance: none` in the same rule, which is what this one
+       never did. */
+    [data-theme='dark'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
     }
 
     [data-theme='dark'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -679,6 +919,24 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the box's small corner
+       on a card-grounded track, a square-ish thumb, and the primary fill
+       once on. */
+    [data-theme='dark'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.1rem;
+    }
+
+    [data-theme='dark'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='dark'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -687,15 +945,28 @@
 
     /* ── Cards, the dossier: a quiet panel, the redact bar ─────────────── */
 
+    /* The plate is on the ::after since scope-102 (below); the card itself
+       keeps the border box it always had, so nothing moves, and carries
+       nothing but the halo.
+
+       `position: relative` makes the card the containing block of that
+       plate, and `isolation: isolate` the stacking context the plate's
+       negative z-index needs — without it a card standing on a panel with
+       a ground of its own would have its plate painted behind that ground.
+       Neither is a filter: the dialog needs one because its plate is
+       `position: fixed`, and a filter would also make every card the
+       containing block of any fixed descendant a consumer puts in one. */
     [data-theme='dark'] .kp-card {
-        background: var(--card);
-        border: 1px solid var(--border-strong);
+        position: relative;
+        isolation: isolate;
+        background: transparent;
+        border: 1px solid transparent;
         border-radius: calc(var(--radius) * 1.5);
+        box-shadow: var(--kp-halo);
     }
 
     [data-theme='dark'] .kp-card__title {
         font-weight: 700;
-        font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
@@ -771,12 +1042,58 @@
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: calc(var(--radius) * 1.5);
-        box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+        /* The oxide halo [scope-102], where the shadow in the ground's own
+           colour used to be. A box-shadow rather than the blurred film,
+           because `.kp-popover` is `overflow: auto` and clips a
+           pseudo-element away — see --kp-halo. */
+        box-shadow: var(--kp-halo);
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='dark'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='dark'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='dark'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='dark'] .kp-toast--destructive,
+    [data-theme='dark'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='dark'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
     }
 
     [data-theme='dark'] .kp-dialog__title {
         font-weight: 700;
-        font-size: 1.2rem;
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -839,7 +1156,6 @@
     }
 
     [data-theme='dark'] .kp-footer h4 {
-        font-size: 0.95rem;
         color: var(--foreground);
     }
 
@@ -867,10 +1183,6 @@
     [data-theme='dark'] .kp-progress {
         background: var(--card);
         border: 1px solid var(--border-strong);
-    }
-
-    [data-theme='dark'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='dark'] .kp-spinner {
@@ -909,6 +1221,22 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='dark'] .kp-table th {
@@ -928,6 +1256,8 @@
     [data-theme='dark'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='dark'] .kp-datatable__bar {
@@ -966,6 +1296,20 @@
 
     [data-theme='dark'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the rule at the start edge its category toggle and current page carry. */
+    [data-theme='dark'] .kp-accordion__summary {
+        padding-inline-start: 0.5rem;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        border-inline-start-color: var(--primary);
     }
 
     [data-theme='dark'] .kp-reorder {
@@ -1033,16 +1377,15 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='dark'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='dark'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='dark'] .kp-breadcrumb,
     [data-theme='dark'] .kp-pagination {
-        font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
@@ -1253,7 +1596,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='dark'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
     }
@@ -1314,9 +1659,13 @@
         background: var(--secondary-active);
     }
 
+    /* Not `--primary-active` any more [scope-100]: with the hover on its own
+       token (86%), that token (78%) sat 6.2 in OKLab distance from it, under
+       the States block's floor of 10, so a press barely showed. Fourteen
+       points under the hover ground instead. */
     [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
     }
 
     [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
@@ -1344,12 +1693,73 @@
     /* ── The panels' edge is the film itself [scope-16] ────────────────
        A gradient border, drawn by painting the panel's own ground over
        the oxide and letting only the border box show through. */
-    [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog {
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-dialog::before {
         border: 1px solid transparent;
         background:
             linear-gradient(var(--card), var(--card)) padding-box,
             var(--kp-iris) border-box;
+    }
+
+    /* ── The card's plate, and its halo [scope-102] ───────────────────────
+       The dialog's scope-100 restructure, applied to the card for the same
+       measured reason: its chamfer is a clip-path, a clip-path clips the
+       element's own box-shadow, and the card could therefore cast nothing
+       at all. The plate — the ground, the film edge and the cut — moves to
+       the ::after; the card keeps its own border box (`border: 1px solid
+       transparent`, so no box moves) and carries the halo.
+
+       `inset: -1px` is the border's width: the containing block is the
+       card's padding box, and the plate has to reach back over the 1px
+       border it paints the film into. The same inset the dialog's plate
+       carries, for the same reason. */
+    [data-theme='dark'] .kp-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: calc(var(--radius) * 1.5);
+        pointer-events: none;
+    }
+
+    /* ── The dialog's plate under its content, the shadow outside it [scope-100]
+       A clip-path clips everything the element paints, its box-shadow and
+       any filter included, so a chamfered dialog lay flat on its backdrop:
+       the 0 12px 28px shadow painted nothing (1406px of it came back with
+       the clip removed). The chamfer, the ground and the film edge move to
+       the dialog's ::before, and the dialog itself stays unclipped and casts
+       the same shadow as a drop-shadow, which follows the plate's cut shape.
+       The filter makes the dialog the containing block of a fixed
+       descendant, so the plate is fixed to the dialog's box and does not
+       scroll away with a dialog whose content scrolls; the popovers a
+       dialog can hold open in the top layer, which no containing block
+       reaches. The inset is the border's width, because that containing
+       block is the padding box.
+
+       Since scope-102 the shadow is the oxide halo, and a box-shadow
+       rather than a drop-shadow: a modal dialog is `overflow: auto` by
+       the UA stylesheet and clips its own pseudo-elements, so the
+       blurred film could not be worn here at all, and the four fixed
+       shadows are what the decision asks for on every one of the three
+       surfaces. The filter stays, emptied to a no-op: it is what makes
+       this dialog the containing block of its fixed plate, and losing it
+       would let the plate scroll away. A box-shadow is painted with the
+       element's own background and border, so the opaque plate on the
+       ::before covers nothing of it — an outer shadow lies outside the
+       border box by definition. */
+    [data-theme='dark'] .kp-dialog {
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: var(--kp-halo);
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    [data-theme='dark'] .kp-dialog::before {
+        content: '';
+        position: fixed;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
     }
 
     /* ── The small parts that carry the film [scope-16] ───────────────── */
@@ -1360,5 +1770,87 @@
 
     [data-theme='dark'] .kp-measure__bracket {
         border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='dark'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.8rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The dark plate of the prototype, split in the near-white of its primary, with a hairline frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--destructive) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s max(l, 45) / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s max(l, 50) / 0.55);
+        --kp-alarm-scan: hsl(from var(--destructive) h s max(l, 50) / 0.09);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s 2% / 0.7);
+        --kp-alarm-frame: 1px solid;
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

@@ -1,0 +1,4 @@
+{
+    "note": "Component roots css/components.css defines that no catalogue page shows yet. A ratchet: gates/check-catalogue.mjs refuses a root that is neither shown nor listed here, and refuses a listed root the catalogue has started showing, so this list can only shrink. Round eight empties it page by page [scope-31].",
+    "pending": []
+}

@@ -41,6 +41,33 @@
 // hide when every command in them is filtered out; `data-kp-keys` is
 // finally rendered, three versions after it was documented; and the
 // sheet dispatches events like everything else.
+//
+// Since gap-12: a button opens either one without a line of script —
+// `<button data-kp-palette-open="commands">` — through the same open the
+// hotkey uses, so the list is filtered and `kp-palette-open` fires. A
+// page that opened the dialog with `data-kp-dialog` instead got a modal
+// with a stale list and no event. An empty value means the palette that
+// answers the key.
+//
+// Since scope-48: the palette navigates. A trigger in the bar's
+// `.kp-nav__search` slot is such an opener, and the module gives it what a
+// trigger owes its reader — `aria-haspopup="dialog"` and `aria-keyshortcuts`
+// when the markup left them out, and the hotkey printed into an empty
+// `<kbd data-kp-palette-keys>` in the platform's own spelling (⌘K, Ctrl K).
+// And an option may be a link:
+//
+//   <li role="presentation">
+//     <a class="kp-palette__option" role="option" data-kp-option
+//        data-value="reports" href="/reports">Reports</a>
+//   </li>
+//
+// Enter and a click both follow it, and `kp-palette-run` still fires first,
+// cancelable: a consumer with a router calls preventDefault() and routes.
+// Before the module attaches — or on a page with no JavaScript — it is a
+// plain anchor, so the list the server wrote is a list of working links.
+// The module takes the link out of the Tab order (`tabindex="-1"`, taken
+// back on detach): the highlight is virtual focus, and a Tab that walked
+// into the list would leave the input the combobox is built on.
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
@@ -51,8 +78,74 @@ const INPUT = 'input[role="combobox"]';
 const LIST = '[role="listbox"]';
 const STATUS = '[role="status"]';
 const GROUP = '[data-kp-group]';
+/** The attribute that opens a palette or a sheet on a press [gap-12]. */
+export const OPENER = '[data-kp-palette-open]';
 
-/** Fired on the palette when a command is chosen. A contract value [TH26]: `{ value, option }`. */
+/**
+ * Close a modal dialog on a press outside its box [scope-80].
+ *
+ * A modal `<dialog>` paints its backdrop as part of itself, so a press on
+ * the dimmed page lands on the dialog element with coordinates outside its
+ * border box. Both the press and the release have to fall outside: a drag
+ * that selects the query and lets go past the box is not a click outside.
+ * `dialog.close()` is what Escape does too, so focus goes back to the
+ * opener the same way, and the `close` event runs every channel's own
+ * bookkeeping. Returns the function that takes the listeners off.
+ *
+ * @param {HTMLDialogElement} dialog
+ * @returns {() => void}
+ */
+export function closeOnOutsidePress(dialog) {
+    /** @param {MouseEvent} event */
+    const outside = (event) => {
+        if (event.target !== dialog) return false;
+        const box = dialog.getBoundingClientRect();
+        return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+    };
+    let pressedOutside = false;
+    /** @param {PointerEvent} event */
+    const onDown = (event) => {
+        pressedOutside = dialog.open && outside(event);
+    };
+    /** @param {MouseEvent} event */
+    const onClick = (event) => {
+        const both = pressedOutside && outside(event);
+        pressedOutside = false;
+        if (both && dialog.open) dialog.close();
+    };
+    dialog.addEventListener('pointerdown', onDown);
+    dialog.addEventListener('click', onClick);
+    return () => {
+        dialog.removeEventListener('pointerdown', onDown);
+        dialog.removeEventListener('click', onClick);
+    };
+}
+
+/**
+ * Whether a click landed on an opener meant for this dialog.
+ *
+ * @param {Event} event
+ * @param {HTMLDialogElement} dialog
+ * @param {boolean} answersKey  whether this dialog is the one an empty value means
+ */
+function openerFor(event, dialog, answersKey) {
+    const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
+    if (opener === null) return false;
+    const name = opener.getAttribute('data-kp-palette-open') ?? '';
+    return name === '' ? answersKey : name === dialog.id;
+}
+
+/** An empty `<kbd>` inside an opener that the module fills with the hotkey [scope-48]. */
+export const KEYS_SLOT = '[data-kp-palette-keys]';
+
+/** Whether this is a Mac, where the modifier is ⌘ rather than Ctrl. */
+export function isMac() {
+    if (typeof navigator === 'undefined') return false;
+    const platform = /** @type {any} */ (navigator).userAgentData?.platform ?? navigator.platform ?? '';
+    return /mac|iphone|ipad/i.test(platform);
+}
+
+/** Fired on the palette when a command is chosen, cancelable. A contract value [TH26]: `{ value, option, href }`. */
 export const RUN_EVENT = 'kp-palette-run';
 /** Fired on the palette or the sheet when it opens or closes: `{ open }`. */
 export const OPEN_EVENT = 'kp-palette-open';
@@ -66,8 +159,10 @@ const RESULTS_TEXT = (n) => {
 /** @typedef {(optionText: string, query: string) => boolean} Matcher */
 /** @type {Record<string, Matcher>} */
 export const MATCHERS = {
-    // A subsequence, not a substring: "thm" should find "Theme", which is
-    // what people expect from a palette and what a plain `includes` refuses.
+    // Literal by default [scope-56]: a subsequence let "read" find "Report
+    // an incident", which reads as a wrong answer rather than a clever
+    // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
+    // a palette that wants it.
     subsequence: (text, query) => subsequence(text, query),
     substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
     prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase()),
@@ -118,7 +213,7 @@ export function palette(element) {
  *
  * @param {ParentNode} root
  * @param {{ hotkey?: string | null, sheetKey?: string | null, match?: keyof typeof MATCHERS | Matcher, clearOnClose?: boolean, closeOnRun?: boolean, typingSelector?: string }} [options]
- *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match`, `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
+ *   Defaults; per element: `data-kp-hotkey` (a letter, or "none"), `data-kp-primary` (this one answers the key when there are several), `data-kp-match` (`substring` by default, or `subsequence`, `prefix`), `data-kp-clear-on-close="false"`, `data-kp-close-on-run="false"`.
  * @returns {(() => void) & { handles: PaletteHandle[] }} detach
  */
 export function attachPalettes(
@@ -126,7 +221,7 @@ export function attachPalettes(
     {
         hotkey = 'k',
         sheetKey = '?',
-        match = 'subsequence',
+        match = 'substring',
         clearOnClose = true,
         closeOnRun = true,
         typingSelector = 'input, textarea, select, [role="textbox"]',
@@ -155,7 +250,7 @@ export function attachPalettes(
         const key = dialog.dataset.kpHotkey === 'none' ? null : (dialog.dataset.kpHotkey ?? hotkey);
         const clears = dialog.dataset.kpClearOnClose === undefined ? clearOnClose : dialog.dataset.kpClearOnClose !== 'false';
         const closes = dialog.dataset.kpCloseOnRun === undefined ? closeOnRun : dialog.dataset.kpCloseOnRun !== 'false';
-        const matcher = typeof match === 'function' ? match : (MATCHERS[dialog.dataset.kpMatch ?? match] ?? MATCHERS.subsequence);
+        const matcher = typeof match === 'function' ? match : (MATCHERS[dialog.dataset.kpMatch ?? match] ?? MATCHERS.substring);
 
         // data-kp-keys, rendered: the documented attribute nothing read.
         for (const element of list.querySelectorAll(`${OPTION_SELECTOR}[data-kp-keys]`)) {
@@ -192,16 +287,48 @@ export function attachPalettes(
             if (status !== null) status.textContent = RESULTS_TEXT(visible);
         };
 
+        // The click a choice rides on, while it is being dispatched: a link
+        // chosen by a click is followed by the browser, one chosen by Enter
+        // is clicked here so the browser follows it the same way — target,
+        // rel and a router's own click handler included.
+        /** @type {MouseEvent | null} */
+        let clicking = null;
+        /** @param {MouseEvent} event */
+        const onClickStart = (event) => {
+            clicking = event;
+        };
+        const onClickEnd = () => {
+            clicking = null;
+        };
+        list.addEventListener('click', onClickStart, true);
+
         const listbox = createListbox({
             input,
             list,
             onChoose: (_, option) => {
+                const link = option instanceof HTMLAnchorElement && option.hasAttribute('href') ? option : null;
+                if (link !== null && clicking === null) {
+                    // Comes straight back through the listbox as a click.
+                    link.click();
+                    return;
+                }
                 const value = option.dataset.value ?? (option.textContent ?? '').trim();
-                dialog.dispatchEvent(new CustomEvent(RUN_EVENT, { bubbles: true, detail: { value, option } }));
+                const run = new CustomEvent(RUN_EVENT, { bubbles: true, cancelable: true, detail: { value, option, href: link?.href ?? null } });
+                dialog.dispatchEvent(run);
+                if (run.defaultPrevented && link !== null) clicking?.preventDefault();
                 if (closes) dialog.close();
             },
             onDismiss: () => dialog.close(),
         });
+        list.addEventListener('click', onClickEnd);
+
+        // A link option is pointed at, never tabbed to [scope-48].
+        /** @type {HTMLElement[]} */
+        const untabbed = [];
+        for (const element of list.querySelectorAll(`a${OPTION_SELECTOR}[href]:not([tabindex])`)) {
+            element.setAttribute('tabindex', '-1');
+            untabbed.push(/** @type {HTMLElement} */ (element));
+        }
 
         /** @param {string} [query] */
         const openWith = (query) => {
@@ -226,6 +353,7 @@ export function attachPalettes(
             dialog.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
         };
         dialog.addEventListener('close', onClose);
+        const releaseOutside = closeOnOutsidePress(dialog);
 
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
@@ -241,6 +369,38 @@ export function attachPalettes(
         };
         if (key !== null) document.addEventListener('keydown', onKey);
 
+        /** @param {Event} event */
+        const onOpener = (event) => {
+            if (!openerFor(event, dialog, answers(PALETTE, dialog))) return;
+            openWith();
+        };
+        document.addEventListener('click', onOpener);
+
+        // The triggers that open this palette say so, and print its key
+        // [scope-48]. Only what the markup left out is written, and only
+        // that is taken back.
+        /** @type {(() => void)[]} */
+        const unstamp = [];
+        const mac = isMac();
+        for (const opener of document.querySelectorAll(OPENER)) {
+            const name = opener.getAttribute('data-kp-palette-open') ?? '';
+            if (name === '' ? !answers(PALETTE, dialog) : name !== dialog.id) continue;
+            /** @param {string} attribute @param {string} value */
+            const stamp = (attribute, value) => {
+                if (opener.hasAttribute(attribute)) return;
+                opener.setAttribute(attribute, value);
+                unstamp.push(() => opener.removeAttribute(attribute));
+            };
+            stamp('aria-haspopup', 'dialog');
+            if (key === null) continue;
+            stamp('aria-keyshortcuts', `${mac ? 'Meta' : 'Control'}+${key.toUpperCase()}`);
+            for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
+                if ((slot.textContent ?? '').trim() !== '') continue;
+                slot.textContent = getStrings().paletteHotkey(key, mac);
+                unstamp.push(() => (slot.textContent = ''));
+            }
+        }
+
         filter();
         /** @type {PaletteHandle} */
         const handle = { element: dialog, open: openWith, close: () => dialog.close(), refresh: filter };
@@ -248,9 +408,15 @@ export function attachPalettes(
         created.push(handle);
         cleanups.push(() => {
             listbox.destroy();
+            list.removeEventListener('click', onClickStart, true);
+            list.removeEventListener('click', onClickEnd);
+            for (const el of untabbed) el.removeAttribute('tabindex');
+            for (const undo of unstamp) undo();
             input.removeEventListener('input', onInput);
             dialog.removeEventListener('close', onClose);
+            releaseOutside();
             document.removeEventListener('keydown', onKey);
+            document.removeEventListener('click', onOpener);
             for (const el of list.querySelectorAll(OPTION_SELECTOR)) /** @type {HTMLElement} */ (el).hidden = false;
             for (const el of list.querySelectorAll(GROUP)) /** @type {HTMLElement} */ (el).hidden = false;
             for (const el of list.querySelectorAll('kbd[data-kp-generated]')) el.remove();
@@ -284,14 +450,23 @@ export function attachPalettes(
             else openSheet();
         };
         if (key !== null) document.addEventListener('keydown', onKey);
+        /** @param {Event} event */
+        const onOpener = (event) => {
+            if (openerFor(event, sheet, false)) openSheet();
+        };
+        document.addEventListener('click', onOpener);
         sheet.addEventListener('close', onClose);
+        // A press outside the sheet closes it, as it does the palette [scope-80].
+        const releaseOutside = closeOnOutsidePress(sheet);
         /** @type {PaletteHandle} */
         const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {} };
         handles.set(sheet, handle);
         created.push(handle);
         cleanups.push(() => {
             document.removeEventListener('keydown', onKey);
+            document.removeEventListener('click', onOpener);
             sheet.removeEventListener('close', onClose);
+            releaseOutside();
             if (sheet.open) sheet.close();
             handles.delete(sheet);
             delete sheet.dataset.kpShortcutsAttached;

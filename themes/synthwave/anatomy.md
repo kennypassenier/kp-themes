@@ -4,7 +4,7 @@
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Synthwave is
 > the twenty-fifth theme, the first lifted after cyberpunk in 5.0.0
 > (S48, LIFT_PLAN row 1). The research behind it is §25 of
-> [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the concept demo
+> [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the concept demo
 > Kenny approved on 2026-09-08 is "Outrun Horizon".
 
 ## The idea

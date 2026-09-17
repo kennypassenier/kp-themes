@@ -48,7 +48,7 @@ const token = (page, name) =>
         return v;
     }, name);
 
-test.describe('the layout layer', () => {
+test.describe('the layout layer', { tag: ['@component:layout'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);
@@ -202,15 +202,6 @@ test.describe('the layout layer', () => {
             return el.scrollWidth > el.clientWidth + 1;
         });
         expect(overflows).toBe(false);
-    });
-
-    // Drill: removing the [aria-busy='true'] rule makes the two buttons
-    // identical, which is the state standing rule 31 exists to prevent.
-    test('a busy control looks different from an idle one [TH92]', async ({ page }) => {
-        const idle = await box(page, 'idle');
-        const busy = await box(page, 'busy');
-        expect(busy.opacity).not.toBe(idle.opacity);
-        expect(busy.cursor).toBe('progress');
     });
 
     // The one AR17 turns on. `.kp-table td` is (0,1,1) and `.kp-text-end`

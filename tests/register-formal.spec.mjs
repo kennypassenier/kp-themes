@@ -7,11 +7,11 @@
 // the demo's per-word underline recolour could not be carried into the
 // shared markup and is a finding recorded in themes/formal/anatomy.md,
 // not built here); the lede's two marks washing in, staggered; the
-// section heading's rule drawing in when it scrolls into view; the
-// divider as a hairline and a short navy tick (not a tear); the mirror
+// section heading's rule drawing in when it scrolls into view; the mirror
 // button's static letterpress offset shadow; the dossier's stamp and its
 // three redactions clearing left to right on the trigger; and the whole
-// approved inventory on the page.
+// approved inventory on the page. The divider is judged by eye on the
+// catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -25,11 +25,15 @@
 //     it ever scrolls into view, red on "the rule starts collapsed";
 //   - the dossier's `mark.is-cleared::after { transform: scaleX(0) }`
 //     removed → the redaction bar never scales away after the trigger,
-//     the poll times out, red on "the redaction bar scales away".
+//     the poll times out, red on "the redaction bar scales away". Since
+//     fix-33 (scope-93) the bar is the mark's own cloned background and the
+//     rule is `mark.is-cleared { background-size: 0% 100% }`; the same test
+//     reads the size, and a wrapped phrase is covered line by line
+//     (tests/redaction-cover.spec.mjs).
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { bothHalves, shadowLayers, tabToSelector, wholeRingFor } from './ring.mjs';
+import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -70,7 +74,7 @@ const pseudo = (locator, pseudo, props) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the formal register, ${channel}`, () => {
+    test.describe(`the formal register, ${channel}`, { tag: ['@theme:formal', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline fades and rises once, untouched — no glitch, no glyph', async ({ page }) => {
             // `arrive` leaves no state class of its own and no keyframe:
             // its whole mechanism is that the module HOLDS the headline in
@@ -180,49 +184,6 @@ for (const [channel, url] of CHANNELS) {
                 .not.toMatch(/matrix\(0,/);
         });
 
-        test('the divider is a hairline and a short navy tick, not a tear; the alt divider is dashed', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const before = await pseudo(dividers.first(), '::before', ['background-color', 'display']);
-            expect(before.display).toBe('block');
-            const after = await pseudo(dividers.first(), '::after', ['background-color', 'inline-size']);
-            expect(after['inline-size']).not.toBe('0px');
-            const altBefore = await pseudo(dividers.nth(1), '::before', ['border-top-style']);
-            expect(altBefore['border-top-style']).toBe('dashed');
-            const altAfter = await pseudo(dividers.nth(1), '::after', ['content']);
-            expect(altAfter.content === 'none' || altAfter.content === '').toBe(true);
-        });
-
-        test('the mirror button carries a static letterpress offset shadow, composed with the two-channel focus ring [DI2, AR30]', async ({
-            page,
-        }) => {
-            await open(page, url);
-            const MIRROR = '.kp-button--mirror';
-            const button = page.locator(MIRROR).first();
-            const rest = shadowLayers(await button.evaluate((el) => getComputedStyle(el).boxShadow));
-            expect(rest.length, 'one layer at rest: the letterpress offset, and no ring').toBe(1);
-            expect(rest[0], 'a 2px offset shadow, always there — not an animation').toMatch(/2px 2px 0px/);
-            // Reached with the keyboard rather than focus(): a focus() that
-            // never lands resolves happily, and every read below then
-            // measures the RESTING element and passes [G15].
-            await tabToSelector(page, MIRROR);
-            // Read until the ring is whole [fix-1]: the keyboard landed a
-            // moment ago and the ring arrives through a transition.
-            const { found } = await wholeRingFor(page, MIRROR);
-            expect(found.focused, 'the keyboard actually reached the mirror button').toBe(true);
-            const focused = shadowLayers(found.boxShadow);
-            expect(
-                focused.some((layer) => /2px 2px 0px/.test(layer)),
-                'the letterpress offset survives the focus rather than being replaced by the ring',
-            ).toBe(true);
-            // The ring itself, measured — not a comma count. `split(',')`
-            // splits inside the single `rgb(r, g, b)` of the resting offset
-            // shadow, so the old assertion could never fall below three and
-            // held with no focus ring at all [G2].
-            expect(bothHalves(found), 'both channels, and focus is what paints them').toEqual({ outer: true, inner: true, changed: true });
-        });
-
         test('the dossier stamp names its own word, static; the redactions cover, then clear left to right on the trigger', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -232,13 +193,17 @@ for (const [channel, url] of CHANNELS) {
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Draft/i);
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
-            const covered = await pseudo(marks.first(), '::after', ['transform']);
-            expect(covered.transform, 'covered before the trigger').not.toMatch(/matrix\(0,/);
+            const covered = await pseudo(marks.first(), '', ['background-size', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(
+                [covered['box-decoration-break'], covered['-webkit-box-decoration-break']],
+                'the bar is cloned onto every line of the phrase',
+            ).toContain('clone');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).toHaveClass(/is-cleared/);
             await expect
-                .poll(async () => (await pseudo(marks.first(), '::after', ['transform'])).transform, 'the redaction bar scales away')
-                .toMatch(/matrix\(0,/);
+                .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the redaction bar narrows away')
+                .toBe('0% 100%');
             // A second press re-covers it (a toggle, not a one-way reveal).
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).not.toHaveClass(/is-cleared/);

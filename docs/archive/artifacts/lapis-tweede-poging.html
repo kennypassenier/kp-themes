@@ -1,0 +1,115 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Lapis, tweede poging</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;600&family=Vazirmatn:wght@400;500;600&family=Archivo:wght@400;700;800&display=swap">
+<style>
+/* Lapis was the one of five that did not land. The gold leaf catching the
+   light was a surface effect; these two are the manuscript's own working
+   methods instead — how a page is ruled, and how a word is picked out.
+   Colours and faces read from themes/lapis/tokens.json. */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:hsl(220 16% 5%);color:hsl(205 20% 94%);
+  font-family:"Vazirmatn",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1{font-family:"Archivo",system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;
+  letter-spacing:-.03em;margin:0;font-weight:800}
+p{margin:0}
+.intro{max-width:74rem;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1.1rem,4vw,3rem) 1.4rem}
+.intro p{max-width:64ch;color:hsl(210 12% 74%);margin-top:.8rem;line-height:1.65}
+.eyebrow{font-family:ui-monospace,monospace;font-size:.625rem;letter-spacing:.22em;
+  text-transform:uppercase;color:hsl(214 10% 52%)}
+.t{padding:clamp(1.6rem,4vw,2.6rem) clamp(1.1rem,4vw,3rem);
+  --background:hsl(228 60% 26%);--card:hsl(228 57% 31%);--foreground:hsl(42 55% 89%);
+  --primary:hsl(43 67% 50%);--primary-foreground:hsl(228 60% 12%);
+  --muted-foreground:hsl(230 30% 74%);--border:hsl(228 45% 36%);--border-strong:hsl(43 45% 52%);
+  --accent:hsl(5 75% 55%);--gold:hsl(45 85% 68%);--gold-dim:hsl(43 50% 44%);
+  --dur:220ms;--ease:cubic-bezier(.4,0,.2,1);
+  background:var(--background);color:var(--foreground)}
+.t__head{max-width:74rem;margin:0 auto 1.1rem;display:flex;flex-wrap:wrap;gap:.4rem 1rem;
+  align-items:baseline;justify-content:space-between}
+.t__name{font-family:"Markazi Text",Georgia,serif;font-size:1.7rem}
+.t__what{font-family:ui-monospace,monospace;font-size:.6875rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted-foreground)}
+.t__why{max-width:74rem;margin:0 auto 1.4rem;font-size:.875rem;line-height:1.65;
+  color:var(--muted-foreground);max-inline-size:68ch}
+.t__why b{color:var(--foreground);font-weight:600}
+.trio{max-width:74rem;margin:0 auto;display:grid;gap:1rem;grid-template-columns:1fr}
+@media(min-width:46rem){.trio{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.side{border:1px solid var(--border);padding:1.05rem 1.15rem 1.3rem;background:var(--card);
+  display:flex;flex-direction:column;gap:.85rem}
+.side__tag{font-family:ui-monospace,monospace;font-size:.5625rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted-foreground)}
+.row{display:flex;flex-wrap:wrap;gap:.55rem}
+.b{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  font-family:inherit;font-size:.875rem;font-weight:600;padding:.62rem 1rem;
+  border:1px solid var(--border-strong);background:transparent;color:var(--foreground);
+  cursor:pointer;border-radius:.5rem;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),
+  color var(--dur) var(--ease)}
+.b--go{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}
+.f{font:inherit;font-size:.875rem;color:var(--foreground);background:hsl(228 55% 24%);
+  border:1px solid var(--border-strong);padding:.55rem .75rem;width:100%;border-radius:.5rem}
+.f::placeholder{color:var(--muted-foreground)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ── A · de viervoudige liniëring ─────────────────────────────────────
+   A page of tazhib is ruled before it is written: concentric lines at
+   unequal intervals, gold against blue, and what matters sits inside
+   them. So the frame of a control is not one border but four rules, and
+   touching it adds the outermost one — the ruling closing around the
+   word rather than a colour changing. */
+[data-v="ruled"] .b,[data-v="ruled"] .f{border-color:transparent;
+  box-shadow:0 0 0 1px var(--gold),0 0 0 3px var(--card),0 0 0 4px var(--gold-dim);
+  transition:box-shadow .3s var(--ease),background var(--dur) var(--ease)}
+[data-v="ruled"] .b:hover,[data-v="ruled"] .b:focus-visible,[data-v="ruled"] .f:focus{
+  box-shadow:0 0 0 1px var(--gold),0 0 0 3px var(--card),0 0 0 4px var(--gold-dim),
+  0 0 0 6px var(--card),0 0 0 7px var(--gold);outline:none}
+[data-v="ruled"] .row{gap:1.1rem}
+[data-v="ruled"] .side{padding-bottom:1.6rem}
+
+/* ── B · de rubricatie ────────────────────────────────────────────────
+   In a manuscript the scribe writes the text and the rubricator comes
+   after, picking out what matters in gold. So a label starts with its
+   first letter gilded and the rest in ink, and touching it runs the gold
+   across the remaining letters, left to right, the way the second hand
+   worked across the line. */
+[data-v="rubric"] .b{color:transparent;
+  background-image:linear-gradient(90deg,var(--gold),var(--gold)),
+    linear-gradient(var(--foreground),var(--foreground));
+  background-size:1.15ch 100%,100% 100%;background-repeat:no-repeat;
+  -webkit-background-clip:text;background-clip:text;
+  transition:background-size .5s var(--ease),border-color var(--dur) var(--ease)}
+[data-v="rubric"] .b:hover,[data-v="rubric"] .b:focus-visible{
+  background-size:100% 100%,100% 100%;border-color:var(--gold)}
+[data-v="rubric"] .b--go{background-color:var(--primary);
+  background-image:linear-gradient(90deg,hsl(228 60% 12%),hsl(228 60% 12%)),
+    linear-gradient(hsl(228 45% 34%),hsl(228 45% 34%));
+  -webkit-background-clip:text,text,border-box;background-clip:text,text,border-box}
+[data-v="rubric"] .f:focus{outline:none;border-color:var(--gold)}
+
+@media(prefers-reduced-motion:reduce){.b,.f{transition-duration:1ms !important}}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Twee nieuwe voorstellen voor de eigenaardigheid van lapis, met de huidige knop ernaast, in de echte kleuren van dat thema.</h2>
+
+<div class="intro">
+  <p class="eyebrow">ronde zeven &middot; lapis &middot; tweede poging</p>
+  <h1>Twee manieren waarop een handschrift werkt.</h1>
+  <p>Het bladgoud dat licht vangt was een oppervlak-effect, en dat landde niet. Deze twee komen uit de <b>werkwijze</b> van een verlucht handschrift in plaats van uit zijn glans: hoe een bladzijde geliniëerd wordt voordat er iets op staat, en hoe een woord achteraf wordt uitgelicht. Links de knop zoals hij vandaag is; beweeg over de twee andere en druk ze in.</p>
+</div>
+
+<section class="t">
+  <div class="t__head"><span class="t__name">lapis</span><span class="t__what">twee voorstellen &middot; het bladgoud is afgekeurd</span></div>
+  <p class="t__why"><b>A · de viervoudige liniëring.</b> Een bladzijde tazhib wordt geliniëerd vóór er geschreven wordt: concentrische lijnen op ongelijke afstanden, goud tegen blauw, en wat telt staat erbinnen. Dus de rand van een element is geen enkele lijn maar vier, en aanraken voegt de buitenste toe — de liniëring sluit zich om het woord in plaats van dat er een kleur verandert. <b>B · de rubricatie.</b> In een handschrift schrijft de kopiist de tekst en komt de rubricator erna, die uitlicht wat telt. Dus een opschrift begint met zijn eerste letter in goud en de rest in inkt, en aanraken laat het goud over de overige letters lopen, van links naar rechts, zoals die tweede hand over de regel werkte.</p>
+  <div class="trio">
+    <div class="side"><span class="side__tag">nu</span>
+      <div class="row"><button class="b b--go">Verstuur</button><button class="b">Lees spec</button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side" data-v="ruled"><span class="side__tag">a &middot; de viervoudige liniëring</span>
+      <div class="row"><button class="b b--go">Verstuur</button><button class="b">Lees spec</button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+    <div class="side" data-v="rubric"><span class="side__tag">b &middot; de rubricatie</span>
+      <div class="row"><button class="b b--go">Verstuur</button><button class="b">Lees spec</button></div>
+      <input class="f" type="text" placeholder="handle"></div>
+  </div>
+</section>
+
+</body></html>

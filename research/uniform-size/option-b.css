@@ -1,0 +1,205 @@
+/* research/uniform-size/option-b.css — MOCK, not part of the package.
+
+   Option B · one package-wide box scale.
+
+   What the package would own: every box metric — control and row heights,
+   padding, gaps, margins, font sizes and line heights — at the values
+   css/components.css already declares as its defaults. What a register keeps:
+   colour, border (width included: heights are border-box, so a 3px line eats
+   inwards instead of pushing outwards), radius, shadow, the type FACE, letter
+   case and letter spacing, pseudo-element ornaments that stay out of flow.
+
+   Everything option E fixes, plus the rest of the box. Unlayered, so it beats
+   every @layer kp.* rule; scoped to <html data-option="b">, and to "c", which
+   is this file plus option-c.css. */
+
+:is([data-option='b'], [data-option='c']) body {
+    line-height: 1.5;
+}
+
+/* Controls: one height, one text size, one inline padding. */
+:is([data-option='b'], [data-option='c']) :is(.kp-button, .kp-field__input, .kp-combobox__input) {
+    box-sizing: border-box;
+    min-height: var(--kp-control-height, 2.25rem);
+    padding-block: 0;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-button {
+    padding-inline: 0.875rem;
+}
+
+:is([data-option='b'], [data-option='c']) :is(.kp-field__input, .kp-combobox__input) {
+    padding-inline: 0.625rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-button.kp-button--sm {
+    min-height: max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)));
+    padding-inline: var(--kp-space-sm, 0.5rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* Fields. */
+:is([data-option='b'], [data-option='c']) .kp-field {
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+:is([data-option='b'], [data-option='c']) .kp-field--check {
+    gap: 0.5rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-field__label {
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-combobox__status {
+    margin: 0.5rem 0 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+    line-height: 1.25;
+}
+
+/* Card, alert, badge. */
+:is([data-option='b'], [data-option='c']) .kp-card {
+    padding: 1rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-card__title {
+    margin: 0 0 0.25rem;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-badge {
+    box-sizing: border-box;
+    min-height: 1.5rem;
+    padding: 0 0.5rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-alert {
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.5;
+}
+
+/* Tabs. */
+:is([data-option='b'], [data-option='c']) .kp-tabs__list {
+    gap: 0.25rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-tab {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--kp-control-height, 2.25rem);
+    margin: 0;
+    padding: 0 0.75rem;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-tabs__panel {
+    padding-block: 0.75rem;
+}
+
+/* Navigation bar and side navigation. */
+:is([data-option='b'], [data-option='c']) .kp-nav {
+    gap: 1rem;
+    padding: 0.625rem 1.5rem;
+}
+
+@container kp-nav (max-width: 40rem) {
+    :is([data-option='b'], [data-option='c']) .kp-nav {
+        padding-inline: 0.75rem;
+    }
+}
+
+:is([data-option='b'], [data-option='c']) .kp-nav__brand {
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-nav__links {
+    gap: 0.75rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-nav__link {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--kp-control-height, 2.25rem);
+    padding: 0 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-sidenav__header {
+    padding: 0.75rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-sidenav__title {
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-sidenav__list {
+    padding: 0.4rem;
+    gap: 0.1rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-sidenav__link {
+    box-sizing: border-box;
+    min-height: var(--kp-control-height, 2.25rem);
+    padding: 0 0.6rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+/* Table and pagination. */
+:is([data-option='b'], [data-option='c']) .kp-table :is(th, td) {
+    box-sizing: border-box;
+    block-size: 2.5rem;
+    padding: 0 0.625rem;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-table thead th {
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+:is([data-option='b'], [data-option='c']) .kp-pagination ul {
+    gap: 0.5rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-pagination :is(a, span, li) {
+    padding: 0;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.5;
+}
+
+/* Dialog. */
+:is([data-option='b'], [data-option='c']) .kp-dialog {
+    padding: 1.25rem;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-dialog__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.25;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-dialog__description {
+    margin: 0 0 var(--kp-space-md, 0.75rem);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+:is([data-option='b'], [data-option='c']) .kp-dialog__actions {
+    gap: 0.5rem;
+    margin-top: 1rem;
+}

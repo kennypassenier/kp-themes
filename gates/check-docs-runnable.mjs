@@ -20,8 +20,11 @@
 // HTTPSwitchboard fault was about — a command the software refuses — and
 // gates/check-package.mjs already runs the export map against a packed
 // tarball.
+//
+// A fourth claim runs here too, since scope-76: every class MIGRATION.md
+// names exists (gates/check-migration.mjs, spawned).
 import { readFileSync, existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import process from 'node:process';
 
 const root = new URL('../', import.meta.url);
@@ -44,18 +47,15 @@ const LOOKS_LIKE_A_FILE = /^(?:css|js|fx|hooks|components|gates|tests|themes|sho
  */
 export const FOLLOWED = [
     'README.md',
-    'HANDOFF.md',
     'MIGRATION.md',
     'docs/USER_GUIDE.md',
     'docs/TROUBLESHOOTING.md',
     'docs/DEBUGGING_GUIDE.md',
     'docs/OPERATIONS_RUNBOOK.md',
-    'docs/ADOPTION_PROMPTS.md',
     'docs/ARCHITECTURE_REFERENCE.md',
     'docs/TEST_PLAN.md',
-    'docs/LAYOUT.md',
     'docs/UTILITIES.md',
-    // docs/THEMING.md is deliberately absent: its first line says it is a
+    // docs/archive/legacy/THEMING.md is deliberately absent: its first line says it is a
     // verbatim copy of kp-soft's guide, so the paths in it are claims about
     // THAT repository. A reader follows it to understand where the house
     // themes came from, not to find a file here.
@@ -69,7 +69,12 @@ export const NOT_OURS = [
 
 /** @param {(f: string) => string} [read] */
 export function claims(read = (f) => readFileSync(new URL(f, root), 'utf8')) {
-    const files = execFileSync('git', ['-C', here, 'ls-files', '*.md'], { encoding: 'utf8' }).trim().split('\n');
+    // docs/archive/ holds dated records kept for provenance [scope-77]; a
+    // script they name is a fact about their day, not an instruction.
+    const files = execFileSync('git', ['-C', here, 'ls-files', '*.md'], { encoding: 'utf8' })
+        .trim()
+        .split('\n')
+        .filter((f) => !f.startsWith('docs/archive/'));
     const pkg = JSON.parse(read('package.json'));
     const scripts = new Set(Object.keys(pkg.scripts ?? {}));
     const exported = new Set(Object.keys(pkg.exports ?? {}));
@@ -108,6 +113,11 @@ export function claims(read = (f) => readFileSync(new URL(f, root), 'utf8')) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+    // scope-76: the migration note's own `check:migration` line is gone,
+    // and its check runs here — a class the note names is one more claim a
+    // document makes that the package has to keep. Spawned rather than
+    // inlined, so it prints and refuses with exactly what it always did.
+    const migration = spawnSync(process.execPath, [new URL('check-migration.mjs', import.meta.url).pathname], { stdio: 'inherit' });
     const { files, checked, broken } = claims();
     for (const line of broken) console.error(line);
     if (broken.length > 0) {
@@ -119,4 +129,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(1);
     }
     console.log(`Runnable docs: ${checked} executable claim(s) across ${files} documents — every script, path and import subpath is real.`);
+    if (migration.status !== 0) process.exit(1);
 }

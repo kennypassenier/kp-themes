@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — uniform size across themes (research demo)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <style>
+            /* ==================================================================
+               DEMO CHROME — every class prefixed `demo-` is mock, written for
+               this page only, and is NOT part of the package. The columns are
+               iframes of ./frame.html: each is its own document with the theme
+               on its own root, because a theme cannot be nested inside another
+               on one page (catalogue/review.js explains why, measured
+               2026-09-13). Inside a column everything is a package class; the
+               options are the override files ./option-b.css … ./option-e.css,
+               which are mock too.
+               ================================================================== */
+            .demo-page {
+                max-inline-size: 84rem;
+                margin-inline: auto;
+                padding: 1rem 1.25rem 4rem;
+            }
+            .demo-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                margin-block: 1rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+            }
+            .demo-switcher .kp-field__input {
+                inline-size: 12rem;
+            }
+            .demo-look {
+                margin-block: 0.5rem 1rem;
+                padding: 0.625rem 0.875rem;
+                border-inline-start: 4px solid var(--primary);
+                background: var(--muted);
+                max-inline-size: 72rem;
+            }
+            .demo-look p {
+                margin: 0.25rem 0;
+            }
+            .demo-section {
+                margin-block-start: 3rem;
+                padding-block-start: 1.25rem;
+                border-block-start: 1px solid var(--border);
+            }
+            .demo-tables {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                gap: 1.5rem;
+                align-items: start;
+            }
+            .demo-tables .kp-table {
+                font-size: 0.875rem;
+            }
+            .demo-tables td {
+                white-space: nowrap;
+            }
+            .demo-tables th {
+                vertical-align: bottom;
+            }
+            .demo-chosen {
+                font-weight: 700;
+            }
+            /* The three columns: top-aligned, a fixed 400px each, rulers drawn
+               across at the median theme's composite edges. */
+            .demo-row {
+                position: relative;
+                display: grid;
+                grid-template-columns: repeat(3, 400px);
+                justify-content: start;
+                column-gap: 1.75rem;
+                align-items: start;
+                padding-block-end: 0.5rem;
+            }
+            .demo-col {
+                margin: 0;
+                min-inline-size: 0;
+            }
+            .demo-col__label {
+                display: flex;
+                justify-content: space-between;
+                gap: 0.5rem;
+                margin-block-end: 0.25rem;
+                font-size: 0.875rem;
+            }
+            .demo-col iframe {
+                display: block;
+                inline-size: 400px;
+                block-size: 1200px;
+                border: 0;
+                outline: 1px solid var(--border-strong);
+            }
+            .demo-heights {
+                margin-block-start: 0.5rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.75rem;
+                font-variant-numeric: tabular-nums;
+                line-height: 1.5;
+            }
+            .demo-heights b {
+                font-weight: 700;
+            }
+            .demo-ruler {
+                position: absolute;
+                inset-inline: 0;
+                block-size: 0;
+                border-block-start: 1px dashed hsl(from var(--destructive) h s l / 0.7);
+                pointer-events: none;
+                z-index: 2;
+            }
+            .demo-ruler--total {
+                border-block-start: 2px solid var(--destructive);
+            }
+            .demo-ruler span {
+                position: absolute;
+                inset-inline-end: 0;
+                translate: 0 -100%;
+                padding: 0 0.25rem;
+                font-size: 0.6875rem;
+                background: var(--background);
+                color: var(--destructive);
+            }
+            /* All 22: the same column at half size. */
+            .demo-grid22 {
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 1rem 0.75rem;
+            }
+            .demo-mini {
+                margin: 0;
+                inline-size: 200px;
+                font-size: 0.75rem;
+            }
+            .demo-mini__clip {
+                position: relative;
+                inline-size: 200px;
+                block-size: 750px;
+                overflow: hidden;
+                outline: 1px solid var(--border);
+            }
+            .demo-mini iframe {
+                position: absolute;
+                inset: 0 auto auto 0;
+                inline-size: 400px;
+                block-size: 1500px;
+                border: 0;
+                transform: scale(0.5);
+                transform-origin: 0 0;
+            }
+            .demo-mini__line {
+                position: absolute;
+                inset-inline: 0;
+                border-block-start: 2px solid var(--destructive);
+                z-index: 2;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="demo-page">
+            <h1>Can every element keep its size when the theme changes?</h1>
+            <p>
+                Kenny's question for scope-79: not one control's height, but whether all elements can have a uniform size, so that switching theme
+                leaves the layout and the size of everything nearly where it was. Below: today's measured size of all 22 themes, and four ways to make
+                them agree, each shown in the largest, the median and the smallest theme side by side.
+            </p>
+            <div class="demo-look">
+                <p>
+                    <b>What is mock and what is the package.</b> Inside every column, all of it is the package: <code>.kp-card</code>,
+                    <code>.kp-field</code>, <code>.kp-combobox</code>, <code>.kp-switch</code>, <code>.kp-button</code> and
+                    <code>.kp-button--sm</code>, <code>.kp-nav</code>, <code>.kp-sidenav</code>, <code>.kp-tabs</code>, <code>.kp-alert</code>,
+                    <code>.kp-table</code>, <code>.kp-badge</code>, <code>.kp-pagination</code>, <code>.kp-dialog</code>, with all 22 registers
+                    linked. Mock: the column page itself (<code>frame.html</code>), the four option stylesheets (<code>option-b.css</code> to
+                    <code>option-e.css</code>; option A adds nothing), and everything on this outer page prefixed <code>demo-</code> — the rulers, the
+                    height readouts, the layout.
+                </p>
+                <p>
+                    Numbers in the tables were measured in firefox at a 1400px viewport with
+                    <code>node research/uniform-size/measure.mjs</code> and <code>node research/uniform-size/analyze.mjs</code>. The readouts under
+                    each column are measured live by your own browser and can differ by a pixel or two.
+                </p>
+            </div>
+            <div class="demo-switcher">
+                <label class="kp-field__label" for="demo-theme">This page's own theme (the columns keep theirs):</label>
+                <select class="kp-field__input" id="demo-theme" data-demo-theme>
+                    <option value="formal">Formal</option>
+                    <option value="titanium">Titanium</option>
+                    <option value="blueprint">Blueprint</option>
+                </select>
+            </div>
+
+            <section class="demo-section" id="index">
+                <h2>The size index of all 22 themes</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> the first column is today. The index is the geometric mean, over 19 elements (button, small button, text
+                        field, select, combobox, checkbox row, switch, tab, badge, alert, table header row, table row, nav bar, nav link, side
+                        navigation item, pagination link, dialog title, card title, field label), of the element's height in that theme divided by the
+                        median height of that element across the 22 themes. 1.00 is the typical theme; 1.25 is a quarter taller. The three themes in
+                        bold are the columns below. The right-hand table is the spread (tallest ÷ shortest) of each composite, per option, across all
+                        22 and across the three.
+                    </p>
+                </div>
+                <div class="demo-tables">
+                    <!-- tables:index -->
+                    <table class="kp-table" aria-label="Size index per theme and option">
+                        <caption>
+                            Size index, comfortable density (A compact in the last column)
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Theme</th>
+                                <th scope="col" class="kp-text-end">A</th>
+                                <th scope="col" class="kp-text-end">B</th>
+                                <th scope="col" class="kp-text-end">C</th>
+                                <th scope="col" class="kp-text-end">D</th>
+                                <th scope="col" class="kp-text-end">E</th>
+                                <th scope="col" class="kp-text-end">A compact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="demo-chosen">
+                                <td>brutalism (largest)</td>
+                                <td class="kp-text-end">1.245</td>
+                                <td class="kp-text-end">1.032</td>
+                                <td class="kp-text-end">1.006</td>
+                                <td class="kp-text-end">1.160</td>
+                                <td class="kp-text-end">1.085</td>
+                                <td class="kp-text-end">1.223</td>
+                            </tr>
+                            <tr>
+                                <td>synthwave</td>
+                                <td class="kp-text-end">1.220</td>
+                                <td class="kp-text-end">1.032</td>
+                                <td class="kp-text-end">1.007</td>
+                                <td class="kp-text-end">1.157</td>
+                                <td class="kp-text-end">1.068</td>
+                                <td class="kp-text-end">1.224</td>
+                            </tr>
+                            <tr>
+                                <td>phantom</td>
+                                <td class="kp-text-end">1.131</td>
+                                <td class="kp-text-end">0.998</td>
+                                <td class="kp-text-end">0.998</td>
+                                <td class="kp-text-end">1.032</td>
+                                <td class="kp-text-end">1.067</td>
+                                <td class="kp-text-end">1.130</td>
+                            </tr>
+                            <tr>
+                                <td>deco</td>
+                                <td class="kp-text-end">1.079</td>
+                                <td class="kp-text-end">1.020</td>
+                                <td class="kp-text-end">1.086</td>
+                                <td class="kp-text-end">1.023</td>
+                                <td class="kp-text-end">1.010</td>
+                                <td class="kp-text-end">1.052</td>
+                            </tr>
+                            <tr>
+                                <td>lapis</td>
+                                <td class="kp-text-end">1.066</td>
+                                <td class="kp-text-end">1.010</td>
+                                <td class="kp-text-end">1.006</td>
+                                <td class="kp-text-end">1.072</td>
+                                <td class="kp-text-end">1.011</td>
+                                <td class="kp-text-end">1.075</td>
+                            </tr>
+                            <tr>
+                                <td>terminal</td>
+                                <td class="kp-text-end">1.034</td>
+                                <td class="kp-text-end">0.995</td>
+                                <td class="kp-text-end">0.995</td>
+                                <td class="kp-text-end">0.997</td>
+                                <td class="kp-text-end">0.992</td>
+                                <td class="kp-text-end">1.021</td>
+                            </tr>
+                            <tr>
+                                <td>nostromo</td>
+                                <td class="kp-text-end">1.033</td>
+                                <td class="kp-text-end">1.031</td>
+                                <td class="kp-text-end">1.001</td>
+                                <td class="kp-text-end">1.057</td>
+                                <td class="kp-text-end">1.027</td>
+                                <td class="kp-text-end">1.042</td>
+                            </tr>
+                            <tr>
+                                <td>shade-dark</td>
+                                <td class="kp-text-end">1.030</td>
+                                <td class="kp-text-end">1.008</td>
+                                <td class="kp-text-end">1.008</td>
+                                <td class="kp-text-end">1.043</td>
+                                <td class="kp-text-end">0.995</td>
+                                <td class="kp-text-end">1.038</td>
+                            </tr>
+                            <tr>
+                                <td>pastel</td>
+                                <td class="kp-text-end">1.022</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.004</td>
+                                <td class="kp-text-end">0.993</td>
+                                <td class="kp-text-end">1.010</td>
+                            </tr>
+                            <tr>
+                                <td>sepia</td>
+                                <td class="kp-text-end">1.010</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">0.999</td>
+                                <td class="kp-text-end">0.993</td>
+                                <td class="kp-text-end">1.004</td>
+                            </tr>
+                            <tr class="demo-chosen">
+                                <td>titanium (median)</td>
+                                <td class="kp-text-end">1.008</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">0.997</td>
+                                <td class="kp-text-end">1.003</td>
+                                <td class="kp-text-end">0.994</td>
+                                <td class="kp-text-end">1.003</td>
+                            </tr>
+                            <tr>
+                                <td>cyberpunk</td>
+                                <td class="kp-text-end">1.004</td>
+                                <td class="kp-text-end">0.959</td>
+                                <td class="kp-text-end">0.959</td>
+                                <td class="kp-text-end">0.935</td>
+                                <td class="kp-text-end">0.997</td>
+                                <td class="kp-text-end">1.002</td>
+                            </tr>
+                            <tr>
+                                <td>grotesk</td>
+                                <td class="kp-text-end">1.003</td>
+                                <td class="kp-text-end">1.059</td>
+                                <td class="kp-text-end">1.054</td>
+                                <td class="kp-text-end">1.018</td>
+                                <td class="kp-text-end">1.047</td>
+                                <td class="kp-text-end">1.011</td>
+                            </tr>
+                            <tr>
+                                <td>shade-light</td>
+                                <td class="kp-text-end">1.002</td>
+                                <td class="kp-text-end">1.009</td>
+                                <td class="kp-text-end">1.009</td>
+                                <td class="kp-text-end">1.018</td>
+                                <td class="kp-text-end">0.990</td>
+                                <td class="kp-text-end">1.009</td>
+                            </tr>
+                            <tr>
+                                <td>solstice</td>
+                                <td class="kp-text-end">0.998</td>
+                                <td class="kp-text-end">1.005</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.004</td>
+                                <td class="kp-text-end">1.002</td>
+                                <td class="kp-text-end">0.993</td>
+                            </tr>
+                            <tr>
+                                <td>high-contrast</td>
+                                <td class="kp-text-end">0.994</td>
+                                <td class="kp-text-end">1.003</td>
+                                <td class="kp-text-end">1.003</td>
+                                <td class="kp-text-end">1.007</td>
+                                <td class="kp-text-end">0.990</td>
+                                <td class="kp-text-end">1.003</td>
+                            </tr>
+                            <tr>
+                                <td>formal</td>
+                                <td class="kp-text-end">0.984</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">0.990</td>
+                                <td class="kp-text-end">0.997</td>
+                                <td class="kp-text-end">0.978</td>
+                            </tr>
+                            <tr>
+                                <td>retro</td>
+                                <td class="kp-text-end">0.981</td>
+                                <td class="kp-text-end">1.016</td>
+                                <td class="kp-text-end">1.028</td>
+                                <td class="kp-text-end">0.992</td>
+                                <td class="kp-text-end">0.985</td>
+                                <td class="kp-text-end">0.978</td>
+                            </tr>
+                            <tr>
+                                <td>dark</td>
+                                <td class="kp-text-end">0.973</td>
+                                <td class="kp-text-end">0.991</td>
+                                <td class="kp-text-end">0.988</td>
+                                <td class="kp-text-end">0.968</td>
+                                <td class="kp-text-end">0.988</td>
+                                <td class="kp-text-end">0.963</td>
+                            </tr>
+                            <tr>
+                                <td>forest</td>
+                                <td class="kp-text-end">0.968</td>
+                                <td class="kp-text-end">1.005</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">0.981</td>
+                                <td class="kp-text-end">0.983</td>
+                                <td class="kp-text-end">0.963</td>
+                            </tr>
+                            <tr>
+                                <td>light</td>
+                                <td class="kp-text-end">0.949</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">1.000</td>
+                                <td class="kp-text-end">0.973</td>
+                                <td class="kp-text-end">0.964</td>
+                                <td class="kp-text-end">0.945</td>
+                            </tr>
+                            <tr class="demo-chosen">
+                                <td>blueprint (smallest)</td>
+                                <td class="kp-text-end">0.947</td>
+                                <td class="kp-text-end">1.003</td>
+                                <td class="kp-text-end">0.998</td>
+                                <td class="kp-text-end">0.974</td>
+                                <td class="kp-text-end">0.963</td>
+                                <td class="kp-text-end">0.942</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- /tables:index -->
+                    <!-- tables:spread -->
+                    <table class="kp-table" aria-label="Spread per composite and option">
+                        <caption>
+                            Tallest ÷ shortest, across all 22 themes; last two columns across the three
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Option</th>
+                                <th scope="col" class="kp-text-end">form</th>
+                                <th scope="col" class="kp-text-end">shell</th>
+                                <th scope="col" class="kp-text-end">tabs</th>
+                                <th scope="col" class="kp-text-end">table</th>
+                                <th scope="col" class="kp-text-end">dialog</th>
+                                <th scope="col" class="kp-text-end">column</th>
+                                <th scope="col" class="kp-text-end">settings page</th>
+                                <th scope="col" class="kp-text-end">form (3)</th>
+                                <th scope="col" class="kp-text-end">column (3)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td class="kp-text-end">1.18</td>
+                                <td class="kp-text-end">1.69</td>
+                                <td class="kp-text-end">1.36</td>
+                                <td class="kp-text-end">1.17</td>
+                                <td class="kp-text-end">1.44</td>
+                                <td class="kp-text-end">1.22</td>
+                                <td class="kp-text-end">1.16</td>
+                                <td class="kp-text-end">1.15</td>
+                                <td class="kp-text-end">1.20</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td class="kp-text-end">1.03</td>
+                                <td class="kp-text-end">1.45</td>
+                                <td class="kp-text-end">1.24</td>
+                                <td class="kp-text-end">1.03</td>
+                                <td class="kp-text-end">1.20</td>
+                                <td class="kp-text-end">1.14</td>
+                                <td class="kp-text-end">1.06</td>
+                                <td class="kp-text-end">1.01</td>
+                                <td class="kp-text-end">1.05</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td class="kp-text-end">1.12</td>
+                                <td class="kp-text-end">1.45</td>
+                                <td class="kp-text-end">1.24</td>
+                                <td class="kp-text-end">1.03</td>
+                                <td class="kp-text-end">1.20</td>
+                                <td class="kp-text-end">1.14</td>
+                                <td class="kp-text-end">1.07</td>
+                                <td class="kp-text-end">1.02</td>
+                                <td class="kp-text-end">1.02</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td class="kp-text-end">1.14</td>
+                                <td class="kp-text-end">1.70</td>
+                                <td class="kp-text-end">1.35</td>
+                                <td class="kp-text-end">1.17</td>
+                                <td class="kp-text-end">1.37</td>
+                                <td class="kp-text-end">1.21</td>
+                                <td class="kp-text-end">1.11</td>
+                                <td class="kp-text-end">1.08</td>
+                                <td class="kp-text-end">1.15</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td class="kp-text-end">1.07</td>
+                                <td class="kp-text-end">1.63</td>
+                                <td class="kp-text-end">1.24</td>
+                                <td class="kp-text-end">1.06</td>
+                                <td class="kp-text-end">1.42</td>
+                                <td class="kp-text-end">1.12</td>
+                                <td class="kp-text-end">1.10</td>
+                                <td class="kp-text-end">1.03</td>
+                                <td class="kp-text-end">1.12</td>
+                            </tr>
+                            <tr>
+                                <td>A COMPACT</td>
+                                <td class="kp-text-end">1.18</td>
+                                <td class="kp-text-end">1.69</td>
+                                <td class="kp-text-end">1.36</td>
+                                <td class="kp-text-end">1.21</td>
+                                <td class="kp-text-end">1.46</td>
+                                <td class="kp-text-end">1.23</td>
+                                <td class="kp-text-end">1.17</td>
+                                <td class="kp-text-end">1.13</td>
+                                <td class="kp-text-end">1.20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- /tables:spread -->
+                </div>
+            </section>
+
+            <section class="demo-section" id="option-a" data-demo-option="a">
+                <h2>A · today, no change (the control)</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> the bottom edges against the red rulers, which sit at the median theme's edges. Brutalism's pinned 48px
+                        controls and thick lines push its form card down; its nav bar and dialog title wrap to two lines because Archivo Black in
+                        capitals does not fit. Blueprint stays within 3% of the median in every composite. Nothing on the package side is changed
+                        here.
+                    </p>
+                </div>
+                <div class="demo-row" data-demo-row></div>
+            </section>
+
+            <section class="demo-section" id="option-b" data-demo-option="b">
+                <h2>B · one package-wide box scale; registers keep colour, border, face</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> the controls, tabs, rows and labels now line up to the pixel across the three; brutalism keeps its black 3px
+                        lines and offset shadows, but they are drawn inside a 36px control instead of a 48px one, and its card title is 16px instead
+                        of 24px. What still differs is text that wraps: a face or letter spacing that makes a line longer still adds a line. Mock:
+                        <code>option-b.css</code>, unlayered, restating the defaults already in <code>css/components.css</code>.
+                    </p>
+                </div>
+                <div class="demo-row" data-demo-row></div>
+            </section>
+
+            <section class="demo-section" id="option-c" data-demo-option="c">
+                <h2>C · B, plus <code>font-size-adjust</code> to normalise each face</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> whether the words look the same size across the columns compared with B. For these three the change is small,
+                        because their faces already have an x-height near 0.5; switch the all-22 view below to C and look at deco, whose
+                        small-x-height face grows by about a third, so its checkbox label wraps to two lines under the box (row height 25.6px today,
+                        67.4px in C). Mock: <code>option-b.css</code> plus <code>option-c.css</code>.
+                    </p>
+                </div>
+                <div class="demo-row" data-demo-row></div>
+            </section>
+
+            <section class="demo-section" id="option-d" data-demo-option="d">
+                <h2>D · each theme keeps its sizes, clamped to ±8% of the median</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> brutalism's buttons come down from 48 to about 39px and its fields to 43, but its nav bar, dialog title and
+                        table rows barely move: a clamp on padding and font size cannot touch the height a face's own line spacing and wrapping give.
+                        Mock: <code>option-d.css</code>, generated by <code>build-d.mjs</code> from today's measurements, one clamped value per theme
+                        where the package would write <code>clamp()</code> around a size token.
+                    </p>
+                </div>
+                <div class="demo-row" data-demo-row></div>
+            </section>
+
+            <section class="demo-section" id="option-e" data-demo-option="e">
+                <h2>E · only the line boxes fixed; padding, type size and containers stay free</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> the form card and the table agree nearly as well as in B, because what makes them tall is controls and rows;
+                        the dialog does not, because its title keeps each theme's own size and wraps. Brutalism keeps its 24px card title and its
+                        chunky nav links, now in 36px rows. Mock: <code>option-e.css</code>.
+                    </p>
+                </div>
+                <div class="demo-row" data-demo-row></div>
+            </section>
+
+            <section class="demo-section" id="all-22">
+                <h2>All 22 themes, one option at a time</h2>
+                <div class="demo-look">
+                    <p>
+                        <b>Look at:</b> the same column in every theme at half size, sorted by today's size index, with a red line at the median
+                        column's bottom edge. Pick an option; the 22 columns reload in it. The label under each gives its full-size height.
+                    </p>
+                </div>
+                <div class="demo-switcher" role="group" aria-label="Option shown in all 22 themes">
+                    <button type="button" class="kp-button kp-button--sm" data-demo-all="a" aria-pressed="true">A · today</button>
+                    <button type="button" class="kp-button kp-button--sm" data-demo-all="b" aria-pressed="false">B · box scale</button>
+                    <button type="button" class="kp-button kp-button--sm" data-demo-all="c" aria-pressed="false">C · B + font-size-adjust</button>
+                    <button type="button" class="kp-button kp-button--sm" data-demo-all="d" aria-pressed="false">D · clamped ±8%</button>
+                    <button type="button" class="kp-button kp-button--sm" data-demo-all="e" aria-pressed="false">E · line boxes</button>
+                </div>
+                <div class="demo-grid22" data-demo-grid22></div>
+            </section>
+        </main>
+
+        <script type="module">
+            // Mock: the outer page's wiring. Chosen once from today's measurements
+            // (analyze.mjs: largest, median and smallest size index).
+            const CHOSEN = [
+                ['largest', 'brutalism'],
+                ['median', 'titanium'],
+                ['smallest', 'blueprint'],
+            ];
+            // Today's index order, largest first (analyze.mjs, a-comfortable).
+            const ORDER = /* order:start */ [
+                'brutalism',
+                'synthwave',
+                'phantom',
+                'deco',
+                'lapis',
+                'terminal',
+                'nostromo',
+                'shade-dark',
+                'pastel',
+                'sepia',
+                'titanium',
+                'cyberpunk',
+                'grotesk',
+                'shade-light',
+                'solstice',
+                'high-contrast',
+                'formal',
+                'retro',
+                'dark',
+                'forest',
+                'light',
+                'blueprint',
+            ]; /* order:end */
+            const COMPOSITES = ['form', 'shell', 'tabs', 'table', 'dialog'];
+            const fmt = (v) => (Math.round(v * 10) / 10).toFixed(1);
+
+            const themeSelect = document.querySelector('[data-demo-theme]');
+            if ([...themeSelect.options].some((o) => o.value === document.documentElement.dataset.theme))
+                themeSelect.value = document.documentElement.dataset.theme;
+            themeSelect.addEventListener('change', (event) => {
+                document.documentElement.setAttribute('data-theme', event.target.value);
+            });
+
+            const results = new Map();
+
+            for (const section of document.querySelectorAll('[data-demo-option]')) {
+                const option = section.dataset.demoOption;
+                const row = section.querySelector('[data-demo-row]');
+                for (const [role, theme] of CHOSEN) {
+                    const id = `${option}-${theme}`;
+                    const figure = document.createElement('figure');
+                    figure.className = 'demo-col';
+                    figure.dataset.demoId = id;
+                    figure.innerHTML =
+                        `<div class="demo-col__label"><b>${theme}</b><span>${role}</span></div>` +
+                        `<iframe title="${theme}, option ${option.toUpperCase()}" loading="eager" src="./frame.html?theme=${theme}&option=${option}&id=${id}"></iframe>` +
+                        `<figcaption class="demo-heights" data-demo-heights>measuring…</figcaption>`;
+                    row.append(figure);
+                }
+            }
+
+            function drawRow(option) {
+                const section = document.querySelector(`[data-demo-option="${option}"]`);
+                const row = section.querySelector('[data-demo-row]');
+                const got = CHOSEN.map(([, theme]) => results.get(`${option}-${theme}`));
+                if (got.some((m) => !m)) return;
+                const median = got[1];
+                for (const [i, [, theme]] of CHOSEN.entries()) {
+                    const m = got[i];
+                    const cap = row.querySelector(`[data-demo-id="${option}-${theme}"] [data-demo-heights]`);
+                    const pct = (v, ref) => {
+                        const d = Math.round((v / ref - 1) * 1000) / 10;
+                        return d === 0 ? '±0%' : `${d > 0 ? '+' : ''}${d}%`;
+                    };
+                    cap.innerHTML =
+                        COMPOSITES.map((c) => `${c} ${fmt(m.composites[c])}px <span>(${pct(m.composites[c], median.composites[c])})</span>`).join(
+                            '<br>',
+                        ) + `<br><b>column ${fmt(m.total)}px (${pct(m.total, median.total)})</b>`;
+                }
+                for (const old of row.querySelectorAll('.demo-ruler')) old.remove();
+                const frame = row.querySelector(`[data-demo-id="${option}-titanium"] iframe`);
+                const top = frame.offsetTop;
+                for (const c of COMPOSITES) {
+                    const line = document.createElement('div');
+                    line.className = 'demo-ruler';
+                    line.style.top = `${top + median.bottoms[c]}px`;
+                    line.innerHTML = `<span>median ${c}</span>`;
+                    row.append(line);
+                }
+                const total = document.createElement('div');
+                total.className = 'demo-ruler demo-ruler--total';
+                total.style.top = `${top + median.frameBottom}px`;
+                total.innerHTML = '<span>median column</span>';
+                row.append(total);
+                // One height for all three iframes: the tallest column, so none scrolls.
+                const tallest = Math.ceil(Math.max(...got.map((g) => g.frameBottom)) + 16);
+                for (const f of row.querySelectorAll('iframe')) f.style.blockSize = `${tallest}px`;
+            }
+
+            // The all-22 grid.
+            const grid = document.querySelector('[data-demo-grid22]');
+            const miniResults = new Map();
+            let currentAll = 'a';
+            function loadAll(option) {
+                currentAll = option;
+                miniResults.clear();
+                grid.replaceChildren();
+                for (const b of document.querySelectorAll('[data-demo-all]')) b.setAttribute('aria-pressed', String(b.dataset.demoAll === option));
+                for (const theme of ORDER) {
+                    const fig = document.createElement('figure');
+                    fig.className = 'demo-mini';
+                    fig.innerHTML =
+                        `<div class="demo-mini__clip"><iframe title="${theme}, option ${option.toUpperCase()}, half size" src="./frame.html?theme=${theme}&option=${option}&id=all-${option}-${theme}" tabindex="-1"></iframe></div>` +
+                        `<figcaption><b>${theme}</b> <span data-demo-mini-height>…</span></figcaption>`;
+                    fig.dataset.demoMini = theme;
+                    grid.append(fig);
+                }
+            }
+            function drawAll() {
+                if (miniResults.size < ORDER.length) return;
+                const totals = [...miniResults.values()].map((m) => m.frameBottom).sort((a, b) => a - b);
+                const median = (totals[10] + totals[11]) / 2;
+                for (const fig of grid.querySelectorAll('[data-demo-mini]')) {
+                    fig.querySelector('.demo-mini__line')?.remove();
+                    const line = document.createElement('div');
+                    line.className = 'demo-mini__line';
+                    line.style.top = `${median / 2}px`;
+                    fig.querySelector('.demo-mini__clip').append(line);
+                }
+            }
+            for (const b of document.querySelectorAll('[data-demo-all]')) b.addEventListener('click', () => loadAll(b.dataset.demoAll));
+
+            window.addEventListener('message', (event) => {
+                const m = event.data;
+                if (!m || m.kind !== 'us-measure' || !m.id) return;
+                if (m.id.startsWith('all-')) {
+                    const [, option, ...rest] = m.id.split('-');
+                    const theme = rest.join('-');
+                    if (option !== currentAll) return;
+                    miniResults.set(theme, m);
+                    const fig = grid.querySelector(`[data-demo-mini="${theme}"]`);
+                    if (fig) fig.querySelector('[data-demo-mini-height]').textContent = `${fmt(m.total)}px`;
+                    drawAll();
+                    return;
+                }
+                results.set(m.id, m);
+                drawRow(m.id.split('-')[0]);
+            });
+            addEventListener('resize', () => ['a', 'b', 'c', 'd', 'e'].forEach(drawRow));
+            loadAll('a');
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

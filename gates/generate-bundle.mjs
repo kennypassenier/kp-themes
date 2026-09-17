@@ -47,6 +47,8 @@
 // Usage:
 //   node gates/generate-bundle.mjs           write dist/
 //   node gates/generate-bundle.mjs --check   exit 1 if either would change
+//
+// Since scope-76 the check runs inside `npm run check:min`.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';

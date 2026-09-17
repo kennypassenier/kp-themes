@@ -1,0 +1,41 @@
+/* Option C's neutral loading veil [scope-85, research only].
+   One pseudo-element on the root in the theme's own background, above
+   everything, and a thin bar in the theme's primary colour that follows the
+   milestones. Painted from the first frame because it needs nothing but
+   css/themes.css, which is render-blocking. Lifted by removing the attribute
+   after a short fade, or at once under reduced motion. */
+html[data-kp-veil]::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    background: var(--background, Canvas);
+    transition: opacity 160ms ease-out;
+}
+
+html[data-kp-veil]::before {
+    content: '';
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: 2147483647;
+    block-size: 3px;
+    inline-size: calc(var(--kp-veil-progress, 0) * 100%);
+    background: var(--primary, CanvasText);
+    transition:
+        inline-size 200ms ease-out,
+        opacity 160ms ease-out;
+}
+
+html[data-kp-veil='off']::after,
+html[data-kp-veil='off']::before {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-kp-veil]::after,
+    html[data-kp-veil]::before {
+        transition: none;
+    }
+}

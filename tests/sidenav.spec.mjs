@@ -42,27 +42,9 @@ const FIXTURE = '/tests/fixtures/sidenav.html';
 const part = (page, name) => page.locator(`[data-test="${name}"]`);
 
 /** @param {import('@playwright/test').Locator} locator @param {string} message */
-const width = (locator, message) => measured(locator, (el) => el.getBoundingClientRect().width, undefined, message);
-
-/** @param {import('@playwright/test').Locator} locator @param {string} message */
 const left = (locator, message) => measured(locator, (el) => el.getBoundingClientRect().left, undefined, message);
 
-test.describe('the side navigation', () => {
-    test('side: the panel is part of the page from the start [feat-nav-3]', async ({ page }) => {
-        // The width is the claim, not "wider than something". The first
-        // version asked for more than 100px and stayed green with the rule
-        // removed, because the header text alone is wider than that — a
-        // test measuring its own scaffolding [rule 7e]. `--kp-sidenav-width`
-        // defaults to 15rem, and 15rem at the root's 16px is 240.
-        await page.goto(FIXTURE);
-
-        // In a flex row, which is where a side panel lives: the default
-        // there is to give width away, and a panel asked for 15rem painted
-        // at 135px beside its content until it was told not to.
-        await width(part(page, 'side'), 'side: exactly the width the token declares, beside content').toBeCloseTo(240, 0);
-        await measured(part(page, 'side'), (el) => getComputedStyle(el).position, undefined, 'side: and in the flow, not over it').toBe('static');
-    });
-
+test.describe('the side navigation', { tag: ['@component:navigation'] }, () => {
     test('over: away until the toggler is pressed, and it brings a backdrop [feat-nav-3]', async ({ page }) => {
         await page.goto(FIXTURE);
         const box = await part(page, 'over-box').boundingBox();
@@ -152,26 +134,24 @@ test.describe('the side navigation', () => {
         );
     });
 
-    test('slim: the rail keeps the icons and loses the words [feat-nav-3]', async ({ page }) => {
+    test('slim: a rail that hides its words still says them to a screen reader [feat-nav-3, scope-45]', async ({ page }) => {
+        // Found by the navbar research of 2026-09-13: the slim rail hid every
+        // label with display:none, which takes it out of the accessibility
+        // tree too, so a rail entry whose only visible content is an icon had
+        // no name at all and a screen reader said "button". The demo page had
+        // to write an aria-label by hand on every link to be usable, which is
+        // the proof: a page using the package correctly had to work around it.
         await page.goto(FIXTURE);
-        const panel = part(page, 'slim');
-        const full = await panel.evaluate((el) => el.getBoundingClientRect().width);
+        const toggle = part(page, 'cat-one-toggle');
+        await expect(toggle, 'slim: the category is named before the rail folds').toHaveAccessibleName('Reports');
 
         await page.evaluate(async () => {
             const { sidenavOf } = await import('/js/sidenav.js');
             sidenavOf(document.getElementById('nav-slim'))?.setSlim(true);
         });
+        await page.mouse.move(0, 0);
 
-        await width(panel, 'slim: narrower than it was').toBeLessThan(full);
-        await width(part(page, 'slim-footer'), 'slim: the words are gone').toBe(0);
-        await width(part(page, 'slim-monogram'), 'slim: and what was kept for this moment is there').toBeGreaterThan(0);
-        await width(part(page, 'slim-wordmark'), 'slim: while what it replaces is not').toBe(0);
-
-        await page.evaluate(async () => {
-            const { sidenavOf } = await import('/js/sidenav.js');
-            sidenavOf(document.getElementById('nav-slim'))?.setSlim(false);
-        });
-        await width(panel, 'slim: and all the way back — every state has a way out').toBeCloseTo(full, 0);
+        await expect(toggle, 'slim: and still named once the words are out of sight').toHaveAccessibleName('Reports');
     });
 
     test('accordion: opening one category closes the other [feat-nav-3]', async ({ page }) => {

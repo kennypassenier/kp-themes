@@ -98,15 +98,16 @@ nothing here was silently adapted.
 - **The calibration wipe's mechanism**, above: one `clip-path` sweep
   standing in for the demo's three independently-transformed `<span>`s.
   Same triad, same total duration, a different technique — the same kind
-  of substitution `docs/audits/DEMO_FIDELITY_TERMINAL_2026-09-08.md`
+  of substitution `docs/archive/audits/DEMO_FIDELITY_TERMINAL_2026-09-08.md`
   records for the cursor-in-the-box (B4: "same visual result, different
   technique").
 - **The headline's emphasised word** (small-caps, amber, tighter
   tracking, inside an `<em>` in the demo) is not reachable: the copy
   slot `c.headline` is a plain string in `showcase/concept-copy.mjs`, and
   `conceptBody()` renders it as plain text with no markup slot. The
-  register still carries the `h1 em` rule, written against the day the
-  shared generator can pass inline markup; it does not fire today.
+  register carried an `h1 em` rule for it that no markup ever reached; it
+  was removed at scope-100 and is written again the day the shared
+  generator can pass inline markup.
 - **The divider's inline SVG** (a horizon line plus a hand-drawn zigzag
   peak) is approximated with a CSS conic-gradient chevron, for the
   reason above.
@@ -179,7 +180,13 @@ cannot cross a threshold defined by alternation"), the rule draw
 (`kp-cal-rule`, a `transform`, no luminance change), and the redaction
 lift (`kp-cal-redact`, a `clip-path` under 341×256px). Hover and focus
 transitions read `--fx-duration`/`--fx-ease` from the base layer and are
-not gated again here. Nothing loops.
+not gated again here. Nothing of the register's own loops. The one
+thing that does is the band, where a page carries one
+(`data-kp-marquee`): the package's `kp-marquee-pass`, a transform with no
+luminance change, one pass every 44 s (`--kp-marquee: 44000ms`), running
+continuously. It loops by design: Kenny chose each theme's own band on
+2026-09-08, and asked for it to run when it stood still in solstice on the
+review page (`fix-31`, approved at scope-89).
 
 **DI6 — light or dark, and is the ordering deliberate?** Dark, and
 correct: background 10% → card 14% → popover 17%, rising in the right

@@ -67,11 +67,38 @@ const SHEETS = [
 ];
 
 /**
+ * The review site's shell, on request [scope-31]. The ten pages are fixed pages
+ * of the catalogue's navigation, which links them with `?review`; opened that
+ * way they carry what a research demo carries — the side navigation, the
+ * theme menu and the prompt bars — so a reviewer can move on from them. Opened
+ * without it they are the documentation site's pages as before: that site does
+ * not publish catalogue/, and a page that loaded it unasked would report a
+ * broken shell there, and would no longer write the classes its React twin
+ * writes (tests/examples.spec.mjs, AR20). Classic, so it runs before the
+ * module scripts; the three files load after the page's own.
+ */
+const REVIEW_SHELL = `<script>
+            if (new URLSearchParams(location.search).has('review')) {
+                var sheet = document.createElement('link');
+                sheet.rel = 'stylesheet';
+                sheet.href = '../catalogue/catalogue.css';
+                document.head.append(sheet);
+                var check = document.createElement('script');
+                check.src = '../catalogue/boot-check.js';
+                document.body.append(check);
+                var shell = document.createElement('script');
+                shell.type = 'module';
+                shell.src = '../catalogue/catalogue.js';
+                document.body.append(shell);
+            }
+        </script>`;
+
+/**
  * @param {string} title
  * @param {string} body
  * @returns {string}
  */
-function page(title, body, { themeFromQuery = false, theme = '' } = {}) {
+function page(title, body, { themeFromQuery = false, theme = '', reviewShell = false } = {}) {
     const links = SHEETS.map((sheet) => `        <link rel="stylesheet" href="../css/${sheet}" />`).join('\n');
     // The concept demo opts in to `?theme=<name>` [AR42]; no other page
     // does, so a query parameter never changes a page that did not ask.
@@ -92,7 +119,7 @@ ${links}
     </head>
     <body>
 ${body}
-        <script type="module" src="../js/auto.js"></script>
+        <script type="module" src="../js/auto.js"></script>${reviewShell ? `\n        ${REVIEW_SHELL}` : ''}
     </body>
 </html>
 `;
@@ -187,7 +214,11 @@ const pages = [
     ...EXAMPLES.map((example) => ({
         name: `examples/${example.id}.html`,
         file: `${example.id}.html`,
-        content: page(example.title, renderHTML(example.body, 8), { themeFromQuery: example.id === 'concept' }),
+        content: page(example.title, renderHTML(example.body, 8), {
+            themeFromQuery: example.id === 'concept',
+            // The ten fixed pages of the catalogue; the concept demo has pages of its own.
+            reviewShell: example.id !== 'concept',
+        }),
     })),
     // One concept page per theme with an approved demo [S49, A1 of
     // 2026-09-08]: the same structure and the same markers (S46, KT11),

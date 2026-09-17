@@ -32,7 +32,7 @@ const WIDTHS = [320, 360];
 /** The five components AR32 puts on one rule, by their `data-case`. */
 const CASES = ['button', 'badge', 'tag', 'health', 'copyable'];
 
-test.describe('the overflow floor', () => {
+test.describe('the overflow floor', { tag: ['@component:button', '@component:feedback', '@component:combobox', '@component:data'] }, () => {
     for (const name of CASES) {
         test(`.kp-${name === 'button' ? 'button' : name} holds the page at 320 and 360 [TH113, AR32]`, async ({ page }) => {
             /** @type {string[]} */

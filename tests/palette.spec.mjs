@@ -2,8 +2,10 @@
 //
 // What is worth testing here is not that a dialog opens — the browser
 // does that — but the three things a palette gets wrong: the keystroke on
-// the wrong platform, the subsequence match, and a `?` that steals the
-// question mark someone is typing into a field.
+// the wrong platform, the match, and a `?` that steals the
+// question mark someone is typing into a field. The sheet fitting a 360px
+// window [MR-R6-2] is judged by eye on the catalogue since scope-73
+// (page-effects#palette-narrow).
 
 import { test, expect } from '@playwright/test';
 
@@ -15,7 +17,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`command palette — ${channel.name}`, () => {
+    test.describe(`command palette — ${channel.name}`, { tag: ['@component:page'] }, () => {
         /** Open this channel's palette directly: the global key belongs to
          * the first palette in the document, which is what the shared test
          * at the bottom of this file covers. */
@@ -24,14 +26,17 @@ for (const channel of CHANNELS) {
             await page.locator(`${channel.palette} .kp-palette__input`).focus();
         };
 
-        test('it matches a subsequence, not a substring [TH40]', async ({ page }) => {
+        test('it matches literally by default, not as a subsequence [TH40, scope-56]', async ({ page }) => {
             await page.goto(URL);
             await open(page);
             const palette = page.locator(channel.palette);
-            // "thm" is not a substring of "Thema wisselen"; a palette that
-            // uses `includes` finds nothing here, which is the difference
-            // people actually notice.
+            // Until scope-56 the default was a subsequence and "thm" found
+            // "Thema wisselen". Kenny read that as a wrong answer: the
+            // default is now literal, and subsequence is asked for per
+            // palette (tests/held-60.spec.mjs drives that half).
             await palette.locator('.kp-palette__input').fill('thm');
+            await expect(palette.locator('.kp-palette__option:visible')).toHaveCount(0);
+            await palette.locator('.kp-palette__input').fill('them');
             const options = palette.locator('.kp-palette__option:visible');
             await expect(options).toHaveCount(1);
             await expect(options.first()).toContainText('Thema wisselen');
@@ -52,7 +57,7 @@ for (const channel of CHANNELS) {
     });
 }
 
-test('Ctrl+K opens the palette and focus lands in the input [TH40]', async ({ page }) => {
+test('Ctrl+K opens the palette and focus lands in the input [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     const palette = page.locator('[data-test="plain-palette"]');
     await expect(palette).toBeHidden();
@@ -63,7 +68,7 @@ test('Ctrl+K opens the palette and focus lands in the input [TH40]', async ({ pa
     await expect(palette.locator('.kp-palette__input')).toBeFocused();
 });
 
-test('a second palette on the page does not also open [TH40]', async ({ page }) => {
+test('a second palette on the page does not also open [TH40]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     await page.keyboard.press('Control+k');
     // Two open modal dialogs is what happened before the key was given to
@@ -72,7 +77,7 @@ test('a second palette on the page does not also open [TH40]', async ({ page }) 
     await expect(page.locator('dialog[open].kp-palette')).toHaveCount(1);
 });
 
-test('the shortcut sheet opens on ? and not while typing [TH49]', async ({ page }) => {
+test('the shortcut sheet opens on ? and not while typing [TH49]', { tag: ['@component:page'] }, async ({ page }) => {
     await page.goto(URL);
     const sheet = page.locator('[data-test="plain-shortcuts"]');
     await page.keyboard.press('?');
@@ -89,48 +94,25 @@ test('the shortcut sheet opens on ? and not while typing [TH49]', async ({ page 
     await expect(field).toHaveValue('?');
 });
 
-// The sheet fits a phone [MR-R6-2, DI11].
-//
-// It was content-box: `width` applied to the content and the 1.25rem
-// padding plus the border sat outside it, so at a 360px viewport the
-// dialog measured 373.19px and the page scrolled 13px sideways. Kenny
-// chose on 2026-09-07 to set border-box AND raise the default width by
-// exactly what used to sit outside it, so the sheet keeps its 490px on
-// a wide screen and only changes where it was broken.
-//
-// Drill: remove `box-sizing: border-box` from .kp-shortcuts in
-// css/components.css and the 360px case reads 373.19 against a 360px
-// viewport; remove the raised default instead and the 1280px case reads
-// 448 where it expects 490.
-test('the shortcut sheet fits a 360px viewport and is unchanged on a wide one [MR-R6-2]', async ({ page }) => {
-    await page.goto(URL);
-    const sheet = page.locator('[data-test="plain-shortcuts"]');
-
-    const widthAt = async (viewport) => {
-        await page.setViewportSize({ width: viewport, height: 900 });
-        return page.evaluate(() => {
-            const el = document.querySelector('[data-test="plain-shortcuts"]');
-            return {
-                sheet: el.getBoundingClientRect().width,
-                document: document.documentElement.scrollWidth,
-                viewport: document.documentElement.clientWidth,
-            };
-        });
-    };
-
-    await page.keyboard.press('?');
-    await expect(sheet).toBeVisible();
-
-    const narrow = await widthAt(360);
-    expect(narrow.sheet).toBeLessThanOrEqual(narrow.viewport);
-    expect(narrow.document).toBeLessThanOrEqual(narrow.viewport + 1);
-
-    // The wide case is the half of the choice that keeps the sheet
-    // looking exactly as it shipped: 490px, not the 448px a bare
-    // box-sizing change would have left.
-    for (const viewport of [768, 1280]) {
-        const wide = await widthAt(viewport);
-        expect(wide.sheet, `the sheet changed width at ${viewport}px`).toBeCloseTo(490, 0);
-        expect(wide.document).toBeLessThanOrEqual(wide.viewport + 1);
-    }
-});
+// Kenny's note on the palette (scope-80) was answered for the palette in
+// ec3d3b9; the shortcut sheet is the same dialog machinery and kept the old
+// behaviour. Before: a press on the sheet's backdrop left it open, in both
+// channels.
+for (const channel of CHANNELS) {
+    test(
+        `the shortcut sheet closes on a press outside it and stays open on a press inside, ${channel.name} [scope-80]`,
+        { tag: ['@component:page'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(URL);
+            const sheet = page.locator(channel.sheet);
+            await sheet.evaluate((dialog) => /** @type {HTMLDialogElement} */ (dialog).showModal());
+            await expect(sheet).toBeVisible();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await sheet.boundingBox());
+            await page.mouse.click(box.x + box.width / 2, box.y + Math.min(20, box.height / 2));
+            await expect(sheet, 'a press inside the box keeps the sheet open').toBeVisible();
+            await page.mouse.click(box.x + box.width / 2, Math.min(890, box.y + box.height + 40));
+            await expect(sheet, 'a press on the backdrop closes it').toBeHidden();
+        },
+    );
+}

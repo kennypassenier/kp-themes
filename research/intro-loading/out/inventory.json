@@ -1,0 +1,399 @@
+[
+    {
+        "theme": "formal",
+        "arrival": "",
+        "headline": "arrive",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 142,
+            "headlineEnd": 660,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "opacity",
+                "endTime": 450
+            },
+            {
+                "name": "transform",
+                "endTime": 450
+            }
+        ]
+    },
+    {
+        "theme": "light",
+        "arrival": "",
+        "headline": "clip",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 115,
+            "headlineEnd": 755,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-clip-reveal",
+                "endTime": 620
+            }
+        ]
+    },
+    {
+        "theme": "dark",
+        "arrival": "",
+        "headline": "resolve",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 128,
+            "headlineEnd": 956,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-resolve",
+                "endTime": 640
+            }
+        ]
+    },
+    {
+        "theme": "cyberpunk",
+        "arrival": "",
+        "headline": "decipher",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 136,
+            "headlineEnd": 1372,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-slice-1",
+                "endTime": 600
+            },
+            {
+                "name": "kp-slice-2",
+                "endTime": 600
+            }
+        ]
+    },
+    {
+        "theme": "synthwave",
+        "arrival": "boot",
+        "headline": "tracking",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 140,
+            "arrivalStart": 140,
+            "headlineEnd": 884,
+            "headlineState": "played",
+            "arrivalEnd": 1952
+        },
+        "anims": [
+            {
+                "name": "kp-tracking",
+                "endTime": 700
+            },
+            {
+                "name": "kp-shine",
+                "endTime": 1400
+            }
+        ]
+    },
+    {
+        "theme": "pastel",
+        "arrival": "",
+        "headline": "overprint",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 116,
+            "headlineEnd": 787,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-registration",
+                "endTime": 650
+            }
+        ]
+    },
+    {
+        "theme": "terminal",
+        "arrival": "boot",
+        "headline": "type",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 109,
+            "arrivalStart": 110,
+            "headlineEnd": 964,
+            "headlineState": "played",
+            "arrivalEnd": 1636
+        },
+        "anims": []
+    },
+    {
+        "theme": "forest",
+        "arrival": "",
+        "headline": "",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 109,
+            "headlineEnd": 109,
+            "headlineState": "rest"
+        },
+        "anims": [
+            {
+                "name": "kp-headline-in",
+                "endTime": 600
+            }
+        ]
+    },
+    {
+        "theme": "high-contrast",
+        "arrival": "",
+        "headline": "",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 108,
+            "headlineEnd": 108,
+            "headlineState": "rest"
+        },
+        "anims": [
+            {
+                "name": "kp-hc-headline-wipe",
+                "endTime": 550
+            }
+        ]
+    },
+    {
+        "theme": "sepia",
+        "arrival": "",
+        "headline": "ink",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 121,
+            "headlineEnd": 137,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "color",
+                "endTime": 1050
+            },
+            {
+                "name": "filter",
+                "endTime": 1050
+            },
+            {
+                "name": "opacity",
+                "endTime": 1050
+            }
+        ]
+    },
+    {
+        "theme": "blueprint",
+        "arrival": "",
+        "headline": "",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 114,
+            "headlineEnd": 114,
+            "headlineState": "rest"
+        },
+        "anims": [
+            {
+                "name": "kp-headline-fade",
+                "endTime": 900
+            }
+        ]
+    },
+    {
+        "theme": "solstice",
+        "arrival": "",
+        "headline": "calibrate",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 113,
+            "headlineEnd": 875,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-cal-slide",
+                "endTime": 740
+            }
+        ]
+    },
+    {
+        "theme": "brutalism",
+        "arrival": "",
+        "headline": "slam",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 120,
+            "headlineEnd": 728,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-slam",
+                "endTime": 260
+            }
+        ]
+    },
+    {
+        "theme": "deco",
+        "arrival": "",
+        "headline": "",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 109,
+            "headlineEnd": 109,
+            "headlineState": "rest"
+        },
+        "anims": [
+            {
+                "name": "kp-cartouche-in",
+                "endTime": 520
+            }
+        ]
+    },
+    {
+        "theme": "phantom",
+        "arrival": "card",
+        "headline": "shout",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 132,
+            "arrivalStart": 133,
+            "headlineEnd": 940,
+            "headlineState": "played",
+            "arrivalEnd": 1997
+        },
+        "anims": [
+            {
+                "name": "kp-shout",
+                "endTime": 620
+            }
+        ]
+    },
+    {
+        "theme": "shade-light",
+        "arrival": "",
+        "headline": "blur",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 115,
+            "headlineEnd": 1032,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-word-in",
+                "endTime": 520
+            }
+        ]
+    },
+    {
+        "theme": "shade-dark",
+        "arrival": "",
+        "headline": "focus",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 116,
+            "headlineEnd": 1214,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-focus",
+                "endTime": 600
+            }
+        ]
+    },
+    {
+        "theme": "retro",
+        "arrival": "boot",
+        "headline": "dissolve",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 121,
+            "arrivalStart": 121,
+            "headlineEnd": 772,
+            "headlineState": "played",
+            "arrivalEnd": 1356
+        },
+        "anims": [
+            {
+                "name": "kp-dither-clear",
+                "endTime": 640
+            }
+        ]
+    },
+    {
+        "theme": "grotesk",
+        "arrival": "",
+        "headline": "sharpen",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 108,
+            "headlineEnd": 765,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-sharpen-in",
+                "endTime": 640
+            }
+        ]
+    },
+    {
+        "theme": "lapis",
+        "arrival": "",
+        "headline": "gild",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 108,
+            "headlineEnd": 1029,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-burnish",
+                "endTime": 900
+            }
+        ]
+    },
+    {
+        "theme": "nostromo",
+        "arrival": "",
+        "headline": "popdown",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 110,
+            "headlineEnd": 451,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-popdown",
+                "endTime": 340
+            }
+        ]
+    },
+    {
+        "theme": "titanium",
+        "arrival": "",
+        "headline": "resolve",
+        "text": "Stop looking like a theme.",
+        "marks": {
+            "attach": 117,
+            "headlineEnd": 945,
+            "headlineState": "played"
+        },
+        "anims": [
+            {
+                "name": "kp-mill",
+                "endTime": 340
+            }
+        ]
+    }
+]

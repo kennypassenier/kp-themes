@@ -1,0 +1,63 @@
+{
+    "modules": [
+        "../js/auto.js",
+        "../js/no-flash.js",
+        "../js/theme-registry.js",
+        "../js/theme-core.js",
+        "../js/components.js",
+        "../js/theme-picker.js",
+        "../js/overlays.js",
+        "../js/combobox.js",
+        "../js/palette.js",
+        "../js/datatable.js",
+        "../js/tables.js",
+        "../js/patterns.js",
+        "../js/forms.js",
+        "../js/datepicker.js",
+        "../js/structure.js",
+        "../js/upload.js",
+        "../js/wizard.js",
+        "../js/colorpicker.js",
+        "../js/gridlayout.js",
+        "../js/sidenav.js",
+        "../js/effects.js",
+        "../js/strings.js",
+        "../js/listbox.js",
+        "../js/top-layer.js",
+        "../js/locale.js",
+        "../js/contrast.js"
+    ],
+    "fontsByTheme": {
+        "synthwave": [
+            "../fonts/rajdhani/rajdhani-medium.woff2",
+            "../fonts/rajdhani/rajdhani-regular.woff2",
+            "../fonts/vt323/vt323-regular.woff2",
+            "../fonts/rajdhani/rajdhani-bold.woff2",
+            "../fonts/orbitron/orbitron-variable.woff2",
+            "../fonts/sharetechmono/sharetechmono-regular.woff2",
+            "../fonts/rajdhani/rajdhani-semibold.woff2"
+        ],
+        "terminal": ["../fonts/sharetechmono/sharetechmono-regular.woff2"],
+        "retro": [
+            "../fonts/instrumentsans/instrumentsans-variable.woff2",
+            "../fonts/vt323/vt323-regular.woff2",
+            "../fonts/pixelifysans/pixelifysans-variable.woff2"
+        ],
+        "phantom": [
+            "../fonts/barlow/barlow-regular.woff2",
+            "../fonts/barlow/barlow-bold.woff2",
+            "../fonts/barlowcondensed/barlowcondensed-extrabolditalic.woff2",
+            "../fonts/barlowcondensed/barlowcondensed-blackitalic.woff2",
+            "../fonts/barlowcondensed/barlowcondensed-bold.woff2",
+            "../fonts/barlowcondensed/barlowcondensed-regular.woff2"
+        ],
+        "cyberpunk": [
+            "../fonts/rajdhani/rajdhani-medium.woff2",
+            "../fonts/rajdhani/rajdhani-regular.woff2",
+            "../fonts/sharetechmono/sharetechmono-regular.woff2",
+            "../fonts/rajdhani/rajdhani-bold.woff2",
+            "../fonts/bigshouldersdisplay/bigshouldersdisplay-variable.woff2",
+            "../fonts/rajdhani/rajdhani-semibold.woff2"
+        ]
+    }
+}

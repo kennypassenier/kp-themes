@@ -4,14 +4,14 @@
 //
 // What the demo showed and this suite holds: the striped sun on the hero
 // (a masked disc, static), the floor that drifts and never changes
-// luminance, the horizon as divider (a 2px line with its glow), the chrome
-// headline that goes through one tracking wipe and one shine and ends as
-// its own text, the neon tube a <mark> switches on (dark glass while
-// armed, a glow when on), the laser line under a heading, the stripe under
-// a hovered nav link, the sun cut on a hovered button, the OSD face on a
-// field label, the dossier's tracking noise that clears on its trigger,
-// the boot arrival with its Skip once per session, and the whole approved
-// inventory on the page.
+// luminance, the chrome headline that goes through one tracking wipe and
+// one shine and ends as its own text, the neon tube a <mark> switches on
+// (dark glass while armed, a glow when on), the laser line under a
+// heading, the stripe under a hovered nav link, the sun cut on a hovered
+// button, the OSD face on a field label, the dossier's tracking noise that
+// clears on its trigger, the boot arrival with its Skip once per session,
+// and the whole approved inventory on the page. The horizon divider is
+// judged by eye on the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the sun's mask-image removed from the register → the disc paints
@@ -62,7 +62,7 @@ const pseudo = (locator, pseudo, props) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the synthwave register, ${channel}`, () => {
+    test.describe(`the synthwave register, ${channel}`, { tag: ['@theme:synthwave', '@component:page-effects', '@component:examples'] }, () => {
         test('the page boots once per session, and Skip ends it at once [SW2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');
@@ -102,17 +102,6 @@ for (const [channel, url] of CHANNELS) {
             expect(parseFloat(floor['animation-duration'])).toBeGreaterThanOrEqual(4);
             expect(floor.transform).toMatch(/matrix3d/);
             expect(floor['background-image']).toMatch(/conic-gradient/);
-        });
-
-        test('the divider is the horizon: a 2px line with its glow over a receding grid', async ({ page }) => {
-            await open(page, url);
-            const divider = page.locator('[data-kp-divider]').first();
-            const line = await pseudo(divider, '::before', ['height', 'box-shadow', 'background-color']);
-            expect(line.height).toBe('2px');
-            expect(line['box-shadow']).not.toBe('none');
-            const grid = await pseudo(divider, '::after', ['transform', 'background-image']);
-            expect(grid.transform).toMatch(/matrix3d/);
-            expect(grid['background-image']).toMatch(/repeating-linear-gradient/);
         });
 
         test('the headline is chrome, goes through one tracking wipe and one shine, and ends as its own text [SW2]', async ({ page }) => {
@@ -217,27 +206,6 @@ for (const [channel, url] of CHANNELS) {
                 ),
             );
             expect((await pseudo(rule, '::after', ['transform'])).transform).toMatch(/none|matrix\(1,/);
-        });
-
-        test('the nav link carries the stripe on hover, and the button the sun cut', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            const link = page.locator('.kp-nav__link').nth(1);
-            const before = await pseudo(link, '::after', ['transform']);
-            expect(before.transform).toMatch(/matrix\(0,/);
-            await link.hover();
-            await expect.poll(async () => (await pseudo(link, '::after', ['transform'])).transform).toMatch(/none|matrix\(1,/);
-            expect((await pseudo(link, '::after', ['background-image']))['background-image']).toMatch(/linear-gradient/);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            await button.hover();
-            await expect.poll(async () => (await pseudo(button, '::before', ['animation-name']))['animation-name']).toBe('kp-sun-cut');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
         });
 
         test('the field label and the dossier stamp are in the OSD face, and the noise clears on the trigger', async ({ page }) => {

@@ -8,8 +8,11 @@
 // depends on. The visual half — does the highlight look right — is what
 // the showcase is for; this is the half a test can actually judge.
 
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -32,7 +35,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`combobox — ${channel.name}`, () => {
+    test.describe(`combobox — ${channel.name}`, { tag: ['@component:combobox'] }, () => {
         test('the arrow keys move the highlight, and say so [TH39]', async ({ page }) => {
             await page.goto(URL);
             const input = page.locator(channel.input);
@@ -115,7 +118,9 @@ for (const channel of CHANNELS) {
             expect(label).toBe(S.removeNamed('Urgent'));
         });
 
-        test('Backspace in an empty field removes the last tag [TH41]', async ({ page }) => {
+        test('Backspace in an empty field leaves the last tag by default [TH41, note 2 of 2026-09-13]', async ({ page }) => {
+            // It removed it until Kenny's second nostromo pass; the opt-in is
+            // held in tests/nostromo-second-pass.spec.mjs.
             await page.goto(URL);
             const input = page.locator(channel.tagsInput);
             await input.click();
@@ -123,7 +128,131 @@ for (const channel of CHANNELS) {
             await input.press('Enter');
             await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(1);
             await input.press('Backspace');
-            await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(0);
+            await expect(page.locator(`${channel.tags} .kp-tag`)).toHaveCount(1);
         });
     });
 }
+
+// ── gap-11, the combobox faults of catalogue batch 2 [2026-09-13] ─────────
+
+const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+
+/** @param {import('@playwright/test').Page} page @param {string} theme */
+const wear = async (page, theme) => {
+    await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+    await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+};
+
+for (const channel of CHANNELS) {
+    test(
+        `inside a card that clips its corners the open list is whole, takes its clicks and stays against the input, in every theme — ${channel.name} [2026-09-13]`,
+        { tag: ['@component:combobox', '@sweep'] },
+        async ({ page }) => {
+            // Before: in dark, cyberpunk, phantom and titanium the card's clip-path cut the list away — 5 of 5 options out of reach (4 of 5 in phantom).
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto(URL);
+            const box = page.locator(channel.box);
+            await box.evaluate(async (el, names) => {
+                await Promise.all(
+                    names.map(
+                        (name) =>
+                            new Promise((resolve) => {
+                                const link = document.createElement('link');
+                                link.rel = 'stylesheet';
+                                link.href = `/css/${name}-register.css`;
+                                link.onload = resolve;
+                                link.onerror = resolve;
+                                document.head.append(link);
+                            }),
+                    ),
+                );
+                // The card ends where the combobox ends, so the open list hangs outside it.
+                /** @type {HTMLElement} */ (el.parentElement).classList.add('kp-card');
+            }, THEME_NAMES);
+            const input = page.locator(channel.input);
+            const list = box.locator('.kp-combobox__list');
+            const lost = [];
+            for (const theme of THEME_NAMES) {
+                await wear(page, theme);
+                await input.click();
+                await input.press('ArrowDown');
+                await expect(list).toBeVisible();
+                const m = await box.evaluate((el) => {
+                    const field = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__input')).getBoundingClientRect();
+                    const drawn = /** @type {HTMLElement} */ (el.querySelector('.kp-combobox__list'));
+                    const options = [...drawn.querySelectorAll('[role="option"]:not([hidden])')];
+                    const missed = options.filter((option) => {
+                        const r = option.getBoundingClientRect();
+                        const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                        return hit !== option && !option.contains(hit);
+                    }).length;
+                    // Under the input, or above it when the window has no room below [fix-30]: the card
+                    // puts the framework-free input's bottom 88px above a 720px window's edge, less than the
+                    // list's 118px, so that list opens above, at the same gap.
+                    const list = drawn.getBoundingClientRect();
+                    const above = drawn.dataset.kpOverlaySide === 'above';
+                    return {
+                        missed,
+                        of: options.length,
+                        side: above ? 'above' : 'under',
+                        gap: Math.round(above ? field.top - list.bottom : list.top - field.bottom),
+                    };
+                });
+                if (m.missed > 0 || m.gap < 0 || m.gap > 8)
+                    lost.push(`${theme}: ${m.missed} of ${m.of} out of reach, ${m.gap}px ${m.side} the input`);
+                await input.press('Escape');
+                await expect(list).toBeHidden();
+                await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+            }
+            expect(lost).toEqual([]);
+        },
+    );
+}
+
+// ── scope-60, the tag input that could not add ─────────────────────────────
+
+test(
+    'the tag input adds a tag from typed text, with Enter or a comma [scope-60]',
+    { tag: ['@component:combobox', '@component:catalogue'] },
+    async ({ page }) => {
+        // scope-60: Kenny filtered and removed tags on the catalogue page, but typing a label and pressing Enter added nothing —
+        // with no option highlighted Enter had nothing to take. Before the fix no tag appeared for "safety" + Enter.
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/combobox.html');
+        await waitForJudging(page);
+        const box = page.locator('#tags .kp-combobox');
+        const input = page.locator('#cb-tags');
+        const tags = box.locator('.kp-tag > span');
+        await expect(tags).toHaveText(['Pressure', 'Night shift']);
+        // Typed text that names an option takes that option, value and all.
+        await input.fill('safety');
+        await input.press('Enter');
+        await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety']);
+        await expect(box.locator('.kp-tag').last()).toHaveAttribute('data-value', 'safety');
+        await expect(input).toHaveValue('');
+        // Typed text no option names becomes a tag of its own, on a box that allows it.
+        await input.fill('Leak at the manifold');
+        await input.press('Enter');
+        await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold']);
+        // A comma ends a tag too, and is not typed into the next one.
+        await input.pressSequentially('Valve,');
+        await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold', 'Valve']);
+        await expect(input).toHaveValue('');
+        // And the new tag can be removed like the others.
+        await box.getByRole('button', { name: 'Remove Valve' }).click();
+        await expect(tags).toHaveText(['Pressure', 'Night shift', 'Safety', 'Leak at the manifold']);
+    },
+);
+
+test('a tag input that does not allow new values adds only what an option names [scope-60]', { tag: ['@component:combobox'] }, async ({ page }) => {
+    await page.goto(URL);
+    const input = page.locator('[data-test="plain-tags-input"]');
+    const tags = page.locator('[data-test="plain-tags"] .kp-tag > span');
+    await input.fill('bug');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Bug']);
+    await input.fill('Nothing like it');
+    await input.press('Enter');
+    await expect(tags).toHaveText(['Bug']);
+    await expect(input).toHaveValue('Nothing like it');
+});

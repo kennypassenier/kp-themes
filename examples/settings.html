@@ -60,6 +60,30 @@
                         <a class="kp-nav__link" href="#settings" data-kp-text="Settings">Settings</a>
                     </li>
                 </ul>
+                <div class="kp-nav__search">
+                    <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="settings-palette">
+                        Search
+                        <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+                    </button>
+                    <dialog class="kp-palette" id="settings-palette" data-kp-palette aria-label="Go to">
+                        <input class="kp-palette__input" type="text" role="combobox" aria-label="Go to" aria-expanded="true" aria-controls="settings-palette-list" autocomplete="off" placeholder="Where to?">
+                        <ul class="kp-palette__list" id="settings-palette-list" role="listbox" aria-label="Go to">
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="overview" href="#overview">Overview</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="invoices" href="#invoices">Invoices</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="reports" href="#reports">Reports</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" data-kp-option data-value="settings" href="#settings">Settings</a>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
             </nav>
         </div>
         <main id="main" class="kp-page" tabindex="-1">
@@ -141,5 +165,20 @@
             </div>
         </main>
         <script type="module" src="../js/auto.js"></script>
+        <script>
+            if (new URLSearchParams(location.search).has('review')) {
+                var sheet = document.createElement('link');
+                sheet.rel = 'stylesheet';
+                sheet.href = '../catalogue/catalogue.css';
+                document.head.append(sheet);
+                var check = document.createElement('script');
+                check.src = '../catalogue/boot-check.js';
+                document.body.append(check);
+                var shell = document.createElement('script');
+                shell.type = 'module';
+                shell.src = '../catalogue/catalogue.js';
+                document.body.append(shell);
+            }
+        </script>
     </body>
 </html>

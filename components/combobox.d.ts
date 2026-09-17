@@ -46,7 +46,7 @@ export type ComboboxProps = {
      */
     closeOnBlur?: boolean;
     /**
-     * Default true.
+     * Backspace in an empty field removes the last tag. Default false since 2026-09-13: a stray Backspace took a chosen tag away; each tag's remove button is the way out.
      */
     backspaceRemoves?: boolean;
     /**
@@ -71,6 +71,10 @@ export type ComboboxProps = {
      * Says so in the status line instead of a count.
      */
     loading?: boolean;
+    /**
+     * A query that matches nothing keeps the list open with a "no results" row. Default true [gap-11].
+     */
+    emptyRow?: boolean;
     /**
      * A hidden input carries the value(s) for a plain <form>.
      */

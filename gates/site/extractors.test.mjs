@@ -145,7 +145,83 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // ask-1 (2026-09-10) added one: --kp-badge-wrap, the way out of the
     // overflow floor for the one of its five components whose content is
     // usually a label rather than a value.
-    assert.equal(result.expected, 116, 'AR21 counted 116 --kp-* properties in css/components.css');
+    // gap-11 (2026-09-13) added seven, one per repaired component: the date
+    // picker's input floor, the disabled opacity fields, menu items and
+    // combobox options share, the invalid radio group's outline offset, the
+    // combobox's gap now that it is not a flex column, the dialog's maximum
+    // height, the indeterminate progress stripe and the data table bar's
+    // padding.
+    // The switch (gap-11, approved 2026-09-13) added nine, the concept's
+    // geometry on knobs; gap-13 the same day added four to the data table and
+    // took one away (--kp-table-cell-pad, which nothing else read); gap-12
+    // added four (the back-to-top glyph, the overhang above a scrolling tab
+    // row, the tree's selected wash and bar); the nostromo notes (scope-60)
+    // added the dialog close button's size and held-60 the room inside the
+    // wizard's frame (--kp-wizard-padding): 123 + 9 + 3 + 4 + 1 + 1.
+    // Kenny's second nostromo pass (2026-09-13) added two, the toast
+    // button's hover veil and the ink that veil is judged from
+    // (--kp-toast-button-hover, --kp-toast-button-ink): 141 + 2.
+    // Kenny's review notes of the same day split the data table bar's one
+    // shorthand knob into its block and inline halves
+    // (--kp-datatable-bar-padding-block, --kp-datatable-bar-padding-inline):
+    // 143 - 1 + 2.
+    // The data table's seven features of the same day ("Alle zeven, nu")
+    // added eleven: the sort order ring's radius and size, the expand
+    // button's width and the detail row's block padding, the fixed column's
+    // offset, ground, hairline and hairline width, and the edit button's
+    // underline, pencil and editor floor: 144 + 11.
+    // The add-filter mode of 2026-09-14 ("Allebei, per tabel") added twelve:
+    // the filter editor's ground, ink, border, border width, radius, padding,
+    // gap, maximum width and title weight, the floors under a choice and a
+    // bound, and the gap before a filtered column's mark: 155 + 12.
+    // The palette as navigation (scope-48) added the minimum width of the
+    // bar's search trigger, --kp-nav-search-min, and the app shell moved the
+    // bar's layer into the base, --kp-z-nav, which eleven registers had each
+    // read on their own: 167 + 2.
+    // Option E of research/uniform-size/ (scope-80) put the control and row
+    // heights in the package and added four: the one-line boxes' line
+    // height, the running text's (read by the multi-line field), the table
+    // row's height and the button's block padding: 169 + 4.
+    // The shrinking header (scope-48 wave 2) added four: the compact bar's
+    // block padding and how long it glides (--kp-nav-sticky-shrink,
+    // --kp-nav-sticky-duration), the bar's measured height the module writes
+    // (--kp-nav-sticky-height), and the page's own --kp-scroll-offset, which
+    // the sticky root's scroll padding reads first: 173 + 4.
+    // The mega menu (scope-48, wave 2) added four more: the panel's minimum
+    // column width and column gap, and the two offsets js/components.js
+    // writes to line the panel up with the bar's edges
+    // (--kp-nav-mega-start, --kp-nav-mega-end): 177 + 4.
+    // Both additions together, as measured after the merge: 173 + 4 + 4 = 181.
+    // sticky-shrink (scope-85) added one: --kp-nav-pad-scale, the factor
+    // every bar multiplies its block padding by, which the compact state
+    // sets from --kp-nav-sticky-shrink: 181 + 1.
+    // Option B of research/uniform-size/ (scope-87) put the type sizes of
+    // titles, labels, tabs, badges and navigation in the package and added
+    // eighteen: the heading line height; the card, dialog and footer title
+    // sizes; the help text's size; the badge's size, line height and block
+    // padding; the tab's size and block padding; the bar link's, the menu
+    // link's and the side-navigation link's size and block padding; the
+    // breadcrumb's and the pagination's size: 182 + 18.
+    // scope-88 added two, the field error's and the side navigation title's
+    // size (--kp-field-error-size, --kp-sidenav-title-size): 200 + 2.
+    // fix-32 added one, --kp-datatable-head-reach, the shadow that carries a
+    // sticky header's ground 2px above it, which a register drawing its own
+    // shadow on the header adds to its list: 202 + 1.
+    // Kenny's surfaces note of 2026-09-15 added one,
+    // --kp-surface-padding-inline, the room between a surface's ground and
+    // its content; the alignment beside it is an attribute
+    // (data-kp-surface-align), not a property: 203 + 1.
+    // The alarm (scope-94) added twenty-three: the plate, the ink, the soft
+    // line, the split, the ink's own words, the glow, the halo, the scanlines,
+    // the vignette, the stripes and the bars' height, the frame; the
+    // headline's font, size, case and tracking; the panel's ground, border,
+    // shadow, padding and radius; and the two shares of the time left that
+    // js/alarm.js writes (--kp-alarm-left, --kp-alarm-left-step): 204 + 23.
+    // fix-41 added one, --kp-nav-menu-shift: how far a bar's dropdown or
+    // mega panel slides along the inline axis to stay inside the box that
+    // shows it. js/components.js writes it, the way it writes the two mega
+    // offsets beside it: 227 + 1.
+    assert.equal(result.expected, 228, 'AR21 counted 228 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -177,7 +253,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // [AR31]; and TH104's five, the two wrapper floors plus the nav bar's
     // three padding knobs, which used to be one `clamp(…, 3vw, …)`
     // reading the window rather than its own box.
-    assert.equal(result.readCount, 116);
+    // Every one of them is read through var(), all five rounds' included.
+    // Option B's eighteen (scope-87), scope-88's two, fix-32's one and the surface's one are read through var() too.
+    // So are the alarm's twenty-three (scope-94), and fix-41's one.
+    assert.equal(result.readCount, 228);
     assert.deepEqual(result.unread, []);
 });
 

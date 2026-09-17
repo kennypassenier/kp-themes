@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Media and bands · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Media and bands</h1>
+            <p class="cat-intro">
+                Pictures and the rows that sit around them: <code>.kp-media</code> in its four ratios with <code>.kp-media-figure</code> for a
+                caption, the movable dashboard <code>.kp-grid</code> in its <code>.kp-grid-wrap</code>, the running band <code>.kp-marquee</code>, and
+                the two quiet rows from the concept demo, <code>.kp-laurels</code> and <code>.kp-platforms</code>. Every picture here is an inline SVG
+                in a data URI, so the page makes no request of its own.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#ratios">Ratios</a></li>
+                <li><a href="#empty">Before the picture</a></li>
+                <li><a href="#figure">Figure and overlay</a></li>
+                <li><a href="#grid">Grid</a></li>
+                <li><a href="#grid-narrow">Grid in a narrow box</a></li>
+                <li><a href="#marquee">Marquee</a></li>
+                <li><a href="#laurels">Laurels and platforms</a></li>
+            </ul>
+
+            <section class="cat-block" id="ratios">
+                <h2>Ratios</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> one landscape picture in four frames: the default 16:9, <code>--wide</code> 21:9, <code>--square</code> and
+                    <code>--portrait</code> 3:4. Each frame keeps its own shape and the picture <i>covers</i> it, so the square and the portrait crop
+                    the sides of the pump house rather than squash it — a stretched roof is the fault. The fifth frame is the portrait again with the
+                    <code>--kp-media-fit: contain</code> knob: the whole picture shows, and the bands above and below it are the frame's muted ground,
+                    which must be visibly part of the frame and not a gap in the page. Each theme may give the frame an edge; it must be the same edge
+                    on all five.
+                </div>
+                <div class="cat-stage cat-grid">
+                    <div class="cat-cell">
+                        <h3>Default, 16:9</h3>
+                        <div class="kp-media">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                        </div>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Wide, 21:9</h3>
+                        <div class="kp-media kp-media--wide">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                        </div>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Square</h3>
+                        <div class="kp-media kp-media--square">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                        </div>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Portrait, 3:4</h3>
+                        <div class="kp-media kp-media--portrait">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                        </div>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Portrait, fit: contain</h3>
+                        <div class="kp-media kp-media--portrait" style="--kp-media-fit: contain">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="empty">
+                <h2>Before the picture arrives</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the frames with no picture in them, which is every frame for the first moments of a slow page. Each must already
+                    be its final shape on the muted ground, so the text under it does not jump when the picture lands — the sentence under the square
+                    must sit exactly as far down as it would with a picture. An empty frame must read as a place for something, not as a grey button;
+                    in a theme whose muted ground is close to its page, check the frame is still there at all.
+                </div>
+                <div class="cat-stage cat-grid">
+                    <div class="cat-cell">
+                        <div class="kp-media"></div>
+                        <p>The readings chart for line 2 loads here.</p>
+                    </div>
+                    <div class="cat-cell">
+                        <div class="kp-media kp-media--square"></div>
+                        <p>The photograph of the gauge, taken at 02:40, loads here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="figure">
+                <h2>Figure and overlay</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the caption under a figure sits close to its picture, smaller and muted, and belongs to it rather than to the next
+                    paragraph. The overlay text lies on a dark gradient at the bottom of the picture: it is white on that gradient in every theme on
+                    purpose, and it must stay legible over the pale sky of this picture too. The second overlay is a long sentence in a narrow frame:
+                    the gradient must grow with the text, and no line may run over the pale part of the picture without a ground under it.
+                </div>
+                <div class="cat-stage cat-grid">
+                    <figure class="kp-media-figure">
+                        <div class="kp-media kp-media--square">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20600%20600%22%3E%20%3Crect%20width%3D%22600%22%20height%3D%22600%22%20fill%3D%22%23e7e2d6%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%22220%22%20fill%3D%22%23fbfaf6%22%20stroke%3D%22%233a3a3a%22%20stroke-width%3D%2218%22%2F%3E%20%3Cpath%20d%3D%22M140%20400%20A180%20180%200%201%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23b9b3a5%22%20stroke-width%3D%2210%22%2F%3E%20%3Cpath%20d%3D%22M400%20190%20A180%20180%200%200%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23c0392b%22%20stroke-width%3D%2214%22%2F%3E%20%3Cline%20x1%3D%22300%22%20y1%3D%22300%22%20x2%3D%22190%22%20y2%3D%22395%22%20stroke%3D%22%231f1f1f%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%2218%22%20fill%3D%22%231f1f1f%22%2F%3E%20%3Ctext%20x%3D%22300%22%20y%3D%22470%22%20font-family%3D%22sans-serif%22%20font-size%3D%2240%22%20text-anchor%3D%22middle%22%20fill%3D%22%233a3a3a%22%3E1.1%20bar%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="The wall gauge on line 2 reading 1.1 bar, its needle in the low zone"
+                            />
+                            <p class="kp-media__overlay">Line 2, 02:40</p>
+                        </div>
+                        <figcaption>The wall gauge at the moment the line was closed. It agreed with sensor PT-204 within 0.05 bar.</figcaption>
+                    </figure>
+                    <figure class="kp-media-figure">
+                        <div class="kp-media">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="Pump house 4 from the access road, pipes running out on both sides"
+                            />
+                            <p class="kp-media__overlay">
+                                Pump house 4 from the access road, where the day shift parks and the vendor's van unloads the replacement valve
+                            </p>
+                        </div>
+                        <figcaption>Taken by the night shift at 06:05, in daylight.</figcaption>
+                    </figure>
+                    <figure class="kp-media-figure">
+                        <div class="kp-media kp-media--portrait">
+                            <img
+                                src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%201200%22%3E%20%3Crect%20width%3D%22900%22%20height%3D%221200%22%20fill%3D%22%23d6dde2%22%2F%3E%20%3Crect%20x%3D%22390%22%20y%3D%220%22%20width%3D%22120%22%20height%3D%221200%22%20fill%3D%22%237d8a93%22%2F%3E%20%3Crect%20x%3D%22250%22%20y%3D%22520%22%20width%3D%22400%22%20height%3D%22160%22%20rx%3D%2220%22%20fill%3D%22%234c5961%22%2F%3E%20%3Ccircle%20cx%3D%22450%22%20cy%3D%22600%22%20r%3D%2254%22%20fill%3D%22%23c0392b%22%2F%3E%20%3Crect%20x%3D%22280%22%20y%3D%22760%22%20width%3D%22340%22%20height%3D%2280%22%20fill%3D%22%23f4d35e%22%2F%3E%20%3Ctext%20x%3D%22450%22%20y%3D%22815%22%20font-family%3D%22sans-serif%22%20font-size%3D%2244%22%20text-anchor%3D%22middle%22%20fill%3D%22%231f1f1f%22%3ELOCKED%20OUT%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+                                alt="The manifold valve with a red lock-out tag and a yellow LOCKED OUT sign"
+                            />
+                        </div>
+                        <figcaption>The lock-out tag on the manifold valve.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="cat-block" id="grid">
+                <h2>Grid</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> six tiles on a six-column grid, each on the card surface with a boundary. Tab to a tile: its focus ring must sit
+                    just outside its boundary and not be cut by the tile next to it. Press the arrows to move it and Shift with the arrows to resize
+                    it; the neighbours stay where they are, and a tile can never leave the grid. The <b>Alarms</b> tile is two rows tall; its text
+                    must stay centred in the whole tile, not in its first row. A tile holding more text than fits must clip inside its boundary, not
+                    spill onto the tile below.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-grid-wrap">
+                        <div class="kp-grid" data-kp-grid data-kp-columns="6">
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="pressure"
+                                data-x="0"
+                                data-y="0"
+                                data-w="2"
+                                data-h="1"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Pressure"
+                            >
+                                Pressure · 1.1 bar
+                            </div>
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="flow"
+                                data-x="2"
+                                data-y="0"
+                                data-w="2"
+                                data-h="1"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Flow"
+                            >
+                                Flow · 0 l/min
+                            </div>
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="alarms"
+                                data-x="4"
+                                data-y="0"
+                                data-w="2"
+                                data-h="2"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Alarms"
+                            >
+                                Alarms · 2 open
+                            </div>
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="pump"
+                                data-x="0"
+                                data-y="1"
+                                data-w="1"
+                                data-h="1"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Pump starts"
+                            >
+                                Pump · 15/h
+                            </div>
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="valve"
+                                data-x="1"
+                                data-y="1"
+                                data-w="1"
+                                data-h="1"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Valve"
+                            >
+                                Valve · shut
+                            </div>
+                            <div
+                                class="kp-grid__tile"
+                                data-kp-tile="note"
+                                data-x="2"
+                                data-y="1"
+                                data-w="2"
+                                data-h="1"
+                                tabindex="0"
+                                role="group"
+                                aria-label="Last note"
+                            >
+                                Last note: the gauge and the sensor agreed both times the pressure dropped, so something upstream of the manifold is
+                                at fault and the vendor is booked for Monday.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="grid-narrow">
+                <h2>Grid in a narrow box</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same kind of grid in a box narrower than 40rem stops being an arrangement: one column, tiles in source order,
+                    each keeping its own height — the two-row tile stays twice as tall. No tile may sit on top of another. Drag the pane wider than
+                    40rem and the six columns must come back with each tile where its numbers say.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 20rem">
+                        <div class="kp-grid-wrap">
+                            <div class="kp-grid" data-kp-grid data-kp-columns="6">
+                                <div
+                                    class="kp-grid__tile"
+                                    data-kp-tile="pressure"
+                                    data-x="0"
+                                    data-y="0"
+                                    data-w="3"
+                                    data-h="1"
+                                    tabindex="0"
+                                    role="group"
+                                    aria-label="Pressure"
+                                >
+                                    Pressure · 3.2 bar
+                                </div>
+                                <div
+                                    class="kp-grid__tile"
+                                    data-kp-tile="alarms"
+                                    data-x="3"
+                                    data-y="0"
+                                    data-w="3"
+                                    data-h="2"
+                                    tabindex="0"
+                                    role="group"
+                                    aria-label="Alarms"
+                                >
+                                    Alarms · none
+                                </div>
+                                <div
+                                    class="kp-grid__tile"
+                                    data-kp-tile="flow"
+                                    data-x="0"
+                                    data-y="1"
+                                    data-w="3"
+                                    data-h="1"
+                                    tabindex="0"
+                                    role="group"
+                                    aria-label="Flow"
+                                >
+                                    Flow · 41 l/min
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="marquee">
+                <h2>Marquee</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the first band runs: its items pass right to left without a jump where the row repeats, at the theme's own speed,
+                    and a screen reader hears each item once — the moving copy is hidden from it. With reduced motion asked for in the system, the
+                    band must stand still. Scroll it out of view and back: it resumes where it was. The second band has no
+                    <code>data-kp-marquee</code>, which is the no-script answer: the same items laid out as a still row that wraps. The third holds
+                    long items; in the running band a long item must stay on one line, and in the still row it must wrap.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-marquee" data-kp-marquee>
+                        <span>Line 1 · 3.2 bar</span>
+                        <span>Line 2 · locked out</span>
+                        <span>Cold store · −18 °C</span>
+                        <span>Weighbridge · idle</span>
+                        <span>Next shift · 06:00</span>
+                    </div>
+                    <div style="margin-block-start: 1rem">
+                        <div class="kp-marquee">
+                            <span>Line 1 · 3.2 bar</span>
+                            <span>Line 2 · locked out</span>
+                            <span>Cold store · −18 °C</span>
+                            <span>Weighbridge · idle</span>
+                            <span>Next shift · 06:00</span>
+                        </div>
+                    </div>
+                    <div style="margin-block-start: 1rem">
+                        <div class="kp-marquee" data-kp-marquee>
+                            <span>Vendor on site Monday 08:00 to replace the manifold valve on line 2 — keep the access road clear</span>
+                            <span>Lock-outs are signed by the shift lead only</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="laurels">
+                <h2>Laurels and platforms</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> laurels are a quiet row of claims: each value bold in the page's ink on its own line, its source muted under it,
+                    the items wrapping as a row rather than stacking into a list. The platforms line is smaller and muted still, a row of names with a
+                    wide gap and nothing between them. Both are quiet by default and a register may dramatise them; whatever it does, the bold value
+                    must stay the loudest thing in each laurel. A theme that draws a box around each laurel or platform (nostromo boxes the laurels)
+                    keeps room between the words and the box’s edges. In the narrow pane both must wrap without an item splitting across two columns.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ul class="kp-laurels" aria-label="What this site is measured against">
+                        <li><b>412 days</b> without a lost-time injury</li>
+                        <li><b>99.7 %</b> pump availability, last quarter</li>
+                        <li><b>2 minutes</b> median time to lock out</li>
+                    </ul>
+                    <div style="margin-block-start: 1rem">
+                        <div class="kp-platforms">
+                            <span
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                >
+                                    <circle cx="12" cy="12" r="2.5" />
+                                    <path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10" />
+                                </svg>
+                                <small>Available on</small> PT-204 sensor</span
+                            >
+                            <span
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                >
+                                    <circle cx="12" cy="13" r="8" />
+                                    <path d="M12 13l4-4" />
+                                </svg>
+                                <small>Available on</small> Wall gauge</span
+                            >
+                            <span
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                >
+                                    <rect x="7" y="3" width="10" height="18" rx="2" />
+                                    <path d="M11 18h2" />
+                                </svg>
+                                <small>Available on</small> Handheld</span
+                            >
+                            <span
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                >
+                                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                                    <path d="M3 9h18" />
+                                </svg>
+                                <small>Available on</small> Vendor portal</span
+                            >
+                        </div>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 14rem">
+                        <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+                            <li><b>412 days</b> without a lost-time injury</li>
+                            <li><b>99.7 %</b> pump availability, last quarter</li>
+                        </ul>
+                        <div style="margin-block-start: 1rem">
+                            <div class="kp-platforms">
+                                <span
+                                    ><svg
+                                        viewBox="0 0 24 24"
+                                        width="16"
+                                        height="16"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                    >
+                                        <circle cx="12" cy="12" r="2.5" />
+                                        <path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10" />
+                                    </svg>
+                                    <small>Available on</small> PT-204 sensor</span
+                                >
+                                <span
+                                    ><svg
+                                        viewBox="0 0 24 24"
+                                        width="16"
+                                        height="16"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                    >
+                                        <circle cx="12" cy="13" r="8" />
+                                        <path d="M12 13l4-4" />
+                                    </svg>
+                                    <small>Available on</small> Wall gauge</span
+                                >
+                                <span
+                                    ><svg
+                                        viewBox="0 0 24 24"
+                                        width="16"
+                                        height="16"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                    >
+                                        <rect x="7" y="3" width="10" height="18" rx="2" />
+                                        <path d="M11 18h2" />
+                                    </svg>
+                                    <small>Available on</small> Handheld</span
+                                >
+                                <span
+                                    ><svg
+                                        viewBox="0 0 24 24"
+                                        width="16"
+                                        height="16"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                    >
+                                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                                        <path d="M3 9h18" />
+                                    </svg>
+                                    <small>Available on</small> Vendor portal</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

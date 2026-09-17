@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Page effects · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Page effects</h1>
+            <p class="cat-intro">
+                What a theme does to a page rather than to a component: the hook vocabulary of <code>js/effects.js</code> — the headline reveal, the
+                marks in a lede, the rule under a heading, the dividers, the dossier with its stamp and redactions, the hero and app surfaces — and
+                the parts that had no page of their own: the call-to-action link and the end-side navbar, the button readout, a compact form, the
+                shortcut sheet on a phone, a plain table falling into cards, and the theme picker's focus ring. Until this page these were judged by
+                tests only. The markup in every block is the markup the concept pages use.
+            </p>
+            <p class="cat-intro">
+                A reveal is shown twice. The <b>live</b> copy plays when the page loads and again on <b>Replay</b>, and again whenever the theme is
+                switched, so each theme's own routine can be watched. The copy in the dashed stage is <b>at rest</b>: attached as for someone who
+                asked for less motion, so it is the look the live copy must end on. Only the stage is what a verdict records.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#headline">Headline</a></li>
+                <li><a href="#lede-marks">Lede marks</a></li>
+                <li><a href="#section-rule">Section rule</a></li>
+                <li><a href="#dividers">Dividers</a></li>
+                <li><a href="#dossier">Dossier</a></li>
+                <li><a href="#surfaces">Surfaces</a></li>
+                <li><a href="#nav-cta">Call to action and end side</a></li>
+                <li><a href="#button-readout">Button readout</a></li>
+                <li><a href="#density-compact-form">Compact form</a></li>
+                <li><a href="#palette-narrow">Shortcut sheet at 360 px</a></li>
+                <li><a href="#table-plain-narrow">Plain table in 400 px</a></li>
+                <li><a href="#picker-focus">Picker focus ring</a></li>
+            </ul>
+
+            <section class="cat-block" id="headline">
+                <h2>Headline</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> in <b>every</b> theme the headline arrives once and then stands as exactly its own text — no leftover glyph, no
+                    caret, no word moved off its baseline — in the theme's display face on the hero ground, and nothing in the arrival flashes. The
+                    live copy must end looking exactly like the copy at rest. Then per theme: <b>formal</b> fades and rises once, whole, no glyph ever
+                    touched; <b>cyberpunk</b> deciphers left to right out of glyph noise and ends with one slice burst; <b>nostromo</b> pops down
+                    under a clip, the text whole throughout; <b>synthwave</b> is chrome, one tracking wipe and one shine; <b>terminal</b> types itself
+                    with a block caret that leaves with the last letter; <b>retro</b> clears out of a dither under a hard white shadow;
+                    <b>brutalism</b> slams in word by word onto its yellow offset; <b>phantom</b> shouts in word by word; <b>dark</b>,
+                    <b>titanium</b>, <b>shade-dark</b> and <b>shade-light</b> resolve word by word out of a blur; <b>light</b> opens through a rounded
+                    clip window; <b>pastel</b>'s overprint springs from a wide mis-registration to its 2 px rest offset; <b>sepia</b> settles from a
+                    pale ghost of the ink to the full ink; <b>solstice</b> is covered by a calibration overlay that clears; <b>lapis</b> stands
+                    covered, then burnishes to flat gold; <b>grotesk</b> resolves from a blur and brightness sweep; <b>blueprint</b> fades in inside a
+                    measurement frame whose readout names the box it holds; <b>deco</b> frames it in a cartouche that scales in;
+                    <b>high-contrast</b> wipes in from the left; <b>forest</b> simply stands.
+                </div>
+                <div class="cat-live" data-cat-effect="live">
+                    <div class="cat-live__bar">
+                        <span class="cat-note">Live</span>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-replay>Replay the arrival</button>
+                    </div>
+                    <template>
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">Pump house 4 · night shift</p>
+                            <h1 class="kp-text-balance" data-kp-reveal="headline">Every reading signed before the shift ends.</h1>
+                        </section>
+                    </template>
+                </div>
+                <p class="cat-note">At rest</p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-effect="rest">
+                        <template>
+                            <section class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="microlabel">Pump house 4 · night shift</p>
+                                <h1 class="kp-text-balance" data-kp-reveal="headline">Every reading signed before the shift ends.</h1>
+                            </section>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="lede-marks">
+                <h2>Lede marks</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the two marked phrases in the lede. In the live copy they start covered or empty and clear one after another after
+                    about a second and a half; the words stay in their places the whole time, so no line re-breaks when a mark lands. At rest, in
+                    <b>every</b> theme, the marked words must read at full contrast on their plate and still look like the same sentence as the words
+                    around them. Per theme: <b>formal</b> washes the accent in under each phrase, left to right; <b>blueprint</b> washes in cyan;
+                    <b>light</b> sweeps a highlighter; <b>pastel</b> fills mint, then violet; <b>sepia</b> deepens from ink to the plate colour;
+                    <b>shade-light</b> fills left to right in the accent; <b>dark</b> ignites and settles to the signal; <b>lapis</b> is ivory with no
+                    rule, then gold ink with a gold underline; <b>nostromo</b> is a highlight — ink on transparent with a signal-orange underline, no
+                    plate; <b>terminal</b> is inverse video; <b>retro</b> is the selection, white on navy; <b>brutalism</b> the yellow plate with the
+                    line; <b>phantom</b> black ink on the red plate; <b>synthwave</b> a tube switched on, a near-white core with a glow;
+                    <b>cyberpunk</b> a redaction bar that lifts. <b>deco</b>, <b>forest</b>, <b>high-contrast</b> and <b>shade-dark</b> never cover
+                    the lede at all: a gold highlight, a felt highlight, a plain accent plate and a static signal plate, already there on load.
+                </div>
+                <div class="cat-live" data-cat-effect="live">
+                    <div class="cat-live__bar">
+                        <span class="cat-note">Live</span>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-replay>Replay the marks</button>
+                    </div>
+                    <template>
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="kp-prose kp-lede">
+                                Two pumps, one log, and a handover nobody has to chase. <mark>Readings are signed</mark> before the shift ends.
+                                <mark>Alarms are acknowledged</mark> within the minute. Everything else can wait for the day shift.
+                            </p>
+                        </section>
+                    </template>
+                </div>
+                <p class="cat-note">At rest</p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-effect="rest">
+                        <template>
+                            <section class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="kp-prose kp-lede">
+                                    Two pumps, one log, and a handover nobody has to chase. <mark>Readings are signed</mark> before the shift ends.
+                                    <mark>Alarms are acknowledged</mark> within the minute. Everything else can wait for the day shift.
+                                </p>
+                            </section>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="section-rule">
+                <h2>Section rule</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the rule under <b>Sign the handover</b>. In the live copy it is drawn only once the heading is scrolled into view:
+                    scroll the heading out of the window, press <b>Replay the rule</b>, and scroll back — it must draw in front of you, once, and then
+                    stand. At rest, in <b>every</b> theme that draws one, the rule runs the width the theme gives it, sits under the heading without
+                    touching its descenders, and is the theme's own colour, not the browser's. Per theme: <b>formal</b> a 2 px primary line drawn from
+                    the left over the whole width; <b>nostromo</b> grows from nothing to a full underline; <b>retro</b> a groove that rules itself in
+                    twelve steps; <b>synthwave</b> a laser line drawn from the centre; <b>terminal</b> dashes that type themselves out;
+                    <b>brutalism</b> a six-pixel bar; <b>phantom</b> a rail that sweeps from grey to red; <b>dark</b> and <b>titanium</b> the oxide,
+                    from the leading edge; <b>deco</b> fades toward transparent; <b>light</b>, <b>blueprint</b>, <b>forest</b>, <b>pastel</b>,
+                    <b>sepia</b>, <b>solstice</b>, <b>lapis</b>, <b>grotesk</b>, <b>shade-light</b>, <b>shade-dark</b> and <b>cyberpunk</b> draw left
+                    to right. <b>high-contrast</b> draws once on load.
+                </div>
+                <div class="cat-live" data-cat-effect="live">
+                    <div class="cat-live__bar">
+                        <span class="cat-note">Live</span>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-replay>Replay the rule</button>
+                    </div>
+                    <template>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">handover.form</p>
+                            <h2 data-kp-reveal="rule">Sign the handover</h2>
+                            <p class="kp-prose">The day shift reads this before it touches a valve.</p>
+                        </section>
+                    </template>
+                </div>
+                <p class="cat-note">At rest</p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-effect="rest">
+                        <template>
+                            <section class="kp-section kp-stack" data-kp-surface="app">
+                                <p class="microlabel">handover.form</p>
+                                <h2 data-kp-reveal="rule">Sign the handover</h2>
+                                <p class="kp-prose">The day shift reads this before it touches a valve.</p>
+                            </section>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="dividers">
+                <h2>Dividers</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the plain divider (<code>data-kp-divider</code>) between the hero and the app surface, and the alt divider
+                    (<code>data-kp-divider="alt"</code>) between the app surface and the footer, laid out as the concept page lays them. In
+                    <b>every</b> theme a divider spans the full width, never overlaps the text of the surfaces it separates, and the two surfaces
+                    never touch without it: a theme that paints nothing still leaves one step of room. Per theme: <b>formal</b> a hairline with a
+                    short navy tick, the alt one dashed; <b>cyberpunk</b> the data stream — three rows of muted yellow dashes with a few cyan packets
+                    under a scan hairline, drifting right at two speeds with no jump and no seam, the alt one flowing left, both still under reduced
+                    motion; <b>nostromo</b> a row of vent dots, the alt one on the darker sidebar plate for the footer seam; <b>synthwave</b> the
+                    horizon, a 2 px line with its glow over a receding grid; <b>grotesk</b> two black rules with a signal hairline exactly centred
+                    between them; <b>high-contrast</b> a razor tear whose two tones swap; <b>lapis</b> the four-ring frame with the girih dot, the alt
+                    one a plain hatch; <b>terminal</b> dashes with a plus at each end, the alt one doubled; <b>forest</b> torn paper, the alt one two
+                    concentric rings; <b>pastel</b> pearls, round beads on a thread with no bar and no bead cut at either end, plum then mint ink;
+                    <b>light</b> hairline seams, the alt one tinting its circle with the accent; <b>dark</b> the instrument's scale — hairline, ticks,
+                    the oxide at centre; <b>brutalism</b> a marquee strip, the second running the other way; <b>titanium</b> a milled groove with the
+                    film lying in it; <b>retro</b> a dithered band, then a plain two-line groove; <b>solstice</b> a hairline with an accent peak, the
+                    alt one on the opposite side; <b>phantom</b> torn paper of three clipped plates, the second mirrored; <b>deco</b> a double rule
+                    with a lozenge; <b>sepia</b> a double warm-brown rule, the second with a diamond; <b>shade-light</b> a blurred seam, felt rather
+                    than seen; <b>shade-dark</b> a swell in the next surface's own tone.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <!-- One wrapper, so a compare column keeps the five as siblings: a register reads the surface before a divider. -->
+                    <div>
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="dossier">
+                <h2>Dossier</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the dossier card (<code>data-kp-reveal="emphasis"</code> with a trigger inside). The left copy is covered, waiting
+                    for its trigger; the right copy is the same file opened. In <b>every</b> theme: while covered the three redacted phrases are not
+                    readable but keep their place, so opening the file re-breaks no line; opened, they read at full contrast; the stamp reads the
+                    card's own <code>data-kp-label</code> ("Sealed") and never covers the title or the text; a theme that swaps the word shows
+                    <code>data-kp-label-open</code> ("Cleared") once open. In the live copy, press <b>Open the file</b>: the redactions must lift in
+                    one motion or on a short stagger, never a flicker, and a second press covers them again; <b>Replay</b> puts it back covered. Per
+                    theme: <b>formal</b> names its word, static, and clears left to right; <b>nostromo</b>'s label tape swaps its word and the
+                    redactions clear together; <b>grotesk</b>'s bars cut away in three steps; <b>retro</b> is a Notepad window with a read-only stamp
+                    and a dither brush lifting off; <b>terminal</b> a bracketed stamp with cells clearing; <b>brutalism</b> a tilted stamp with a
+                    pixel outline and bars sliding off; <b>phantom</b> a rotated red plate and censor plates shearing off; <b>solstice</b> a slightly
+                    rotated stamp and a boundary-coloured bar lifted right to left; <b>lapis</b> a seal over the redactions; <b>deco</b> jewel
+                    redactions; <b>synthwave</b> the stamp in the OSD face and noise that clears; <b>blueprint</b> solid ink blocks cleared left to
+                    right; <b>forest</b> and <b>sepia</b> a rotated stamp in the destructive ink; <b>pastel</b> a rotated stamp that swaps its word;
+                    <b>dark</b> a log with a redact bar; <b>high-contrast</b> staggered by 90 ms.
+                </div>
+                <div class="cat-live" data-cat-effect="live">
+                    <div class="cat-live__bar">
+                        <span class="cat-note">Live</span>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-replay>Cover it again</button>
+                    </div>
+                    <template>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <div class="kp-card" data-slot="card" data-kp-reveal="emphasis" data-kp-label="Sealed" data-kp-label-open="Cleared">
+                                <div class="kp-card__header">
+                                    <h3 class="kp-card__title">Incident INC-4471</h3>
+                                </div>
+                                <div class="kp-card__body">
+                                    <p class="microlabel">FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD</p>
+                                    <p>
+                                        The pressure on line 2 dropped at <mark>03:12 on the night shift</mark>, the operator on duty was
+                                        <mark>Bram De Smet</mark>, and the valve was replaced by <mark>the contractor on call</mark>. The line was
+                                        back in service before the day shift arrived.
+                                    </p>
+                                    <p>Open the file to clear the redactions.</p>
+                                    <div class="kp-row">
+                                        <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                                            <span class="kp-button__edge" aria-hidden="true"></span>
+                                            <span class="kp-button__label">Open the file</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </template>
+                </div>
+                <p class="cat-note">Covered, and opened</p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-pair">
+                        <div data-cat-effect="armed">
+                            <template>
+                                <section class="kp-section kp-stack" data-kp-surface="app">
+                                    <div
+                                        class="kp-card"
+                                        data-slot="card"
+                                        data-kp-reveal="emphasis"
+                                        data-kp-label="Sealed"
+                                        data-kp-label-open="Cleared"
+                                    >
+                                        <div class="kp-card__header">
+                                            <h3 class="kp-card__title">Incident INC-4471</h3>
+                                        </div>
+                                        <div class="kp-card__body">
+                                            <p class="microlabel">FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD</p>
+                                            <p>
+                                                The pressure on line 2 dropped at <mark>03:12 on the night shift</mark>, the operator on duty was
+                                                <mark>Bram De Smet</mark>, and the valve was replaced by <mark>the contractor on call</mark>. The line
+                                                was back in service before the day shift arrived.
+                                            </p>
+                                            <p>Open the file to clear the redactions.</p>
+                                            <div class="kp-row">
+                                                <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                                    <span class="kp-button__label">Open the file</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </template>
+                        </div>
+                        <div data-cat-effect="open">
+                            <template>
+                                <section class="kp-section kp-stack" data-kp-surface="app">
+                                    <div
+                                        class="kp-card"
+                                        data-slot="card"
+                                        data-kp-reveal="emphasis"
+                                        data-kp-label="Sealed"
+                                        data-kp-label-open="Cleared"
+                                    >
+                                        <div class="kp-card__header">
+                                            <h3 class="kp-card__title">Incident INC-4471</h3>
+                                        </div>
+                                        <div class="kp-card__body">
+                                            <p class="microlabel">FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD</p>
+                                            <p>
+                                                The pressure on line 2 dropped at <mark>03:12 on the night shift</mark>, the operator on duty was
+                                                <mark>Bram De Smet</mark>, and the valve was replaced by <mark>the contractor on call</mark>. The line
+                                                was back in service before the day shift arrived.
+                                            </p>
+                                            <p>Open the file to clear the redactions.</p>
+                                            <div class="kp-row">
+                                                <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                                    <span class="kp-button__label">Open the file</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="surfaces">
+                <h2>Surfaces</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the hero surface (<code>data-kp-surface="hero"</code>) and the app surface (<code>data-kp-surface="app"</code>),
+                    each in a stage tall enough for the texture to show. In <b>every</b> theme: the hero paints its own ground (the theme's hero
+                    colour) and the app paints the theme's background, so the two read as two grounds; every text on both — microlabel, heading, muted
+                    line, link, each button — clears its contrast floor on its own ground; and a theme's texture stays inside the surface it belongs
+                    to rather than bleeding over the stage around it. In <b>every</b> theme no text or button touches a surface's left or right edge:
+                    the package keeps one lg step of room inside the ground (<code>--kp-surface-padding-inline</code>). The third stage is the same
+                    hero with <code>data-kp-surface-align="center"</code>, an option that is off unless a page writes it: the microlabel, heading and
+                    line centre, and the row of buttons sits in the middle. Per theme: <b>cyberpunk</b>'s hero is the yellow ground and its app the
+                    void; <b>synthwave</b>'s hero carries a striped, static sun and a floor that drifts without changing brightness; <b>phantom</b>'s
+                    hero carries its plates; <b>lapis</b> confines its girih tile to the two surfaces and turns the page-wide texture off;
+                    <b>forest</b> and <b>shade-light</b> paint their own app ground; <b>titanium</b>'s ground is carbon twill under a moving light.
+                </div>
+                <p class="cat-note">Hero</p>
+                <div class="cat-stage cat-stage--block cat-stage--surface">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">Pump house 4 · preview build</p>
+                        <h2>Every reading, signed.</h2>
+                        <p class="kp-prose">The quiet line under the heading, in the hero's muted ink, with <a href="#surfaces">a link in it</a>.</p>
+                        <div class="kp-row">
+                            <button type="button" class="kp-button kp-button--primary">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Open the log</span>
+                            </button>
+                            <button type="button" class="kp-button">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Read the rota</span>
+                            </button>
+                            <button type="button" class="kp-button kp-button--ghost">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Later</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+                <p class="cat-note">App</p>
+                <div class="cat-stage cat-stage--block cat-stage--surface">
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">handover.log</p>
+                        <h2>Tonight's handover</h2>
+                        <p class="kp-prose">The working surface, in the theme's own ground, with <a href="#surfaces">a link in it</a>.</p>
+                        <div class="kp-row">
+                            <button type="button" class="kp-button kp-button--primary">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Sign it</span>
+                            </button>
+                            <button type="button" class="kp-button kp-button--destructive kp-button--mirror">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Discard</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+                <p class="cat-note">Hero, centred (<code>data-kp-surface-align="center"</code>)</p>
+                <div class="cat-stage cat-stage--block cat-stage--surface">
+                    <section class="kp-section kp-stack" data-kp-surface="hero" data-kp-surface-align="center">
+                        <p class="microlabel">Pump house 4 · preview build</p>
+                        <h2>Every reading, signed.</h2>
+                        <p class="kp-prose">The quiet line under the heading, in the hero's muted ink, with <a href="#surfaces">a link in it</a>.</p>
+                        <div class="kp-row">
+                            <button type="button" class="kp-button kp-button--primary">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Open the log</span>
+                            </button>
+                            <button type="button" class="kp-button">
+                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                <span class="kp-button__label">Read the rota</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section class="cat-block" id="nav-cta">
+                <h2>Call to action and end side</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the last link of each bar is the call to action (<code>.kp-nav__link--cta</code>). In <b>every</b> theme it is the
+                    one link that reads as an action rather than a place — a plate, a bracket, a frame — yet keeps the bar's height and its
+                    neighbours' baseline, and its hover and focus stay visible on its own plate. Per theme: <b>formal</b> a primary plate with the
+                    radius; <b>terminal</b> bracketed; <b>brutalism</b> lifts away from its shadow on hover; <b>nostromo</b> a plate that lights under
+                    the pointer. The second bar carries <code>data-kp-nav-side="end"</code>, for a bar that sits on the end side of the screen: only
+                    <b>cyberpunk</b> answers it — its clipped strip mirrors, the notch moving from the top left to the top right and the cut corner
+                    from the bottom right to the bottom left. In every other theme the two bars must look identical.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Pump house navigation">
+                            <span class="kp-nav__brand">
+                                Pump house 4
+                                <small class="kp-nav__brand-tag">PH//04</small>
+                            </span>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Readings">Readings</a></li>
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Rota">Rota</a></li>
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Docs">Docs</a></li>
+                                <li>
+                                    <a class="kp-nav__link kp-nav__link--cta" href="#nav-cta" data-kp-text="Request access">Request access</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <p class="cat-note">The same bar with <code>data-kp-nav-side="end"</code></p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Pump house navigation, end side" data-kp-nav-side="end">
+                            <span class="kp-nav__brand">
+                                Pump house 4
+                                <small class="kp-nav__brand-tag">PH//04</small>
+                            </span>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Readings">Readings</a></li>
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Rota">Rota</a></li>
+                                <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Docs">Docs</a></li>
+                                <li>
+                                    <a class="kp-nav__link kp-nav__link--cta" href="#nav-cta" data-kp-text="Request access">Request access</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="button-readout">
+                <h2>Button readout</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the first button carries a readout (<code>.kp-button__readout</code>, the word "READY"), the second does not. At
+                    rest, in <b>every</b> theme, the readout is invisible and the two buttons are exactly the same height: the readout is out of the
+                    flow and costs the control nothing. Hover or Tab to the first button: in <b>dark</b> and <b>titanium</b> the small reading appears
+                    above the control, in the theme's oxide, and goes again when the pointer leaves; in every other theme nothing appears at all. The
+                    readout is decoration — a screen reader hears "Send", never "READY Send".
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button kp-button--primary">
+                        <span class="kp-button__edge" aria-hidden="true"></span>
+                        <span class="kp-button__readout" aria-hidden="true">READY</span>
+                        <span class="kp-button__label">Send</span>
+                    </button>
+                    <button type="button" class="kp-button">
+                        <span class="kp-button__edge" aria-hidden="true"></span>
+                        <span class="kp-button__label">Cancel</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="density-compact-form">
+                <h2>Compact form</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same form twice; the right one sits under <code>data-density="compact"</code>. In <b>every</b> theme the
+                    compact one is visibly tighter: the gap between the fields and the gap between a label and its input both come down, and so does
+                    the height of the inputs and the button — but a control never gets smaller than a comfortable pointer target (24 px is the floor;
+                    use the Devtools ruler), the labels stay the same readable size, and nothing overlaps.
+                </div>
+                <p class="cat-note">Left: the default density. Right: compact.</p>
+                <div class="cat-stage cat-pair">
+                    <div>
+                        <form class="kp-form">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="pe-roomy-name">Name</label>
+                                <input class="kp-field__input" id="pe-roomy-name" type="text" />
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="pe-roomy-email">Email</label>
+                                <input class="kp-field__input" id="pe-roomy-email" type="email" />
+                            </div>
+                            <button class="kp-button" type="submit">Save</button>
+                        </form>
+                    </div>
+                    <div data-density="compact">
+                        <form class="kp-form">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="pe-compact-name">Name</label>
+                                <input class="kp-field__input" id="pe-compact-name" type="text" />
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="pe-compact-email">Email</label>
+                                <input class="kp-field__input" id="pe-compact-email" type="email" />
+                            </div>
+                            <button class="kp-button" type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="palette-narrow">
+                <h2>Shortcut sheet at 360 px</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the keyboard shortcut sheet (<code>.kp-shortcuts</code>) inside a window 360 px wide — a frame, because the
+                    sheet's width follows the window, not its container. In <b>every</b> theme the whole sheet, its border included, fits inside the
+                    frame: no horizontal scrollbar under it, no edge cut off, and the long meaning in the last row wraps inside its column rather than
+                    pushing the sheet wider. On a wide screen the same sheet is 490 px (Data › Shortcut sheet shows it there). The frame follows the
+                    theme of this page.
+                </div>
+                <div class="cat-stage">
+                    <iframe
+                        class="cat-viewport"
+                        data-cat-viewport="frame/shortcuts-360.html"
+                        title="The shortcut sheet in a window 360 pixels wide"
+                        width="360"
+                        height="360"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </section>
+
+            <section class="cat-block" id="table-plain-narrow">
+                <h2>Plain table in 400 px</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a plain <code>.kp-table</code> with <code>data-kp-cards</code>, in a container 400 px wide while the window stays
+                    wide. In <b>every</b> theme it falls into cards: the header row is gone from sight, each row is a card, and each cell is a line
+                    with its column's name (from <code>data-label</code>) before the value, told apart from the value by weight or colour. No cell
+                    runs past the container, and the table never scrolls sideways.
+                </div>
+                <div class="cat-stage">
+                    <div class="cat-width-400">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table" data-kp-cards>
+                                <caption>
+                                    Open incidents
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Reference</th>
+                                        <th scope="col">Site</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-label="Reference">INC-4471</td>
+                                        <td data-label="Site">Pump house 4</td>
+                                        <td data-label="Status">Open</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-label="Reference">INC-4468</td>
+                                        <td data-label="Site">Cold store</td>
+                                        <td data-label="Status">Watching</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="picker-focus">
+                <h2>Theme picker focus ring</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> Tab into the row of theme buttons and walk it with Tab. In <b>every</b> theme the focused button shows a ring of
+                    two visible channels: a solid outline at least 2 px wide, standing at least 2 px off the button, and a second, contrasting colour
+                    with it, so the ring shows on a light and on a dark ground alike. On the button of the theme on screen, the selection's own border
+                    and check must not hide the ring. Pressing a button switches this page's theme.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-row" data-kp-theme-picker aria-label="Choose a theme">
+                        <button type="button" data-kp-theme="formal">
+                            <span class="kp-swatch" data-theme="formal"></span>
+                            Formal
+                        </button>
+                        <button type="button" data-kp-theme="cyberpunk">
+                            <span class="kp-swatch" data-theme="cyberpunk"></span>
+                            Cyberpunk
+                        </button>
+                        <button type="button" data-kp-theme="nostromo">
+                            <span class="kp-swatch" data-theme="nostromo"></span>
+                            Nostromo
+                        </button>
+                        <button type="button" data-kp-theme="dark">
+                            <span class="kp-swatch" data-theme="dark"></span>
+                            Dark
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Review · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Every component, one page</h1>
+            <p class="cat-intro">
+                Every block of every component page, gathered here so the whole package is reviewed in one place and every note ends up in one prompt
+                at the foot of the page. The component pages stay where each block is written; this page reads them, so the two cannot drift.
+            </p>
+            <p class="cat-intro">
+                <b>Approving.</b> Each block can be approved or not in the theme on screen, here, on its component page or in a compare column — all
+                three share one verdict. The page remembers what the component looked like at that moment — its markup and the computed style of
+                everything on its stage — as a hash, in this browser. A judged block leaves the page, and comes back when anything it paints changes.
+                Tick <b>Show blocks already judged</b> to see them all. Verdicts are per theme, like the notes.
+            </p>
+            <p class="cat-intro">
+                <b>Comparing.</b> <a href="./compare.html">Compare two themes</a> puts one component under two themes side by side, element by
+                element.
+            </p>
+            <div data-cat-compose="all"></div>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./review.js"></script>
+        <!-- The intro blocks are gathered here, so the module that wires them runs here too [fix-43]. -->
+        <script type="module" src="./intros.js"></script>
+    </body>
+</html>

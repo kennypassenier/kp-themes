@@ -3,7 +3,7 @@
 > How this theme answers the questions in
 > [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Sepia is lifted
 > in 5.0.0 (S48, LIFT_PLAN row 9). The research behind it is §9 of
-> [RESEARCH_2026-09.md](../../docs/RESEARCH_2026-09.md); the concept demo
+> [RESEARCH_2026-09.md](../../docs/archive/RESEARCH_2026-09.md); the concept demo
 > Kenny approved on 2026-09-08 is "Aged Well".
 
 ## The idea
@@ -18,9 +18,14 @@ photograph, but paper, ink, and the warmth both acquire.
 
 ## What is load-bearing
 
-1. **No cool hues in the body.** Everything in the reading surface sits
-   between 24° and 45°. The moment a blue-grey appears, the page stops
-   feeling like paper and starts feeling like a document viewer.
+1. **No cool hues in the body.** The reading surface — ground, ink,
+   cards, borders, the primary and the accent — sits between 24° and
+   45°. The moment a blue-grey appears, the page stops feeling like paper
+   and starts feeling like a document viewer. What leaves that band does
+   so to be told apart, never to decorate: the status colours
+   (destructive at 6°, success at 90°–95°, the info toast at 200°–205°,
+   the interview status at 280°–285°) and three chart series (chart-2 at
+   95°, chart-3 at 200°, chart-4 at 340°).
 2. **Ink, not black.** `--foreground` is `hsl(28, 45%, 16%)`. True black
    on warm paper reads as a hole punched in the page.
 3. **A serif for display.** The only theme besides terminal that changes
@@ -80,23 +85,30 @@ the research:
   faint, blurred ghost of the ink colour settles to the full colour in
   one shot, the whole line moving together, no per-word stagger. The
   rule under a heading (`draw`) grows from nothing to its full width when
-  it scrolls into view.
-- **Divider.** A double warm-brown rule — Public Domain Review's device,
-  kept inside this theme's own 24°–45° family rather than PDR's literal
-  gold. The `alt` variant carries a small diamond at its centre, the
-  theme's second-tear flourish.
+  it scrolls into view; since scope-101 the shape it grows is the swelled
+  rule of X3 below.
+- **Divider.** One stroke of sienna ink, thickest in the middle and a
+  hairline at both ends (X3). Until scope-101 it was a double warm-brown
+  rule — Public Domain Review's device, kept inside this theme's own
+  24°–45° family rather than PDR's literal gold — and Kenny's own
+  sentence for this theme replaced it. The `alt` variant carries a small
+  diamond at its centre, the theme's second-tear flourish, now sitting on
+  the thickest part of the stroke.
 - **Accent.** No shadow, no offset: the serif face itself, roman for h1
   and italic for h2, is the whole accent (anatomy point 3).
 - **Arrival.** Quiet. The headline's own ink-in is this theme's answer to
   a page arriving; it ships no full-page overlay at all (`themes/hooks.json`
   answers the hook `quiet` with this reason).
 
-Every hover on a footer link is the demo's hand-drawn underline,
-approximated as a background-size transition (X1 finding below); the
+A footer link's underline, the demo's hand-drawn one approximated as a
+1px background rule (X1 finding below), stands drawn at rest; a hover
+eases the link's ink from sienna to the text colour, the underline with
+it, over the register's own 450ms hand-drawn easing (scope-100); the
 navbar's dropdown (KT14) is a quiet card popover, sienna ink on hover;
 every button is a plain plate with no bevel, the theme's own 0.375rem
 radius; the confirmation dialog is a real `<dialog>` (Kenny, 2026-09-08),
-its backdrop fading once through the demo's own `@keyframes confirm-in`.
+its backdrop fading once through `@keyframes kp-confirm-in`, the demo's
+own `confirm-in` under the package's prefix.
 One answer per component root (56 of 64, the eight helpers excused).
 
 ## X1 — findings: what the demo showed and the package now renders exactly (S49)
@@ -108,7 +120,7 @@ implementation matches the demo everywhere else.
 
 - **A full paper-grain texture is refused, not merely capped.** The
   demo's own comment names this explicitly and disagrees with
-  `docs/LIFT_PLAN.md` row 9's one-line mechanism shorthand ("multiply
+  `docs/archive/LIFT_PLAN.md` row 9's one-line mechanism shorthand ("multiply
   paper layer"): the demo's hazards section says "No aged-paper texture.
   The obvious flourish, and the wrong one: a mottled background reduces
   text contrast for exactly the reader this theme is for." That sentence
@@ -127,10 +139,13 @@ implementation matches the demo everywhere else.
   alone. The rule is rebuilt as a flat line grown by `transform: scaleX()`
   on the existing `[data-kp-reveal='rule']::after` pseudo-element (the
   same technique retro's groove and phantom's rail already use for their
-  own rule reveals); the footer's link underlines are rebuilt as a
-  `background-size` transition. Both keep the demo's motion — nothing
-  drawn until it is meant to be, one growth, once — and lose only the
-  literal hand-drawn wobble of the curve itself.
+  own rule reveals); the footer's link underlines are rebuilt as a 1px
+  background rule that stands drawn and takes the link's ink. The rule
+  keeps the demo's motion — nothing drawn until it is meant to be, one
+  growth, once — and loses only the literal hand-drawn wobble of the
+  curve; the footer underline keeps no growth of its own (it was a
+  `background-size` transition between two equal sizes, which animated
+  nothing, and since scope-100 the hover eases the colour instead).
 - **The double-rule divider has no child elements to draw with.** The
   demo's divider is a `<div>` holding two `<i>` lines; the shared concept
   page emits one bare `[data-kp-divider]` element for every theme (S46,
@@ -178,6 +193,50 @@ dialog backdrop's fade — has its `TIMINGS` row and was included in
 `npm run report:di5` (`reports/di5.md`, 35 effects, sepia's own entry
 verified against the table).
 
+## X3 — the two gestures of scope-25, built at scope-101
+
+Kenny gave this theme two sentences of its own at `scope-25`
+(2026-09-11) — "the ink spreading into the paper on a press and the rule
+that is thickest in the middle" — and neither was built until
+`scope-101` (2026-09-16). The approved concept demo for both is
+`research/scope25-gestures/demo.html`, blocks 1 and 2, and both are
+implemented exactly as it draws them. `tests/sepia-gestures.spec.mjs`
+holds them.
+
+**The ink on a press.** A `::after` twelve pixels larger than the button
+grows four offset blots of `--primary` from the point the pointer went
+down, feathered by a fractal-noise mask outside the button and solid
+under the label, so the ground behind text stays smooth — this theme
+refuses grain behind words (X1). It spreads in 240ms and settles back
+over 900ms, on a registered `--kp-ink-spread` (a gradient cannot be
+transitioned; a number it reads can), and the `@property` sits at the
+top level of the register because a cascade layer may not hold one. The
+press point comes from `js/effects.js`, which writes `--kp-press-x` and
+`--kp-press-y` onto the button for a theme declaring `--kp-press: point`;
+without the module, and on a key press, the stain grows from the middle
+of the button, which the register declares as its own default.
+
+Two costs Kenny accepted with the gesture, re-measured after the move
+(2026-09-16, firefox, `/examples/concept-sepia.html`): the stain reaches
+**11px past the button's border edge** (12px past its padding box, the
+demo's own figure), so a neighbour closer than that is touched — in the
+concept page's own hero row the buttons stand 20.8px apart and the stain
+stops 9.8px short. Contrast under a held press is unchanged from the
+demo: **9.52 primary, 7.41 plain, 7.79 ghost**, read from the worst pixel
+of each label's ground.
+
+**The swelled rule.** One shape (`--kp-swell`), never tiled, stretched to
+whatever width it is given with `preserveAspectRatio='none'`: 0.5px at
+both ends, 3px in the middle. Stretching a path sideways keeps its
+vertical profile, so the ends stay hairlines at every width and there is
+no tile edge to split at any device pixel ratio. It draws both the
+section divider and the rule under a heading, and it keeps the register's
+own scaleX reveal. Measured at devicePixelRatio 2.222, at 1280px and at
+997px wide, in both: **6.14 device pixels of ink in the middle against
+0.89 at each end, and no seam**. Its cost, also accepted: the heading
+rule grows from 2px to 4px tall, so the paragraph under a heading sits
+**2.00px lower** at rest.
+
 ## Answers to the invariant questions
 
 **DI1 — boundaries at 3:1.** `--border-strong` and `--input` are a mid
@@ -196,7 +255,9 @@ button's own border, never instead of it.
 **DI3 — states you can see.** The pressed state reaches the floor on
 lightness alone; nothing here is near the edge of the colour space. The
 register adds a quiet inset shadow on `:active` and a border-colour step
-on `:hover`, both derived from tokens.
+on `:hover`, both derived from tokens, and since scope-101 the ink of
+X3 spreads from the press point as well — the only press in the set that
+leaves a trace you can still see after the finger lifts.
 
 **DI4 — colour is never the only carrier.** This theme has the hardest
 time of any: warm tints on warm paper converge under a colour deficiency
@@ -224,7 +285,9 @@ register live inside `@media (prefers-reduced-motion: no-preference)`;
 without it, the headline stands in its full colour, the lede marks are
 already settled, the rule stands drawn, the redactions are already
 lifted or covered at rest (never mid-motion), and the dialog opens with
-no fade.
+no fade. The ink of X3 is the same picture without the easing: the stain
+stands at its full size for as long as the button is held, and goes when
+the press does.
 
 **DI9 — theme colour stays in the token layer.** The register names no
 colour: every plate, border, shadow and the ink wash are `var(--token)`
@@ -233,9 +296,10 @@ No texture — refused wholesale rather than dialled to a ceiling (X1).
 
 ## What this theme may not do
 
-- **No cool accent.** Not for links, not for focus, not for charts one to
-  five. Two of the charts are green and blue-ish by necessity, and both
-  are pulled towards the warm end far enough to belong.
+- **No cool accent.** Not for links, not for focus. The charts are the
+  exception a series needs: chart-2 is a muted green (95°), chart-3 a
+  plain dark blue (200°) and chart-4 a dusky rose (340°), each held to
+  a low saturation (35%–40%) so it sits on the paper without shouting.
 - **No aged-paper texture, no page-wide grain.** The obvious flourish,
   and the wrong one: a mottled background reduces text contrast for
   exactly the reader this theme is for (X1).

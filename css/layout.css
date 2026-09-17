@@ -2,11 +2,14 @@
     /* @kp-soft/themes — css/layout.css
        The layout layer [TH90, TH91, S22].
 
-       Sixteen classes, and the reason they exist is measured rather than
+       Twenty-three classes, and the reason they exist is measured rather than
        assumed: the chassis kit wrote 71 lines of its own layout glue plus
        28 inline style attributes, and its stylesheet header said in so many
        words that this is "layout glue and the few utilities @kp-soft/themes
        deliberately does not ship". These are those.
+
+       Import it beside the tokens and the components, in that order:
+       css/themes.css, css/components.css, css/layout.css.
 
        Every class reads a knob with the scale as its default, so a page or
        a theme retunes it without rewriting the rule (KT6). Nothing here
@@ -14,12 +17,21 @@
 
        The layer matters: kp.layout sits after kp.components, so adding
        .kp-stack to a component that sets its own gap wins — which is what
-       someone reaching for a layout class means (AR17). */
+       someone reaching for a layout class means (AR17).
+
+       The comment directly above each rule is what site/layout.html prints
+       beside it [AR21, scope-77], so it names the rule's knobs and their
+       defaults; a comment there may not contain an asterisk, because the
+       generator reads up to the first one. The name is a promise: every
+       class here falls under the same semver promise as the component
+       classes, and renaming one is a major version. */
 
     /* ── Containers ─────────────────────────────────────────────────── */
 
     /* The page itself: a measure to read within, centred, with margins that
-       shrink on a phone instead of stepping at a breakpoint. */
+       shrink on a phone instead of stepping at a breakpoint. Knobs:
+       --kp-page-max (64rem), --kp-page-pad (between the md and xl steps of
+       the scale, 3vw in between), --kp-page-pad-block (the xl step). */
     .kp-page {
         max-inline-size: var(--kp-page-max, 64rem);
         margin-inline: auto;
@@ -29,17 +41,17 @@
 
     /* Vertical rhythm. This is the fault the round started from: two fields
        and a button touched because a field has no vertical margin and
-       nothing above it supplied one. */
+       nothing above it supplied one. Knob: --kp-stack-gap (the md step). */
     .kp-stack {
         display: flex;
         flex-direction: column;
         gap: var(--kp-stack-gap, var(--kp-space-md));
     }
 
-    /* A row that wraps rather than overflowing, aligned on the centre by
-       default because that is what a row of controls wants. --end aligns on
-       the baseline of the tallest control, which is what a field beside a
-       button wants. */
+    /* A row of controls that wraps rather than overflowing, aligned on the
+       centre by default because that is what a row of controls wants. Four
+       modifiers change one thing each. Knobs: --kp-row-gap (the sm step),
+       --kp-row-align (center). */
     .kp-row {
         display: flex;
         flex-wrap: wrap;
@@ -47,24 +59,34 @@
         align-items: var(--kp-row-align, center);
     }
 
+    /* Aligns the row on the bottom edge, which is what a field beside a
+       button wants. */
     .kp-row--end {
         --kp-row-align: flex-end;
     }
 
+    /* Aligns the row on the top edge. */
     .kp-row--start {
         --kp-row-align: flex-start;
     }
 
+    /* Pushes the ends of the row apart. */
     .kp-row--between {
         justify-content: space-between;
     }
 
+    /* Refuses to wrap. */
     .kp-row--nowrap {
         flex-wrap: nowrap;
     }
 
-    /* A grid that picks its own column count from the space it has. The
-       minimum track is the knob: a card wants 16rem, a tile less. */
+    /* A grid that adds a column when there is room for one, with no
+       breakpoint anywhere. The minimum track is the knob: a card wants
+       16rem, a tile less. It keeps a little air on all four sides so the
+       first column's text never sits against the edge of whatever it lands
+       in (Kenny, 2026-09-08). Knobs: --kp-autogrid-min (16rem),
+       --kp-autogrid-gap (the lg step), --kp-autogrid-pad (the sm step; set
+       it to 0 for a grid that should reach its container's edge). */
     .kp-autogrid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--kp-autogrid-min, 16rem), 1fr));
@@ -89,36 +111,72 @@
 
     /* Content with a side column that drops below when there is no room for
        both — no media query, so it behaves the same inside a narrow
-       container as it does in a narrow window. */
+       container as it does in a narrow window. The aside drops once the
+       main column would be narrower than half the track. Knob:
+       --kp-sidebar-gap (the lg step). */
     .kp-sidebar {
         display: flex;
         flex-wrap: wrap;
         gap: var(--kp-sidebar-gap, var(--kp-space-lg));
     }
 
+    /* The side column. Knob: --kp-sidebar-width (16rem). */
     .kp-sidebar > .kp-sidebar__aside {
         flex-basis: var(--kp-sidebar-width, 16rem);
         flex-grow: 1;
     }
 
+    /* The main column, which takes every spare pixel. Knob:
+       --kp-sidebar-break (50%), the narrowest it may be before the aside
+       drops below it. */
     .kp-sidebar > .kp-sidebar__main {
         flex-basis: 0;
         flex-grow: 999;
         min-inline-size: var(--kp-sidebar-break, 50%);
     }
 
+    /* An application shell: the bar on top and a body under it that fills
+       the rest of the window, so a rail beside the content runs to the
+       bottom of the window rather than stopping where the content does
+       (scope-80). The body is a row that wraps, the rail and the content
+       its items. Knob: --kp-shell-min (100dvh), the least height of the
+       whole shell. */
+    .kp-shell {
+        display: flex;
+        flex-direction: column;
+        min-block-size: var(--kp-shell-min, 100dvh);
+    }
+
+    /* A shell is the whole window, so the page around it gives up the
+       browser's default body margin: with it the bar stood 8px off the
+       edges and a shell as tall as the window scrolled by 16px, the rail
+       ending 8px under the window's bottom (measured at 1400 by 900). */
+    body:has(.kp-shell) {
+        margin: 0;
+    }
+
+    /* The shell's body, which takes every spare pixel of that height. */
+    .kp-shell > .kp-shell__body {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+    }
+
     /* A section of a page: space above it, and nothing else. The heading
-       inside keeps whatever the theme gives it. */
+       inside keeps whatever the theme gives it. Knob: --kp-section-gap
+       (the 2xl step). */
     .kp-section {
         margin-block-start: var(--kp-section-gap, var(--kp-space-2xl));
     }
 
+    /* As the first child a section puts no space above itself, where the
+       space would push the page down for no reason. */
     .kp-section:first-child {
         margin-block-start: 0;
     }
 
     /* A box with a ceiling, centred — the login card, the empty state, the
-       one-column form. */
+       one-column form. Knob: --kp-center-max (28rem). */
     .kp-center {
         margin-inline: auto;
         max-inline-size: var(--kp-center-max, 28rem);
@@ -128,23 +186,32 @@
 
     /* Running text stops at a readable measure. ch rather than rem, because
        the measure is about characters per line and the themes ship faces of
-       very different widths. */
+       very different widths. Knob: --kp-prose-max (65ch). */
     .kp-prose {
         max-inline-size: var(--kp-prose-max, 65ch);
     }
 
+    /* Exactly the theme's --muted-foreground, never a lightened copy of the
+       body colour. */
     .kp-text-muted {
         color: var(--muted-foreground);
     }
 
+    /* Aligns text to the end. This and .kp-text-center are the reason the
+       layer exists at all: a table cell sets its own alignment at higher
+       specificity, so before the cascade layers these two did nothing
+       inside a table. */
     .kp-text-end {
         text-align: end;
     }
 
+    /* Centres text; see .kp-text-end for why it is in this layer. */
     .kp-text-center {
         text-align: center;
     }
 
+    /* The package's own monospace face. Knobs: --kp-mono-face (the theme's
+       --font-mono), --kp-mono-size (0.9em). */
     .kp-mono {
         font-family: var(--kp-mono-face, var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace));
         font-size: var(--kp-mono-size, 0.9em);
@@ -152,7 +219,7 @@
 
     /* A block of code that breaks rather than widening the page. A key or a
        token has no spaces to break at, which is why anywhere and not
-       break-word. */
+       break-word. It sits on a card and reads --kp-mono-face like .kp-mono. */
     .kp-code-block {
         background: var(--card);
         color: var(--card-foreground);
@@ -179,7 +246,9 @@
        skip link every page in this package carries. Someone using that link
        cannot see that its target went under the bar. */
     html {
-        scroll-padding-block-start: var(--kp-scroll-offset, 0px);
+        /* A sticky nav bar (`.kp-nav-wrap--sticky`) writes its own height to
+           --kp-nav-sticky-height here; a page's --kp-scroll-offset still wins. */
+        scroll-padding-block-start: var(--kp-scroll-offset, var(--kp-nav-sticky-height, 0px));
     }
 
     /* DI7: a page that asks for smooth scrolling still does not get it when
@@ -193,8 +262,16 @@
 
     /* Opt-in, by an attribute rather than a class, because staying put is a
        behaviour of that element on that page and not a kind of element.
-       The offset above is what pairs with it: a page that sticks its nav
-       sets --kp-scroll-offset to the height it stuck. */
+       Knobs: --kp-sticky-top (0), --kp-sticky-layer (30). It has a partner
+       on the html element: --kp-scroll-offset (0px) is how far an in-page
+       link stops short of the top, and a page that sticks its nav sets it
+       to the height it stuck. Without it the skip link every page carries
+       lands underneath the bar, and the person using that link is exactly
+       the person who cannot see that it did. --kp-scroll-behavior (auto)
+       turns on smooth scrolling, read inside the reduced-motion guard so
+       smooth cannot survive a reader who asked for less motion. All three
+       defaults change nothing: a page that does not ask gets what it got
+       before. */
     [data-kp-sticky] {
         position: sticky;
         inset-block-start: var(--kp-sticky-top, 0);
@@ -205,7 +282,12 @@
 
     /* Standing rule 31 says a button that starts something slow shows it.
        The behaviour was already in the package and the styling was not, so
-       the chassis kit wrote this rule itself. It belongs here. */
+       the chassis kit wrote this rule itself. It belongs here. The busy
+       state made visible: the element dims and the cursor becomes a
+       progress cursor. An attribute rather than a class, because the
+       attribute is what a screen reader already reads, and a busy control
+       that looks identical to an idle one is the fault correction KT6
+       exists about. Knob: --kp-busy-opacity (0.7). */
     [aria-busy='true'] {
         opacity: var(--kp-busy-opacity, 0.7);
         cursor: progress;

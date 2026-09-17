@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>A menu inside the box that shows it, and a closed over-the-page panel</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <style>
+            /* The box the bar lives in is the review dialog's stage, copied
+               property for property from catalogue/catalogue.css
+               (`.cat-review-dialog__stage`): it scrolls, and `contain: strict`
+               clips what hangs out of it AND makes it a containing block. That
+               is what cut the Account dropdown in Kenny's review of
+               2026-09-16 — the panel fitted the window, so nothing moved it,
+               and the stage cut it anyway. Its width follows the window the
+               way the dialog's 92vw does, so the three widths are three
+               different geometries. */
+            .clip {
+                contain: strict;
+                overflow: auto;
+                overscroll-behavior: contain;
+                inline-size: 62vw;
+                block-size: 16rem;
+                padding: 1rem 1.25rem;
+            }
+
+            /* The one rule the bars need: the links sit at the far end, the
+               way a bar with the brand at the start and the places at the end
+               does. That is where a dropdown has no room on its right. */
+            .kp-nav > .kp-nav__links {
+                margin-inline-start: auto;
+            }
+
+            /* The two panels sit side by side, the way the catalogue block
+               lays them out: the scoped one in its own box, the
+               window-fixed one after it. That second place matters — a
+               closed panel in the flow starts where its column starts, so
+               a panel that fails to leave the screen fails by the width of
+               the page before it and not by a rounding pixel. */
+            .over-row {
+                display: flex;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .over-box {
+                position: relative;
+                inline-size: 30rem;
+                max-inline-size: 100%;
+                block-size: 10rem;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 1 · A bar in a box that clips it.
+
+             The bar carries both panels the package places: a mega menu's
+             wide panel (`placeNavPanel`) and a plain dropdown under the last
+             item (`placeNavMenu`). Neither may be cut by the box that shows
+             them. -->
+        <div class="clip" data-test="clip">
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation" data-test="clip-nav">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <ul class="kp-nav__links">
+                        <li><a class="kp-nav__link" href="#overview">Overview</a></li>
+                        <li>
+                            <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure data-test="clip-disclosure">
+                                Equipment
+                            </button>
+                            <div class="kp-nav__menu kp-nav__menu--wide" data-test="clip-panel">
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Pumps</h2>
+                                    <ul>
+                                        <li><a href="#pumps">Main line pumps</a></li>
+                                        <li><a href="#boosters">Booster sets</a></li>
+                                    </ul>
+                                </div>
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Valves</h2>
+                                    <ul>
+                                        <li><a href="#gate">Gate valves</a></li>
+                                        <li><a href="#check">Check valves</a></li>
+                                    </ul>
+                                </div>
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Sensors</h2>
+                                    <ul>
+                                        <li><a href="#pressure">Pressure transducers</a></li>
+                                        <li><a href="#flow">Flow meters</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-test="clip-last">
+                            <a class="kp-nav__link" href="#account" aria-haspopup="true" data-test="clip-last-link">Account</a>
+                            <ul class="kp-nav__menu" data-kp-menu-label="Signed in as J. Okafor" data-test="clip-menu">
+                                <li><a href="#profile">Profile and preferences</a></li>
+                                <li><a href="#sessions">Signed-in devices</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- 2 · The over-the-page side navigation, closed.
+
+             The first is fixed to the window, which is what a page asks for
+             when it wants a panel over everything; the second is scoped to
+             its own box (`data-kp-sidenav-position="absolute"`), which is what
+             the catalogue shows. Closed, neither may be on the screen. -->
+        <div class="over-row">
+            <div class="over-box" data-test="over-box">
+                <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="over-scoped" data-test="over-scoped-toggle">
+                    Open the panel
+                </button>
+                <nav
+                    class="kp-sidenav"
+                    id="over-scoped"
+                    data-test="over-scoped"
+                    data-kp-sidenav-mode="over"
+                    data-kp-sidenav-position="absolute"
+                    aria-label="Over its box"
+                >
+                    <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                    <div class="kp-sidenav__scroll">
+                        <ul class="kp-sidenav__list">
+                            <li>
+                                <a class="kp-sidenav__link" href="#summary"><span class="kp-sidenav__label">Summary</span></a>
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#readings"><span class="kp-sidenav__label">Readings</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <div>
+                <button type="button" class="kp-sidenav__toggle" data-kp-sidenav-toggle aria-controls="over-window" data-test="over-window-toggle">
+                    Open the panel
+                </button>
+                <nav class="kp-sidenav" id="over-window" data-test="over-window" data-kp-sidenav-mode="over" aria-label="Over the window">
+                    <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                    <div class="kp-sidenav__scroll">
+                        <ul class="kp-sidenav__list">
+                            <li>
+                                <a class="kp-sidenav__link" href="#summary" data-test="over-window-first"
+                                    ><span class="kp-sidenav__label">Summary</span></a
+                                >
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#readings"><span class="kp-sidenav__label">Readings</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

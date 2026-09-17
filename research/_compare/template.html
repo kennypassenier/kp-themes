@@ -1,0 +1,134 @@
+<!doctype html>
+<!-- The comparison page, fixed once [scope-105]. Copy this file to
+     research/<topic>/demo.html and fill the four slots marked FILL; change
+     nothing else. It loads the package and the register of the theme under
+     COMPARE-THEME, freezes every state on the same patch of ground, and gives
+     each state the same markup so the only difference is the rule being
+     compared.
+
+     FILL 1  the theme and the title (three places: <html data-theme>,
+             data-cat-theme, <title>, <h1>)
+     FILL 2  the states: one rule block per state, each written as
+             [data-theme='<theme>'] .cmp-<state> <selector> { … } so it goes
+             into the register by dropping the wrapper class
+     FILL 3  the component's markup, once, inside <template id="cmp-markup">
+     FILL 4  the sentence saying what is compared and what it costs
+
+     Nothing here measures. A number belongs in the form's text, not on this
+     page; the page is for the eye [scope-105]. -->
+<html lang="en" data-theme="dark" data-cat-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>FILL 1 · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* Page chrome, this page only; never the package. */
+            .cmp-row {
+                display: grid;
+                gap: 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                margin-block: 1.5rem;
+            }
+            .cmp-state {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.25rem;
+                background: var(--background);
+            }
+            .cmp-state > h3 {
+                margin-block: 0 0.75rem;
+                font-size: 0.8125rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .cmp-ground {
+                padding: 1.5rem;
+                border-radius: 8px;
+                background: var(--card);
+            }
+            .cmp-tag {
+                font-size: 0.6875rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                padding: 0.1rem 0.5rem;
+            }
+
+            /* ── FILL 2 · one block per state ──────────────────────────────
+               [data-theme='dark'] .cmp-ships   .kp-… { … }   what ships today
+               [data-theme='dark'] .cmp-b       .kp-… { … }   the proposal
+               [data-theme='dark'] .cmp-c       .kp-… { … }   a quieter variant
+            */
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>FILL 1</h1>
+            <p class="cat-intro">
+                <span class="cmp-tag">mock</span> FILL 4 — what is compared, what each state costs, and what a choice sets in motion.
+            </p>
+
+            <!-- Each state gets the same markup from the template below, on the
+                 page ground and once on a card, so a difference that only shows
+                 on one of the two is visible. -->
+            <section class="cat-block" id="on-the-page">
+                <h2>On the page ground</h2>
+                <div class="cmp-row" data-cmp-row></div>
+            </section>
+
+            <section class="cat-block" id="on-a-card">
+                <h2>On a card</h2>
+                <div class="cmp-row" data-cmp-row data-cmp-card></div>
+            </section>
+        </main>
+
+        <!-- FILL 3 · the component, once. Package classes only. -->
+        <template id="cmp-markup">
+            <div class="kp-card">
+                <p>Replace this with the component being compared.</p>
+            </div>
+        </template>
+
+        <script type="module">
+            // FILL 2's state names and their labels, in the order they appear.
+            const STATES = [
+                ['ships', 'As it ships'],
+                ['b', 'The proposal'],
+                ['c', 'A quieter variant'],
+            ];
+            const markup = document.querySelector('#cmp-markup');
+            for (const row of document.querySelectorAll('[data-cmp-row]')) {
+                for (const [name, label] of STATES) {
+                    const state = document.createElement('div');
+                    state.className = `cmp-state cmp-${name}`;
+                    const title = document.createElement('h3');
+                    title.textContent = label;
+                    const ground = document.createElement('div');
+                    if (row.hasAttribute('data-cmp-card')) ground.className = 'cmp-ground';
+                    ground.append(markup.content.cloneNode(true));
+                    state.append(title, ground);
+                    row.append(state);
+                }
+            }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <!-- The catalogue shell, so the demo carries the navigation every
+             review page carries. `gates/check-catalogue.mjs` refuses a
+             research/<topic>/demo.html without it, so the template has it and
+             a copy never has to discover that from a red gate. -->
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

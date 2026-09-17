@@ -203,10 +203,14 @@ relative colour of one.
 
 ## What this theme may not do
 
-- Draw a frame, a bracket, a box or any panel silhouette around a piece
-  of content. That device was tried three times and rejected three
-  times; the dimension lines are what replaced it, not a fourth attempt
-  at the same idea in a new shape.
+- Draw a CLOSED frame, a box or any panel silhouette around a piece of
+  content. That device was tried three times and rejected three times.
+  What replaced it is the measurement frame of `scope-18` — four corner
+  brackets on the box's own corners, with nothing spanning between them,
+  which Kenny chose on 2026-09-11 after the command-table demo ("dan is
+  de demo hier niet voor niks geweest") and asked for again on
+  2026-09-16, at `scope-107`, around the laurel claims. The bracket is
+  this theme's instrument; a rectangle around content is still not.
 - Give a dimension line a fixed width. Both lines answer to something
   real — the headline's own rendered box — or they are not this theme's
   device, they are decoration wearing its name.

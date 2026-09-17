@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Am I through? · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Am I through?</h1>
+            <p class="cat-intro">
+                One page that answers the only question a round really has: is there anything left to judge. It counts every block of every component
+                page against every theme, in this browser and this engine, and says how many carry a verdict — the register in the repository and the
+                verdicts this browser holds, together.
+            </p>
+            <p class="cat-intro">
+                It counts verdicts, not readings: a block that changed after it was judged shows on the review page itself, which reads every block
+                again. So this page answers "did I go through everything", and the review page answers "does it still look the way I approved it".
+            </p>
+
+            <section id="round-state">
+                <h2>Where the round stands</h2>
+                <p class="cat-note" data-cat-round-status role="status">Counting…</p>
+                <div data-cat-round-banner hidden></div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table" data-cat-round-table>
+                        <caption>
+                            Every theme, and what is left to judge in it
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Theme</th>
+                                <th scope="col">Judged</th>
+                                <th scope="col">Left</th>
+                                <th scope="col">Where</th>
+                            </tr>
+                        </thead>
+                        <tbody data-cat-round-rows></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./round.js"></script>
+    </body>
+</html>

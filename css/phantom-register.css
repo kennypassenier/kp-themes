@@ -4,7 +4,7 @@
    register. Scoped to [data-theme='phantom'] and inert elsewhere; opt-in,
    imported after themes.css. The approved concept demo ("Calling Card",
    2026-09-08) is the reference for every value here, and
-   docs/RESEARCH_2026-09.md §15 is where each mechanism was measured.
+   docs/archive/RESEARCH_2026-09.md §15 is where each mechanism was measured.
 
    Cyberpunk emits light; phantom is print. What this file does, in
    order: the knobs and the texture; the type; the hooks of S45 — the
@@ -107,7 +107,6 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.02em;
-        line-height: 1.05;
     }
 
     /* Microlabels: mono, uppercase, a red tick. */
@@ -130,9 +129,7 @@
     /* The heading accent: the display step (S47), a hard black shadow and
        one red offset — the theme's whole character. */
     [data-theme='phantom'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 0.94;
         margin-block: 0 0.35em;
         text-wrap: balance;
         color: var(--foreground);
@@ -314,9 +311,11 @@
     [data-theme='phantom'] .kp-nav {
         background: var(--background);
         border-bottom: 2px solid var(--border);
-        padding-block: 1.1rem;
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The brand: italic capitals with the red offset. */
@@ -341,10 +340,9 @@
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1.02rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -429,14 +427,27 @@
         box-shadow: none;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+        }
+    }
+
     [data-theme='phantom'] .kp-nav__menu a {
         display: block;
         position: relative;
         z-index: 0;
-        padding: 0.5rem 1rem;
+        padding-inline: 1rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -477,8 +488,7 @@
         --kp-plate-frame: var(--foreground);
         position: relative;
         isolation: isolate;
-        min-height: 3rem;
-        padding: 0.65rem 1.6rem;
+        padding-inline: 1.6rem;
         font-family: var(--theme-font-display);
         font-weight: 700;
         font-size: 1.05rem;
@@ -606,13 +616,8 @@
 
     [data-theme='phantom'] .kp-button--sm {
         min-width: 0;
-        min-height: 2.25rem;
-        padding: 0.4rem 1rem;
+        padding-inline: 1rem;
         font-size: 0.9rem;
-    }
-
-    [data-theme='phantom'] .kp-button--lg {
-        min-height: 3.5rem;
     }
 
     [data-theme='phantom'] .kp-icon-button {
@@ -632,7 +637,6 @@
     [data-theme='phantom'] .kp-field__label {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -649,7 +653,7 @@
         background: var(--card);
         border: 2px solid var(--input);
         border-radius: 0;
-        padding: 0.65rem 0.85rem;
+        padding-inline: 0.85rem;
         caret-color: var(--primary);
     }
 
@@ -666,7 +670,6 @@
 
     [data-theme='phantom'] .kp-field__help {
         font-family: var(--kp-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.06em;
     }
 
@@ -703,6 +706,25 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the skewed square with
+       the input's two-pixel edge, and the primary fill once on. */
+    [data-theme='phantom'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='phantom'] .kp-switch__input {
+        border: 2px solid var(--input);
+        background: var(--card);
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='phantom'] .kp-form__summary {
         border-left: 4px solid var(--primary);
         background: var(--card);
@@ -724,7 +746,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 900;
-        font-size: 1.9rem;
         letter-spacing: 0.02em;
         text-transform: uppercase;
         text-shadow: 3px 3px 0 var(--background);
@@ -793,13 +814,86 @@
     [data-theme='phantom'] .kp-datepicker__panel,
     [data-theme='phantom'] .kp-combobox__list,
     [data-theme='phantom'] .kp-palette,
-    [data-theme='phantom'] .kp-theme-menu {
+    [data-theme='phantom'] .kp-theme-menu__list {
         background: var(--popover);
         border: 0;
         border-left: 4px solid var(--primary);
         border-radius: 0;
         clip-path: var(--kp-paperclip);
         box-shadow: none;
+    }
+
+    /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
+       2026-09-16, on the React theme menu: "niet veel te zien? Ook het
+       vorige item heb ik te snel approved" — both theme-menu blocks in the
+       catalogue showed the trigger and nothing else.
+
+       `.kp-theme-menu` is `display: inline-block; position: relative` in
+       css/components.css: the box the trigger stands in and the panel
+       hangs off, 40x36 px in the catalogue. It stood in the list above, so
+       it took the paperclip — and a `clip-path` clips every descendant,
+       including one positioned outside the box. Measured in firefox at
+       devicePixelRatio 2.222: the panel is 188x632 px and starts 151.6 px
+       back along the inline axis and 36 px below, so all of it fell
+       outside a 40x36 clip and nothing of the menu was painted, in both
+       channels. The wrapper also wore the popover's ground and the 4 px
+       primary edge, which is the lone red bar that stood beside the
+       trigger with nothing behind it.
+
+       So the wrapper is given its own nature back and the panels keep the
+       paperclip themselves: `.kp-popover` above already dresses the
+       markup channel's popover and the React channel's
+       `.kp-popover.kp-theme-menu__list`, which is named in the list too so
+       a consumer using the class on its own still gets the torn edge.
+       Spelled out rather than simply dropped from the list, because this
+       is the rule that says the element is not a surface. */
+    [data-theme='phantom'] .kp-theme-menu {
+        background: transparent;
+        border: 0;
+        clip-path: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='phantom'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='phantom'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='phantom'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='phantom'] .kp-toast--destructive,
+    [data-theme='phantom'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='phantom']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='phantom'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
     }
 
     [data-theme='phantom'] .kp-toasts {
@@ -874,6 +968,13 @@
         transform: skewX(var(--kp-skew));
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='phantom'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
     [data-theme='phantom'] .kp-footer {
         background: var(--background);
         color: var(--muted-foreground);
@@ -883,7 +984,6 @@
         font-family: var(--theme-font-display);
         font-style: italic;
         font-weight: 800;
-        font-size: 1.15rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -933,10 +1033,14 @@
         border-radius: 0;
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.8rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         transform: skewX(var(--kp-skew));
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='phantom'] .kp-tag {
+        font-size: 0.8rem;
     }
 
     [data-theme='phantom'] .kp-health__dot {
@@ -961,10 +1065,6 @@
         border: 2px solid var(--border);
         border-radius: 0;
         transform: skewX(var(--kp-skew));
-    }
-
-    [data-theme='phantom'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='phantom'] .kp-spinner {
@@ -1015,6 +1115,22 @@
         border: 2px solid var(--border);
         border-radius: 0;
         transform: skewX(var(--kp-skew));
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -1087,6 +1203,22 @@
         font-family: var(--kp-mono);
     }
 
+    /* The accordion [gap-12]: the display capitals its tabs shout in. */
+    [data-theme='phantom'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
     [data-theme='phantom'] .kp-reorder {
         border: 2px solid var(--border);
         border-radius: 0;
@@ -1132,7 +1264,6 @@
     [data-theme='phantom'] .kp-pagination {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
@@ -1222,11 +1353,11 @@
 
     [data-theme='phantom'] .kp-field,
     [data-theme='phantom'] .kp-form {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='phantom'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='phantom'] .kp-combobox,
@@ -1585,7 +1716,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='phantom'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='phantom'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='phantom'] .kp-nav__menu--wide .kp-nav__menu-heading {
         background: var(--primary);
         color: var(--primary-foreground);
         transform: skewX(-8deg);
@@ -1604,7 +1737,7 @@
     [data-theme='phantom'] .kp-sidenav__category-toggle {
         position: relative;
         z-index: 0;
-        padding: 0.5rem 0.95rem;
+        padding-inline: 0.95rem;
     }
 
     [data-theme='phantom'] .kp-sidenav__link::before {
@@ -1667,5 +1800,142 @@
     [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+    }
+
+    /* The primary's press [scope-80]. Every other variant is shoved 3px
+       down and right when pressed; the primary already takes that shove on
+       hover, so pressing it moved nothing (measured: `matrix(1, 0, 0, 1, 3,
+       3)` hovered and pressed alike) — Kenny's "the primary needs an
+       animation like the others when I click it". Pressed, it travels the
+       rest of the way onto its own shadow: 5px, the shadow's full offset,
+       with the shadow gone under it. */
+    [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
+        transform: translate(5px, 5px);
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='phantom'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): tall condensed display capitals in the full
+       ink, and under the pointer the skewed red slash that sweeps in behind
+       them. The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
+        position: relative;
+        z-index: 0;
+        padding-inline: 0.95rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary-foreground);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
+        content: '';
+        position: absolute;
+        left: -4%;
+        top: 14%;
+        height: 72%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover::before,
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible::before {
+        width: 108%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
+            transition: width var(--fx-duration) var(--kp-cut);
+        }
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A calling card: red, black and white only, the headline tilted, white bars and a white frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 3% / 0.96);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--background);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 1% / 0.8);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 3px solid var(--foreground);
+        --kp-alarm-title-tracking: 0;
+    }
+
+    [data-theme='phantom'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm__title {
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        border-color: var(--kp-alarm-soft);
+        background: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::after {
+        background: var(--kp-alarm-soft);
     }
 }

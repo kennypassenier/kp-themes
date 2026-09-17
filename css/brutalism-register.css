@@ -3,7 +3,7 @@
    The brutalism register, 5.0.0 [S48, LIFT_PLAN row 5]: printed matter.
    Scoped to [data-theme='brutalism'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Hard Copy", 2026-09-08)
-   is the reference for every value here, and docs/RESEARCH_2026-09.md
+   is the reference for every value here, and docs/archive/RESEARCH_2026-09.md
    §12 is where each mechanism was measured: Gumroad's lift/drop shadow
    pair and its per-plate ink token, BEIGE FORCE's pixel outline from four
    box-shadows and its relative-colour hover, Future Pharmaceutical's
@@ -48,9 +48,15 @@
         --kp-pixel:
             calc(-1 * var(--kp-line)) 0 0 0 var(--border-strong), var(--kp-line) 0 0 0 var(--border-strong),
             0 calc(-1 * var(--kp-line)) 0 0 var(--border-strong), 0 var(--kp-line) 0 0 var(--border-strong);
-        /* The marquee's hatch: a strip of the plate colour on the ink. */
-        --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28px);
-        --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28px);
+        /* The marquee's hatch: a strip of the plate colour on the ink. One
+           tile is --kp-hatch-tile wide and holds exactly one stripe period
+           along x: at -45deg a stripe period of tile / sqrt(2) across the
+           stripe (28.2843px for 40px) moves the stripe one whole tile along
+           the band, so a tile's right edge meets the next tile's left edge
+           with no seam. */
+        --kp-hatch-tile: 40px;
+        --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28.2843px);
+        --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28.2843px);
     }
 
     /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
@@ -80,12 +86,9 @@
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: -0.02em;
-        line-height: 1.05;
     }
 
     [data-theme='brutalism'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 0.98;
         letter-spacing: -0.025em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -155,7 +158,10 @@
     /* The divider: Future Pharmaceutical's marquee — a strip twice the
        band's width translated -50%, seamless, one cycle in 42 seconds,
        frozen under reduced motion. A hatch of the plate on the ink, the
-       second one the ink on the plate, running the other way. */
+       second one the ink on the plate, running the other way. The tile is
+       one stripe period, never the band's own width (which is no multiple
+       of the period, and left a seam where one tile ended), and the strip's
+       half is rounded up to whole tiles so the -50% loop lands on one. */
     [data-theme='brutalism'] [data-kp-divider] {
         display: block;
         position: relative;
@@ -170,8 +176,8 @@
         position: absolute;
         inset-block: 0;
         inset-inline-start: 0;
-        inline-size: 200%;
-        background: var(--kp-hatch) 0 0 / 50% 100% repeat-x;
+        inline-size: calc(2 * round(up, 100%, var(--kp-hatch-tile)));
+        background: var(--kp-hatch) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
     }
 
     [data-theme='brutalism'] [data-kp-divider='alt'] {
@@ -179,7 +185,7 @@
     }
 
     [data-theme='brutalism'] [data-kp-divider='alt']::before {
-        background: var(--kp-hatch-alt) 0 0 / 50% 100% repeat-x;
+        background: var(--kp-hatch-alt) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
     }
 
     /* ── The hero: paper, and the dot grid the base layer draws ───────── */
@@ -210,9 +216,11 @@
 
     [data-theme='brutalism'] .kp-nav {
         background: var(--background);
-        padding-block: 1.1rem;
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='brutalism'] .kp-nav__brand {
@@ -233,9 +241,8 @@
 
     [data-theme='brutalism'] .kp-nav__link {
         display: block;
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -308,11 +315,23 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 500;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -380,12 +399,6 @@
             var(--kp-shadow-up);
     }
 
-    /* The demo's height, on every button [S49, A4]; TH111's amendment
-       lets the sizes separate in padding and type instead. */
-    [data-theme='brutalism'] .kp-button {
-        min-block-size: 3rem;
-    }
-
     [data-theme='brutalism'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
     }
@@ -442,7 +455,6 @@
 
     [data-theme='brutalism'] .kp-field__label {
         font-weight: 700;
-        font-size: 0.78rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
     }
@@ -456,7 +468,14 @@
         border: var(--kp-line) solid var(--input);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-        padding: 0.65rem 0.8rem;
+        padding-inline: 0.8rem;
+    }
+
+    /* The field and the combobox take their height from the package
+       [scope-80]; the search box and the palette keep their own. */
+    [data-theme='brutalism'] .kp-datatable__search,
+    [data-theme='brutalism'] .kp-palette__input {
+        padding-block: calc(var(--kp-space-sm) * 1.3);
     }
 
     /* Focus fills the well with the plate: the ring stays outside it. */
@@ -476,7 +495,6 @@
     }
 
     [data-theme='brutalism'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -525,6 +543,34 @@
         border-radius: 0;
     }
 
+    /* The switch [gap-11], in the checkbox's voice: a square slab with the
+       heavy line and the offset shadow, a square thumb in ink, and the
+       primary fill once on. */
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: var(--kp-line);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        background: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        background: var(--primary-foreground);
+    }
+
     [data-theme='brutalism'] .kp-form__summary {
         background: var(--card);
         border: var(--kp-line) solid var(--border-strong);
@@ -539,10 +585,6 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
-    }
-
-    [data-theme='brutalism'] .kp-card__title {
-        font-size: 1.5rem;
     }
 
     [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] {
@@ -628,12 +670,51 @@
         text-transform: uppercase;
     }
 
-    [data-theme='brutalism'] .kp-toasts {
-        gap: 0.9rem;
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='brutalism'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
     }
 
-    [data-theme='brutalism'] .kp-dialog__title {
-        font-size: 1.5rem;
+    [data-theme='brutalism'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='brutalism'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='brutalism'] .kp-toast--destructive,
+    [data-theme='brutalism'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='brutalism']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='brutalism'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-toasts {
+        gap: 0.9rem;
     }
 
     /* The menu keeps a ring's width of paper inside its frame: with the
@@ -718,6 +799,13 @@
         inline-size: var(--kp-line);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='brutalism'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: var(--kp-line);
+    }
+
     /* The footer: the ink, the paper, the yellow. */
     [data-theme='brutalism'] .kp-footer {
         background: var(--sidebar-background);
@@ -727,7 +815,6 @@
     [data-theme='brutalism'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-primary);
@@ -797,11 +884,6 @@
         box-shadow: var(--kp-shadow);
     }
 
-    [data-theme='brutalism'] .kp-progress__value {
-        background: var(--secondary);
-        border-inline-end: var(--kp-line) solid var(--border-strong);
-    }
-
     [data-theme='brutalism'] .kp-spinner {
         border-color: var(--border-strong);
         border-top-color: var(--secondary);
@@ -849,6 +931,22 @@
         box-shadow: 2px 2px 0 0 var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='brutalism'] .kp-table {
@@ -860,6 +958,8 @@
 
     [data-theme='brutalism'] .kp-table th {
         background: var(--secondary);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--secondary);
         color: var(--secondary-foreground);
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -880,6 +980,13 @@
         border-radius: 0;
         box-shadow: var(--kp-shadow);
         background: var(--card);
+    }
+
+    /* Compact reaches the search box [gap-13]: the well's padding is a
+     * literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='brutalism'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='brutalism'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.4rem;
     }
 
     [data-theme='brutalism'] .kp-datatable__bar {
@@ -927,6 +1034,23 @@
 
     [data-theme='brutalism'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
+    [data-theme='brutalism'] .kp-accordion__summary {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: var(--kp-line);
     }
 
     [data-theme='brutalism'] .kp-reorder {
@@ -1038,11 +1162,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='brutalism'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='brutalism'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='brutalism'] .kp-combobox,
@@ -1268,7 +1392,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='brutalism'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='brutalism'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='brutalism'] .kp-nav__menu--wide .kp-nav__menu-heading {
         background: var(--foreground);
         color: var(--background);
         font-weight: 700;
@@ -1302,9 +1428,8 @@
     [data-theme='brutalism'] .kp-sidenav__category-toggle {
         border: 2px solid var(--foreground);
         background: var(--background);
-        padding: 0.5rem 0.75rem;
+        padding-inline: 0.75rem;
         font-weight: 700;
-        font-size: 0.82rem;
         text-transform: uppercase;
         border-radius: 0;
         box-shadow: 3px 3px 0 var(--foreground);
@@ -1380,8 +1505,24 @@
     [data-theme='brutalism'] .kp-field__input,
     [data-theme='brutalism'] .kp-card,
     [data-theme='brutalism'] .kp-alert,
-    [data-theme='brutalism'] .kp-badge,
-    [data-theme='brutalism'] .kp-sidenav {
+    [data-theme='brutalism'] .kp-badge {
+        position: relative;
+    }
+
+    /* The side navigation says where it sits, and this tag may not argue
+       with it [fix-42]. A register wins over the base layer whatever its
+       specificity, so `position: relative` here took the `position: fixed`
+       an `over` or `push` panel gets from css/components.css away with it
+       and put the closed panel back in the flow, standing on the page
+       before it was opened — Kenny, 2026-09-16, brutalism's over-the-page
+       menu: "Hier staat het menu al meer dan volledig op de pagina voor ik
+       het open. Het moet normaal toch 'uit het zicht' zijn?" Measured on
+       catalogue/navigation.html#sidenav-over in firefox: the closed panel's
+       right edge stood 621px onto the page where every other theme has it
+       at 0. Those two modes are positioned already, and a positioned box is
+       all the tag needs; only the `side` panel, a flex item of the page's
+       own layout, has to be given one. */
+    [data-theme='brutalism'] .kp-sidenav:not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
         position: relative;
     }
 
@@ -1453,5 +1594,139 @@
 
     [data-theme='brutalism'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='brutalism'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): heavy spaced capitals in a thick frame that
+       is invisible until pointed at, when the frame and the secondary slab
+       appear. The link's typeface, case, spacing, shape and pointer answer
+       are restated here, because the trigger is a button beside the list
+       rather than a link in it. The underline a plain link carries is not:
+       it says "this is a link", and the trigger is not one. */
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: var(--kp-line) solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A stamp slammed onto the page: a red slab with a thick black border and a hard offset shadow, set at an angle, black hazard bars on the cream ground. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='brutalism'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive-foreground);
+        --kp-alarm-soft: var(--destructive-foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 4px solid var(--foreground);
+        --kp-alarm-panel-ground: var(--destructive);
+        --kp-alarm-panel-border: 4px solid var(--foreground);
+        --kp-alarm-panel-shadow: 10px 10px 0 var(--foreground);
+        --kp-alarm-panel-padding: clamp(0.9rem, 2.6cqi, 2.25rem);
+        --kp-alarm-title-tracking: -0.02em;
+        /* One step smaller, everywhere [Kenny, 2026-09-16]. His rejection of
+           the auto alarm: "De tekst wordt afgebroken omdat het te groot is om
+           in het kader te passen. Het hele element en subelementen mogen wat
+           minder groot zijn." Measured in firefox on the raised alarm with
+           the catalogue's own words, "Intrusion detected": at 1280x800 the
+           headline asked the slab for 983 px of content box and got 884, so
+           99 px of it was cut off by the plate; at 864x450 — the CSS viewport
+           of his 2.222 zoom — the panel stood 109 px taller than the alarm's
+           own box, and because the alarm centres its panel the overflow goes
+           BOTH ways: the code line sat 45 px above the frame and the top of
+           the headline 30 px above it, out of reach of the scroll. The
+           headline drops from the package's 12cqi to 8cqi with a 5.5rem
+           ceiling, the bars, the padding, the line and the shadow come down
+           with it, and the plate narrows from 56rem to 44rem so the words
+           have somewhere to wrap. The slab, the tilt and Archivo Black in
+           capitals are untouched: this is the same stamp, one step smaller. */
+        /* And back up a notch [Kenny, 2026-09-16, second look]: "nu is het
+           te klein, zie gewoon dat de rode kader net in het vak past". The
+           headline and the plate take the room the frame leaves, with the
+           fit test holding the overflow at zero in all 22 themes. */
+        --kp-alarm-title-size: clamp(2rem, 10cqi, 7rem);
+        --kp-alarm-bar: 0.85rem;
+    }
+
+    [data-theme='brutalism'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-alarm__panel {
+        inline-size: min(100%, 52rem);
+        rotate: -2deg;
+    }
+
+    /* The sub-elements come down with the plate [Kenny, 2026-09-16]: the code
+       line, the reason and the button are the package's sizes minus a step,
+       so the whole stamp shrinks together rather than the headline alone. The
+       button keeps a width a thumb can find. */
+    [data-theme='brutalism'] .kp-alarm__code {
+        font-size: clamp(0.62rem, 1.1cqi, 0.82rem);
+    }
+
+    [data-theme='brutalism'] .kp-alarm__detail {
+        font-size: clamp(0.78rem, 1.5cqi, 1.05rem);
+        line-height: 1.4;
+    }
+
+    [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack {
+        min-inline-size: 11rem;
     }
 }

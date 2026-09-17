@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Motion that must restart after the still frame</title>
+        <!-- fix-31 was an infinite animation that never ran again after the
+             review page had read its hashes. The remedy lives in
+             `stillAnimations()` in catalogue/block-hash.js; this is the
+             package's own motion, on a page with no catalogue on it, so the
+             property can be measured without a review page in the way
+             [scope-103]. -->
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <h1>A band that runs</h1>
+        <div class="kp-marquee" data-kp-marquee data-test="band">
+            <span>Line 1 · 3.2 bar</span>
+            <span>Line 2 · locked out</span>
+            <span>Cold store · −18 °C</span>
+            <span>Weighbridge · idle</span>
+            <span>Next shift · 06:00</span>
+        </div>
+
+        <!-- A second infinite animation of another kind, so the claim is
+             about infinite animations and not about the marquee alone. -->
+        <progress class="kp-progress" data-test="progress" aria-label="Loading"></progress>
+
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

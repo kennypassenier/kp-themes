@@ -7,16 +7,14 @@
 // out of a dither in discrete densities and ending as its own text under a
 // hard white shadow, the mark as the selection bar (ink while armed, white
 // on navy once selected), the groove ruling itself in under a heading when
-// it enters the viewport, the two grooves as dividers (the dithered band and
-// the plain two-line one), the title-bar ramp on the brand and the selection
+// it enters the viewport, the title-bar ramp on the brand and the selection
 // bar behind a hovered menu item, the raised bevel on a button with the navy
 // bevel on the default one, the read-only stamp and the dither brush lifting
 // off the dossier's redactions on the trigger, and the whole approved
-// inventory on the page.
+// inventory on the page. The two groove dividers are judged by eye on the
+// catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
-//   - the divider's dithered band removed from the register → the first
-//     groove paints as a plain one, red on "the dividers are grooves";
 //   - `--kp-arrival: boot` removed → no overlay, red on "the page boots";
 //   - the armed dither (`[data-kp-effects] … :not(.is-deciphered)::after`)
 //     removed → the armed probe reads opacity 0, red on "the headline
@@ -94,7 +92,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the retro register, ${channel}`, () => {
+    test.describe(`the retro register, ${channel}`, { tag: ['@theme:retro', '@component:page-effects', '@component:examples'] }, () => {
         test('the page boots once per session through the POST, and Skip ends it at once [RT2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');
@@ -234,53 +232,6 @@ for (const [channel, url] of CHANNELS) {
             expect(groove['animation-timing-function']).toMatch(/steps\(12/);
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are grooves: the dithered band first, the plain two-line groove second [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => ({ h: getComputedStyle(el).height, bg: getComputedStyle(el).backgroundImage }));
-            expect(first.h).toBe('8px');
-            expect(first.bg, 'the band between the lines is a checkerboard').toMatch(/conic-gradient/);
-            expect(first.bg.match(/linear-gradient/g)?.length, 'two groove lines').toBeGreaterThanOrEqual(2);
-            const second = await dividers.nth(1).evaluate((el) => ({ h: getComputedStyle(el).height, bg: getComputedStyle(el).backgroundImage }));
-            expect(second.h).toBe('2px');
-            expect(second.bg).not.toMatch(/conic-gradient/);
-        });
-
-        test('the brand is the title bar, a hovered menu item is the selection bar, and the buttons are bevels', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            // Nothing below is read before the module says it is finished
-            // and the boot overlay is off the page with it [TF1].
-            await bootGone(page);
-            const brand = page.locator('.kp-nav__brand').first();
-            await style(brand, 'background-image').toMatch(/linear-gradient/);
-            await style(brand, 'color').toBe(await paint(page, '--primary-foreground'));
-            const link = page.locator('.kp-nav__link').nth(1);
-            await link.hover();
-            await style(link, 'background-color').toBe(await paint(page, '--primary'));
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            await expect
-                .poll(async () => (await button.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
-                    message: 'the four-inset bevel',
-                })
-                .toBe(4);
-            await style(button, 'border-radius').toBe('0px');
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            await style(primary, 'background-color').toBe(await paint(page, '--primary'));
-            await expect
-                .poll(async () => (await primary.evaluate((el) => getComputedStyle(el).boxShadow)).match(/inset/g)?.length, {
-                    message: 'with its own bevel',
-                })
-                .toBe(4);
         });
 
         test('the dossier is a Notepad window: the read-only stamp, and the dither brush lifting off on the trigger', async ({ page }) => {

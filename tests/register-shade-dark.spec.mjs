@@ -5,17 +5,16 @@
 //
 // What the demo showed and this suite holds: the headline's words arriving
 // out of a blur, the rule drawing itself in on scroll, the hero button and
-// the dossier card settling out of the same blur once on load, the loose
-// hero mark as a static signal plate (never covered), the dossier's marks
-// as ink plates that clear left to right on the trigger, the two-channel
-// focus ring, the divider's radial swell, and the whole approved inventory.
+// the dossier card settling out of the same blur once on load, the
+// dossier's marks as ink plates that clear left to right on the trigger,
+// the two-channel focus ring, and the whole approved inventory. The loose
+// hero mark's static signal plate and the divider's radial swell are
+// judged by eye on the catalogue since scope-73 (page-effects#lede-marks,
+// page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
 // in both browsers) [G13]:
-//   - the loose-mark rule (`[data-theme='shade-dark'] mark { background:
-//     var(--fx-signal); ... }`) removed → the hero mark painted no
-//     background at all, red on "the lede mark is a signal plate";
 //   - `[data-theme='shade-dark'][data-kp-effects] .kp-card[data-kp-reveal=
 //     'emphasis'] mark:not(.is-cleared) { color: transparent; }` removed →
 //     the redacted phrase read its own text before the trigger, red on
@@ -26,8 +25,8 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { expectMenuDisplayTransition, measureMenuClose } from './helpers/menu-fade.mjs';
 import { style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -89,7 +88,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the shade-dark register, ${channel}`, () => {
+    test.describe(`the shade-dark register, ${channel}`, { tag: ['@theme:shade-dark', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline arrives word by word out of a blur, and ends as its own text [TH119]', async ({ page }) => {
             // Recorded before navigation. At rest the headline is simply
             // its own text with no wrappers — which is also exactly what a
@@ -142,19 +141,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await mark.evaluate((el) => getComputedStyle(el).backgroundColor), 'the lede mark is never covered').toBe(
                 await paint(page, '--fx-signal'),
             );
-        });
-
-        test('the lede mark is a static signal plate, never covered or cleared away [S49]', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] mark').first();
-            await expect(mark).toBeVisible();
-            // Drilled: removing the loose-mark rule below leaves this
-            // `rgba(0, 0, 0, 0)` — the theme's default `mark` background.
-            expect(await mark.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--fx-signal'));
-            expect(await mark.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--fx-signal-foreground'));
-            // The text is always there and always coloured, whether or not
-            // the effects module has run yet.
-            expect((await mark.textContent())?.length).toBeGreaterThan(0);
         });
 
         test('the rule draws itself in when its heading enters the viewport, and stands drawn without the script [TH122]', async ({ page }) => {
@@ -221,78 +207,51 @@ for (const [channel, url] of CHANNELS) {
             await expect(marks.first()).not.toHaveClass(/is-cleared/);
         });
 
-        test('the focus ring keeps two channels: an outline in the foreground, a moat in the ground [DI2]', async ({ page }) => {
+        test('the dropdown closes with its fade, as it opens [scope-100]', async ({ page, browserName }) => {
             await open(page, url);
-            const PRIMARY = '[data-kp-surface="hero"] .kp-button--primary';
-            const primary = page.locator(PRIMARY).first();
-            // Reached with the keyboard, not focus(): a focus() that never
-            // lands resolves happily and the reads below then measure the
-            // button at rest and pass [G15].
-            await tabToSelector(page, PRIMARY);
-            const ring = await primary.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { outlineColor: s.outlineColor, outlineStyle: s.outlineStyle, boxShadow: s.boxShadow };
-            });
-            expect(ring.outlineStyle).toBe('solid');
-            expect(ring.outlineColor).toBe(await paint(page, '--foreground'));
-            expect(ring.boxShadow, 'the outer moat in the ground').toContain(await paint(page, '--background'));
+            await expectMenuDisplayTransition(page);
+            // Firefox closes every theme's dropdown at once (measured
+            // 2026-09-16, the package's own formal included), so the
+            // frames are read in chromium only.
+            if (browserName !== 'chromium') return;
+            const closing = await measureMenuClose(page);
+            expect(closing.lastShownMs, `still fading 100ms after closing (seen ${closing.opacities.join(' ')})`).toBeGreaterThanOrEqual(100);
+            expect(closing.opacities.length, 'through more than one opacity').toBeGreaterThan(1);
         });
 
-        test('the dividers swell in the next surface’s own tone, no literal blur() filter', async ({ page }) => {
+        test("the skip link takes the register's transition [scope-100]", async ({ page }) => {
             await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const d = dividers.nth(i);
-                const before = await pseudo(d, '::before', ['background-image', 'filter']);
-                expect(before['background-image']).toMatch(/radial-gradient/);
-                expect(before.filter).toBe('none');
-                const after = await pseudo(d, '::after', ['background-image', 'opacity']);
-                expect(after['background-image']).toMatch(/linear-gradient/);
-            }
+            const durations = await page
+                .locator('.kp-skip-link')
+                .first()
+                .evaluate((el) =>
+                    getComputedStyle(el)
+                        .transitionDuration.split(',')
+                        .map((d) => parseFloat(d)),
+                );
+            expect(Math.max(...durations), 'a transition with a duration').toBeGreaterThan(0);
         });
 
-        test('the dropdown is styled in the theme’s own language [KT14]', async ({ page }) => {
+        test('a pressed variant button eases its border with its fill, rather than jumping [scope-100]', async ({ page }) => {
             await open(page, url);
-            const parent = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            const link = parent.locator(':scope > a').first();
-            await link.hover();
-            const menu = parent.locator('.kp-nav__menu');
-            await expect.poll(() => menu.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
-            const item = menu.locator('a').first();
-            await item.hover();
-            await expect.poll(() => item.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--secondary'));
-        });
-
-        test('the same light, the other material: the control lifts, and the press goes under [scope-12]', async ({ page }) => {
-            // shade-light's own test, read on the dark twin. Drilled
-            // 2026-09-12 in firefox: the rest `box-shadow` removed -> red on
-            // the offsets; the `:active` rule's `inset` removed -> red on
-            // the press turning inward.
-            // The PLAIN button, named explicitly: `.kp-button` with
-            // `.first()` reaches the hero's `--mirror` variant, which
-            // carries its own later rules [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            await open(page, url);
-            const rest = await btn.evaluate((el) => getComputedStyle(el).boxShadow);
-            const offsets = rest.match(/(-?[\d.]+)px (-?[\d.]+)px ([\d.]+)px/);
-            expect(offsets, 'a shadow at rest').not.toBeNull();
-            expect(Number(offsets[1]), 'it falls to the right of the source').toBeGreaterThan(0);
-            expect(Number(offsets[2]), 'and below it').toBeGreaterThan(Number(offsets[1]));
-            // Further and softer than the light twin's 1px 2px 3px: on a
-            // dark ground a short sharp shadow is not a shadow, it is a line.
-            expect(Number(offsets[3]), 'softer than the light twin').toBeGreaterThan(3);
-            expect(rest, 'away from the light, not into it').not.toContain('inset');
-            await btn.hover();
-            await style(btn, 'translate', 'the lift is toward the source').toBe('-1px -1px');
+            await settled(page);
+            const button = page.locator('[data-kp-surface="app"] .kp-button--primary:not(:disabled)').last();
+            await button.scrollIntoViewIfNeeded();
+            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await button.boundingBox());
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await settled(page);
             await page.mouse.down();
-            await style(btn, 'transition-duration', 'the press does not ease in').toBe('0s');
-            expect(await btn.evaluate((el) => getComputedStyle(el).boxShadow), 'and it turns inward').toContain('inset');
+            const running = await button.evaluate((el) =>
+                el
+                    .getAnimations()
+                    .map((a) => /** @type {CSSTransition} */ (a).transitionProperty)
+                    .filter(Boolean),
+            );
+            // Released off the button, so no click follows.
+            await page.mouse.move(2, 2);
             await page.mouse.up();
+            expect(running, `the fill eases (${running.join(', ')})`).toContain('background-color');
+            expect(running, 'and the border with it').toContain('border-top-color');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

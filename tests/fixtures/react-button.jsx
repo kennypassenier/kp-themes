@@ -17,6 +17,9 @@ function Cases() {
             <Button size="lg" data-test="react-lg">
                 Save
             </Button>
+            <Button data-test="react-icon">
+                <span aria-hidden="true">↻</span> Retry
+            </Button>
         </>
     );
 }

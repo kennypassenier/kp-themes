@@ -1,6 +1,7 @@
-import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { parseDate, toISO } from '../js/datepicker.js';
-import { datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
+import { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { clampToMonth, jumpMove, measureDateView, outsideRange, parseDate, raiseDatePanel, toISO, yearBlockStart } from '../js/datepicker.js';
+import { calendarNames, datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
+import { DEFAULT_STRINGS } from '../js/strings.js';
 import { acceptsFile } from '../js/upload.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
@@ -35,6 +36,7 @@ function useLocale(ref, explicit) {
 /**
  * @typedef {object} DatePickerProps
  * @property {string} label
+ * @property {boolean} [hideLabel]     The label stays for assistive technology but is not drawn, for a picker a visible heading already names (a data table's date filter). Default false.
  * @property {string} [value]          Controlled text.
  * @property {string} [defaultValue]   Initial text when uncontrolled.
  * @property {(iso: string | null, date: Date | null) => void} [onChange]
@@ -70,6 +72,7 @@ function useLocale(ref, explicit) {
 function DatePickerInner(
     {
         label,
+        hideLabel = false,
         value,
         defaultValue = '',
         onChange,
@@ -104,16 +107,59 @@ function DatePickerInner(
     useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
     const locale = useLocale(inner, localeProp);
     const firstDay = weekStartsOn(locale, weekProp);
+    // The names follow the locale; a consumer's own dictionary still wins [gap-11].
+    const names = calendarNames(s, DEFAULT_STRINGS, locale);
     const [text, setText] = useControllable(value, defaultValue, undefined);
     const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
     const [cursor, setCursor] = useState(() => parseDate(defaultValue, locale) ?? new Date());
     const button = useRef(/** @type {HTMLButtonElement | null} */ (null));
+    const panelRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+    // Above any container that clips, and inside the window: the same
+    // raiseDatePanel the framework-free channel opens with (js/datepicker.js).
+    useLayoutEffect(() => {
+        if (!open || panelRef.current === null) return undefined;
+        return raiseDatePanel(panelRef.current);
+    }, [open]);
+    // Opened from its button, the calendar takes the focus on its one tabbable
+    // day, as the framework-free channel does: the arrows then move through the
+    // month, and Escape has somewhere to come back from.
+    const focusOnOpen = useRef(false);
+    useEffect(() => {
+        if (!open || !focusOnOpen.current) return;
+        focusOnOpen.current = false;
+        /** @type {HTMLElement | null | undefined} */ (panelRef.current?.querySelector('[tabindex="0"]'))?.focus();
+    }, [open]);
+
+    // The month and year grids [scope-89], as the framework-free channel
+    // draws them (js/datepicker.js): which grid shows, where Escape steps back
+    // to, the day view's size held while another grid shows, and what a
+    // screen reader is told when the grid changes.
+    const [view, setView] = useState(/** @type {import('../js/datepicker.js').DateView} */ ('days'));
+    const back = useRef(/** @type {Date[]} */ ([]));
+    const [pin, setPin] = useState(/** @type {ReturnType<typeof measureDateView> | null} */ (null));
+    const [announcement, setAnnouncement] = useState('');
+    const focusCell = useRef(false);
+    useEffect(() => {
+        if (!focusCell.current) return;
+        focusCell.current = false;
+        /** @type {HTMLElement | null | undefined} */ (panelRef.current?.querySelector('.kp-datepicker__grid [tabindex="0"]'))?.focus();
+    });
+    // Every opening starts on the days.
+    useEffect(() => {
+        if (open) return;
+        setView('days');
+        back.current = [];
+        setPin(null);
+        setAnnouncement('');
+    }, [open]);
 
     const chosen = parseDate(text, locale);
     const year = cursor.getFullYear();
     const month = cursor.getMonth();
     const lead = (new Date(year, month, 1).getDay() - firstDay + 7) % 7;
     const days = new Date(year, month + 1, 0).getDate();
+    const from = yearBlockStart(year);
+    const monthTitle = s.monthTitle(names.months[month] ?? '', year);
     const lower = min ? parseDate(min, locale) : null;
     const upper = max ? parseDate(max, locale) : null;
     /** @param {Date} date */
@@ -122,6 +168,55 @@ function DatePickerInner(
         (upper !== null && date > upper) ||
         disabledDays.includes(date.getDay()) ||
         (isDateDisabled?.(date) ?? false);
+
+    /** Move to a grid and a date, say which grid shows, and focus its cell. @param {import('../js/datepicker.js').DateView} next @param {Date} date */
+    const settle = (next, date) => {
+        setCursor(date);
+        setView(next);
+        if (next === 'days') setPin(null);
+        const y = date.getFullYear();
+        const start = yearBlockStart(y);
+        setAnnouncement(
+            next === 'days'
+                ? s.monthTitle(names.months[date.getMonth()] ?? '', y)
+                : next === 'months'
+                  ? s.monthGrid(y)
+                  : s.yearGrid(start, start + 11),
+        );
+        focusCell.current = true;
+    };
+    /** Open the month or year grid over the current one. @param {import('../js/datepicker.js').DateView} next */
+    const go = (next) => {
+        if (view === 'days' && panelRef.current !== null) setPin(measureDateView(panelRef.current));
+        back.current.push(cursor);
+        settle(next, cursor);
+    };
+    /** Escape in the month or year grid: the grid below, where it was. */
+    const stepBack = () => settle(view === 'years' ? 'months' : 'days', back.current.pop() ?? cursor);
+    /** A month or year chosen: the grid below, on it. @param {Date} date @param {boolean} off */
+    const pick = (date, off) => {
+        if (off) return;
+        back.current.pop();
+        settle(view === 'years' ? 'months' : 'days', date);
+    };
+    /** @param {import('react').KeyboardEvent} event @param {number} index @param {Date} date @param {boolean} off */
+    const onJumpKey = (event, index, date, off) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            pick(date, off);
+            return;
+        }
+        const delta = jumpMove(event.key, index);
+        if (delta === null) return;
+        event.preventDefault();
+        setCursor(view === 'months' ? clampToMonth(year, month + delta, cursor.getDate()) : clampToMonth(year + delta, month, cursor.getDate()));
+        focusCell.current = true;
+    };
+    /** Previous and next: a month, a year or twelve years, by the grid. @param {-1 | 1} sign */
+    const stepBy = (sign) =>
+        setCursor(
+            view === 'days' ? new Date(year, month + sign, 1) : clampToMonth(year + sign * (view === 'months' ? 1 : 12), month, cursor.getDate()),
+        );
 
     /** @param {Date} date */
     const take = (date) => {
@@ -184,10 +279,18 @@ function DatePickerInner(
             onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
             }}
+            onKeyDown={(event) => {
+                // Escape from anywhere in the open picker — the month buttons too —
+                // closes it and hands the focus back to its button.
+                if (event.key !== 'Escape' || !open || event.defaultPrevented) return;
+                event.preventDefault();
+                setOpen(false);
+                button.current?.focus();
+            }}
             {...rest}
         >
             <div className="kp-field">
-                <label className="kp-field__label" htmlFor={id}>
+                <label className={hideLabel ? 'kp-field__label kp-sr-only' : 'kp-field__label'} htmlFor={id}>
                     {label}
                 </label>
                 <input
@@ -213,79 +316,159 @@ function DatePickerInner(
                     {...inputProps}
                 />
             </div>
+            {/* The date picker's markup, class for class: a plain button with
+                the glyph hidden from a screen reader, named by aria-label and
+                title [Kenny's note of 2026-09-13 — it was a ghost reading
+                "Calendar"]. */}
             <button
                 type="button"
                 ref={button}
-                className="kp-button kp-button--ghost"
+                className="kp-button"
                 data-kp-date-open
                 aria-label={s.calendarOpen}
+                title={s.calendarOpen}
                 aria-expanded={open}
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                    if (!open) {
+                        focusOnOpen.current = true;
+                        // Open on the chosen date, so the focused day is the one in the field.
+                        if (chosen !== null) setCursor(chosen);
+                    }
+                    setOpen(!open);
+                }}
             >
-                {trigger ?? s.calendarButton}
+                {trigger ?? <span aria-hidden="true">{s.calendarButton}</span>}
             </button>
             {open && (
-                <div className="kp-datepicker__panel" data-kp-date-panel>
+                <div
+                    className="kp-datepicker__panel"
+                    data-kp-date-panel
+                    ref={panelRef}
+                    style={view !== 'days' && pin !== null ? { minInlineSize: pin.inline, minBlockSize: pin.block } : undefined}
+                    onKeyDown={(event) => {
+                        // Escape steps back one grid; from the days it closes, as before.
+                        if (event.key !== 'Escape' || view === 'days') return;
+                        event.preventDefault();
+                        stepBack();
+                    }}
+                >
                     <div className="kp-datepicker__head">
                         <button
                             type="button"
                             className="kp-button kp-button--ghost"
-                            aria-label={s.previousMonth}
-                            onClick={() => setCursor(new Date(year, month - 1, 1))}
+                            aria-label={view === 'days' ? s.previousMonth : view === 'months' ? s.previousYear : s.previousYears}
+                            onClick={() => stepBy(-1)}
                         >
                             {previousGlyph}
                         </button>
-                        <span className="kp-datepicker__title" id={`${id}-title`}>
-                            {s.monthTitle(s.months[month] ?? '', year)}
-                        </span>
+                        {view === 'years' ? (
+                            // The year grid is the top, so its title is only a title.
+                            <span className="kp-datepicker__title" id={`${id}-title`}>
+                                {s.yearRange(from, from + 11)}
+                            </span>
+                        ) : (
+                            <button
+                                type="button"
+                                className="kp-datepicker__title"
+                                id={`${id}-title`}
+                                aria-label={view === 'days' ? s.chooseMonth(monthTitle) : s.chooseYear(year)}
+                                onClick={() => go(view === 'days' ? 'months' : 'years')}
+                            >
+                                {view === 'days' ? monthTitle : String(year)}
+                            </button>
+                        )}
                         <button
                             type="button"
                             className="kp-button kp-button--ghost"
-                            aria-label={s.nextMonth}
-                            onClick={() => setCursor(new Date(year, month + 1, 1))}
+                            aria-label={view === 'days' ? s.nextMonth : view === 'months' ? s.nextYear : s.nextYears}
+                            onClick={() => stepBy(1)}
                         >
                             {nextGlyph}
                         </button>
                     </div>
-                    <div className="kp-datepicker__grid" role="grid" aria-labelledby={`${id}-title`}>
-                        {Array.from({ length: 7 }, (_, i) => s.weekdays[(firstDay + i) % 7] ?? '').map((day, i) => (
-                            <span className="kp-datepicker__weekday" role="columnheader" aria-label={day} key={`${day}-${i}`}>
-                                {day}
-                            </span>
-                        ))}
-                        {Array.from({ length: lead }, (_, i) => (
-                            <span className="kp-datepicker__blank" key={`blank-${i}`} />
-                        ))}
-                        {Array.from({ length: days }, (_, i) => {
-                            const day = new Date(year, month, i + 1);
-                            const iso = toISO(day);
-                            const off = disabled(day);
-                            return (
-                                <button
-                                    type="button"
-                                    key={iso}
-                                    className="kp-datepicker__day"
-                                    data-kp-day={iso}
-                                    data-kp-disabled={off ? '' : undefined}
-                                    role="gridcell"
-                                    // The full date as the name: "4" alone
-                                    // tells a screen reader nothing about
-                                    // which month it is in.
-                                    aria-label={s.dayLabel(i + 1, s.months[month] ?? '', year)}
-                                    aria-selected={chosen !== null && toISO(chosen) === iso}
-                                    aria-disabled={off ? 'true' : undefined}
-                                    // Exactly one day in the tab order, so
-                                    // Tab leaves the grid instead of walking
-                                    // 31 buttons.
-                                    tabIndex={i + 1 === cursor.getDate() ? 0 : -1}
-                                    onKeyDown={(event) => onDayKey(event, day)}
-                                    onClick={() => take(day)}
-                                >
-                                    {renderDay ? renderDay(day, { className: 'kp-datepicker__day', disabled: off }) : i + 1}
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {view !== 'days' && (
+                        <div
+                            className="kp-datepicker__grid"
+                            data-kp-view={view}
+                            role="grid"
+                            aria-label={view === 'months' ? s.monthGrid(year) : s.yearGrid(from, from + 11)}
+                            // The width exactly, the height at least: the day grid's, so the panel does not jump.
+                            style={pin === null ? undefined : { inlineSize: pin.gridInline, minBlockSize: pin.gridBlock }}
+                        >
+                            {Array.from({ length: 12 }, (_, i) => {
+                                const isMonth = view === 'months';
+                                const date = isMonth ? clampToMonth(year, i, cursor.getDate()) : clampToMonth(from + i, month, cursor.getDate());
+                                const current = isMonth ? i === month : from + i === year;
+                                const off = isMonth
+                                    ? outsideRange(new Date(year, i, 1), new Date(year, i + 1, 0), lower, upper)
+                                    : outsideRange(new Date(from + i, 0, 1), new Date(from + i, 11, 31), lower, upper);
+                                return (
+                                    <button
+                                        type="button"
+                                        key={isMonth ? `m${i}` : `y${from + i}`}
+                                        // A month or a year is a day cell to every register.
+                                        className="kp-datepicker__day"
+                                        data-kp-month={isMonth ? `${year}-${String(i + 1).padStart(2, '0')}` : undefined}
+                                        data-kp-year={isMonth ? undefined : String(from + i)}
+                                        data-kp-disabled={off ? '' : undefined}
+                                        role="gridcell"
+                                        aria-label={isMonth ? s.monthTitle(names.months[i] ?? '', year) : undefined}
+                                        aria-selected={current}
+                                        aria-disabled={off ? 'true' : undefined}
+                                        tabIndex={current ? 0 : -1}
+                                        onKeyDown={(event) => onJumpKey(event, i, date, off)}
+                                        onClick={() => pick(date, off)}
+                                    >
+                                        {isMonth ? names.monthsShort[i] : String(from + i)}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {view === 'days' && (
+                        <div className="kp-datepicker__grid" data-kp-view="days" role="grid" aria-label={monthTitle}>
+                            {Array.from({ length: 7 }, (_, i) => names.weekdays[(firstDay + i) % 7] ?? '').map((day, i) => (
+                                <span className="kp-datepicker__weekday" role="columnheader" aria-label={day} key={`${day}-${i}`}>
+                                    {day}
+                                </span>
+                            ))}
+                            {Array.from({ length: lead }, (_, i) => (
+                                <span className="kp-datepicker__blank" key={`blank-${i}`} />
+                            ))}
+                            {Array.from({ length: days }, (_, i) => {
+                                const day = new Date(year, month, i + 1);
+                                const iso = toISO(day);
+                                const off = disabled(day);
+                                return (
+                                    <button
+                                        type="button"
+                                        key={iso}
+                                        className="kp-datepicker__day"
+                                        data-kp-day={iso}
+                                        data-kp-disabled={off ? '' : undefined}
+                                        role="gridcell"
+                                        // The full date as the name: "4" alone
+                                        // tells a screen reader nothing about
+                                        // which month it is in.
+                                        aria-label={s.dayLabel(i + 1, names.months[month] ?? '', year)}
+                                        aria-selected={chosen !== null && toISO(chosen) === iso}
+                                        aria-disabled={off ? 'true' : undefined}
+                                        // Exactly one day in the tab order, so
+                                        // Tab leaves the grid instead of walking
+                                        // 31 buttons.
+                                        tabIndex={i + 1 === cursor.getDate() ? 0 : -1}
+                                        onKeyDown={(event) => onDayKey(event, day)}
+                                        onClick={() => take(day)}
+                                    >
+                                        {renderDay ? renderDay(day, { className: 'kp-datepicker__day', disabled: off }) : i + 1}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    <span className="kp-sr-only" aria-live="polite">
+                        {announcement}
+                    </span>
                 </div>
             )}
         </div>
@@ -431,12 +614,25 @@ function UploadInner(
                 htmlFor={id}
                 data-kp-upload-zone
                 data-kp-dragging={dragging ? '' : undefined}
+                // The zone takes the drag at its first event, as the framework-free
+                // channel does: an uncancelled dragenter hands the drop target to
+                // the body (second nostromo pass, 2026-09-13).
+                onDragEnter={(event) => {
+                    if (!dropping || disabled) return;
+                    event.preventDefault();
+                    setDragging(true);
+                }}
                 onDragOver={(event) => {
                     if (!dropping || disabled) return;
                     event.preventDefault();
                     setDragging(true);
                 }}
-                onDragLeave={() => setDragging(false)}
+                onDragLeave={(event) => {
+                    // Moving onto a child of the zone is not leaving it.
+                    const to = event.relatedTarget;
+                    if (to instanceof Node && event.currentTarget.contains(to)) return;
+                    setDragging(false);
+                }}
                 onDrop={(event) => {
                     if (!dropping || disabled) return;
                     event.preventDefault();
@@ -477,6 +673,7 @@ function UploadInner(
                             <button
                                 type="button"
                                 className="kp-button kp-button--ghost"
+                                data-kp-upload-remove
                                 aria-label={s.removeNamed(row.name)}
                                 onClick={() => remove(row)}
                             >

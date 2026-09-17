@@ -195,6 +195,20 @@ export const KNOBS = Object.freeze({
      * phantom"; the picker was fine.
      */
     arrivalDismiss: '--kp-arrival-dismiss',
+    /**
+     * How fast the arrival plays, as a factor [scope-84]. Default 1.
+     *
+     * Every wait of the arrival — a boot line's step, a percentage's step,
+     * the card's hold, the pause before it switches off — is divided by
+     * it, and every CSS animation on the overlay (the CRT switching off,
+     * the card's bar and its shove) plays at it as its playback rate. So
+     * `0.5` takes twice as long and `2` half as long, and the sequence
+     * stays the same sequence. A value that is not a number above zero
+     * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+     * sets it on the root of a frame; no register declares it, and a page
+     * that never sets it plays exactly as before.
+     */
+    arrivalRate: '--kp-arrival-rate',
 });
 /**
  * How long a counting number takes, in milliseconds [feat-count-1].
@@ -237,6 +251,69 @@ export const POINTER_KNOB = '--kp-pointer';
 /** The properties `POINTER_KNOB` drives, each 0 to 1 across the viewport. */
 export const POINTER = Object.freeze({ x: '--kp-px', y: '--kp-py' });
 
+/**
+ * The knob a theme sets on the surfaces the pointer LIGHTS [scope-101,
+ * from scope-25]: `--kp-light: pointer`.
+ *
+ * Kenny's sentence for the shade pair, verbatim: "the pointer is the
+ * light, and the light half throws its shade away from it while the dark
+ * half is lifted out of shade by it". A shadow's direction depends on
+ * where its element is, which the two root numbers `POINTER_KNOB` writes
+ * cannot say — so this is written per element instead of per page. It
+ * rides on that same bus: the same `--kp-pointer: track` arms it, the
+ * same `pointermove` listener feeds it, the same animation frame writes
+ * both. Off wherever the bus is off, which includes reduced motion.
+ */
+export const LIGHT_KNOB = '--kp-light';
+
+/**
+ * The six properties `LIGHT_KNOB` drives on each lit element: the
+ * direction away from the pointer (`x`, `y`), how near it is (`near`,
+ * `lift`) and where the pointer sits inside the element's own box
+ * (`atX`, `atY`). A register declares its fallback for every one of them,
+ * so a page with no pointer paints the fixed light it painted before.
+ */
+export const LIGHT = Object.freeze({
+    x: '--kp-light-x',
+    y: '--kp-light-y',
+    near: '--kp-light-near',
+    lift: '--kp-light-lift',
+    atX: '--kp-light-at-x',
+    atY: '--kp-light-at-y',
+});
+
+/** What the light can fall on, the approved demo's own list. */
+export const LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+
+/** Past this many pixels the shade is at full length; under it, shorter. */
+export const LIGHT_REACH = 240;
+
+/** Past this many pixels the light no longer reaches the surface at all. */
+export const LIGHT_FAR = 560;
+
+/**
+ * The knob a theme sets to have the point a press started at written to the
+ * button it started on [scope-25, built at scope-101]: `--kp-press: point`.
+ *
+ * Sepia's approved gesture is the ink spreading into the paper on a press,
+ * and ink spreads from where the nib touched down, not from the middle of
+ * the plate. CSS knows a button is being pressed; it cannot know WHERE, so
+ * something has to write the two numbers down. That is all this does — the
+ * whole gesture is the register's, and this is the coordinate it reads.
+ *
+ * Unlike `POINTER_KNOB` it stays armed under reduced motion: someone asking
+ * for less movement is not asking for the stain to appear in the wrong
+ * place, and the register gives them the same stain with no transition.
+ *
+ * Without the module, on a key press, or after `detach()`, the two
+ * properties are whatever the stylesheet declared — sepia's own default is
+ * the middle of the button, so the gesture is whole before a pointer has
+ * ever touched it [KT6].
+ */
+export const PRESS_KNOB = '--kp-press';
+
+/** The properties `PRESS_KNOB` drives: the press point inside the button's box. */
+export const PRESS = Object.freeze({ x: '--kp-press-x', y: '--kp-press-y' });
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -345,13 +422,42 @@ export const TIMINGS = Object.freeze({
     'kp-tube-off': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
     'kp-caret': { durationMs: 1000, cycles: Infinity, property: 'background-size', luminanceSteps: [1, 1, 0, 0] },
+    // The alarm [scope-94]: the plate fading in, the frame's glow breathing
+    // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
+    // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per
+    // cell), the split copies slicing through once and then every 5 s, the
+    // headline's short dip every 5 s, the detail line fading in, the caret,
+    // the hazard stripes marching and the faint band sweeping down. Measured
+    // from rendered frames in tests/alarm.spec.mjs as well.
+    // Since scope-98 the flicker, the decode, the split, the dip, the caret,
+    // the march and the sweep are cyberpunk's alone; the package's default
+    // arrives whole: the panel settling and the headline arriving, once each.
+    // The plate's row keeps cyberpunk's 180 ms, the shorter of the two.
+    'kp-alarm-ground-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-settle': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-arrive': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-pulse': { durationMs: 1400, cycles: Infinity, property: 'opacity', luminanceSteps: [0.4, 1] },
+    // Cyberpunk's panel striking like a failing tube [scope-100], in its
+    // register: 0, 0.6, a sag to 0.52 under the 10% step, 1 — one direction,
+    // where the package's kp-alarm-flicker-in (0, 1, 0.3, 1) read 3.00/s.
+    'kp-alarm-cyberpunk-flicker': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [0, 0.6, 0.52, 1, 1] },
+    'kp-alarm-jitter': { durationMs: 5000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0.6, 1] },
+    'kp-alarm-slice-in': { durationMs: 600, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-alarm-slice': { durationMs: 5000, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
+    'kp-alarm-decode-letter': { durationMs: 180, cycles: 1, property: 'color', luminanceSteps: [] },
+    'kp-alarm-decode-noise': { durationMs: 90, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
+    'kp-alarm-detail-in': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-alarm-caret': { durationMs: 1000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
+    'kp-alarm-march': { durationMs: 1600, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-alarm-sweep': { durationMs: 6000, cycles: Infinity, property: 'translate', luminanceSteps: [] },
     // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
     // arriving out of a blur, the hero button and the dossier card settling
     // out of the same blur once on load, and the confirmation dialog's
     // native open/close — the last two shared with academia's, which mounts
     // its dialog the same way.
+    // One keyframe for both grains since scope-100 (the two were identical):
+    // the words at 600ms, the hero button and dossier card at 500ms.
     'kp-focus': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-focus-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-dialog-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-backdrop-in': { durationMs: 180, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     // The nostromo register [S48, LIFT_PLAN row 19]: the headline and the
@@ -374,7 +480,7 @@ export const TIMINGS = Object.freeze({
     // over the headline, the rule draw, and the dossier's redaction lift.
     'kp-cal-slide': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-cal-rule': { durationMs: 480, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-cal-redact': { durationMs: 320, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-cal-redact': { durationMs: 320, cycles: 1, property: 'background-size', luminanceSteps: [] },
     // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // once across a headline (the whole line, unsplit) or a redaction bar.
     // No luminance step: the mask moves, the content under it does not
@@ -400,13 +506,26 @@ export const TIMINGS = Object.freeze({
     'kp-slice-2': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-charge': { durationMs: 520, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-slide-in': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-rule-in': { durationMs: 420, cycles: 1, property: 'transform', luminanceSteps: [] },
+    // The base layer's shared rule draw. One keyframe, nine registers, each
+    // with its own duration: nostromo 280ms, blueprint 420ms, lapis 480ms
+    // (its --kp-rule knob, which is what runs), light and retro 480ms, deco
+    // 600ms, brutalism 620ms, terminal 900ms, shade-light its --fx-duration.
+    // The row carries the shortest, the worst case a rate is read at; it
+    // used to say 420ms, blueprint's alone [scope-100].
+    'kp-rule-in': { durationMs: 280, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-settle': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-blink': { durationMs: 1000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
     'kp-drift': { durationMs: 40000, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The indeterminate progress stripes [gap-11]: a background-position
+    // drift of one stripe period, no luminance change of its own.
+    'kp-progress-stripes': { durationMs: 1200, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    // Cyberpunk's data stream [scope-96]: two dash tiles drifting by one
+    // tile width per loop (144px and 216px in 8000ms), no luminance change.
+    'kp-stream-144': { durationMs: 8000, cycles: Infinity, property: 'mask-position', luminanceSteps: [] },
+    'kp-stream-216': { durationMs: 8000, cycles: Infinity, property: 'mask-position', luminanceSteps: [] },
     // The shared marquee [M1, 2026-09-08]: one transform across a doubled
     // row, no luminance change of its own, and the only loop besides
     // brutalism's hatch. The duration is a knob, so this row carries the
@@ -445,7 +564,7 @@ export const TIMINGS = Object.freeze({
     'kp-mark-sweep': { durationMs: 420, cycles: 1, property: 'color', luminanceSteps: [0, 1] },
     // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
     // resolve, a monotone blur+brightness sweep, once, on the whole,
-    // unsplit line (`kp-sharpen-in` — not `kp-focus-in`/`focus`, which the
+    // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
     // dark and shade-dark registers already own for their own, different
     // mechanics). The confirmation dialog's one-shot open reuses the
     // `kp-dialog-in` row above, which academia, nostromo and shade-dark
@@ -483,6 +602,16 @@ export const TIMINGS = Object.freeze({
 const started = new WeakSet();
 /** Fields whose caret listeners are already bound, so a second attach adds none [G16]. */
 const carets = new WeakSet();
+/**
+ * The documents whose arrival overlay is on screen, each with the headline
+ * reveals held until it has gone [scope-86]. Kept per document rather than
+ * per attach: a second attach on the same page (js/auto.js over React, the
+ * `DecipherText` wrapper) sees the arrival as already seen, but its
+ * headline must still wait for the overlay the first attach put up.
+ *
+ * @type {WeakMap<Document, Set<() => void>>}
+ */
+const arrivalsOnScreen = new WeakMap();
 
 /** The unknown hook values reported on this page, `hook=value`, for the diagnostics [AR44]. */
 const unknownReported = new Set();
@@ -650,8 +779,8 @@ export function attachEffects(root = document, options = {}) {
     };
 
     // ── The headline: decipher, then one slice burst [TH119] ───────────
-    /** @param {Element} el */
-    const headline = (el) => {
+    /** @param {Element} el @param {boolean} [atRest] straight to rest, as a detach does for a reveal it never started */
+    const headline = (el, atRest = false) => {
         const text = el.textContent ?? '';
         el.setAttribute(TEXT_ATTRIBUTE, text);
         if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);
@@ -668,7 +797,7 @@ export function attachEffects(root = document, options = {}) {
             el.classList.add(STATE.deciphered);
             announce(el, 'headline', routine, skipped);
         };
-        if (routine === '' || reduced() || seen(el, 'headline')) {
+        if (atRest || routine === '' || reduced() || seen(el, 'headline')) {
             rest(true);
             return;
         }
@@ -919,7 +1048,7 @@ export function attachEffects(root = document, options = {}) {
             // one-shot optical resolve, then the element rests. Without an
             // animation the class comes off by the table's duration. Its own
             // routine name and keyframe, distinct from the `focus` word-
-            // stagger group and `kp-focus-in` shade-dark already owns.
+            // stagger group and `kp-focus` shade-dark already owns.
             pending++;
             el.classList.add(STATE.sharpening);
             let ended = false;
@@ -1303,8 +1432,32 @@ export function attachEffects(root = document, options = {}) {
         const reveal = el.getAttribute(HOOKS.reveal);
         if (reveal === null || !REVEALS.includes(reveal)) return;
         started.add(el);
-        if (reveal === 'headline') headline(el);
-        else if (reveal === 'emphasis') emphasis(el);
+        if (reveal === 'headline') {
+            // The headline waits for the arrival [scope-86]: started under
+            // the overlay it was over before the overlay went, so a first
+            // visit never saw it. It starts when the overlay is removed,
+            // whether the arrival ran its course, was skipped or clicked
+            // away; with no arrival on screen it starts now, as before.
+            const held = arrivalsOnScreen.get(doc);
+            if (!held) {
+                headline(el);
+                return;
+            }
+            pending++;
+            let waiting = true;
+            const go = () => {
+                if (!waiting) return;
+                waiting = false;
+                held.delete(go);
+                pending--;
+                // Detached while held: the text was never touched, so the
+                // element only needs its rest record.
+                if (detached) headline(el, true);
+                else headline(el);
+            };
+            held.add(go);
+            finishers.push(go);
+        } else if (reveal === 'emphasis') emphasis(el);
         else rule(el);
     };
 
@@ -1456,6 +1609,16 @@ export function attachEffects(root = document, options = {}) {
     // while doing so. detach() drops it explicitly [G8].
     if (query) query.addEventListener('change', onPreference);
 
+    // Whether this attach puts up the arrival, decided before the scan so
+    // the headline the scan finds already knows to wait for it [scope-86].
+    // The arrival itself is built at the end of attach, as before.
+    const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
+    const arrivalRoutine =
+        arrivalAsked === '' || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
+    const arrivalPerformed = (arrivalRoutine === 'boot' || arrivalRoutine === 'card') && Boolean(doc.body);
+    const arrivalPlays = arrivalPerformed && !reduced() && !seen(html, 'arrival');
+    if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, new Set());
+
     scan(root);
 
     // ── The caret [TM2, R6-Q7]: a block cursor inside the focused field ─
@@ -1529,9 +1692,134 @@ export function attachEffects(root = document, options = {}) {
     // gradient is declared once on the theme and inherited: every surface
     // that paints the oxide reads the same two numbers, so they must be one
     // pair, not one pair per element.
+    // The pointer light [scope-101, built from scope-25]. The shade pair's
+    // half of the bus: where the two numbers above are one pair for the
+    // whole page, these are six per LIT ELEMENT, because a shade falls
+    // away from the pointer and "away" is a different direction for every
+    // box on the screen.
+    //
+    // Deliberately NOT a second bus. It is armed by the same
+    // `--kp-pointer: track` declaration, fed by the one `pointermove`
+    // listener below, and written inside the same animation frame; what it
+    // adds of its own are the four ways the light goes OUT — a touch, a
+    // Tab, the pointer leaving the window, and reduced motion — plus a
+    // scroll listener, because a box that moves under a still pointer has
+    // turned relative to it.
+    //
+    // Returns null when nothing is there to light. Every value is the
+    // research demo's own arithmetic, unchanged.
+    const pointerLight = () => {
+        if (!view) return null;
+        /** @type {HTMLElement[]} */
+        let lit = [];
+        /** @type {{ x: number, y: number } | null} */
+        let at = null;
+        let recollect = 0;
+        let queued = 0;
+        /** @param {HTMLElement} el */
+        const clear = (el) => {
+            for (const prop of Object.values(LIGHT)) el.style.removeProperty(prop);
+        };
+        // Which elements this theme lights is the theme's own answer, read
+        // from the cascade rather than hard-coded here: a register that
+        // never declares `--kp-light: pointer` gets an empty list and the
+        // frame below does nothing at all.
+        const collect = () => {
+            for (const el of lit) clear(el);
+            lit = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(LIGHT_SELECTOR)]).filter(
+                (el) => view.getComputedStyle(el).getPropertyValue(LIGHT_KNOB).trim() === 'pointer',
+            );
+        };
+        const paint = () => {
+            const here = at;
+            if (!here || reduced()) {
+                for (const el of lit) clear(el);
+                return;
+            }
+            for (const el of lit) {
+                const box = el.getBoundingClientRect();
+                // Off screen: nothing to light, and one getBoundingClientRect
+                // is cheaper than six style writes.
+                if (box.bottom < 0 || box.top > view.innerHeight) {
+                    clear(el);
+                    continue;
+                }
+                const dx = box.left + box.width / 2 - here.x;
+                const dy = box.top + box.height / 2 - here.y;
+                const distance = Math.hypot(dx, dy);
+                const k = 1.4 / Math.max(distance, LIGHT_REACH);
+                const near = 1 - Math.min(distance / LIGHT_FAR, 1);
+                el.style.setProperty(LIGHT.x, (dx * k).toFixed(3));
+                el.style.setProperty(LIGHT.y, (dy * k).toFixed(3));
+                el.style.setProperty(LIGHT.near, near.toFixed(3));
+                el.style.setProperty(LIGHT.lift, (0.6 + near).toFixed(3));
+                el.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
+                el.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
+            }
+        };
+        const schedule = () => {
+            if (queued) return;
+            queued = view.requestAnimationFrame(() => {
+                frames.delete(queued);
+                queued = 0;
+                paint();
+            });
+            frames.add(queued);
+        };
+        const away = () => {
+            at = null;
+            schedule();
+        };
+        /** @param {PointerEvent} event */
+        const onDown = (event) => {
+            if (event.pointerType === 'touch') away();
+        };
+        /** @param {KeyboardEvent} event */
+        const onKey = (event) => {
+            if (event.key === 'Tab') away();
+        };
+        // A theme change re-answers the knob: the list is built again one
+        // frame later, when the new register's cascade has settled.
+        const themes = new MutationObserver(() => {
+            if (recollect) return;
+            recollect = view.requestAnimationFrame(() => {
+                frames.delete(recollect);
+                recollect = 0;
+                collect();
+                paint();
+            });
+            frames.add(recollect);
+        });
+        themes.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+        doc.addEventListener('pointerdown', onDown, { passive: true });
+        doc.addEventListener('keydown', onKey, { passive: true });
+        html.addEventListener('pointerleave', away, { passive: true });
+        view.addEventListener('scroll', schedule, { passive: true });
+        cleanups.push(() => {
+            themes.disconnect();
+            doc.removeEventListener('pointerdown', onDown);
+            doc.removeEventListener('keydown', onKey);
+            html.removeEventListener('pointerleave', away);
+            view.removeEventListener('scroll', schedule);
+            // The way out [KT6]: what the module wrote, the module removes,
+            // and the register's own fallbacks take over again.
+            for (const el of lit) clear(el);
+            lit = [];
+        });
+        collect();
+        return {
+            /** @param {PointerEvent | MouseEvent} event */
+            put(event) {
+                at = 'pointerType' in event && event.pointerType === 'touch' ? null : { x: event.clientX, y: event.clientY };
+                paint();
+            },
+        };
+    };
+
     const pointerBus = () => {
         const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : '';
         if (routine !== 'track' || !view || reduced()) return;
+        const light = pointerLight();
         let frame = 0;
         /** @param {PointerEvent | MouseEvent} event */
         const onMove = (event) => {
@@ -1543,6 +1831,7 @@ export function attachEffects(root = document, options = {}) {
                 const h = view.innerHeight || 1;
                 html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
                 html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h))));
+                light?.put(event);
             });
             frames.add(frame);
         };
@@ -1553,6 +1842,54 @@ export function attachEffects(root = document, options = {}) {
             // and the stylesheet's own declared value takes over again.
             html.style.removeProperty(POINTER.x);
             html.style.removeProperty(POINTER.y);
+        });
+    };
+
+    // The press point [scope-101]. One delegated listener, one write per
+    // press, and nothing at all unless the theme asked for it.
+    //
+    // It writes to the button rather than to the root, because every button
+    // on the page has a press point of its own and the last one pressed
+    // must keep its stain while the next one grows.
+    const pressBus = () => {
+        const routine = rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : '';
+        if (routine !== 'point' || !view) return;
+        /** The buttons this bus has written to, so it can take it all back [KT6]. */
+        /** @type {Set<HTMLElement>} */
+        const marked = new Set();
+        /** @param {Event} event */
+        const onDown = (event) => {
+            const pointer = /** @type {PointerEvent} */ (event);
+            const target = event.target;
+            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
+            if (!button) return;
+            const box = button.getBoundingClientRect();
+            button.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
+            button.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
+            marked.add(button);
+        };
+        // A key press has no point: the stylesheet's own default takes over
+        // again, which puts the stain in the middle of the button.
+        /** @param {Event} event */
+        const onKey = (event) => {
+            const key = /** @type {KeyboardEvent} */ (event).key;
+            const target = event.target;
+            const button = target instanceof Element ? /** @type {HTMLElement | null} */ (target.closest('.kp-button')) : null;
+            if (!button || (key !== ' ' && key !== 'Enter')) return;
+            button.style.removeProperty(PRESS.x);
+            button.style.removeProperty(PRESS.y);
+            marked.delete(button);
+        };
+        doc.addEventListener('pointerdown', onDown, { passive: true });
+        doc.addEventListener('keydown', onKey);
+        cleanups.push(() => {
+            doc.removeEventListener('pointerdown', onDown);
+            doc.removeEventListener('keydown', onKey);
+            for (const button of marked) {
+                button.style.removeProperty(PRESS.x);
+                button.style.removeProperty(PRESS.y);
+            }
+            marked.clear();
         });
     };
 
@@ -1607,6 +1944,7 @@ export function attachEffects(root = document, options = {}) {
         }
     };
     pointerBus();
+    pressBus();
     measure();
 
     // ── The marquee [M1, M2]: a row that runs ──────────────────────────
@@ -1657,17 +1995,48 @@ export function attachEffects(root = document, options = {}) {
     // phantom's [PH2]: the theme's own name as the line, a bar the register
     // runs under it, and the overlay shoved off to the left. Once per
     // session, never under reduced motion, and every word from the
-    // dictionary [KT5] — a theme's name is data, not copy.
+    // dictionary [KT5] — a theme's name is data, not copy. The words are
+    // the theme's own (`arrivalWordsByTheme`, `arrivalLinesByTheme`) or the
+    // neutral ones, and `--kp-arrival-rate` scales the whole sequence
+    // [scope-84].
     const arrival = () => {
-        const asked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : '';
-        const routine = asked === '' || ARRIVALS.includes(asked) ? asked : reportUnknownRoutine(html, ROUTINES.arrival, asked, ARRIVALS);
-        if ((routine !== 'boot' && routine !== 'card') || !doc.body) return;
+        const routine = arrivalRoutine;
+        if (!arrivalPerformed || !doc.body) return;
         const card = routine === 'card';
-        if (reduced() || seen(html, 'arrival')) {
+        if (!arrivalPlays) {
             announce(html, 'arrival', routine, true);
             return;
         }
+        // The headlines held for this overlay start once it has gone
+        // [scope-86]: on its own end, on Skip, on a click, and when a
+        // detach takes it down.
+        const release = () => {
+            const held = arrivalsOnScreen.get(doc);
+            arrivalsOnScreen.delete(doc);
+            if (held) for (const go of [...held]) go();
+        };
         const words = getStrings();
+        const theme = html.getAttribute('data-theme') ?? '';
+        // The words of this theme's own world [scope-84]: a theme with an
+        // entry reads its own, and a theme without one reads the neutral
+        // default — never another theme's.
+        const own = words.arrivalWordsByTheme?.[theme] ?? {};
+        const said = {
+            line: own.line ?? words.arrivalLine,
+            progress: own.progress ?? words.arrivalProgress,
+            ready: own.ready ?? words.arrivalReady,
+        };
+        const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? '');
+        const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
+        /** @param {() => void} fn @param {number} ms */
+        const paced = (fn, ms) => later(fn, ms / rate);
+        // The overlay's CSS animations at the same rate. Read after a style
+        // flush, so an animation a class has just started is in the list.
+        const pace = () => {
+            if (rate === 1 || typeof overlay.getAnimations !== 'function') return;
+            void view?.getComputedStyle(overlay).opacity;
+            for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
+        };
         const overlay = doc.createElement('div');
         overlay.className = ARRIVAL.root;
         const line = doc.createElement('pre');
@@ -1687,13 +2056,18 @@ export function attachEffects(root = document, options = {}) {
         }
         overlay.append(line, ...(bar ? [bar] : []), skip);
         doc.body.append(overlay);
+        pace();
         pending++;
         let ended = false;
         let pct = 0;
+        let removed = false;
         const remove = () => {
+            if (removed) return;
+            removed = true;
             overlay.remove();
             announce(html, 'arrival', routine, false);
             pending--;
+            release();
             done();
         };
         const end = () => {
@@ -1704,18 +2078,17 @@ export function attachEffects(root = document, options = {}) {
                 return;
             }
             overlay.classList.add(STATE.off);
+            pace();
             overlay.addEventListener('animationend', remove, { once: true });
-            later(remove, TIMINGS[card ? 'kp-load-out' : 'kp-crt-off'].durationMs + 50);
+            paced(remove, TIMINGS[card ? 'kp-load-out' : 'kp-crt-off'].durationMs + 50);
         };
         const step = () => {
             if (ended) return;
             pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
-            line.textContent = [words.arrivalLine, words.arrivalProgress + ' ' + pct + '%', pct === 100 ? words.arrivalReady : '']
-                .filter(Boolean)
-                .join('\n');
+            line.textContent = [said.line, `${said.progress} ${pct}%`.trim(), pct === 100 ? said.ready : ''].filter(Boolean).join('\n');
             bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
-            if (pct === 100) later(end, 220);
-            else later(step, 110);
+            if (pct === 100) paced(end, 220);
+            else paced(step, 110);
         };
 
         // The lines mode [S49, A11]: a theme whose own boot is a POST
@@ -1724,7 +2097,7 @@ export function attachEffects(root = document, options = {}) {
         // five lines. The words are the dictionary's (KT5), the cadence
         // the demos' own 190ms, and a `{count}` counts up to the theme's
         // declared total the way a memory test does.
-        const lines = words.arrivalLinesByTheme?.[html.getAttribute('data-theme') ?? ''] ?? null;
+        const lines = words.arrivalLinesByTheme?.[theme] ?? null;
         let shown = 0;
         const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
         const lineStep = () => {
@@ -1737,8 +2110,8 @@ export function attachEffects(root = document, options = {}) {
                 )
                 .join('\n');
             bar?.style.setProperty(BOOT_PROGRESS, String(shown / lines.length));
-            if (shown === lines.length) later(end, 320);
-            else later(lineStep, 190);
+            if (shown === lines.length) paced(end, 320);
+            else paced(lineStep, 190);
         };
         skip.addEventListener('click', end);
         // CP1, Kenny 2026-09-09: "remember it for the next version". This is
@@ -1749,10 +2122,13 @@ export function attachEffects(root = document, options = {}) {
         // skip-only`.
         if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== 'skip-only') overlay.addEventListener('click', end);
         finishers.push(end);
-        cleanups.push(() => overlay.remove());
+        cleanups.push(() => {
+            overlay.remove();
+            if (!removed) release();
+        });
         if (card) {
-            line.textContent = html.getAttribute('data-theme') ?? '';
-            later(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
+            line.textContent = theme;
+            paced(end, TIMINGS['kp-bar-run'].durationMs + cfg.cardHold);
         } else if (lines && lines.length > 0) lineStep();
         else step();
     };

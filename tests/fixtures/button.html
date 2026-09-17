@@ -50,6 +50,16 @@
             <div id="react-button"></div>
         </section>
 
+        <!-- After every other button, so the tab order above is unchanged:
+             a label beside an icon, the markup scope-83 asks for. The React
+             one is the last button the mount above renders. -->
+        <section id="plain-icon">
+            <button type="button" class="kp-button" data-test="plain-icon">
+                <span aria-hidden="true">↻</span>
+                <span class="kp-button__text">Retry</span>
+            </button>
+        </section>
+
         <script type="module" src="/tests/fixtures/.build/react-button.js"></script>
     </body>
 </html>

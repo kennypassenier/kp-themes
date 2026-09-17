@@ -1,0 +1,2673 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Data tables · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../catalogue/deps.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only. Every rule here is
+               scoped to a `dtr-` class of this page and none of them names a
+               `kp-` class: where a block shows the package, the package's own
+               stylesheets draw it untouched. Mocks borrow package classes
+               (kp-table, kp-button, kp-field__input, kp-popover, kp-tag …) by
+               putting them on elements, never by restyling them.
+               ================================================================== */
+            .dtr-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+                font-family: var(--theme-font-mono, monospace);
+            }
+            .dtr-tag--package {
+                color: var(--success);
+            }
+            .dtr-tag--mock {
+                color: var(--warning);
+            }
+            .dtr-tag--mixed {
+                color: var(--info);
+            }
+            .dtr-toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: end;
+                gap: 0.5rem 0.75rem;
+                padding: 0.75rem 0.75rem 0;
+            }
+            .dtr-toolbar > * {
+                min-inline-size: 0;
+            }
+            .dtr-grow {
+                flex: 1 1 14rem;
+            }
+            .dtr-foot {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem 1rem;
+                padding: 0 0.75rem 0.75rem;
+            }
+            .dtr-foot > p {
+                margin: 0;
+            }
+            .dtr-pager {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.25rem;
+            }
+            .dtr-pager [aria-current='page'] {
+                font-weight: 700;
+                text-decoration: underline;
+                text-decoration-thickness: 2px;
+                text-underline-offset: 0.25em;
+            }
+            .dtr-pager__gap {
+                padding-inline: 0.25rem;
+                color: var(--muted-foreground);
+            }
+            /* Proposed default, applied to the mocks only: a status label in a
+               table column keeps its word whole (the package's documented
+               knob, `--kp-badge-wrap`). The package blocks keep the shipped
+               `anywhere`, so the difference can be seen in nostromo. */
+            .dtr-mock {
+                --kp-badge-wrap: normal;
+            }
+            /* The mock sort control. It inherits the header's case and
+               spacing, which a bare <button> does not, and draws the
+               package's own glyph knobs on the same line as the label. */
+            .dtr-sort {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                padding: 0;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: inherit;
+                letter-spacing: inherit;
+                text-transform: inherit;
+                text-align: inherit;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+            /* The unsorted hint only. A sorted header carries aria-sort, and
+               the package already paints its arrow on any th[aria-sort]. */
+            th:not([aria-sort]) > .dtr-sort::after {
+                content: var(--kp-glyph-sortable, '↕');
+                opacity: 0.35;
+            }
+            .dtr-mock thead th {
+                white-space: nowrap;
+            }
+            .dtr-prio {
+                display: inline-block;
+                margin-inline-start: 0.3rem;
+                min-inline-size: 1.2em;
+                padding: 0 0.25em;
+                border: 1px solid currentColor;
+                border-radius: 999px;
+                font-size: 0.7em;
+                line-height: 1.35;
+                text-align: center;
+            }
+            .dtr-filter-row th {
+                padding-block: 0.25rem;
+                vertical-align: top;
+            }
+            .dtr-filter-row input,
+            .dtr-filter-row select {
+                min-inline-size: 6.5rem;
+            }
+            .dtr-panel {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+                gap: 0.75rem 1.25rem;
+                margin: 0.75rem 0.75rem 0;
+                padding: 0.75rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius, 0.5rem);
+            }
+            .dtr-panel[hidden] {
+                display: none;
+            }
+            .dtr-range {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+            }
+            .dtr-range > input {
+                flex: 1 1 0;
+                min-inline-size: 0;
+            }
+            .dtr-range--wrap {
+                flex-wrap: wrap;
+            }
+            .dtr-range--wrap > input,
+            .dtr-range__picker {
+                flex: 1 1 9rem;
+                min-inline-size: 0;
+            }
+            .dtr-chips {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0 0.75rem;
+            }
+            .dtr-hit {
+                background: hsl(from var(--warning) h s l / 0.35);
+                color: inherit;
+                border-radius: 2px;
+            }
+            .dtr-frozen {
+                position: relative;
+                min-block-size: 27rem;
+            }
+            .dtr-anchor-cols {
+                anchor-name: --dtr-cols;
+            }
+            .dtr-pop-cols {
+                position-anchor: --dtr-cols;
+            }
+            .dtr-menu-check {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .dtr-pair {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+                gap: 1.25rem;
+            }
+            .dtr-caption {
+                margin: 0 0 0.5rem;
+                font-weight: 600;
+            }
+            .dtr-readout {
+                margin: 0.75rem 0 0;
+                color: var(--muted-foreground);
+                font-size: 0.875rem;
+            }
+            .dtr-bulk {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem 0.75rem;
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+                background: var(--muted);
+            }
+            .dtr-bulk[hidden] {
+                display: none;
+            }
+            .dtr-bulk__count {
+                font-weight: 700;
+                margin-inline-end: auto;
+            }
+            .dtr-detail > td {
+                padding-block: 0.75rem 1rem;
+            }
+            .dtr-dl {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+                gap: 0.25rem 1rem;
+                margin: 0;
+            }
+            .dtr-dl dt {
+                color: var(--muted-foreground);
+            }
+            .dtr-dl dd {
+                margin: 0;
+                white-space: normal;
+            }
+            .dtr-dl ol {
+                margin: 0;
+                padding-inline-start: 1.2rem;
+            }
+            .dtr-scroll {
+                max-block-size: 22rem;
+                overflow: auto;
+                border-block: 1px solid var(--border);
+            }
+            .dtr-scroll table {
+                min-inline-size: 72rem;
+            }
+            .dtr-scroll--head thead th {
+                position: sticky;
+                inset-block-start: 0;
+                z-index: 2;
+                background: var(--background);
+                box-shadow: inset 0 -1px var(--border-strong);
+            }
+            .dtr-scroll--col tbody td:first-child,
+            .dtr-scroll--col thead th:first-child {
+                position: sticky;
+                inset-inline-start: 0;
+                z-index: 1;
+                background: var(--background);
+                box-shadow: inset -1px 0 var(--border-strong);
+            }
+            .dtr-scroll--head.dtr-scroll--col thead th:first-child {
+                z-index: 3;
+                box-shadow:
+                    inset -1px 0 var(--border-strong),
+                    inset 0 -1px var(--border-strong);
+            }
+            .dtr-short table {
+                min-inline-size: 0;
+            }
+            .dtr-states {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+                gap: 1.25rem;
+            }
+            .dtr-w-3 {
+                inline-size: 3rem;
+            }
+            .dtr-w-5 {
+                inline-size: 5rem;
+            }
+            .dtr-w-7 {
+                inline-size: 7rem;
+            }
+            .dtr-w-9 {
+                inline-size: 9rem;
+            }
+            .dtr-stale {
+                opacity: 0.55;
+            }
+            .dtr-busy {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .dtr-log {
+                margin: 0.75rem;
+                padding-inline-start: 1.5rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.78rem;
+                overflow-wrap: anywhere;
+            }
+            .dtr-editable {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                padding: 0;
+                border: 0;
+                border-block-end: 1px dashed var(--border-strong);
+                background: none;
+                color: inherit;
+                font: inherit;
+                cursor: pointer;
+            }
+            .dtr-pre {
+                margin: 0.75rem;
+                max-block-size: 12rem;
+                overflow: auto;
+                white-space: pre;
+            }
+            .dtr-grid [tabindex]:focus-visible,
+            .dtr-grid [tabindex='0']:focus {
+                outline: var(--focus-ring-width, 2px) solid var(--ring);
+                outline-offset: -3px;
+            }
+            .dtr-narrow {
+                max-inline-size: 26rem;
+            }
+            .dtr-segment {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem 1rem;
+                border: 0;
+                margin: 0;
+                padding: 0;
+            }
+            .dtr-segment legend {
+                padding: 0;
+                margin-block-end: 0.25rem;
+            }
+            .dtr-mt {
+                margin-block-start: 1rem;
+            }
+            /* The column-search row's date cell: the package's date picker,
+               kept on one line by a floor on its wrapper, since a table
+               cell shrinks to its content's narrowest shape. */
+            .dtr-th-date {
+                min-inline-size: 11rem;
+                --kp-datepicker-input-min: 6.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Data tables: what to build, what to lose, which defaults</h1>
+            <p class="cat-intro">
+                One block per data-table feature, all on the same sixty incidents. A green <b>package today</b> tag means the block is the shipped
+                <code>.kp-datatable</code> with <code>js/datatable.js</code> doing the work. An amber <b>mock</b> tag means a working imitation
+                written for this page only: its behaviour is inline script at the bottom of this file and its extra styling is scoped to
+                <code>dtr-</code> classes; it borrows package classes such as <code>.kp-table</code>, <code>.kp-button</code> and
+                <code>.kp-field__input</code> but restyles none of them. A blue <b>mixed</b> tag says in its note which half is which. The findings
+                and the recommendation per feature are in <code>research/datatable/README.md</code>. One proposed default is applied to every mock and
+                to no package block: <code>--kp-badge-wrap: normal</code>, so a status badge in a narrow column keeps its word whole. In nostromo,
+                compare the badges in the first block (which may break mid-word) with those in any mock.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#today">Package today</a></li>
+                <li><a href="#footer">Footer spacing</a></li>
+                <li><a href="#search-scope">Search in a column</a></li>
+                <li><a href="#column-search">Per-column search row</a></li>
+                <li><a href="#filters">Filters</a></li>
+                <li><a href="#filter-add">Adding a filter</a></li>
+                <li><a href="#multi-sort">Multi-sort</a></li>
+                <li><a href="#columns">Column visibility</a></li>
+                <li><a href="#density">Density</a></li>
+                <li><a href="#pagination">Pagination</a></li>
+                <li><a href="#selection">Selection and bulk actions</a></li>
+                <li><a href="#expansion">Row expansion</a></li>
+                <li><a href="#sticky">Sticky header, fixed column</a></li>
+                <li><a href="#states">Loading, empty, failed</a></li>
+                <li><a href="#export">Export</a></li>
+                <li><a href="#inline-edit">Inline edit</a></li>
+                <li><a href="#async">Server data</a></li>
+                <li><a href="#keyboard">Keyboard grid</a></li>
+                <li><a href="#cards">Responsive cards</a></li>
+                <li><a href="#defaults">Proposed defaults</a></li>
+            </ul>
+
+            <!-- ============================================================ today -->
+            <section class="cat-block" id="today">
+                <h2>The data table as it ships<span class="dtr-tag dtr-tag--package">package today</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>package today</b>, nothing on this block is mock. It is <code>.kp-datatable</code> with
+                    <code>data-kp-page-size="10"</code> and <code>data-kp-cards</code>. Type <i>cold</i> in the search: the status line changes to "n
+                    of 60 rows". Sort <b>Hours open</b>: it sorts as numbers. Now sort <b>Severity</b>: it sorts <i>alphabetically</i> (Critical,
+                    High, Low, Medium), because the framework-free channel has no way to give one column its own order. Tick the header checkbox on
+                    page 1, then go to page 2: every row on every page is ticked, although the label says "every visible row". Tick one row, then
+                    search for a site that hides it: the header checkbox stays half-ticked for a row you can no longer see. And the status line and
+                    pager sit against the table's edge, with no room under them.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" id="dt-today" data-kp-datatable data-kp-cards data-kp-page-size="10">
+                        <div class="kp-datatable__bar">
+                            <input
+                                class="kp-datatable__search"
+                                type="search"
+                                data-kp-datatable-search
+                                aria-label="Search incidents"
+                                placeholder="Search all columns"
+                            />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, as the package ships the data table
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select every visible row" /></th>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text">Site</th>
+                                        <th scope="col" data-kp-sort="text">Status</th>
+                                        <th scope="col" data-kp-sort="text">Severity</th>
+                                        <th scope="col" data-kp-sort="date">Opened</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-sort="text">Owner</th>
+                                        <th scope="col">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ footer -->
+            <section class="cat-block" id="footer">
+                <h2>Footer spacing: as shipped and proposed<span class="dtr-tag dtr-tag--mixed">mixed</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> both tables are the <b>package today</b>, five rows a page. The left one is untouched: in a theme that draws a
+                    border round the table (nostromo, brutalism, light) the "60 rows" text starts against that border and the pager's buttons touch
+                    the bottom edge. The right one adds the package's own spacing utilities <code>kp-px-md kp-py-sm</code> to both bars, standing in
+                    for the default this page proposes the component carry itself. Check that the status text now starts roughly where the first
+                    column's text starts, that the pager has air below it, and that in cyberpunk (no border) the inset still reads as intended rather
+                    than as a stray indent.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dtr-pair">
+                        <div>
+                            <p class="dtr-caption">As shipped</p>
+                            <div class="kp-datatable" id="dt-foot-before" data-kp-datatable data-kp-page-size="5">
+                                <div class="kp-datatable__bar">
+                                    <input
+                                        class="kp-datatable__search"
+                                        type="search"
+                                        data-kp-datatable-search
+                                        aria-label="Search incidents, as shipped"
+                                        placeholder="Search"
+                                    />
+                                </div>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Footer as shipped
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-sort="text">Reference</th>
+                                                <th scope="col" data-kp-sort="text">Site</th>
+                                                <th scope="col" data-kp-sort="text">Status</th>
+                                                <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                                <div class="kp-datatable__bar">
+                                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dtr-caption">Proposed: the bars inset</p>
+                            <div class="kp-datatable" id="dt-foot-after" data-kp-datatable data-kp-page-size="5">
+                                <div class="kp-datatable__bar kp-px-md kp-py-sm">
+                                    <input
+                                        class="kp-datatable__search"
+                                        type="search"
+                                        data-kp-datatable-search
+                                        aria-label="Search incidents, proposed"
+                                        placeholder="Search"
+                                    />
+                                </div>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Footer proposed
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-sort="text">Reference</th>
+                                                <th scope="col" data-kp-sort="text">Site</th>
+                                                <th scope="col" data-kp-sort="text">Status</th>
+                                                <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                                <div class="kp-datatable__bar kp-px-md kp-py-sm">
+                                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="dtr-readout" data-dtr-foot-readout></p>
+                </div>
+            </section>
+
+            <!-- ============================================================ search scope -->
+            <section class="cat-block" id="search-scope">
+                <h2>Search in one column, or all of them<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. One search box with an <b>In</b> choice beside it. Type <i>gate</i> with <b>All columns</b>: the Main
+                    gate rows come back, and so do pump-house rows whose note mentions the gate. Switch <b>In</b> to <b>Site</b>: only the site column
+                    is searched, the pump-house rows drop out, and the matches are marked in that column only. Then try the typed form in the box,
+                    <code>status:open owner:maes</code>: each <code>column:value</code> pair narrows one column, and plain words still go to the
+                    <b>In</b> choice. Decide whether the typed form earns its place or whether the <b>In</b> choice alone is enough.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-scope">
+                        <div class="dtr-toolbar">
+                            <div class="kp-field dtr-grow">
+                                <label class="kp-field__label" for="scope-q">Search</label>
+                                <input class="kp-field__input" id="scope-q" type="search" placeholder="Words, or column:value" autocomplete="off" />
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="scope-in">In</label>
+                                <select class="kp-field__input" id="scope-in">
+                                    <option value="">All columns</option>
+                                    <option value="ref">Reference</option>
+                                    <option value="site">Site</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="note">Note</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, searched in a chosen column
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ column search -->
+            <section class="cat-block" id="column-search">
+                <h2>A search field under every column<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. A second header row holds one control per column: text columns get a "contains" field, Status and
+                    Severity a choice (the package's drawn select), Opened an "on or after" date in the package's date picker (type
+                    <code>01/09/2026</code> or press its calendar button), Hours open an "at least" number in a plain package text field with no
+                    browser spinner. The row is set to <code>data-density="compact"</code>, the package's own density switch. Type in two columns at
+                    once and watch the status line. Check the date picker fits its header cell with the calendar button beside the field, and that its
+                    calendar is not cut off by the table's scrolling box. Check that every field has a name a screen reader can read (each is labelled
+                    "Filter Site", and so on), that the row scrolls sideways with the table at 400 px rather than squeezing, and whether this row is
+                    worth its height compared with the filter panel in the next block.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-colsearch">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, with a search field per column
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                    <tr class="dtr-filter-row" data-density="compact" data-dtr-filter-row></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-toolbar" style="padding: 0">
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-clear>Clear column searches</button>
+                                <div class="dtr-pager" data-dtr-pager></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ filters -->
+            <section class="cat-block" id="filters">
+                <h2>Filters: choices, ranges, dates<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. <b>Filters</b> opens a panel, shown open here; press it to close and open it again. The panel has the
+                    three kinds Kenny asked about: <b>choices</b> (Status and Severity as checkboxes, Site as a select), a <b>range</b> (Hours open,
+                    from and to) and <b>dates</b> (Opened, from and to). It starts with Open and Watching ticked, a proposed default that hides closed
+                    incidents. Every active filter appears as a removable pill under the toolbar; the count on the button matches the pills. Remove a
+                    pill: the matching control in the panel unticks or empties. Set the hours range the wrong way round (from 100 to 10) and see that
+                    the page says so rather than showing nothing. The controls are the package's own: the hours are text fields that take digits (type
+                    <i>ten</i> and the field says it wants whole hours), and each Opened bound is a <code>.kp-datepicker</code>; type
+                    <code>01/09/2026</code> or use its calendar, then remove the Opened pill and check that both pickers empty.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-filters">
+                        <div class="dtr-toolbar">
+                            <button type="button" class="kp-button" id="flt-toggle" aria-expanded="true" aria-controls="flt-panel">
+                                Filters <span data-dtr-filter-count></span>
+                            </button>
+                            <input
+                                class="kp-field__input dtr-grow"
+                                type="search"
+                                aria-label="Search incidents"
+                                placeholder="Search all columns"
+                                data-dtr-q
+                            />
+                        </div>
+                        <div class="dtr-panel" id="flt-panel" role="group" aria-label="Filters">
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Status</legend>
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="status" value="Open" checked /> Open</label
+                                >
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="status" value="Watching" checked /> Watching</label
+                                >
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="status" value="Closed" /> Closed</label
+                                >
+                            </fieldset>
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Severity</legend>
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="severity" value="Critical" /> Critical</label
+                                >
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="severity" value="High" /> High</label
+                                >
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="severity" value="Medium" /> Medium</label
+                                >
+                                <label class="kp-field__option"
+                                    ><input class="kp-field__check" type="checkbox" name="severity" value="Low" /> Low</label
+                                >
+                            </fieldset>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="flt-site">Site</label>
+                                <select class="kp-field__input" id="flt-site" name="site">
+                                    <option value="">Any site</option>
+                                </select>
+                            </div>
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Hours open</legend>
+                                <div class="dtr-range">
+                                    <input
+                                        class="kp-field__input"
+                                        type="text"
+                                        inputmode="numeric"
+                                        pattern="[0-9]*"
+                                        autocomplete="off"
+                                        name="hoursFrom"
+                                        aria-label="Hours open, from"
+                                        placeholder="From"
+                                    />
+                                    <span aria-hidden="true">–</span>
+                                    <input
+                                        class="kp-field__input"
+                                        type="text"
+                                        inputmode="numeric"
+                                        pattern="[0-9]*"
+                                        autocomplete="off"
+                                        name="hoursTo"
+                                        aria-label="Hours open, to"
+                                        placeholder="To"
+                                    />
+                                </div>
+                                <p class="kp-field__error" data-dtr-hours-error role="alert" hidden></p>
+                            </fieldset>
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Opened</legend>
+                                <div class="dtr-range dtr-range--wrap">
+                                    <div class="dtr-range__picker">
+                                        <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                                            <input
+                                                class="kp-field__input"
+                                                id="flt-opened-from"
+                                                type="text"
+                                                inputmode="numeric"
+                                                autocomplete="off"
+                                                name="openedFrom"
+                                                data-kp-date-input
+                                                aria-label="Opened on or after"
+                                            />
+                                            <button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm"
+                                                data-kp-date-open
+                                                aria-label="Open the calendar for opened on or after"
+                                                title="Open the calendar"
+                                            >
+                                                <span aria-hidden="true">▦</span>
+                                            </button>
+                                            <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                                        </div>
+                                    </div>
+                                    <div class="dtr-range__picker">
+                                        <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                                            <input
+                                                class="kp-field__input"
+                                                id="flt-opened-to"
+                                                type="text"
+                                                inputmode="numeric"
+                                                autocomplete="off"
+                                                name="openedTo"
+                                                data-kp-date-input
+                                                aria-label="Opened on or before"
+                                            />
+                                            <button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm"
+                                                data-kp-date-open
+                                                aria-label="Open the calendar for opened on or before"
+                                                title="Open the calendar"
+                                            >
+                                                <span aria-hidden="true">▦</span>
+                                            </button>
+                                            <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="dtr-chips">
+                            <ul class="kp-tag-list" aria-label="Active filters" data-dtr-chips></ul>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-clear-filters>Clear all filters</button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, filtered
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ filter-add -->
+            <section class="cat-block" id="filter-add">
+                <h2>Adding a filter, one at a time<span class="dtr-tag dtr-tag--package">package today</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>package today</b>, nothing on this block is mock. It is <code>.kp-datatable</code> with
+                    <code>data-kp-filter-mode="add"</code> (React: <code>filterMode="add"</code>), Kenny's choice of 2026-09-14: both designs ship,
+                    chosen per table, and the panel stays the default. The button, the menu (<code>.kp-menu</code> in a <code>.kp-popover</code>), the
+                    checkboxes, the number fields, the two <code>.kp-datepicker</code> pickers and the <code>.kp-tag</code> pills are the package's
+                    own; the editor has its own frame, because a <code>.kp-card</code> or <code>.kp-popover</code> carries a clip-path in some
+                    registers that would cut off an open calendar, and the calendar itself opens in the top layer. The table starts with one pill,
+                    <i>Status: Open, Watching</i>. <b>Compare it with the panel in the block above.</b> <b>Space:</b> the panel, while open, spends
+                    its full height above the table even with nothing set; this design spends one toolbar line and one line of pills, and the editor's
+                    height only while you edit (the line under the table measures both in the current theme). <b>What each makes easy:</b>
+                    the panel shows every filter at once; adding a filter keeps the toolbar quiet and does not grow with the number of columns.
+                    <b>Try:</b> press <b>+ Add filter (1 active)</b>, choose <b>Hours open</b>, type 10 and 100, Apply: a pill
+                    <i>Hours open: 10–100</i> appears and the rows narrow. Type <i>ten</i> instead and the editor says it wants a number; 100 then 10
+                    and it says the range runs backwards. Click the pill's text: its editor opens with 10 and 100 in it. Open the menu again: Status
+                    and Hours open are marked <i>filtered</i>, and choosing one opens its pill's editor rather than a second pill. Add
+                    <b>Opened</b> from 1 September with the calendar button. With two or more pills, <b>Clear all</b> appears. Remove a pill with its
+                    ×. Cancel and Escape leave everything as it was; an empty editor applied removes its filter; the arrow keys move through the menu.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div
+                        class="kp-datatable"
+                        id="dt-addfilter"
+                        data-kp-datatable
+                        data-kp-filter-mode="add"
+                        data-kp-page-size="10"
+                        data-kp-page-sizes="none"
+                    >
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button" data-kp-datatable-add-filter>+ Add filter</button>
+                            <input
+                                class="kp-datatable__search"
+                                type="search"
+                                data-kp-datatable-search
+                                aria-label="Search incidents, add-filter block"
+                                placeholder="Search all columns"
+                            />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, filtered one column at a time
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Site</th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-filter="choice"
+                                            data-kp-filter-options="Open,Watching,Closed"
+                                            data-kp-filter-value="Open,Watching"
+                                        >
+                                            Status
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            data-kp-sort="text"
+                                            data-kp-sort-order="Low,Medium,High,Critical"
+                                            data-kp-filter="choice"
+                                            data-kp-filter-options="Critical,High,Medium,Low"
+                                        >
+                                            Severity
+                                        </th>
+                                        <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-sort="date" data-kp-filter="date">Opened</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches these filters. Remove a pill or loosen one.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                    <p class="dtr-readout" data-dtr-space-readout></p>
+                </div>
+            </section>
+            <!-- ============================================================ multi-sort -->
+            <section class="cat-block" id="multi-sort">
+                <h2>Sorting on more than one column<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. It opens sorted by <b>Severity</b> high to low, then <b>Hours open</b> high to low; the small numbers
+                    in the headers give the order, and the sentence above the table says it in words. A plain click on a header replaces the sort with
+                    that one column; <b>Shift</b> + click (or Shift + Enter on the focused header) adds the column as the next key, and a third Shift
+                    + click on it removes it. Severity sorts in its own order here (Critical, High, Medium, Low), which the package today cannot do.
+                    Check whether the numbers read clearly beside the theme's arrow glyph, and whether Shift is discoverable enough to be worth
+                    building at all.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-multisort">
+                        <div class="dtr-toolbar">
+                            <p class="kp-datatable__status dtr-grow" data-dtr-sort-summary aria-live="polite" style="margin: 0"></p>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-reset-sort>
+                                Back to Severity, then Hours open
+                            </button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, sorted on several columns. Shift and click a column header to add it to the sort.
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ columns -->
+            <section class="cat-block" id="columns">
+                <h2>Choosing which columns show<span class="dtr-tag dtr-tag--mixed">mixed</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b> behaviour on package classes: the menu is a <code>.kp-menu</code> in a <code>.kp-popover</code>, the
+                    checkboxes are <code>.kp-field__check</code>. The first copy is frozen open so every theme can be judged without clicking; the
+                    <b>Columns</b> button opens the live copy, and both drive the same table. Untick <b>Note</b> and <b>Owner</b>: the columns go, the
+                    header and cells together. <b>Reference</b> cannot be hidden, because a row without its key cannot be told apart. The package
+                    today only has <code>.kp-col-low</code>, which hides a marked column when the table is narrower than 40rem; a reader cannot
+                    choose.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div>
+                        <div class="dtr-frozen">
+                            <button type="button" class="kp-button kp-button--ghost" aria-haspopup="true" aria-expanded="true">
+                                Columns (frozen open)
+                            </button>
+                            <div class="kp-popover">
+                                <ul class="kp-menu" aria-label="Visible columns" data-dtr-colmenu></ul>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kp-datatable dtr-mock" id="mk-columns">
+                                <div class="dtr-toolbar">
+                                    <button
+                                        type="button"
+                                        class="kp-button kp-button--ghost dtr-anchor-cols"
+                                        popovertarget="dtr-col-pop"
+                                        aria-haspopup="true"
+                                    >
+                                        Columns
+                                    </button>
+                                    <div popover="auto" id="dtr-col-pop" class="kp-popover dtr-pop-cols">
+                                        <ul class="kp-menu" aria-label="Visible columns" data-dtr-colmenu></ul>
+                                    </div>
+                                    <span class="kp-datatable__status" data-dtr-col-count></span>
+                                </div>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Incidents, with a choice of columns
+                                        </caption>
+                                        <thead>
+                                            <tr data-dtr-head></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="dtr-foot">
+                                    <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                                    <div class="dtr-pager" data-dtr-pager></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ density -->
+            <section class="cat-block" id="density">
+                <h2>Row density<span class="dtr-tag dtr-tag--mixed">mixed</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the table is the <b>package today</b>, and so is the attribute that makes it compact:
+                    <code>data-density="compact"</code> from <code>css/_density.css</code>, set on the <code>.kp-datatable</code>. Only the two radio
+                    buttons are mock. Switch between them and read the measured row height under the table. Check that Compact still leaves the
+                    checkbox and the badge comfortable to hit and read. Then look at the search box and the pager: the readout shows the row losing
+                    about 8 px and the pager's buttons shrink with it, while the search box keeps its height, because
+                    <code>.kp-datatable__search</code> pads with literals that the density switch does not reach. Decide whether compact should reach
+                    them too.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <fieldset class="dtr-segment" data-dtr-density-choice>
+                        <legend class="kp-field__label">Density</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="dtr-density" value="comfortable" checked /> Comfortable</label
+                        >
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="dtr-density" value="compact" /> Compact</label
+                        >
+                    </fieldset>
+                    <div class="kp-datatable dtr-mt" id="dt-density" data-kp-datatable data-kp-page-size="6">
+                        <div class="kp-datatable__bar">
+                            <input
+                                class="kp-datatable__search"
+                                type="search"
+                                data-kp-datatable-search
+                                aria-label="Search incidents, density block"
+                                placeholder="Search"
+                            />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, density
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select every visible row" /></th>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text">Site</th>
+                                        <th scope="col" data-kp-sort="text">Status</th>
+                                        <th scope="col" data-kp-sort="text">Severity</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                        <th scope="col" data-kp-sort="text">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                    <p class="dtr-readout" data-dtr-density-readout aria-live="polite"></p>
+                </div>
+            </section>
+
+            <!-- ============================================================ pagination -->
+            <section class="cat-block" id="pagination">
+                <h2>Pages, page size and where you are<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. Compare with the package's pager in the first block, which offers Previous, "1 / 6" and Next only.
+                    Here the footer says <i>Showing 11–20 of 60</i>, a <b>Rows per page</b> choice offers 10, 25, 50 and All, and the pager has First,
+                    Previous, numbered pages with a gap, Next and Last. Change the page size while on page 4: you should land on the page that still
+                    holds the first row you were looking at, not back on page 1. Check the current page is marked by more than colour (it is bold and
+                    underlined), and that the pager wraps at 400 px instead of pushing the page sideways.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-pages">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, with page controls
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <div class="dtr-toolbar" style="padding: 0">
+                                <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite" style="margin: 0"></p>
+                                <label class="kp-field__option" for="pages-size">Rows per page</label>
+                                <select class="kp-field__input" id="pages-size" style="inline-size: auto">
+                                    <option value="10" selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="0">All</option>
+                                </select>
+                            </div>
+                            <nav class="dtr-pager" aria-label="Pages of incidents" data-dtr-pager></nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ selection -->
+            <section class="cat-block" id="selection">
+                <h2>Selection with actions on the selected rows<span class="dtr-tag dtr-tag--mixed">mixed</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the table and its checkboxes are the <b>package today</b>; the action bar above it is <b>mock</b>, listening to
+                    the package's <code>kp-datatable-select</code> event. Three rows start selected so the bar is visible. It says how many are
+                    selected, offers <b>Assign to</b>, <b>Mark closed</b> and <b>Clear selection</b>, and disappears when nothing is selected. Press
+                    <b>Mark closed</b>: the badges on those rows change and the bar clears. Then tick the header checkbox: the count jumps to 60, not
+                    10, because the package selects every filtered row on every page, which the React channel does not do (it selects the page).
+                    Decide which of the two it should be; the count in the bar makes the difference impossible to miss.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dtr-bulk" data-dtr-bulk role="region" aria-label="Actions on selected incidents" hidden>
+                        <span class="dtr-bulk__count" data-dtr-bulk-count aria-live="polite"></span>
+                        <label class="kp-sr-only" for="bulk-owner">Assign selected incidents to</label>
+                        <select class="kp-field__input" id="bulk-owner" style="inline-size: auto" data-dtr-bulk-owner>
+                            <option value="">Assign to…</option>
+                        </select>
+                        <button type="button" class="kp-button kp-button--sm" data-dtr-bulk-close>Mark closed</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-bulk-clear>Clear selection</button>
+                    </div>
+                    <p class="dtr-readout" data-dtr-bulk-log role="status" aria-live="polite"></p>
+                    <div class="kp-datatable dtr-mt" id="dt-select" data-kp-datatable data-kp-page-size="10">
+                        <div class="kp-datatable__bar">
+                            <input
+                                class="kp-datatable__search"
+                                type="search"
+                                data-kp-datatable-search
+                                aria-label="Search incidents, selection block"
+                                placeholder="Search"
+                            />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, selectable
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select every visible row" /></th>
+                                        <th scope="col" data-kp-sort="text">Reference</th>
+                                        <th scope="col" data-kp-sort="text">Site</th>
+                                        <th scope="col" data-kp-sort="text">Status</th>
+                                        <th scope="col" data-kp-sort="text">Severity</th>
+                                        <th scope="col" data-kp-sort="text">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ expansion -->
+            <section class="cat-block" id="expansion">
+                <h2>Rows that open to show more<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. The first row starts open. Its detail sits in a full-width row under it: the whole note (which the
+                    Note column cuts off), the owner and a short history. The toggle is a real button with <code>aria-expanded</code> and a name that
+                    says which incident it opens. Open two more and sort by <b>Hours open</b>: the open rows stay open and travel with their incident,
+                    even to another page. Check that the detail row is told apart from an ordinary row in every theme, and that the long note wraps
+                    instead of widening the table.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-expand">
+                        <div class="dtr-toolbar">
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-expand-all>
+                                Open every row on this page
+                            </button>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-collapse-all>Close them all</button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, each row can be opened for details
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ sticky -->
+            <section class="cat-block" id="sticky">
+                <h2>A header that stays, a first column that stays<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b> CSS on a <code>.kp-table</code>: all 60 rows in a box 22rem tall and wider than the page. Scroll down
+                    inside it: the header row stays on top. Scroll sideways: <b>Reference</b> stays on the left, so every row keeps its name. Turn
+                    each off with the switches to compare. Check in nostromo and cyberpunk that the stuck cells are opaque (no rows showing through),
+                    that the hairline under the header and beside the first column is still visible, and that the corner cell sits above both. Note
+                    that this box scrolls both ways by itself, which the package's <code>.kp-table-wrap</code> today does sideways only.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <fieldset class="dtr-segment">
+                        <legend class="kp-field__label">Keep in place</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="checkbox" data-dtr-sticky="head" checked /> Header row</label
+                        >
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="checkbox" data-dtr-sticky="col" checked /> First column</label
+                        >
+                    </fieldset>
+                    <div
+                        class="dtr-scroll dtr-scroll--head dtr-scroll--col dtr-mt dtr-mock"
+                        id="mk-sticky"
+                        tabindex="0"
+                        role="region"
+                        aria-label="All incidents, scrolls in both directions"
+                    >
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                All incidents
+                            </caption>
+                            <thead>
+                                <tr data-dtr-head></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ states -->
+            <section class="cat-block" id="states">
+                <h2>Loading, refreshing, nothing, no match, failed<span class="dtr-tag dtr-tag--mixed">mixed</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> five frozen states side by side. The parts are <b>package today</b>: <code>.kp-skeleton</code>,
+                    <code>.kp-spinner</code>, <code>.kp-empty</code> with <code>.kp-empty__title</code>, <code>.kp-alert--destructive</code>. Putting
+                    them into the table's frame is <b>mock</b>, because the framework-free data table today has only
+                    <code>data-kp-datatable-empty</code>, a single message for "the search found nothing". Check that the five read differently at a
+                    glance: <b>first load</b> shows the shape of the rows, <b>refreshing</b> keeps the old rows dimmed so the page does not jump,
+                    <b>nothing yet</b> and <b>no match</b> say different things and offer different ways out, and <b>failed</b> is the only one in the
+                    alarm colour.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dtr-states">
+                        <div>
+                            <p class="dtr-caption">First load</p>
+                            <div class="kp-datatable">
+                                <div class="kp-table-wrap" aria-busy="true">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Incidents, loading
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Reference</th>
+                                                <th scope="col">Site</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="kp-skeleton dtr-w-5"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-9"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-3"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="kp-skeleton dtr-w-5"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-7"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-3"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="kp-skeleton dtr-w-5"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-9"></span></td>
+                                                <td><span class="kp-skeleton dtr-w-3"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="dtr-foot"><p class="kp-datatable__status">Loading incidents…</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dtr-caption">Refreshing</p>
+                            <div class="kp-datatable">
+                                <div class="kp-table-wrap" aria-busy="true">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Incidents, refreshing
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Reference</th>
+                                                <th scope="col">Site</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="dtr-stale" data-dtr-state-rows></tbody>
+                                    </table>
+                                </div>
+                                <div class="dtr-foot">
+                                    <p class="kp-datatable__status dtr-busy">
+                                        <span class="kp-spinner" aria-hidden="true"></span> Updating, showing the list from 08:02
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dtr-caption">Nothing yet</p>
+                            <div class="kp-empty">
+                                <p class="kp-empty__title">No incidents reported</p>
+                                <p class="kp-empty__body">
+                                    Nothing has been reported at any site since the log was started. New reports appear here as they come in.
+                                </p>
+                                <button type="button" class="kp-button kp-button--primary">Report an incident</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dtr-caption">No match</p>
+                            <div class="kp-empty">
+                                <p class="kp-empty__title">No incident matches "boiler" with severity Critical</p>
+                                <p class="kp-empty__body">60 incidents are hidden by the search and one filter.</p>
+                                <button type="button" class="kp-button kp-button--secondary">Clear the search and filters</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dtr-caption">Failed</p>
+                            <div class="kp-alert kp-alert--destructive" role="alert">
+                                <p class="kp-alert__label">The incident list could not be loaded</p>
+                                <p>The server answered 503 at 08:04. Nothing was changed. Try again, or check the status page if it keeps failing.</p>
+                                <button type="button" class="kp-button">Try again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ export -->
+            <section class="cat-block" id="export">
+                <h2>Export what you are looking at<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. The preview below the table is exactly what <b>Download CSV</b> writes: the rows the search leaves,
+                    in the current sort, every page and not only the one on screen. Type <i>critical</i> and sort by <b>Opened</b>; the preview
+                    follows. The note column holds commas and quotes, so check that those fields are wrapped in quotes in the preview.
+                    <b>Copy as tab-separated</b> puts the same rows on the clipboard for pasting into a spreadsheet. Decide whether export belongs in
+                    the package or in each app.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-export">
+                        <div class="dtr-toolbar">
+                            <input
+                                class="kp-field__input dtr-grow"
+                                type="search"
+                                aria-label="Search incidents to export"
+                                placeholder="Search all columns"
+                                data-dtr-q
+                            />
+                            <button type="button" class="kp-button" data-dtr-csv>Download CSV</button>
+                            <button type="button" class="kp-button kp-button--ghost" data-dtr-tsv>Copy as tab-separated</button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, exportable
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                        <pre class="kp-code-block dtr-pre" data-dtr-preview aria-label="Preview of the CSV file"></pre>
+                        <p class="dtr-readout" style="margin: 0 0.75rem 0.75rem" data-dtr-export-log role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ inline edit -->
+            <section class="cat-block" id="inline-edit">
+                <h2>Editing a value in its cell<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>, on a private copy of the data so the other blocks do not change. <b>Status</b>, <b>Severity</b> and
+                    <b>Owner</b> have a dashed underline: they are buttons. The first row's Owner starts in its edit state. Choose a new value and
+                    press Enter or move away: it saves, a line under the table says what changed, and <b>Undo</b> puts it back. Escape cancels. Check
+                    that it is obvious which cells can be edited before you hover, that the select fits in the cell without making the row jump, and
+                    that focus returns to the cell after saving.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-edit">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, Status, Severity and Owner can be edited in place
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-edit-log role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                        <p class="kp-sr-only" data-dtr-status></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ async -->
+            <section class="cat-block" id="async">
+                <h2>Rows that come from a server<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>; the "server" is a function on this page that answers after 250 to 900 ms, or 2 s with
+                    <b>Slow network</b> on. The table does not filter, sort or page by itself: every change sends a request, logged newest first under
+                    the table with its query string. Type <i>pump house</i> quickly: the search waits 300 ms after the last key, so one request goes
+                    out, not nine. Click sort headers fast with Slow network on: an answer that arrives after a newer request was sent is thrown away
+                    and the log says so. While waiting, the old rows stay dimmed and the status says it is loading. The package today has no
+                    framework-free equivalent (only the React channel's <code>totalRows</code>).
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-async">
+                        <div class="dtr-toolbar">
+                            <input
+                                class="kp-field__input dtr-grow"
+                                type="search"
+                                aria-label="Search incidents on the server"
+                                placeholder="Search on the server"
+                                data-dtr-q
+                            />
+                            <select class="kp-field__input" style="inline-size: auto" aria-label="Status" data-dtr-status-filter>
+                                <option value="">Any status</option>
+                                <option>Open</option>
+                                <option>Watching</option>
+                                <option>Closed</option>
+                            </select>
+                            <label class="kp-field__option"><input class="kp-field__check" type="checkbox" data-dtr-slow /> Slow network</label>
+                        </div>
+                        <div class="kp-table-wrap" data-dtr-busy-box>
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, served page by page
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status dtr-busy" data-dtr-status role="status" aria-live="polite"></p>
+                            <div class="dtr-pager" data-dtr-pager></div>
+                        </div>
+                        <ol class="dtr-log" reversed data-dtr-log aria-label="Requests sent"></ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ keyboard -->
+            <section class="cat-block" id="keyboard">
+                <h2>Moving through cells with the arrow keys<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>. This table is <code>role="grid"</code>: Tab enters it once, on one cell, and leaves it with the next
+                    Tab. Inside, the arrow keys move a cell at a time, Home and End go to the start and end of the row, Ctrl + Home and Ctrl + End to
+                    the first and last cell, Page Up and Page Down five rows. The line under the table says where you are. Check that the focus ring
+                    is visible on every cell in every theme. Then weigh it: in a grid a screen reader stops reading the table as a table and expects
+                    spreadsheet behaviour, which is a promise a read-only list does not need to make.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-grid">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table dtr-grid" role="grid" aria-label="Ten most recent incidents, navigable with arrow keys">
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <p class="kp-datatable__status" data-dtr-grid-readout aria-live="polite">Tab into the table to start.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ cards -->
+            <section class="cat-block" id="cards">
+                <h2>Cards when the table is narrow<span class="dtr-tag dtr-tag--package">package today</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>package today</b>, nothing mock but the 26rem box it sits in. <code>data-kp-cards</code> turns each row into a
+                    card below 40rem of table width, so this one shows cards even on a wide screen. Check that each value keeps its column name, that
+                    the empty label beside the checkbox is not a stray gap, that the note is cut to one line inside a card where there would be room
+                    to wrap it, and that sorting still works although the headers are hidden (it does not: the headers are the only sort control, and
+                    in card form they are visually hidden, so a sighted reader has no way to sort).
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="dtr-narrow">
+                        <div class="kp-datatable" id="dt-cards" data-kp-datatable data-kp-cards data-kp-page-size="4">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    type="search"
+                                    data-kp-datatable-search
+                                    aria-label="Search incidents, cards"
+                                    placeholder="Search"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Incidents as cards
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select every visible row" /></th>
+                                            <th scope="col" data-kp-sort="text">Reference</th>
+                                            <th scope="col" data-kp-sort="text">Site</th>
+                                            <th scope="col" data-kp-sort="text">Status</th>
+                                            <th scope="col" data-kp-sort="text">Severity</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                            <th scope="col" data-kp-sort="text">Owner</th>
+                                            <th scope="col">Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>No incident matches that search.</div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ defaults -->
+            <section class="cat-block" id="defaults">
+                <h2>The proposed defaults, together<span class="dtr-tag dtr-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <b>mock</b>, one table with every default the README proposes switched on and nothing else: search with an
+                    <b>In</b> choice (all columns first), a Status filter, sorted by <b>Opened</b> newest first on a two-state sort, 25 rows a page
+                    with 10, 25, 50 and 100 on offer, a header that stays while the 22rem box scrolls, comfortable density, and the footer inset from
+                    the edge. Selection, expansion, export, inline edit and the keyboard grid are off, because they are per-app choices. Judge it as
+                    the table an app would get by writing the least markup: is anything missing you would expect on day one, or anything here you
+                    would switch off?
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable dtr-mock" id="mk-defaults">
+                        <div class="dtr-toolbar">
+                            <div class="kp-field dtr-grow">
+                                <label class="kp-field__label" for="def-q">Search</label>
+                                <input class="kp-field__input" id="def-q" type="search" placeholder="Search incidents" data-dtr-q />
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="def-in">In</label>
+                                <select class="kp-field__input" id="def-in" data-dtr-in>
+                                    <option value="">All columns</option>
+                                    <option value="ref">Reference</option>
+                                    <option value="site">Site</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="note">Note</option>
+                                </select>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="def-status">Status</label>
+                                <select class="kp-field__input" id="def-status" data-dtr-status-filter>
+                                    <option value="">Any</option>
+                                    <option>Open</option>
+                                    <option>Watching</option>
+                                    <option>Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="dtr-scroll dtr-scroll--head dtr-short" tabindex="0" role="region" aria-label="Incidents, proposed defaults">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Incidents, proposed defaults
+                                </caption>
+                                <thead>
+                                    <tr data-dtr-head></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="dtr-foot">
+                            <div class="dtr-toolbar" style="padding: 0">
+                                <p class="kp-datatable__status" data-dtr-status role="status" aria-live="polite" style="margin: 0"></p>
+                                <label class="kp-field__option" for="def-size">Rows per page</label>
+                                <select class="kp-field__input" id="def-size" style="inline-size: auto" data-dtr-size>
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <nav class="dtr-pager" aria-label="Pages of incidents" data-dtr-pager></nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // MOCK BEHAVIOUR for this research page. The package blocks are
+            // driven by js/datatable.js as auto.js attached it; this script
+            // only writes their rows (one dataset for every block) and asks
+            // the package to re-read them. Everything else below is mock.
+            import { dataTable, attachDataTables, SELECT_EVENT } from '../../js/datatable.js';
+            import { attachSelects, drawnSelect } from '../../js/combobox.js';
+            import { attachDatePickers, datePicker, DATE_EVENT } from '../../js/datepicker.js';
+
+            /* ------------------------------------------------------------ data */
+
+            // Site and note belong together, so a note never describes a
+            // machine the site does not have.
+            const REPORTS = [
+                ['Pump house 4', 'Pump cycles every four minutes; the pressure reading disagrees with the wall gauge by two bar.'],
+                ['Pump house 4', 'Water hammer on the main whenever pump 2 stops, loud enough to hear from the gate.'],
+                ['Cold store', 'Door sensor reports "open" while the door is shut; alarm silenced by hand twice tonight.'],
+                ['Cold store', 'Temperature logger stopped sending at 02:10; battery replaced, gap of 3 hours in the record.'],
+                ['Weighbridge', 'Display flickers when the cabin heater is on; weights still agree with the reference, within 5 kg.'],
+                ['Weighbridge', 'Calibrated against the reference weights, all within tolerance; no further action.'],
+                ['Boiler room', 'Pilot light goes out when the loading door opens, "only when the wind is from the west".'],
+                ['Boiler room', 'Reported twice by the night shift, no fault found in daylight; watching for a week.'],
+                ['Loading bay', 'Forklift charger on bay 3 shows a ground fault; charger isolated, trucks moved to bay 2.'],
+                ['Loading bay', 'Oil sheen in the drainage pit next to bay 2; absorbent booms placed, source not found yet.'],
+                ['Main gate', 'Barrier arm stuck half-open after the power dip at 05:40; lifted by hand, contractor called.'],
+                ['Main gate', 'Intercom has no audio from the cabin side; drivers are phoning the office instead.'],
+                ['Server room', 'UPS on rack B beeping, load at 82 percent after the new switch went in.'],
+                ['Server room', 'Cabinet fan failed; temporary fan fitted, replacement part due Thursday.'],
+                ['Server room', 'Camera 7 lost its stream; the switch port is flapping, cable to be traced.'],
+                ['Canteen', 'Dishwasher rinse below 82 °C, three cycles in a row; dishes rewashed by hand.'],
+                ['Canteen', 'Extraction fan above the fryer is noisy, bearing suspected; fryer use limited to lunch.'],
+                ['Chiller plant', 'Compressor 1 tripped on high head pressure during the afternoon heat; reset, running.'],
+                ['Chiller plant', 'Coolant low on chiller 1; topped up with 4 litres, watching for loss.'],
+                ['Chiller plant', 'Condensate line leaking onto the walkway; bucket placed and drain cleared, leak remains.'],
+                ['Workshop B', 'Badge reader rejects valid cards after 18:00; the late shift is using the side door.'],
+                ['Workshop B', 'Alarm panel shows a zone 4 fault; wiring checked, fault is intermittent.'],
+                ['Workshop B', 'Compressed-air drop at bench 6 hisses; fitting tightened, still losing pressure overnight.'],
+                ['Main gate', 'Awaiting a replacement contactor from the supplier for the barrier motor.'],
+            ];
+            const OWNERS = ['A. Verhoeven', 'M. Dries', 'K. Janssens', 'S. Peeters', 'L. Maes', 'R. Claes', 'N. Wouters'];
+            const SITES = [...new Set(REPORTS.map(([site]) => site))].sort();
+
+            // Seeded, so every reload and every reviewer sees the same sixty rows.
+            let seed = 4471;
+            const rand = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
+            const pick = (list) => list[Math.floor(rand() * list.length)];
+            const weighted = (entries) => {
+                let x = rand() * entries.reduce((sum, [, w]) => sum + w, 0);
+                for (const [value, w] of entries) if ((x -= w) < 0) return value;
+                return entries[0][0];
+            };
+
+            const NOW = Date.UTC(2026, 8, 13, 8, 0);
+            const HOUR = 3600000;
+            const INCIDENTS = [];
+            {
+                let t = NOW;
+                for (let i = 0; i < 60; i += 1) {
+                    t -= Math.round((4 + rand() * 14) * HOUR);
+                    const [site, note] = pick(REPORTS);
+                    const status =
+                        i < 18
+                            ? weighted([
+                                  ['Open', 5],
+                                  ['Watching', 3],
+                                  ['Closed', 2],
+                              ])
+                            : weighted([
+                                  ['Open', 1],
+                                  ['Watching', 2],
+                                  ['Closed', 7],
+                              ]);
+                    const severity = weighted([
+                        ['Low', 3],
+                        ['Medium', 3.5],
+                        ['High', 2.5],
+                        ['Critical', 1],
+                    ]);
+                    const since = Math.floor((NOW - t) / HOUR);
+                    const hours = status === 'Closed' ? Math.min(since, 1 + Math.floor(rand() * 72)) : since;
+                    INCIDENTS.push({
+                        ref: `INC-${4530 - i}`,
+                        site,
+                        status,
+                        severity,
+                        opened: new Date(t).toISOString().slice(0, 10),
+                        hours,
+                        owner: pick(OWNERS),
+                        note,
+                    });
+                }
+            }
+
+            const COLUMNS = [
+                { key: 'ref', label: 'Reference', kind: 'text' },
+                { key: 'site', label: 'Site', kind: 'text' },
+                { key: 'status', label: 'Status', kind: 'text' },
+                { key: 'severity', label: 'Severity', kind: 'severity' },
+                { key: 'opened', label: 'Opened', kind: 'date' },
+                { key: 'hours', label: 'Hours open', kind: 'number' },
+                { key: 'owner', label: 'Owner', kind: 'text' },
+                { key: 'note', label: 'Note', kind: 'text', sortable: false },
+            ];
+            const COL = Object.fromEntries(COLUMNS.map((c) => [c.key, c]));
+            const KEYS = COLUMNS.map((c) => c.key);
+            const SEVERITY_RANK = { Low: 0, Medium: 1, High: 2, Critical: 3 };
+            const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
+
+            /* --------------------------------------------------------- helpers */
+
+            const esc = (value) => String(value).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+            const lower = (value) => String(value).toLowerCase();
+
+            function compareBy(key, a, b) {
+                const kind = COL[key].kind;
+                if (kind === 'number') return a[key] - b[key];
+                if (kind === 'severity') return SEVERITY_RANK[a[key]] - SEVERITY_RANK[b[key]];
+                return collator.compare(String(a[key]), String(b[key]));
+            }
+            function sortRows(rows, sorts) {
+                if (!sorts.length) return [...rows];
+                return [...rows].sort((a, b) => {
+                    for (const s of sorts) {
+                        const c = compareBy(s.key, a, b);
+                        if (c !== 0) return s.dir === 'asc' ? c : -c;
+                    }
+                    return 0;
+                });
+            }
+
+            /** Mark every occurrence of a needle in already-escaped text. */
+            function highlight(text, needles) {
+                let out = esc(text);
+                for (const needle of needles) {
+                    if (!needle) continue;
+                    const safe = esc(needle).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    out = out.replace(new RegExp(safe, 'gi'), (m) => `<mark class="dtr-hit">${m}</mark>`);
+                }
+                return out;
+            }
+
+            function td(row, key, marks = {}) {
+                const label = ` data-label="${esc(COL[key].label)}"`;
+                const value = row[key];
+                const text = marks[key]?.length ? highlight(value, marks[key]) : esc(value);
+                if (key === 'ref') return `<td${label}><code class="kp-mono">${text}</code></td>`;
+                if (key === 'status') return `<td${label}><span class="kp-badge">${text}</span></td>`;
+                if (key === 'hours') return `<td${label} class="kp-text-end kp-numeric">${text}</td>`;
+                if (key === 'note') return `<td${label} class="kp-cell-truncate" title="${esc(value)}">${text}</td>`;
+                return `<td${label}>${text}</td>`;
+            }
+            function tr(row, keys, { select = false, marks } = {}) {
+                const box = select ? `<td data-label=""><input type="checkbox" data-kp-select-row aria-label="Select ${row.ref}" /></td>` : '';
+                return `<tr data-kp-row-key="${row.ref}">${box}${keys.map((k) => td(row, k, marks)).join('')}</tr>`;
+            }
+            function th(key, sorts, sortable = true) {
+                const col = COL[key];
+                const end = col.kind === 'number' ? ' class="kp-text-end"' : '';
+                if (!sortable || col.sortable === false) return `<th scope="col"${end}>${esc(col.label)}</th>`;
+                const at = sorts.findIndex((s) => s.key === key);
+                const sort = sorts[at];
+                const aria = sort ? ` aria-sort="${sort.dir === 'asc' ? 'ascending' : 'descending'}"` : '';
+                const prio = sorts.length > 1 && sort ? `<span class="dtr-prio" aria-hidden="true">${at + 1}</span>` : '';
+                // Not the package's `.kp-datatable__sort` inside `th[data-kp-sort]`:
+                // measured on this page, that pairing puts the arrow on a second
+                // line under the button and drops the theme's uppercase (see README).
+                return `<th scope="col"${end}${aria}><button type="button" class="dtr-sort" data-dtr-sort="${key}">${esc(col.label)}${prio}</button></th>`;
+            }
+
+            /* ------------------------------------------------ package blocks */
+
+            // auto.js attached these tables while their bodies were empty; the
+            // rows go in now and the package's refresh() re-reads them.
+            function fillPackage(id, rows, keys, options = {}) {
+                const wrap = document.getElementById(id);
+                wrap.querySelector('tbody').innerHTML = rows.map((row) => tr(row, keys, options)).join('');
+                const handle = dataTable(wrap);
+                if (handle) handle.refresh();
+                else attachDataTables(wrap.parentElement);
+                return dataTable(wrap);
+            }
+
+            fillPackage('dt-today', INCIDENTS, KEYS, { select: true });
+            fillPackage('dt-foot-before', INCIDENTS, ['ref', 'site', 'status', 'hours']);
+            fillPackage('dt-foot-after', INCIDENTS, ['ref', 'site', 'status', 'hours']);
+            fillPackage('dt-cards', INCIDENTS, ['ref', 'site', 'status', 'severity', 'hours', 'owner', 'note'], { select: true });
+
+            {
+                // Measured, not asserted: the gap between the frame's edge and the status text.
+                const readout = document.querySelector('[data-dtr-foot-readout]');
+                const measure = () => {
+                    const gap = (id) => {
+                        const dt = document.getElementById(id);
+                        const status = dt.querySelector('.kp-datatable__status').getBoundingClientRect();
+                        const box = dt.getBoundingClientRect();
+                        const pager = dt.querySelector('.kp-datatable__pager').getBoundingClientRect();
+                        return `${Math.round(status.left - box.left)} px from the left edge, pager ${Math.round(box.bottom - pager.bottom)} px above the bottom edge`;
+                    };
+                    readout.textContent = `Measured in this theme. As shipped: status ${gap('dt-foot-before')}. Proposed: status ${gap('dt-foot-after')}.`;
+                };
+                measure();
+                new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+                addEventListener('resize', measure);
+            }
+
+            /* --------------------------------------------------- mock engine */
+
+            class MockTable {
+                constructor(root, options = {}) {
+                    Object.assign(
+                        this,
+                        { keys: KEYS, pageSize: 10, sorts: [], multi: false, source: INCIDENTS, predicate: () => true, marks: () => ({}) },
+                        options,
+                    );
+                    this.root = root;
+                    this.page = 0;
+                    this.headRow = root.querySelector('[data-dtr-head]');
+                    this.tbody = root.querySelector('tbody');
+                    this.status = root.querySelector('[data-dtr-status]');
+                    this.pager = root.querySelector('[data-dtr-pager]');
+                    this.headRow.addEventListener('click', (event) => {
+                        const button = event.target.closest('[data-dtr-sort]');
+                        if (button) this.toggleSort(button.dataset.dtrSort, event.shiftKey);
+                    });
+                    this.pager?.addEventListener('click', (event) => {
+                        const button = event.target.closest('[data-dtr-page]');
+                        if (!button || button.disabled) return;
+                        const role = button.dataset.dtrRole;
+                        this.page = Number(button.dataset.dtrPage);
+                        this.render();
+                        (
+                            this.pager.querySelector(`[data-dtr-role="${role}"]:not([disabled])`) ?? this.pager.querySelector('[aria-current="page"]')
+                        )?.focus();
+                    });
+                }
+                toggleSort(key, add) {
+                    const at = this.sorts.findIndex((s) => s.key === key);
+                    const current = this.sorts[at];
+                    const next = !current ? 'asc' : current.dir === 'asc' ? 'desc' : add ? null : 'asc';
+                    if (this.multi && add) {
+                        if (!current) this.sorts.push({ key, dir: 'asc' });
+                        else if (next) current.dir = next;
+                        else this.sorts.splice(at, 1);
+                    } else {
+                        // A plain click: this column alone, flipped if it already was the only key.
+                        const flip = current !== undefined && this.sorts.length === 1 && current.dir === 'asc';
+                        this.sorts = [{ key, dir: flip ? 'desc' : 'asc' }];
+                    }
+                    this.page = 0;
+                    this.render();
+                    this.headRow.querySelector(`[data-dtr-sort="${key}"]`)?.focus();
+                    this.onSort?.();
+                }
+                rows() {
+                    return sortRows(this.source.filter(this.predicate), this.sorts);
+                }
+                update() {
+                    this.page = 0;
+                    this.render();
+                }
+                render() {
+                    const rows = this.rows();
+                    this.view = rows;
+                    const size = this.pageSize > 0 ? this.pageSize : Math.max(rows.length, 1);
+                    const pages = Math.max(1, Math.ceil(rows.length / size));
+                    this.page = Math.min(this.page, pages - 1);
+                    const from = this.page * size;
+                    const slice = rows.slice(from, from + size);
+                    this.headRow.innerHTML = (this.lead?.head ?? '') + this.keys.map((k) => th(k, this.sorts, this.sortable !== false)).join('');
+                    const marks = this.marks();
+                    const span = this.keys.length + (this.lead ? 1 : 0);
+                    this.tbody.innerHTML = slice.length
+                        ? slice.map((row) => (this.rowHTML ? this.rowHTML(row, marks) : tr(row, this.keys, { marks }))).join('')
+                        : `<tr><td colspan="${span}"><div class="kp-empty">${esc(this.emptyText ?? 'No incident matches. Loosen the search or the filters.')}</div></td></tr>`;
+                    if (this.status) {
+                        const total = this.source.length;
+                        const range = rows.length ? `Showing ${from + 1}–${from + slice.length} of ${rows.length}` : 'Showing 0';
+                        this.status.textContent = rows.length === total ? `${range} incidents` : `${range} (filtered from ${total})`;
+                    }
+                    if (this.pager) this.pager.innerHTML = (this.pagerHTML ?? simplePager)(this.page, pages);
+                    this.afterRender?.(slice, rows);
+                }
+            }
+
+            function pageButton(label, page, { disabled = false, current = false, role = String(page), name } = {}) {
+                // The package pager's look: the theme's own button, visible at rest, and
+                // a button pointing backwards marked so a theme that cuts a notch
+                // (cyberpunk) cuts it on the side the button points to.
+                const back = role === 'first' || role === 'prev' ? ' data-kp-direction="back"' : '';
+                return `<button type="button" class="kp-button kp-button--sm"${back} data-dtr-page="${page}" data-dtr-role="${role}"${disabled ? ' disabled' : ''}${current ? ' aria-current="page"' : ''}${name ? ` aria-label="${esc(name)}"` : ''}>${esc(label)}</button>`;
+            }
+            function simplePager(page, pages) {
+                return (
+                    pageButton('Previous', page - 1, { disabled: page === 0, role: 'prev' }) +
+                    `<span class="kp-datatable__status">Page ${page + 1} of ${pages}</span>` +
+                    pageButton('Next', page + 1, { disabled: page >= pages - 1, role: 'next' })
+                );
+            }
+            function fullPager(page, pages) {
+                const wanted = new Set([0, pages - 1, page - 1, page, page + 1].filter((p) => p >= 0 && p < pages));
+                let out = pageButton('First', 0, { disabled: page === 0, role: 'first', name: 'First page' });
+                out += pageButton('Previous', page - 1, { disabled: page === 0, role: 'prev', name: 'Previous page' });
+                let last = -1;
+                for (const p of [...wanted].sort((a, b) => a - b)) {
+                    if (p - last > 1) out += '<span class="dtr-pager__gap" aria-hidden="true">…</span>';
+                    out += pageButton(String(p + 1), p, { current: p === page, name: `Page ${p + 1}` });
+                    last = p;
+                }
+                out += pageButton('Next', page + 1, { disabled: page >= pages - 1, role: 'next', name: 'Next page' });
+                out += pageButton('Last', pages - 1, { disabled: page >= pages - 1, role: 'last', name: 'Last page' });
+                return out;
+            }
+            const debounce = (fn, ms) => {
+                let timer = 0;
+                return (...args) => {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => fn(...args), ms);
+                };
+            };
+
+            /** `status:open owner:"de smet"` → pairs, and the words left over. */
+            const ALIASES = {
+                ref: 'ref',
+                reference: 'ref',
+                site: 'site',
+                status: 'status',
+                severity: 'severity',
+                opened: 'opened',
+                owner: 'owner',
+                note: 'note',
+            };
+            function parseQuery(input) {
+                const pairs = [];
+                const rest = input.replace(/(\w+):("([^"]*)"|\S+)/g, (whole, name, raw, quoted) => {
+                    const key = ALIASES[name.toLowerCase()];
+                    if (!key) return whole;
+                    pairs.push({ key, value: lower(quoted ?? raw) });
+                    return ' ';
+                });
+                return { pairs, words: lower(rest).trim() };
+            }
+
+            /* ------------------------------------------------- search scope */
+            {
+                const root = document.getElementById('mk-scope');
+                const q = root.querySelector('#scope-q');
+                const scope = root.querySelector('#scope-in');
+                const searchable = ['ref', 'site', 'status', 'severity', 'opened', 'owner', 'note'];
+                const table = new MockTable(root, {
+                    predicate: (row) => {
+                        const { pairs, words } = parseQuery(q.value);
+                        const keys = scope.value ? [scope.value] : searchable;
+                        return pairs.every((p) => lower(row[p.key]).includes(p.value)) && (!words || keys.some((k) => lower(row[k]).includes(words)));
+                    },
+                    marks: () => {
+                        const { pairs, words } = parseQuery(q.value);
+                        const marks = {};
+                        for (const p of pairs) (marks[p.key] ??= []).push(p.value);
+                        if (words) for (const k of scope.value ? [scope.value] : searchable) (marks[k] ??= []).push(words);
+                        return marks;
+                    },
+                });
+                q.addEventListener('input', () => table.update());
+                scope.addEventListener('change', () => table.update());
+                table.render();
+            }
+
+            /* ------------------------------------------------ column search */
+            {
+                const root = document.getElementById('mk-colsearch');
+                const row = root.querySelector('[data-dtr-filter-row]');
+                row.innerHTML = KEYS.map((key) => {
+                    const name = `Filter ${COL[key].label}`;
+                    if (key === 'status' || key === 'severity') {
+                        const values = key === 'status' ? ['Open', 'Watching', 'Closed'] : ['Critical', 'High', 'Medium', 'Low'];
+                        return `<th scope="col"><select class="kp-field__input" data-dtr-col="${key}" aria-label="${name}"><option value="">Any</option>${values.map((v) => `<option>${v}</option>`).join('')}</select></th>`;
+                    }
+                    if (key === 'opened')
+                        // The package's date picker, not the browser's date input: the field
+                        // holds what was typed, data-kp-date-value the ISO date it means.
+                        return `<th scope="col"><div class="dtr-th-date"><div class="kp-datepicker" data-kp-datepicker lang="en-GB"><input class="kp-field__input" id="colsearch-opened" type="text" inputmode="numeric" autocomplete="off" data-kp-date-input data-dtr-col="${key}" aria-label="${name}, on or after" /><button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-date-open aria-label="Open the calendar for ${name}" title="Open the calendar"><span aria-hidden="true">▦</span></button><div class="kp-datepicker__panel" data-kp-date-panel hidden></div></div></div></th>`;
+                    if (key === 'hours')
+                        // A package text field that takes digits: no browser spinner.
+                        return `<th scope="col"><input class="kp-field__input" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-dtr-col="${key}" aria-label="${name}, at least" placeholder="At least" /></th>`;
+                    return `<th scope="col"><input class="kp-field__input" type="search" data-dtr-col="${key}" aria-label="${name}" placeholder="Contains" /></th>`;
+                }).join('');
+                // Created after auto.js ran: the selects and the picker are attached here.
+                attachSelects(row);
+                attachDatePickers(row);
+                const control = (key) => row.querySelector(`[data-dtr-col="${key}"]`);
+                const value = (key) => (key === 'opened' ? (control(key).dataset.kpDateValue ?? '') : control(key).value);
+                const table = new MockTable(root, {
+                    predicate: (r) =>
+                        KEYS.every((key) => {
+                            const v = value(key).trim();
+                            if (!v) return true;
+                            if (key === 'status' || key === 'severity') return r[key] === v;
+                            if (key === 'opened') return r.opened >= v;
+                            if (key === 'hours') return /^\d+$/.test(v) ? r.hours >= Number(v) : true;
+                            return lower(r[key]).includes(lower(v));
+                        }),
+                    marks: () => Object.fromEntries(['ref', 'site', 'owner', 'note'].map((k) => [k, [lower(value(k).trim())]])),
+                });
+                row.addEventListener('input', () => table.update());
+                row.addEventListener('change', () => table.update());
+                row.addEventListener(DATE_EVENT, () => table.update());
+                root.querySelector('[data-dtr-clear]').addEventListener('click', () => {
+                    for (const c of row.querySelectorAll('[data-dtr-col]')) {
+                        const picker = c.closest('[data-kp-datepicker]');
+                        if (picker) datePicker(picker)?.set(null);
+                        else c.value = '';
+                    }
+                    for (const select of row.querySelectorAll('select')) drawnSelect(select)?.refresh();
+                    table.update();
+                });
+                table.render();
+            }
+
+            /* ------------------------------------------------------- filters */
+            {
+                const root = document.getElementById('mk-filters');
+                const panel = root.querySelector('#flt-panel');
+                const toggle = root.querySelector('#flt-toggle');
+                const q = root.querySelector('[data-dtr-q]');
+                const site = panel.querySelector('#flt-site');
+                site.insertAdjacentHTML('beforeend', SITES.map((s) => `<option>${esc(s)}</option>`).join(''));
+                const field = (name) => panel.querySelector(`[name="${name}"]`);
+                const checked = (name) => [...panel.querySelectorAll(`[name="${name}"]:checked`)].map((box) => box.value);
+                // Hours are text fields that take digits; anything else is not a bound.
+                const hours = (name) => {
+                    const v = field(name).value.trim();
+                    return /^\d+$/.test(v) ? v : '';
+                };
+                // A date bound is the package's picker: its ISO value, whatever the field shows.
+                const iso = (name) => field(name).dataset.kpDateValue ?? '';
+                const pickerOf = (name) => datePicker(field(name).closest('[data-kp-datepicker]'));
+                const hoursError = panel.querySelector('[data-dtr-hours-error]');
+                const state = () => ({
+                    status: checked('status'),
+                    severity: checked('severity'),
+                    site: site.value,
+                    hoursFrom: hours('hoursFrom'),
+                    hoursTo: hours('hoursTo'),
+                    openedFrom: iso('openedFrom'),
+                    openedTo: iso('openedTo'),
+                });
+                const table = new MockTable(root, {
+                    sorts: [{ key: 'opened', dir: 'desc' }],
+                    predicate: (r) => {
+                        const s = state();
+                        const words = lower(q.value.trim());
+                        if (words && !KEYS.some((k) => lower(r[k]).includes(words))) return false;
+                        if (s.status.length && !s.status.includes(r.status)) return false;
+                        if (s.severity.length && !s.severity.includes(r.severity)) return false;
+                        if (s.site && r.site !== s.site) return false;
+                        if (s.hoursFrom !== '' && r.hours < Number(s.hoursFrom)) return false;
+                        if (s.hoursTo !== '' && r.hours > Number(s.hoursTo)) return false;
+                        if (s.openedFrom && r.opened < s.openedFrom) return false;
+                        if (s.openedTo && r.opened > s.openedTo) return false;
+                        return true;
+                    },
+                });
+                table.emptyText = 'No incident matches these filters.';
+                const chips = root.querySelector('[data-dtr-chips]');
+                const count = root.querySelector('[data-dtr-filter-count]');
+                const renderChips = () => {
+                    const s = state();
+                    const list = [
+                        ...s.status.map((v) => [`Status: ${v}`, `status=${v}`]),
+                        ...s.severity.map((v) => [`Severity: ${v}`, `severity=${v}`]),
+                        ...(s.site ? [[`Site: ${s.site}`, 'site']] : []),
+                        ...(s.hoursFrom !== '' || s.hoursTo !== '' ? [[`Hours open: ${s.hoursFrom || '0'}–${s.hoursTo || 'any'}`, 'hours']] : []),
+                        ...(s.openedFrom || s.openedTo ? [[`Opened: ${s.openedFrom || 'any'} to ${s.openedTo || 'today'}`, 'opened']] : []),
+                    ];
+                    chips.innerHTML = list
+                        .map(
+                            ([label, id]) =>
+                                `<li class="kp-tag">${esc(label)}<button type="button" class="kp-tag__remove" data-dtr-remove="${esc(id)}" aria-label="Remove filter ${esc(label)}">×</button></li>`,
+                        )
+                        .join('');
+                    count.textContent = list.length ? `(${list.length})` : '';
+                    if (s.hoursFrom !== '' && s.hoursTo !== '' && Number(s.hoursFrom) > Number(s.hoursTo)) {
+                        table.emptyText = `The hours range runs backwards: from ${s.hoursFrom} to ${s.hoursTo}. Swap the two values.`;
+                    } else {
+                        table.emptyText = 'No incident matches these filters.';
+                    }
+                    const typedWrong = ['hoursFrom', 'hoursTo'].map((n) => field(n).value.trim()).filter((v) => v !== '' && !/^\d+$/.test(v));
+                    hoursError.hidden = typedWrong.length === 0;
+                    hoursError.textContent = typedWrong.length ? `Hours open takes whole hours, like 10; "${typedWrong[0]}" is not one.` : '';
+                    hoursError.closest('fieldset').setAttribute('aria-invalid', String(typedWrong.length > 0));
+                };
+                const apply = () => {
+                    renderChips();
+                    table.update();
+                };
+                panel.addEventListener('input', apply);
+                // A text field already applied on input; its change fires on blur, and
+                // re-rendering the pills then would swallow the click on a pill's ×.
+                panel.addEventListener('change', (event) => {
+                    if (event.target.matches('input[type="checkbox"], select')) apply();
+                });
+                panel.addEventListener(DATE_EVENT, apply);
+                q.addEventListener('input', () => table.update());
+                chips.addEventListener('click', (event) => {
+                    const id = event.target.closest('[data-dtr-remove]')?.dataset.dtrRemove;
+                    if (!id) return;
+                    if (id.includes('=')) {
+                        const [name, v] = id.split('=');
+                        panel.querySelector(`[name="${name}"][value="${v}"]`).checked = false;
+                    } else if (id === 'site') site.value = '';
+                    else if (id === 'hours') field('hoursFrom').value = field('hoursTo').value = '';
+                    else if (id === 'opened') for (const name of ['openedFrom', 'openedTo']) pickerOf(name)?.set(null);
+                    apply();
+                    (chips.querySelector('.kp-tag__remove') ?? toggle).focus();
+                });
+                root.querySelector('[data-dtr-clear-filters]').addEventListener('click', () => {
+                    for (const box of panel.querySelectorAll('input[type="checkbox"]')) box.checked = false;
+                    for (const name of ['openedFrom', 'openedTo']) pickerOf(name)?.set(null);
+                    for (const input of panel.querySelectorAll('input:not([type="checkbox"]):not([data-kp-date-input]), select')) input.value = '';
+                    apply();
+                });
+                toggle.addEventListener('click', () => {
+                    const open = toggle.getAttribute('aria-expanded') !== 'true';
+                    toggle.setAttribute('aria-expanded', String(open));
+                    panel.hidden = !open;
+                });
+                apply();
+            }
+
+            /* ---------------------------------------------------- filter-add */
+            {
+                // Package today: the rows go in, the package does the rest.
+                fillPackage('dt-addfilter', INCIDENTS, ['ref', 'site', 'status', 'severity', 'hours', 'opened', 'owner']);
+
+                // Measured, not asserted: what each design spends above the table.
+                const readout = document.querySelector('[data-dtr-space-readout]');
+                const root = document.getElementById('dt-addfilter');
+                const measure = () => {
+                    const above = (id) => {
+                        const r = document.getElementById(id);
+                        return Math.round(r.querySelector('.kp-table-wrap').getBoundingClientRect().top - r.getBoundingClientRect().top);
+                    };
+                    const panelOpen = !document.getElementById('flt-panel').hidden;
+                    const editing = root.querySelector('[data-kp-datatable-filter-editor]:not([hidden])') !== null;
+                    readout.textContent = `Measured in this theme: the filter panel above ${panelOpen ? 'with its panel open' : 'with its panel closed'} spends ${above('mk-filters')} px above its table; this block spends ${above('dt-addfilter')} px${editing ? ' with its editor open' : ''}.`;
+                };
+                measure();
+                new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+                new ResizeObserver(measure).observe(root);
+                new ResizeObserver(measure).observe(document.getElementById('mk-filters'));
+                addEventListener('resize', measure);
+            }
+
+            /* ---------------------------------------------------- multi-sort */
+            {
+                const root = document.getElementById('mk-multisort');
+                const initial = () => [
+                    { key: 'severity', dir: 'desc' },
+                    { key: 'hours', dir: 'desc' },
+                ];
+                const summary = root.querySelector('[data-dtr-sort-summary]');
+                const table = new MockTable(root, {
+                    multi: true,
+                    sorts: initial(),
+                    afterRender: () => {
+                        const words = table.sorts.map(
+                            (s) =>
+                                `${COL[s.key].label} ${s.dir === 'asc' ? (COL[s.key].kind === 'number' ? 'low to high' : 'A to Z') : COL[s.key].kind === 'number' || COL[s.key].kind === 'severity' ? 'high to low' : 'Z to A'}`,
+                        );
+                        summary.textContent = words.length ? `Sorted by ${words.join(', then ')}.` : 'Not sorted.';
+                    },
+                });
+                root.querySelector('[data-dtr-reset-sort]').addEventListener('click', () => {
+                    table.sorts = initial();
+                    table.update();
+                });
+                table.render();
+            }
+
+            /* ------------------------------------------------------- columns */
+            {
+                const root = document.getElementById('mk-columns');
+                const hidden = new Set();
+                const menus = document.querySelectorAll('#columns [data-dtr-colmenu]');
+                const count = root.querySelector('[data-dtr-col-count]');
+                const table = new MockTable(root, { pageSize: 8 });
+                const renderMenus = () => {
+                    menus.forEach((menu, n) => {
+                        menu.innerHTML =
+                            COLUMNS.map((c) => {
+                                const id = `dtr-col-${n}-${c.key}`;
+                                const locked = c.key === 'ref';
+                                return `<li><label class="kp-menu__item dtr-menu-check" for="${id}"><input class="kp-field__check" type="checkbox" id="${id}" data-dtr-colkey="${c.key}"${hidden.has(c.key) ? '' : ' checked'}${locked ? ' disabled' : ''} /> ${esc(c.label)}${locked ? ' (always shown)' : ''}</label></li>`;
+                            }).join('') +
+                            '<li role="separator" class="kp-menu__separator"></li>' +
+                            '<li><button type="button" class="kp-menu__item" data-dtr-colreset>Show every column</button></li>';
+                    });
+                    table.keys = KEYS.filter((k) => !hidden.has(k));
+                    count.textContent = `${table.keys.length} of ${KEYS.length} columns shown`;
+                    table.render();
+                };
+                document.getElementById('columns').addEventListener('change', (event) => {
+                    const key = event.target.dataset?.dtrColkey;
+                    if (!key) return;
+                    if (event.target.checked) hidden.delete(key);
+                    else hidden.add(key);
+                    const focusId = event.target.id;
+                    renderMenus();
+                    document.getElementById(focusId)?.focus();
+                });
+                document.getElementById('columns').addEventListener('click', (event) => {
+                    if (!event.target.closest('[data-dtr-colreset]')) return;
+                    hidden.clear();
+                    renderMenus();
+                });
+                renderMenus();
+            }
+
+            /* ------------------------------------------------------- density */
+            {
+                const wrap = document.getElementById('dt-density');
+                fillPackage('dt-density', INCIDENTS, ['ref', 'site', 'status', 'severity', 'hours', 'owner'], { select: true });
+                const readout = document.querySelector('[data-dtr-density-readout]');
+                const measure = () => {
+                    const row = wrap.querySelector('tbody tr:not([hidden])');
+                    const search = wrap.querySelector('.kp-datatable__search');
+                    const mode = wrap.dataset.density === 'compact' ? 'Compact' : 'Comfortable';
+                    readout.textContent = `${mode}: a body row is ${Math.round(row.getBoundingClientRect().height)} px tall, the search box ${Math.round(search.getBoundingClientRect().height)} px.`;
+                };
+                document.querySelector('[data-dtr-density-choice]').addEventListener('change', (event) => {
+                    if (event.target.value === 'compact') wrap.dataset.density = 'compact';
+                    else delete wrap.dataset.density;
+                    measure();
+                });
+                measure();
+                new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            }
+
+            /* ---------------------------------------------------- pagination */
+            {
+                const root = document.getElementById('mk-pages');
+                const size = root.querySelector('#pages-size');
+                const table = new MockTable(root, { pagerHTML: fullPager, sorts: [{ key: 'opened', dir: 'desc' }] });
+                size.addEventListener('change', () => {
+                    // Keep the first row in view: the page that now holds it.
+                    const first = table.page * (table.pageSize || table.view.length);
+                    table.pageSize = Number(size.value);
+                    table.page = table.pageSize ? Math.floor(first / table.pageSize) : 0;
+                    table.render();
+                });
+                table.page = 3;
+                table.render();
+            }
+
+            /* ----------------------------------------------------- selection */
+            {
+                const wrap = document.getElementById('dt-select');
+                const handle = fillPackage('dt-select', INCIDENTS, ['ref', 'site', 'status', 'severity', 'owner'], { select: true });
+                const bar = document.querySelector('[data-dtr-bulk]');
+                const countEl = bar.querySelector('[data-dtr-bulk-count]');
+                const owner = bar.querySelector('[data-dtr-bulk-owner]');
+                const log = document.querySelector('[data-dtr-bulk-log]');
+                owner.insertAdjacentHTML('beforeend', OWNERS.map((o) => `<option>${esc(o)}</option>`).join(''));
+                const show = (keys) => {
+                    bar.hidden = keys.length === 0;
+                    countEl.textContent = `${keys.length} selected`;
+                };
+                wrap.addEventListener(SELECT_EVENT, (event) => show(event.detail.keys));
+                const cellOf = (key, column) => wrap.querySelector(`tr[data-kp-row-key="${key}"] td[data-label="${column}"]`);
+                bar.querySelector('[data-dtr-bulk-close]').addEventListener('click', () => {
+                    const keys = handle.selected();
+                    for (const key of keys) cellOf(key, 'Status').innerHTML = '<span class="kp-badge">Closed</span>';
+                    handle.select([]);
+                    log.textContent = `Marked ${keys.length} incident${keys.length === 1 ? '' : 's'} closed: ${keys.join(', ')}. (This page only; nothing is saved.)`;
+                });
+                owner.addEventListener('change', () => {
+                    if (!owner.value) return;
+                    const keys = handle.selected();
+                    for (const key of keys) cellOf(key, 'Owner').textContent = owner.value;
+                    log.textContent = `Assigned ${keys.length} incident${keys.length === 1 ? '' : 's'} to ${owner.value}.`;
+                    owner.value = '';
+                    handle.select([]);
+                });
+                bar.querySelector('[data-dtr-bulk-clear]').addEventListener('click', () => {
+                    handle.select([]);
+                    log.textContent = 'Selection cleared.';
+                });
+                handle.select([INCIDENTS[0].ref, INCIDENTS[2].ref, INCIDENTS[5].ref]);
+            }
+
+            /* ----------------------------------------------------- expansion */
+            {
+                const root = document.getElementById('mk-expand');
+                const open = new Set([INCIDENTS[0].ref]);
+                const keys = ['ref', 'site', 'status', 'severity', 'hours', 'owner', 'note'];
+                const history = (row) => {
+                    const lines = [`${row.opened}: reported at ${row.site}, severity ${row.severity}.`, `Assigned to ${row.owner}.`];
+                    if (row.status === 'Watching') lines.push('Fix applied; being watched before it is closed.');
+                    if (row.status === 'Closed') lines.push(`Closed after ${row.hours} hours.`);
+                    if (row.status === 'Open') lines.push(`Still open after ${row.hours} hours.`);
+                    return lines.map((l) => `<li>${esc(l)}</li>`).join('');
+                };
+                const table = new MockTable(root, {
+                    keys,
+                    pageSize: 8,
+                    lead: { head: '<th scope="col"><span class="kp-sr-only">Details</span></th>' },
+                    rowHTML: (row) => {
+                        const expanded = open.has(row.ref);
+                        const id = `dtr-detail-${row.ref}`;
+                        const toggle = `<td data-label=""><button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-toggle="${row.ref}" aria-expanded="${expanded}" aria-controls="${id}" aria-label="Details for ${row.ref}">${expanded ? '▾' : '▸'}</button></td>`;
+                        const main = tr(row, keys).replace('>', `>${toggle}`);
+                        const detail = expanded
+                            ? `<tr class="dtr-detail" id="${id}"><td colspan="${keys.length + 1}"><dl class="dtr-dl"><dt>Note</dt><dd>${esc(row.note)}</dd><dt>Owner</dt><dd>${esc(row.owner)}</dd><dt>History</dt><dd><ol>${history(row)}</ol></dd></dl></td></tr>`
+                            : '';
+                        return main + detail;
+                    },
+                });
+                root.addEventListener('click', (event) => {
+                    const button = event.target.closest('[data-dtr-toggle]');
+                    if (button) {
+                        const ref = button.dataset.dtrToggle;
+                        if (open.has(ref)) open.delete(ref);
+                        else open.add(ref);
+                        table.render();
+                        root.querySelector(`[data-dtr-toggle="${ref}"]`)?.focus();
+                    }
+                    if (event.target.closest('[data-dtr-expand-all]')) {
+                        for (const b of root.querySelectorAll('[data-dtr-toggle]')) open.add(b.dataset.dtrToggle);
+                        table.render();
+                    }
+                    if (event.target.closest('[data-dtr-collapse-all]')) {
+                        open.clear();
+                        table.render();
+                    }
+                });
+                table.render();
+            }
+
+            /* -------------------------------------------------------- sticky */
+            {
+                const root = document.getElementById('mk-sticky');
+                root.querySelector('[data-dtr-head]').innerHTML = KEYS.map((k) => th(k, [], false)).join('');
+                root.querySelector('tbody').innerHTML = INCIDENTS.map((row) => tr(row, KEYS)).join('');
+                document.querySelector('#sticky').addEventListener('change', (event) => {
+                    const which = event.target.dataset?.dtrSticky;
+                    if (which) root.classList.toggle(`dtr-scroll--${which}`, event.target.checked);
+                });
+            }
+
+            /* -------------------------------------------------------- states */
+            document.querySelector('[data-dtr-state-rows]').innerHTML = INCIDENTS.slice(0, 3)
+                .map((row) => tr(row, ['ref', 'site', 'status']))
+                .join('');
+
+            /* -------------------------------------------------------- export */
+            {
+                const root = document.getElementById('mk-export');
+                const q = root.querySelector('[data-dtr-q]');
+                const preview = root.querySelector('[data-dtr-preview]');
+                const log = root.querySelector('[data-dtr-export-log]');
+                const cell = (value, sep) => {
+                    const text = String(value);
+                    if (sep === '\t') return text.replace(/[\t\n]/g, ' ');
+                    return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+                };
+                const serialise = (rows, sep) =>
+                    [COLUMNS.map((c) => cell(c.label, sep)).join(sep), ...rows.map((r) => KEYS.map((k) => cell(r[k], sep)).join(sep))].join('\n');
+                const table = new MockTable(root, {
+                    pageSize: 5,
+                    predicate: (r) => {
+                        const words = lower(q.value.trim());
+                        return !words || KEYS.some((k) => lower(r[k]).includes(words));
+                    },
+                    afterRender: (slice, rows) => {
+                        const lines = serialise(rows, ',').split('\n');
+                        preview.textContent =
+                            lines.slice(0, 7).join('\n') +
+                            (lines.length > 7 ? `\n… ${lines.length - 7} more line${lines.length - 7 === 1 ? '' : 's'}` : '');
+                    },
+                });
+                q.addEventListener('input', () => table.update());
+                root.querySelector('[data-dtr-csv]').addEventListener('click', () => {
+                    // A byte-order mark first, so a spreadsheet opens "°C" as °C.
+                    const blob = new Blob(['\uFEFF' + serialise(table.view, ',')], { type: 'text/csv;charset=utf-8' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'incidents-2026-09-13.csv';
+                    link.click();
+                    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+                    log.textContent = `Downloaded incidents-2026-09-13.csv: ${table.view.length} rows.`;
+                });
+                root.querySelector('[data-dtr-tsv]').addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(serialise(table.view, '\t'));
+                        log.textContent = `Copied ${table.view.length} rows, tab-separated.`;
+                    } catch {
+                        log.textContent = 'The browser refused the clipboard; use Download CSV instead.';
+                    }
+                });
+                table.render();
+            }
+
+            /* --------------------------------------------------- inline edit */
+            {
+                const root = document.getElementById('mk-edit');
+                const data = INCIDENTS.map((row) => ({ ...row }));
+                const keys = ['ref', 'site', 'status', 'severity', 'owner', 'note'];
+                const choices = { status: ['Open', 'Watching', 'Closed'], severity: ['Critical', 'High', 'Medium', 'Low'], owner: OWNERS };
+                const log = root.querySelector('[data-dtr-edit-log]');
+                let editing = { ref: data[0].ref, key: 'owner' };
+                let undo = null;
+                const editableCell = (row, key) => {
+                    const label = ` data-label="${esc(COL[key].label)}"`;
+                    if (editing && editing.ref === row.ref && editing.key === key) {
+                        return `<td${label}><select class="kp-field__input" data-density="compact" data-dtr-editor aria-label="${esc(COL[key].label)} of ${row.ref}">${choices[key].map((c) => `<option${c === row[key] ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></td>`;
+                    }
+                    const shown = key === 'status' ? `<span class="kp-badge">${esc(row[key])}</span>` : esc(row[key]);
+                    return `<td${label}><button type="button" class="dtr-editable" data-dtr-edit="${key}" data-dtr-ref="${row.ref}" aria-label="${esc(COL[key].label)} of ${row.ref}: ${esc(row[key])}. Edit">${shown}<span aria-hidden="true">✎</span></button></td>`;
+                };
+                const table = new MockTable(root, {
+                    keys,
+                    source: data,
+                    pageSize: 8,
+                    rowHTML: (row) => `<tr>${keys.map((k) => (choices[k] ? editableCell(row, k) : td(row, k))).join('')}</tr>`,
+                    // The editor select is written after auto.js ran, on every render:
+                    // the package's drawn list is laid over it here.
+                    afterRender: () => attachSelects(root),
+                });
+                // Enter and Escape belong to the drawn list while it is open (or
+                // opening): only a key pressed on a closed list saves or cancels.
+                let listWasOpen = false;
+                root.addEventListener(
+                    'keydown',
+                    (event) => {
+                        if (event.target.matches('[data-dtr-editor]')) listWasOpen = event.target.getAttribute('aria-expanded') === 'true';
+                    },
+                    { capture: true },
+                );
+                const focusCell = (ref, key) => root.querySelector(`[data-dtr-edit="${key}"][data-dtr-ref="${ref}"]`)?.focus();
+                const commit = (save) => {
+                    if (!editing) return;
+                    const select = root.querySelector('[data-dtr-editor]');
+                    const { ref, key } = editing;
+                    const row = data.find((r) => r.ref === ref);
+                    editing = null;
+                    if (save && select && select.value !== row[key]) {
+                        const before = row[key];
+                        row[key] = select.value;
+                        undo = { row, key, before };
+                        log.innerHTML = `${esc(ref)}: ${esc(COL[key].label)} changed from ${esc(before)} to ${esc(row[key])}. <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-dtr-undo>Undo</button>`;
+                    }
+                    table.render();
+                    focusCell(ref, key);
+                };
+                root.addEventListener('click', (event) => {
+                    const button = event.target.closest('[data-dtr-edit]');
+                    if (button) {
+                        commit(true);
+                        editing = { ref: button.dataset.dtrRef, key: button.dataset.dtrEdit };
+                        table.render();
+                        root.querySelector('[data-dtr-editor]')?.focus();
+                        return;
+                    }
+                    if (event.target.closest('[data-dtr-undo]') && undo) {
+                        undo.row[undo.key] = undo.before;
+                        log.textContent = `Undone: ${undo.row.ref} ${COL[undo.key].label} is ${undo.before} again.`;
+                        const { row, key } = undo;
+                        undo = null;
+                        table.render();
+                        focusCell(row.ref, key);
+                    }
+                });
+                root.addEventListener('keydown', (event) => {
+                    if (!event.target.matches('[data-dtr-editor]')) return;
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        // Enter on a closed list only opened it; Enter on an open list
+                        // took the highlighted option, and that is the save.
+                        if (listWasOpen) commit(true);
+                    }
+                    if (event.key === 'Escape' && !listWasOpen) {
+                        event.preventDefault();
+                        commit(false);
+                        log.textContent = 'Edit cancelled; nothing changed.';
+                    }
+                });
+                root.addEventListener('focusout', (event) => {
+                    if (!event.target.matches('[data-dtr-editor]')) return;
+                    // Saving on blur, after the click that caused it has been handled.
+                    setTimeout(() => {
+                        if (editing && !root.querySelector('[data-dtr-editor]')?.matches(':focus')) commit(true);
+                    }, 0);
+                });
+                table.render();
+                log.textContent = `Editing Owner of ${data[0].ref}. Choose a name, then press Enter, or Escape to cancel.`;
+            }
+
+            /* ---------------------------------------------------------- async */
+            {
+                const root = document.getElementById('mk-async');
+                const q = root.querySelector('[data-dtr-q]');
+                const statusFilter = root.querySelector('[data-dtr-status-filter]');
+                const slow = root.querySelector('[data-dtr-slow]');
+                const logEl = root.querySelector('[data-dtr-log]');
+                const box = root.querySelector('[data-dtr-busy-box]');
+                const headRow = root.querySelector('[data-dtr-head]');
+                const tbody = root.querySelector('tbody');
+                const statusEl = root.querySelector('[data-dtr-status]');
+                const pagerEl = root.querySelector('[data-dtr-pager]');
+                const keys = ['ref', 'site', 'status', 'severity', 'opened', 'hours', 'owner'];
+                const size = 10;
+                const state = { q: '', status: '', sort: { key: 'opened', dir: 'desc' }, page: 0 };
+                let sent = 0;
+                let latest = 0;
+                let total = 0;
+
+                // The pretend server: it filters, sorts and pages, then answers late.
+                const server = (params) =>
+                    new Promise((resolve) => {
+                        const rows = sortRows(
+                            INCIDENTS.filter(
+                                (r) =>
+                                    (!params.q || KEYS.some((k) => lower(r[k]).includes(params.q))) && (!params.status || r.status === params.status),
+                            ),
+                            [params.sort],
+                        );
+                        const ms = slow.checked ? 2000 : 250 + Math.round(Math.random() * 650);
+                        setTimeout(() => resolve({ rows: rows.slice(params.page * size, params.page * size + size), total: rows.length, ms }), ms);
+                    });
+
+                const logLine = (text) => {
+                    logEl.insertAdjacentHTML('afterbegin', `<li>${esc(text)}</li>`);
+                    while (logEl.children.length > 8) logEl.lastElementChild.remove();
+                };
+                const drawHead = () => {
+                    headRow.innerHTML = keys.map((k) => th(k, [state.sort])).join('');
+                };
+                const load = async () => {
+                    const id = (sent += 1);
+                    latest = id;
+                    const params = { q: lower(state.q.trim()), status: state.status, sort: { ...state.sort }, page: state.page };
+                    const query = new URLSearchParams({
+                        ...(params.q && { q: params.q }),
+                        ...(params.status && { status: params.status.toLowerCase() }),
+                        sort: `${params.sort.dir === 'desc' ? '-' : ''}${params.sort.key}`,
+                        page: String(params.page + 1),
+                        size: String(size),
+                    });
+                    box.setAttribute('aria-busy', 'true');
+                    tbody.classList.add('dtr-stale');
+                    statusEl.innerHTML = '<span class="kp-spinner" aria-hidden="true"></span> Loading…';
+                    const answer = await server(params);
+                    if (id !== latest) {
+                        logLine(`#${id} GET /api/incidents?${query} → 200 in ${answer.ms} ms, discarded: request #${latest} was sent after it`);
+                        return;
+                    }
+                    logLine(`#${id} GET /api/incidents?${query} → 200 in ${answer.ms} ms, ${answer.rows.length} rows of ${answer.total}`);
+                    total = answer.total;
+                    box.removeAttribute('aria-busy');
+                    tbody.classList.remove('dtr-stale');
+                    tbody.innerHTML = answer.rows.length
+                        ? answer.rows.map((r) => tr(r, keys)).join('')
+                        : `<tr><td colspan="${keys.length}"><div class="kp-empty">The server found no incident for that search.</div></td></tr>`;
+                    const pages = Math.max(1, Math.ceil(total / size));
+                    statusEl.textContent = total
+                        ? `Showing ${state.page * size + 1}–${state.page * size + answer.rows.length} of ${total}`
+                        : 'No results';
+                    pagerEl.innerHTML = simplePager(state.page, pages);
+                };
+                headRow.addEventListener('click', (event) => {
+                    const button = event.target.closest('[data-dtr-sort]');
+                    if (!button) return;
+                    const key = button.dataset.dtrSort;
+                    state.sort = { key, dir: state.sort.key === key && state.sort.dir === 'asc' ? 'desc' : 'asc' };
+                    state.page = 0;
+                    drawHead();
+                    headRow.querySelector(`[data-dtr-sort="${key}"]`)?.focus();
+                    load();
+                });
+                pagerEl.addEventListener('click', (event) => {
+                    const button = event.target.closest('[data-dtr-page]');
+                    if (!button || button.disabled) return;
+                    state.page = Number(button.dataset.dtrPage);
+                    load();
+                });
+                q.addEventListener(
+                    'input',
+                    debounce(() => {
+                        state.q = q.value;
+                        state.page = 0;
+                        load();
+                    }, 300),
+                );
+                statusFilter.addEventListener('change', () => {
+                    state.status = statusFilter.value;
+                    state.page = 0;
+                    load();
+                });
+                drawHead();
+                load();
+            }
+
+            /* ------------------------------------------------------- keyboard */
+            {
+                const root = document.getElementById('mk-grid');
+                const table = root.querySelector('table');
+                const keys = ['ref', 'site', 'status', 'severity', 'hours', 'owner'];
+                const readout = root.querySelector('[data-dtr-grid-readout]');
+                root.querySelector('[data-dtr-head]').innerHTML = keys.map((k) => th(k, [], false)).join('');
+                root.querySelector('tbody').innerHTML = sortRows(INCIDENTS, [{ key: 'opened', dir: 'desc' }])
+                    .slice(0, 10)
+                    .map((row) => tr(row, keys))
+                    .join('');
+                const cells = () => [...table.rows].map((row) => [...row.cells]);
+                const grid = cells();
+                grid.flat().forEach((cell) => (cell.tabIndex = -1));
+                grid[1][0].tabIndex = 0;
+                let at = { r: 1, c: 0 };
+                const move = (r, c) => {
+                    r = Math.max(0, Math.min(grid.length - 1, r));
+                    c = Math.max(0, Math.min(grid[r].length - 1, c));
+                    grid[at.r][at.c].tabIndex = -1;
+                    at = { r, c };
+                    const cell = grid[r][c];
+                    cell.tabIndex = 0;
+                    cell.focus();
+                    readout.textContent = `${r === 0 ? 'Header row' : `Row ${r} of ${grid.length - 1}`}, column ${COL[keys[c]].label}: ${cell.textContent.trim()}`;
+                };
+                table.addEventListener('keydown', (event) => {
+                    const { r, c } = at;
+                    const map = {
+                        ArrowUp: [r - 1, c],
+                        ArrowDown: [r + 1, c],
+                        ArrowLeft: [r, c - 1],
+                        ArrowRight: [r, c + 1],
+                        Home: event.ctrlKey ? [0, 0] : [r, 0],
+                        End: event.ctrlKey ? [grid.length - 1, keys.length - 1] : [r, keys.length - 1],
+                        PageUp: [r - 5, c],
+                        PageDown: [r + 5, c],
+                    };
+                    const target = map[event.key];
+                    if (!target) return;
+                    event.preventDefault();
+                    move(...target);
+                });
+                table.addEventListener('focusin', (event) => {
+                    const cell = event.target.closest('td, th');
+                    if (!cell) return;
+                    const r = cell.parentElement.rowIndex;
+                    const c = cell.cellIndex;
+                    if (r !== at.r || c !== at.c) move(r, c);
+                    else
+                        readout.textContent = `${r === 0 ? 'Header row' : `Row ${r} of ${grid.length - 1}`}, column ${COL[keys[c]].label}: ${cell.textContent.trim()}`;
+                });
+            }
+
+            /* ------------------------------------------------------- defaults */
+            {
+                const root = document.getElementById('mk-defaults');
+                const q = root.querySelector('[data-dtr-q]');
+                const scope = root.querySelector('[data-dtr-in]');
+                const status = root.querySelector('[data-dtr-status-filter]');
+                const sizeSelect = root.querySelector('[data-dtr-size]');
+                const searchable = ['ref', 'site', 'status', 'severity', 'opened', 'owner', 'note'];
+                const table = new MockTable(root, {
+                    pageSize: 25,
+                    pagerHTML: fullPager,
+                    sorts: [{ key: 'opened', dir: 'desc' }],
+                    predicate: (r) => {
+                        const words = lower(q.value.trim());
+                        const keys = scope.value ? [scope.value] : searchable;
+                        return (!words || keys.some((k) => lower(r[k]).includes(words))) && (!status.value || r.status === status.value);
+                    },
+                    marks: () => {
+                        const words = lower(q.value.trim());
+                        return words ? Object.fromEntries((scope.value ? [scope.value] : searchable).map((k) => [k, [words]])) : {};
+                    },
+                });
+                q.addEventListener('input', () => table.update());
+                scope.addEventListener('change', () => table.update());
+                status.addEventListener('change', () => table.update());
+                sizeSelect.addEventListener('change', () => {
+                    table.pageSize = Number(sizeSelect.value);
+                    table.update();
+                });
+                table.render();
+            }
+        </script>
+    </body>
+</html>

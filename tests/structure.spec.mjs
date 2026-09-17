@@ -37,7 +37,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`tree — ${channel.name} [TH45]`, () => {
+    test.describe(`tree — ${channel.name} [TH45]`, { tag: ['@component:structure'] }, () => {
         test('the whole tree is one tab stop', async ({ page }) => {
             await page.goto(URL);
             const tree = page.locator(channel.tree);
@@ -90,7 +90,7 @@ for (const channel of CHANNELS) {
         });
     });
 
-    test.describe(`reorder — ${channel.name} [TH46]`, () => {
+    test.describe(`reorder — ${channel.name} [TH46]`, { tag: ['@component:structure'] }, () => {
         test('the arrow keys move an item and focus follows it', async ({ page }) => {
             await page.goto(URL);
             const handle = page.locator(channel.handle);
@@ -118,7 +118,7 @@ for (const channel of CHANNELS) {
         });
     });
 
-    test.describe(`split pane — ${channel.name} [TH55]`, () => {
+    test.describe(`split pane — ${channel.name} [TH55]`, { tag: ['@component:structure'] }, () => {
         test('the arrow keys move the separator and say where it is', async ({ page }) => {
             await page.goto(URL);
             const separator = page.locator(channel.separator);

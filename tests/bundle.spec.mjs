@@ -71,7 +71,7 @@ const snapshot = async (page) => {
     );
 };
 
-test.describe('the dist bundle', () => {
+test.describe('the dist bundle', { tag: ['@component:bundle', '@sweep'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
     });

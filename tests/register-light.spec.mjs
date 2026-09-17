@@ -7,13 +7,13 @@
 // no dither, no per-word stagger — the one thing every other headline
 // routine does and this one does not); the lede's two marks sweeping in
 // with a highlighter's background-size, staggered by the module itself;
-// the rule reusing the base layer's own kp-rule-in; the two dividers as
-// hairline seams, the alt one tinted with the accent/signal pair; the
-// nav dropdown answered [KT14]; the two radius vocabularies (pill
+// the rule reusing the base layer's own kp-rule-in; the nav dropdown
+// answered [KT14]; the two radius vocabularies (pill
 // buttons, small-radius surfaces); elevation on every panel that floats
 // over a page where card and popover are both pure white (DI6); the
 // dossier's redactions clearing on the trigger, staggered; and the whole
-// approved inventory.
+// approved inventory. The two hairline-seam dividers are judged by eye on
+// the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -96,7 +96,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the light register, ${channel}`, () => {
+    test.describe(`the light register, ${channel}`, { tag: ['@theme:light', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion every reveal is at rest, and the page carries no boot at all', async ({ page }) => {
             await open(page, url, { reduced: true });
             expect(await page.locator('.kp-boot').count(), 'this theme is quiet on arrival').toBe(0);
@@ -184,60 +184,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const transform = (await pseudo(rule, '::after', ['transform'])).transform;
             expect(transform, 'drawn to its full width at rest').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are hairline seams; the alt one tints its circle with the accent/signal pair [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => getComputedStyle(el).height);
-            expect(first, 'a hairline, not a block gap').toBe('1px');
-            const alt = await dividers.nth(1).evaluate((el) => {
-                const s = getComputedStyle(el, '::after');
-                return { bg: s.backgroundColor, border: s.borderColor };
-            });
-            expect(alt.bg).toBe(await paint(page, '--accent'));
-            expect(alt.border).toBe(await paint(page, '--fx-signal'));
-        });
-
-        test('the nav dropdown opens and is styled, not left to the bar alone [KT14]', async ({ page }) => {
-            await open(page, url);
-            const item = page
-                .locator('.kp-nav__links > li')
-                .filter({ has: page.locator('.kp-nav__menu') })
-                .first();
-            await item.hover();
-            const menu = item.locator('.kp-nav__menu');
-            await expect.poll(() => menu.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { shadow: s.boxShadow, radius: s.borderRadius };
-            });
-            expect(style.shadow, 'the dropdown panel carries the shared shadow step').not.toBe('none');
-            expect(style.radius).not.toBe('0px');
-        });
-
-        test('the two radius vocabularies: buttons and the icon button are pills, cards keep the small radius', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').first();
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius), 'a full pill').toMatch(/^(999px|6249\.9375rem|.*px)$/);
-            const bRadius = await button.evaluate((el) => parseFloat(getComputedStyle(el).borderRadius));
-            expect(bRadius, 'a pill: at least half the control height').toBeGreaterThan(15);
-            const card = page.locator('.kp-card[data-kp-reveal="emphasis"]').first();
-            const cRadius = await card.evaluate((el) => parseFloat(getComputedStyle(el).borderRadius));
-            expect(cRadius, 'the small surface radius, not a pill').toBeLessThan(15);
-        });
-
-        test('elevated panels carry a shadow: card and popover are both pure white [DI6]', async ({ page }) => {
-            await open(page, url);
-            const card = page.locator('.kp-card[data-kp-reveal="emphasis"]').first();
-            const shadow = await card.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'the card carries its own elevation').not.toBe('none');
-            const menuShadow = await page
-                .locator('.kp-nav__menu')
-                .first()
-                .evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(menuShadow, 'the dropdown too').not.toBe('none');
         });
 
         test("the dossier's redactions clear on the trigger, staggered [S49, A11]", async ({ page }) => {

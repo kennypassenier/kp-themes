@@ -13,7 +13,7 @@ import { measured } from './paint.mjs';
 
 const px = (page) => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--kp-px').trim());
 
-test('the bus writes the pointer position, once the theme asks for it [scope-16]', async ({ page }) => {
+test('the bus writes the pointer position, once the theme asks for it [scope-16]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/pointer.html');
     expect(await px(page), 'the declared default stands before anything moves').toBe('0.5');
     const box = page.viewportSize();
@@ -35,7 +35,7 @@ test('the bus writes the pointer position, once the theme asks for it [scope-16]
     ).toBeGreaterThan(left);
 });
 
-test('nothing is written for someone who asked for less motion [scope-16, DI7]', async ({ page }) => {
+test('nothing is written for someone who asked for less motion [scope-16, DI7]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/tests/fixtures/pointer.html');
     const box = page.viewportSize();
@@ -44,7 +44,7 @@ test('nothing is written for someone who asked for less motion [scope-16, DI7]',
     expect(await px(page), 'a colour that follows your hand is movement too').toBe('0.5');
 });
 
-test('detach gives the stylesheet its own value back [scope-16, KT6]', async ({ page }) => {
+test('detach gives the stylesheet its own value back [scope-16, KT6]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/pointer.html');
     const box = page.viewportSize();
     await page.mouse.move(Math.round(box.width * 0.85), Math.round(box.height * 0.3));
@@ -53,7 +53,7 @@ test('detach gives the stylesheet its own value back [scope-16, KT6]', async ({ 
     expect(await px(page), 'what the module wrote, the module removes').toBe('0.5');
 });
 
-test('a theme that does not ask keeps its own value [scope-16]', async ({ page }) => {
+test('a theme that does not ask keeps its own value [scope-16]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/pointer.html?track=off');
     const box = page.viewportSize();
     await page.mouse.move(Math.round(box.width * 0.9), Math.round(box.height * 0.9));
@@ -75,7 +75,7 @@ test('a theme that does not ask keeps its own value [scope-16]', async ({ page }
 // red on dark asking for the bus.
 const py = (page) => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--kp-py').trim());
 
-test('the bus writes the vertical too, not the horizontal twice [scope-16]', async ({ page }) => {
+test('the bus writes the vertical too, not the horizontal twice [scope-16]', { tag: ['@component:page-effects'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/pointer.html');
     expect(await py(page), 'the declared default stands before anything moves').toBe('0.5');
     const box = page.viewportSize();
@@ -91,15 +91,19 @@ test('the bus writes the vertical too, not the horizontal twice [scope-16]', asy
     expect(x, 'and the horizontal is its own value, not a copy').toBeLessThan(0.4);
 });
 
-test('the spectral instrument asks for the bus and receives it [scope-16]', async ({ page }) => {
-    await page.goto('/showcase/themes/dark.html');
+test(
+    'the spectral instrument asks for the bus and receives it [scope-16]',
+    { tag: ['@component:page-effects', '@theme:dark', '@component:showcase'] },
+    async ({ page }) => {
+        await page.goto('/showcase/themes/dark.html');
 
-    // dark declares `--kp-pointer: track`, which is what arms the bus.
-    const asks = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--kp-pointer').trim());
-    expect(asks, 'dark asks the module to track the pointer').toBe('track');
+        // dark declares `--kp-pointer: track`, which is what arms the bus.
+        const asks = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--kp-pointer').trim());
+        expect(asks, 'dark asks the module to track the pointer').toBe('track');
 
-    const box = page.viewportSize();
-    await page.mouse.move(Math.round(box.width * 0.75), Math.round(box.height * 0.3));
-    await expect.poll(() => px(page)).not.toBe('0.5');
-    expect(Number(await px(page)), 'the written value follows the hand across').toBeGreaterThan(0.6);
-});
+        const box = page.viewportSize();
+        await page.mouse.move(Math.round(box.width * 0.75), Math.round(box.height * 0.3));
+        await expect.poll(() => px(page)).not.toBe('0.5');
+        expect(Number(await px(page)), 'the written value follows the hand across').toBeGreaterThan(0.6);
+    },
+);

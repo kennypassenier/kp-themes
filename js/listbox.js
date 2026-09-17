@@ -86,8 +86,31 @@ export function createListbox({
     let buffer = '';
     let bufferTimer = 0;
 
-    /** @returns {HTMLElement[]} the options as they stand right now */
-    const options = () => /** @type {HTMLElement[]} */ ([...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector)));
+    /**
+     * Whether an option is shown: neither it nor a group between it and the
+     * list is `hidden`. The list's own `hidden` does not count, because the
+     * arrow keys may move the highlight in a list that is about to open.
+     *
+     * @param {HTMLElement} option
+     */
+    const shown = (option) => {
+        for (let el = /** @type {HTMLElement | null} */ (option); el !== null && el !== list; el = el.parentElement) if (el.hidden) return false;
+        return true;
+    };
+
+    /**
+     * The options as they stand right now: the ones a person can see and
+     * choose. A filtered-out option used to count, so after typing the first
+     * ArrowDown highlighted an option nobody could see and the highlight
+     * walked through every hidden one before it reached the list [note 2 of
+     * Kenny's second nostromo pass, 2026-09-13].
+     *
+     * @returns {HTMLElement[]}
+     */
+    const options = () =>
+        /** @type {HTMLElement[]} */ (
+            [...list.querySelectorAll(optionSelector)].filter((el) => !el.matches(disabledSelector) && shown(/** @type {HTMLElement} */ (el)))
+        );
 
     /**
      * Give every option an id, because `aria-activedescendant` refers to
@@ -140,6 +163,9 @@ export function createListbox({
         index = -1;
         input.removeAttribute('aria-activedescendant');
         for (const option of options()) {
+            // Recorded like highlight's stamp: a clear before any highlight
+            // left `aria-selected="false"` behind after destroy [scope-48].
+            if (!option.hasAttribute('aria-selected')) stampedSelected.add(option);
             option.setAttribute('aria-selected', 'false');
             option.classList.remove(activeClass);
         }

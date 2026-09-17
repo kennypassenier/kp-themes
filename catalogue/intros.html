@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Theme intros · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Theme intros</h1>
+            <p class="cat-intro">
+                The screen a theme shows once when a page first opens: the arrival of <code>js/effects.js</code>, asked for by a theme with
+                <code>--kp-arrival</code>. A reader sees it once per session and never when their browser asks for less motion, so it is hard to look
+                at twice. Here every theme that has one plays it in a window of its own, in that theme, whatever theme this page wears.
+            </p>
+            <p class="cat-intro">
+                <b>Play the intro</b> forgets that it was seen and plays it again. The <b>speed</b> slider sets <code>--kp-arrival-rate</code> on the
+                window: 0.5× takes twice as long, 2× half as long, and the next play uses it. Beside each window are the words the intro shows, taken
+                from the dictionary (<code>js/strings.js</code>), the line on screen right now, and how long the last play took. A theme that asks for
+                a counting boot and has no words of its own shows the neutral words <b>Loading</b>, <b>Progress</b> and <b>Ready</b>, never another
+                theme's.
+            </p>
+            <div class="kp-alert kp-alert--warning" role="status" data-cat-intro-reduced hidden>
+                <span class="kp-alert__body">
+                    Your browser asks for reduced motion, so the package never plays an intro for you and the windows below stay at rest. For
+                    inspection only, this page can play them anyway.
+                </span>
+                <label class="kp-switch">
+                    <input class="kp-switch__input" type="checkbox" role="switch" data-cat-intro-force />
+                    <span class="kp-switch__state" aria-hidden="true"></span>
+                    <span>Play anyway for inspection</span>
+                </label>
+            </div>
+            <ul class="cat-toc">
+                <li><a href="#intro-synthwave">Synthwave</a></li>
+                <li><a href="#intro-terminal">Terminal</a></li>
+                <li><a href="#intro-retro">Retro</a></li>
+                <li><a href="#intro-phantom">Phantom</a></li>
+            </ul>
+            <p class="cat-note" data-cat-intro-none>No intro: every other theme.</p>
+
+            <section class="cat-block" id="intro-synthwave" data-cat-intro="synthwave" data-cat-theme="synthwave">
+                <h2>Synthwave</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the words changed. <b>Words were:</b> "▶ Calibrating neural uplink", "Progress N%", "OK" — cyberpunk's voice on a
+                    VHS night. <b>Now:</b> "▶ Play", "Tracking N%", "Press start" — a VCR's on-screen display settling its tracking, then an arcade
+                    cabinet's attract screen. Do the words belong to the outrun horizon? Then the look: the void with the lines in the cyan OSD face,
+                    uppercase, with a glow; the percentage counts up in uneven steps; <b>Skip</b> in pink at the bottom right; at 100 % the CRT
+                    switches the screen off in 550 ms at 1×. A click anywhere ends it. Nothing flickers.
+                </div>
+                <div class="cat-live__bar cat-intro-controls">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
+                    <label class="kp-field__label" for="rate-synthwave">Speed</label>
+                    <input id="rate-synthwave" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
+                    <output for="rate-synthwave" data-cat-intro-rate-value>1.0×</output>
+                </div>
+                <div class="cat-pair">
+                    <div class="cat-stage cat-stage--block">
+                        <iframe class="cat-viewport cat-intro-frame" title="Synthwave's intro" data-cat-intro-frame></iframe>
+                    </div>
+                    <div class="cat-intro-words">
+                        <h3>All the words the package ships for this intro</h3>
+                        <pre data-cat-intro-words></pre>
+                        <h3>Words before</h3>
+                        <pre>
+▶ Calibrating neural uplink
+Progress N%
+OK</pre>
+                        <h3>The line on screen at this moment of the playback</h3>
+                        <pre data-cat-intro-live aria-live="polite">—</pre>
+                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="intro-terminal" data-cat-intro="terminal" data-cat-theme="terminal">
+                <h2>Terminal</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the words did not change; judge them for fit. <b>Words were and are:</b> "KP-THEMES BIOS v5.0.0", "MEMORY TEST
+                    ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY." — the five POST lines of the approved
+                    "Green Phosphor" demo, which Kenny answered "Demo exact". Then the look: phosphor green on the near-black glass with a bloom, the
+                    lines arriving one under another every 190 ms at 1×, a bracketed <b>Skip</b>, and the tube collapsing to a line and to nothing,
+                    transform and opacity only, with no brightness spike.
+                </div>
+                <div class="cat-live__bar cat-intro-controls">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
+                    <label class="kp-field__label" for="rate-terminal">Speed</label>
+                    <input id="rate-terminal" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
+                    <output for="rate-terminal" data-cat-intro-rate-value>1.0×</output>
+                </div>
+                <div class="cat-pair">
+                    <div class="cat-stage cat-stage--block">
+                        <iframe class="cat-viewport cat-intro-frame" title="Terminal's intro" data-cat-intro-frame></iframe>
+                    </div>
+                    <div class="cat-intro-words">
+                        <h3>All the words the package ships for this intro</h3>
+                        <pre data-cat-intro-words></pre>
+                        <h3>Words before</h3>
+                        <pre>Unchanged.</pre>
+                        <h3>The line on screen at this moment of the playback</h3>
+                        <pre data-cat-intro-live aria-live="polite">—</pre>
+                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="intro-retro" data-cat-intro="retro" data-cat-theme="retro">
+                <h2>Retro</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the words did not change; judge them for fit. <b>Words were and are:</b> "KP Modular BIOS v4.51PG", "kp-themes 95
+                    — retro build", "Memory Test : {count}K" — the BIOS banner and memory test of the approved "Bevel 95" demo, the count running up
+                    to 640. Then the look: the DOS face on the deep ground, the segmented bar filling one block per line, a raised <b>Skip</b>
+                    button, and the screen leaving through the pixel dissolve in four densities.
+                </div>
+                <div class="cat-live__bar cat-intro-controls">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
+                    <label class="kp-field__label" for="rate-retro">Speed</label>
+                    <input id="rate-retro" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
+                    <output for="rate-retro" data-cat-intro-rate-value>1.0×</output>
+                </div>
+                <div class="cat-pair">
+                    <div class="cat-stage cat-stage--block">
+                        <iframe class="cat-viewport cat-intro-frame" title="Retro's intro" data-cat-intro-frame></iframe>
+                    </div>
+                    <div class="cat-intro-words">
+                        <h3>All the words the package ships for this intro</h3>
+                        <pre data-cat-intro-words></pre>
+                        <h3>Words before</h3>
+                        <pre>Unchanged.</pre>
+                        <h3>The line on screen at this moment of the playback</h3>
+                        <pre data-cat-intro-live aria-live="polite">—</pre>
+                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="intro-phantom" data-cat-intro="phantom" data-cat-theme="phantom">
+                <h2>Phantom</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the words did not change. <b>Words were and are:</b> the theme's own name, "phantom", set uppercase in the display
+                    face — a calling card, data rather than copy. Then the look: the name on black, the red bar running under it in 900 ms at 1×, a
+                    hold of 300 ms, and the whole card shoved off to the left. <b>Skip</b> and a click anywhere end it at once.
+                </div>
+                <div class="cat-live__bar cat-intro-controls">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
+                    <label class="kp-field__label" for="rate-phantom">Speed</label>
+                    <input id="rate-phantom" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
+                    <output for="rate-phantom" data-cat-intro-rate-value>1.0×</output>
+                </div>
+                <div class="cat-pair">
+                    <div class="cat-stage cat-stage--block">
+                        <iframe class="cat-viewport cat-intro-frame" title="Phantom's intro" data-cat-intro-frame></iframe>
+                    </div>
+                    <div class="cat-intro-words">
+                        <h3>All the words the package ships for this intro</h3>
+                        <pre data-cat-intro-words></pre>
+                        <h3>Words before</h3>
+                        <pre>Unchanged.</pre>
+                        <h3>The line on screen at this moment of the playback</h3>
+                        <pre data-cat-intro-live aria-live="polite">—</pre>
+                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- No js/auto.js on this page, on purpose: it would attach the effects
+             to this document too, and in synthwave, terminal, retro or phantom
+             the review page itself would be covered by the intro it inspects. -->
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./intros.js"></script>
+    </body>
+</html>

@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Page parts · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Page parts</h1>
+            <p class="cat-intro">
+                The parts that belong to the page rather than to its content: the footer <code>.kp-footer</code>, the side note
+                <code>.kp-side-note</code>, the command palette <code>.kp-palette</code>, and the theme menu with its groups, options and swatches
+                (<code>.kp-theme-menu</code>, <code>.kp-theme-group</code>, <code>.kp-theme-option</code>, <code>.kp-swatch</code>). The palette and
+                the theme menu are shown open; the theme menu in this page's own bar is the live one.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#footer">Footer</a></li>
+                <li><a href="#side-note">Side note</a></li>
+                <li><a href="#palette">Command palette</a></li>
+                <li><a href="#palette-empty">Palette with no match</a></li>
+                <li><a href="#palette-links">Palette of links</a></li>
+                <li><a href="#theme-menu">Theme menu</a></li>
+                <li><a href="#theme-menu-react">Theme menu, React shape</a></li>
+                <li><a href="#theme-buttons">Theme picker as buttons</a></li>
+            </ul>
+
+            <section class="cat-block" id="footer">
+                <h2>Footer</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the footer is the quietest thing on a page: a rule above it, muted ink, a smaller size, and generous padding that
+                    grows with the window rather than jumping. The first is one line. The second holds three columns of links laid out with the layout
+                    layer's <code>.kp-autogrid</code>: the links must inherit the footer's quiet voice while still being recognisably links, and the
+                    headings must not shout louder than the page's own. Narrow the window: the columns must stack, never squeeze into a word per line.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <footer class="kp-footer">Pump house 4 · north site · operated by the night and day shifts since 2019</footer>
+                    <div style="margin-block-start: 1rem">
+                        <footer class="kp-footer">
+                            <div class="kp-autogrid kp-autogrid--tight">
+                                <div>
+                                    <h4>North site</h4>
+                                    <p>Readings are kept for seven years. Lock-outs are signed by the shift lead.</p>
+                                </div>
+                                <div>
+                                    <h4>Lines</h4>
+                                    <ul>
+                                        <li><a href="#footer">Line 1</a></li>
+                                        <li><a href="#footer">Line 2</a></li>
+                                        <li><a href="#footer">Cold store</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4>When something breaks</h4>
+                                    <ul>
+                                        <li><a href="#footer">Report an incident</a></li>
+                                        <li><a href="#footer">Vendor hotline, contract HF-2201</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="side-note">
+                <h2>Side note</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the side note is the smallest, most muted text the package draws — a file code or a caption at the edge of a
+                    section, hidden from screen readers because it repeats nothing they need. It must still be legible: check its contrast with the
+                    Devtools colour tool in the palest and the darkest theme. A register may turn it into a stamp or a vertical label in the margin of
+                    its container; it must stay inside that container, never overlap the heading beside it or anything outside the block.
+                </div>
+                <!-- Positioned, so a register that sets the note in the margin sets it in
+                     this stage's margin rather than over the review navigation (Kenny,
+                     2026-09-13, forest). -->
+                <div class="cat-stage cat-stage--block" style="position: relative; min-block-size: 20rem; padding-inline-start: 2.5rem">
+                    <p class="kp-side-note" aria-hidden="true">PH4 · LINE 02 · SHEET 3 OF 7</p>
+                    <h3 style="margin-block: 0.25rem 0">Handover, night to day</h3>
+                </div>
+            </section>
+
+            <section class="cat-block" id="palette">
+                <h2>Command palette</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the frozen palette is on the card surface with a strong boundary; its input has no box of its own, only a rule
+                    under it, and the list below scrolls inside the palette. Group labels are small capitals in the muted ink. The first command is
+                    the highlighted one (<code>is-active</code>, the keyboard's position): a soft wash of the ink across the whole row, not the accent
+                    colour. Descriptions are smaller and muted, and key hints sit at the row's end without competing with the label. The status line
+                    under the list says how many commands match. Press <b>Open the commands</b> (<code>data-kp-palette-open</code>, so it opens
+                    through the palette's own open and fires <code>kp-palette-open</code>), or Ctrl+K: the live palette opens modal near the top of
+                    the window with focus in the input; type "lock" and the list must filter to <b>Lock out a line</b> and the status must say "1
+                    command". The match is literal by default: "read" must show only <b>Readings for line 2</b>, not also <b>Report an incident</b>,
+                    and "lk" finds nothing (a palette that wants letters in order says <code>data-kp-match="subsequence"</code>). Escape closes it and
+                    clears the query.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 27rem">
+                    <dialog class="kp-palette" open aria-label="Commands, frozen">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="pg-pal-frozen-list"
+                            autocomplete="off"
+                            placeholder="Type a command…"
+                        />
+                        <ul class="kp-palette__list" id="pg-pal-frozen-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group">
+                                <span class="kp-palette__group-label">Incidents</span>
+                                <ul role="group" aria-label="Incidents">
+                                    <li class="kp-palette__option is-active" role="option" aria-selected="true" id="pg-pal-frozen-open">
+                                        Report an incident<span class="kp-palette__description">Opens the form for the site you are on</span
+                                        ><kbd class="kp-palette__keys">N</kbd>
+                                    </li>
+                                    <li class="kp-palette__option" role="option">
+                                        Lock out a line<span class="kp-palette__description">Needs the shift lead's signature</span
+                                        ><kbd class="kp-palette__keys">L</kbd>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group">
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li class="kp-palette__option" role="option">Readings for line 2</li>
+                                    <li class="kp-palette__option" role="option">
+                                        Handover notes from the night shift, including the ones not yet signed by the day shift lead
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status">4 commands</p>
+                    </dialog>
+                </div>
+                <div class="cat-stage" style="margin-block-start: 1rem">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-palette-open="pg-pal-live">Open the commands</button>
+                    <dialog class="kp-palette" id="pg-pal-live" data-kp-palette data-kp-primary aria-label="Commands">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="pg-pal-live-list"
+                            autocomplete="off"
+                            placeholder="Type a command…"
+                        />
+                        <ul class="kp-palette__list" id="pg-pal-live-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Incidents</span>
+                                <ul role="group" aria-label="Incidents">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="report" data-kp-keys="N">
+                                        Report an incident
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="lockout" data-kp-keys="L">
+                                        Lock out a line
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="palette-empty">
+                <h2>Palette with no match</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a query nothing matches, frozen as <code>js/palette.js</code> leaves it: every command hidden, every group hidden
+                    with them, and the status line saying "No commands". The palette must not collapse into a line with no sign of a list — the input
+                    and the status keep their places, and the status must read as a message rather than as an empty footer.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 9rem">
+                    <dialog class="kp-palette" open aria-label="Commands, no match">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="pg-pal-empty-list"
+                            autocomplete="off"
+                            value="vendor invoice"
+                        />
+                        <ul class="kp-palette__list" id="pg-pal-empty-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" hidden>
+                                <span class="kp-palette__group-label">Incidents</span>
+                                <ul role="group" aria-label="Incidents">
+                                    <li class="kp-palette__option" role="option" hidden>Report an incident</li>
+                                    <li class="kp-palette__option" role="option" hidden>Lock out a line</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status">No commands</p>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="palette-links">
+                <h2>Palette of links</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a palette whose commands are links (<code>&lt;a href&gt;</code> with the option's role), frozen with the second
+                    one highlighted. A link command must look exactly like any other command: the row's own ink, no underline, no link colour, the
+                    same padding and the same soft wash when highlighted — the row is the affordance, not an underline. The key hint still sits at the
+                    row's end. This one is frozen and does nothing; the live one, opened from the bar's trigger, is on the navigation page under
+                    <b>Search in the bar</b>, where Enter and a click follow the link.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 16rem">
+                    <dialog class="kp-palette" open aria-label="Go to, frozen">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Go to"
+                            aria-expanded="true"
+                            aria-controls="pg-pal-links-list"
+                            aria-activedescendant="pg-pal-links-readings"
+                            autocomplete="off"
+                            placeholder="Where to?"
+                        />
+                        <ul class="kp-palette__list" id="pg-pal-links-list" role="listbox" aria-label="Go to">
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Incidents</a>
+                            </li>
+                            <li role="presentation">
+                                <a
+                                    class="kp-palette__option is-active"
+                                    role="option"
+                                    aria-selected="true"
+                                    tabindex="-1"
+                                    id="pg-pal-links-readings"
+                                    href="#palette-links"
+                                    >Readings for line 2<kbd class="kp-palette__keys">G R</kbd></a
+                                >
+                            </li>
+                            <li role="presentation">
+                                <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Rota</a>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status">3 commands</p>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="theme-menu">
+                <h2>Theme menu</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the menu as <code>themeMenuMarkup()</code> writes it, shown open under its icon button: a popover with every theme
+                    in two groups, <b>Light</b> and <b>Dark</b>, each with a small muted label and a rule between the groups that runs the menu's full
+                    width. Each option starts with its swatch — a circle split between that theme's own ground and primary colour, with a boundary so
+                    a pale swatch on a pale menu is still a circle — and the theme on screen carries a check at the row's end and a heavier weight.
+                    The menu is taller than most windows, so the list scrolls inside the popover; the scrollbar must stay inside the rounded corners,
+                    never run square across them. It is attached: choosing a theme here changes the whole page, exactly as the bar's menu does.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 44rem">
+                    <span class="kp-theme-menu">
+                        <button type="button" class="kp-icon-button" aria-label="Choose a theme" aria-expanded="true">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                                <path
+                                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"
+                                />
+                            </svg>
+                        </button>
+                        <div class="kp-popover">
+                            <ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme">
+                                <li role="presentation" class="kp-theme-group" data-kp-theme-group="light">
+                                    <span class="kp-theme-group__label" aria-hidden="true">Light</span>
+                                    <ul class="kp-theme-group__list" aria-label="Light">
+                                        <li>
+                                            <button type="button" data-kp-theme="formal">
+                                                <span class="kp-swatch" data-theme="formal"></span>Formal
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="light">
+                                                <span class="kp-swatch" data-theme="light"></span>Light
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="pastel">
+                                                <span class="kp-swatch" data-theme="pastel"></span>Pastel
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="forest">
+                                                <span class="kp-swatch" data-theme="forest"></span>Forest
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="high-contrast">
+                                                <span class="kp-swatch" data-theme="high-contrast"></span>High contrast
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="sepia">
+                                                <span class="kp-swatch" data-theme="sepia"></span>Sepia
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="brutalism">
+                                                <span class="kp-swatch" data-theme="brutalism"></span>Brutalism
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="shade-light">
+                                                <span class="kp-swatch" data-theme="shade-light"></span>Shade (light)
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="retro">
+                                                <span class="kp-swatch" data-theme="retro"></span>Retro
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="grotesk">
+                                                <span class="kp-swatch" data-theme="grotesk"></span>Grotesk
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="nostromo">
+                                                <span class="kp-swatch" data-theme="nostromo"></span>Nostromo
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark">
+                                    <span class="kp-theme-group__label" aria-hidden="true">Dark</span>
+                                    <ul class="kp-theme-group__list" aria-label="Dark">
+                                        <li>
+                                            <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="cyberpunk">
+                                                <span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="synthwave">
+                                                <span class="kp-swatch" data-theme="synthwave"></span>Synthwave
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="terminal">
+                                                <span class="kp-swatch" data-theme="terminal"></span>Terminal
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="blueprint">
+                                                <span class="kp-swatch" data-theme="blueprint"></span>Blueprint
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="solstice">
+                                                <span class="kp-swatch" data-theme="solstice"></span>Solstice
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="deco">
+                                                <span class="kp-swatch" data-theme="deco"></span>Art Deco
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="phantom">
+                                                <span class="kp-swatch" data-theme="phantom"></span>Phantom
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="shade-dark">
+                                                <span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="lapis">
+                                                <span class="kp-swatch" data-theme="lapis"></span>Lapis
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-kp-theme="titanium">
+                                                <span class="kp-swatch" data-theme="titanium"></span>Titanium
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+            </section>
+
+            <section class="cat-block" id="theme-menu-react">
+                <h2>Theme menu, React shape</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same menu as <code>components/theme-switcher.jsx</code> renders it, frozen open with Terminal chosen: the list
+                    is a <code>.kp-theme-menu__list</code> under the button at its end edge, each option has its label in
+                    <code>.kp-theme-option__label</code> and the chosen one a drawn check (<code>.kp-theme-option__check</code>) instead of the text
+                    glyph. Put it beside the block above: the two channels must be indistinguishable apart from that check. This copy is not attached
+                    — its check stays on Terminal whatever the page wears, because only React moves it.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 46rem">
+                    <div style="display: flex; justify-content: flex-end; max-inline-size: 24rem">
+                        <div class="kp-theme-menu">
+                            <button type="button" class="kp-icon-button" aria-label="Choose a theme" aria-haspopup="listbox" aria-expanded="true">
+                                Aa
+                            </button>
+                            <div class="kp-popover kp-theme-menu__list">
+                                <ul role="listbox" aria-label="Choose a theme" class="kp-menu">
+                                    <li role="presentation" class="kp-theme-group" data-kp-theme-group="light">
+                                        <span class="kp-theme-group__label" aria-hidden="true">Light</span>
+                                        <ul role="group" class="kp-theme-group__list" aria-label="Light">
+                                            <li role="option" data-kp-theme="formal" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="formal"></span><span class="kp-theme-option__label">Formal</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="light" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="light"></span><span class="kp-theme-option__label">Light</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="pastel" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="pastel"></span><span class="kp-theme-option__label">Pastel</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="forest" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="forest"></span><span class="kp-theme-option__label">Forest</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="high-contrast" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="high-contrast"></span
+                                                ><span class="kp-theme-option__label">High contrast</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="sepia" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="sepia"></span><span class="kp-theme-option__label">Sepia</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="brutalism" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="brutalism"></span
+                                                ><span class="kp-theme-option__label">Brutalism</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="shade-light" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="shade-light"></span
+                                                ><span class="kp-theme-option__label">Shade (light)</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="retro" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="retro"></span><span class="kp-theme-option__label">Retro</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="grotesk" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="grotesk"></span
+                                                ><span class="kp-theme-option__label">Grotesk</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="nostromo" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="nostromo"></span
+                                                ><span class="kp-theme-option__label">Nostromo</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark">
+                                        <span class="kp-theme-group__label" aria-hidden="true">Dark</span>
+                                        <ul role="group" class="kp-theme-group__list" aria-label="Dark">
+                                            <li role="option" data-kp-theme="dark" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="dark"></span><span class="kp-theme-option__label">Dark</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="cyberpunk" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="cyberpunk"></span
+                                                ><span class="kp-theme-option__label">Cyberpunk</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="synthwave" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="synthwave"></span
+                                                ><span class="kp-theme-option__label">Synthwave</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="terminal" data-selected="true" aria-selected="true" tabindex="0">
+                                                <span class="kp-swatch" data-theme="terminal"></span
+                                                ><span class="kp-theme-option__label">Terminal</span
+                                                ><svg
+                                                    class="kp-theme-option__check"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M20 6 9 17l-5-5"></path>
+                                                </svg>
+                                            </li>
+                                            <li role="option" data-kp-theme="blueprint" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="blueprint"></span
+                                                ><span class="kp-theme-option__label">Blueprint</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="solstice" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="solstice"></span
+                                                ><span class="kp-theme-option__label">Solstice</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="deco" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="deco"></span><span class="kp-theme-option__label">Art Deco</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="phantom" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="phantom"></span
+                                                ><span class="kp-theme-option__label">Phantom</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="shade-dark" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="shade-dark"></span
+                                                ><span class="kp-theme-option__label">Shade (dark)</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="lapis" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="lapis"></span><span class="kp-theme-option__label">Lapis</span>
+                                            </li>
+                                            <li role="option" data-kp-theme="titanium" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="titanium"></span
+                                                ><span class="kp-theme-option__label">Titanium</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="theme-buttons">
+                <h2>Theme picker as buttons</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the picker without a menu: the same grouped options laid out as rows of small bordered buttons on the card
+                    surface, each with its swatch before the name. The theme on screen is marked twice, by a border in the selected colour and by a
+                    check after its name. Hover a button: a wash of the ink, not a colour. The groups wrap as rows with their labels above them and a
+                    rule between. Press any button to switch the page's theme. The picker is a list here because the grouped options are list items;
+                    the package takes the browser's list indent and markers away, so the first row starts at the list's own edge.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ul data-kp-theme-picker aria-label="Choose a theme, as buttons">
+                        <li role="presentation" class="kp-theme-group" data-kp-theme-group="light">
+                            <span class="kp-theme-group__label" aria-hidden="true">Light</span>
+                            <ul class="kp-theme-group__list" aria-label="Light">
+                                <li>
+                                    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="high-contrast">
+                                        <span class="kp-swatch" data-theme="high-contrast"></span>High contrast
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="brutalism">
+                                        <span class="kp-swatch" data-theme="brutalism"></span>Brutalism
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="shade-light">
+                                        <span class="kp-swatch" data-theme="shade-light"></span>Shade (light)
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="nostromo">
+                                        <span class="kp-swatch" data-theme="nostromo"></span>Nostromo
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark">
+                            <span class="kp-theme-group__label" aria-hidden="true">Dark</span>
+                            <ul class="kp-theme-group__list" aria-label="Dark">
+                                <li>
+                                    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="cyberpunk">
+                                        <span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="synthwave">
+                                        <span class="kp-swatch" data-theme="synthwave"></span>Synthwave
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="terminal">
+                                        <span class="kp-swatch" data-theme="terminal"></span>Terminal
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="blueprint">
+                                        <span class="kp-swatch" data-theme="blueprint"></span>Blueprint
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="solstice">
+                                        <span class="kp-swatch" data-theme="solstice"></span>Solstice
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="shade-dark">
+                                        <span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="titanium">
+                                        <span class="kp-swatch" data-theme="titanium"></span>Titanium
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

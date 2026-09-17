@@ -1,0 +1,1166 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Small Hours (stars II)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   dark — concept demo "Small Hours" [S46, round six, LIFT_PLAN row 15]
+
+   0. ROUND TWO — visible starfield variant (this file only, dark-demo-
+      stars.html; dark-demo.html "Small Hours" is untouched and stays the
+      comparison baseline). Kenny's verdict on round one: "one of the
+      better themes, but I see no starfield — I do not know whether seeing
+      it would be better or worse; make a version with a clearly visible
+      starfield and keep this one, so I can open both and compare." Two
+      changes only, everything else — structure, copy, mechanisms, the
+      <dialog> wipe flow, all 30 elements — is identical to round one:
+
+      (a) THE STARFIELD — SECOND TRY (dark-demo-stars-v2.html, this file;
+          dark-demo-stars.html, the first try, is untouched and stays a
+          second comparison point alongside the plain baseline). Kenny's
+          verdict on the first try, translated: "the starfield is a bit
+          TOO present, and the stars are not at random locations, and
+          they should have a slight shimmer like in the JWST photos — the
+          distinct eight-pointed star patterns seen in James Webb Space
+          Telescope photos — subtly please." Three changes, all confined
+          to the starfield; the nav-dropdown fix from the first try
+          (§0(b) below) is untouched and carried forward as-is:
+
+          IRREGULAR, NOT TILED. The first try's `background-size` +
+          `repeat` tiling reads as a lattice once you look for it — a
+          human eye finds the repeat within a few seconds even with three
+          layers at different periods. This try replaces tiling with 112
+          individually-generated positions (dark-demo-stars-v2.html has
+          no tiling and no runtime randomness at all): a seeded
+          mulberry32 PRNG, seed 20260908, in scratchpad/dks2-generate-
+          stars.mjs, produces the 112 (x%, y%) pairs once; the script's
+          stdout is pasted verbatim into this file's CSS and SVG as
+          static data (scratchpad/dks2-stars-output.txt holds the full
+          run). The page itself carries no `Math.random`, no seed, no
+          generation logic — every position below is a literal. A
+          rejection sampler keeps points out of a measured exclusion box
+          (x 2%-56%, y 31%-65% of a 1280x900 reference viewport — the
+          union of #headline's and .kp-lede's measured boxes plus a ~3%
+          margin, from scratchpad/dks2-measure.mjs) so no star's core
+          sits under the headline or the lede; the ten brightest are
+          additionally kept >=10% apart from one another so their spike
+          glyphs (below) don't collide. Everything else is left to fall
+          where the seed puts it, including natural clumping, because
+          real starfields are not blue-noise-even and evenness would
+          itself read as "designed," not irregular.
+          LESS PRESENT. 112 stars total (dim 80, mid 22, bright/spike
+          10 — within the requested 90-140), against the first try's
+          tiled count of roughly 1,800 dots covering the *entire*
+          viewport at its three tile periods (1280x900 / 28px, /64px,
+          /150px tiles, summed). Radii shrank too: dim 0.45-0.75px at
+          per-dot alpha 0.30-0.48, mid 0.9-1.3px at 0.50-0.68, both
+          fading from 92% radius outward (not from the centre, so the
+          reduced alpha is still what actually paints at each dot's
+          core — the same anti-aliasing lesson the first try's own
+          comment recorded). EFFECTIVE OPACITY: `body::before`'s own
+          `opacity` is **0.35** — the same literal, DI9-comparable metric
+          as before (`--fx-texture-opacity`, 0.06 shipped, css/
+          _rules.css:43-47), and the ten spike stars (a separate layer,
+          §(below)) carry the same **0.35** on their own container, so
+          one number describes the whole field. 0.35 is **≈5.8x DI9's
+          ~6% ceiling** — still over it, and **reported, not silently
+          corrected (S42)**, exactly as the first try's 0.6 (10x) was;
+          it is also **42% lower than the first try's figure**, which is
+          the literal, comparable answer to "less present." This is a
+          comparison variant only — 5.0.0's shipped `[data-theme='dark']`
+          register keeps 0.06 unchanged; nothing here proposes raising
+          the ceiling.
+          EFFECTIVE COVERAGE (upper-bound point-area, same conservative
+          method the first try used — treating each dot/line's whole
+          nominal footprint as opaque, which overstates it since the
+          gradient itself fades well inside that footprint): dim 96.3px²
+          + mid 84.8px² + bright 893.7px² (10 x [a 2px-radius core +
+          8 spike lines, ~16px x 0.6px each] = 89.4px²/star) = 1,074.8px²
+          over the 1,152,000px² reference viewport = **≈0.093% of the
+          viewport** — an order of magnitude sparser than the first
+          try's own ≈0.84%, because 112 irregular points cover far less
+          area than ~1,800 tiled ones regardless of any single dot's own
+          alpha.
+          THE SHIMMER — JWST diffraction spikes, subtle. The ten
+          brightest stars each carry an inline SVG `<symbol id="jwst-
+          spike">` (defined once, just after this stylesheet, reused via
+          `<use>` at each of the ten positions — no images, no per-star
+          markup beyond one `<use>`) with eight thin spikes: six evenly
+          spaced 60° apart starting at 30° (30/90/150/210/270/330 —
+          "six spikes from the hexagonal mirror," deliberately rotated
+          off horizontal so they don't overlap the next pair) plus a
+          separate horizontal pair at 0°/180° ("two horizontal ones from
+          the secondary-mirror struts") — eight distinct tips in total,
+          the "distinct eight-pointed star pattern" Kenny named. Each
+          spike is a short (16-20px at the symbol's own scale), thin
+          (0.6px) line on a `userSpaceOnUse` gradient stroke fading from
+          ~0.4 alpha at the core to 0 at the tip — no filter, no glow,
+          just a fading stroke — plus a small soft core (a 2px-radius
+          circle on a radial gradient, 0.85 alpha at centre, with one
+          cheap `feGaussianBlur stdDeviation=0.5` for the only softening
+          in the whole glyph — well inside "no filters that cost more
+          than a small blur"). Kept subtle by construction: short spikes,
+          low alpha, and only 10 of 112 stars carry the glyph at all — a
+          minority "a little brighter," never a wash. Because each mini-
+          `<svg>` is its own square viewBox (`-20 -20 40 40`) sized in
+          absolute px and positioned by CSS `left`/`top` percentages
+          (not one page-wide viewBox stretched to the viewport's aspect
+          ratio), the eight-way symmetry never distorts on a non-square
+          viewport, mobile included.
+          NO SHIMMER MEANS NO ANIMATION (DI5). Kenny's word "shimmer"
+          describes what the spike geometry itself suggests to the eye —
+          not a runtime effect. There is no `@keyframes`, no `animation`,
+          no opacity cycling anywhere in the starfield, exactly as the
+          first try: nothing here was ever animated, and nothing here
+          twinkles or loops now either.
+          CONTRAST WITH THE STARS CONSIDERED: no token value changed in
+          this file, so the §4 table below (computed from the literal
+          token hex) still describes every solid-colour pair on the page
+          exactly. At ≈0.093% coverage, over 99.9% of every pixel —
+          glyphs included — receives zero contribution from the star
+          layer no matter its own opacity; only a rare, isolated pixel
+          under a star's centre is ever blended, and WCAG's ratio is
+          defined against the nominal painted colours a reader's eye
+          tracks across a run of text, not one unlucky antialiased pixel.
+          The lowest pair stays the §4 figure, 4.54:1 (success badge),
+          unmoved, and stays ≥4.5.
+          The nav's `.sub` dropdown panel is opaque (`--panel`, no
+          transparency) and sits at z-index 20, above the star layers'
+          z-index 1, so dropdown text is never composited with a star at
+          all — moot for that surface.
+          VISIBILITY, INHERITED UNCHANGED FROM THE FIRST TRY: `.top`
+          (nav+hero+horizon) has an explicit z-index:30 and an opaque
+          `--panel` background, above the star layers' z-index:1, so the
+          fixed field only shows through where the page behind it is NOT
+          `.top` (or another opaque sibling like `.dossier`). At scroll=0
+          in a 1280x900 viewport, `.top` is 807px tall — only the bottom
+          ~93px of that viewport is open, and by chance none of the ten
+          spike stars' generated positions land there; scrolling reveals
+          the rest, exactly as it already did for the tiled dots in the
+          first try's own screenshot (dark-demo-stars.png shows the same
+          pattern: none of the dots over the hero, all of them once you
+          reach `.app-surface`). Verified directly, not assumed —
+          scratchpad/dks2-find-safe.mjs finds an unobstructed scroll
+          position for all ten spike stars; scratchpad/dks2-star-crop.png
+          is one of them, scrolled 40px.
+          The horizon divider's own denser local sample (`.horizon::
+          before`, still 0.09, still its twelve hand-placed points) is
+          untouched — it is a separate named element from the page's
+          global starfield, and only the changes above were authorised.
+      (b) THE NAV DROPDOWN, now dark's own language rather than the
+          "unstyled dropdown that pulled him out of the theme" Kenny
+          found across this batch's other demos: `.sub` already carried a
+          quiet dark panel (`--panel`) and the theme's own edge
+          (`--edge` border, 1px) — see the unchanged rule below — but its
+          keyboard state was indistinguishable from a mouse hover (both
+          just `--accent`). `.sub a:focus-visible` now gets its own
+          violet outline (`--violet`, contrast 5.96 on `--panel`, §4 —
+          clears DI2's 3:1 boundary floor by a wide margin), replacing
+          the page-wide ink outline for this one context so Tab through
+          the menu reads as "this theme," not as a browser default. No
+          gradient anywhere in it — a flat panel, a flat border, a flat
+          violet ring.
+
+   1. MECHANISMS (all measured, docs/RESEARCH_2026-09.md):
+      - Starfield texture: anatomy.md's own "a starfield you cannot quite see"
+        realised as discrete point-stars (radial-gradient dots, no tiling —
+        the box is the viewport), the same construction Dead North uses for
+        its halftone screen [A R34, §15]. Dead North's separate feTurbulence
+        grain layer is NOT stacked on top of it: one layer only, so the
+        whole texture sits at DI9's 0.06 ceiling rather than Dead North's own
+        .55 (halftone) + .1 (grain) composited total. [ROUND TWO: this
+        description is round one's; in this file (the second try) the
+        layer is 112 irregular points at opacity 0.35, not a tiled 0.6 and
+        not the shipped 0.06 — see §0(a) above.]
+      - Chrome that inverts over imagery: mix-blend-mode:difference on the
+        vertical side-note, over the hero's violet glow — "a candidate for
+        the dark themes only" [D, RESEARCH cross-cutting mechanisms, citing
+        Moranta `position:sticky … mix-blend-mode:difference`, rauno
+        `.index_cross{mix-blend-mode:difference}`, Heller `mix-blend-mode:
+        difference`]. No photograph is loaded (S48's "no external images"),
+        so the "imagery" is the hero's own radial-gradient glow — the same
+        substitution LIFT_PLAN row 15 anticipates ("difference-blend chrome
+        over imagery"). Decorative and aria-hidden, matching how the same
+        margin note is treated in the phantom and terminal drafts.
+      - Headline arrival ("resolve"): Dead North's measured word-stagger
+        [A R34] — 28ms per word, ~640ms, cubic-bezier(.22,1,.36,1) — reused
+        verbatim for timing, but reskinned from Dead North's skew+translateY
+        "shout" into a blur+opacity settle, because dark's own anatomy asks
+        for a theme someone reads for two hours, not one that shouts. Pure
+        CSS, no script: the words are plainly visible with no query applied,
+        and only animate under `(prefers-reduced-motion: no-preference)`.
+      - Emphasis ignite: Dead North's `dn-ignite-color`, `animation-timeline:
+        view(); animation-range: entry 30% entry 80%` [A R34, measured],
+        reused at its own measured range, unchanged in mechanism — a mark
+        starts muted and its colour resolves to the violet as it is read.
+      - Section rule: Dead North's `dn-rail-sweep`, `background-size:220%
+        100%`, `animation-range: entry 10% entry 85%` [A R34, measured],
+        reused unchanged as the "drawn rule" under a heading.
+      - Dossier stamp: `[data-kp-reveal='emphasis'][data-kp-label]::before {
+        content: attr(data-kp-label) }`, the exact convention already in
+        css/cyberpunk-register.css:667-668 for the same slot.
+      - Confirmation: a native `<dialog>` with `showModal()`, mirroring
+        `js/components.js openConfirmation()` (Cancel focused by default,
+        Escape and the backdrop's own close event return focus to the
+        button) — per Kenny's correction of 2026-09-08, not the "sure?"
+        arm-then-act pattern some earlier drafts of this demo still carry.
+   2. HAZARDS REFUSED (docs/RESEARCH_2026-09.md "## Hazards"):
+      - No `.15s`/`.1s infinite` CRT flicker (133/s, 10Hz) anywhere on this
+        page — nothing here loops. Every reveal on this page is one-shot or
+        is bound 1:1 to the user's own scroll position (the view()-timeline
+        marks and rule), which the hazards list does not flag as a flash
+        risk because it is not an autonomous timer.
+      - The texture is completely static (no `steps()` jitter, no animated
+        opacity) — the "oscillating patterns" hazard names static grain and
+        halftone as the safe model (Dead North, A) and flags only the
+        oscillating variants (effect-labs' `scanlines 0.1s`), which are not
+        used here.
+      - The difference-blend side-note never carries essential text (it is
+        `aria-hidden="true"`, matching the demo drafts for phantom and
+        terminal) and never oscillates — the blend result is fixed per
+        scroll position, not time.
+      - Font: only a Google-Fonts family already in fonts/families.json is
+        loaded — see §3.
+   3. FONTS: Instrument Sans (ital/normal, 400-700 variable) — Google Fonts,
+      SIL OFL 1.1, `reservedFontName: false` in fonts/families.json (already
+      the family `themes/dark/tokens.json` names for `theme-font-body` and
+      `theme-font-display`), so nothing is added the theme does not already
+      commit to. Mono is the system `ui-monospace` stack, exactly
+      `theme-font-mono`'s declared value — no third download, no new font
+      budget spent (R6-Q6 stays closed for this theme).
+   4. CONTRAST (WCAG 2.x, hex literal from themes/dark/tokens.json, computed
+      by a one-off script against the *rounded hex* actually painted on this
+      page — see scratchpad/dark-hex.json and dark-run-contrast.mjs):
+      #eaecf1 (ink) on #101219 (void) 15.83 · #eaecf1 on #161922 (panel)
+      14.85 · #a9afbc (dim) on #101219 8.50 · #a9afbc on #161922 7.98 ·
+      #a184f5 (violet) on #101219 6.36 · #a184f5 on #161922 5.96 ·
+      #19122b on #a184f5 (button ink on button) 6.14 · #e7e9ef on #262936
+      (accent) 11.91 · #e77474 (danger) on #161922 5.98 · #280b0b on #e77474
+      6.25 · #31d382 on #1c5438 (success badge) 4.54 · #f4aa2a on #62430e
+      (warning badge) 4.57 · #50aef1 on #113f5f (info badge) 4.56 ·
+      **lowest text pair 4.54, ≥4.5 clears** · #606985 (edge) on #101219
+      3.44, on #161922 3.22 — **lowest boundary pair 3.22, ≥3 clears**
+      (DI1: `--input`/`--border-strong` are the same token here, both are
+      component boundaries, `--border` alone stays the ungated hairline at
+      1.31 and is never used as a boundary). DI2, worst surface per channel:
+      inner ring `#eaecf1` on `#a184f5` (a button) only 2.49, but the outer
+      ring `#101219` on `#a184f5` is 6.36 — one channel always clears 3.
+      The reverse holds on the page ground (inner 15.83, outer 1.07). The
+      side-note's difference-blend, checked as due diligence though it
+      carries no required text: over the void 13.36, over the panel 11.72,
+      over the violet glow only 2.19 — the reason it stays `aria-hidden`.
+   5. DI5 — every animation on this page, its duration, whether it loops:
+      - Headline word resolve: opacity 0→1 + blur 6px→0, 640ms each,
+        staggered 28ms apart, **runs once per page load, never loops**. One
+        luminance change per word, well under 3/s even stacked.
+      - Emphasis ignite (`<mark>`): one colour change per mark, bound to
+        `animation-timeline:view()` — it advances only as the user scrolls
+        past `entry 30%–80%` and **does not run again until scrolled back
+        out and in**; it cannot free-run.
+      - Section rule sweep: one `background-position` sweep per heading,
+        same `view()` binding, **entry 10%–85%**, same non-looping
+        guarantee.
+      - Dossier redaction reveal: one clip transition per redaction on
+        click, staggered 90ms apart, **one-shot, no loop**.
+      - Nav dropdown open/close: one opacity fade per hover/focus event,
+        150ms (`--dur`, this theme's own `fx-duration` token), **never
+        loops**.
+      - Confirm dialog: no authored animation — the native `<dialog>` and
+        its `::backdrop` open and close without a custom keyframe.
+      None of the above is a repeating cycle, so none is rated against the
+      3/s ceiling as a loop; each is one monotonic change occupying under a
+      second, the same accounting `docs/RESEARCH_2026-09.md`'s own DI5
+      section uses for a single fade. `@media (prefers-reduced-motion:
+      reduce)` turns every one of them off and leaves the *finished* state
+      as the default paint — the headline already sharp, the marks already
+      violet, the rule already fully drawn — matching the "good models"
+      the hazards list names (Dead North, Culpepper, Magic UI).
+   6. One visual world by design: every colour is painted by this page
+      itself; there is no `prefers-color-scheme` branch and no light
+      variant.
+   ───────────────────────────────────────────────────────────────────────── */
+:root {
+    --void: #101219;          /* background */
+    --deep: #0c0d13;          /* sidebar-background — the divider/footer ground, one step darker */
+    --panel: #161922;         /* card / popover */
+    --ink: #eaecf1;           /* foreground */
+    --dim: #a9afbc;           /* muted-foreground */
+    --edge: #606985;          /* border-strong / input — the DI1 boundary */
+    --line: #2b2f3b;          /* border — ungated hairline only */
+    --violet: #a184f5;        /* primary */
+    --violet-ink: #19122b;    /* primary-foreground */
+    --accent: #262936;
+    --accent-ink: #e7e9ef;
+    --danger: #e77474;        /* destructive */
+    --danger-ink: #280b0b;    /* destructive-foreground */
+    --ok: #1c5438; --ok-ink: #31d382;
+    --warn: #62430e; --warn-ink: #f4aa2a;
+    --info-bg: #113f5f; --info-ink: #50aef1;
+
+    --display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+    --measure: 72rem;
+    --dur: 150ms;                          /* this theme's own fx-duration token */
+    --ease: cubic-bezier(0.2, 0, 0, 1);     /* this theme's own fx-ease token */
+    --settle: cubic-bezier(0.22, 1, 0.36, 1); /* Dead North's shout-in ease, reused for the resolve */
+    --radius: 0.5rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { background: var(--void); }
+body {
+    margin: 0;
+    background: var(--void);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* The starfield, SECOND TRY — see §0(a). 112 individually-generated,
+   irregular positions (dim 80 + mid 22), no tiling, no background-size
+   repeat — every radial-gradient below is one literal star, pasted
+   verbatim from scratchpad/dks2-generate-stars.mjs's stdout (seed
+   20260908; scratchpad/dks2-stars-output.txt holds the full run). All
+   static — no keyframes, no opacity cycling, nothing here can flash.
+   opacity:0.35 is the effective figure quoted in §0(a) — 5.8x DI9's 0.06
+   ceiling, still over it, reported there as a finding (S42), and 42%
+   lower than the first try's 0.6. Each dot fades only in the outer 8%
+   of its own radius (transparent 92%), not from the centre, so the core
+   still reaches close to its nominal alpha despite the much smaller
+   size (0.45-1.3px) — the same anti-aliasing lesson the first try's
+   comment recorded, applied to a field that is dimmer by design this
+   time. The ten brightest stars are NOT in this list — they carry the
+   JWST spike glyph instead (below) and live in their own layer so their
+   own alpha isn't diluted by this element's opacity. */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    background-image:
+        radial-gradient(0.54px 0.54px at 88.87% 1.94%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.51px 0.51px at 51.53% 10.05%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.52px 0.52px at 80.97% 12.77%, hsl(from var(--ink) h s l / 0.44), transparent 92%),
+        radial-gradient(0.55px 0.55px at 57.07% 70.36%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.69px 0.69px at 72.75% 59.8%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.49px 0.49px at 17.76% 13.19%, hsl(from var(--ink) h s l / 0.46), transparent 92%),
+        radial-gradient(0.56px 0.56px at 84.6% 63.3%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.53px 0.53px at 43.84% 0.71%, hsl(from var(--ink) h s l / 0.37), transparent 92%),
+        radial-gradient(0.71px 0.71px at 30.57% 23.7%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.6px 0.6px at 45.59% 17.57%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.54px 0.54px at 84.08% 21.21%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.61px 0.61px at 57.58% 0.8%, hsl(from var(--ink) h s l / 0.35), transparent 92%),
+        radial-gradient(0.74px 0.74px at 53.5% 23.59%, hsl(from var(--ink) h s l / 0.41), transparent 92%),
+        radial-gradient(0.61px 0.61px at 96.8% 63.48%, hsl(from var(--ink) h s l / 0.44), transparent 92%),
+        radial-gradient(0.65px 0.65px at 31.69% 5.48%, hsl(from var(--ink) h s l / 0.44), transparent 92%),
+        radial-gradient(0.7px 0.7px at 85.97% 22.48%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.55px 0.55px at 10.78% 2.19%, hsl(from var(--ink) h s l / 0.43), transparent 92%),
+        radial-gradient(0.7px 0.7px at 74.14% 27.66%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.66px 0.66px at 99.49% 95.54%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.57px 0.57px at 4.38% 82.01%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.67px 0.67px at 7.01% 66.69%, hsl(from var(--ink) h s l / 0.46), transparent 92%),
+        radial-gradient(0.65px 0.65px at 39.35% 68.25%, hsl(from var(--ink) h s l / 0.3), transparent 92%),
+        radial-gradient(0.63px 0.63px at 59.61% 52.31%, hsl(from var(--ink) h s l / 0.43), transparent 92%),
+        radial-gradient(0.46px 0.46px at 20.54% 11.46%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.56px 0.56px at 6.11% 95.56%, hsl(from var(--ink) h s l / 0.36), transparent 92%),
+        radial-gradient(0.63px 0.63px at 25.77% 16.04%, hsl(from var(--ink) h s l / 0.41), transparent 92%),
+        radial-gradient(0.71px 0.71px at 25.79% 87.93%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.52px 0.52px at 93.62% 52.85%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.66px 0.66px at 20.61% 98.01%, hsl(from var(--ink) h s l / 0.42), transparent 92%),
+        radial-gradient(0.68px 0.68px at 93.97% 80.22%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.56px 0.56px at 87.03% 5.41%, hsl(from var(--ink) h s l / 0.35), transparent 92%),
+        radial-gradient(0.59px 0.59px at 80.71% 65.76%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.57px 0.57px at 99.5% 10.27%, hsl(from var(--ink) h s l / 0.36), transparent 92%),
+        radial-gradient(0.61px 0.61px at 53.68% 21.06%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.67px 0.67px at 77.82% 53.12%, hsl(from var(--ink) h s l / 0.48), transparent 92%),
+        radial-gradient(0.57px 0.57px at 80.06% 25.6%, hsl(from var(--ink) h s l / 0.35), transparent 92%),
+        radial-gradient(0.66px 0.66px at 76.73% 64.57%, hsl(from var(--ink) h s l / 0.38), transparent 92%),
+        radial-gradient(0.53px 0.53px at 2.41% 79.31%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.57px 0.57px at 37.9% 83.64%, hsl(from var(--ink) h s l / 0.38), transparent 92%),
+        radial-gradient(0.65px 0.65px at 94.54% 86.15%, hsl(from var(--ink) h s l / 0.46), transparent 92%),
+        radial-gradient(0.53px 0.53px at 7.15% 75.91%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.54px 0.54px at 57.74% 29.82%, hsl(from var(--ink) h s l / 0.4), transparent 92%),
+        radial-gradient(0.73px 0.73px at 19.11% 10.45%, hsl(from var(--ink) h s l / 0.44), transparent 92%),
+        radial-gradient(0.74px 0.74px at 61.7% 28.91%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.67px 0.67px at 4.93% 25.58%, hsl(from var(--ink) h s l / 0.48), transparent 92%),
+        radial-gradient(0.65px 0.65px at 65.41% 66.94%, hsl(from var(--ink) h s l / 0.43), transparent 92%),
+        radial-gradient(0.55px 0.55px at 32.76% 18.3%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.53px 0.53px at 91.88% 26.54%, hsl(from var(--ink) h s l / 0.47), transparent 92%),
+        radial-gradient(0.6px 0.6px at 4.13% 24.24%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.65px 0.65px at 32.88% 73.16%, hsl(from var(--ink) h s l / 0.38), transparent 92%),
+        radial-gradient(0.68px 0.68px at 80.98% 85.39%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.72px 0.72px at 37.23% 9%, hsl(from var(--ink) h s l / 0.39), transparent 92%),
+        radial-gradient(0.64px 0.64px at 62.52% 49.75%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.71px 0.71px at 21.79% 28.69%, hsl(from var(--ink) h s l / 0.33), transparent 92%),
+        radial-gradient(0.48px 0.48px at 47.18% 75.92%, hsl(from var(--ink) h s l / 0.41), transparent 92%),
+        radial-gradient(0.64px 0.64px at 43% 5.73%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.57px 0.57px at 9.38% 67.9%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.64px 0.64px at 99.12% 98.7%, hsl(from var(--ink) h s l / 0.44), transparent 92%),
+        radial-gradient(0.74px 0.74px at 75.31% 9.18%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.71px 0.71px at 2.34% 3.41%, hsl(from var(--ink) h s l / 0.38), transparent 92%),
+        radial-gradient(0.69px 0.69px at 80.76% 43.83%, hsl(from var(--ink) h s l / 0.37), transparent 92%),
+        radial-gradient(0.73px 0.73px at 63.86% 92.45%, hsl(from var(--ink) h s l / 0.4), transparent 92%),
+        radial-gradient(0.5px 0.5px at 62.88% 84.25%, hsl(from var(--ink) h s l / 0.43), transparent 92%),
+        radial-gradient(0.73px 0.73px at 94.83% 37.32%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.73px 0.73px at 62.09% 28.54%, hsl(from var(--ink) h s l / 0.46), transparent 92%),
+        radial-gradient(0.61px 0.61px at 51.93% 89.38%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.7px 0.7px at 56.41% 38.54%, hsl(from var(--ink) h s l / 0.41), transparent 92%),
+        radial-gradient(0.53px 0.53px at 38.04% 68.09%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.52px 0.52px at 83.87% 43.57%, hsl(from var(--ink) h s l / 0.38), transparent 92%),
+        radial-gradient(0.55px 0.55px at 88.65% 13.56%, hsl(from var(--ink) h s l / 0.31), transparent 92%),
+        radial-gradient(0.62px 0.62px at 68.35% 77.8%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.48px 0.48px at 86.69% 61.36%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(0.48px 0.48px at 72.17% 53.66%, hsl(from var(--ink) h s l / 0.41), transparent 92%),
+        radial-gradient(0.49px 0.49px at 6.64% 14.82%, hsl(from var(--ink) h s l / 0.32), transparent 92%),
+        radial-gradient(0.72px 0.72px at 50.19% 78%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.63px 0.63px at 81.1% 46.81%, hsl(from var(--ink) h s l / 0.37), transparent 92%),
+        radial-gradient(0.68px 0.68px at 12.25% 3.33%, hsl(from var(--ink) h s l / 0.47), transparent 92%),
+        radial-gradient(0.52px 0.52px at 37.76% 7.71%, hsl(from var(--ink) h s l / 0.42), transparent 92%),
+        radial-gradient(0.65px 0.65px at 72.41% 75.41%, hsl(from var(--ink) h s l / 0.45), transparent 92%),
+        radial-gradient(0.67px 0.67px at 77.19% 0.8%, hsl(from var(--ink) h s l / 0.34), transparent 92%),
+        radial-gradient(1.27px 1.27px at 55.66% 17.97%, hsl(from var(--ink) h s l / 0.54), transparent 92%),
+        radial-gradient(0.92px 0.92px at 31.48% 98.08%, hsl(from var(--ink) h s l / 0.56), transparent 92%),
+        radial-gradient(0.98px 0.98px at 54.66% 2.18%, hsl(from var(--ink) h s l / 0.6), transparent 92%),
+        radial-gradient(1.23px 1.23px at 83.8% 86.11%, hsl(from var(--ink) h s l / 0.51), transparent 92%),
+        radial-gradient(1.14px 1.14px at 46.9% 16.07%, hsl(from var(--ink) h s l / 0.54), transparent 92%),
+        radial-gradient(1.14px 1.14px at 82.88% 35.84%, hsl(from var(--ink) h s l / 0.59), transparent 92%),
+        radial-gradient(1.23px 1.23px at 93.79% 46.77%, hsl(from var(--ink) h s l / 0.55), transparent 92%),
+        radial-gradient(0.97px 0.97px at 19.1% 95.09%, hsl(from var(--ink) h s l / 0.55), transparent 92%),
+        radial-gradient(1.23px 1.23px at 92.01% 4.13%, hsl(from var(--ink) h s l / 0.53), transparent 92%),
+        radial-gradient(1.22px 1.22px at 68.07% 1.21%, hsl(from var(--ink) h s l / 0.55), transparent 92%),
+        radial-gradient(0.99px 0.99px at 54.49% 22.62%, hsl(from var(--ink) h s l / 0.65), transparent 92%),
+        radial-gradient(1px 1px at 76.81% 11.69%, hsl(from var(--ink) h s l / 0.65), transparent 92%),
+        radial-gradient(1.11px 1.11px at 26.4% 24.48%, hsl(from var(--ink) h s l / 0.68), transparent 92%),
+        radial-gradient(0.92px 0.92px at 90.33% 70.56%, hsl(from var(--ink) h s l / 0.51), transparent 92%),
+        radial-gradient(1.2px 1.2px at 70.33% 42.31%, hsl(from var(--ink) h s l / 0.63), transparent 92%),
+        radial-gradient(1.16px 1.16px at 6.78% 72.2%, hsl(from var(--ink) h s l / 0.54), transparent 92%),
+        radial-gradient(1.07px 1.07px at 90.1% 56.54%, hsl(from var(--ink) h s l / 0.58), transparent 92%),
+        radial-gradient(1.09px 1.09px at 50.41% 9.21%, hsl(from var(--ink) h s l / 0.62), transparent 92%),
+        radial-gradient(1.17px 1.17px at 91.22% 22.93%, hsl(from var(--ink) h s l / 0.61), transparent 92%),
+        radial-gradient(1.08px 1.08px at 93.35% 23.28%, hsl(from var(--ink) h s l / 0.63), transparent 92%),
+        radial-gradient(1.19px 1.19px at 32.44% 12.13%, hsl(from var(--ink) h s l / 0.5), transparent 92%),
+        radial-gradient(0.93px 0.93px at 98.39% 26.47%, hsl(from var(--ink) h s l / 0.56), transparent 92%);
+}
+
+/* The ten spike stars — see §0(a) "THE SHIMMER". One <symbol> (defined
+   once, just below) reused via <use> at each of the ten generated
+   positions; each mini-<svg> is its own square viewBox sized in
+   absolute px (not one page-wide viewBox stretched to the viewport's
+   aspect ratio), so the eight-way symmetry never distorts. Positions
+   and rotations are the literal output of the same generator run as the
+   dots above — static data, no runtime randomness. Same opacity (0.35)
+   as body::before, so one number describes the whole field. */
+.starfield-bright {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+}
+.star-spike { position: absolute; overflow: visible; }
+
+a { color: inherit; text-decoration: none; }
+
+/* DI2 — two channels: the ink ring hugs the element, the void ring sits
+   outside it. On the page ground the inner wins (15.83); on a violet
+   button the outer wins (6.36). See §4 for the full table. */
+:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--void);
+    border-radius: var(--radius);
+}
+
+.wrap { width: min(var(--measure), 100% - 2.5rem); margin-inline: auto; }
+@media (max-width: 26rem) { .wrap { width: min(var(--measure), 100% - 1.4rem); } }
+
+.btn, .badge { max-inline-size: 100%; overflow-wrap: anywhere; }
+
+/* ── Microlabel ────────────────────────────────────────────────────────── */
+.microlabel {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 0 0 0.6rem;
+}
+.microlabel::before { content: '· '; color: var(--violet); }
+
+/* ── Nav ───────────────────────────────────────────────────────────────── */
+.top { background: var(--panel); position: relative; border-bottom: 1px solid var(--edge); z-index: 30; }
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+    padding-block: 0.7rem;
+}
+.brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+.brand small {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    color: var(--dim);
+}
+.menu { display: flex; align-items: center; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; gap: 0.15rem; }
+.menu ul { margin: 0; padding: 0; list-style: none; }
+.menu > li { position: relative; }
+.menu-link {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.94rem;
+    color: var(--dim);
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.menu-link:hover, .menu > li:focus-within > .menu-link { color: var(--ink); background: var(--accent); }
+.menu-link[aria-haspopup]::after { content: ' ⌄'; font-size: 0.8em; }
+.menu > li.is-lang { border-left: 1px solid var(--line); margin-left: 0.5rem; padding-left: 0.5rem; }
+.menu > li.is-cta { margin-left: 0.25rem; }
+.menu > li.is-cta .menu-link { background: var(--violet); color: var(--violet-ink); font-weight: 600; }
+.menu > li.is-cta .menu-link:hover { background: var(--ink); color: var(--void); }
+
+.sub {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 12rem;
+    max-width: min(14rem, 80vw);
+    background: var(--panel);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    padding: 0.3rem;
+    opacity: 0;
+    display: none;
+    z-index: 20;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.45);
+}
+.menu > li:hover > .sub, .menu > li:focus-within > .sub { display: block; opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+    .sub { transition: opacity var(--dur) var(--ease); }
+}
+.sub a {
+    display: block;
+    padding: 0.45rem 0.7rem;
+    border-radius: calc(var(--radius) / 1.5);
+    color: var(--ink);
+    font-size: 0.92rem;
+}
+.sub a:hover { background: var(--accent); }
+/* ROUND TWO §0(b): the keyboard state gets the theme's own violet, not
+   the page-wide ink outline — a quiet dark panel, the theme's edge
+   (border above, unchanged), the violet as the keyboard highlight, no
+   gradient. Contrast of the ring itself: violet on panel is 5.96 (§4),
+   clears DI2's 3:1 boundary floor with room to spare. */
+.sub a:focus-visible {
+    background: var(--accent);
+    outline: 2px solid var(--violet);
+    outline-offset: -2px;
+    box-shadow: none;
+}
+@media (max-width: 44rem) {
+    .menu > li { position: static; }
+    .sub { left: 0.75rem; right: 0.75rem; min-width: 0; max-width: none; width: auto; }
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.5rem;
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--edge);
+    background: var(--panel);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.btn:hover { background: var(--accent); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+/* kp-button--mirror: present for structural parity with the other themes'
+   demos (S46 — the same marker in every demo); this theme gives it no
+   flourish of its own, so it inherits the plain primary look. */
+.btn--primary { background: var(--violet); border-color: var(--violet); color: var(--violet-ink); }
+.btn--primary:hover { background: color-mix(in srgb, var(--violet) 88%, white); }
+.btn--ghost { background: transparent; border-color: transparent; color: var(--ink); }
+.btn--ghost:hover { background: var(--accent); border-color: var(--edge); }
+.btn--danger-outline { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn--danger-outline:hover { background: var(--danger); color: var(--danger-ink); }
+.btn--danger-fill { background: var(--danger); border-color: var(--danger); color: var(--danger-ink); }
+.btn--danger-fill:hover { background: color-mix(in srgb, var(--danger) 85%, black); }
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+.hero { position: relative; overflow: hidden; isolation: isolate; padding-block: 3rem 4.5rem; }
+/* The "imagery" the difference-blend chrome inverts over — a violet glow,
+   since no photograph is loaded (see §1). */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 55% 60% at 84% 46%, hsl(from var(--violet) h s l / 0.32), transparent 68%);
+}
+.hero .side {
+    position: absolute;
+    right: 0.6rem;
+    top: 2.2rem;
+    writing-mode: vertical-rl;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+    mix-blend-mode: difference;
+    z-index: 2;
+    padding: 0.4rem 0.1rem;
+}
+@media (max-width: 40rem) { .hero .side { display: none; } }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 2.5rem; align-items: end; }
+@media (max-width: 54rem) { .hero-grid { grid-template-columns: 1fr; } }
+
+.laurels { display: flex; flex-wrap: wrap; gap: 0.9rem 1.4rem; margin: 0 0 1.8rem; padding: 0; list-style: none; }
+.laurels li { font-size: 0.78rem; color: var(--dim); max-width: 15rem; }
+.laurels b { display: block; font-size: 0.95rem; color: var(--ink); font-weight: 600; }
+
+h1.display {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6.5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.2rem;
+    text-wrap: balance;
+    color: var(--ink);
+}
+h1.display .w { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+    h1.display .w {
+        animation: resolve-in 640ms var(--settle) both;
+        animation-delay: calc(var(--i) * 28ms);
+    }
+}
+@keyframes resolve-in {
+    from { opacity: 0; filter: blur(6px); transform: translateY(0.15em); }
+    to { opacity: 1; filter: blur(0); transform: none; }
+}
+
+.kp-lede { max-width: 38rem; font-size: 1.08rem; color: var(--ink); margin: 0 0 1.7rem; }
+/* Emphasis ignite: Dead North's dn-ignite-color, unchanged range. Default
+   (no support, or reduced motion) is already the finished violet — never
+   an invisible or half-drawn state. */
+mark.ignite {
+    background: none;
+    color: var(--violet);
+    font-weight: 600;
+    text-decoration: underline 2px solid var(--edge);
+    text-underline-offset: 0.18em;
+}
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        mark.ignite {
+            color: var(--dim);
+            text-decoration-color: var(--line);
+            animation: ignite linear both;
+            animation-timeline: view();
+            animation-range: entry 30% entry 80%;
+        }
+    }
+}
+@keyframes ignite { to { color: var(--violet); text-decoration-color: var(--edge); } }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem 1rem; align-items: center; }
+.platforms { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.35rem 1.3rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+.platforms span::before { content: '· '; color: var(--violet); }
+
+.spec { background: var(--panel); color: var(--ink); border: 1px solid var(--edge); border-radius: calc(var(--radius) * 1.5); padding: 1.2rem 1.4rem; font-size: 0.86rem; line-height: 1.75; }
+.spec dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 1.1rem; }
+.spec dt { color: var(--dim); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; }
+.spec dd { margin: 0; }
+.spec .sw { display: inline-block; width: 0.85em; height: 0.85em; vertical-align: -0.08em; margin-right: 0.4em; border-radius: 0.2em; border: 1px solid var(--line); }
+
+/* ── The divider: the "horizon" — a night seam, deeper than the ground,
+      the same starfield technique at a denser local sample, a thin violet
+      line at true centre. Not measured in dark's own research section;
+      built from the two mechanisms that are (the starfield, the violet
+      as accent) rather than inventing an unrelated one. ─────────────────── */
+.horizon { position: relative; height: 56px; background: var(--deep); overflow: hidden; }
+.horizon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.09;
+    background:
+        radial-gradient(1.4px 1.4px at 12% 30%, var(--ink), transparent 60%),
+        radial-gradient(1.1px 1.1px at 27% 70%, var(--ink), transparent 60%),
+        radial-gradient(1.6px 1.6px at 46% 20%, var(--ink), transparent 60%),
+        radial-gradient(1.3px 1.3px at 63% 65%, var(--ink), transparent 60%),
+        radial-gradient(1.5px 1.5px at 81% 35%, var(--ink), transparent 60%),
+        radial-gradient(1.2px 1.2px at 92% 75%, var(--ink), transparent 60%);
+}
+.horizon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(18rem, 60%);
+    height: 1px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(90deg, transparent, var(--violet), transparent);
+}
+.horizon[data-kp-divider="alt"] { transform: scaleX(-1); }
+
+/* ── App surface ───────────────────────────────────────────────────────── */
+.app-surface { background: var(--void); padding-block: 3.2rem 4rem; }
+.app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+@media (max-width: 54rem) { .app-grid { grid-template-columns: 1fr; } }
+
+h2.h { font-family: var(--display); font-weight: 700; font-size: clamp(1.5rem, 3.4vw, 2rem); letter-spacing: -0.01em; color: var(--ink); margin: 0 0 0.9rem; text-wrap: balance; }
+.rule { display: block; width: min(16rem, 60%); height: 2px; margin: -0.35rem 0 1.3rem; background: linear-gradient(90deg, var(--violet) 0 45%, var(--line) 45% 100%); background-size: 220% 100%; background-position: 0 0; background-repeat: no-repeat; border-radius: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        .rule { animation: rail-sweep linear both; animation-timeline: view(); animation-range: entry 10% entry 85%; }
+    }
+}
+@keyframes rail-sweep { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+.form { display: grid; gap: 1rem; }
+.field { display: grid; gap: 0.3rem; max-width: 28rem; }
+.field label { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+.control {
+    font: inherit;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.75rem;
+    min-height: 2.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.control::placeholder { color: var(--dim); }
+.control:focus { border-color: var(--violet); }
+select.control {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%), linear-gradient(135deg, var(--dim) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 2.2rem;
+}
+/* kp-field__input--multiline: the required literal marker for a textarea. */
+.kp-field__input--multiline { min-height: 5.5rem; resize: vertical; }
+.field .help { font-size: 0.8rem; color: var(--dim); }
+.field.is-invalid .control { border-color: var(--danger); }
+.field.is-invalid .help { color: var(--danger); }
+/* kp-field--check: the required literal marker for the checkbox row. */
+.kp-field--check { display: flex; flex-direction: row; align-items: flex-start; gap: 0.6rem; max-width: none; }
+.kp-field--check input {
+    appearance: none;
+    flex: 0 0 auto;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.15rem;
+    border: 1px solid var(--edge);
+    border-radius: 0.25rem;
+    background: var(--panel);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+.kp-field--check input:checked { background: var(--violet); border-color: var(--violet); }
+.kp-field--check input:checked::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 0.1rem; background: var(--violet-ink); }
+.kp-field--check label { font-weight: 400; font-size: 0.92rem; cursor: pointer; }
+.form-actions { display: flex; flex-wrap: wrap; gap: 0.9rem 1rem; align-items: center; margin-top: 0.2rem; }
+.toast { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ok-ink); opacity: 0; }
+.toast.is-on { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .toast { transition: opacity var(--dur) var(--ease); } }
+
+/* ── The dossier ───────────────────────────────────────────────────────── */
+.dossier { position: relative; background: var(--panel); border: 1px solid var(--edge); border-radius: calc(var(--radius) * 1.5); padding: 1.7rem 1.5rem 1.4rem; }
+/* The stamp: attr(data-kp-label) content, the same convention
+   css/cyberpunk-register.css already uses for this slot. */
+[data-kp-reveal='emphasis'][data-kp-label]::before {
+    content: attr(data-kp-label);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--violet);
+    color: var(--violet-ink);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+}
+.dossier h3 { font-family: var(--display); font-weight: 700; font-size: 1.5rem; color: var(--ink); margin: 0 0.4rem 0.2rem 0; max-width: 70%; }
+.dossier .meta { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--dim); margin: 0 0 1rem; }
+.dossier p { margin: 0 0 1rem; color: var(--ink); }
+/* white-space:nowrap matters here: an inline element that line-wraps gets
+   its ::after box fragmented across lines in most engines, which leaves a
+   sliver of the "hidden" text showing at the wrap point. Keeping each
+   redacted phrase short and unbreakable is what makes color:transparent
+   safe to rely on. */
+.redact { position: relative; color: transparent; white-space: nowrap; border-radius: 0.2em; }
+.redact::after {
+    content: '';
+    position: absolute;
+    inset: -0.05em -0.15em;
+    background: var(--edge);
+    border-radius: 0.2em;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .redact::after { transition: transform 380ms var(--ease); transform-origin: right center; }
+    .dossier.is-open .redact:nth-of-type(1)::after { transition-delay: 0ms; }
+    .dossier.is-open .redact:nth-of-type(2)::after { transition-delay: 90ms; }
+    .dossier.is-open .redact:nth-of-type(3)::after { transition-delay: 180ms; }
+}
+.dossier.is-open .redact { color: var(--ink); }
+.dossier.is-open .redact::after { transform: scaleX(0); }
+.dossier-actions { display: flex; flex-wrap: wrap; gap: 0.8rem 1rem; margin-top: 0.4rem; }
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+.kp-footer { background: var(--deep); color: var(--dim); padding: 2rem clamp(1rem, 4vw, 3rem) 1.5rem; }
+.foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; }
+@media (max-width: 54rem) { .foot-grid { grid-template-columns: 1fr; } }
+.foot-grid h4 { font-size: 0.95rem; color: var(--ink); margin: 0 0 0.6rem; }
+.foot-grid p { margin: 0; max-width: 30rem; }
+.foot-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.foot-grid a { color: var(--dim); font-size: 0.92rem; }
+.foot-grid a:hover { color: var(--ink); }
+.fine { margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--dim); }
+
+/* ── Confirmation dialog: native <dialog>, no authored motion at all —
+      the safest way to satisfy DI5 for an element that must not surprise
+      anyone. Mirrors js/components.js's openConfirmation() contract. ────── */
+.dialog { max-width: min(26rem, calc(100vw - 2rem)); padding: 1.3rem; border: 1px solid var(--edge); border-radius: calc(var(--radius) * 1.5); background: var(--panel); color: var(--ink); }
+.dialog::backdrop { background: rgb(0 0 0 / 0.55); }
+.dialog h2 { margin: 0 0 0.5rem; font-family: var(--display); font-size: 1.2rem; }
+.dialog p { margin: 0 0 1.1rem; color: var(--dim); font-size: 0.92rem; }
+.dialog-actions { display: flex; gap: 0.6rem; justify-content: flex-end; flex-wrap: wrap; }
+
+/* ── Reduced motion: every effect resolves to its rest state ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .sub, .toast, .redact::after, .btn, .control { transition: none; }
+}
+</style>
+
+<!-- The JWST-style diffraction-spike glyph, defined once and reused by
+     the ten brightest stars via <use> — see the header comment §0(a)
+     "THE SHIMMER". Eight thin spikes (six at 30/90/150/210/270/330deg
+     from the hexagonal mirror, plus a horizontal pair at 0/180deg from
+     the secondary-mirror struts), each a userSpaceOnUse gradient stroke
+     fading to transparent, plus a small soft core (one cheap
+     feGaussianBlur, nothing more). No JS, no per-star markup beyond a
+     single <use> each — positions and rotations are pasted literals
+     from scratchpad/dks2-generate-stars.mjs. Fully static: no
+     <animate>, no CSS animation anywhere near it (DI5). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <symbol id="jwst-spike" viewBox="-20 -20 40 40">
+            <radialGradient id="jwst-spike-core" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </radialGradient>
+            <g stroke="var(--ink)" stroke-width="0.6" stroke-linecap="round" fill="none">
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(30)" stroke="url(#jwst-spike-fade-a)"/>
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(90)" stroke="url(#jwst-spike-fade-b)"/>
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(150)" stroke="url(#jwst-spike-fade-c)"/>
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(210)" stroke="url(#jwst-spike-fade-a)"/>
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(270)" stroke="url(#jwst-spike-fade-b)"/>
+                <line x1="0" y1="0" x2="16" y2="0" transform="rotate(330)" stroke="url(#jwst-spike-fade-c)"/>
+                <line x1="0" y1="0" x2="18" y2="0" transform="rotate(0)" stroke="url(#jwst-spike-fade-h)"/>
+                <line x1="0" y1="0" x2="18" y2="0" transform="rotate(180)" stroke="url(#jwst-spike-fade-h)"/>
+            </g>
+            <linearGradient id="jwst-spike-fade-a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="16" y2="0">
+                <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="jwst-spike-fade-b" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="16" y2="0">
+                <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.38"/>
+                <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="jwst-spike-fade-c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="16" y2="0">
+                <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="jwst-spike-fade-h" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="18" y2="0">
+                <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="jwst-spike-soft" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="0.5"/>
+            </filter>
+            <circle r="2" fill="url(#jwst-spike-core)" filter="url(#jwst-spike-soft)"/>
+        </symbol>
+    </defs>
+</svg>
+<div class="starfield-bright" aria-hidden="true">
+    <svg class="star-spike" style="left:58.58%;top:70.69%;width:22.3px;height:22.3px;transform:translate(-50%,-50%) rotate(287deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:81.84%;top:28.91%;width:22.3px;height:22.3px;transform:translate(-50%,-50%) rotate(123deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:81.8%;top:39.12%;width:25.1px;height:25.1px;transform:translate(-50%,-50%) rotate(57deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:25.76%;top:9.93%;width:25.1px;height:25.1px;transform:translate(-50%,-50%) rotate(171deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:31.34%;top:26.1%;width:23.1px;height:23.1px;transform:translate(-50%,-50%) rotate(50deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:28.08%;top:86.45%;width:22.7px;height:22.7px;transform:translate(-50%,-50%) rotate(155deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:53.82%;top:5.38%;width:21.7px;height:21.7px;transform:translate(-50%,-50%) rotate(20deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:91.59%;top:77.36%;width:21.7px;height:21.7px;transform:translate(-50%,-50%) rotate(108deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:48.25%;top:22.63%;width:25.5px;height:25.5px;transform:translate(-50%,-50%) rotate(84deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+    <svg class="star-spike" style="left:21.4%;top:69.03%;width:19.1px;height:19.1px;transform:translate(-50%,-50%) rotate(218deg)" viewBox="-20 -20 40 40" aria-hidden="true"><use href="#jwst-spike" x="-20" y="-20" width="40" height="40"/></svg>
+</div>
+
+<div class="top">
+    <header class="wrap nav">
+        <a class="brand" href="#" aria-label="kp-themes, dark theme">kp-themes <small>DK·15</small></a>
+        <nav aria-label="Main">
+            <ul class="menu">
+                <li class="is-current"><a class="menu-link" href="#" aria-haspopup="true">Themes</a>
+                    <ul class="sub">
+                        <li><a href="#">Dark</a></li>
+                        <li><a href="#">Phantom</a></li>
+                        <li><a href="#">Synthwave</a></li>
+                    </ul>
+                </li>
+                <li><a class="menu-link" href="#" aria-haspopup="true">Components</a>
+                    <ul class="sub">
+                        <li><a href="#">Buttons</a></li>
+                        <li><a href="#">Forms</a></li>
+                        <li><a href="#">Dialogs</a></li>
+                    </ul>
+                </li>
+                <li><a class="menu-link" href="#">Effects</a></li>
+                <li><a class="menu-link" href="#">Docs</a></li>
+                <li class="is-lang"><a class="menu-link" href="#" aria-haspopup="true">EN</a>
+                    <ul class="sub"><li><a href="#">Nederlands</a></li><li><a href="#">English</a></li></ul>
+                </li>
+                <li class="is-cta"><a class="menu-link" href="#try">Try it</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" data-kp-surface="hero" id="hero">
+        <div class="side kp-side-note" aria-hidden="true">QUIET HOURS · TEXTURE AT 0.35 · 112 IRREGULAR POINTS</div>
+        <div class="wrap hero-grid">
+            <div>
+                <ul class="laurels" aria-label="What this theme is measured against">
+                    <li><b>14.85, not 21</b>8% ground, 93% ink — never pure black on pure white</li>
+                    <li><b>One hue family</b>ground, border and muted text all carry the same blue cast</li>
+                    <li><b>DI5 safe</b>every reveal is one change, or bound to your own scroll</li>
+                </ul>
+                <p class="microlabel">theme 15 · dark · preview build</p>
+                <h1 class="display" data-kp-reveal="headline" id="headline"><span class="w" style="--i:0">Comfortable</span> <span class="w" style="--i:1">in</span> <span class="w" style="--i:2">the</span> <span class="w" style="--i:3">dark,</span> <span class="w" style="--i:4">on</span> <span class="w" style="--i:5">purpose.</span></h1>
+                <p class="kp-lede">Deep slate, not <mark class="ignite">true black</mark> — the gap holds halation and pupil fatigue down without losing contrast. A light, unsaturated violet lifts off the ground instead of vibrating against it, and <mark class="ignite">a blue cast</mark> runs through every border, shadow and line so grey never reads as an afterthought.</p>
+                <div class="cta-row">
+                    <a class="btn btn--primary kp-button--mirror" href="#try">Read tonight</a>
+                    <a class="btn" href="#spec">See the spec</a>
+                    <button class="btn btn--ghost" type="button">Ghost</button>
+                </div>
+                <div class="platforms" aria-label="Where it renders">
+                    <span>Chromium</span><span>Firefox</span><span>Framework-free</span><span>React</span>
+                </div>
+            </div>
+            <aside class="spec" id="spec" aria-label="Palette and type">
+                <dl>
+                    <dt>ground</dt><dd><i class="sw" style="background:#101219"></i>void #101219</dd>
+                    <dt>panel</dt><dd><i class="sw" style="background:#161922"></i>card #161922</dd>
+                    <dt>ink</dt><dd><i class="sw" style="background:#eaecf1"></i>foreground #EAECF1</dd>
+                    <dt>accent</dt><dd><i class="sw" style="background:#a184f5"></i>violet #A184F5</dd>
+                    <dt>edge</dt><dd><i class="sw" style="background:#606985"></i>border-strong #606985</dd>
+                    <dt>danger</dt><dd><i class="sw" style="background:#e77474"></i>destructive #E77474</dd>
+                    <dt>display</dt><dd>Instrument Sans 700</dd>
+                    <dt>body</dt><dd>Instrument Sans 400&ndash;600</dd>
+                    <dt>mono</dt><dd>system ui-monospace</dd>
+                    <dt>tokens</dt><dd>94, shared with every other theme</dd>
+                </dl>
+            </aside>
+        </div>
+    </section>
+    <div class="horizon" data-kp-divider aria-hidden="true"></div>
+</div>
+
+<section class="app-surface" data-kp-surface="app" id="try">
+    <div class="wrap app-grid">
+        <div>
+            <p class="microlabel">access.reading_light</p>
+            <h2 class="h">Set tonight's session</h2><span class="rule" data-kp-reveal="rule" aria-hidden="true"></span>
+            <form class="form" id="form" data-kp-form novalidate>
+                <div class="field">
+                    <label for="handle">Reader name</label>
+                    <input class="control" id="handle" name="handle" placeholder="night owl" autocomplete="username">
+                    <span class="help">However you want the log to remember you.</span>
+                </div>
+                <div class="field">
+                    <label for="mail">Contact</label>
+                    <input class="control" id="mail" name="mail" type="email" placeholder="you@example.com" autocomplete="email">
+                    <span class="help">Only used if something needs your attention before morning.</span>
+                </div>
+                <div class="field">
+                    <label for="window">Reading window</label>
+                    <select class="control" id="window" name="window">
+                        <option>Just past midnight</option>
+                        <option>The small hours</option>
+                        <option>Until it's light out</option>
+                        <option>No fixed hour</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="why">What you're reading</label>
+                    <textarea class="control kp-field__input--multiline" id="why" name="why" placeholder="Two lines. That's plenty."></textarea>
+                </div>
+                <div class="field kp-field--check">
+                    <input type="checkbox" name="terms" id="terms">
+                    <label for="terms">I understand this theme ships no theme picker of its own.</label>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Save settings</button>
+                    <button class="btn btn--danger-outline" type="button" id="wipe" data-kp-confirm="Wipe the form">Wipe the form</button>
+                    <span class="toast" id="toast" role="status"></span>
+                </div>
+            </form>
+        </div>
+        <div>
+            <p class="microlabel">log.kp-themes-15</p>
+            <h2 class="h">The theme, on the record</h2><span class="rule" data-kp-reveal="rule" aria-hidden="true"></span>
+            <article class="dossier" id="dossier" data-kp-reveal="emphasis" data-kp-label="Observation 15">
+                <h3>Dark</h3>
+                <p class="meta">FILE 15 · STATUS: PREVIEW · READ AT: NIGHT</p>
+                <p>The ordinary dark theme, done properly. The ground sits at 8% lightness with a blue cast, <span class="redact">never true black</span>. The one ornament is a starfield of 112 irregular points, ten with a JWST-style shimmer, <span class="redact">seen, softly</span>. Everything else is quiet on purpose, because the whole job of this theme is <span class="redact">two hours of reading</span>.</p>
+                <div class="dossier-actions">
+                    <button class="btn btn--primary" type="button" id="open" data-kp-reveal-trigger>Open the log</button>
+                    <button class="btn btn--ghost" type="button" id="close" hidden>Close the log</button>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<div class="horizon" data-kp-divider="alt" aria-hidden="true"></div>
+
+<footer class="kp-footer">
+    <div class="wrap foot-grid">
+        <div>
+            <h4>kp-themes</h4>
+            <p>Twenty-five themes, three registers, one promise: a released theme never changes.</p>
+        </div>
+        <div>
+            <h4>Registers</h4>
+            <ul><li><a href="#">Dark</a></li><li><a href="#">Phantom</a></li><li><a href="#">Synthwave</a></li></ul>
+        </div>
+        <div>
+            <h4>Channels</h4>
+            <ul><li><a href="#">Framework-free</a></li><li><a href="#">React</a></li><li><a href="#">Home Assistant</a></li></ul>
+        </div>
+    </div>
+    <div class="wrap fine">Build 5.0.0-preview · 94 tokens, one dark ground · no hearts were harmed</div>
+</footer>
+
+<dialog class="dialog" id="wipeDialog" aria-labelledby="wipeTitle" aria-describedby="wipeDesc">
+    <h2 id="wipeTitle">Wipe the form</h2>
+    <p id="wipeDesc">This clears every field above. It cannot be undone.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn" id="wipeCancel">Cancel</button>
+        <button type="button" class="btn btn--danger-fill" id="wipeConfirm">Confirm</button>
+    </div>
+</dialog>
+
+<script>
+(() => {
+    // The dossier opens and closes; both buttons keep focus inside the demo.
+    const dossier = document.getElementById('dossier');
+    const open = document.getElementById('open');
+    const close = document.getElementById('close');
+    open.addEventListener('click', () => {
+        dossier.classList.add('is-open');
+        open.hidden = true;
+        close.hidden = false;
+        close.focus();
+    });
+    close.addEventListener('click', () => {
+        dossier.classList.remove('is-open');
+        close.hidden = true;
+        open.hidden = false;
+        open.focus();
+    });
+
+    // The form: a quiet toast on save, a native <dialog> before a wipe.
+    const form = document.getElementById('form');
+    const toast = document.getElementById('toast');
+    let toastTimer = 0;
+    function say(text) {
+        toast.textContent = text;
+        toast.classList.remove('is-on');
+        void toast.offsetWidth;
+        toast.classList.add('is-on');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('is-on'), 2600);
+    }
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const mail = document.getElementById('mail');
+        const field = mail.closest('.field');
+        if (mail.value && !mail.checkValidity()) {
+            field.classList.add('is-invalid');
+            field.querySelector('.help').textContent = 'Enter a valid address.';
+            mail.focus();
+            return;
+        }
+        field.classList.remove('is-invalid');
+        say('Saved for tonight');
+    });
+
+    // The wipe: a real confirmation dialog, not a relabelled button
+    // (Kenny's correction of 2026-09-08). Escape and the backdrop both
+    // fire the dialog's native 'close' event, so one listener covers
+    // Cancel, Escape and the confirm path alike.
+    const wipe = document.getElementById('wipe');
+    const dialog = document.getElementById('wipeDialog');
+    const cancel = document.getElementById('wipeCancel');
+    const confirm = document.getElementById('wipeConfirm');
+    wipe.addEventListener('click', () => {
+        dialog.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', () => dialog.close());
+    confirm.addEventListener('click', () => {
+        form.reset();
+        form.querySelectorAll('.is-invalid').forEach((f) => f.classList.remove('is-invalid'));
+        dialog.close();
+        say('Form wiped');
+    });
+    dialog.addEventListener('close', () => wipe.focus());
+})();
+</script>
+
+</body></html>

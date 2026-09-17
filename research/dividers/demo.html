@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en" data-theme="pastel" data-cat-theme="pastel">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Softer dividers and a shape knob · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               Page chrome: every class prefixed `dv-` is written for this page
+               only and is NOT the package.
+               ================================================================== */
+            .dv-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .dv-tag--package {
+                color: var(--success-foreground);
+            }
+            .dv-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .dv-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .dv-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .dv-stage {
+                border: 1px dashed var(--border);
+                padding: 1rem;
+                background: var(--background);
+            }
+            .dv-controls {
+                display: grid;
+                gap: 0.75rem;
+                margin-block-end: 1rem;
+            }
+            .dv-code {
+                margin: 0;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.8rem;
+                color: var(--muted-foreground);
+            }
+            .dv-code output {
+                color: var(--foreground);
+            }
+            .dv-narrow {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, 20rem);
+                gap: 1rem;
+            }
+            .dv-narrow > div {
+                inline-size: 20rem;
+                border: 1px dashed var(--border);
+            }
+            .dv-narrow .kp-section {
+                padding: 0.75rem;
+            }
+            .dv-narrow .dv-name {
+                margin: 0;
+                padding: 0.4rem 0.75rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+
+            /* ==================================================================
+               THE PROPOSED KNOB, written here as it would ship (mock: in the
+               package it would sit in css/layout.css, kp.layout, the one layer
+               after kp.register, so a consumer's choice beats a theme's own
+               drawing). Unlayered on this page, which has the same effect.
+
+               data-kp-divider-shape="zigzag|scallop|wave|cloud|pearls|line|none"
+               on <html>, on any ancestor, or on one divider. Each value only
+               sets custom properties, so the nearest element that names a
+               shape wins by inheritance. With no attribute anywhere, the
+               theme's own register drawing stays, exactly as today.
+
+               Knobs, read where the shape is named:
+                 --kp-divider-tile   the repeat width (1.5rem)
+                 --kp-divider-height the divider's height (3rem)
+                 --kp-divider-ink    plain divider colour (--primary)
+                 --kp-divider-ink-alt alt divider colour (--muted-foreground;
+                                      pastel's register sets --accent-foreground)
+               ================================================================== */
+            [data-kp-divider-shape='zigzag'] {
+                --kp-divider-mask-image: linear-gradient(#000 0 0), conic-gradient(from -45deg at 50% 100%, #000 90deg, #0000 0);
+                --kp-divider-mask-size:
+                    100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                    var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+                --kp-divider-mask-position: top, bottom;
+                --kp-divider-mask-repeat: no-repeat, round no-repeat;
+            }
+            [data-kp-divider-shape='scallop'] {
+                --kp-divider-mask-image:
+                    linear-gradient(#000 0 0), radial-gradient(circle farthest-side at 50% 0, #000 calc(100% - 0.6px), #0000 100%);
+                --kp-divider-mask-size:
+                    100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                    var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+                --kp-divider-mask-position: top, bottom;
+                --kp-divider-mask-repeat: no-repeat, round no-repeat;
+            }
+            [data-kp-divider-shape='wave'] {
+                --kp-divider-mask-image:
+                    linear-gradient(#000 0 0),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10' preserveAspectRatio='none'%3E%3Cpath d='M0 0H40V5Q30 15 20 5T0 5Z'/%3E%3C/svg%3E");
+                --kp-divider-mask-size:
+                    100% calc(100% - var(--kp-divider-tile, 1.5rem) / 2 + 1px),
+                    calc(var(--kp-divider-tile, 1.5rem) * 2) calc(var(--kp-divider-tile, 1.5rem) / 2);
+                --kp-divider-mask-position: top, bottom;
+                --kp-divider-mask-repeat: no-repeat, round no-repeat;
+            }
+            [data-kp-divider-shape='cloud'] {
+                --kp-divider-mask-image:
+                    linear-gradient(#000 0 0),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 16' preserveAspectRatio='none'%3E%3Cpath d='M0 0H60V3A9 9 0 0 1 42 3A12 12 0 0 1 18 3A9 9 0 0 1 0 3Z'/%3E%3C/svg%3E");
+                --kp-divider-mask-size:
+                    100% calc(100% - var(--kp-divider-tile, 1.5rem) * 0.6 + 1px),
+                    calc(var(--kp-divider-tile, 1.5rem) * 3) calc(var(--kp-divider-tile, 1.5rem) * 0.8);
+                --kp-divider-mask-position: top, bottom;
+                --kp-divider-mask-repeat: no-repeat, round no-repeat;
+            }
+            [data-kp-divider-shape='pearls'] {
+                --kp-divider-mask-image: linear-gradient(#000 0 0), radial-gradient(circle closest-side, #000 calc(100% - 0.6px), #0000 100%);
+                --kp-divider-mask-size: 100% 1px, var(--kp-divider-tile, 1.5rem) calc(var(--kp-divider-tile, 1.5rem) / 2);
+                --kp-divider-mask-position: center, center;
+                --kp-divider-mask-repeat: no-repeat, space no-repeat;
+            }
+            [data-kp-divider-shape='line'] {
+                --kp-divider-mask-image:
+                    linear-gradient(90deg, #0000, #000 18% 82%, #0000), radial-gradient(circle closest-side, #000 calc(100% - 0.6px), #0000 100%),
+                    radial-gradient(circle closest-side, #000 calc(100% - 0.6px), #0000 100%),
+                    radial-gradient(circle closest-side, #000 calc(100% - 0.6px), #0000 100%);
+                --kp-divider-mask-size: 100% 3px, 0.55rem 0.55rem, 0.55rem 0.55rem, 0.55rem 0.55rem;
+                --kp-divider-mask-position: center, calc(50% - 1.1rem) 50%, 50% 50%, calc(50% + 1.1rem) 50%;
+                --kp-divider-mask-repeat: no-repeat;
+            }
+            [data-kp-divider-shape='none'] {
+                --kp-divider-mask-image: linear-gradient(#0000 0 0);
+                --kp-divider-mask-size: 100% 100%;
+                --kp-divider-mask-position: center;
+                --kp-divider-mask-repeat: no-repeat;
+            }
+
+            /* The one drawing rule every shape shares. It takes the divider
+               back from whatever the register drew (clip-path, pseudo-elements,
+               filters) and paints one ink through the shape's mask. */
+            :is([data-kp-divider-shape] [data-kp-divider], [data-kp-divider][data-kp-divider-shape]) {
+                display: block;
+                position: relative;
+                block-size: var(--kp-divider-height, 3rem);
+                margin-block: 0;
+                padding: 0;
+                border: 0;
+                box-shadow: none;
+                filter: none;
+                opacity: 1;
+                overflow: visible;
+                transform: none;
+                animation: none;
+                clip-path: none;
+                background: var(--kp-divider-ink, var(--primary));
+                mask-image: var(--kp-divider-mask-image);
+                mask-size: var(--kp-divider-mask-size);
+                mask-position: var(--kp-divider-mask-position);
+                mask-repeat: var(--kp-divider-mask-repeat);
+            }
+            :is([data-kp-divider-shape] [data-kp-divider], [data-kp-divider][data-kp-divider-shape])::before,
+            :is([data-kp-divider-shape] [data-kp-divider], [data-kp-divider][data-kp-divider-shape])::after {
+                content: none;
+            }
+            /* The alt divider (before the footer) takes the second ink and
+               faces up: the shaped edge points into the surface above it. */
+            :is([data-kp-divider-shape] [data-kp-divider='alt'], [data-kp-divider='alt'][data-kp-divider-shape]) {
+                background: var(--kp-divider-ink-alt, var(--muted-foreground));
+                transform: scaleY(-1);
+            }
+            /* A theme names its own inks where the default does not suit it.
+               This line would sit in css/pastel-register.css: pastel keeps its
+               mint ink for the footer seam. (--accent-foreground is not a safe
+               package default: in shade-light it is a pale ink that vanishes
+               on the page ground, measured on this page.) */
+            [data-theme='pastel'] {
+                --kp-divider-ink-alt: var(--accent-foreground);
+                --kp-divider-ink-alt-base: var(--accent-foreground);
+            }
+            /* "Room only": the base rule's one step of the spacing scale. */
+            :is([data-kp-divider-shape='none'] [data-kp-divider], [data-kp-divider][data-kp-divider-shape='none']) {
+                block-size: var(--kp-space-xl);
+            }
+
+            /* The soft-ink option for the live block: the same two inks mixed
+               toward the page ground, so a pastel page gets its pale rose and
+               mint rather than full plum and dark mint. */
+            .dv-soft {
+                --kp-divider-ink: color-mix(in oklab, var(--primary) 38%, var(--background));
+                --kp-divider-ink-alt: color-mix(in oklab, var(--kp-divider-ink-alt-base, var(--muted-foreground)) 45%, var(--background));
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>Dividers: softer shapes for pastel, and a knob to choose one</h1>
+            <p class="cat-intro">
+                Kenny, on <code>catalogue/page-effects.html#dividers</code> in pastel: "The sawtooth isn't really fitting with 'Pastel' which is
+                fluffier and rounder. And there should be an option." This page shows the pastel divider as it ships, five softer shapes, then a
+                proposed knob, <code>data-kp-divider-shape</code>, switching live. Parts marked
+                <span class="dv-tag dv-tag--package">package</span> are the stylesheets as they ship: the surfaces (<code>data-kp-surface</code>),
+                <code>.kp-section</code>, <code>.kp-stack</code>, <code>.kp-footer</code>, the radio group (<code>.kp-fieldset</code>) and the
+                dividers' own markup. Parts marked <span class="dv-tag dv-tag--mock">mock</span> use the knob, which does not exist in the package:
+                its rules are in this page's <code>&lt;style&gt;</code>, written as they would ship. The page opens in pastel; loaded registers:
+                pastel, shade-light, dark. The theme menu in the bar reaches the other themes.
+            </p>
+            <div class="dv-switcher" role="group" aria-label="Theme for this page">
+                <span class="dv-tag dv-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-dv-theme="pastel" aria-pressed="true">pastel</button>
+                <button type="button" class="kp-button kp-button--ghost" data-dv-theme="shade-light" aria-pressed="false">shade-light</button>
+                <button type="button" class="kp-button kp-button--ghost" data-dv-theme="dark" aria-pressed="false">dark</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="current">
+                <h2>0 · As it ships <span class="dv-tag dv-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> pastel's torn tabs from <code>css/pastel-register.css</code>: a 3.2rem bar in <code>--primary</code> cut to a
+                    zig-zag by a percentage <code>clip-path</code>, then the alt bar in <code>--accent-foreground</code> (a dark mint) with the teeth
+                    on top. The points are hard and the teeth stretch with the width, because the polygon is in percentages. This is what the five
+                    shapes below are measured against. In shade-light and dark this block shows their own drawings, untouched.
+                </div>
+                <div class="dv-stage">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="scallop">
+                <h2>1 · Scallop <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same bar and the same two inks as today, but the edge is a row of half circles, the shape of a cake doily or a
+                    paper cupcake case. The circles are a fixed 1.5rem across (<code>--kp-divider-tile</code>) and the count rounds to fit the width,
+                    so there is never a half circle at either end and the circles stay round at any width. The alt one faces up into the app surface.
+                    Check the seam between the flat bar and the circles: there must be no hairline gap.
+                </div>
+                <div class="dv-stage" data-kp-divider-shape="scallop">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="wave">
+                <h2>2 · Wave <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a smooth, even wave with no corners at all: one tile is 3rem wide and 0.75rem deep, drawn as a small SVG path
+                    through the mask, repeated and rounded to fit. It is the calmest of the band shapes. Check that the wave is continuous where one
+                    tile meets the next (no step), and that the alt wave is the same wave mirrored, in the mint ink.
+                </div>
+                <div class="dv-stage" data-kp-divider-shape="wave">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="cloud">
+                <h2>3 · Cloud <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the "fluffiest" reading: round bumps of two sizes (a large one between two smaller ones, repeated every 4.5rem),
+                    like the underside of a cloud. It has more character than the scallop and less regularity; judge whether the small cusps where two
+                    bumps meet read as soft or as points. The alt cloud faces up.
+                </div>
+                <div class="dv-stage" data-kp-divider-shape="cloud">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="pearls">
+                <h2>4 · Pearls <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> no bar at all: a string of round beads (0.75rem, one every 1.5rem) on a 1px thread, spread with
+                    <code>space</code> so the first and last bead touch the edges. Much lighter than the band shapes; the surfaces meet with only the
+                    beads between them. Check whether this is too quiet to separate the hero from the app surface in pastel, where both grounds are
+                    pale.
+                </div>
+                <div class="dv-stage" data-kp-divider-shape="pearls">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="line">
+                <h2>5 · Soft rule <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the plainest option: a 3px rule that fades out over its first and last 18 %, with three round beads at the centre.
+                    No edge shape at all, so it suits a page where the surfaces themselves already differ. Check that the fade reaches transparent at
+                    both ends and that the beads sit exactly on the rule.
+                </div>
+                <div class="dv-stage" data-kp-divider-shape="line">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="knob">
+                <h2>6 · The knob, live <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> choose a shape and the two dividers in the frame change at once; the line under the radios shows the attribute a
+                    consumer would write. <b>Theme default</b> removes the attribute, so the register's own drawing returns (pastel's zig-zag,
+                    shade-light's blurred seam, dark's scale). <b>Soft ink</b> mixes both inks toward the page ground. The third divider, between the
+                    two app surfaces, carries its own <code>data-kp-divider-shape="pearls"</code>: it must stay pearls whatever the frame is set to,
+                    which shows that the nearest element naming a shape wins. Switch to dark: every shape must still draw, in dark's own
+                    <code>--primary</code>. In a consumer the attribute would normally sit on <code>&lt;html&gt;</code>; here it sits on the frame so
+                    the other blocks on this page keep their own shapes.
+                </div>
+                <div class="dv-controls">
+                    <fieldset class="kp-fieldset" data-kp-layout="inline">
+                        <legend class="kp-field__label">Divider shape</legend>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="" /> Theme default</label>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="zigzag" /> zigzag</label>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="dv-shape" value="scallop" checked /> scallop</label
+                        >
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="wave" /> wave</label>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="cloud" /> cloud</label>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="pearls" /> pearls</label>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="line" /> line</label>
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-shape" value="none" /> none</label>
+                    </fieldset>
+                    <fieldset class="kp-fieldset" data-kp-layout="inline">
+                        <legend class="kp-field__label">Ink</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="dv-ink" value="theme" checked /> Theme inks</label
+                        >
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="dv-ink" value="soft" /> Soft ink</label>
+                    </fieldset>
+                    <p class="dv-code">Markup: <output id="dv-attr">&lt;html data-kp-divider-shape="scallop"&gt;</output></p>
+                </div>
+                <div class="dv-stage" id="dv-live" data-kp-divider-shape="scallop">
+                    <section class="kp-section kp-stack" data-kp-surface="hero">
+                        <p class="microlabel">hero surface</p>
+                        <p class="kp-prose">Order the lemon sponge by Thursday noon for a Saturday pick-up.</p>
+                    </section>
+                    <div data-kp-divider></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface</p>
+                        <p class="kp-prose">Your basket holds two items: a lemon sponge and a box of six almond biscuits.</p>
+                    </section>
+                    <div data-kp-divider data-kp-divider-shape="pearls"></div>
+                    <section class="kp-section kp-stack" data-kp-surface="app">
+                        <p class="microlabel">app surface, second part</p>
+                        <p class="kp-prose">Pick-up is at the side door on Rue des Tilleuls; ring once and wait.</p>
+                    </section>
+                    <div data-kp-divider="alt"></div>
+                    <footer class="kp-footer">
+                        <p class="microlabel">Rue des Tilleuls 12 · open Tuesday to Sunday</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="narrow">
+                <h2>7 · At 320 px <span class="dv-tag dv-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> every shape in a 20rem (320 px) frame, the width of a small phone. The scallops, waves, clouds and beads must keep
+                    their size and simply be fewer; nothing may squash or stretch, and no divider may be wider than its frame (no sideways scroll).
+                    Compare the zig-zag frame, which uses the knob's fixed-size teeth rather than the register's percentage polygon.
+                </div>
+                <div class="dv-narrow">
+                    <div data-kp-divider-shape="zigzag">
+                        <p class="dv-name">zigzag</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="scallop">
+                        <p class="dv-name">scallop</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="wave">
+                        <p class="dv-name">wave</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="cloud">
+                        <p class="dv-name">cloud</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="pearls">
+                        <p class="dv-name">pearls</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                    <div data-kp-divider-shape="line">
+                        <p class="dv-name">line</p>
+                        <section class="kp-section" data-kp-surface="hero"><p class="kp-prose">Order by Thursday noon.</p></section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section" data-kp-surface="app"><p class="kp-prose">Two items in your basket.</p></section>
+                        <div data-kp-divider="alt"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu and the judging
+            // panel follow it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-dv-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.dvTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.dvTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+            // Mock knob control: writes data-kp-divider-shape on the live frame.
+            const live = document.getElementById('dv-live');
+            const out = document.getElementById('dv-attr');
+            for (const input of document.querySelectorAll('input[name="dv-shape"]')) {
+                input.addEventListener('change', () => {
+                    if (input.value) live.setAttribute('data-kp-divider-shape', input.value);
+                    else live.removeAttribute('data-kp-divider-shape');
+                    out.textContent = input.value
+                        ? `<html data-kp-divider-shape="${input.value}">`
+                        : '<html> (no attribute: the theme draws its own)';
+                });
+            }
+            for (const input of document.querySelectorAll('input[name="dv-ink"]')) {
+                input.addEventListener('change', () => live.classList.toggle('dv-soft', input.value === 'soft'));
+            }
+        </script>
+    </body>
+</html>

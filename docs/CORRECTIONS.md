@@ -138,6 +138,138 @@ against the surface it lies on. B: the visited link is held apart from the
 link by the generator and by nothing else, so a hand-authored value would
 slip past.
 
+**4 · How we prevent recurrence.** Kenny's option (b), scope-93: each
+register that drew the bar on an absolutely positioned `mark::after` over a
+phrase that can wrap paints it as the mark's own background — a one-colour
+gradient whose `background-size` is the reveal — with
+`box-decoration-break: clone`, as lapis, nostromo and forest already did.
+A background follows every line of the phrase, reaches past the words only
+as padding the line makes room for, and adds no reflow finding. The
+registers whose marks never wrap (`white-space: nowrap`: cyberpunk,
+synthwave, terminal, brutalism, phantom, retro, titanium, dark, shade-dark)
+and high-contrast (an inline block) keep their bars. Two package-level
+answers were tried first and refused: `white-space: nowrap` scrolled the
+concept page sideways at 320px in formal, grotesk, sepia and solstice, and
+an inline block left each bar's bleed counted as overflow in 13 themes.
+`tests/redaction-cover.spec.mjs` reads, per theme and per phrase, the
+painted redaction against the words' ink, at both review sizes and at the
+phrase's own break.
+
+**5 · What the remedy costs.** Seven registers changed, each keeping its
+direction, timing and stagger:
+
+- formal — the ink narrows toward the phrase's start, 260ms, stagger 80ms;
+  the words keep their ink, the bar's own colour, as before.
+- pastel — the plate narrows toward the start, 380ms, staggered; the word
+  takes its ink 220ms in. The plate no longer also fades (a gradient's
+  colour does not transition); it only narrows.
+- sepia — the bar lifts toward the start on the theme's own curve and
+  `--kp-redact-duration`, staggered; the word's ink returns on
+  `--fx-duration`.
+- blueprint — the block narrows away from the left, 400ms, stagger 150ms;
+  the block is not the words' colour, so each phrase's words take their ink
+  once its block is gone.
+- solstice — `kp-cal-redact` now animates the background's width, right to
+  left, staggered; the bar covers the words at rest as before, and the words
+  wear no ink until their bar has gone (they were visible under the bar
+  before, which a background cannot hide).
+- shade-light — the plate narrows toward the start, 260ms, stagger 90ms,
+  0.05em short of the words' top and bottom as before.
+- grotesk — the bar is cut toward the phrase's end in three steps,
+  staggered 90ms; the word takes its ink when the cut is done.
+
+Measured in firefox at 1400×900, the third phrase's bar against its words,
+before and after: formal 158×21 over 154, now 159×21; pastel 160×21, now
+160×20; sepia 158×21, now 158×21; blueprint 163×21, now 163×21; solstice
+158×20, now 158×20; shade-light 146×20, now 147×21; grotesk 164×21, now
+164×21. The bleed past each end is now padding in the line, so the words
+beside a phrase sit 1 to 2.4px further off and a line can break one word
+earlier. Reduced motion shows every state at once, as before. Every dossier
+block in those seven themes changes and returns for Kenny's verdict.
+
+**6 · Who enforces it.** Discipline, not code — stated as such
+deliberately. No hook or test can inspect prose that only ever exists in
+a conversation. What helps: the rule lives in this project's `CLAUDE.md`,
+so every session opened in this directory reads it before acting.
+
+**7 · How and when it gets measured.** At the next form in this project
+carrying checkable claims — the Phase 2 decision form on components and
+missing tokens. Claude counts how many claims assert a fact about code or
+another project, and how many of those carry a file:line or an explicit
+second-hand label, and reports that count at the top of that form. The
+measure works when the two numbers match. Queued in
+[MINI_ROUNDS.md](MINI_ROUNDS.md) until it has happened.
+
+**8 · The fallback if the measurement fails.** Switch to the strict form:
+a form then contains only claims that carry a source, and everything
+unverified becomes its own item asking "I do not know this — shall I
+measure it?". Slower and longer, but it makes ignorance visible instead of
+presenting it as fact.
+
+**9 · When the measure is reviewed.** At this project's retrospective
+(Phase 10). A rule without a review moment outlives its usefulness, and
+being able to remove rules is the only thing that keeps the stack
+readable.
+
+### KT1's fallback, activated 2026-09-04
+
+Field 8's fallback triggered at the Phase 7 gate, on Kenny's decision. The
+measure had already failed once after being agreed: on 2026-09-03, after
+KT1 was approved, Claude asserted that cyberpunk had no display face at
+all in the plain-CSS consumers. Kenny looked at the live kyu dashboard and
+saw Chakra Petch; both consumers set it themselves from their own
+`theme-bridge.css`. The claim was checkable and was not checked.
+
+The count KT1 asked for was finally taken at the Phase 7 gate form — nine
+claims about code, nine carrying a file:line or a measured number, so they
+matched. Kenny's answer was that one matching count does not undo a
+measure that had already been broken, and that the fallback applies from
+here.
+
+**So, from 2026-09-04, in this project:** every claim in a form carries
+its source, or it becomes its own item in that form. Not only the
+checkable ones and not only the ones a decision rests on — every claim.
+An assertion with no source is not softened with a hedge; it is either
+sourced or it is asked.
+
+## KT2 · A gate that checked one half of a two-halved property
+
+Approved 2026-09-04, all nine fields "Correct". The measurement of field 7
+happened in the same session; the correction is **closed**.
+
+**1 · What went wrong.** L3 built the derived interaction states and
+checked whether the text on such a state still reads. It never asked the
+other question: whether the state is distinguishable from the colour it
+came from. Measured 2026-09-04, the distance between a base colour and its
+pressed state, on the OKLab scale where roughly 10 means "you can see that
+it changed": formal 12.1, light 10.6, dark 10.7, pastel 11.4, forest 11.3 —
+and cyberpunk 2.6 to 7.1, terminal 4.5 to 8.4. In those two themes,
+pressing a control changed nothing anyone could see.
+
+Two things were corrected during the round, both of them my own claims:
+
+- I first reported that hover was under the threshold in every theme and
+  that this was the fault. Hover is 2.4 to 3.4 everywhere, which is the
+  same order as Material's 8% state layer. The outlier is the pressed
+  state in the two opt-out themes, and the wider claim was wrong.
+- I first measured the badge plates with a contrast ratio and read 1.04 to
+  1.40, which sounds like an invisible badge. A contrast ratio compares
+  luminance only, and those plates differ in hue; in perceptual distance
+  they sit 5.6 to 12.6 from their card. The instrument was wrong, not the
+  badges.
+
+**2 · Which gate let it through.** `checkStates` in
+`gates/check-invariants.mjs`. It reported "35 checks, all seven themes in
+order" and covered the missing half with that number. AR8 asks a gate how
+many things it checked; nothing asked whether they were the right 35.
+
+**3 · Where else the same fault sits.** Stated as *a gate checks one half
+of a two-halved property and reports green*, it was found twice more.
+A: a badge's text is gated against its plate; the plate was never measured
+against the surface it lies on. B: the visited link is held apart from the
+link by the generator and by nothing else, so a hand-authored value would
+slip past.
+
 **4 · How we prevent recurrence.** Three things. `checkStateVisibility`
 measures the missing half and was written failing, before the fix
 (standing rule 8). The derivation lets the pressed state give up chroma
@@ -1237,7 +1369,7 @@ is deleted and `main` requires no status check. There is no run to read a
 conclusion from, so KT12's measure has nothing left to do and is retired
 rather than kept as a rule nobody can follow. What replaces it is not
 another automatic check but Kenny's own: `npm run gates` still refuses a
-commit, `npm run test:affected` runs what a change touches, and `npm run
+commit, `test:affected` (retired at scope-33) runs what a change touches, and `npm run
 verify` runs everything on the command he gives before a release. The
 fault KT12 recorded — reading an exit code instead of a verdict — cannot
 recur in that shape, because nothing reads an exit code any more; the
@@ -1495,14 +1627,14 @@ suite, both engines, 2528 tests, 6.0 minutes — and the no-CI table in
 run the no-CI table assigns to Kenny", and this session was counted rather
 than guessed: seven playwright runs. One was the whole suite. The other
 six ran the specs a change touches — which is the right scope — but in
-chromium and firefox together, where `npm run test:affected` runs
+chromium and firefox together, where `test:affected` (retired at scope-33) runs
 `--project=firefox` and nothing else, for a reason its own comment gives:
 Kenny's browser is a firefox derivative and firefox has been the odd
 engine here fourteen times against chromium's six. Seven of seven
 deviated; one of them was the plain violation.
 
 **4 · How we prevent recurrence.** Two things. During work Claude runs
-`npm run test:affected` and never playwright directly; where a drill wants
+`test:affected` (retired at scope-33) and never playwright directly; where a drill wants
 the second engine, that is a question rather than a decision. And Kenny's
 new agreement, which changes the rule rather than only the habit — see
 below.
@@ -2333,7 +2465,7 @@ handler)`, so the handler was taken as the pattern and every run died on
 whole framework-free channel's proof: the page readable with its register,
 its fonts and its module all refused. It had not actually run.
 
-**2 · Why nobody saw it.** `npm run test:affected` resolved a change to
+**2 · Why nobody saw it.** `test:affected` (retired at scope-33) resolved a change to
 `css/<theme>-register.css` to `tests/register-<theme>.spec.mjs` and
 nothing else. Every quirk and every hover gesture of round seven is a
 register edit, so the inner loop ran twenty tests and printed green while
@@ -2692,3 +2824,1191 @@ body; then the same for any descendant selector, which is what found
 phantom and cleared it.
 
 **10 · When we review the measure.** At round seven's retrospective.
+
+## fix-18 · Stopping after a phase when no input was needed (2026-09-13)
+
+**1 · What went wrong.** Phase 9 closed — the release tagged, published
+and verified — and Claude ended the turn with "say when you want Phase
+10". Kenny's reply: *"dus je stopt weer na een fase, nadat ik vorige keer
+expliciet gezegd heb dat je moet doorgaan als je geen input van mij nodig
+hebt."* Fourth time.
+
+**2 · Which gate let it through.** None. The rule lives in the central
+memory and is read at every session start, and nothing enforces it at the
+moment it matters.
+
+**3 · Where the same fault sits.** The property is **a rule that only
+discipline holds, about something that happens at the END of a turn** —
+the one moment when attention is lowest and the work feels finished.
+Searched with `grep -rl` over the central memory store for entries of that
+shape: two already cover this exact rule, `auto-start-next-phase.md`
+(2026-09-02, from JobTracker) and `fases-vanzelf-starten.md` (2026-09-04,
+from this project). Both were broken. On 2026-09-12 Claude strengthened
+the second one with the failure pattern itself — and then broke it again
+the same evening, twice.
+
+**4 · How we prevent recurrence.** `~/.claude/hooks/may-i-stop.py`, wired
+as a `Stop` hook. It refuses to end a turn unless `CLAUDE.md`'s status
+block says, in a new `Next action` row, `waiting on Kenny: <what>`.
+Continuing becomes the default; stopping requires writing down what is
+awaited, by name.
+
+Only projects carrying a `Procedure status` block are touched, and the
+hook never blocks twice in one turn, so it cannot loop.
+
+**5 · What the remedy costs.** One hook and one row in a table Claude
+already maintains. The row has to be kept current — and if it is not, the
+hook blocks, so forgetting falls the safe way. The real cost is that a
+legitimate stop now needs a sentence naming what is awaited, which is a
+sentence worth writing anyway.
+
+**6 · Who enforces it.** Code. A `Stop` hook in `~/.claude/settings.json`,
+beside the `SessionStart` and `UserPromptSubmit` hooks already there.
+
+**7 · How we measure that it works.** At the next phase close: either the
+hook blocks, or it does not have to because the next phase had already
+begun. Both are information. Queued in `docs/MINI_ROUNDS.md`.
+
+**8 · The fallback if the measurement fails.** The hook also blocks while
+a form is unanswered, so only Kenny's reply can end the turn.
+
+**9 · Gezocht met.** `grep -rl` over
+`~/.claude/projects/-home-kenny-homeassistant-mcp/memory/` for entries
+about continuing between phases; `python3 -c` over `~/.claude/settings.json`
+for the hook types already wired; and the hook itself run against five
+states before it was proposed — mid-phase, a named wait, an empty row, a
+missing row, and a directory with no procedure.
+
+**10 · When we review the measure.** At round eight's retrospective, or
+sooner if it ever blocks a turn that should have ended.
+
+**A note on the first proposal, which was wrong.** The first design
+inferred the state from two rows the status block already carries: when
+`Current phase` and `Last completed gate` name the same number, the phase
+is done. Measured against this round's own history, it fired at
+`2bbb2d9` — in the middle of Phase 7, with work still running — because
+the gate's answer is recorded while the work continues. A check that cries
+wolf is one people learn to skip, which is the lesson `check-doc-quotes`
+had already taught two days earlier. The explicit row replaced it.
+
+## fix-19 · Review links pointed at a server that was no longer running (2026-09-13)
+
+**1 · What went wrong.** The research-and-catalogue form listed five pages
+to look at "op de draaiende server", `http://localhost:4300/...`. Kenny:
+*"Die vijf dingen om naar te kijken zie ik niet? ofwel file not found
+ofwel kan het niet verbinden met die localhost link?"* Measured afterwards:
+`ss -ltnp | grep :4300` returned nothing and `curl` answered `000` for
+every link. The server had been started through the session's preview pane
+and ended when the session restarted for a model switch.
+
+**2 · Which gate let it through.** None. Every link returned 200 when it
+was written into the form; nothing checks a link at the moment it is
+handed over, and the server's lifetime belonged to a session rather than
+to the person using it.
+
+**3 · Where the same fault sits.** The property is **a URL handed to Kenny
+that depends on a process Claude started and does not keep alive**.
+Searched with `git grep -nE 'localhost:[0-9]{4}' -- '*.md'` over the
+tracked documents: none. Searched this session's transcript for Claude
+replies carrying a `localhost:NNNN` link: 6 replies, 19 links, all of them
+on a preview-pane server. The round-seven link Kenny opened himself worked
+only because an older server had been left running for four days.
+
+**4 · How we prevent recurrence.** Two parts. `npm run catalogue` starts
+the static server in Kenny's own terminal and prints every review page
+only after the running server has answered 200 for it
+(`tests/fixtures/serve-catalogue.mjs`), so a printed link works. And a
+review hand-over gives that command rather than a bare link; where Claude
+does give a link, it is checked with `curl` in the same turn, immediately
+before the message.
+
+**5 · What the remedy costs.** One command for Kenny to run before a
+review, in a terminal he keeps open, and one `curl` per link for Claude.
+
+**6 · Who enforces it.** The script is code: it cannot print a dead link.
+The hand-over habit is discipline-enforced.
+
+**7 · How we measure it works, and when.** At the next Kijken step: Kenny
+runs `npm run catalogue` and every printed page opens. Queued as
+`fix-19-M1`.
+
+**8 · If the measurement fails.** A page that `npm run catalogue` printed
+with ✓ and that Kenny cannot open means the fault is not the server's
+lifetime (a firewall, a browser profile, a port) — measured then, on his
+machine, with his permission for that occasion.
+
+**9 · When we review the measure.** When the catalogue is published by
+`pages.yml` and reviewing no longer needs a local server at all; then the
+command becomes optional and this record says so.
+
+## fix-20 · The office lamp flashed before the reply was finished (2026-09-13)
+
+**1 · What went wrong.** Kenny: *"de HA notificatie mag pas gestuurd worden
+als allerlaatste stap, zodat ik niet meer op iets moet wachten nadat mijn
+lampen flashen."* Measured over this session's transcript for 2026-09-13:
+the lamp flashed in 8 turns, and in 7 of them Claude wrote text after the
+last flash.
+
+**2 · Which gate let it through.** None. The global rule already says the
+lamp is the very last action of a turn (Kenny, 2026-09-08); nothing holds
+it, and the reply was written after the tool calls out of habit.
+
+**3 · Where the same fault sits.** The property is **a signal meaning
+"Claude is done" sent before Claude is done**. Searched with a pass over
+the transcript that splits it into turns at each human message and checks
+whether any assistant text follows the last `notify_color_lights` call:
+7 of 8 turns today. The PushNotification has the same property and was sent
+before the final text in the same turns.
+
+**4 · How we prevent recurrence.** Order of the end of a turn, written as
+the steps they are: the form rendered, the reply text written in full, then
+the PushNotification, then the lamp as the final tool call, with nothing
+after it. Consciously no hook: a Stop hook sees the order only once the
+text has already been shown, so it could not prevent a flash, only add a
+second one at the end.
+
+**5 · What the remedy costs.** Nothing but the order.
+
+**6 · Who enforces it.** Discipline, marked as such.
+
+**7 · How we measure it works, and when.** The same transcript pass, run at
+the end of this round over every turn after this record: zero turns with
+text after the last flash. Queued as `fix-20-M1`.
+
+**8 · If the measurement fails.** A Stop hook that refuses a turn whose last
+tool call is not the lamp when a lamp was called, accepting the double flash
+as the price, asked for as a global change.
+
+**9 · When we review the measure.** At that measurement.
+
+## fix-21 · The review page restyled what it was showing (2026-09-13)
+
+**1 · What went wrong.** Kenny marked "Dialog with description and close"
+not approved in nostromo: the close button still touched the word "shift".
+On the component page the gap measured 59.7px; on the review page the
+dialog title had lost its class and its 52px right padding. The review page
+rewrote every `h2` in a gathered block to `h3` without its attributes, and
+17 headings inside the stages lost their styling.
+
+**2 · Which gate let it through.** None. The review page's fingerprint hashed
+what it rendered, so a block drawn wrongly was hashed wrongly and could be
+approved; nothing compared the gathered block with its component page.
+
+**3 · Where the same fault sits.** The property is **the review page drawing a
+block differently from its component page**. Searched with a count of
+headings inside `.cat-stage` that carry no class on the review page, and a
+comparison of the dialog title's computed padding on both pages: 17 headings,
+all from the one rewrite; nothing else found by that search.
+
+**4 · How we prevent recurrence.** Only the block's own heading steps down,
+keeping its attributes. A test compares each gathered block's computed style
+with the same block on its component page — queued as `fix-21-M1`, to be
+written with the next change to `catalogue/review.js`.
+
+**5 · What the remedy costs.** One comparison test over 109 blocks.
+
+**6 · Who enforces it.** The fix is code; the comparison test is queued.
+
+**7 · How we measure it works, and when.** At the next change to
+`catalogue/review.js`: the comparison test passes for every block in formal
+and nostromo.
+
+**8 · If the measurement fails.** The review page stops rewriting gathered
+markup at all and nests blocks under a component heading instead.
+
+**9 · When we review the measure.** When the comparison test exists.
+
+## fix-22 · A search command waited on input for eleven and a half hours (2026-09-13)
+
+**1 · What went wrong.** Kenny found a background task running for 11h28m.
+It was a Bash command of Claude's; the tool moved it to the background after
+120 seconds and nobody stopped it. The first explanation — a `grep` given an
+empty file name, waiting on standard input — was refuted the same day: the
+tool's shell reads `/dev/null` (`readlink /proc/$$/fd/0`), and the same
+command with an empty name returns in 0.001 s. The real cause is not
+established; the processes were stopped before they were inspected.
+
+**2 · Which gate let it through.** None. A command that reads standard input
+is not refused, and a backgrounded shell has no lifetime.
+
+**3 · Where the same fault sits.** The property is **a shell of this session
+that outlives its turn**, whatever blocks it. Searched by listing processes
+whose standard output is a file under the session's `tasks/` directory, with
+their age: one, the listing's own shell.
+
+**4 · How we prevent recurrence.** Kenny first chose a global hook
+prefixing every command with `exec </dev/null` (form of 2026-09-13); Claude did
+not build it, because stdin already is `/dev/null` and it would not have stopped
+this. His second answer ("Klopt", same day): the global Stop hook
+(`~/.claude/hooks/may-i-stop.py`, committed in dev-procedure `abedf8c`) lists
+this session's shells older than ten minutes — any process whose output still
+goes to the session's `tasks/` files — and refuses the turn once per shell.
+
+**5 · What the remedy costs.** One pass over `/proc` per turn: 25 ms measured;
+a deliberately long background run is reported once too.
+
+**6 · Who enforces it.** The Stop hook, code.
+
+**7 · How we measure it works, and when.** On the turn that built it: a
+`sleep 900` started in the background must be refused at that turn's end, with
+the shell named in the message. At the end of round eight: the count of times
+the hook reported. Measured on the building turn: at 613 s the hook
+refused the turn with `pid 3251896 · 10 min · sleep 900`; the shell was then
+stopped with TaskStop.
+
+**8 · If the measurement fails.** Claude puts `timeout 600` before every command
+of its own that can run long, as discipline, and says so.
+
+**9 · When we review the measure.** At that measurement.
+
+## fix-23 · A blocklist took the review page down in Kenny's browser (2026-09-13)
+
+**1 · What went wrong.** In Kenny's browser the review page lost its
+navigation and every block, locally and on GitHub Pages, after a hard reload;
+the page's own boot check reported "Could not load
+https://kennypassenier.github.io/kp-themes/review/catalogue/catalogue.js".
+The module `catalogue/fingerprint.js`, added that day, matches EasyPrivacy's
+rule `/fingerprint.js^$domain=~github.com`, and FireDragon, his default
+browser, ships uBlock Origin (`/usr/lib/firedragon/distribution/policies.json`).
+One blocked import fails the whole module graph.
+
+**2 · Which gate let it through.** None. Claude's checks ran in Playwright's
+Firefox and in FireDragon with a fresh profile, neither with a blocklist
+loaded; the page was never tried the way its reviewer runs it.
+
+**3 · Where the same fault sits.** The property is **a published file name a
+blocklist refuses**. Searched by matching every file under catalogue/,
+research/, css/, js/ and fonts/ against the 1689 plain path rules of
+EasyPrivacy and EasyList: none after the rename.
+
+**4 · How we prevent recurrence.** `gates/check-catalogue.mjs` refuses a
+published file name containing fingerprint, analytics, tracking, tracker,
+beacon, telemetry or advert; and `catalogue/boot-check.js` puts the browser's
+error on a page whose script does not start, which is how this was found.
+
+**5 · What the remedy costs.** One directory walk per gate run; a word list
+that catches the common rules, not every one.
+
+**6 · Who enforces it.** The gate, code; the boot check, code.
+
+**7 · How we measure it works, and when.** Now: Kenny opens the published
+review page in FireDragon and sees the navigation and the blocks.
+
+**8 · If the measurement fails.** Claude asks Kenny for the console line that
+names the refused URL, and replaces the word list with a check against the
+blocklists themselves.
+
+**9 · When we review the measure.** At the end of round eight.
+
+## fix-24 · The ruler picked one click as both of its elements (2026-09-14)
+
+**1 · What went wrong.** Kenny: "waar ik ook klik, die pakt zowel het first als
+second element". `build()` in `catalogue/devtools.js` added document listeners
+on every open of the overlay and never removed them; after a second open one
+click ran the ruler twice and printed `first: 133 × 36 px` and `second: 133 ×
+36 px` for the same button.
+
+**2 · Which gate let it through.** None. The overlay had no test at all.
+
+**3 · Where the same fault sits.** The property is **a document or window
+listener added each time a catalogue tool opens or mounts, without removal**.
+Searched with `grep -n "document.addEventListener\|window.addEventListener"
+catalogue/*.js` (13 outside the overlay) and `grep -rn "mountPrompt(\|mountJudging(\|
+mountDevtools(\|mountComforts("` for their callers: each mount runs once per
+document, so the overlay was the only place.
+
+**4 · How we prevent recurrence.** The overlay's listeners share one
+AbortController, aborted on close and before a rebuild; the theme listener of
+`openDevtools()` too. `tests/catalogue-devtools.spec.mjs` opens the overlay
+three times and requires one click to pick only the first element; it failed
+with the fault in place.
+
+**5 · What the remedy costs.** One test of a few seconds.
+
+**6 · Who enforces it.** The test, code.
+
+**7 · How we measure it works, and when.** At Kenny's next use of the ruler on
+the published review site.
+
+**8 · If the measurement fails.** Claude records the sequence Kenny used and
+adds it to the test before changing the code again.
+
+**9 · When we review the measure.** At the end of round eight.
+
+## fix-25 · The side note lay over the review navigation (2026-09-13)
+
+Kenny found forest's vertical side note over the catalogue's side navigation:
+`.kp-side-note` is set absolutely in 14 registers and the block had no
+positioned container. The catalogue block is positioned and the long example
+removed (measured: the note stays inside its block in all 22 themes). The
+proposed package measure — the note positioning against its own section, or
+the guide requiring a positioned container — was **dropped by Kenny** in the
+form of 2026-09-14 ("Schrappen"): the package stays as it is.
+
+## fix-26 · Claude ended turns with prose where a form belonged (2026-09-14)
+
+**1 · What went wrong.** Kenny: "waarom gebruik je geen formulieren zoals
+afgesproken?" Two live-found faults (the ruler, the side note) got no
+correction form, and three choices (filter design, control heights, grotesk's
+hover) sat in prose under "nog open voor jou".
+
+**2 · Which gate let it through.** The Stop hook checks that the Next action
+row says Claude waits on Kenny, not that a form came in that turn.
+
+**3 · Where the same fault sits.** Of Kenny's 8 messages since the review site
+went live (2026-09-13 18:12 UTC), 5 were answered without a form: 18:30,
+19:20, 19:38, 20:23 and 22:39 UTC. Searched with a script over the session
+transcript that checks, per message of Kenny's, whether the answer carried a
+`show_widget` with `class="elicit"`.
+
+**4 · How we prevent recurrence.** The Stop hook refuses a turn that ends on
+"waiting on Kenny" without a form since his last message, where CLAUDE.md
+carries `forms-at-wait: required` (kp-themes only). A turn in which only an
+agent runs writes "waiting on agent: <what>" and may end without a form.
+
+**5 · What the remedy costs.** Claude can no longer end on "have a look"
+without a form that offers "nog niet gekeken".
+
+**6 · Who enforces it.** The Stop hook, code.
+
+**7 · How we measure it works, and when.** When built: the hook refuses one
+turn without a form. At the end of round eight: 0 turns on "waiting on Kenny"
+without a form. Measured on the building turn (2026-09-14): a
+turn ending on "waiting on Kenny" without a form was refused with the message
+naming `forms-at-wait: required`; five drills on fake transcripts behaved as
+intended (no form → refused, form after Kenny's message → allowed, form only
+before it → refused, no marker → allowed, waiting on agent → allowed).
+
+**8 · If the measurement fails.** Claude proposes it for every project, in a
+form.
+
+**9 · When we review the measure.** At the end of round eight.
+
+
+## fix-27 · A bar's dropdown ran past the window's right edge (2026-09-14)
+
+Approved 2026-09-14, "Zoals voorgesteld" [scope-83].
+
+**1 · What went wrong.** Kenny's catalogue note on grotesk: the dropdown under
+the last bar item ran past the window's right edge. `.kp-nav__menu` hung from
+its item's start edge (`inset-inline-start: 0`) whatever lay beyond it, so an
+item near the window's end sent its panel off screen.
+
+**2 · Which gate let it through.** None measured where a dropdown lies against
+the window. The catalogue's dropdown blocks put the item near the bar's start,
+and the overflow tests read the page's scroll width, which an absolutely
+placed panel does not widen on every page.
+
+**3 · Where the same fault sits.** Every theme and both channels: measured on
+`tests/fixtures/nav-menu.html`, a bar whose links sit at the window's end, in
+firefox before the change, the dropdown under the last item lay 36 to 106px
+past the right edge at 1400px in 21 themes — all but retro, whose window
+buttons hold the bar's last stretch — and 84 to 118px past it at 420px in 16
+(formal, light, dark, pastel, forest, high-contrast, sepia — React only —,
+blueprint, solstice, shade-light, shade-dark, retro, grotesk, lapis, nostromo,
+titanium); the six whose narrow bar wraps the item to the row's start
+(cyberpunk, synthwave, terminal, brutalism, deco, phantom) fitted there by
+chance. The mega menu built beside it
+[scope-48] shares the bar and is measured by the same test.
+
+**4 · How we prevent recurrence.** A dropdown is measured as it opens — on
+hover, on focus, and again when the window changes size — and hangs from its
+item's end edge (`data-kp-nav-menu-end`) when the start edge leaves it outside
+the window and the end edge does not: `placeNavMenu` in `js/components.js`,
+wired by `attachNavMenus` (through `js/auto.js`) and called by the React
+NavBar from its items. The @sweep test `tests/nav-menu.spec.mjs` holds it in
+all 22 themes, at 1400px and 420px, both channels.
+
+**5 · What the remedy costs.** A small script on the bar; without it a
+dropdown keeps its start edge. Pointer entry is not `:hover` in the style
+until the next frame in firefox, so a panel opening that way is measured one
+frame late, and may show that frame on its start edge.
+
+**6 · Who enforces it.** The sweep test, code, at the commit level of
+`npm run test:tags` and in every full run.
+
+**7 · How we measure it works, and when.** When built (2026-09-14):
+`tests/nav-menu.spec.mjs` "the dropdown under a bar's last item … [fix-27]"
+red before the change with 75 findings (21 themes at 1400px and 16 at 420px,
+per channel, listed in field 3), green after it in firefox and chromium, with
+the mega menu's panel inside the window and on the bar's edges in all 22 too.
+At the end of round eight: 0 notes of a bar menu past the window's edge on the
+catalogue.
+
+**8 · If the measurement fails.** The panel is placed in the top layer and in
+window coordinates, as `js/top-layer.js` does for the combobox list.
+
+**9 · When we review the measure.** At the end of round eight.
+
+## fix-28 · Kenny's browser gave unset controls his desktop font (2026-09-14)
+
+**1 · What went wrong.** 39 of the 158 verdict hashes Kenny recorded on
+2026-09-14 (commit `001af2f3`) differed from the hashes Playwright's Firefox
+reads for the same blocks at the same commit. An earlier agent's measurement
+found why: FireDragon 155 gives a button, a checkbox or a switch the package
+leaves without a font his desktop font, Fira Sans (GTK), where Playwright's
+Firefox 153 reads the generic `sans-serif`. With Fira Sans on those controls
+his hashes were reproduced for `button--icons` in formal, nostromo, grotesk,
+light, dark, deco, blueprint and titanium, and for dark's
+`navigation--bar-collapsed`, `bar-long` and `bar-search`. FireDragon 155
+rounding a line height to another half pixel than Firefox 153 explained five
+of synthwave's button blocks and deco's sizes. Nine stay unexplained:
+brutalism's seven button blocks, synthwave's groups and dark's app shell.
+Kenny's answer to the question (scope-83, fix-28): "Klopt".
+
+**2 · Which gate let it through.** None could: `record` wrote Kenny's hashes
+without comparing them to what the tools read, and no test ran a browser
+whose default font differed from the page's.
+
+**3 · Where the same fault sits.** Every control the package styles without
+a font, found by forcing a distinctive default (`DejaVu Serif`, as the lowest
+author layer) on every review page in all 22 themes: `.kp-icon-button`
+(with `.kp-alert__close`, `.kp-toast__close`, `.kp-dialog__close`),
+`.kp-nav__toggle`, `.kp-sidenav__toggle`, `.kp-field__check` (checkbox and
+radio), `.kp-switch__input`, the colour picker's range inputs and the
+upload's hidden file input. The same set in every theme; no register sets a
+font on any of them. The research navbar demo's own mock radios are the
+demo's, not the package's.
+
+**4 · How we prevent recurrence.** `css/components.css` gives those controls
+`font-family: inherit` — the family only, so no size and no box moves.
+`tests/control-font.spec.mjs` forces the distinctive default and fails on
+any control of a review page that shows it, and on a moved `button--icons`
+hash in formal and nostromo. `node gates/verdicts.mjs record` prints
+`node gates/verdicts.mjs compare --against-browser --commit <HEAD>`, which
+hashes every entry recorded at that commit again in Playwright's browser of
+the entry's engine and lists the ones that differ; `--at-recorded` measures
+each at the commit it was recorded on instead of the working tree.
+
+**5 · What the remedy costs.** Every block with one of those controls reads
+a new hash in every theme (the family changed from the generic to the
+theme's), so those blocks return to Kenny's review once. A compare run takes
+about 17 s for 158 entries.
+
+**6 · Who enforces it.** The browser test, code; the compare step, a command
+Claude runs after every `record`.
+
+**7 · How we measure it works, and when.** When built: the compare step on
+Kenny's 158 entries at their own commit (`--at-recorded`) reports 39 differ,
+119 equal, in 16.8 s — the earlier count, reproduced by the tool. At Kenny's
+next catalogue prompt: the mismatches `compare --against-browser` reports
+for it, expected at most 9 (the unexplained ones).
+
+**8 · If the measurement fails.** The differing blocks are compared line by
+line with `node gates/verdicts.mjs compare --browser /usr/bin/firedragon`,
+and what they share becomes a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next catalogue prompt.
+
+## fix-29 · An approved block stayed on the review page, and its note outlived the approval (2026-09-15)
+
+**1 · What went wrong.** Kenny, on the review page in FireDragon, theme
+dark: "Sometimes when I approve, I see it turn green, but the entry itself
+doesn't go away like the others do." And: "if there was already text in the
+comment and I approve, that text is no longer relevant and may be removed."
+The first is the anchor pin of 2026-09-14: a block the address names
+(`catalogue/index.html#navigation--bar-long`, the links Claude gives) stays
+on the page even when judged, and nothing ended that hold — approved, it
+turned "Approved" and stayed for as long as the address named it, a reload
+included. The second: an approval left the reviewer's own note in the
+textarea, in storage and in the next copied prompt.
+
+**2 · Which gate let it through.** None. `tests/catalogue-anchor.spec.mjs`
+checks that a linked block is shown and scrolled to, not that it leaves
+once judged; no test wrote a note and then approved.
+
+**3 · Where the same fault sits.** Measured in firefox on `ae6ac250`, with
+the register and review notes of the moment Kenny judged (`ae6ac250^`: notes
+on `bar-long`, `bar-search` and `table--datatable-add-filter` in dark), at
+1400×900: approving all 137 open dark blocks one after another left 0 on the
+page; a block with a review note, a rejection followed by an approval, an
+approval after "Copy prompt", the sticky bar approved while hovered, and a
+theme switch there and back all left as well. Only the block the address
+named stayed. The pin and the note live in `catalogue/judging.js`, shared by
+the review page, the component pages, the research demos and the compare
+columns, so all four had both faults.
+
+**4 · How we prevent recurrence.** A verdict given on the page to the pinned
+block releases the pin and takes the hash off the address
+(`history.replaceState`), so the block leaves like any other and a reload
+does not bring it back. An approval removes the note of that block in the
+theme on screen — textarea, storage, and therefore the prompt; a note in
+another theme stays; a rejection keeps it; Undo restores the verdict and the
+note together. Two tests in `tests/catalogue-review.spec.mjs`, marked
+`[fix-29]`, hold both.
+
+**5 · What the remedy costs.** An address that linked to a block loses its
+anchor once that block is judged; the link Claude gave still works when
+opened again. A note deleted by a mistaken approval is back only through
+Undo, which holds the last verdict only.
+
+**6 · Who enforces it.** The two browser tests, code, at the building level
+of `npm run test:tags` for any catalogue change.
+
+**7 · How we measure it works, and when.** When built: "a block the address
+links to leaves the page once it is judged" red on `ae6ac250` (the block
+resolved 13 times as visible with `data-cat-state="approved"`), and
+"approving a block removes its note" red (the textarea still held the note);
+both green after the change, with every test in `tests/catalogue-*.spec.mjs`
+green in firefox (22). At Kenny's next catalogue review: no approved block
+stays on the page, and no approved block's note in the copied prompt.
+
+**8 · If the measurement fails.** The block that stayed is named with its
+address, the "Show blocks already judged" toggle and its review note state,
+and read against `render()` in `catalogue/judging.js`: whatever else holds it
+becomes a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next catalogue review.
+
+## fix-30 · A raised overlay never opens upward, so a list below the fold cannot be reached (2026-09-15)
+
+**1 · What went wrong.** After option B (`7c707d54`) made the page above the
+framework-free tag field 14px shorter in formal,
+`tests/nostromo-second-pass.spec.mjs:121` ("a click on an option adds that
+tag — framework-free") failed: the combobox list, raised into the top layer
+and fixed to the window, opened below the window's bottom edge, did not flip
+up, and the click on "Bug" timed out (`locator.click: Test timeout of 30000ms
+exceeded`). A fixed box outside the viewport cannot be scrolled into view, so
+a person could not reach it either.
+
+**2 · Which gate let it through.** None. No test places a field with a
+raised overlay at the bottom of the window; the test passed only because
+there happened to be room below the field.
+
+**3 · Where the same fault sits.** The property: an overlay fixed to the
+window by `js/top-layer.js`, placed without reading the window's height.
+Searched with `grep -rn "raiseInPlace(\|raiseOverlay(" js/*.js | grep -v
+"^js/top-layer.js"`: `js/combobox.js:184` (tag field and combobox list),
+`js/combobox.js:614` (select list), `js/datepicker.js:152` (datepicker
+panel). None flips upward; `placeDatePanel` reads `clientWidth` only.
+
+**4 · How we prevent recurrence.** One placement in `js/top-layer.js` for
+all three: below when it fits, above when the room below is too small and
+the room above larger, and a `max-block-size` with the list scrolling itself
+when neither fits.
+
+**5 · What the remedy costs.** One placement function and six browser tests
+(three overlays, two channels); the time was not measured beforehand.
+
+**6 · Who enforces it.** Code: the six tests, tagged for their components,
+first made to fail on `7c707d54`, run at the commit level.
+
+**7 · How we measure it works, and when.** At the commit of the fix: the six
+new tests red on `7c707d54` and green after, and
+`tests/nostromo-second-pass.spec.mjs:121` green, in the commit-level run.
+
+**8 · If the measurement fails.** If the flip does not hold in both
+channels, opening the overlay scrolls its field into view instead, and that
+returns to Kenny as a correction of its own.
+
+**9 · When we review the measure.** At the next version raise, once the
+tests have gone a round without failing.
+
+## fix-31 · The review page's hash left the marquee standing still (2026-09-15)
+
+**1 · What went wrong.** Kenny, on the review page in solstice: "I don't see
+these running from side to side?" Measured in firefox on
+`catalogue/media.html#marquee` (formal): the band's animation stayed
+`paused` at time 0 for 3 s while its CSS said `running`; one `play()` from the
+console set it moving.
+
+**2 · Which gate let it through.** None. No test follows an infinite
+animation after the review page has taken its hashes.
+
+**3 · Where the same fault sits.** The property: an infinite CSS animation
+that stands still after judging while its CSS play state is `running`.
+Searched with a Playwright script that loads `catalogue/media.html`,
+`catalogue/feedback.html` and `catalogue/index.html` in firefox, scrolls every
+target of an infinite animation into view and follows `currentTime` for
+400 ms. On the index: `kp-pulse` 15 running, `kp-spin` 4, `kp-progress-stripes`
+1, `kp-marquee-pass` 2 still. Only the two marquee bands.
+
+**4 · How we prevent recurrence.** `stillAnimations()` in
+`catalogue/block-hash.js` no longer calls `pause()`: it sets each infinite
+animation's time to 0, reads, and restores the time it had, so the CSS keeps
+control of the play state. The cause, measured with an intercepted
+`Animation.pause`: at 404 ms the hash paused a band that was already still,
+a script pause then outranks the CSS, and `release()` only restarts what was
+running.
+
+**5 · What the remedy costs.** One function and one test; the hashes stay
+the same, since the reading still happens at time 0.
+
+**6 · Who enforces it.** A test in `tests/catalogue-review.spec.mjs` that
+follows the band for a second after judging and requires it to move.
+
+**7 · How we measure it works, and when.** At the commit of the fix: the test
+red on `1b9c72bd`, green after, with the tagged catalogue tests green.
+
+**8 · If the measurement fails.** The hash skips the marquee track instead,
+and that returns as a correction of its own.
+
+**9 · When we review the measure.** At Kenny's next review of
+`#media--marquee`.
+
+## fix-32 · Row text showed above the sticky header of the data table (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon, solstice and several other
+themes: "When scrolling down, I see slivers of the white text just above the
+header row, sometimes when I stop, I see that as well." Not reproduced in
+headless firefox: no gap between the scroll box and the header in 22 themes
+at three scroll positions, and no bright pixels above the header in solstice
+at 2× scale nor over twelve wheel steps at 1.25×. Hypothesis: the box starts
+on a half pixel (306.32px) and the header is drawn a frame late or a pixel
+low while scrolling.
+
+**2 · Which gate let it through.** The sticky-header test measures positions,
+not the pixels above the header, and never scrolls with a wheel.
+
+**3 · Where the same fault sits.** Searched with `grep -n "position: sticky"
+css/components.css`: two table headers, the plain one under
+`data-kp-max-height` and the one with fixed columns.
+
+**4 · How we prevent recurrence.** The header's ground reaches 2px above the
+header, an unblurred shadow in the header's own colour, clipped by the scroll
+box itself.
+
+**5 · What the remedy costs.** Two CSS rules and one test; the tables with a
+sticky header change their hash and return for Kenny's verdict.
+
+**6 · Who enforces it.** Code for the ground (a test reading the shadow in
+every theme); Kenny's eye for real scrolling.
+
+**7 · How we measure it works, and when.** At Kenny's next review of
+`#table--datatable-sticky` in FireDragon: wheel-scrolling in three themes of
+his choice shows no text above the header.
+
+**8 · If the measurement fails.** Kenny names the theme and screen scale, and
+Claude tries to reproduce it in FireDragon itself for a new correction.
+
+**9 · When we review the measure.** At that review.
+
+### fix-32, the letters that stayed: measured from the compositor (2026-09-15)
+
+**What Kenny still saw.** In FireDragon, solstice,
+`catalogue/table.html#datatable-sticky`, after the reach shipped: "the
+letters from the rows below sometimes show when they are behind the
+header". He browses zoomed (`layout.css.devPixelsPerPx`, his verdict hashes
+match 1.25 and 1.5).
+
+**Headless does not see it.** Wheel steps with screenshots at once, +16ms
+and +250ms, at `devPixelsPerPx` 1.25 and 1.5, and a sweep of `scrollTop` in
+0.2px steps: 0 frames with row text in FireDragon or Playwright's firefox.
+A headless screenshot paints the page again on the main thread; what Kenny
+sees is the compositor's frame.
+
+**Reproduced.** FireDragon 155 and Playwright's firefox 153, headed on a
+private Xvfb display, real wheel clicks (xdotool), every presented frame
+of the header band recorded at 60fps (ffmpeg x11grab) and compared with the
+frame before scrolling. Four themes (solstice, formal, nostromo, retro),
+the data table moved by 0, 0.25, 0.5 and 0.75 device pixels, so its top
+edge falls on four fractions. Frames with row text, before → after:
+
+| Zoom | FireDragon 155          | Playwright firefox 153 |
+| ---- | ----------------------- | ---------------------- |
+| 1    | 504 / 3278 → 0 / 3464   | 0 / 3486               |
+| 1.1  | 496 / 3368 → 0 / 3458   | 0 / 3426               |
+| 1.25 | 447 / 3425 → 0 / 3366   | 0 / 3457 → 0 / 3338    |
+| 1.5  | 492 / 3481 → 0 / 3359   | 0 / 3514               |
+| 1.75 | 445 / 3476 → 9 / 3355   | 0 / 3451 → 0 / 3460    |
+
+Before, in FireDragon, every theme and every zoom leaked, in exactly the
+recordings whose box top fell in the lower half of a device pixel (8 of
+16 each). The nine frames after are one recording of nostromo at 1.75
+(top at .94 of a pixel); the same fraction measured again showed none.
+
+**Cause.** With the themes' grounds replaced by red outside the box,
+green in the box and blue in the header: the box's ground and the sticky
+header both start on the next device row, but the row text is clipped one
+device row higher and paints over the parent's ground, above the box. The
+reach cannot cover it, because the box clips the reach as well. Measured
+and left: the reach at 4px, a backing pseudo-element above the header,
+`will-change: transform` on the header, `contain: paint` and `isolation`
+on the box, `clip-path: inset(-6px)`. A clip-path whose top is 0 took it
+away.
+
+**Measure.** While scrolled, and not keyboard-focused, the box clips its
+own top edge: `clip-path: inset(0 -100vmax -100vmax)` on
+`.kp-datatable[data-kp-max-height][data-kp-scrolled] > .kp-table-wrap:not(:focus-visible)`.
+At rest nothing is clipped, so a caption is untouched; a focused box keeps
+its whole ring. The fix-32 sweep now also reads the box's clip at rest,
+scrolled, back at the top and focused, in every theme, four tables: red
+on 9a833da0 (4 failed, firefox), green after (8 passed, both engines). The
+pixel measurement itself stays a scratch harness: Playwright's own engine
+never showed the fault.
+
+**Open.** A keyboard-focused box, scrolled by keys, is not clipped and
+could still show the pixel. Horizontal scrolling with fixed columns was not
+measured. Kenny's look at `#table--datatable-sticky` in FireDragon, zoomed,
+is still the measurement that closes this.
+
+## fix-33 · A redaction stood beside its phrase instead of over it (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon, on
+`catalogue/page-effects.html#dossier` in formal, pastel and grotesk: the
+third redaction was over twice the height of the others, covered none of
+its words and sat in front of "the contractor". Reproduced in firefox by
+narrowing the paragraph until a phrase breaks: seven themes (formal,
+pastel, sepia, blueprint, solstice, shade-light, grotesk) drew a bar 3 to
+5px wide and 44 to 46px tall at the end of the first line — formal's and
+solstice's words readable beside it — and at 1400×900 and 1920×1000 as
+laid out, shade-light's third phrase already broke that way. Cause: those
+registers draw the bar as an absolutely positioned `mark::after` on an
+inline `<mark>`; when the inline breaks, the bar's containing block is the
+rectangle from the start of its first line box to the end of its last
+(CSS 2 §10.1, item 4), not a box per line.
+
+**2 · Which gate let it through.** The register specs read the bar's
+computed style on the concept page, where every phrase fits its line; no
+test laid a phrase over a line break, and nothing measured the painted bar
+against the words.
+
+**3 · Where the same fault sits.** Searched with
+`grep -nE "(^|[ ,>])(mark|a|span|code|kbd|…)(…)*::?(after|before)\b" css/*-register.css css/components.css css/_rules.css`
+(40 hits outside the dossier: the lede marks of cyberpunk, phantom and
+retro, which already carry `white-space: nowrap`; nav and footer links,
+which are flex items or inline-block; `.kp-platforms span::before`, which
+is not absolutely positioned), and in the browser: every element on the
+sixteen component pages, in all 22 themes, whose computed display is
+`inline`, whose white space wraps and whose `::before` or `::after` is
+absolutely positioned — none after the repair.
+
+**4 · How we prevent recurrence.** The package keeps a redacted phrase
+one box: `[data-kp-reveal='emphasis'] mark` is an inline block in
+`css/_rules.css`, at most as wide as its line and as tall as its words
+(`line-height: normal`, a negative block margin so a tall face does not
+open the line) — high-contrast's own answer, made the package's.
+`white-space: nowrap`, dark's and shade-dark's answer, was tried first and
+refused: at 320px the concept pages' phrases are wider than the card, and
+formal, grotesk, sepia and solstice scrolled the document sideways.
+`tests/redaction-cover.spec.mjs` reads, per theme and per phrase, the
+painted redaction against the words' ink, as laid out at both review sizes
+and at the phrase's own break.
+
+**5 · What the remedy costs.** Measured in firefox at 1400×900: the bar
+keeps its height in 17 themes; shade-light and shade-dark grow 1px; light,
+high-contrast and deco, whose registers already made the mark an inline
+block, lose 4 to 5px (24px to 20 or 19.2px). No paragraph changes height.
+A bar that bleeds past its phrase now bleeds past a box, which the reflow
+and overflow audits count as that box's own overflow: 2 to 5px in 13
+themes at 320 and 768px, and on the formal concept page at every width —
+open for Kenny. Every dossier block changes and returns for his verdict.
+
+**6 · Who enforces it.** Code: the new spec, a `@sweep`, in the commit level, firefox only while the catalogue's reading never settles in chromium from dark on (measured on be9c034a); and the seven register specs, which read the mark's background-size where they read the pseudo-element before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of
+`#dossier` in FireDragon in formal, pastel and grotesk: each bar covers its
+phrase, one line tall.
+
+**8 · If the measurement fails.** Kenny names the theme and the window
+width, and Claude reproduces it at that width for a new correction.
+
+**9 · When we review the measure.** At that review.
+
+## fix-34 · 290 verdicts carried a hash the test browser does not read, because the page was zoomed (2026-09-15)
+
+**1 · What went wrong.** `node gates/verdicts.mjs compare --against-browser
+--commit d499b6b27812` after Kenny's light-theme review: 1212 equal, 290
+differ (brutalism 115 of 137). The review dialog is not the cause (dialog and
+panel stored the same hash for all 137 brutalism blocks). Gecko rounds border
+widths to whole device pixels: brutalism matched 100 of 137 of Kenny's hashes
+at `layout.css.devPixelsPerPx` 1.25 against 22 at 1; his hashes match 1, 1.25
+and 1.5 within one theme.
+
+**2 · Which gate let it through.** The review page reads a block at any zoom
+and records nothing about it; the comparison reads at ratio 1 only.
+
+**3 · Where the same fault sits.** Searched by reading every block at ratios
+1, 1.1, 1.2, 1.25, 1.333, 1.5, 1.7 and 2 and comparing with the 1502
+recorded hashes: 1212 equal at 1, 180 match another ratio, 110 match none
+(mostly data tables and closed pickers, probably read while scrolled or open).
+In every differing brutalism and grotesk block the first differing property is
+a `border-*-width`.
+
+**4 · How we prevent recurrence.** Kenny reviews zoomed by default
+(`scope-93`), so the page records the zoom a verdict was read at, and the
+comparison with the test browser reads each verdict at its recorded zoom. The
+proposed refusal at another zoom is not built.
+
+**5 · What the remedy costs.** One more field per verdict and a comparison
+that launches the test browser once per recorded zoom.
+
+**6 · Who enforces it.** Code: a test that records a verdict at 1.25 and
+finds it equal when compared at 1.25.
+
+**7 · How we measure it works, and when.** At Kenny's next review: the
+comparison with the test browser shows no difference caused by zoom.
+
+**8 · If the measurement fails.** The remaining differences are listed with
+their first differing property and return as a correction of their own.
+
+**9 · When we review the measure.** After two reviews without a zoom
+difference.
+
+## fix-35 · A form offered three of a demo's shapes and a scope wider than the note (2026-09-15)
+
+**1 · What went wrong.** In the light-theme review form, divider-shape offered
+scallop, cloud and wave while `research/dividers/README.md` names scallop,
+wave, cloud, pearls and soft rule plus zigzag and none; Kenny wanted pearls
+and asked whether answers were missing. laurels-direction's consequence lines
+said "for every theme" while his note concerned shade-light only; an agent
+first built the wreaths for 22 themes.
+
+**2 · Which gate let it through.** None: `form-lint.py` counts pronouns,
+examples and old IDs, not whether options follow their source or a scope
+follows the note.
+
+**3 · Where the same fault sits.** Searched with `grep -l "demo.html" r8-*.html`
+in the session scratchpad: six forms; in the two most recent (after scope-89
+and the light-theme review) each demo item's pills were laid beside its
+README: only divider-shape and laurels-direction were wrong; the three older
+forms were not re-checked.
+
+**4 · How we prevent recurrence.** An item resting on a demo names every option
+the demo offers as a pill, or says why one is left out; a consequence line
+states as its scope the theme of Kenny's note unless he wrote otherwise.
+
+**5 · What the remedy costs.** Longer items for demos with many options.
+
+**6 · Who enforces it.** Discipline, not code: Claude lays each demo item's
+README beside its pills before linting.
+
+**7 · How we measure it works, and when.** At the next form with a demo item.
+
+**8 · If the measurement fails.** `form-lint.py` gets a check that compares a
+demo item's pills with the README it links.
+
+**9 · When we review the measure.** After three forms with demo items and no
+fault.
+
+## fix-36 · The review dialog took the height cap off the dialog it was showing (2026-09-15)
+
+**1 · What went wrong.** Kenny, in FireDragon at devicePixelRatio 2.222, on `overlays--dialog-long` in retro: "de popup werkte niet ... de eerste entry helemaal boven mijn scherm was '02:19 1.60 bar Low' en ik kon niet scrollen". Measured in firefox inside the review dialog: the sixty-row dialog opened 2574px tall with no cap, top at -837px on a 1400×900 window (-1062px at 864×450), its body 2440px tall and never scrolling; formal the same (top at -1057px).
+
+**2 · Which gate let it through.** None. `tests/catalogue-review-dialog.spec.mjs` drives the review dialog's own keys and size; no test opened a block's modal inside it, and the overlays tests open the long dialog on the plain page, where it is capped.
+
+**3 · Where the same fault sits.** The property: a knob set as an inherited custom property on an element that hosts package components. Searched with `grep -rn "\-\-kp-[a-z-]*:" catalogue/*.css showcase/*.css`: `.cat-review-dialog` was the only one setting a package `--kp-dialog-*` knob; every theme shares the fault because the knob belongs to no register.
+
+**4 · How we prevent recurrence.** The review dialog sets its size on its own `max-inline-size` / `max-block-size` only (its layer comes after the package's), never through `--kp-dialog-max-*`; a retro-local offset added alongside (`--kp-retro-close-room`) is reset on every dialog so it cannot leak the same way.
+
+**5 · What the remedy costs.** Two lines removed from `catalogue/catalogue.css`; no package or register change for this fault.
+
+**6 · Who enforces it.** Code: `tests/retro-dialog-notes.spec.mjs`, four tests (retro and formal, 864×450 and 1400×900) that open the long dialog from the review dialog, tagged `@component:catalogue` and `@component:overlays`, red on 4ccbca61 and green after.
+
+**7 · How we measure it works, and when.** At the commit: the four tests green in the building level. At Kenny's next review of `overlays--dialog-long` in retro: the dialog opens at 02:00 inside the window, and the wheel reaches 02:59.
+
+**8 · If the measurement fails.** Kenny names the theme and the zoom; Claude reproduces it at that CSS viewport and the package's `.kp-dialog[open]` gets a cap that no inherited knob can remove, as a correction of its own.
+
+**9 · When we review the measure.** At that review.
+
+## fix-37 · A decided research demo stayed under "Research to look at" (2026-09-16)
+
+**1 · What went wrong.** `research/laurels` was decided at scope-93 (direction B, wreaths, shade-light only) and built in `f692812d`, but `catalogue/pages.js` still listed it under "Research to look at" until Kenny asked ("en waarom is die laurel pagina nog bij 'research to look at'? dat is toch al lang afgehandeld"); moved in `db797b69`.
+
+**2 · Which gate let it through.** None. `gates/check-catalogue.mjs` held only that every review page is in the navigation, not that a decided topic is archived; the move was a step Claude forgot at the merge.
+
+**3 · Where the same fault sits.** Nowhere else: of the 14 research topics, only `theme-portraits` is under "Research to look at", and it waits for Kenny's judgement. Searched with: `for d in research/*/; do n=$(basename $d); awk -v n="research/$n/" '/group:/{g=$0} index($0,n){print g; exit}' catalogue/pages.js; grep -il decided $d/README.md; done`.
+
+**4 · How we prevent recurrence.** A decided topic's README carries `**Decided (scope-N)` near its top, and `decidedOutsideArchive` in `gates/check-catalogue.mjs` refuses one listed outside "Archived research".
+
+**5 · What the remedy costs.** About thirty lines in the catalogue gate and its test; a one-line note per decided topic (seven archived READMEs received theirs now; `control-height` and `grotesk-hover` have no README).
+
+**6 · Who enforces it.** Code: `npm run gates` through `check:catalogue`, with a unit test in `gates/check-catalogue.test.mjs`; writing the "Decided" line at each decision is Claude's discipline.
+
+**7 · How we measure it works, and when.** When the three portraits are archived after Kenny's judgement: the gate must refuse while their README says "Decided" and pages.js still lists them under "Research to look at". Proven once already by moving laurels back: the gate refused with `research/laurels (listed under "Research to look at")`.
+
+**8 · If the measurement fails.** The gate reads the decision from `docs/SCOPE.md` instead of the README line.
+
+**9 · When we review the measure.** After three topics archived without a fault.
+
+## fix-38 · Dark's buttons showed no focus ring, and no test noticed (2026-09-16)
+
+**1 · What went wrong.** In dark, tabbing to a button changed 0 pixels outside the button (formal: 395–526) and 90 inside: the chamfer's `clip-path` cut the focus ring away. Found by an agent writing dark's signature, measured in Firefox.
+
+**2 · Which gate let it through.** The focus-ring invariant in `docs/DESIGN_INVARIANTS.md` is checked on the ring's CSS value, not on whether it shows on screen; a register that clips the ring away passes.
+
+**3 · Where the same fault sits.** Not yet measured beyond dark and formal. Searched with `grep -ln clip-path css/*-register.css`: 16 registers use `clip-path`, 13 within three lines of a button, field or link selector (cyberpunk, dark, titanium, shade-light, phantom, high-contrast, light, lapis, pastel, retro, blueprint, solstice, nostromo); the fix starts with the browser measurement in all 22.
+
+**4 · How we prevent recurrence.** A browser test tabs to a button, a field and a link in every theme and requires a visible change (pixels outside the box or on its edge).
+
+**5 · What the remedy costs.** One test of about 22 × 3 measurements, a few seconds per theme, tagged as a sweep.
+
+**6 · Who enforces it.** Code: the new test at the commit tag level.
+
+**7 · How we measure it works, and when.** At the fix: the test fails first on dark (and any other theme it fails on) and passes after; at Kenny's next review of dark's buttons, the ring shows.
+
+**8 · If the measurement fails.** The ring becomes its own outline outside the chamfered shape (an unclipped shadow layer) instead of `outline`.
+
+**9 · When we review the measure.** At the next theme with a button shape of its own.
+
+## fix-39 · A dropdown was cut by the box that showed it, not by the window (2026-09-16)
+
+**1 · What went wrong.** Kenny, reviewing `navigation--mega-menu` in light through the review dialog: "de Account dropdown verliest een deel van het rechtergedeelte omdat het venster niet breed genoeg is". Measured: the review dialog's stage carries `contain: strict; overflow: auto`, and `placeNavMenu` read only `document.documentElement.clientWidth`, so it saw a panel 300px inside the window while the stage cut its right edge by 70px at 1280, 83px at 1024 and 83px at 900.
+
+**2 · Which gate let it through.** None. `tests/overlay-flip.spec.mjs` (fix-30) tests the flip against the window; no test placed a menu inside a clipping ancestor, which is how every block in the review dialog is shown.
+
+**3 · Where the same fault sits.** The property: code that asks the window for room when its element sits in a box that clips. Searched with `grep -rn "documentElement.clientWidth\|innerWidth\|innerHeight" js/`: `placeNavMenu` and `placeNavPanel` (fixed together, both now read `viewBox()`); `js/top-layer.js` reads the visual viewport for the top layer, where the clipping ancestor cannot apply because the panel is in the top layer.
+
+**4 · How we prevent recurrence.** `viewBox()` narrows the window by every clipping ancestor (`overflow` other than visible, or `contain` that paints), `overflowOf()` measures against that box, and `slideIntoView()` writes `--kp-nav-menu-shift` so a panel slides along the inline axis until its edge sits at the box's edge, never letting the other side out.
+
+**5 · What the remedy costs.** Three functions and one knob in the package (227 → 228 knobs in the AR21 count), and one shift per open.
+
+**6 · Who enforces it.** Code: `tests/menu-in-window.spec.mjs` with `tests/fixtures/menu-in-window.html`, which copies the review dialog's stage property for property; 35 tests, red 16 of 35 before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `navigation--mega-menu` and `navigation--dropdown`: the panel is whole at 1280, 1024 and 900px. The test measured 65/53/53px inside after the fix.
+
+**8 · If the measurement fails.** The panel moves to the top layer, where the clipping ancestor cannot reach it, as the popovers already do.
+
+**9 · When we review the measure.** At the next component that opens a panel outside the top layer.
+
+## fix-40 · Brutalism's over-the-page menu stood on the page before it opened (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `navigation--sidenav-over` in brutalism: "Hier staat het menu al meer dan volledig op de pagina voor ik het open. Het moet normaal toch 'uit het zicht' zijn?". Measured: the closed panel's right edge was 621px onto the page, where every other theme has it at 0.
+
+**2 · Which gate let it through.** `tests/sidenav.spec.mjs` opens the panel and tests what it does; no test measured the closed panel's position, and the register's own spec measures its paint, not its place.
+
+**3 · Where the same fault sits.** The property: a register setting `position` on a component whose base layout depends on `position: fixed`. Searched with `grep -n "position:" css/*-register.css | grep -iE "sidenav|dialog|popover|toast|nav__menu"`: only brutalism's `.kp-sidenav { position: relative }`, which it needs for the "thing names itself" label; the same label in the other themes uses a box that is positioned already.
+
+**4 · How we prevent recurrence.** Brutalism's rule excludes the two modes that are positioned by the package (`:not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`), and a sweep measures the closed panel in every theme.
+
+**5 · What the remedy costs.** One selector.
+
+**6 · Who enforces it.** Code: the closed-panel sweep in `tests/menu-in-window.spec.mjs`, red on brutalism before (504px onto the screen in the fixture), green in all 22 after.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `navigation--sidenav-over` in brutalism: nothing of the panel shows until he opens it.
+
+**8 · If the measurement fails.** The package stops letting a register set `position` on `.kp-sidenav` at all, by moving the layout to an inner element.
+
+**9 · When we review the measure.** At the next register that needs a positioned box for a label.
+
+## fix-41 · The oxide halo painted across the chamfered corner (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `overlays--confirm` in dark: "wat me opvalt met de gloed die we toevoegden, normaal is de hoek afgesneden, maar nu is er een niet-gekleurde streep die het terug hoekig maakt, los dat op. Mogelijk ook op andere panelen die ik al goedgekeurd heb" — and he marked the app shell, the dossier and the long dialog the same way. Measured at devicePixelRatio 2.222: 1667 of 5700 pixels past the cut on the confirmation, 1711 and 1654 on the app shell's cards, 1679/1622/1596 on the dossier's, 579 and 2850 on the long dialog.
+
+**2 · Which gate let it through.** The halo tests of scope-102 measure the separation in a 24px band around the panel; a shadow that also fills the cut corner scores better there, not worse. No test asked whether the chamfer was still a chamfer.
+
+**3 · Where the same fault sits.** The property: a shadow drawn on the box while the shape is cut somewhere else. Searched with `grep -n "clip-path\|--kp-halo" css/*-register.css`: only `.kp-card` and `.kp-dialog` in dark and titanium are chamfered; the other nine panels that carry the halo are square (`--radius: 0`), so their halo already traces the corner they have.
+
+**4 · How we prevent recurrence.** The chamfer is carried outward through the halo's reach (`--kp-halo-field` with two bounded bites of `--kp-halo-reach`) and applied to the panel itself, so the shadow is cut along the same 45°.
+
+**5 · What the remedy costs.** Two custom properties and one clip per chamfered panel; nothing a panel holds is clipped unless it reaches into one of the two corners.
+
+**6 · Who enforces it.** Code: the chamfer tests in `tests/register-dark-faults.spec.mjs`, at both ratios, red at 1713 and 1619 pixels before, 0 of 5700 after, in Firefox and Chromium.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `overlays--confirm`, `navigation--app-shell`, `page-effects--dossier` and `overlays--dialog-long` in dark: the corner is cut and no strip squares it.
+
+**8 · If the measurement fails.** The halo moves to a chamfered pseudo-element behind the panel, at the cost of a second layer per panel.
+
+**9 · When we review the measure.** At the next theme that cuts a corner.
+
+## fix-42 · A select wore the browser's arrow beside the theme's (2026-09-16)
+
+**1 · What went wrong.** Kenny, on `field--multiline` in dark: "Rechts van de dropdown zie ik één keer onze styling van pijltje … en nog één van firefox zelf ofzo? Het staat er alelszins twee keer". Measured: 19 columns of ink over the select's right edge in dark and titanium, 8 in the twenty other themes.
+
+**2 · Which gate let it through.** None. The field tests read the select's own paint; neither engine's own dropmarker was counted, and the arrow is drawn by the register.
+
+**3 · Where the same fault sits.** The property: a register drawing a select's arrow without resetting the UA's. Searched with `grep -ln "kp-field__input" css/*-register.css` then reading each for a gradient or glyph over the select: dark and titanium, no others.
+
+**4 · How we prevent recurrence.** Both registers join the other fifteen: the gradients go and only `select.kp-field__input::picker-icon` is coloured, so the browser reserves the room for its own arrow and paints it in the theme's ink.
+
+**5 · What the remedy costs.** Three declarations removed per register; a long option no longer runs under the arrow, because the browser's room is reserved.
+
+**6 · Who enforces it.** Code: the select sweep in `tests/register-dark-faults.spec.mjs` — one arrow over the right edge in all 22 themes, red on dark and titanium before.
+
+**7 · How we measure it works, and when.** At Kenny's next review of `field--multiline` in dark and titanium: one arrow.
+
+**8 · If the measurement fails.** The package sets `appearance: none` on every select and draws the arrow itself, and the registers only colour it.
+
+**9 · When we review the measure.** At the next register that wants its own control glyph.
+
+## fix-43 · The gathered intro blocks had a Play button that did nothing (2026-09-16)
+
+**1 · What went wrong.** Kenny judged the four theme intros through "Every component, one page" and rejected all four: "er gebeurt niks als oik op play druk?" (synthwave), "same here" (terminal), "niks" (phantom), "er gebeurt niks" (retro). The review page copies a block's markup and runs none of the page's own scripts, so `catalogue/intros.js` — which wires Play, the speed slider and the word list — never ran there. On `catalogue/intros.html` itself everything worked, which is why the tests were green.
+
+**2 · Which gate let it through.** scope-111's gate, one step short. It made sure a page carrying blocks is gathered by the review page; it never asked whether those blocks still work once gathered.
+
+**3 · Where the same fault sits.** The property: a component page that loads a script `catalogue/index.html` does not load. Searched with `for f in catalogue/*.html; do grep -o '<script[^>]*src="[^"]*"' "$f"; done`: 20 pages, and `intros.html` is the only one with a module of its own (`./intros.js`); every other page loads `../js/auto.js`, `./boot-check.js` and `./catalogue.js`, all of which the review page loads too.
+
+**4 · How we prevent recurrence.** `catalogue/index.html` loads `./intros.js` as well, and that module now mounts the blocks it finds at load and again on the `cat-composed` event the review page fires, each block once (a `WeakSet`, so no attribute is added that a block hash would read). `gates/check-catalogue.mjs` gained `scriptsOutsideTheReview`, which refuses a gathered page running a script the review page does not load.
+
+**5 · What the remedy costs.** One script tag and a mount loop; the review page loads one more module (2,8 KB). The gate makes a page-specific catalogue module harder to add — deliberately, because that is the fault.
+
+**6 · Who enforces it.** Code, twice: the gate above (unit test in `gates/check-catalogue.test.mjs`, proven red by removing the script tag: "1 gathered catalogue page(s) run a script the review page does not") and a browser test in `tests/catalogue-intros.spec.mjs` that plays the terminal intro on the review page (red first: the words beside the window never arrived).
+
+**7 · How we measure it works, and when.** At Kenny's next judgement of the four intro blocks on the review page: Play plays, and the block reports how long it took.
+
+**8 · If the measurement fails.** The intro windows stop being iframes wired by a page module and become part of the package's own attachment (`js/auto.js`), so nothing about them depends on which catalogue page shows them.
+
+**9 · When we review the measure.** At the next catalogue page that wants a script of its own.
+
+## fix-44 · A test run named a file that does not exist and reported a pass (2026-09-16)
+
+**1 · What went wrong.** At `98e66738` the intro page became a component page, which moved its blocks' verdict keys from `catalogue/intros.html#intro-synthwave` to `intros--intro-synthwave`. The test that pins that key was run as `npx playwright test tests/catalogue-review.spec.mjs tests/intros.spec.mjs` — the second name does not exist (the file is `tests/catalogue-intros.spec.mjs`). Playwright reads positional arguments as filters, ran only the first file, printed "19 passed", and the spec stayed red for two commits until fix-43 brought it out.
+
+**2 · Which gate let it through.** None: the spec paths of a targeted run are typed by hand, and nothing compared them with the files on disk. `npm run test:tags` derives them from the changed files and would not have had the name at all.
+
+**3 · Where the same fault sits.** The property: a Playwright invocation naming a spec path that is not a file. Searched with a scan of this session's transcript over all 1233 `playwright test` commands, collecting every `tests/*.spec.mjs` argument and checking it against `git log --diff-filter=A` (a throwaway probe deleted afterwards did exist when it ran): three names were never in the repository — `tests/intros.spec.mjs` (this fault), `tests/catalogue-pixel-ratio.spec.mjs` and `tests/_overflow.spec.mjs`, the last two inside heredocs rather than as arguments.
+
+**4 · How we prevent recurrence.** `tests/global-setup.mjs` refuses the run: `missingSpecs` reads the command line, skips the values of the options that take one, and throws when a `*.spec.mjs` argument is not a file — "no such spec file: … — a run that names a file it cannot find measures nothing".
+
+**5 · What the remedy costs.** Eight lines in a setup that already ran, and no measurable time; it also refuses a deliberate run of a spec that is about to be written, which is a keystroke away from being written first.
+
+**6 · Who enforces it.** Code: the guard above, with `gates/spec-paths.test.mjs` on the pure part, and proven live — `npx playwright test tests/catalogue-intros.spec.mjs tests/intros.spec.mjs` now fails in global setup, the same command that used to report a pass.
+
+**7 · How we measure it works, and when.** At the next targeted browser run of this session: the misspelt name fails the run, and a correct one passes (measured once already, both ways).
+
+**8 · If the measurement fails.** Targeted runs stop being typed by hand: `npm run test:tags -- --files <changed files>` selects the specs from the tag map, and a hand-typed path becomes the exception that needs a reason.
+
+**9 · When we review the measure.** At the next Playwright upgrade, in case the runner grows a strict mode of its own.
+
+## fix-45 · The same blocks came back in every theme, for good (2026-09-16)
+
+**1 · What went wrong.** Kenny, after a full round: "volgens mij ga ik in cirkels … ik bleef maar van thema veranderen en kreeg precies telkens hetzelfde voorgeschoteld". Measured on two of the blocks he kept seeing: for `field--summary · light` the register held `2b0ce353…` and his browser read `66d3d20d…`; for `page-effects--density-compact-form · terminal` the register held `33061cd1…` against his `d7159073…`. The tools read the register's hash again at every width from 1152 to 2560 px, so it is not the window: those entries carry a hash his browser never gives, so the review page calls the block "Changed since judged" in every theme, every time.
+
+**2 · Which gate let it through.** None. `migrate --to 4` only rewrites an entry whose stored hash the tools can reproduce, which is safe; `reanchor` (scope-94) writes the tools' reading over an entry they could NOT reproduce, which is exactly the case where the two browsers disagree.
+
+**3 · Where the same fault sits.** The property: a register entry whose hash was written by the tools rather than by the browser that gave the verdict, at a zoom other than 100%. Searched by measuring: `compare --browser /usr/bin/firedragon --themes light` shows FireDragon 155 and Playwright's Firefox 153 agreeing on 260 of 270 blocks at ratio 1 (the ten that differ are the portrait pages' scrollbar padding), while at ratio 2.222 the two blocks above differ — so the disagreement follows the zoom, and every entry `reanchor` wrote at a ratio other than 1 is suspect.
+
+**4 · How we prevent recurrence.** `reanchorEntries` no longer anchors an entry read at a ratio other than 1 on a reading of the tools: it leaves it alone and lists it as "left to the reviewer", so the block comes back to Kenny once and his own reading settles it. `--force` is there for the case where he asks for it.
+
+**5 · What the remedy costs.** A re-anchoring round now leaves the zoomed entries open, so they return to the review page instead of being silently settled — which is the point, but it is more work for Kenny than a number that only looked right.
+
+**6 · Who enforces it.** Code: the guard in `gates/verdicts.mjs`, with `gates/check-verdicts.test.mjs` pinning both sides (skipped by default, written with `--force`).
+
+**7 · How we measure it works, and when.** At Kenny's next pass over the review site: the nineteen pairs recorded on his instruction today ("Keur alle componenten die nog openstaan goed") carry the tools' readings. If a block among them comes back as "Changed since judged", the gap is still open and the next step is `compare --browser` at his own zoom.
+
+**8 · If the measurement fails.** `compare` gains a `--ratio`, the disagreement is measured block by block at 2.222, and the recipe reads past whatever it finds — the way it already reads past the 1/64 px font size and the percentage translate.
+
+**9 · When we review the measure.** At the next change to the hash recipe, when re-anchoring is on the table again.
+
+## fix-46 · The blocks moved while Kenny was judging them (2026-09-16)
+
+**1 · What went wrong.** "ik heb het gevoel dat ik nog altijd in cirkels blijf goedkeuren." Measured: he approved the 27 titanium blocks at 06:00 and the same 27 came back an hour later. `button--groups · titanium` read `09fb3a33…` in his first round and `c4f65fa3…` in his second, while the tools read `c4f65fa3…` both at `a2dbce32` and at HEAD — so the block itself did not change between those commits; what changed was the deploy he was looking at. Every push to `round-six` redeploys the review site (`.github/workflows/pages.yml`), and four commits landed while he was going through the themes.
+
+**2 · Which gate let it through.** None, and no rule either: the cycle says Claude pushes whenever it asks him to look [scope-67], and nothing said what happens to the pushes that follow while he is still looking.
+
+**3 · Where the same fault sits.** The property: a commit that changes what a block looks like, made while a review round is open. Searched with `git log --oneline --name-only 3e728bc8...a2dbce32` over the four commits of that hour: three of them touch `catalogue/*.html`, `js/` or `catalogue/*.js` — `c0ade4ba` (the intro module), `d8ddd759` (the remembered state, 9 files under js/ and components/) and `3d941c56` (the dialog and judging.js). Every one of them moved blocks under him.
+
+**4 · How we prevent recurrence.** A round is opened when Claude asks him to look and closed when he is through (`catalogue/round.json`). While it is open, `npm run gates` refuses a commit that changes `css/`, `js/`, `components/`, a `catalogue/*.html` page or a theme's tokens; the register, the notes, the documents, the tests and the gates stay free, so recording his verdicts and writing this down still commits.
+
+**5 · What the remedy costs.** Work that changes a block waits for the end of a round — which is the point, and it is also what he chose this time ("Eerst de controleronde van Kenny"). A round left open by mistake blocks the next change until it is closed, which is one command away and printed in the refusal.
+
+**6 · Who enforces it.** Code: `gates/check-round.mjs` in `npm run gates`, with `gates/check-round.test.mjs` on the rule. Proven both ways: with the round open a probe line in `css/dark-register.css` was refused by name, and the same run with nothing staged passed.
+
+**7 · How we measure it works, and when.** At the end of the round now open: the blocks Kenny approves stay approved, and none of them comes back in a later theme because a commit moved it.
+
+**8 · If the measurement fails.** The review site stops following `round-six` and is pinned to the commit the round was opened at, so a push cannot reach him mid-round at all.
+
+**9 · When we review the measure.** At the first time work has to wait for a round to close and that waiting hurts.
+
+## fix-47 · A field the reviewer had touched hashed as a different block (2026-09-16)
+
+**1 · What went wrong.** Kenny, after three rounds of approving the same field blocks in theme after theme: "Ik ga nog altijd in cirkels!". Measured on `catalogue/field.html`: the block `#text` read `8413c69c…` at rest, `ee6733ba…` with a name typed into its first input, and `cf1b057a…` with a control inside it focused. A verdict given in either of those states carried a hash nothing else ever reads, so the block came back as "Changed since judged" every time — and the blocks that kept coming back were exactly the ones with real form controls: the three field blocks and the compact form.
+
+**2 · Which gate let it through.** None. The recipe was made engine-proof and window-proof (scope-95, fix-34) but never reviewer-proof: it read the block as the reviewer had left it.
+
+**3 · Where the same fault sits.** The property: a computed style in the hash that follows what the reviewer did rather than what the markup says. Searched by measuring the two states against a clean reading on the same page — a typed value (`:placeholder-shown`, `:user-invalid`) and a focused control (the focus ring) both moved the hash; a blurred, empty field read the same as the clean block again.
+
+**4 · How we prevent recurrence.** `readBlocks` now takes its reading of the block as written: `atRest` puts every input, textarea and select back to its own default, moves the focus out of the block, and restores both the moment the reading is done. Values are set directly, so no component sees an input event.
+
+**5 · What the remedy costs.** The reviewer's caret leaves the block for the length of a reading and comes back; a component that only reacts to input events sees nothing at all.
+
+**6 · Who enforces it.** Code: `tests/catalogue-hash-at-rest.spec.mjs` — a typed value and a focused control read the same hash as the untouched block, and the reviewer keeps what he had.
+
+**7 · How we measure it works, and when.** At Kenny's next pass: the field blocks he approves stay approved instead of returning in the next theme.
+
+**8 · If the measurement fails.** The hash stops reading the properties that follow a control's state at all, and the states themselves are held by the register specs, where they are already tested.
+
+**9 · When we review the measure.** At the next change to the hash recipe.
+
+## fix-48 · Nothing said "you are through" (2026-09-16)
+
+**1 · What went wrong.** Kenny, twice: "Op het einde mag er dan een boodschap komen dat zegt dat ik rond ben", and then "Er MOET een pagina komen die toont dat ik klaar ben als ik alles beoordeeld heb. Waarom moet ik dit meer dan 1 keer zeggen?". The first answer was the dialog's end message, which only appears after the walk has gone through every theme — so it never came, and the second ask had to be made.
+
+**2 · Which gate let it through.** No gate; a reading of the ask that was too narrow. The request named the end of a round, and the answer put the message inside the tool that happens to walk a round.
+
+**3 · Where the same fault sits.** The property: a thing Kenny asked for that exists only inside one tool, so it cannot be seen from anywhere else. Searched over the catalogue's pages: the count of what is left lived in the review bar ("N of M block(s) left to judge in <theme>") and in the dialog's live region, both of them per theme and neither of them reachable without starting a round.
+
+**4 · How we prevent recurrence.** `catalogue/round.html` — "Am I through?" — counts every block of every component page against every theme from the verdicts alone, prints a banner that says either "You are through" or how much is left, and names per theme what is missing. It is in the navigation of every catalogue page.
+
+**5 · What the remedy costs.** One page and one module (about 120 lines) that read the register and this browser's judgements; it hashes nothing, so it answers in a second.
+
+**6 · Who enforces it.** Code: `tests/catalogue-round.spec.mjs` — with nothing judged the page says what is left per theme; with the register as the repository holds it, it says the round is over.
+
+**7 · How we measure it works, and when.** At Kenny's next round: he opens that page instead of asking whether he is through, and it answers without him having to walk anything.
+
+**8 · If the measurement fails.** The answer moves to where he already is: a line in the review page's own bar that says the same thing across every theme.
+
+**9 · When we review the measure.** When a round is judged in two browsers at once and one page has to say something about both.
+
+## fix-49 · The register never held what the review page reads (2026-09-16)
+
+**1 · What went wrong.** "Godverdomme, ik ga nog altijd gewoon naar 'every component, one page' … en NOG ALTIJD krijg ik geen eindscherm." Driven end to end in a browser: the review page opened with 9 of 143 blocks left to judge in formal, and approving them moved the walk on to the next theme where the same handful waited again — so the round never reached its end screen. Measured underneath it: 2919 of the 3062 pairs in the register held a hash the review page does not read at his zoom. The tools read a block on its own component page at whatever zoom they were told; Kenny reads it composed into `catalogue/index.html` at 2.222. The two surfaces never agreed, so a verdict given on one was "changed" on the other, for good.
+
+**2 · Which gate let it through.** None. fix-45 stopped the tools from anchoring a zoomed entry, which was right, but nothing checked that what the register holds is what the reviewer's own surface reads.
+
+**3 · Where the same fault sits.** The property: a hash in the register taken on a surface or at a zoom the reviewer does not use. Searched by reading all 3062 pairs on the review page at 2.222 and comparing: 143 matched (one theme's worth), 2919 did not.
+
+**4 · How we prevent recurrence.** `node gates/verdicts.mjs settle [--ratio 2.222]` reads every block where Kenny reads it — the review page, theme by theme, at his zoom — and records that reading under the verdict the entry already carries. Run once on his word; the guard of fix-45 stands for everything else.
+
+**5 · What the remedy costs.** One browser run of about a minute, and a register that follows the reviewer's surface rather than the tools'.
+
+**6 · Who enforces it.** Discipline plus the measurement: after the run, a check at his zoom across the 22 themes counted 0 block/theme pairs left to judge, against 9 per theme before.
+
+**7 · How we measure it works, and when.** At Kenny's next open of the review site: the page shows nothing to judge, the dialog says the round is over on opening, and "Am I through?" says he is through.
+
+**8 · If the measurement fails.** The register stops holding hashes at all for pairs the reviewer has approved in his own browser, and the review page trusts the local judgement first.
+
+**9 · When we review the measure.** At the next change to the hash recipe, when every reading is taken again anyway.
+
+## fix-50 · The settle tool read all 22 themes as formal (2026-09-16)
+
+**1 · What went wrong.** After the register was brought up to hash version 5, the review page still showed 139 of 143 blocks as "Changed since judged" in light. Measured in the tool's own browser: the four lines it hashed read `theme: formal` in every theme, so 21 of the 22 themes had been recorded with formal's hash.
+
+**2 · Which gate let it through.** None: `settle` is a one-off tool run on Kenny's word, and its own output ("3062 brought up to it") looks the same whether the themes were applied or not.
+
+**3 · Where the same fault sits.** The property: a Playwright `evaluate` that applies a theme through a dynamic import and is never checked. Searched over the tools: `gates/verdicts.mjs` had the only such call (the compare and rehash paths ask the page for a theme through `measurePlaywright`, which sets it in the page's own markup); the browser tests use `page.evaluate((name) => import('/js/theme-core.js')…)`, which does work, and they assert on the result afterwards.
+
+**4 · How we prevent recurrence.** `settle` sets the theme as an attribute on the root element and reads it back before it hashes anything; since scope-114 nothing else about a reading depends on the theme being painted, so one page load answers for all 22.
+
+**5 · What the remedy costs.** Nothing: the run went from a minute of waiting for registers to paint to a few seconds.
+
+**6 · Who enforces it.** The measurement in `tests/catalogue-hash-inputs.spec.mjs`: a block read in another theme must give another hash. A run where the theme never changed would fail it.
+
+**7 · How we measure it works, and when.** Measured the same day, after the fix: the review page shows every block approved in formal, the dialog says the round is over on opening, and the round page says "You are through" at 3062 of 3062 — at ratio 1 and at Kenny's 2.222.
+
+**8 · If the measurement fails.** The tool stops driving a page at all and hashes the four lines in Node, where the theme is a string it passes itself.
+
+**9 · When we review the measure.** At the next tool that needs a theme applied in a browser.
+
+## fix-51 · Eighteen tests were red in Chromium, and nothing said so (2026-09-17)
+
+**1 · What went wrong.** The release run of 6.1.0 stopped at the browser phase: 18 failed, 3612 passed, 22:58. Fourteen of the eighteen were Chromium's alone, and none of them was new that day — they had been red for as long as the code they measure has existed, because the building and the commit levels run firefox only and the whole suite in both engines runs at a release. One of them, `site.spec.mjs` on the media page, has been red in Chromium since `e6567608` and went out in v6.0.0: measured in a v6.0.0 worktree on 2026-09-17, same failure, same line.
+
+**2 · Which gate let it through.** The levels themselves [scope-103, `gates/run-tags.mjs`]: `building` and `commit` pass `--project=firefox`, for the good reason that Kenny reads the work in a firefox derivative. Nothing between the commit level and the release asks the other engine, so a fault that is Chromium's alone waits for the release to be found — which is the worst moment to find fourteen of them.
+
+**3 · Where the same fault sits.** The property: a test whose answer depends on the engine, written and drilled in one of them. The release run named all of them, and each was measured on its own afterwards:
+- `fonts.spec.mjs:115` — a control had to resolve the family the BODY resolves; terminal, nostromo and phantom give `.kp-button` their own mono or display face on purpose, and Kenny approved all three in the catalogue. Now: no control may resolve the forced DESKTOP family, which is the fault fix-28 was.
+- `control-font.spec.mjs:68` — a real find, both engines: the intro page's speed slider is the catalogue's own control, so no package rule gave it a font and the browser's did. Fixed in `catalogue/catalogue.css`.
+- `site.spec.mjs:22` — the media page names `/hero.jpg`, the reader's own picture, which nothing serves; Chromium writes the 404 into the console and Firefox says nothing. Failed requests are read by address now, with that one named.
+- `alarm.spec.mjs:188` — Chromium's tab ring for a modal dialog with one focusable element is that button and the document; Firefox keeps the button. Neither reaches the page behind, which is what the decision promised and what is asked now.
+- `catalogue-round.spec.mjs:28` — a verdict is per engine, and the register holds Kenny's Gecko verdicts; asking Chromium whether the round is over asks about a round nobody walked there. The test now skips in an engine the register does not hold.
+- `blueprint-…-notes.spec.mjs:136` — Chromium's full-page screenshot does not line up with `getBoundingClientRect()` far down a page: 5px out at y=5574, which cut the two brackets along the top edge of three claims. The paint is read from the window now.
+- `button-notes.spec.mjs:99` — a text range's box is 16.00px in Chromium and 17.00px in Firefox on the same paint, so top against top read -1.28px and -0.78px against a 1px tolerance. Centre against centre reads -1.01 and -1.00.
+- `picker.spec.mjs:126` — Chromium scrolls the focused option to the window's edge, Firefox carries on to the menu's own padding, so the menu's box hung 4.56px below the window in one engine. What must be visible is the option.
+- `datatable-add-filter.spec.mjs:250` — two races: three keys fired before the menu had the focus (one Chromium run in four chose the first column) and three Tabs fired while the ticked box was re-rendering. Every press now waits for the stop it is meant to reach.
+- `fixtures.spec.mjs:138` — dark and titanium light a cleared mark on `animation-timeline: view()` since scope-107. A view-driven animation's `finished` never resolves while the page stands still, so waiting for it timed the test out; Firefox has no `view()` at all.
+
+One more property came out of the same reading, from a sweep over the nine theme-parameterised specs: an assertion that two measured values on the page must be THE SAME holds only while the narrow three themes are alike. `registers.spec.mjs:323` (the picker rests in the same place in every theme, already carrying a carve-out for terminal's bezel), `register-dark-faults.spec.mjs:743` (a select's arrow counted against itself) and `fixtures.spec.mjs:196` (every colour within 3 of a token) are the same shape as the fonts one. Left standing, named here.
+
+**4 · How we prevent recurrence.** A level between the commit level and the release: `npm run test:tags -- --level engines` — the commit level's selection, both engines — run at the close of a layer and after any fix that touches paint, focus or the keyboard. The release level stays what it is; what changes is that the other engine is asked while the work is still in hand rather than at the tag.
+
+**5 · What the remedy costs.** The commit level's selection twice instead of once. Measured on this branch, the ten specs of this correction took 2.2 minutes in Chromium alone; the whole suite in both engines is 23 minutes, which is why it is not the commit level.
+
+**6 · Who enforces it.** `gates/run-tags.mjs` carries the level and refuses an unknown one; the checker agent runs it, and the layer's close in `docs/CYCLE.md` names it.
+
+**7 · How we measure it works, and when.** At the close of the next layer: the engines level runs and either finds nothing, or finds it there instead of at the release form.
+
+**8 · If the measurement fails.** The commit level itself goes to both engines and the building level stays firefox, paying the time on every commit rather than at every layer.
+
+**9 · When we review the measure.** When a third engine is judged, or when the release run finds an engine fault the engines level did not.

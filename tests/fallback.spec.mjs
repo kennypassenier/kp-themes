@@ -46,7 +46,7 @@ async function watch(page) {
     });
 }
 
-test('site 1 of 4: a stored name this build does not know [TH97, AR25]', async ({ page }) => {
+test('site 1 of 4: a stored name this build does not know [TH97, AR25]', { tag: ['@component:picker'] }, async ({ page }) => {
     await watch(page);
     await page.goto(PAGE);
     const result = await page.evaluate(async (unknown) => {
@@ -80,7 +80,7 @@ test('site 1 of 4: a stored name this build does not know [TH97, AR25]', async (
     expect(result.events[0]).toMatchObject({ requested: UNKNOWN, applied: 'formal', source: 'stored' });
 });
 
-test('site 2 of 4: a name the server wrote into the markup [TH97, AR25]', async ({ page }) => {
+test('site 2 of 4: a name the server wrote into the markup [TH97, AR25]', { tag: ['@component:picker'] }, async ({ page }) => {
     await watch(page);
     await page.goto(PAGE);
     const result = await page.evaluate(async (unknown) => {
@@ -97,7 +97,7 @@ test('site 2 of 4: a name the server wrote into the markup [TH97, AR25]', async 
     expect(result.events[0]).toMatchObject({ requested: UNKNOWN, applied: 'formal', source: 'current' });
 });
 
-test('site 3 of 4: applyTheme called with a name that is not one [TH97, AR25]', async ({ page }) => {
+test('site 3 of 4: applyTheme called with a name that is not one [TH97, AR25]', { tag: ['@component:picker'] }, async ({ page }) => {
     await watch(page);
     await page.goto(PAGE);
     const result = await page.evaluate(async (unknown) => {
@@ -113,28 +113,32 @@ test('site 3 of 4: applyTheme called with a name that is not one [TH97, AR25]', 
     expect(result.events[0]).toMatchObject({ requested: UNKNOWN, applied: 'formal', source: 'apply' });
 });
 
-test('site 4 of 4: another tab, running a newer deployment, stores a name this one lacks [TH97, AR25]', async ({ page }) => {
-    await watch(page);
-    await page.goto(PAGE);
-    const result = await page.evaluate(async (unknown) => {
-        const core = await import('/js/theme-core.js');
-        // A known theme first, so `currentTheme()` inside the handler has
-        // nothing of its own to report and the source below is the one
-        // under test.
-        core.applyTheme('dark');
-        core.onThemeChange(() => {});
-        window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: unknown, oldValue: 'dark' }));
-        return { worn: document.documentElement.getAttribute('data-theme'), warnings: window.__warnings, events: window.__unknown };
-    }, UNKNOWN);
+test(
+    'site 4 of 4: another tab, running a newer deployment, stores a name this one lacks [TH97, AR25]',
+    { tag: ['@component:picker'] },
+    async ({ page }) => {
+        await watch(page);
+        await page.goto(PAGE);
+        const result = await page.evaluate(async (unknown) => {
+            const core = await import('/js/theme-core.js');
+            // A known theme first, so `currentTheme()` inside the handler has
+            // nothing of its own to report and the source below is the one
+            // under test.
+            core.applyTheme('dark');
+            core.onThemeChange(() => {});
+            window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: unknown, oldValue: 'dark' }));
+            return { worn: document.documentElement.getAttribute('data-theme'), warnings: window.__warnings, events: window.__unknown };
+        }, UNKNOWN);
 
-    // Nothing was applied: this tab keeps what it is wearing and says so.
-    expect(result.worn).toBe('dark');
-    expect(result.warnings).toHaveLength(1);
-    expect(result.events).toHaveLength(1);
-    expect(result.events[0]).toMatchObject({ requested: UNKNOWN, applied: 'dark', source: 'cross-tab' });
-});
+        // Nothing was applied: this tab keeps what it is wearing and says so.
+        expect(result.worn).toBe('dark');
+        expect(result.warnings).toHaveLength(1);
+        expect(result.events).toHaveLength(1);
+        expect(result.events[0]).toMatchObject({ requested: UNKNOWN, applied: 'dark', source: 'cross-tab' });
+    },
+);
 
-test('once per session, and a session outlives a page load [TH97, AR25]', async ({ page }) => {
+test('once per session, and a session outlives a page load [TH97, AR25]', { tag: ['@component:picker'] }, async ({ page }) => {
     await watch(page);
     await page.goto(PAGE);
     const first = await page.evaluate(async (unknown) => {
@@ -177,7 +181,7 @@ test('once per session, and a session outlives a page load [TH97, AR25]', async 
     expect(third.remembered).toBe(`${UNKNOWN} vermilion`);
 });
 
-test('a name that is a theme, and no name at all, say nothing [TH97]', async ({ page }) => {
+test('a name that is a theme, and no name at all, say nothing [TH97]', { tag: ['@component:picker'] }, async ({ page }) => {
     await watch(page);
     await page.goto(PAGE);
     const result = await page.evaluate(async () => {

@@ -1,0 +1,571 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Drie dingen uit een demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+    :root {
+        --ground: #f4f2ee;
+        --panel: #fbfaf8;
+        --ink: #1b1a18;
+        --ink-soft: #56534d;
+        --ink-faint: #86827a;
+        --line: #ddd9d1;
+        --line-strong: #c6c1b6;
+        --accent: #3d5a73;
+        --accent-soft: #e6ecf1;
+        --radius: 12px;
+        color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+            --ground: #16171a;
+            --panel: #1e2024;
+            --ink: #eceae6;
+            --ink-soft: #a9a69f;
+            --ink-faint: #7c7972;
+            --line: #2c2f34;
+            --line-strong: #3d4148;
+            --accent: #8fb3cd;
+            --accent-soft: #23303b;
+        }
+    }
+    :root[data-theme='dark'] {
+        --ground: #16171a;
+        --panel: #1e2024;
+        --ink: #eceae6;
+        --ink-soft: #a9a69f;
+        --ink-faint: #7c7972;
+        --line: #2c2f34;
+        --line-strong: #3d4148;
+        --accent: #8fb3cd;
+        --accent-soft: #23303b;
+    }
+
+    body {
+        background: var(--ground);
+        color: var(--ink);
+        font-family: 'Archivo', system-ui, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+    }
+    .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+    }
+    header.top {
+        border-bottom: 1px solid var(--line-strong);
+        padding-bottom: 24px;
+        margin-bottom: 40px;
+    }
+    h1 {
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
+        text-wrap: balance;
+    }
+    .lede {
+        color: var(--ink-soft);
+        font-size: 15px;
+        max-width: 62ch;
+        margin: 0;
+    }
+    .case {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 22px;
+        margin-bottom: 34px;
+    }
+    .case > h2 {
+        font-size: 19px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+    }
+    .case > p {
+        color: var(--ink-soft);
+        font-size: 14px;
+        margin: 0 0 18px;
+        max-width: 66ch;
+    }
+    .tag {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-radius: 999px;
+        padding: 3px 9px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    .panels {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px) {
+        .panels.two {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    .panel {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--ground);
+        display: flex;
+        flex-direction: column;
+    }
+    .panel .stage {
+        flex: 1;
+        display: flex;
+    }
+    .panel .stage > * {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .tk .body {
+        flex: 1;
+    }
+    .panel > .cap {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    .cap b {
+        font-weight: 500;
+        color: var(--ink-soft);
+    }
+    .stage {
+        padding: 0;
+    }
+    .note {
+        font-size: 13px;
+        color: var(--ink-faint);
+        margin: 14px 0 0;
+        max-width: 66ch;
+    }
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin: 14px 0 0;
+        flex-wrap: wrap;
+    }
+    button.toggle {
+        font: inherit;
+        font-size: 13px;
+        color: var(--ink);
+        background: var(--panel);
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+    button.toggle:hover {
+        border-color: var(--accent);
+    }
+    button.toggle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+    .state {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 12px;
+        color: var(--ink-faint);
+    }
+
+    /* ── ticker, in zijn eigen kleuren ── */
+    .tk {
+        background: hsl(0, 0%, 4%);
+        color: hsl(40, 12%, 90%);
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        padding: 18px 0 0;
+    }
+    .tk .body {
+        padding: 0 18px 18px;
+    }
+    .tk .tape,
+    .tk .tape-empty {
+        margin-top: auto;
+    }
+    .tk h3 {
+        font-size: 15px;
+        font-weight: 500;
+        margin: 0 0 6px;
+        color: hsl(36, 91%, 55%);
+        letter-spacing: 0.04em;
+    }
+    .tk p {
+        margin: 0;
+        font-size: 12.5px;
+        color: hsl(0, 0%, 62%);
+        line-height: 1.65;
+    }
+    .tape {
+        border-block: 1px solid hsl(0, 0%, 18%);
+        background: hsl(0, 0%, 8%);
+        overflow: hidden;
+        margin-top: 16px;
+    }
+    .tape-track {
+        display: flex;
+        width: max-content;
+        will-change: transform;
+        animation: tape 26s linear infinite;
+    }
+    .tape-track.stopped {
+        animation-play-state: paused;
+    }
+    .tape-run {
+        display: flex;
+        flex: none;
+        padding: 9px 0;
+    }
+    .tape-run span {
+        font-size: 12.5px;
+        white-space: nowrap;
+        padding-inline: 18px;
+        border-inline-end: 1px solid hsl(0, 0%, 18%);
+        color: hsl(40, 12%, 90%);
+    }
+    .tape-run span i {
+        font-style: normal;
+        color: hsl(36, 91%, 55%);
+    }
+    .tape-run span.dn i {
+        color: hsl(4, 80%, 62%);
+    }
+    @keyframes tape {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .tape-track {
+            animation: none;
+        }
+    }
+    .tape-empty {
+        border-top: 1px solid hsl(0, 0%, 18%);
+        padding: 22px 18px;
+        font-size: 12.5px;
+        color: hsl(0, 0%, 40%);
+        text-align: center;
+    }
+
+    /* ── blueprint ── */
+    .bp {
+        background: hsl(215, 65%, 12%);
+        color: hsl(190, 55%, 92%);
+        font-family: 'Archivo', system-ui, sans-serif;
+        padding: 20px 18px 30px;
+        min-height: 260px;
+    }
+    .bp .bar {
+        display: flex;
+        gap: 18px;
+        font-size: 13px;
+        border-bottom: 1px solid hsl(210, 40%, 26%);
+        padding-bottom: 10px;
+        color: hsl(195, 30%, 72%);
+    }
+    .bp .bar b {
+        font-weight: 500;
+        color: hsl(190, 55%, 92%);
+        border: 1px solid hsl(190, 80%, 62%);
+        padding: 2px 8px;
+    }
+    .bp .menu {
+        margin-top: 0;
+        width: 250px;
+        background: hsl(215, 65%, 12%);
+        border: 1px solid hsl(210, 40%, 26%);
+        border-top: 2px solid hsl(190, 80%, 62%);
+    }
+    .bp .menu .lbl {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: hsl(190, 80%, 62%);
+        padding: 7px 12px 6px;
+        border-bottom: 1px dashed hsl(210, 40%, 26%);
+    }
+    .bp .menu a {
+        display: flex;
+        gap: 10px;
+        padding: 9px 12px;
+        font-size: 13.5px;
+        color: hsl(190, 55%, 92%);
+        text-decoration: none;
+        border-bottom: 1px solid hsl(210, 40%, 20%);
+    }
+    .bp .menu a:last-child {
+        border-bottom: 0;
+    }
+    .bp .menu a em {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-style: normal;
+        font-size: 12px;
+        color: hsl(195, 30%, 72%);
+    }
+    .missing {
+        border: 1px dashed hsl(35, 85%, 60%);
+        color: hsl(35, 85%, 60%);
+    }
+
+    /* ── grotesk ── */
+    .gk {
+        background: #fff;
+        color: hsl(0, 0%, 7%);
+        font-family: 'Archivo', system-ui, sans-serif;
+        padding: 26px 20px 30px;
+        min-height: 200px;
+    }
+    .gk h3 {
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .gk h3 .sq {
+        width: 14px;
+        height: 14px;
+        background: hsl(355, 95%, 45%);
+        flex: none;
+    }
+    .gk p {
+        margin: 0;
+        font-size: 13.5px;
+        color: hsl(0, 0%, 40%);
+        max-width: 46ch;
+        line-height: 1.65;
+    }
+    .gk .where {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: hsl(0, 0%, 55%);
+        margin-bottom: 14px;
+    }
+    footer.end {
+        border-top: 1px solid var(--line-strong);
+        margin-top: 44px;
+        padding-top: 18px;
+        color: var(--ink-faint);
+        font-size: 13px;
+    }
+</style>
+
+<div class="wrap">
+    <header class="top">
+        <h1>Drie dingen uit een goedgekeurde demo die het pakket niet bouwt</h1>
+        <p class="lede">
+            Dit is item R6 van de bekrachtiging, nu echt te zien in plaats van beschreven. Elk geval staat er twee keer: links wat het pakket
+            vandaag toont, rechts wat de demo toonde. De koersenband van ticker beweegt hier echt, want dat is nu juist wat er ontbreekt.
+        </p>
+    </header>
+
+    <section class="case">
+        <span class="tag">ticker</span>
+        <h2>De koersenband loopt nergens</h2>
+        <p>
+            De demo van ticker had onderaan een doorlopende band met koersen, in dezelfde amber op zwart als de rest van het thema. Het pakket
+            heeft die niet: de gedeelde pagina die elk thema toont, heeft geen plek voor zo'n band, en één lift mag die pagina niet in zijn
+            eentje verbouwen.
+        </p>
+        <div class="panels two">
+            <div class="panel">
+                <div class="cap"><span>Nu in het pakket</span><b>geen band</b></div>
+                <div class="stage">
+                    <div class="tk">
+                        <div class="body">
+                            <h3>KP // TICKER</h3>
+                            <p>De handelsvloer, niet de speelhal. Amber op zwart, cijfers die uitlijnen, paneeltitels in reverse video.</p>
+                        </div>
+                        <div class="tape-empty">— hier houdt de pagina op —</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="cap"><span>Wat de demo toonde</span><b>band loopt</b></div>
+                <div class="stage">
+                    <div class="tk">
+                        <div class="body">
+                            <h3>KP // TICKER</h3>
+                            <p>Dezelfde pagina, met de band die onderaan blijft lopen zolang je kijkt.</p>
+                        </div>
+                        <div class="tape">
+                            <div class="tape-track" id="tape">
+                                <div class="tape-run" id="run"></div>
+                                <div class="tape-run" id="run2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button type="button" class="toggle" id="pauseBtn">Pauzeer buiten beeld: uit</button>
+            <span class="state" id="tapeState">de band loopt</span>
+        </div>
+        <p class="note">
+            De knop hierboven is de tweede helft van deze bevinding. Het pakket kent geen enkel mechanisme dat een lopende animatie stopzet
+            zodra hij buiten beeld staat — de marquee van brutalism loopt ook gewoon door. Zet de knop aan en scrol de band uit beeld: dan pas
+            stopt hij. Zo'n mechanisme bouwen raakt elke bestaande loop in het pakket, en dat is jouw beslissing, niet die van één lift.
+        </p>
+    </section>
+
+    <section class="case">
+        <span class="tag">blueprint</span>
+        <h2>Het bijschrift per regel in het uitklapmenu</h2>
+        <p>
+            Het menu van blueprint is een titelblok, zoals op een technische tekening: eigen grond, één haarlijn, een cyaan bovenregel en
+            genummerde regels. Dat is allemaal gebouwd. Wat ontbreekt is het kopje boven de regels dat per menu iets anders zegt — de demo
+            leest daarvoor een waarde per menu uit de markup, en de gedeelde NavBar-component heeft daar geen prop voor.
+        </p>
+        <div class="panels two">
+            <div class="panel">
+                <div class="cap"><span>Nu in het pakket</span><b>geen kopje</b></div>
+                <div class="stage">
+                    <div class="bp">
+                        <div class="bar"><b>Sheets</b><span>Legend</span><span>Symbols</span></div>
+                        <div class="menu">
+                            <a href="#"><em>01</em> Elevations</a>
+                            <a href="#"><em>02</em> Sections</a>
+                            <a href="#"><em>03</em> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="cap"><span>Wat de demo toonde</span><b>kopje per menu</b></div>
+                <div class="stage">
+                    <div class="bp">
+                        <div class="bar"><b>Sheets</b><span>Legend</span><span>Symbols</span></div>
+                        <div class="menu">
+                            <div class="lbl missing">Detail · scale 4:1</div>
+                            <a href="#"><em>01</em> Elevations</a>
+                            <a href="#"><em>02</em> Sections</a>
+                            <a href="#"><em>03</em> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="note">
+            Het gestippelde amberkleurige kader staat er alleen hier, om te wijzen: dat regeltje is het verschil. In de demo zei het per menu
+            iets anders — “Detail · scale 4:1” bij Sheets, “Key · rev A” bij Legend, “Sheet · lang” bij Symbols.
+        </p>
+    </section>
+
+    <section class="case">
+        <span class="tag">grotesk</span>
+        <h2>Het rode vierkantje voor een kop</h2>
+        <p>
+            Dit is het omgekeerde geval: hier staat er iets te veel. Sinds 3.1.1 zet de gedeelde basislaag een rood vierkantje voor elke kop in
+            grotesk. De goedgekeurde demo heeft dat niet. Het register onderdrukt het binnen een surface, dus op de concept-pagina klopt het —
+            maar op een gewone pagina staat het er nog.
+        </p>
+        <div class="panels two">
+            <div class="panel">
+                <div class="cap"><span>Buiten een surface</span><b>vierkantje staat er</b></div>
+                <div class="stage">
+                    <div class="gk">
+                        <div class="where">examples/article.html</div>
+                        <h3><span class="sq" aria-hidden="true"></span>One source, many consumers</h3>
+                        <p>Een gewone documentpagina in grotesk. Het vierkantje komt uit de basislaag, niet uit het register.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="cap"><span>Binnen een surface</span><b>onderdrukt</b></div>
+                <div class="stage">
+                    <div class="gk">
+                        <div class="where">de concept-pagina, zoals de demo</div>
+                        <h3>Request an environment</h3>
+                        <p>Dezelfde kop op de concept-pagina. Het register zet het vierkantje uit, want de demo heeft het niet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="note">
+            De vraag die openstaat: moet dat vierkantje overal weg voor grotesk, of blijft het staan buiten een surface? Ik heb het niet zelf
+            beslist, want de basislaag is gedeeld en de demo zegt er niets over.
+        </p>
+    </section>
+
+    <footer class="end">
+        De focusring van forest — het vierde beeld van daarnet — is hiermee niet in tegenspraak: die was een echte fout en is hersteld. Deze
+        drie zijn geen fouten maar bewuste gaten, elk met dezelfde reden: ze raken gedeelde code die één thema niet alleen mag veranderen.
+    </footer>
+</div>
+
+<script>
+    const QUOTES = [
+        ['KP', '412.75', '+1.9%', 0],
+        ['THEME', '98.20', '-0.4%', 1],
+        ['REG25', '1 240.00', '+3.2%', 0],
+        ['TOKENS', '96.00', '0.0%', 0],
+        ['LIFT19', '77.50', '+0.8%', 0],
+        ['DI9', '0.06', '-0.2%', 1],
+        ['GATES', '96/96', '+0.0%', 0],
+        ['SUITE', '2 399', '+1.1%', 0],
+    ];
+    const line = QUOTES.map(([n, p, d, dn]) => `<span class="${dn ? 'dn' : ''}">${n} <i>${p}</i> ${d}</span>`).join('');
+    document.getElementById('run').innerHTML = line;
+    document.getElementById('run2').innerHTML = line;
+
+    const tape = document.getElementById('tape');
+    const btn = document.getElementById('pauseBtn');
+    const state = document.getElementById('tapeState');
+    let gated = false;
+    let visible = true;
+
+    const paint = () => {
+        const stopped = gated && !visible;
+        tape.classList.toggle('stopped', stopped);
+        state.textContent = stopped ? 'de band staat stil — hij is buiten beeld' : 'de band loopt';
+    };
+
+    btn.addEventListener('click', () => {
+        gated = !gated;
+        btn.textContent = `Pauzeer buiten beeld: ${gated ? 'aan' : 'uit'}`;
+        paint();
+    });
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(
+            (entries) => {
+                visible = entries[0].isIntersecting;
+                paint();
+            },
+            { threshold: 0.2 },
+        ).observe(tape);
+    }
+    paint();
+</script>
+
+</body></html>

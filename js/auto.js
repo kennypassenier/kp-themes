@@ -14,14 +14,23 @@
 import { applyStoredTheme } from './no-flash.js';
 import { applyTheme } from './theme-core.js';
 import { THEMES } from './theme-registry.js';
-import { attachConfirmations, attachNavToggles, attachSkipLinks, attachToTop, enforceContracts } from './components.js';
-import { attachDialogs, attachTabs } from './overlays.js';
+import {
+    attachConfirmations,
+    attachNavMenus,
+    attachNavToggles,
+    attachSkipLinks,
+    attachStickyNavs,
+    attachToTop,
+    enforceContracts,
+} from './components.js';
+import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTooltips } from './overlays.js';
+import { attachAlarms } from './alarm.js';
 import { attachThemePickers } from './theme-picker.js';
-import { attachComboboxes } from './combobox.js';
+import { attachComboboxes, attachSelects } from './combobox.js';
 import { attachPalettes } from './palette.js';
 import { attachDataTables } from './datatable.js';
 import { attachTableRegions } from './tables.js';
-import { attachForms } from './forms.js';
+import { attachForms, attachSwitches } from './forms.js';
 import { attachPatterns } from './patterns.js';
 import { attachStructure } from './structure.js';
 import { attachDatePickers } from './datepicker.js';
@@ -31,6 +40,7 @@ import { attachColorPickers } from './colorpicker.js';
 import { attachGrids } from './gridlayout.js';
 import { attachEffects } from './effects.js';
 import { attachSidenavs } from './sidenav.js';
+import { attachRemembered, restoreRemembered } from './remember.js';
 
 /**
  * Attach every behaviour under `root`. Returns one detach for all of it.
@@ -39,21 +49,34 @@ import { attachSidenavs } from './sidenav.js';
  * @returns {() => void}
  */
 export function attachAll(root = document) {
+    // Before every attach: what a reader chose last time goes back onto the
+    // markup, and each module then reads the markup it always read
+    // [js/remember.js]. A subtree rendered after the boot is restored here.
+    restoreRemembered(root);
     const detaches = [
+        attachRemembered(root),
         enforceContracts(root),
         attachConfirmations(root),
         attachSkipLinks(root),
         attachToTop(root),
         attachNavToggles(root),
+        attachStickyNavs(root),
+        attachNavMenus(root),
         attachSidenavs(root),
         attachDialogs(root),
+        attachAlarms(root),
+        attachDismissals(root),
+        attachTooltips(root),
+        attachScrollbars(root),
         attachTabs(root),
         attachThemePickers(root),
         attachComboboxes(root),
+        attachSelects(root),
         attachPalettes(root),
         attachDataTables(root),
         attachTableRegions(root),
         attachForms(root),
+        attachSwitches(root),
         attachPatterns(root),
         attachStructure(root),
         attachDatePickers(root),
@@ -73,6 +96,10 @@ export function attachAll(root = document) {
 
 if (typeof document !== 'undefined') {
     applyStoredTheme();
+    // The same moment, for the same reason: this module is deferred, so it
+    // runs after the parse and before the first frame. A state restored at
+    // DOMContentLoaded instead would be a state the reader saw flip.
+    restoreRemembered();
     // `?theme=<name>` picks a theme for this load without storing it
     // [AR42], on a page that opts in with `data-kp-theme-from-query` on
     // <html>: the concept demo is one page rendered under every theme, and

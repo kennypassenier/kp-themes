@@ -1,0 +1,28 @@
+{
+    "$comment": "What a block is made of [scope-114]: the code that shapes it, as digests. catalogue/block-hash.js reads this instead of the paint, so a verdict does not follow the zoom, the window or what the reviewer typed. Written by gates/generate-code-version.mjs.",
+    "shared": "cd7c278c1c7a92ff87b75007e1bda523",
+    "themes": {
+        "formal": "48997a1eb47c0127aa040683cd8f6a4e",
+        "light": "6ccd2848da8352a8dca6e443bd075e10",
+        "dark": "3a042c6c9ec335d94d2c7448116b009c",
+        "cyberpunk": "d7ef5487048b6935080b9668dc367d05",
+        "synthwave": "948e21957a6040d7277f83a2e1c3f8c2",
+        "pastel": "7a605123eab179bf57943b8501a81cdf",
+        "terminal": "5c7689723e504a86a9de035f737920a6",
+        "forest": "d78c0a700536efdffd86c437d88cf330",
+        "high-contrast": "396765bc0fa495017fecea3756e25cf5",
+        "sepia": "9ef43b930b26e165e44c1b7ba4abe83b",
+        "blueprint": "2640835a3eb929628224f86b2f6f7a4b",
+        "solstice": "30b676d51035a6e8bc931adad9140997",
+        "brutalism": "c0f0ccc3514b8cd1986b7bb66bc8b07b",
+        "deco": "6bdaff90a8c9dc11eafd8d4cd5a73ead",
+        "phantom": "08997bc843b603683b4e92609b857447",
+        "shade-light": "842eebbe2351b145168e698d2d08d375",
+        "shade-dark": "fdd7c84774ac936c827d765a6fe73e21",
+        "retro": "dfdf4458edcc615357e95eff453aa2cf",
+        "grotesk": "fbe3179d71cc661c4bd972137381b85b",
+        "lapis": "11e36b9f9eb42b8e0afe618dc7adedf9",
+        "nostromo": "1e0d3050d111eb5aec4c29d1f3a5248e",
+        "titanium": "fd89ed4df12c9f962f56866e83f20376"
+    }
+}

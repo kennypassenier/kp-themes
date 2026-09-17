@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
-import { TOAST_MS } from '../js/overlays.js';
+import { openAtTop, revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -87,10 +87,24 @@ function DialogInner(
         if (open && !dialog.open) {
             if (modal) dialog.showModal();
             else dialog.show();
+            // At the top every time it opens, as the framework-free channel [scope-96].
+            openAtTop(dialog);
             initialFocus?.current?.focus();
         }
         if (!open && dialog.open) dialog.close();
     }, [open, modal, initialFocus]);
+
+    // Whether the dialog or its body scrolls, for a register that draws its
+    // own scrollbar (js/overlays.js watchScrollbar) [retro notes, 2026-09-15].
+    useEffect(() => {
+        const dialog = inner.current;
+        if (!dialog) return undefined;
+        const body = /** @type {HTMLElement | null} */ (dialog.querySelector(':scope > .kp-dialog__body'));
+        const stops = [watchScrollbar(dialog), ...(body ? [watchScrollbar(body)] : [])];
+        return () => {
+            for (const stop of stops) stop();
+        };
+    }, []);
 
     /** @param {'escape' | 'close' | 'action'} reason */
     const close = (reason) => {
@@ -209,6 +223,7 @@ function DropdownMenuInner(
         popover.addEventListener('toggle', onToggle);
         return () => popover.removeEventListener('toggle', onToggle);
     }, [onOpenChange]);
+    useEffect(() => (inner.current ? watchScrollbar(inner.current) : undefined), []);
     useEffect(() => {
         const popover = inner.current;
         if (!popover || openProp === undefined) return;
@@ -322,6 +337,9 @@ function TooltipInner(
     const inner = useRef(null);
     useImperativeHandle(ref, () => /** @type {HTMLElement} */ (inner.current), []);
     useEffect(() => () => clearTimeout(timer.current), []);
+    /** @type {import('react').RefObject<HTMLSpanElement | null>} */
+    const tip = useRef(null);
+    useEffect(() => (tip.current ? watchScrollbar(tip.current) : undefined), []);
     /** @param {boolean} next @param {number} delay */
     const schedule = (next, delay) => {
         clearTimeout(timer.current);
@@ -342,6 +360,8 @@ function TooltipInner(
         <As
             ref={inner}
             className={`kp-tooltip-anchor ${className}`.trim()}
+            // Wired here, so js/overlays.js attachTooltips leaves it alone [gap-11, AR29].
+            data-kp-tooltip-owner
             style={{ anchorName: `--${id}`, ...style }}
             onMouseEnter={() => schedule(true, openDelayMs)}
             onMouseLeave={() => schedule(false, closeDelayMs)}
@@ -351,6 +371,7 @@ function TooltipInner(
                 {children}
             </span>
             <span
+                ref={tip}
                 role="tooltip"
                 id={id}
                 hidden={!shown}
@@ -409,14 +430,23 @@ function ToastsInner(
                 renderToast(m, () => onDismiss?.(m.id))
             ) : (
                 <>
-                    {m.text}
+                    {/* The words in their own box, so the buttons sit at the
+                        toast's end whatever the text's length. */}
+                    <span className="kp-toast__body">{m.text}</span>
                     {m.action && (
                         <button type="button" className="kp-button kp-button--ghost" onClick={m.action.onClick}>
                             {m.action.label}
                         </button>
                     )}
                     {dismissible && (
-                        <button type="button" className="kp-icon-button kp-toast__close" aria-label={s.close} onClick={() => onDismiss?.(m.id)}>
+                        <button
+                            type="button"
+                            className="kp-icon-button kp-toast__close"
+                            aria-label={s.close}
+                            // Wired here, so js/overlays.js attachDismissals leaves it alone [gap-11, AR29].
+                            data-kp-dismiss-owner
+                            onClick={() => onDismiss?.(m.id)}
+                        >
                             ×
                         </button>
                     )}
@@ -549,6 +579,19 @@ function TabsInner(
     const list = useRef(null);
     useEffect(() => {
         setMounted((was) => (was.has(active) ? was : new Set([...was, active])));
+    }, [active]);
+    // A row that does not fit scrolls, and the selected tab is kept inside
+    // it [gap-12]. The ref reads the index at the moment the row starts to
+    // scroll, not the one the effect was created with.
+    const activeRef = useRef(active);
+    activeRef.current = active;
+    useEffect(() => {
+        const row = list.current;
+        if (!row) return undefined;
+        return watchTabOverflow(row, () => row.querySelectorAll('[role="tab"]')[activeRef.current]);
+    }, []);
+    useEffect(() => {
+        if (list.current) revealTab(list.current, list.current.querySelectorAll('[role="tab"]')[active]);
     }, [active]);
 
     /** @param {number} index */

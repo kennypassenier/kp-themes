@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Remembered state, one page per question</title>
+        <script>
+            // Classic and inline, so it is the FIRST thing this document
+            // runs: what the page looked like at the two moments a flash
+            // would show in. The module below is deferred, so it executes
+            // after the parse and before both of these — if a remembered
+            // state is not already on the markup here, the reader saw the
+            // wrong one.
+            window.__kpAt = { frames: [] };
+            window.__kpDcl = false;
+            window.__kpLook = function () {
+                var nav = document.querySelector('[data-test="nav"]');
+                var faq = document.querySelector('[data-test="faq-two"]');
+                var split = document.querySelector('[data-test="split"] [role="separator"]');
+                return {
+                    readyState: document.readyState,
+                    afterDcl: window.__kpDcl,
+                    groups: nav
+                        ? [].map.call(nav.querySelectorAll('.kp-sidenav__category'), function (c) {
+                              return c.hasAttribute('data-kp-sidenav-expanded');
+                          })
+                        : null,
+                    faqOpen: faq ? faq.open : null,
+                    splitValue: split ? split.getAttribute('aria-valuenow') : null,
+                };
+            };
+            document.addEventListener('DOMContentLoaded', function () {
+                window.__kpAt.dcl = window.__kpLook();
+                window.__kpDcl = true;
+            });
+            // Every frame the browser offers until the page has loaded, with
+            // the state the document was in at that moment. `readyState`
+            // turns "interactive" BEFORE a deferred script runs, so the
+            // marker that matters is DOMContentLoaded: from there on, every
+            // frame must already show what was remembered.
+            (function frame() {
+                window.__kpAt.frames.push(window.__kpLook());
+                if (document.readyState !== 'complete') requestAnimationFrame(frame);
+            })();
+        </script>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <script type="module" src="/js/auto.js"></script>
+    </head>
+    <body>
+        <h1>Remembered state</h1>
+
+        <!-- 1. The side navigation Kenny's case is about: two groups, both
+             open in the markup, a name of its own, and a rail to collapse. -->
+        <div data-test="nav-box">
+            <button type="button" class="kp-button" data-kp-sidenav-toggle aria-controls="nav-one" data-test="nav-toggle">Menu</button>
+            <button type="button" class="kp-button" data-kp-sidenav-slim-toggle aria-controls="nav-one" data-test="nav-rail-toggle">Rail</button>
+            <nav
+                class="kp-sidenav"
+                id="nav-one"
+                data-test="nav"
+                aria-label="Remembering"
+                data-kp-remember="fixture-nav"
+                data-kp-sidenav-mode="side"
+                data-kp-sidenav-slim
+            >
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li class="kp-sidenav__category" data-kp-sidenav-expanded data-test="nav-group-components">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="nav-group-components-toggle">
+                                <span class="kp-sidenav__label">Components</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#a"><span class="kp-sidenav__label">Button</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="kp-sidenav__category" data-kp-sidenav-expanded data-test="nav-group-pages">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="nav-group-pages-toggle">
+                                <span class="kp-sidenav__label">Pages</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#b"><span class="kp-sidenav__label">Dashboard</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 2. The same component, a different name: separate state. -->
+        <div data-test="nav-two-box">
+            <nav class="kp-sidenav" id="nav-two" data-test="nav-two" aria-label="Second" data-kp-remember="fixture-nav-second">
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li class="kp-sidenav__category" data-kp-sidenav-expanded data-test="nav-two-group">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="nav-two-group-toggle">
+                                <span class="kp-sidenav__label">Components</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#c"><span class="kp-sidenav__label">Card</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 3. The same component with NO name: it remembers nothing. -->
+        <div data-test="nav-plain-box">
+            <nav class="kp-sidenav" id="nav-plain" data-test="nav-plain" aria-label="Plain">
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li class="kp-sidenav__category" data-kp-sidenav-expanded data-test="nav-plain-group">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="nav-plain-group-toggle">
+                                <span class="kp-sidenav__label">Components</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#d"><span class="kp-sidenav__label">Alert</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 4. A second panel claiming the name panel 1 already answers to. -->
+        <div data-test="nav-clash-box">
+            <nav class="kp-sidenav" id="nav-clash" data-test="nav-clash" aria-label="Clash" data-kp-remember="fixture-nav">
+                <div class="kp-sidenav__scroll">
+                    <ul class="kp-sidenav__list">
+                        <li class="kp-sidenav__category" data-kp-sidenav-expanded data-test="nav-clash-group">
+                            <button type="button" class="kp-sidenav__category-toggle" data-test="nav-clash-group-toggle">
+                                <span class="kp-sidenav__label">Components</span>
+                            </button>
+                            <div class="kp-sidenav__submenu">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#e"><span class="kp-sidenav__label">Badge</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 5. The accordion: two sections, the second one remembering. -->
+        <div class="kp-accordion" data-test="faq">
+            <details class="kp-accordion__item" data-test="faq-one">
+                <summary class="kp-accordion__summary" data-test="faq-one-summary">Who may reopen a locked-out line?</summary>
+                <div class="kp-accordion__body">The shift lead who signed the lock-out.</div>
+            </details>
+            <details class="kp-accordion__item" data-kp-remember="faq-pressure" data-test="faq-two">
+                <summary class="kp-accordion__summary" data-test="faq-two-summary">What counts as a pressure drop?</summary>
+                <div class="kp-accordion__body">More than one bar within thirty minutes.</div>
+            </details>
+        </div>
+
+        <!-- 6. The split pane: the divider's position. -->
+        <div class="kp-split" data-kp-split data-test="split" data-kp-remember="fixture-panes">
+            <div class="kp-split__pane">Left</div>
+            <div
+                class="kp-split__separator"
+                role="separator"
+                tabindex="0"
+                aria-orientation="vertical"
+                aria-valuemin="10"
+                aria-valuemax="90"
+                aria-valuenow="50"
+                aria-label="Resize"
+                data-test="split-divider"
+            ></div>
+            <div class="kp-split__pane">Right</div>
+        </div>
+
+        <!-- 7. The tree: which branches are open. -->
+        <ul class="kp-tree" role="tree" data-kp-tree data-test="tree" data-kp-remember="fixture-folders" aria-label="Folders">
+            <li role="treeitem" aria-expanded="true" data-kp-item="documents" data-test="tree-documents">
+                <span class="kp-tree__label">Documents</span>
+                <ul role="group">
+                    <li role="treeitem" data-kp-item="report"><span class="kp-tree__label">Report</span></li>
+                </ul>
+            </li>
+            <li role="treeitem" aria-expanded="true" data-kp-item="downloads" data-test="tree-downloads">
+                <span class="kp-tree__label">Downloads</span>
+                <ul role="group">
+                    <li role="treeitem" data-kp-item="invoice"><span class="kp-tree__label">Invoice</span></li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- 8. The data table: the columns shown, the sort, the density. -->
+        <div class="kp-datatable" data-kp-datatable data-kp-column-menu data-test="table" data-kp-remember="fixture-issues">
+            <div class="kp-datatable__bar">
+                <select class="kp-field__input kp-datatable__select" data-kp-datatable-density data-test="table-density"></select>
+            </div>
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <caption>
+                        Issues
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" data-kp-sort="text" data-test="table-head-reference">Reference</th>
+                            <th scope="col" data-kp-sort="text" data-test="table-head-site">Site</th>
+                            <th scope="col" data-kp-sort="number" data-test="table-head-hours">Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INC-3</td>
+                            <td>Mill</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>INC-1</td>
+                            <td>Quay</td>
+                            <td>9</td>
+                        </tr>
+                        <tr>
+                            <td>INC-2</td>
+                            <td>Yard</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="kp-datatable__bar">
+                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+            </div>
+        </div>
+    </body>
+</html>

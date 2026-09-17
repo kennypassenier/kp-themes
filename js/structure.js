@@ -20,6 +20,7 @@
 // on every treeitem.
 
 import { getStrings } from './strings.js';
+import { paintRemembered, treeItemId } from './remember.js';
 
 const TREE = '[data-kp-tree]';
 const REORDER = '[data-kp-reorder]';
@@ -116,6 +117,10 @@ export function attachStructure(
         const tree = /** @type {HTMLElement} */ (element);
         if (tree.dataset.kpTreeAttached !== undefined) continue;
         tree.dataset.kpTreeAttached = '';
+        // Which branches were open, when the tree asked to be remembered
+        // [Kenny, 2026-09-16]. Painted before the first read below, so the
+        // starting state is the markup either way.
+        const memory = paintRemembered(tree, 'tree');
         const finds = tree.dataset.kpTypeahead === undefined ? typeahead : tree.dataset.kpTypeahead !== 'false';
         const clickMode = tree.dataset.kpClick ?? (clickToggles ? 'toggle' : 'select');
         const selects = tree.dataset.kpSelectable !== undefined || selectable;
@@ -137,6 +142,13 @@ export function attachStructure(
             if (!item.hasAttribute('aria-expanded')) return;
             if ((item.getAttribute('aria-expanded') === 'true') === expanded) return;
             item.setAttribute('aria-expanded', String(expanded));
+            if (memory !== null) {
+                /** @type {Record<string, boolean>} */
+                const branches = {};
+                for (const branch of tree.querySelectorAll('[role="treeitem"][aria-expanded]'))
+                    branches[treeItemId(branch)] = branch.getAttribute('aria-expanded') === 'true';
+                memory.write('branches', branches);
+            }
             tree.dispatchEvent(new CustomEvent(TREE_EXPAND_EVENT, { bubbles: true, detail: { item, id: idOf(item), expanded } }));
         };
         /** @param {HTMLElement | null} item */
@@ -343,17 +355,25 @@ export function attachStructure(
         };
 
         // The pointer route: drag by the handle, drop between siblings.
+        // The move and release are heard on the window, not on the handle:
+        // moving the row in the DOM detaches the handle for a moment, which
+        // releases its pointer capture, and the first version then stopped
+        // hearing the pointer after one row [held-60].
+        /** @type {(() => void) | null} */
+        let endDrag = null;
         /** @param {PointerEvent} event */
         const onPointerDown = (event) => {
             if (!pointer || event.button !== 0) return;
             const handle = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (event.target).closest('[data-kp-handle]'));
             const item = handle?.closest('[data-kp-item]');
-            if (!handle || !(item instanceof HTMLElement)) return;
+            if (!handle || !(item instanceof HTMLElement) || item.parentElement !== list) return;
             event.preventDefault();
-            handle.setPointerCapture(event.pointerId);
+            endDrag?.();
+            const pointerId = event.pointerId;
             item.dataset.kpDragging = '';
             /** @param {PointerEvent} move */
             const onMove = (move) => {
+                if (move.pointerId !== pointerId) return;
                 for (const sibling of list.children) {
                     if (sibling === item) continue;
                     const box = sibling.getBoundingClientRect();
@@ -364,15 +384,19 @@ export function attachStructure(
                     }
                 }
             };
-            const onUp = () => {
+            /** @param {PointerEvent} [up] */
+            const onUp = (up) => {
+                if (up && up.pointerId !== pointerId) return;
                 delete item.dataset.kpDragging;
-                handle.removeEventListener('pointermove', onMove);
-                handle.removeEventListener('pointerup', onUp);
-                handle.removeEventListener('pointercancel', onUp);
+                window.removeEventListener('pointermove', onMove);
+                window.removeEventListener('pointerup', onUp);
+                window.removeEventListener('pointercancel', onUp);
+                endDrag = null;
             };
-            handle.addEventListener('pointermove', onMove);
-            handle.addEventListener('pointerup', onUp);
-            handle.addEventListener('pointercancel', onUp);
+            endDrag = onUp;
+            window.addEventListener('pointermove', onMove);
+            window.addEventListener('pointerup', onUp);
+            window.addEventListener('pointercancel', onUp);
         };
 
         list.addEventListener('keydown', onKey);
@@ -394,6 +418,7 @@ export function attachStructure(
         cleanups.push(() => {
             list.removeEventListener('keydown', onKey);
             list.removeEventListener('pointerdown', onPointerDown);
+            endDrag?.();
             list.replaceChildren(...original);
             if (madeLive) live?.remove();
             handles.delete(list);
@@ -406,6 +431,10 @@ export function attachStructure(
         const split = /** @type {HTMLElement} */ (element);
         if (split.dataset.kpSplitAttached !== undefined) continue;
         split.dataset.kpSplitAttached = '';
+        // Where the divider was left, when the pane asked to be remembered
+        // [Kenny, 2026-09-16]. The painter writes aria-valuenow, which is
+        // where the starting position is read from three lines below.
+        const memory = paintRemembered(split, 'split');
         const separator = /** @type {HTMLElement | null} */ (split.querySelector('[role="separator"]'));
         if (separator === null) continue;
         // A separator between left and right is "vertical" in ARIA terms;
@@ -430,6 +459,7 @@ export function attachStructure(
             // separator that moves silently is a separator only a mouse
             // can use.
             separator.setAttribute('aria-valuenow', String(value));
+            memory?.write('value', value);
             split.dispatchEvent(new CustomEvent(SPLIT_EVENT, { bubbles: true, detail: { value } }));
         };
         setValue(value);

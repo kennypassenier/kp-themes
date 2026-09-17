@@ -139,9 +139,27 @@
 
     /* No give. The spectral instrument draws its label in on hover; metal
        does not compress, so titanium answers a press by dropping the whole
-       control one pixel and nothing else. */
+       control one pixel.
+
+       The face goes into its seat [Kenny's titanium note, 2026-09-15].
+       "There is no click effect": the one pixel ran over the theme's 60ms,
+       and on the bare, secondary, ghost and mirror buttons the pressed
+       ground was three RGB steps from the hover ground, so a click showed
+       nothing. Still no give and no glow — the face does not shrink and
+       nothing blooms — but a pressed part is out of the light: the bright
+       tool edge along its top goes out and a hairline of shadow takes its
+       place, the ground drops a full step (below, with the fix-12 rules),
+       and all of it arrives at once, because a click is shorter than a
+       transition. The release runs back over the same 60ms, linear. A
+       keyboard press keeps the focus ring, which owns the shadow while
+       it shows. */
     [data-theme='titanium'] .kp-button:active:not(:disabled) {
         translate: 0 1px;
+        transition-duration: 0s;
+    }
+
+    [data-theme='titanium'] .kp-button:active:not(:disabled):not(:focus-visible) {
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
     }
 
     /* The reading above the control: the consumer's own word, in the
@@ -163,6 +181,37 @@
         background: var(--kp-iris);
         background-clip: text;
         color: transparent;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the end edge (the start
+       corner is the cut one), and it stops the width of the focus ring and
+       its outline short of the control, so none of the ring the chamfer
+       cuts away reappears on top. It reaches well past both ends because
+       the readout does not wrap. */
+    [data-theme='titanium'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            100% var(--kp-readout-seam),
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
+        );
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -222,6 +271,21 @@
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
     }
 
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item already gives. The ink
+       (--focus-ring) runs along the edge and the void
+       (--focus-ring-contrast) inside it, the same order as the ring
+       outside. The outline stays declared and stays clipped. */
+    [data-theme='titanium'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     /* ── Type ──────────────────────────────────────────────────────────── */
 
     [data-theme='titanium'] h1,
@@ -229,13 +293,10 @@
     [data-theme='titanium'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
         color: var(--foreground);
     }
 
     [data-theme='titanium'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.08;
         letter-spacing: -0.02em;
         margin-block: 0 0.35em;
         text-wrap: balance;
@@ -413,14 +474,12 @@
 
     [data-theme='titanium'] .kp-nav-wrap {
         background: var(--card);
-        position: relative;
         border-bottom: 1px solid var(--border-strong);
-        z-index: var(--kp-z-nav, 30);
     }
 
     [data-theme='titanium'] .kp-nav {
         background: var(--card);
-        padding-block: 0.7rem;
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='titanium'] .kp-nav__brand {
@@ -435,10 +494,9 @@
     }
 
     [data-theme='titanium'] .kp-nav__link {
-        padding: 0.5rem 0.8rem;
+        padding-inline: 0.8rem;
         border-radius: var(--radius);
         font-weight: 500;
-        font-size: 0.94rem;
         color: var(--muted-foreground);
     }
 
@@ -448,6 +506,14 @@
     [data-theme='titanium'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--foreground);
         background: var(--accent);
+    }
+
+    /* The ring above the next link's plate [fix-38]: the links sit 0.15rem
+       apart and the ring reaches 4px out, so a later item — the current
+       page's accent plate — painted over its end side (5% of it changed on
+       focus). The focused item is lifted over its neighbours. */
+    [data-theme='titanium'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
     }
 
     [data-theme='titanium'] .kp-nav__link[aria-haspopup]::after {
@@ -487,12 +553,24 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='titanium'] .kp-nav__menu a {
         display: block;
-        padding: 0.45rem 0.7rem;
+        padding-inline: 0.7rem;
         border-radius: calc(var(--radius) / 1.5);
         color: var(--foreground);
-        font-size: 0.92rem;
     }
 
     [data-theme='titanium'] .kp-nav__menu a:hover {
@@ -523,7 +601,6 @@
 
     [data-theme='titanium'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.5rem;
     }
 
     [data-theme='titanium'] .kp-button--primary,
@@ -533,9 +610,16 @@
         color: var(--primary-foreground);
     }
 
+    /* A step down, not up [scope-80]. The primary is a pale metal on a
+       dark ground, and six points lighter took it to a near-white nobody
+       could tell from the rest: measured on catalogue/button.html, rest to
+       hover was 4.9 in OKLab distance where roughly 10 is "tells them
+       apart", and the bare button's hover is 8.9. Fourteen points darker is
+       11.4, and the pressed state below goes a further thirteen, so pressed
+       stays 11.0 from hover (DI3's floor of 10). */
     [data-theme='titanium'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 6));
-        border-color: hsl(from var(--primary) h s calc(l + 6));
+        background: hsl(from var(--primary) h s calc(l - 14));
+        border-color: hsl(from var(--primary) h s calc(l - 14));
     }
 
     [data-theme='titanium'] .kp-button--ghost {
@@ -568,7 +652,6 @@
 
     [data-theme='titanium'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.9rem;
         color: var(--foreground);
     }
 
@@ -589,21 +672,22 @@
         border-color: var(--primary);
     }
 
-    [data-theme='titanium'] select.kp-field__input {
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
-            linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
-        background-position:
-            calc(100% - 18px) 55%,
-            calc(100% - 12px) 55%;
-        background-size:
-            6px 6px,
-            6px 6px;
-        background-repeat: no-repeat;
+    /* One arrow on a select, never two [fix-42]. The same three lines dark
+       carried, with the same fault: a chevron in two 6px gradients and
+       nothing taking the browser's own arrow away, so firefox drew its
+       dropmarker beside it (19 columns of ink over the select's right edge
+       against the 8 of a theme that leaves the arrow to the browser, and
+       still 8 with this register's own arrow forced off). Found by sweeping
+       all 22 themes for what Kenny reported in dark; these two were the
+       only pair, and the sweep is tests/register-dark-faults.spec.mjs. The arrow
+       goes back to the browser, which also reserves the room for it, and
+       the picker icon wears the theme where the page may take the list
+       over [KT8]. */
+    [data-theme='titanium'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
     }
 
     [data-theme='titanium'] .kp-field__help {
-        font-size: 0.8rem;
         color: var(--muted-foreground);
     }
 
@@ -644,6 +728,23 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the machined corner on
+       the card, a small square thumb, and the primary fill once on. */
+    [data-theme='titanium'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.1rem;
+    }
+
+    [data-theme='titanium'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
     [data-theme='titanium'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -660,7 +761,6 @@
 
     [data-theme='titanium'] .kp-card__title {
         font-weight: 700;
-        font-size: 1.5rem;
     }
 
     /* The stamp: attr(data-kp-label) content, the convention
@@ -739,9 +839,51 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='titanium'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='titanium'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='titanium'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='titanium'] .kp-toast--destructive,
+    [data-theme='titanium'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='titanium']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='titanium'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='titanium'] .kp-dialog__title {
         font-weight: 700;
-        font-size: 1.2rem;
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -804,7 +946,6 @@
     }
 
     [data-theme='titanium'] .kp-footer h4 {
-        font-size: 0.95rem;
         color: var(--foreground);
     }
 
@@ -832,10 +973,6 @@
     [data-theme='titanium'] .kp-progress {
         background: var(--card);
         border: 1px solid var(--border-strong);
-    }
-
-    [data-theme='titanium'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='titanium'] .kp-spinner {
@@ -874,6 +1011,22 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='titanium'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='titanium'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data ─────────────────────────────────────────────────────────── */
 
     [data-theme='titanium'] .kp-table th {
@@ -893,6 +1046,8 @@
     [data-theme='titanium'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
     }
 
     [data-theme='titanium'] .kp-datatable__bar {
@@ -931,6 +1086,19 @@
 
     [data-theme='titanium'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='titanium'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='titanium'] .kp-reorder {
@@ -998,16 +1166,15 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='titanium'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='titanium'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='titanium'] .kp-breadcrumb,
     [data-theme='titanium'] .kp-pagination {
-        font-size: 0.9rem;
         color: var(--muted-foreground);
     }
 
@@ -1213,7 +1380,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='titanium'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='titanium'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='titanium'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
     }
@@ -1270,13 +1439,22 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
+    /* Not `--secondary-active` any more: that token sits three RGB steps
+       from `--accent`, the hover ground, so the press never showed on the
+       bare, secondary, ghost and mirror buttons [Kenny's titanium note,
+       2026-09-15]. Eleven points under the hover ground, the metal in
+       shadow: ten measured 9.9 in OKLab distance, a hair under the States
+       block's floor of 10; eleven is 10.9. */
     [data-theme='titanium'] .kp-button:active:not(:disabled) {
-        background: var(--secondary-active);
+        background: hsl(from var(--accent) h s calc(l - 11));
     }
 
+    /* Not `--primary-active` any more: that token is 74%, three points
+       from the darker hover above, so the press would vanish into it
+       [scope-80]. */
     [data-theme='titanium'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
+        background: hsl(from var(--primary) h s calc(l - 27));
+        border-color: hsl(from var(--primary) h s calc(l - 27));
     }
 
     [data-theme='titanium'] .kp-button--destructive:active:not(:disabled) {
@@ -1321,5 +1499,87 @@
 
     [data-theme='titanium'] .kp-measure__bracket {
         border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='titanium'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.8rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       An instrument fault: a graphite plate, the headline in its signal orange-red, a hairline frame and brushed silver bars. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='titanium'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 6% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: hsl(from var(--primary) h s l / 0.5);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='titanium'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

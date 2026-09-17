@@ -18,7 +18,7 @@
 //     have to be visible or they are not findings at all
 //
 // The browser phase uses Playwright's `line` reporter, which prints
-// `[412/2526] [firefox] › tests/x.spec.mjs:31:5 › name` over one line:
+// `[412/2502] [firefox] › tests/x.spec.mjs:31:5 › name` over one line:
 // that is the "what is running" half, and the heartbeat below never
 // fires while it is printing.
 //
@@ -98,21 +98,21 @@ const only = (process.argv.find((a) => a.startsWith('--only=')) ?? '').slice('--
 const PHASES = [
     {
         name: 'gates',
-        what: 'the thirty blocking checks — generated files, tokens, layers, hooks, registers, fonts, strings, types',
+        what: 'the twenty-nine blocking checks — generated files, tokens, layers, hooks, registers, fonts, strings, types',
         command: 'npm',
         args: ['run', 'gates'],
         blocking: true,
     },
     {
         name: 'browser',
-        what: fast ? 'the whole suite, Firefox only (--fast)' : 'the whole suite, Chromium and Firefox — about 2500 tests, six minutes',
+        what: fast ? 'the whole suite, Firefox only (--fast)' : 'the whole suite, Chromium and Firefox — about 2502 tests, six minutes',
         command: 'npx',
         args: fast ? ['playwright', 'test', '--project=firefox', '--reporter=line'] : ['playwright', 'test', '--reporter=line'],
         blocking: true,
     },
     {
         name: 'advice',
-        what: 'contrast, the design invariants, motion, the DI5 report, the texture ceiling — a reading, never a verdict',
+        what: 'contrast, the design invariants, motion, the DI5 report, the texture ceiling, variant grounds, the compliance table, the baseline checksums, prettier — a reading, never a verdict',
         command: 'npm',
         args: ['run', 'advice'],
         // Kenny, 2026-09-09: the accessibility floors report and do not

@@ -1,5 +1,6 @@
-import { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
+import { raiseInPlace } from '../js/top-layer.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -52,7 +53,7 @@ export const MATCHERS = {
  * @property {keyof typeof MATCHERS | Matcher} [match]  Default substring.
  * @property {boolean} [openOnFocus]     Default true.
  * @property {boolean} [closeOnBlur]     Default true.
- * @property {boolean} [backspaceRemoves]  Default true.
+ * @property {boolean} [backspaceRemoves]  Backspace in an empty field removes the last tag. Default false since 2026-09-13: a stray Backspace took a chosen tag away; each tag's remove button is the way out.
  * @property {boolean} [stayOpen]        Keep the list open after adding a tag. Default true.
  * @property {number} [maxTags]
  * @property {boolean} [allowDuplicates]
@@ -60,6 +61,7 @@ export const MATCHERS = {
  * @property {boolean} [clearable]       A clear button on the combobox.
  * @property {boolean} [loop]            Arrow keys wrap. Default true.
  * @property {boolean} [loading]         Says so in the status line instead of a count.
+ * @property {boolean} [emptyRow]        A query that matches nothing keeps the list open with a "no results" row. Default true [gap-11].
  * @property {string} [name]             A hidden input carries the value(s) for a plain <form>.
  * @property {string} [placeholder]
  * @property {boolean} [disabled]
@@ -96,7 +98,7 @@ function ComboboxInner(
         match = 'substring',
         openOnFocus = true,
         closeOnBlur = true,
-        backspaceRemoves = true,
+        backspaceRemoves = false,
         stayOpen = true,
         maxTags = Infinity,
         allowDuplicates = false,
@@ -104,6 +106,7 @@ function ComboboxInner(
         clearable = false,
         loop = true,
         loading = false,
+        emptyRow = true,
         name,
         placeholder,
         disabled = false,
@@ -262,6 +265,15 @@ function ComboboxInner(
     /** @param {string} v */
     const labelOf = (v) => options.find((o) => o.value === v)?.label ?? v;
 
+    const listShown = open && !(visible.length === 0 && !(emptyRow && query.trim() !== ''));
+    const listRef = useRef(/** @type {HTMLUListElement | null} */ (null));
+    // Above a container that clips, where the stylesheet drew it: the same
+    // raiseInPlace the framework-free channel opens with (js/top-layer.js).
+    useLayoutEffect(() => {
+        if (!listShown || listRef.current === null || boxRef.current === null) return undefined;
+        return raiseInPlace(listRef.current, boxRef.current, inputRef.current ?? boxRef.current);
+    }, [listShown]);
+
     return (
         <div
             className={`kp-combobox ${className}`.trim()}
@@ -338,7 +350,10 @@ function ComboboxInner(
                     <input type="hidden" name={name} value={options.find((o) => o.label === query)?.value ?? query} />
                 ))}
 
-            <ul className={`kp-combobox__list ${classNames.list ?? ''}`.trim()} id={listId} role="listbox" hidden={!open || visible.length === 0}>
+            {/* A query that matches nothing keeps the list open with a row that
+                says so, right under the input [gap-11]; an empty query with
+                nothing left to offer still closes it. */}
+            <ul ref={listRef} className={`kp-combobox__list ${classNames.list ?? ''}`.trim()} id={listId} role="listbox" hidden={!listShown}>
                 {visible.map((option, i) => (
                     <li
                         className={`kp-combobox__option ${i === active ? 'is-active' : ''} ${classNames.option ?? ''}`.trim()}
@@ -359,6 +374,11 @@ function ComboboxInner(
                         {renderOption ? renderOption(option, { active: i === active, selected: chosen.includes(option.value) }) : option.label}
                     </li>
                 ))}
+                {emptyRow && (
+                    <li className="kp-combobox__empty" role="presentation" data-kp-combobox-empty hidden={visible.length > 0}>
+                        {s.noResults}
+                    </li>
+                )}
             </ul>
 
             {/* A sighted user watches the list shrink; without this nobody

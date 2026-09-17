@@ -7,15 +7,17 @@
 // rendered page, not on the token file, because the hero block remaps
 // what a component reads and a remap can point at the wrong thing.
 //
-// Drill [KT3]: with the generator's hero block removed (`heroes` left out
-// of build() in gates/generate-themes.mjs, `npm run generate`), the hero
-// and the app paint the same ground under cyberpunk and the first test
-// goes red on "the hero paints the app's ground"; the contrast test alone
-// would stay green, because the app's colours read fine on the hero too.
-// Performed 2026-09-07, both browsers, then restored.
+// That the hero and the app paint two different grounds is judged by eye
+// on the catalogue since scope-73 (page-effects#surfaces); the contrast
+// tests below stay.
 
 import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
+import { sweepThemeRecords } from './helpers/sweep-themes.mjs';
+
+// The contrast floor is the same claim in every theme; the level decides
+// how many of them are measured [scope-103]. All 22 at the release level.
+const SWEEP = sweepThemeRecords(THEMES);
 
 const URL = (theme) => `/examples/concept.html?theme=${theme}`;
 
@@ -127,38 +129,7 @@ const GROUND = `(el) => {
     return [getComputedStyle(document.documentElement).backgroundColor];
 }`;
 
-test.describe('two surfaces in one theme [TH116]', () => {
-    test('under cyberpunk the hero paints its own ground, and the app paints the theme background', async ({ page }) => {
-        await open(page, 'cyberpunk');
-        const hero = page.locator('[data-kp-surface="hero"]').first();
-        const app = page.locator('[data-kp-surface="app"]').first();
-        const [heroGround] = await hero.evaluate((el, src) => new Function(`return ${src}`)()(el), GROUND);
-        const [appGround] = await app.evaluate((el, src) => new Function(`return ${src}`)()(el), GROUND);
-        const expected = await page.evaluate(() => {
-            const style = getComputedStyle(document.documentElement);
-            return { hero: style.getPropertyValue('--surface-hero-bg').trim(), app: style.getPropertyValue('--background').trim() };
-        });
-        // The token is an hsl() literal; the paint is rgb(). Compare by
-        // painting the token on a probe element in the same document.
-        const paint = await page.evaluate(
-            ([hsl1, hsl2]) => {
-                const probe = document.createElement('div');
-                document.body.append(probe);
-                const out = [];
-                for (const value of [hsl1, hsl2]) {
-                    probe.style.backgroundColor = value;
-                    out.push(getComputedStyle(probe).backgroundColor);
-                }
-                probe.remove();
-                return out;
-            },
-            [expected.hero, expected.app],
-        );
-        expect(heroGround, "the hero paints the app's ground").not.toBe(appGround);
-        expect(heroGround).toBe(paint[0]);
-        expect(appGround).toBe(paint[1]);
-    });
-
+test.describe('two surfaces in one theme [TH116]', { tag: ['@sweep', '@component:examples'] }, () => {
     // A pair an approved demo puts under the floor is REPORTED, not lifted
     // [S49, S42]: the register carries the demo's own value, the shortfall
     // is measured here with the demo it came from, and Kenny decides at
@@ -174,23 +145,15 @@ test.describe('two surfaces in one theme [TH116]', () => {
      * @type {Record<string, { measured: number, what: string, why: string }[]>}
      */
     const REPORTED = {
-        'shade-light': [
-            {
-                measured: 3.61,
-                // A pair, not one line of text: this is one token against
-                // two grounds, and it lands on every caption, every hint
-                // and every timestamp the page carries — eight lines that
-                // are all the same decision. Naming the text of each would
-                // record the fixture's wording rather than the choice.
-                pair: 'rgb(101, 126, 134) on rgb(240, 235, 219)',
-                why: "the muted colour, chosen by Kenny on 2026-09-12 (`shade-light-muted`). It was identical to --foreground until Phase 7, which meant nothing in this theme was muted at all — captions, hints, timestamps and the text of an empty field all read as body text. There is no lighter colour that clears 4.5, because shade-light's BODY text only reaches 5.01 itself; the choice was between a visible difference under the floor and no difference at all. The floors are advice in this package (Kenny, 2026-09-09), and the reading is recorded in docs/TEST_PLAN.md.",
-            },
-            {
-                measured: 4.13,
-                pair: 'rgb(101, 126, 134) on rgb(254, 250, 241)',
-                why: 'the same muted colour on the card rather than on the page — see the entry above for the decision and the reason there is no lighter one.',
-            },
-        ],
+        // shade-light's two muted entries (3.61 on the page, 4.13 on the
+        // card, both `rgb(101, 126, 134)`) were REMOVED at `scope-101`,
+        // 2026-09-16: Kenny answered shade-light-contrast "Donkerder
+        // maken", --muted-foreground went from 46% to 39% lightness, and
+        // the three pairs now measure 4.71, 5.21 and 5.39. This list holds
+        // only pairs the package still paints below the floor, and the
+        // check above refuses an entry for a pair that has been fixed —
+        // which is how it was found.
+        'shade-light': [],
         'shade-dark': [
             {
                 measured: 4.21,
@@ -212,8 +175,8 @@ test.describe('two surfaces in one theme [TH116]', () => {
         ],
     };
 
-    for (const theme of THEMES) {
-        test(`every text on both surfaces clears its contrast floor under ${theme.name}`, async ({ page }) => {
+    for (const theme of SWEEP) {
+        test(`every text on both surfaces clears its contrast floor under ${theme.name}`, { tag: [`@theme:${theme.name}`] }, async ({ page }) => {
             await open(page, theme.name);
             await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
             const failures = await page.evaluate((groundSource) => {

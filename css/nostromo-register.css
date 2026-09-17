@@ -60,15 +60,12 @@
     [data-theme='nostromo'] h4 {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        line-height: 1.15;
         letter-spacing: 0.01em;
         text-transform: none;
         color: var(--foreground);
     }
 
     [data-theme='nostromo'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         max-width: 20ch;
     }
 
@@ -137,16 +134,19 @@
         flex: none;
     }
 
+    /* The site mark is quieter than the brand, not unreadable [scope-59]:
+       --muted-foreground is the light page's muted ink and read 1.82:1 on
+       the dark strip. The strip's own ink, desaturated and dimmed, keeps it
+       a step below the brand at 6:1 or so. */
     [data-theme='nostromo'] .kp-nav__brand-tag {
         font-family: var(--theme-font-mono);
         font-size: 0.7rem;
         letter-spacing: 0.14em;
-        color: var(--muted-foreground);
+        color: hsl(from var(--sidebar-foreground) h calc(s * 0.6) 64);
     }
 
     [data-theme='nostromo'] .kp-nav__links {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -157,13 +157,12 @@
     }
 
     /* The current item carries a filled LED dot no other item has [DI4];
-   css/_rules.css already answers this generically for `nav
-   [aria-current='page']`, this refines the flex layout on the link
-   itself. */
-    [data-theme='nostromo'] .kp-nav__link[aria-current] {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
+   css/_rules.css draws it for `nav [aria-current='page']`. The link stays
+   inline like its neighbours [scope-59]: as an inline-flex box its
+   baseline was the dot's bottom edge, and "Incidents" sat 1.6px below the
+   other items. The dot is centred on the text instead. */
+    [data-theme='nostromo'] .kp-nav__link[aria-current]::before {
+        vertical-align: middle;
     }
 
     [data-theme='nostromo'] .kp-nav__link:hover,
@@ -178,10 +177,15 @@
         opacity: 0.85;
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='nostromo'] .kp-nav__link--cta {
         background: var(--selected);
         color: var(--primary-foreground);
         border-radius: 0.2rem;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='nostromo'] .kp-nav__link--cta:hover,
@@ -197,6 +201,27 @@
         border: 1px solid var(--sidebar-accent);
         border-radius: 0.35rem;
         box-shadow: 0 8px 20px hsl(from var(--sidebar-background) h s l / 0.35);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            /* Room under the item it belongs to [scope-59]: the caption
+               touched "Readings" (4px, the panel's own padding). */
+            padding-block-start: 0.5rem;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* …and room under the caption's rule before the first item. */
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu[data-kp-menu-label]::before {
+            margin-block-end: 0.5rem;
+        }
     }
 
     [data-theme='nostromo'] .kp-nav__menu a {
@@ -228,6 +253,8 @@
         background: var(--card);
         border-radius: 0.2rem;
         min-width: 8rem;
+        /* Room between the words and the plate's edge [scope-60]. */
+        padding: 0.375rem 0.625rem;
     }
 
     [data-theme='nostromo'] .kp-laurels b {
@@ -424,7 +451,6 @@
 
     [data-theme='nostromo'] .kp-field__label {
         font-family: var(--theme-font-mono);
-        font-size: 0.68rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -476,6 +502,23 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11], in the checkbox's voice: the console's rounded
+       corner on the popover, and the selection colour once on. */
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--input);
+        background: var(--popover);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
+    }
+
     [data-theme='nostromo'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -490,10 +533,6 @@
         color: var(--card-foreground);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-    }
-
-    [data-theme='nostromo'] .kp-card__title {
-        font-size: 1.25rem;
     }
 
     [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] {
@@ -565,6 +604,56 @@
         border-radius: var(--radius);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='nostromo'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='nostromo'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='nostromo'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='nostromo'] .kp-toast--destructive,
+    [data-theme='nostromo'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='nostromo']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='nostromo'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='nostromo'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border: 0;
+        border-radius: 0;
+    }
+
     [data-theme='nostromo'] .kp-dialog::backdrop {
         background: var(--kp-backdrop);
     }
@@ -616,6 +705,13 @@
         text-transform: uppercase;
     }
 
+    /* The badge is a pill, a radius of half its height also when its text
+       wraps onto two lines [scope-55, Kenny 2026-09-13]. Nostromo only for
+       now; the tag keeps its small corner. */
+    [data-theme='nostromo'] .kp-badge {
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
     [data-theme='nostromo'] .kp-health {
         letter-spacing: 0.04em;
     }
@@ -634,11 +730,6 @@
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         padding: 1px;
-    }
-
-    [data-theme='nostromo'] .kp-progress__value {
-        background: var(--selected);
-        border-radius: 999px;
     }
 
     /* --selected against --border-strong only reaches 1.17:1 (KT8's 1.5
@@ -689,6 +780,22 @@
         border: 1px solid var(--border-strong);
         border-radius: 0.2rem;
         background: transparent;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data: table, datatable, diff, timeline, tree, reorder ────────── */
@@ -764,6 +871,21 @@
         font-size: 0.85rem;
     }
 
+    /* The accordion [gap-12]: the console mono capitals its tabs use. */
+    [data-theme='nostromo'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
     [data-theme='nostromo'] .kp-reorder {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -800,6 +922,13 @@
         background: var(--selected);
         color: var(--primary-foreground);
         border-radius: 0.2rem;
+    }
+
+    /* The plate marks the current page; the nav LED the base rules light in
+       front of every current link in a <nav> is a second mark on the same
+       number, so pagination does without it [scope-60]. */
+    [data-theme='nostromo'] .kp-pagination [aria-current='page']::before {
+        content: none;
     }
 
     [data-theme='nostromo'] .kp-wizard {
@@ -863,11 +992,11 @@
     /* ── Layout roots the rules above reach only through their parts ─── */
 
     [data-theme='nostromo'] .kp-field {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='nostromo'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='nostromo'] .kp-combobox,
@@ -886,6 +1015,13 @@
     [data-theme='nostromo'] .kp-split__separator {
         background: var(--border-strong);
         inline-size: 1px;
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='nostromo'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 1px;
     }
 
     [data-theme='nostromo'] .kp-grid {
@@ -907,7 +1043,6 @@
     }
 
     [data-theme='nostromo'] .kp-footer h4 {
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--sidebar-foreground);
@@ -1020,7 +1155,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='nostromo'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='nostromo'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='nostromo'] .kp-nav__menu--wide .kp-nav__menu-heading {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.2em;
         color: var(--muted-foreground);
@@ -1047,7 +1184,6 @@
         font-family: var(--theme-font-mono);
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        font-size: 0.625rem;
     }
 
     [data-theme='nostromo'] .kp-sidenav__link,
@@ -1055,9 +1191,9 @@
         font-family: var(--theme-font-mono);
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        font-size: 0.6875rem;
         border-radius: 0;
-        padding: 0.6rem 0.75rem 0.6rem 1.65rem;
+        padding-left: 1.65rem;
+        padding-right: 0.75rem;
         border-block-end: 1px solid var(--border);
     }
 
@@ -1173,5 +1309,89 @@
     [data-theme='nostromo'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='nostromo'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the control strip's small spaced monospace
+       capitals on a barely rounded key that lights with the strip's accent
+       when pointed at. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.4rem;
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0.2rem;
+        background: none;
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='nostromo'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--sidebar-accent);
+        color: var(--sidebar-foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The ship computer: the beige console goes to a dark CRT from its ink, red phosphor with a beige split, scanlines, and the wide display face at a size it fits. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='nostromo'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--foreground) h s 5% / 0.97);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: var(--background);
+        --kp-alarm-split: var(--background);
+        --kp-alarm-on-ink: hsl(from var(--foreground) h s 5%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 45 / 0.45);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.5);
+        --kp-alarm-scan: hsl(from var(--background) h s l / 0.06);
+        --kp-alarm-vignette: hsl(from var(--foreground) h s 2% / 0.8);
+        --kp-alarm-title-size: clamp(2rem, 9cqi, 7rem);
+        --kp-alarm-title-tracking: 0.08em;
+    }
+
+    [data-theme='nostromo'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

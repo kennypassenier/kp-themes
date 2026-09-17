@@ -1,0 +1,442 @@
+{
+    "$comment": "Which files each kept document describes [scope-35]. gates/check-drift.mjs --check refuses a commit where a listed source moved and the document did not; after reading (and, if needed, updating) the document, `npm run drift:seen -- <doc>` rerecords its hashes. `hash` is sha256 over the sorted lines `<path>\\0<sha256 of content>\\n` of the matched tracked files, `files` holds those per-file hashes, `doc` the document's own sha256. Generated outputs (dist/, site/, docs/MINIFIED.md) are never sources. Not infallible: touching a document counts as looking at it, and the gate knows files, not meaning.",
+    "documents": {
+        "README.md": {
+            "why": "The front page promises what a consumer installs and imports: the exports and version (package.json), the gate count it states (.claude/hooks/gates.sh), the theme list and hook vocabulary (themes/order.json, themes/hooks.json), the fonts (fonts/families.json), the JavaScript entry points it walks through (index.js, js/auto.js, js/strings.js, js/locale.js, js/lazy-register.js, js/theme-picker.js, js/no-flash.js), the component count (components/*.d.ts: one per component, moves with the API, not with every fix), the Tailwind bridge and the Home Assistant generator. css/themes.css is generated (its generator is named instead) and css/*.css as a whole is left out: the README names files, not rules. Narrowed at scope-78: the .d.ts of each named module instead of its .js, and without package.json and gates/generate-themes.mjs.",
+            "sources": [
+                ".claude/hooks/gates.sh",
+                "themes/order.json",
+                "themes/hooks.json",
+                "fonts/families.json",
+                "index.d.ts",
+                "js/auto.d.ts",
+                "js/strings.d.ts",
+                "js/locale.d.ts",
+                "js/lazy-register.d.ts",
+                "js/theme-picker.d.ts",
+                "js/no-flash.d.ts",
+                "components/*.d.ts",
+                "css/tailwind-bridge.css",
+                "gates/generate-ha-themes.mjs"
+            ],
+            "hash": "f332c636ce256f9113e86b7e6cb93732e1aca43e2a68bf9ba983c5c3f84e41d9",
+            "doc": "55533585e059817d6b97117d253942a64b155bbe266ac380256578f42b78afbb",
+            "files": {
+                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
+                "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
+                "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
+                "components/button.d.ts": "e5538fa698caf55f220dd3ee719541272e0e5b73019c9eb768429f5470046cb5",
+                "components/canvas.d.ts": "741636db5972b72624abb60ae757f6fbbdd31227d1a694d4279db686b0af7459",
+                "components/card.d.ts": "624463820cf7b69acd73483d167bf86bbefdd2e6915ebd94f78319aa03e6eb8e",
+                "components/combobox.d.ts": "8b18e5384ccc4abd2ce09e64b544d21fdad3d08bbf366d40e83fca21a40e8642",
+                "components/datatable.d.ts": "7e20346157cc88a72b07e75add20f03dc0362e2676f53e5f50b81b1da1545165",
+                "components/field.d.ts": "c1a9893ee4f9f90d7f4764711021a357e96c175c64f6a2f1803c152ceb5aa8f2",
+                "components/flow.d.ts": "9a4e0a95aed63628f7e2dce1e1e2a510d951a1816eedddd9b9b071497e097b95",
+                "components/form.d.ts": "1158c6783dfc42b6336a19aaeacda7e05bf036bedc2b392e81d9f84781d67752",
+                "components/marquee.d.ts": "b0a19c959054ac63fa7a35a23b467cb014aa0f25665a6a2e8014cc5091870cb2",
+                "components/nav-bar.d.ts": "be39fa4396e7df08ccaab01a1a2155a41a008919e007696a6fa232b8ddac17d9",
+                "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
+                "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
+                "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
+                "components/sidenav.d.ts": "8b14a2df6a4b8f58bb29c76ce52091dce942647d7df6623740de75625c11a1e6",
+                "components/structure.d.ts": "cb15de5af7c7b758e9c6e732fd23c89a197b4025a1e2d56fa1a6dff87ca26d87",
+                "components/switch.d.ts": "f1ae0185c1a08dae513dafa95f801ce672b68d27c7c99a7cad7714d30c743403",
+                "components/table.d.ts": "b6a5495a0f1fe6e650310fee839f5c7a0b83cba69ef1d6ffd4e46682a157ea47",
+                "components/theme-switcher.d.ts": "f2bf0de96b7f2e92186773fe19860392817c4a28fb06c4d8663114606891943a",
+                "css/tailwind-bridge.css": "3d5243279dfac04cb77b2b588d42308f1ade7381a30a63b38468303e14d48547",
+                "fonts/families.json": "520ea80794f69ab310ed00d1d8e3a95f883edf871ff932938245edb2af6adf2a",
+                "gates/generate-ha-themes.mjs": "3dc26149391dec23ac8cb74c7215c11c7378832574ee196ae1c86f86dd076acf",
+                "index.d.ts": "8774fff3957cde93034e92915469cf0281fb154fe87d19d161fdd165c7aa27d2",
+                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
+                "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
+                "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
+                "js/strings.d.ts": "09576b169dd4c2d6885a245657c3aa0aadd791335f67aa8af5ee1506066149c9",
+                "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
+                "themes/hooks.json": "277d5f625b2b3d26ad1ef27e7d24dcbfb56fc730b1a598cb45883b85c96d0f8d",
+                "themes/order.json": "a3c20eecfe3599891f0862cfb33fe7a6e2b7c3ce1375b46f8cf689759d216e95"
+            }
+        },
+        "MIGRATION.md": {
+            "why": "MIGRATION records the breaks per major; every class it names is already bound to the stylesheets by gates/check-migration.mjs. What can drift is the list of versions: a new major lands in package.json and its breaks in CHANGELOG.md, and MIGRATION must gain a section then. Narrowed at scope-78: CHANGELOG.md only (package.json moves with every script).",
+            "sources": [
+                "CHANGELOG.md"
+            ],
+            "hash": "3bba3d2707f24e30bfc3b351970416b176248995fd76ab36274f8f67d9e86285",
+            "doc": "88e244a34e9651d2bdce063316dba7a3c470e0117ed1976630e6f321da3c01b3",
+            "files": {
+                "CHANGELOG.md": "263231bab28b88315f2c7cb00669f38d5c6e946e608a607b02de5ae7cab05fd6"
+            }
+        },
+        "docs/ARCHITECTURE_REFERENCE.md": {
+            "why": "The system as built: the module map (js/*.d.ts — one per module, its role and exports; gates.test.mjs already holds that every js/*.js is named), the stylesheet layers it lists by file, the generators of the two generated artefacts, the colour code and its config, the gate list (.claude/hooks/gates.sh) and the test setup (playwright.config.mjs, tests/global-setup.mjs). Register and component rule changes are left out: the doc names the layers, not their rules. Narrowed at scope-78: without package.json, gates/config.json, check-tokens, hooks/*.d.ts, density/print/bridge layers and global-setup.",
+            "sources": [
+                "js/*.d.ts",
+                "index.js",
+                "css/_header.css",
+                "gates/generate-themes.mjs",
+                "gates/generate-showcase.mjs",
+                "gates/colour.mjs",
+                ".claude/hooks/gates.sh",
+                "playwright.config.mjs"
+            ],
+            "hash": "4bf634680fccc38512733347299b6f119461e1adaa137c37b2e4f20727ae1f31",
+            "doc": "636bd2e81d7960cd59adcde002574c8d2f4961cd2018df62dd6e119056fb40c2",
+            "files": {
+                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
+                "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
+                "gates/colour.mjs": "a937662bbb79c5125bc5eb84639f5c67c9261e498d57e7135f98a2d04988bc95",
+                "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
+                "gates/generate-themes.mjs": "d4b5afbf713553bd0f39c8e82331f08deb7b7294c71bb202dfdfc34149aea052",
+                "index.js": "296e4392ccba14246f0d3ee3e0f657017941652e75c43a20c1b3ffadb0a7ca54",
+                "js/alarm.d.ts": "0de3c8b777f96a86283e4bd2e15cd18968763dfad6777f0acb39839f4db4d9c3",
+                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
+                "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
+                "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
+                "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
+                "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
+                "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
+                "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
+                "js/forms.d.ts": "758f945ddb3ed12f6a8fc560b4abe99d6c300eb22311e387a9d498e7970678c3",
+                "js/gridlayout.d.ts": "fb845e8146a65516cd1bfec4d0123c5921f3f1875f84ad77132412c43be9b59e",
+                "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
+                "js/listbox.d.ts": "f78f182a9fd64ed6993560276e65c58230a65a466dfa728e652b7071196631f6",
+                "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
+                "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
+                "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
+                "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",
+                "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
+                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd",
+                "js/strings.d.ts": "622284a932002bb3780b20138984e09cb2c56b6e38b9ab818a111dbc93aad31b",
+                "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
+                "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
+                "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
+                "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
+                "js/theme-registry.d.ts": "3c2cea67a9507c7668000cbb7905fc8221004e2333487849be7058529374ddb7",
+                "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
+                "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
+                "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
+                "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
+            }
+        },
+        "docs/CYCLE.md": {
+            "why": "The working method: the agents it assigns (.claude/agents/*.md), how a verdict reaches the register (gates/verdicts.mjs, gates/check-verdicts.mjs, catalogue/block-hash.js), the test gradations (gates/run-tags.mjs, tests/tags.json) and the review site the pages workflow publishes. catalogue/verdicts.json is data a verdict writes, not method, so it is left out. Narrowed at scope-78: without tests/tags.json (its rules move with every new file) and check-verdicts.",
+            "sources": [
+                ".claude/agents/*.md",
+                "gates/verdicts.mjs",
+                "catalogue/block-hash.js",
+                "gates/run-tags.mjs",
+                ".github/workflows/pages.yml"
+            ],
+            "hash": "abf8fa62d62e1bbf7b4d2bbf5377c6336d700e7f81d03deaded3db8d06ae0f7f",
+            "doc": "7b4af9f5e77849593565a5ffe3a5da625ee7c9358eecde7aa7defb57dd21ef84",
+            "files": {
+                ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
+                ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
+                ".claude/agents/theme-builder.md": "9133a9851f51d927dc24b9b13182c3c0cbafd7046af161b5c274cab6aecbfe07",
+                ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
+                "catalogue/block-hash.js": "feeb5165bc5a0a3edfc117e5071ba60294228e8e57bcb500812f7fa7e6d4ebef",
+                "gates/run-tags.mjs": "b585a12d860edd87e5e461e46f4b25fa0386a070e6ca6f07b5da0298a0d57397",
+                "gates/verdicts.mjs": "ad2c337f456f7a1199738199c2c4fe0ea629858b5d8ec3ac358e8ba2b85cbda5"
+            }
+        },
+        "docs/DEBUGGING_GUIDE.md": {
+            "why": "Symptom to cause for a maintainer: most of its 110 paths are gates, whose quoted messages gates/check-doc-quotes.mjs already binds. Hashed are the files whose behaviour the guide explains rather than quotes: the hook and pre-commit, the advice and gate scripts it walks through by name, the diagnostics module, the paint and ring helpers the tests use, and the runner configuration. js/effects.js and js/strings.js (named 7 and 5 times, for single facts) are left out: they move weekly and the facts are quoted. Narrowed at scope-78: without the individual gate scripts (their messages are already bound by check-doc-quotes).",
+            "sources": [
+                ".claude/hooks/gates.sh",
+                ".githooks/pre-commit",
+                "gates/verify.mjs",
+                "js/diagnostics.js",
+                "tests/paint.mjs",
+                "tests/ring.mjs",
+                "playwright.config.mjs"
+            ],
+            "hash": "5ee748b92d3cf87d6afd82a1f356f9b51b1c1757c7c516757005fcdd43deed03",
+            "doc": "1d01209875b434eeb4f094df55819498296f0019118218042da40378f240af87",
+            "files": {
+                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
+                "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
+                "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
+                "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818",
+                "tests/paint.mjs": "0d5b83bc909cac906d158192945d4f228eae9425e4f3c4fab4781643d5b04674",
+                "tests/ring.mjs": "d6318010bd41e972c9c93fafb578d198917ee678549570d2807c68512559dfdb"
+            }
+        },
+        "docs/DESIGN_INVARIANTS.md": {
+            "why": "The compliance table is written by gates/compliance.mjs and a test reads its DI5 row, so the prose is what can drift: it states how each invariant is gated (check-contrast, check-invariants, check-motion, check-texture, their thresholds in gates/config.json), the rule layer it constrains (css/_rules.css) and the theme hook the dark-theme rule names (hooks/use-theme.js). themes/*/tokens.json is left out: a token value moves the table, not the invariant. Narrowed at scope-78: without css/_rules.css and hooks/use-theme.js.",
+            "sources": [
+                "gates/compliance.mjs",
+                "gates/check-contrast.mjs",
+                "gates/check-invariants.mjs",
+                "gates/check-motion.mjs",
+                "gates/check-texture.mjs",
+                "gates/config.json"
+            ],
+            "hash": "7a2ed2218c5b56a4a6b39ba2eae429e7c0676b787ed504eb78a38dba7a678806",
+            "doc": "76380b94c01ac674695ac833699694d13b276a50405e990b9d7cac80c2e2efe7",
+            "files": {
+                "gates/check-contrast.mjs": "e5d4227e381943c609c93ace3ecb38fc045742df569197d0cd0ab58a7b126c99",
+                "gates/check-invariants.mjs": "8e554d4b7422db3ce2e34cedff5944ae13c8eb7453f4972de7bd4aceebf3ba07",
+                "gates/check-motion.mjs": "cd612e40fb851d4bf8d98001a3b150166e01e26fc8a08be04d61abf6320f2471",
+                "gates/check-texture.mjs": "7707c0feee5af074b28ad43b4e2fbe6ee15295412bbe17cf822af340558c31c4",
+                "gates/compliance.mjs": "f89b68f8d66f867e9aa965f217433fe36db7095ab4b9f288ea628492e1429b15",
+                "gates/config.json": "ec9cd1908f462cc0d0fe1d5aefc3f024e48c819ec438b12280220f87dc7f5a43"
+            }
+        },
+        "docs/OPERATIONS_RUNBOOK.md": {
+            "why": "Numbered procedures that run commands: the scripts they call (package.json), the release and pages workflows, the commit hooks, the generators the regenerate step runs (gates/generate-*.mjs), the tools a new theme passes through (wire-register, integrate-lift, checksums, register-pending) and the data they edit (tear.json, fonts/families.json, themes/hooks.json). Registers and tokens are left out: the runbook tells how to add one, not what one says. Narrowed at scope-78: without package.json, the generators and the data files.",
+            "sources": [
+                ".github/workflows/*.yml",
+                ".githooks/*",
+                ".claude/hooks/gates.sh",
+                "gates/checksums.mjs",
+                "gates/wire-register.mjs",
+                "gates/integrate-lift.mjs",
+                "gates/verify.mjs"
+            ],
+            "hash": "6e3197513d381e1c070d5c447e1719f3dae62a18573367f659e26f0f4a0cfaef",
+            "doc": "f4a3f556adce1d4f8676156b2e1d1c0dd9a70548c19b652bd0bf7c57a31ad50a",
+            "files": {
+                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
+                ".githooks/check-ids.sh": "d075bb8ee6b91c880221f76751473c1b91ad65726693191e231a45c0af5c2009",
+                ".githooks/commit-msg": "354ddac65850847c211cacc9ca8bc4196922e288483c149098d5fd08323e6de4",
+                ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
+                ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
+                ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
+                "gates/checksums.mjs": "c71c22b26253b4abb24d2a73bb6267ec39eeb78a40783d4a2d817355831512e4",
+                "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
+                "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
+                "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"
+            }
+        },
+        "docs/RULES.md": {
+            "why": "The rules that say \"code-enforced\" name their code: the hook, the tag runner and map, the layer, string, register-coverage, id and token gates, the workflows, the runner configuration and the paint/ring helpers a rule tells tests to use. A rule that is prose (no code) has no source here; the gate cannot see a new decision in docs/SCOPE.md that changes a rule. Narrowed at scope-78: the hook, the tag runner, the workflows and the runner configuration only.",
+            "sources": [
+                ".claude/hooks/gates.sh",
+                "gates/run-tags.mjs",
+                ".github/workflows/*.yml",
+                "playwright.config.mjs"
+            ],
+            "hash": "22a8396785836b1331e4a9a3f3297ae124b3fe001db08cf07b9a7903f368c7f8",
+            "doc": "10db7b3adde0918261b569f58c60991a64ff094a073a5c08537154758da00d6d",
+            "files": {
+                ".claude/hooks/gates.sh": "b1bcf3cdab97eae4ae3ebe7e29a8aeb21741c964d3d71e11604e00aba1618f58",
+                ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
+                ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
+                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
+                "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
+            }
+        },
+        "docs/TEST_PLAN.md": {
+            "why": "What runs where and what is deliberately not tested: the runner and its projects (playwright.config.mjs), the tag map and its runner and gate (tests/tags.json, gates/run-tags.mjs, gates/check-tags.mjs), the release run (gates/verify.mjs) and the scripts it names (package.json). tests/*.spec.mjs is left out: the plan names suites, not tests, and every test edit would trip it. Narrowed at scope-78: without package.json and tests/tags.json.",
+            "sources": [
+                "playwright.config.mjs",
+                "gates/run-tags.mjs",
+                "gates/check-tags.mjs",
+                "gates/verify.mjs"
+            ],
+            "hash": "c92b69e3f664fffcc6a86e75ecda04fa33103c15cfd166d34899aea074435e59",
+            "doc": "e37327187f71b1940555b9e86f39f182b7fd3639124b82ffab5b2507ba85fe18",
+            "files": {
+                "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
+                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
+                "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
+                "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
+            }
+        },
+        "docs/TROUBLESHOOTING.md": {
+            "why": "The consumer's symptoms each answer with a module: no-flash and the stored choice (js/no-flash.js, js/theme-core.js), pickers in step (js/theme-picker.js), confirm buttons and their events (js/components.js, components/button.jsx), the DI4 badge contract (components/badge.jsx), menus placed by the top layer (js/overlays.js, js/top-layer.js), reduced motion (js/effects.js, fx/use-reduced-motion.js) and the auto entry (js/auto.js). Narrowed at scope-78: the .d.ts of the same modules (the API the answers cite, not every fix).",
+            "sources": [
+                "js/no-flash.d.ts",
+                "js/theme-core.d.ts",
+                "js/theme-picker.d.ts",
+                "js/components.d.ts",
+                "components/button.d.ts",
+                "components/badge.d.ts",
+                "js/overlays.d.ts",
+                "js/top-layer.d.ts",
+                "js/effects.d.ts",
+                "fx/use-reduced-motion.d.ts",
+                "js/auto.d.ts"
+            ],
+            "hash": "b5ad65c928ac43664878e934b106055ce8bb909fde68bd3a9aa1c06b2a1950bf",
+            "doc": "3d4830fd3a641ad4c3a67b5077ea1dad06286784ac4db47e01cfe1563aa10100",
+            "files": {
+                "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
+                "components/button.d.ts": "e5538fa698caf55f220dd3ee719541272e0e5b73019c9eb768429f5470046cb5",
+                "fx/use-reduced-motion.d.ts": "833e78bfe22635132e38cb508761aad76f130361f26773a971ea7a3d691808df",
+                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
+                "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
+                "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
+                "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
+                "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
+                "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
+                "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a"
+            }
+        },
+        "docs/USER_GUIDE.md": {
+            "why": "The consumer's feature-by-feature guide: its 30 headings span every module, component, hook and effect the package exports, plus the theme list and hook vocabulary. It describes their public surface, so the .d.ts of each (one per module, generated from the JSDoc and held byte for byte by check-types) is hashed rather than the implementation; themes/order.json and themes/hooks.json carry the theme list and the hook names. Narrowed at scope-78: without package.json.",
+            "sources": [
+                "js/*.d.ts",
+                "components/*.d.ts",
+                "hooks/*.d.ts",
+                "fx/*.d.ts",
+                "index.d.ts",
+                "themes/order.json",
+                "themes/hooks.json"
+            ],
+            "hash": "e4c4d8773245ee24fa5dad013c811b9ffb26b6b67c0f55a2e08a13c3fed4ca30",
+            "doc": "c346d2744c77682a903f2d243b134f8a6fbe576e9ea66890b5d5ae8eddd7f223",
+            "files": {
+                "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
+                "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
+                "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
+                "components/button.d.ts": "e5538fa698caf55f220dd3ee719541272e0e5b73019c9eb768429f5470046cb5",
+                "components/canvas.d.ts": "741636db5972b72624abb60ae757f6fbbdd31227d1a694d4279db686b0af7459",
+                "components/card.d.ts": "624463820cf7b69acd73483d167bf86bbefdd2e6915ebd94f78319aa03e6eb8e",
+                "components/combobox.d.ts": "8b18e5384ccc4abd2ce09e64b544d21fdad3d08bbf366d40e83fca21a40e8642",
+                "components/datatable.d.ts": "7e20346157cc88a72b07e75add20f03dc0362e2676f53e5f50b81b1da1545165",
+                "components/field.d.ts": "c1a9893ee4f9f90d7f4764711021a357e96c175c64f6a2f1803c152ceb5aa8f2",
+                "components/flow.d.ts": "9a4e0a95aed63628f7e2dce1e1e2a510d951a1816eedddd9b9b071497e097b95",
+                "components/form.d.ts": "1158c6783dfc42b6336a19aaeacda7e05bf036bedc2b392e81d9f84781d67752",
+                "components/marquee.d.ts": "b0a19c959054ac63fa7a35a23b467cb014aa0f25665a6a2e8014cc5091870cb2",
+                "components/nav-bar.d.ts": "be39fa4396e7df08ccaab01a1a2155a41a008919e007696a6fa232b8ddac17d9",
+                "components/overlays.d.ts": "be5ce355f6b9989126fc515e4da64e6a8c260b8bfd125c95446e8c9c1e7a3b87",
+                "components/palette.d.ts": "e34febf6466cea48d900105a04e555d640eafb9d0fb413ddc94a6b018b500ec7",
+                "components/patterns.d.ts": "9ab40c4539b939b24c82cb7152ee28c4971f0291865308893d3eadf003166acc",
+                "components/sidenav.d.ts": "a1957051f455bcf67c8aa1926ccd0403a726698c5787710514b847aa015fe140",
+                "components/structure.d.ts": "cb15de5af7c7b758e9c6e732fd23c89a197b4025a1e2d56fa1a6dff87ca26d87",
+                "components/switch.d.ts": "f1ae0185c1a08dae513dafa95f801ce672b68d27c7c99a7cad7714d30c743403",
+                "components/table.d.ts": "b6a5495a0f1fe6e650310fee839f5c7a0b83cba69ef1d6ffd4e46682a157ea47",
+                "components/theme-switcher.d.ts": "f2bf0de96b7f2e92186773fe19860392817c4a28fb06c4d8663114606891943a",
+                "fx/boot-sequence.d.ts": "9aae9f0daf237c8177581f014b7d0dd414eb3ebd12b7c176d61349b1bf92fa2f",
+                "fx/decipher-text.d.ts": "d89133c4737051c6f4590fda936c33f485432e5e4a21f82aaab9a3de24a2dfa1",
+                "fx/digital-rain.d.ts": "29bff7fc7ba5669f9069809d2eee510bf90d26484114ea4e9a5022c03511a116",
+                "fx/index.d.ts": "d5c38e164581efd023b476a8fc421334ca962f28b89e9e83c19c5aa6e88da940",
+                "fx/scramble-number.d.ts": "6e2d555f6f63c470b471cff51cfcb2d26bfe48b61555beb5c25bb111011c8358",
+                "fx/use-reduced-motion.d.ts": "833e78bfe22635132e38cb508761aad76f130361f26773a971ea7a3d691808df",
+                "fx/when.d.ts": "7ec24462d7385f8c1ac6e1bfbf109b72105418ae9509ddf2ccb235029e691e34",
+                "hooks/use-controllable.d.ts": "48cde66acba1f270554f5e47a44339a06d838affdf82e6be80e966978c785dd6",
+                "hooks/use-strings.d.ts": "50f2c91a944f6c795ff3b273c8da70d7889aa36ed6527508cca47875368f51a5",
+                "hooks/use-theme.d.ts": "0c3273b2c70b8397f33dd7e6ee501bf7bcda1ac781138b3cc89cdf6f57cdf647",
+                "index.d.ts": "958833370376b87223864f7cbeb39912122966d44ef18a0a75cf75cc44771fb4",
+                "js/alarm.d.ts": "0de3c8b777f96a86283e4bd2e15cd18968763dfad6777f0acb39839f4db4d9c3",
+                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
+                "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
+                "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
+                "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
+                "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
+                "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
+                "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
+                "js/forms.d.ts": "758f945ddb3ed12f6a8fc560b4abe99d6c300eb22311e387a9d498e7970678c3",
+                "js/gridlayout.d.ts": "fb845e8146a65516cd1bfec4d0123c5921f3f1875f84ad77132412c43be9b59e",
+                "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
+                "js/listbox.d.ts": "f78f182a9fd64ed6993560276e65c58230a65a466dfa728e652b7071196631f6",
+                "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
+                "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
+                "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
+                "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",
+                "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
+                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd",
+                "js/strings.d.ts": "622284a932002bb3780b20138984e09cb2c56b6e38b9ab818a111dbc93aad31b",
+                "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
+                "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
+                "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
+                "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
+                "js/theme-registry.d.ts": "3c2cea67a9507c7668000cbb7905fc8221004e2333487849be7058529374ddb7",
+                "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
+                "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
+                "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
+                "themes/hooks.json": "277d5f625b2b3d26ad1ef27e7d24dcbfb56fc730b1a598cb45883b85c96d0f8d",
+                "themes/order.json": "a3c20eecfe3599891f0862cfb33fe7a6e2b7c3ce1375b46f8cf689759d216e95"
+            }
+        },
+        "docs/UTILITIES.md": {
+            "why": "The hand-written utility list; gates/check-utilities.mjs already compares its class names with the generated ones. The families and scale it explains come from gates/generate-utilities.mjs; css/utilities.css is that generator's output and is left out.",
+            "sources": [
+                "gates/generate-utilities.mjs"
+            ],
+            "hash": "ad0369effbbc15fbd8177a179d615e18ff9d3cb365a5d440ec06e8eb708d4410",
+            "doc": "a5cdb8b3a5da70d22d5d169324018730c9781b59e17a8890b97af649b2db8757",
+            "files": {
+                "gates/generate-utilities.mjs": "d474fce4b918a1b6fe9dc405a641b8217ba54d2d1b2f212d769f7249285f53da"
+            }
+        },
+        "research/datatable/README.md": {
+            "why": "The data table finding whose defaults js/datatable.js cites (the 300 ms server debounce): the module, its React wrapper and the catalogue page the demo was judged on. css/components.css is left out: the finding names the table rules once, and that file moves with every component. Narrowed at scope-78: the two .d.ts only.",
+            "sources": [
+                "js/datatable.d.ts",
+                "components/datatable.d.ts"
+            ],
+            "hash": "5e46b7938fca78a96e8cace2655bc8b62e316bb23cfce2c9ae154f4b50008305",
+            "doc": "3e93afddd788e97d5caf807987969652594b6e170551b8a3c1b8881202cd235f",
+            "files": {
+                "components/datatable.d.ts": "7e20346157cc88a72b07e75add20f03dc0362e2676f53e5f50b81b1da1545165",
+                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c"
+            }
+        },
+        "research/futuristic/README.md": {
+            "why": "Six layout concepts built on the layout layer and the effects module; the finding feeds scope-49. css/components.css and the cyberpunk register are named once each and left out. Narrowed at scope-78: css/layout.css only.",
+            "sources": [
+                "css/layout.css"
+            ],
+            "hash": "aa763c339588f2b1b10091b686a25fbe519cca5cd1e01c6c12b67cbbc4179ca7",
+            "doc": "963f389233558dd52e45ab8868bd53276d1ba30f0957f4cea055c8817d792113",
+            "files": {
+                "css/layout.css": "0d2526baae50fb680e4ddade99500c310e72871298a3599c44cc12a0a6246b4e"
+            }
+        },
+        "research/loading/README.md": {
+            "why": "Three loading strategies measured against the lazy register and the auto entry; its build and measure scripts and their sources live beside it. examples/ and dist/ are generated and left out. Narrowed at scope-78: without js/auto.js and the copied sources.",
+            "sources": [
+                "js/lazy-register.js",
+                "research/loading/*.mjs"
+            ],
+            "hash": "53ea920233db01a4b831265c883539c72aef3d603eeaf61c93beefb23721da68",
+            "doc": "c163ccc3314cee6d6d74a616723c5912c6860a480d3ffbfd44c7b77d88c85c0b",
+            "files": {
+                "js/lazy-register.js": "138ea65e56ae34d289c1f76b00525082875a63ab7abddf7b69d1db869dbcf4d8",
+                "research/loading/build-a.mjs": "df5fdea0ab9c868879999479cd8cf70306d21b74d641649c229de4e74eaf0bbd",
+                "research/loading/build-b.mjs": "6e05acf9ccb41b15fa1f8e5d4fce95cd75a71c7fa9188ad90c137dca1d7d65f7",
+                "research/loading/build-c.mjs": "939f47b3ab1f5ccce43fae324f6407020adcad7bca844345929ba5706bbed066",
+                "research/loading/measure.mjs": "8203fedef4c11e24ca2575be8f084fca2fba5b987d127bcda1bb402daeddf52a",
+                "research/loading/run.mjs": "282d459eb92ee7c5a67d68f9082d2c6db02c297b301ead5f33656c3a0ae66840",
+                "research/loading/split-effects.mjs": "9cd02285726fae909a12a24c671b7df17593169a6e3b80b54ad7f2ef9437eb3a",
+                "research/loading/verify.spec.mjs": "5501a3133b90121509b838660b4d88d2e2f1edeaee352201936aa52f934dd4ad"
+            }
+        },
+        "research/navbar/README.md": {
+            "why": "Seven navigation patterns against the side navigation module, the nav bar and sidenav components and the layout layer; feeds scope-48. css/components.css (named ten times) is left out: it moves with every component, and the finding is a dated measurement. Narrowed at scope-78: the three .d.ts only.",
+            "sources": [
+                "js/sidenav.d.ts",
+                "components/nav-bar.d.ts",
+                "components/sidenav.d.ts"
+            ],
+            "hash": "0aac84f8ee7e580d1c29115517fb0adb011d6f73fe2f1464202e7fa8a055daae",
+            "doc": "dd682d6e4c80ce622d87664728447fd905efe61ede0d6673b3b6c49d291cc199",
+            "files": {
+                "components/nav-bar.d.ts": "be39fa4396e7df08ccaab01a1a2155a41a008919e007696a6fa232b8ddac17d9",
+                "components/sidenav.d.ts": "a1957051f455bcf67c8aa1926ccd0403a726698c5787710514b847aa015fe140",
+                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd"
+            }
+        }
+    },
+    "exempt": {
+        "CHANGELOG.md": "append-only record: each entry is true of its own tag, and the release workflow publishes it verbatim",
+        "CLAUDE.md": "the session status and index; gates/gates.test.mjs already holds its document index against docs/ in both directions",
+        "docs/CORRECTIONS.md": "append-only correction log (FORM_PROTOCOL §8): an entry records what was found on its date",
+        "docs/FEATURES.md": "frozen feature list with its test bars; rounds are appended, never rewritten, and gates/check-ids.mjs reads it",
+        "docs/SCOPE.md": "append-only decision record: a decision is true of the day it was taken",
+        "docs/MINI_ROUNDS.md": "the live queue: a row changes when its item does, not when a source does",
+        "docs/ID_TRANSLATIONS.md": "a data file .githooks/check-ids.sh parses, not prose about a source",
+        "docs/MINIFIED.md": "generated by gates/generate-min.mjs; npm run check:min already refuses a stale copy",
+        "reports/di5.md": "generated by gates/check-motion.mjs --report; npm run check:di5-report already refuses a stale copy"
+    }
+}

@@ -3,7 +3,7 @@
    The retro register, 5.0.0 [S48, LIFT_PLAN row 3]: the 1995 desktop.
    Scoped to [data-theme='retro'] and inert elsewhere; opt-in, imported
    after themes.css. The approved concept demo ("Bevel 95", 2026-09-08) is
-   the reference for every value here, and docs/RESEARCH_2026-09.md §21 is
+   the reference for every value here, and docs/archive/RESEARCH_2026-09.md §21 is
    where each mechanism was measured: 98.css (the four-inset bevel, its
    inversion with the label stepping one pixel, the sunken well, the
    title-bar ramp, the tab that lifts, the checkerboard scrollbar track),
@@ -25,7 +25,7 @@
    control keeps its --border-strong edge, which check-invariants holds at
    3:1, and the two-tone bevel sits inside that edge as inset shadows. The
    original's mid-grey-on-light-grey bevel measured 2.17:1 and was the
-   whole reason the boundary could not be the bevel (docs/THEME_CANDIDATES.md,
+   whole reason the boundary could not be the bevel (docs/archive/THEME_CANDIDATES.md,
    C7). The dotted focus rectangle of the original is forbidden by DI2; the
    two-channel ring is composed in front of the bevel, never instead of it.
 
@@ -130,7 +130,6 @@
     [data-theme='retro'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        line-height: 1.1;
     }
 
     /* The base layer paints a title bar behind every h1 (the 3.x theme);
@@ -142,8 +141,6 @@
         padding: 0;
         background: none;
         color: var(--foreground);
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         margin-block: 0 0.35em;
         text-wrap: balance;
         text-shadow: 2px 2px 0 var(--popover);
@@ -329,10 +326,12 @@
 
     [data-theme='retro'] .kp-nav {
         background: var(--background);
-        padding-block: 3px;
+        padding-block: calc(var(--kp-nav-pad-block, 3px) * var(--kp-nav-pad-scale, 1));
         gap: 0.5rem;
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The three window controls the demo's title bar ends on [S49, A2]:
@@ -405,8 +404,7 @@
        selection bar, instantly. */
     [data-theme='retro'] .kp-nav__link {
         display: block;
-        padding: 0.3rem 0.7rem;
-        font-size: 0.875rem;
+        padding-inline: 0.7rem;
         font-weight: 500;
         color: var(--foreground);
         border: 1px solid transparent;
@@ -445,7 +443,8 @@
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 700;
-        padding: 0.25rem 0.9rem;
+        padding-inline: 0.9rem;
+        position: relative;
     }
 
     [data-theme='retro'] .kp-nav__link--cta:hover,
@@ -462,9 +461,31 @@
             var(--kp-raised);
     }
 
+    /* Pressed, the label steps one pixel down and right, as the original's
+       did — painted, never laid out, the way the buttons below press (Kenny,
+       2026-09-15 [scope-93]; see "Pressed" under Buttons for the
+       mechanism). It used to move a pixel of block and inline padding from
+       one side to the other: the box kept its size, but its baseline moved,
+       and it was the one block metric this register was allowed to keep
+       for it. Now the whole link is translated a pixel and its face —
+       ground, border and the pressed bevel — is repainted by `::before` a
+       pixel up and left, where it was at rest, so only the words move. The
+       link's own face is hidden in the last rule of this file. */
     [data-theme='retro'] .kp-nav__link--cta:active {
+        translate: 1px 1px;
+    }
+
+    [data-theme='retro'] .kp-nav__link--cta:active::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -2px 0 0 -2px;
+        box-sizing: border-box;
+        background-color: inherit;
+        border: 1px solid;
+        border-color: inherit;
         box-shadow: var(--kp-pressed);
-        padding: calc(0.25rem + 1px) calc(0.9rem - 1px) calc(0.25rem - 1px) calc(0.9rem + 1px);
+        pointer-events: none;
     }
 
     /* The dropdown: a raised panel that pops, no fade — 1995 had no easing. */
@@ -477,11 +498,24 @@
         min-width: 12rem;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='retro'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='retro'] .kp-nav__menu a {
         display: block;
         position: relative;
-        padding: 0.25rem 1.4rem 0.25rem 1.6rem;
-        font-size: 0.85rem;
+        padding-left: 1.6rem;
+        padding-right: 1.4rem;
         color: var(--foreground);
         text-decoration: none;
         border-radius: 0;
@@ -527,7 +561,6 @@
        pager's or a menu's button keeps its own width (DI11 at 320 px). */
     [data-theme='retro'] [data-kp-surface='hero'] .kp-row > .kp-button {
         min-width: min(11rem, 100%);
-        min-height: 2.2rem;
     }
 
     [data-theme='retro'] .kp-button:hover {
@@ -552,12 +585,54 @@
     }
 
     /* Pressed: the bevel inverts and the label steps one pixel down and
-       right, the way the original's did. No transition: --fx-duration is 0. */
+       right, the way the original's did. No transition: --fx-duration is 0.
+
+       The step is painted, never laid out (Kenny's retro notes,
+       2026-09-15: "reserve the space for the button so it doesn't shift the
+       actual interface"). It used to be a pixel of extra start padding, and
+       measured on catalogue/button.html#variants that pixel widened the
+       pressed button by 1px and pushed every button after it in the row
+       1px along, in both engines; a small or large button took the default
+       button's padding outright (+7px and -9px), and in a baseline row the
+       moved label moved the row's baseline. Now nothing of the box's
+       metrics changes on press. The whole control is translated one pixel
+       down and right — paint only, so its layout box and its neighbours
+       stay where they were — and the face is put back where it was at rest:
+       the control's own ground, border and bevel are hidden (the ground
+       clipped to the glyphs it sits under, the border replaced by a clear
+       border image, the shadow dropped), and `::before` repaints them one
+       pixel up and left, inheriting the ground and the border colour from
+       the control, so every variant and every consumer colour keeps its
+       own. What is left moving is exactly what moved in 1995: the label,
+       an icon, the accelerator's mark.
+
+       Two cheaper ways were measured and refused. A text shadow with the
+       glyphs' fill cleared draws nothing in firefox, which resolves
+       `currentcolor` in a text shadow to the cleared fill; and any padding
+       or border moved from one side to the other moves the label's
+       baseline, which moves the whole row in a baseline-aligned row
+       (catalogue/button.html#sizes). The face assumes the border of 1px
+       this register gives every button above. The control's own face is
+       hidden by the last rule of this file, after every rule that paints a
+       button's ground, because a `background` shorthand resets the clip. */
     [data-theme='retro'] .kp-button:active:not(:disabled),
     [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
-        box-shadow: var(--kp-pressed);
-        padding-block-start: calc(0.375rem + 1px);
-        padding-inline-start: calc(0.875rem + 1px);
+        --kp-retro-press: var(--kp-pressed);
+        translate: 1px 1px;
+    }
+
+    [data-theme='retro'] .kp-button:active:not(:disabled)::before,
+    [data-theme='retro'] .kp-icon-button:active:not(:disabled)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -2px 0 0 -2px;
+        box-sizing: border-box;
+        background-color: inherit;
+        border: 1px solid;
+        border-color: inherit;
+        box-shadow: var(--kp-retro-press);
+        pointer-events: none;
     }
 
     /* The default button: the navy fill with its own bevel. The mirror
@@ -591,8 +666,9 @@
             var(--kp-raised-navy);
     }
 
+    /* The pressed bevel is painted by the face `::before` redraws (above). */
     [data-theme='retro'] .kp-button--primary:active:not(:disabled) {
-        box-shadow: var(--kp-pressed-navy);
+        --kp-retro-press: var(--kp-pressed-navy);
     }
 
     /* Destructive: a face button whose label is the alert colour, the way
@@ -635,7 +711,6 @@
     /* ── Fields: wells cut into the chrome ─────────────────────────────── */
 
     [data-theme='retro'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -669,7 +744,6 @@
 
     [data-theme='retro'] .kp-field__help {
         font-family: var(--kp-dos);
-        font-size: 1rem;
         color: var(--muted-foreground);
     }
 
@@ -681,7 +755,6 @@
 
     [data-theme='retro'] .kp-field__error {
         font-family: var(--kp-dos);
-        font-size: 1rem;
         color: var(--destructive);
     }
 
@@ -743,6 +816,103 @@
             inset -2px -2px 0 0 var(--border-strong);
     }
 
+    /* …and the caption on the groove, the way a 1995 group box cut its
+       line for the words (Kenny's retro notes, 2026-09-15, field.html#narrow:
+       "the text 'Is anyone at risk?' is struck through by the border of
+       the box below it"). A fieldset paints its box from the middle of its
+       legend down, and the groove above is a set of inset shadows, which —
+       unlike a border — no browser interrupts behind a legend: the two top
+       hairlines ran through the middle of the caption's letters. Measured
+       in firefox and chromium: the dark hairline crossed "Is anyone at
+       risk?" 10.8px below the legend's top, on a legend 21.6px tall.
+
+       So a fieldset with a legend draws no top edge of its own — its other
+       three edges are the same pixels as background layers, because inset
+       shadows whose top meets a box top at a fractional position leave a
+       faint antialiased seam across it (measured 168 against 185 on a
+       ground of 191 in firefox) — and the legend draws the top edge instead, left and right of its words: the legend
+       spans the fieldset's whole width, its words sit where they sat, and
+       its two pseudo-elements are the hairlines, each placed at 50% of the
+       legend's height — the same line the fieldset's box starts on. A
+       ground colour behind the words, the usual answer, would show as a
+       flat patch on this theme's dithered ground. */
+    [data-theme='retro'] .kp-fieldset:has(> legend) {
+        box-shadow: none;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right top / 1px 100% no-repeat,
+            linear-gradient(var(--popover), var(--popover)) left bottom / 100% 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) left 1px top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) right 1px top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom 1px / 100% 1px no-repeat;
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend {
+        display: flex;
+        align-items: baseline;
+        column-gap: 3px;
+        box-sizing: border-box;
+        inline-size: calc(100% + 2rem);
+        margin-inline: -1rem;
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::before,
+    [data-theme='retro'] .kp-fieldset > legend::after {
+        content: '';
+        flex: 1 1 0;
+        align-self: stretch;
+        min-inline-size: 3px;
+        background:
+            linear-gradient(to bottom, transparent 50%, var(--border-strong) 50% calc(50% + 2px), transparent calc(50% + 2px)) left / 1px 100%
+                no-repeat,
+            linear-gradient(
+                to bottom,
+                transparent 50%,
+                var(--border-strong) 50% calc(50% + 1px),
+                var(--popover) calc(50% + 1px) calc(50% + 2px),
+                transparent calc(50% + 2px)
+            );
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::before {
+        flex: 0 0 calc(1rem - 3px);
+    }
+
+    [data-theme='retro'] .kp-fieldset > legend::after {
+        background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            var(--border-strong) 50% calc(50% + 1px),
+            var(--popover) calc(50% + 1px) calc(50% + 2px),
+            transparent calc(50% + 2px)
+        );
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: a sunken square well on
+       the popover, a square thumb, and the title bar's primary once on.
+       The ring keeps the bevel under it, as the check's does. */
+    [data-theme='retro'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-switch__input:checked {
+        background: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='retro'] .kp-switch__input:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            var(--kp-sunken);
+    }
+
     [data-theme='retro'] .kp-form__summary {
         background: var(--popover);
         border: 1px solid var(--border-strong);
@@ -761,7 +931,6 @@
     [data-theme='retro'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 1.35rem;
     }
 
     /* The dossier: a Notepad window — the header is the title bar, the body
@@ -784,8 +953,6 @@
 
     [data-theme='retro'] .kp-card[data-kp-reveal='emphasis'] .kp-card__title {
         color: var(--primary-foreground);
-        font-size: 0.95rem;
-        line-height: 1.6;
     }
 
     [data-theme='retro'] .kp-card[data-kp-reveal='emphasis'] .kp-card__body {
@@ -849,15 +1016,267 @@
         clip-path: inset(0 0 0 0);
     }
 
-    /* Windows: raised chrome with the hard shadow; a dialog carries the
-       title bar. */
-    [data-theme='retro'] .kp-dialog,
-    [data-theme='retro'] .kp-popover,
+    /* ── The scrollbar of a window [retro notes, 2026-09-15] ────────────
+       Kenny, on overlays.html#confirm, #menu, #menu-extremes and #tooltip:
+       "it should be the whole scrollbar, greyed out so it's obvious that it
+       can't be used, just like a disabled scrollbar in old Windows OSes",
+       and for a menu "disabled if there is no actual scroll and enabled if
+       you can scroll", "not double".
+
+       What he saw was not a scrollbar. Since 27384cd (S49, A12) the rule
+       for the combo button below had started in the middle of this one's
+       selector list: the windows' own declarations were gone, and every
+       dialog, popover, menu, toast, tooltip, confirmation and date panel
+       wore the select's painted arrow button at its end with 2.1rem of
+       padding for it — twice on a menu, whose popover and list both
+       matched. Measured in firefox: 33.6px of end padding and the arrow's
+       background-image on all seven. The selector list is gone; what the
+       windows lost with it (the ground, the drop shadow) is not put back
+       here, because the dialogs, toasts and date panels as they are now
+       were approved in that state.
+
+       The bar is the 1995 one, whole: an arrow button at each end, the
+       2×2 dithered track between them, and a raised thumb sized and placed
+       by how much of the content is in view. Only the box that scrolls
+       draws it — the popover (so a menu draws one, not two), a dialog
+       without a body, or a dialog's body — and the platform's own bar is
+       hidden, so scrolling by wheel, keyboard and touch is the platform's
+       and the drawing is this register's. It is painted as background
+       layers, which a scroll box keeps still while its content moves.
+
+       A tooltip draws none (Kenny, 2026-09-15, retro-scrollbars "Tooltips
+       zonder scrollbalk" [scope-93]): a line of description is not a
+       window, and never scrolls. Dialogs, menus and confirmations keep
+       theirs.
+
+       Enabled and disabled come from js/overlays.js `watchScrollbar`,
+       theme-neutral: `data-kp-popover-overflowing` while the content is taller
+       than the box, with the view's height, the part in view and the
+       progress as custom properties. Without it the bar is disabled: grey
+       embossed arrows, no thumb. With it the arrows are ink and the thumb
+       is drawn; the same module makes a press on an arrow scroll a line,
+       on the track a page, and on the thumb a drag, from the three sizes
+       declared here.
+
+       Why not the platform's scrollbar styled: firefox — Kenny's browser —
+       styles only a scrollbar's two colours and its width, never its
+       arrows, and chromium stops reading ::-webkit-scrollbar the moment
+       `scrollbar-color` is set, which this register sets on the root. */
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body) {
+        --kp-scrollbar-size: 16px;
+        --kp-scrollbar-button: 16px;
+        --kp-scrollbar-ink: var(--border);
+        --kp-scrollbar-emboss: var(--popover);
+        --kp-scrollbar-up:
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 8px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 0px) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 7px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 1px) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 6px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 2px) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 5px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 3px) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 7px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 1px) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 6px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 2px) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 5px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 3px) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 4px) top
+                calc(var(--kp-scrollbar-inset) + round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) + 4px) /
+                7px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top calc(var(--kp-scrollbar-inset) + 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) top var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-inset) / 16px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat;
+        --kp-scrollbar-down:
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 5px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 0px
+                ) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 6px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 1px
+                ) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 7px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 2px
+                ) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-ink), var(--kp-scrollbar-ink)) right calc(var(--kp-scrollbar-inset) + 8px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 3px
+                ) /
+                1px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 4px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 1px
+                ) /
+                7px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 5px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 2px
+                ) /
+                5px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 6px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 3px
+                ) /
+                3px 1px no-repeat,
+            linear-gradient(var(--kp-scrollbar-emboss), var(--kp-scrollbar-emboss)) right calc(var(--kp-scrollbar-inset) + 7px) bottom
+                calc(
+                    var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px -
+                        round(down, calc((min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 4px) / 2), 1px) - 4px
+                ) /
+                1px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) bottom
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) bottom
+                calc(var(--kp-scrollbar-inset) + min(16px, calc(50% + 0.5px - var(--kp-scrollbar-inset))) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) bottom var(--kp-scrollbar-inset) / 1px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) bottom calc(var(--kp-scrollbar-inset) + 1px) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) bottom var(--kp-scrollbar-inset) / 16px
+                min(16px, calc(50% - var(--kp-scrollbar-inset))) no-repeat;
+        --kp-scrollbar-track:
+            linear-gradient(to left, transparent 0 calc(var(--kp-scrollbar-inset) + 16px), var(--popover) calc(var(--kp-scrollbar-inset) + 16px)),
+            conic-gradient(var(--popover) 0 25%, var(--card) 0 50%, var(--popover) 0 75%, var(--card) 0) 0 0 / 2px 2px;
+        --kp-scrollbar-thumb-paint:
+            linear-gradient(var(--popover), var(--popover)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 16px 1px no-repeat,
+            linear-gradient(var(--popover), var(--popover)) right calc(var(--kp-scrollbar-inset) + 15px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-thumb-top) + var(--kp-scrollbar-thumb) - 1px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top calc(var(--kp-scrollbar-thumb-top) + 1px) / 16px 1px
+                no-repeat,
+            linear-gradient(var(--card), var(--card)) right calc(var(--kp-scrollbar-inset) + 14px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--border), var(--border)) right calc(var(--kp-scrollbar-inset) + 1px) top var(--kp-scrollbar-thumb-top) / 1px
+                var(--kp-scrollbar-thumb) no-repeat,
+            linear-gradient(var(--border), var(--border)) right var(--kp-scrollbar-inset) top
+                calc(var(--kp-scrollbar-thumb-top) + var(--kp-scrollbar-thumb) - 2px) / 16px 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) right var(--kp-scrollbar-inset) top var(--kp-scrollbar-thumb-top) / 16px
+                var(--kp-scrollbar-thumb) no-repeat;
+        scrollbar-width: none;
+        background: var(--kp-scrollbar-up), var(--kp-scrollbar-down), var(--kp-scrollbar-track), var(--kp-scrollbar-ground);
+    }
+
+    /* A popover's bar sits inside its two-pixel bevel, and its words keep
+       four pixels off the bar. A dialog's padding already has the room. */
+    [data-theme='retro'] .kp-popover {
+        --kp-scrollbar-inset: 2px;
+        --kp-scrollbar-ground: var(--popover);
+        padding-inline-end: calc(0.25rem + 18px);
+    }
+
+    /* A tooltip draws no bar, so it takes no room for one: the package's
+       own end padding, as before the bar [scope-93]. */
+    [data-theme='retro'] .kp-popover.kp-tooltip {
+        padding-inline-end: 0.5rem;
+    }
+
+    [data-theme='retro'] .kp-dialog {
+        --kp-scrollbar-inset: 0px;
+        --kp-scrollbar-ground: var(--popover);
+        --kp-retro-close-room: 0px;
+    }
+
+    /* The close button stands beside the bar, never on it [retro notes,
+       2026-09-15, overlays--dialog-parts]. A dialog without a body draws its
+       bar down the whole end edge of its padding box, from the very top, and
+       the package pins the close button half a rem in from that same edge:
+       the button's last 8px lay over the bar's up arrow. Here it moves in by
+       the bar's width, and the title's room for it grows by the same. Reset
+       to zero on every dialog above, so the value never inherits into a
+       dialog inside this one. */
+    [data-theme='retro'] .kp-dialog:not(:has(> .kp-dialog__body)):has(> .kp-dialog__close) {
+        --kp-retro-close-room: var(--kp-scrollbar-size);
+    }
+
+    [data-theme='retro'] .kp-dialog > .kp-dialog__close {
+        inset-inline-end: calc(var(--kp-space-sm, 0.5rem) + var(--kp-retro-close-room));
+    }
+
+    [data-theme='retro'] .kp-dialog__body {
+        --kp-scrollbar-inset: 0px;
+        --kp-scrollbar-ground: transparent;
+        padding-inline-end: 20px;
+    }
+
+    /* The three windows whose only answer was that broken selector list.
+       Square, as every window here is; their grounds stay the ones they were
+       approved with. A menu is the popover's list and draws no bar of its
+       own, a confirmation is a dialog and draws the dialog's, a toast
+       never scrolls and draws none. */
     [data-theme='retro'] .kp-menu,
-    [data-theme='retro'] .kp-toast,
-    [data-theme='retro'] .kp-tooltip,
     [data-theme='retro'] .kp-confirm,
-    [data-theme='retro'] .kp-datepicker__panel,
+    [data-theme='retro'] .kp-toast {
+        border-radius: 0;
+    }
+
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Enabled: ink arrows and the thumb. The thumb is at least eight pixels
+       long, as the platform's is, and both lengths are whole pixels. */
+    [data-theme='retro'] :is(.kp-popover:not(.kp-tooltip), .kp-dialog:not(:has(> .kp-dialog__body)), .kp-dialog__body)[data-kp-popover-overflowing] {
+        --kp-scrollbar-ink: var(--foreground);
+        --kp-scrollbar-emboss: transparent;
+        --kp-scrollbar-thumb: round(
+            down,
+            max(8px, calc((var(--kp-scroll-view) - 2 * var(--kp-scrollbar-inset) - 32px) * var(--kp-scroll-ratio))),
+            1px
+        );
+        --kp-scrollbar-thumb-top: round(
+            calc(
+                var(--kp-scrollbar-inset) + 16px + (var(--kp-scroll-view) - 2 * var(--kp-scrollbar-inset) - 32px - var(--kp-scrollbar-thumb)) *
+                    var(--kp-scroll-progress)
+            ),
+            1px
+        );
+        background:
+            var(--kp-scrollbar-up), var(--kp-scrollbar-down), var(--kp-scrollbar-thumb-paint), var(--kp-scrollbar-track), var(--kp-scrollbar-ground);
+    }
 
     /* The combo button the demo paints [S49, A12]: `appearance: none` and
        a raised square with the ink arrow on it. KT8 kept the platform
@@ -891,6 +1310,47 @@
             right 4px center;
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='retro'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='retro'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='retro'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='retro'] .kp-toast--destructive,
+    [data-theme='retro'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='retro'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) .kp-button--ghost {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='retro'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     /* And the keyboard highlight is the selection bar, as it is on a
        mark: navy with white on it [S49, A12]. */
     [data-theme='retro'] .kp-combobox__option.is-active,
@@ -917,11 +1377,20 @@
     [data-theme='retro'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
         background: var(--kp-ramp);
         color: var(--primary-foreground);
         padding: 3px 0.5rem;
         margin: 0 0 0.75rem;
+    }
+
+    /* The title bar's words stop short of the close button [retro notes,
+       2026-09-15, overlays--dialog-parts]. The `padding` above restates the
+       inline end too, and this layer comes after the package's, so the
+       package's room for the button (css/components.css, scope-60) was
+       lost: the words ran 16px under the button. The plate itself still
+       runs under the button, as a 1995 title bar does. */
+    [data-theme='retro'] .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__title {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem + var(--kp-retro-close-room, 0px));
     }
 
     /* The keyboard highlight is the selection bar with its own ink (KT8:
@@ -982,6 +1451,13 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='retro'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
     /* The footer: the chrome, and the fine print as a status bar. */
     [data-theme='retro'] .kp-footer {
         background: var(--background);
@@ -1016,7 +1492,6 @@
     [data-theme='retro'] .kp-footer h4 {
         font-family: var(--theme-font-display);
         font-weight: 700;
-        font-size: 0.95rem;
     }
 
     [data-theme='retro'] .kp-footer a {
@@ -1055,8 +1530,12 @@
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-sunken);
         font-family: var(--kp-dos);
-        font-size: 0.95rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='retro'] .kp-tag {
+        font-size: 0.95rem;
     }
 
     [data-theme='retro'] .kp-health {
@@ -1085,10 +1564,6 @@
         border-radius: 0;
         box-shadow: var(--kp-sunken);
         padding: 2px;
-    }
-
-    [data-theme='retro'] .kp-progress__value {
-        background: repeating-linear-gradient(90deg, var(--primary) 0 8px, var(--popover) 8px 10px);
     }
 
     [data-theme='retro'] .kp-spinner {
@@ -1135,6 +1610,22 @@
         box-shadow: var(--kp-raised);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='retro'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: Explorer's column headers are buttons ───────────────────── */
 
     [data-theme='retro'] .kp-table {
@@ -1145,9 +1636,17 @@
 
     [data-theme='retro'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-raised);
         font-weight: 600;
+    }
+
+    /* A sticky header keeps its raised edge and, while its box is scrolled,
+ * the reach above it [fix-32, scope-90]; at rest the raised edge alone. */
+    [data-theme='retro'] .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
+        box-shadow: var(--kp-raised), var(--kp-datatable-head-reach);
     }
 
     [data-theme='retro'] .kp-table td {
@@ -1213,6 +1712,19 @@
         font-size: 1.05rem;
     }
 
+    /* The accordion [gap-12]: the plain system weight of its category toggle, bold once open. */
+    [data-theme='retro'] .kp-accordion__summary {
+        font-weight: 500;
+    }
+
+    [data-theme='retro'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-accordion__item[open] > .kp-accordion__summary {
+        font-weight: 700;
+    }
+
     [data-theme='retro'] .kp-reorder {
         border: 1px solid var(--border-strong);
         border-radius: 0;
@@ -1233,8 +1745,7 @@
         box-shadow:
             inset 1px 1px 0 var(--popover),
             inset -1px 0 0 var(--border);
-        font-size: 0.85rem;
-        padding: 0.3rem 0.75rem;
+        padding-inline: 0.75rem;
     }
 
     [data-theme='retro'] .kp-tab[aria-selected='true'] {
@@ -1256,7 +1767,6 @@
     [data-theme='retro'] .kp-breadcrumb,
     [data-theme='retro'] .kp-pagination {
         font-family: var(--kp-dos);
-        font-size: 1.05rem;
     }
 
     [data-theme='retro'] .kp-pagination a[aria-current],
@@ -1271,7 +1781,6 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-raised);
-        padding: 3px;
     }
 
     [data-theme='retro'] .kp-wizard__steps {
@@ -1330,11 +1839,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='retro'] .kp-field {
-        gap: 0.25rem;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='retro'] .kp-form {
-        gap: 0.8rem;
+        gap: calc(var(--kp-space-lg) * 0.8);
     }
 
     [data-theme='retro'] .kp-combobox,
@@ -1710,7 +2219,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='retro'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='retro'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='retro'] .kp-nav__menu--wide .kp-nav__menu-heading {
         background: var(--secondary);
         font-family: var(--theme-font-mono);
         text-transform: none;
@@ -1720,9 +2231,17 @@
     /* ── The side navigation [feat-nav-3] ────────────────────────────
        Everything in this theme is a window on a desktop, and a column of
        links is the one part of that desktop that was always a list box:
-       sunken, with the selection painted edge to edge. */
+       sunken, with the selection painted edge to edge.
+
+       Its ground is the menu strip's (Kenny's retro notes, 2026-09-15,
+       navigation.html#app-shell: "the sidebar should not be so dark, should
+       be same as the top navbar"; #sidenav-over: "too dark"). It was
+       `--input`, the 38% grey of a field's well, and the ink on it measured
+       2.81:1 in firefox — a channel of 26 on a ground of 97, under the 4.5 of
+       DI3 — where the bar's own ground, `--background`, carries the same ink
+       at 9.46:1. */
     [data-theme='retro'] .kp-sidenav {
-        --kp-sidenav-surface: var(--input);
+        --kp-sidenav-surface: var(--background);
         --kp-sidenav-list-pad: 0.15rem;
         --kp-sidenav-gap: 0;
         border: 2px solid;
@@ -1737,7 +2256,6 @@
     }
 
     [data-theme='retro'] .kp-sidenav__title {
-        font-size: 0.75rem;
         letter-spacing: 0;
         text-transform: none;
         color: inherit;
@@ -1745,8 +2263,7 @@
 
     [data-theme='retro'] .kp-sidenav__link,
     [data-theme='retro'] .kp-sidenav__category-toggle {
-        padding: 0.3rem 0.7rem;
-        font-size: 0.875rem;
+        padding-inline: 0.7rem;
         font-weight: 500;
         border-radius: 0;
     }
@@ -1785,11 +2302,21 @@
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing.
+
+       Not the base layer's values any more (Kenny, 2026-09-15 [scope-93]):
+       this register's destructive button is a grey face with a dark-red
+       label, and the base's pressed ground, --destructive-active, put that
+       label on its own dark red — measured at 1.38:1.
+       Pressed, the destructive button is what every other button here is:
+       the same face with its bevel inverted and its label stepped a pixel
+       (the pressed state under "Buttons" paints both), the label on the
+       grey at the contrast it has at rest. */
 
     [data-theme='retro'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--destructive-active);
-        border-color: var(--destructive-active);
+        background-color: var(--card);
+        border-color: var(--border-strong);
+        color: var(--destructive);
     }
 
     /* ── The accelerator shows [gap-4, approved 2026-09-12] ────────────
@@ -1813,5 +2340,188 @@
     [data-theme='retro'] .kp-button:hover:not(:disabled) [data-kp-key],
     [data-theme='retro'] .kp-button:focus-visible [data-kp-key] {
         border-block-end-color: currentcolor;
+    }
+
+    /* ── …on every button [scope-80] ───────────────────────────────────
+       Kenny approved the accelerator and asked for it on every button in
+       this theme, not only on the ones whose consumer marked a letter. A
+       label that marks nothing shows its first letter instead.
+
+       Visual only. No key is bound and no `aria-keyshortcuts` is written:
+       an underline that promised a shortcut which does nothing would be a
+       lie to a keyboard user, and which letter is unique in a group, and
+       whether Alt+letter may be taken from the browser, are open.
+
+       `::first-letter` only reaches into a block container, and a button is
+       an inline flex row whose text is an anonymous item, so a label of
+       plain text is laid out as one line of text instead — the bargain
+       components.css already makes for a marked label, and it looks the
+       same: one line box, centred both ways. Only a label with no element
+       inside it: an icon beside the text would be the "first letter"
+       otherwise, so a button that carries an icon and marks nothing still
+       shows none. The component's own `.kp-button__label` is answered the
+       same way.
+
+       …and beside an icon [scope-83]: Kenny, retro-accelerator "Alleen het
+       teken" — the mark only, still no shortcut, and a button with an icon
+       gets it too. CSS cannot tell a text node from the icon beside it, so
+       such a label puts its text in `.kp-button__text`. In a flex row that
+       element is an item, which is a block container, so `::first-letter`
+       reaches it with no change of display; it has no rule in any other
+       theme, where it lays out exactly as the bare text did. */
+    [data-theme='retro'] .kp-button:not(:has(> *)),
+    [data-theme='retro'] .kp-button__label:not(:has(> *)) {
+        display: inline-block;
+        align-content: center;
+        text-align: center;
+    }
+
+    [data-theme='retro'] .kp-button:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button__label:not(:has(> *))::first-letter,
+    [data-theme='retro'] :is(.kp-button, .kp-button__label) > .kp-button__text:not(:has(> *))::first-letter {
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='retro'] .kp-button:not(:has(> *)):is(:hover:not(:disabled), :focus-visible)::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__text:not(:has(> *))::first-letter,
+    [data-theme='retro'] .kp-button:is(:hover:not(:disabled), :focus-visible) > .kp-button__label > .kp-button__text:not(:has(> *))::first-letter {
+        border-block-end-color: currentcolor;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='retro'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the menu bar's plain words in a frame that
+       is invisible until the item is pointed at, when it takes the primary
+       selection. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.7rem;
+        font-weight: 500;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='retro'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* ── The pressed control's own face, hidden [retro notes 2026-09-15] ──
+       Last in the file on purpose: every rule above that gives a button
+       its ground uses the `background` shorthand, which resets
+       `background-clip`, and a destructive or toast button pressed showed
+       its own ground one pixel outside the face `::before` repaints. See
+       the pressed state under "Buttons". */
+    [data-theme='retro'] .kp-button:active:not(:disabled),
+    [data-theme='retro'] .kp-icon-button:active:not(:disabled) {
+        background-clip: text;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
+    }
+
+    /* The call to action in the bar presses the same way [scope-93]. A
+       pressed link has focus, so the menu strip's selection rule
+       (`.kp-nav__links > li:focus-within > .kp-nav__link`, a heavier
+       selector) paints its ground with the shorthand too; the doubled class
+       outweighs it, so the face hidden here stays hidden. */
+    [data-theme='retro'] .kp-nav__link.kp-nav__link--cta:active:active {
+        background-clip: text;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A 1995 error box: the desktop turns its teal, yellow hazard stripes top and bottom, and the words sit in a silver bevelled window whose title bar is the code line. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='retro'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--accent) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--warning);
+        --kp-alarm-frame: 2px solid var(--background);
+        --kp-alarm-panel-ground: var(--background);
+        --kp-alarm-panel-border: 2px solid var(--foreground);
+        --kp-alarm-panel-shadow:
+            inset -2px -2px 0 hsl(from var(--foreground) h s l / 0.55), inset 2px 2px 0 hsl(from var(--background) h s 100),
+            6px 6px 0 var(--foreground);
+        --kp-alarm-panel-padding: 0 clamp(1rem, 3cqi, 2rem) clamp(1rem, 3cqi, 2rem);
+        /* Kenny, 2026-09-16, rejecting the pixel face: "te grof om deftig te
+           lezen". He picked the theme's own body face out of the demo
+           [scope-108]; the window chrome around it carries the era, so the
+           headline does not have to. */
+        --kp-alarm-title-font: var(--theme-font-body);
+        --kp-alarm-title-size: clamp(2rem, 8cqi, 6rem);
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='retro'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='retro'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='retro'] .kp-alarm__panel {
+        /* Wider on Kenny's second look [2026-09-16]: "de kader mag groter" —
+           the window should own its stage the way a 1995 error box did. */
+        inline-size: min(100%, 58rem);
+    }
+
+    [data-theme='retro'] .kp-alarm__code {
+        justify-self: stretch;
+        margin-inline: calc(-1 * clamp(1rem, 3cqi, 2rem));
+        padding: 0.3rem 0.6rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        letter-spacing: 0.04em;
+        text-align: start;
     }
 }

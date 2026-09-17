@@ -124,6 +124,36 @@
                 "where": "mark inside p.kp-prose.kp-lede",
                 "chromium": "wider than its container by 1px",
                 "firefox": null
+            },
+            {
+                "where": "button.kp-button.kp-button--primary.kp-button--mirror",
+                "//": "The ink of a press [scope-25, built at scope-101]: the stain is a pseudo-element 12px larger than the button on every side, so the button's scrollable area is 12px wider than its box in both engines and at both widths. Kenny accepted that reach with the gesture; nothing is clipped and no document scrolls sideways.",
+                "chromium": "content 150 wide in a box of 138",
+                "firefox": "content 147 wide in a box of 135"
+            },
+            {
+                "where": "button.kp-button",
+                "//": "The ink of a press [scope-25, built at scope-101]: the stain is a pseudo-element 12px larger than the button on every side, so the button's scrollable area is 12px wider than its box in both engines and at both widths. Kenny accepted that reach with the gesture; nothing is clipped and no document scrolls sideways.",
+                "chromium": "content 182 wide in a box of 170",
+                "firefox": "content 178 wide in a box of 166"
+            },
+            {
+                "where": "button.kp-button.kp-button--ghost",
+                "//": "The ink of a press [scope-25, built at scope-101]: the stain is a pseudo-element 12px larger than the button on every side, so the button's scrollable area is 12px wider than its box in both engines and at both widths. Kenny accepted that reach with the gesture; nothing is clipped and no document scrolls sideways.",
+                "chromium": "content 155 wide in a box of 143",
+                "firefox": "content 151 wide in a box of 139"
+            },
+            {
+                "where": "button.kp-button.kp-button--primary",
+                "//": "The ink of a press [scope-25, built at scope-101]: the stain is a pseudo-element 12px larger than the button on every side, so the button's scrollable area is 12px wider than its box in both engines and at both widths. Kenny accepted that reach with the gesture; nothing is clipped and no document scrolls sideways.",
+                "chromium": "content 140 wide in a box of 128",
+                "firefox": "content 137 wide in a box of 125"
+            },
+            {
+                "where": "button.kp-button.kp-button--destructive.kp-button--mirror",
+                "//": "The ink of a press [scope-25, built at scope-101]: the stain is a pseudo-element 12px larger than the button on every side, so the button's scrollable area is 12px wider than its box in both engines and at both widths. Kenny accepted that reach with the gesture; nothing is clipped and no document scrolls sideways.",
+                "chromium": "content 116 wide in a box of 104",
+                "firefox": "content 114 wide in a box of 102"
             }
         ],
         "solstice": [

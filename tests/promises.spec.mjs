@@ -9,7 +9,7 @@
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
-test('printing drops the theme and the decoration [TH36]', async ({ page }) => {
+test('printing drops the theme and the decoration [TH36]', { tag: ['@sweep', '@component:showcase'] }, async ({ page }) => {
     await page.goto('/showcase/themes/cyberpunk.html');
     await page.emulateMedia({ media: 'print' });
 
@@ -34,7 +34,7 @@ test('printing drops the theme and the decoration [TH36]', async ({ page }) => {
     expect(printed.textureHidden).toBe(true);
 });
 
-test('a refused save is shown, not swallowed [AR6]', async ({ page }) => {
+test('a refused save is shown, not swallowed [AR6]', { tag: ['@component:picker'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/picker.html');
     await page.waitForSelector('#plain [data-kp-theme="dark"]');
 
@@ -56,7 +56,7 @@ test('a refused save is shown, not swallowed [AR6]', async ({ page }) => {
     await expect(status).toContainText(S.themeSaveFailed);
 });
 
-test('a choice made in another tab is followed [AR5]', async ({ page }) => {
+test('a choice made in another tab is followed [AR5]', { tag: ['@component:picker'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/picker.html');
     await page.waitForSelector('#plain [data-kp-theme="dark"]');
     await page.click('#plain [data-kp-theme="formal"]');

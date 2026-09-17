@@ -36,7 +36,17 @@ vanish.
    theme's own research, obsidianassembly.com, Dark_Editorial.html)
    carried between zero and three soft box-shadows each. Depth between
    surfaces (bg → card → popover, and the dossier card) comes from the
-   tone ladder alone.
+   tone ladder alone. What does cast a shadow is a control, not a
+   surface: since scope-12 the plain button (not the variants) and the
+   back-to-top control lie under one light from the top left, and the
+   side navigation's current row and a media frame are set into the page
+   with an inset one. **Since `scope-101` that light is the pointer**
+   (scope-25, "the dark half is lifted out of shade by it"): the plain
+   button, the card and the hero take the direction away from the pointer
+   and a pale radial patch of the foreground where it stands — 8% on a
+   button, 6% on a card and the hero. Without a pointer, under reduced
+   motion, on a touch screen, while tabbing or without `js/effects.js`
+   the fixed top-left light is what paints, unchanged from scope-12.
 5. **No texture.** `--fx-texture` stays unset. No starfield, no grain —
    the register adds nothing to the ground.
 
@@ -45,8 +55,8 @@ vanish.
 `css/shade-dark-register.css` is the theme's answer to the hook
 vocabulary (S45):
 
-- **Surface.** The tone ladder alone (bg → card → popover), no shadow.
-  The hero and app share one ground.
+- **Surface.** The tone ladder alone (bg → card → popover), no shadow
+  on a card or popover. The hero and app share one ground.
 - **Emphasis.** A loose `<mark>` (the hero lede) is a static signal
   plate — the demo never covers or reveals it, unlike the other lifted
   themes' loose marks. Inside the dossier card, a `<mark>` is an ink
@@ -73,8 +83,13 @@ The hero CTA button and the dossier card (both carry
 `data-kp-reveal="emphasis"`) settle out of the same blur the headline
 uses, once, when the page is ready — see the S49 finding below for why
 this is "on load" rather than the demo's own words, "on first
-scroll-into-view". Every hover is a lightness step on the token
-(`hsl(from var(--token) h s calc(l ± N%))`), never a colour of its own.
+scroll-into-view". A filled plate's hover (the primary, secondary and
+destructive buttons, the bar's call to action) is a lightness step on its
+token (`hsl(from var(--token) h s calc(l + N))`); the rest move to
+another token on the ladder — a ghost button and a table row to
+`--card`, a menu item to `--secondary`, a bar or footer link from the
+muted ink to `--foreground` — and the plain button lifts under its light
+(scope-12). None is a colour of the register's own.
 One answer per component root (56 of 64, the eight helpers excused).
 
 **What the demo showed and the package now renders exactly (S49,
@@ -146,27 +161,35 @@ boundary on the page, still above the 3.0 floor.
 
 **DI2 — the focus ring.** The demo's own global rule: an outline in the
 foreground and a box-shadow moat in the ground, composed on every
-focusable element rather than per component. Measured on a primary
+focusable element rather than per component — with one exception: the
+plain button, whose scope-12 shadow would otherwise replace the moat,
+draws its own ring (`--focus-ring-contrast` outline, `--focus-ring`
+inner ring in front of the shadow). Measured on a primary
 button: foreground/primary 1.11 (fails alone), background/primary 5.46
 (clears 3:1) — one channel always wins, as the invariant predicts.
 
 **DI3 — states you can see.** Derived by lightness towards light; the
 dark button took a lighter ink for the same reason the light half's took
-a darker one. Hover states step `l` by a few points on the token via
-`hsl(from var(--token) h s calc(l + N%))` — no colour of the register's
-own.
+a darker one. A filled plate's hover steps `l` by a few points on its
+token via `hsl(from var(--token) h s calc(l + N))`; the other hovers move
+to a neighbouring token (see the register above) — no colour of the
+register's own.
 
 **DI4 — colour is never the only carrier.** As the light half.
 
-**DI5 — the flash threshold.** Nothing loops. Six one-shot effects, all
-in `reports/di5.md`: the headline's words (opacity, 600ms), the hero
-button and dossier card's entrance (opacity, 500ms), the three
+**DI5 — the flash threshold.** One thing loops: the band
+(`.kp-marquee`), a transform pass of 46000ms that repeats while it is on
+screen and changes no luminance. Besides it, six one-shot effects, all
+in `reports/di5.md`: the headline's words (`kp-focus`, opacity, 600ms),
+the hero button and dossier card's entrance (the same `kp-focus`
+keyframe at 500ms), the three
 redactions clearing (a transform, not luminance-tracked), the dialog and
 its backdrop opening (opacity, 180ms each), and the rule drawing (a
 transform, not luminance-tracked). None of the three sources this pass
 measured carried a loop either (obsidianassembly.com's reveal is
 one-shot, Dark Editorial's only animated rule is an 8s hover-zoom,
-noth.in's blur layers are static) — this theme adds none.
+noth.in's blur layers are static) — this theme adds none of its own;
+the band's loop is the package's marquee at this theme's pace.
 
 **DI6 — light or dark.** `color-scheme: dark`, and the layers rise:
 0.0041 (bg) → a lighter card → a lighter popover still, in that order.
@@ -188,7 +211,13 @@ flourish, no colour outside `var(--token)` or a relative colour of one.
   plates carry a near-white ink.
 - **No starfield, no grain.** Dark owns the first; this half owns
   nothing but its contrast.
-- **No elevation shadow.** The tone ladder carries depth; a `box-shadow`
-  on a card or popover would contradict the anatomy's own measured
-  finding (`--fx-lift: 0px`, `--fx-shadow-offset: 0px`).
-- **No loop, no flicker.** Every effect in `reports/di5.md` plays once.
+- **No elevation shadow on a surface.** The tone ladder carries depth; a
+  `box-shadow` on a popover would contradict the anatomy's own measured
+  finding (`--fx-lift: 0px`, `--fx-shadow-offset: 0px`). The plain
+  button's and back-to-top's light (scope-12) is a control's, not a
+  surface's. **The card is the one exception, since `scope-101`** (Kenny,
+  2026-09-16, scope25-build): it carries a shade at rest, scaled by the
+  light's own lift. The approved concept demo left it flat and this line
+  said so; the change is his, not the register's.
+- **No flicker.** Every theme keyframe in `reports/di5.md` plays once;
+  the only loop is the band's luminance-free transform.

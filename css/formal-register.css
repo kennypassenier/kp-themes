@@ -63,17 +63,14 @@
     }
 
     [data-theme='formal'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-variation-settings: 'opsz' 144;
         letter-spacing: -0.03em;
-        line-height: 1.08;
         margin-block: 0 1.25rem;
     }
 
     [data-theme='formal'] [data-kp-surface='app'] h2 {
         font-variation-settings: 'opsz' 90;
         letter-spacing: -0.02em;
-        font-size: 1.5rem;
     }
 
     [data-theme='formal'] .microlabel {
@@ -184,7 +181,7 @@
     }
 
     [data-theme='formal'] .kp-nav {
-        padding-block: 1rem;
+        padding-block: calc(var(--kp-nav-pad-block, 1rem) * var(--kp-nav-pad-scale, 1));
     }
 
     [data-theme='formal'] .kp-nav__brand {
@@ -211,7 +208,6 @@
 
     [data-theme='formal'] .kp-nav__link {
         font-family: var(--theme-font-body);
-        font-size: 0.9375rem;
         color: var(--foreground);
         border-radius: calc(var(--radius) / 2);
     }
@@ -227,11 +223,17 @@
         text-decoration: underline;
     }
 
+    /* The call to action: a primary plate with the radius. The words sit
+       one lg step in from either side of it [Kenny, 2026-09-15: "barely any
+       spacing between the letters and the blue box"]; the plate had 0px of
+       inline padding, so the first and last letter stood on its edge. The
+       height stays the package's (option B). */
     [data-theme='formal'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         font-weight: 600;
         border-radius: var(--radius);
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='formal'] .kp-nav__link--cta:hover {
@@ -246,6 +248,19 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: 0 8px 24px -12px hsl(from var(--foreground) h s l / 0.28);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
     }
 
     [data-theme='formal'] .kp-nav__menu a {
@@ -336,9 +351,28 @@
         border-radius: var(--radius);
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='formal'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='formal'] .kp-fieldset {
         border-color: var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: formal keeps the pill, on the field's own ground
+       and boundary, so a switch sits in a form like the inputs beside it. */
+    [data-theme='formal'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
     }
 
     /* ── Cards and the dossier: a file on the desk, redactions that clear
@@ -359,12 +393,21 @@
     /* The stamp: a rotated brick-bordered badge, static — the demo's own
        "Draft — not for release" never changes text on reveal, so the
        package's data-kp-label-open swap is a no-op here by design (the
-       copy entry repeats the same word). */
+       copy entry repeats the same word).
+       It floats at the card's top end rather than being placed absolutely
+       (Kenny, 2026-09-15, stamp-cards "Op elke kaart met een label"
+       [scope-98]): an absolute stamp only landed on a card that was
+       positioned, the dossier, and lay over a long title on a narrow one.
+       A float lives in the card's own flow on every labelled card, and the
+       header beside it is a flex container, which never overlaps a float:
+       it narrows beside the stamp, or drops below it when the title's
+       longest word no longer fits. The margins hold the -3deg rotation's
+       corners clear of the title. */
     [data-theme='formal'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
-        position: absolute;
-        inset-block-start: 0.8rem;
-        inset-inline-end: 1.1rem;
+        float: inline-end;
+        margin-block: 0.15rem 0.4rem;
+        margin-inline: 0.6rem 0.1rem;
         display: inline-block;
         font-family: var(--theme-font-display);
         font-variation-settings: 'opsz' 40;
@@ -379,37 +422,44 @@
         rotate: -3deg;
     }
 
+    /* The header beside the stamp keeps at least its title's longest word,
+       so where that no longer fits beside the stamp the header is placed
+       below it instead of being squeezed under it [scope-98]. */
+    [data-theme='formal'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
+    }
+
     [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
         background: var(--muted);
     }
 
-    /* The redaction: a run of ink over the phrase, cleared left to right
-       — a scale transform on a full-cover bar, the way a redaction pen is
-       dragged off a page, not a fade. */
+    /* The redaction: a run of ink over the phrase, cleared toward its
+       start — the bar narrows away the way a redaction pen is dragged off a
+       page, not a fade. The bar is the phrase's own background, cloned onto
+       every line the phrase takes [fix-33, scope-93]: a bar on an absolutely
+       positioned ::after covered none of a phrase that wrapped. The ink
+       reaches 0.06em above and below the words and 0.1em past each end as
+       padding, room the words around it make, so no bar reaches past the
+       line it sits on. The
+       words keep their ink, the bar's own colour, so they are unreadable
+       under it and uncovered exactly where it has gone. */
     [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 100% 100% no-repeat;
         color: var(--card-foreground);
-        padding: 0;
+        padding: 0.06em 0.1em;
         border-radius: 0;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.06em -0.1em;
-        background: var(--foreground);
-        transform-origin: left center;
-        transform: scaleX(1);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        background-size: 100% 100%;
     }
 
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        transform: scaleX(1);
-    }
-
-    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        transform: scaleX(0);
+    [data-theme='formal'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% 100%;
     }
 
     /* ── Panels: one hairline boundary, the card's own paper ─────────── */
@@ -427,6 +477,55 @@
         background: var(--card);
         border-color: var(--border);
         border-radius: var(--radius);
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='formal'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='formal'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='formal'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='formal'] .kp-toast--destructive,
+    [data-theme='formal'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='formal']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='formal'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='formal'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border-radius: 0;
     }
 
     [data-theme='formal'] .kp-dialog__title {
@@ -449,7 +548,6 @@
     }
 
     [data-theme='formal'] .kp-footer h4 {
-        font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -539,10 +637,6 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='formal'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     [data-theme='formal'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
@@ -579,6 +673,22 @@
 
     [data-theme='formal'] .kp-copyable__button {
         border-radius: calc(var(--radius) / 2);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -628,6 +738,20 @@
         color: var(--foreground);
     }
 
+    /* The accordion [gap-12]: the body face and the ink, and the primary colour for what is open, as its tabs mark the selected one. */
+    [data-theme='formal'] .kp-accordion__summary {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
     /* ── Navigation and steps ──────────────────────────────────────────── */
 
     [data-theme='formal'] .kp-tab {
@@ -662,6 +786,12 @@
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: 50%;
+    }
+
+    /* A month or a year is wider than it is tall, so the day's 50% drew it
+     * as a stretched ellipse; it is a pill, and the day stays a circle [scope-90]. */
+    [data-theme='formal'] .kp-datepicker__grid:is([data-kp-view='months'], [data-kp-view='years']) .kp-datepicker__day[aria-selected='true'] {
+        border-radius: 999px;
     }
 
     [data-theme='formal'] .kp-colorpicker__swatch {
@@ -746,15 +876,15 @@
             transition: transform 450ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform 260ms var(--fx-ease);
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger, 80ms);
         }
 
-        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
         }
     }
@@ -770,7 +900,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='formal'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='formal'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='formal'] .kp-nav__menu--wide .kp-nav__menu-heading {
         font-variant-caps: all-small-caps;
         letter-spacing: 0.1em;
         color: var(--foreground);
@@ -833,6 +965,14 @@
         pointer-events: none;
     }
 
+    /* On a filled button a primary-coloured rule vanishes into its own
+       ground; there the rule takes the label's colour (Kenny, catalogue
+       note 2026-09-13). */
+    [data-theme='formal'] .kp-button--primary::after,
+    [data-theme='formal'] .kp-button--destructive::after {
+        border-color: currentColor;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-button::after {
             transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
@@ -842,5 +982,229 @@
     [data-theme='formal'] .kp-button:hover:not(:disabled)::after,
     [data-theme='formal'] .kp-button:focus-visible::after {
         opacity: 1;
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): the body face at a size above the small
+       text, in the full ink, on a half radius; under the pointer the primary
+       ink this register gives its quiet language link, and the two-pixel
+       weight a pointed-at link's underline takes, drawn as a rule because a
+       button has no underline to thicken. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        font-family: var(--theme-font-body);
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: calc(var(--radius) / 2);
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='formal'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: currentcolor;
+    }
+
+    /* ── The alarm [scope-94, scope-98] ────────────────────────────────────
+       A notice served on the house paper. Kenny, judging the portrait:
+       "het alarm geeft nog altijd het glitch effect, dat enkel bij cyberpunk
+       thuishoort. het kleurenschema van het alarm passen volgens mij ook niet
+       super hard bij dit thema". So nothing here glitches, glows, loops or
+       flickers, and every colour keeps the role signature.json gives it:
+
+         the plate    navy (--primary) at 94 %: the one thing that acts now
+                      is the alarm, and the page behind it is inert
+         the sheet    the card stock, a hairline frame (--border) and the
+                      double rule 2px inside it in navy, the certificate's
+                      gesture; the dropdown's 8px/24px ink shadow, no further
+         the code     the masthead line: body face, spaced capitals, navy
+         headline     the stamp: Fraunces capitals in brick (--destructive),
+                      engraved spacing, optical size 144, no shadow
+         under it     the docket cut: a --border-strong hairline and a 3rem
+                      navy tick
+         the reason   the ink, in the body face (formal has no mono voice)
+         the button   the navy plate with the mirror's 2px gold impression
+                      (--fx-signal); pressing darkens it (--primary-active)
+
+       Motion is the register's own, a transition once each, never a
+       keyframe (the header: this register holds none): the plate fades, the
+       sheet arrives as the headline does (opacity and a 6px rise, 450ms,
+       --fx-ease), the docket tick draws as the section rule does (a scaleX,
+       450ms, --fx-ease), the double rule fades in as a hovered button's does
+       (--fx-duration, --fx-ease), and the reason fades after. Under reduced
+       motion the finished notice stands at once. The button keeps this
+       register's shape and takes the alarm's paint, on selectors long enough
+       to outrank this register's own button states; the dialog takes no focus
+       ring, because in the auto mode the whole screen is what has focus. */
+    [data-theme='formal'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--primary) h s l / 0.94);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--primary-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--primary) h s l / 0);
+        --kp-alarm-bar: 0rem;
+        --kp-alarm-frame: 0 none;
+        --kp-alarm-title-size: clamp(2.25rem, 8.5cqi, 6.5rem);
+        --kp-alarm-title-tracking: 0.08em;
+        --kp-alarm-panel-ground: var(--card);
+        --kp-alarm-panel-border: 1px solid var(--border);
+        --kp-alarm-panel-radius: var(--radius);
+        --kp-alarm-panel-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.28);
+        --kp-alarm-panel-padding: clamp(1.75rem, 5cqi, 3.5rem) clamp(1.25rem, 5cqi, 4rem);
+    }
+
+    [data-theme='formal'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='formal'] .kp-alarm__panel {
+        inline-size: min(100%, 54rem);
+    }
+
+    [data-theme='formal'] .kp-alarm__panel::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] .kp-alarm__code {
+        color: var(--primary);
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+    }
+
+    [data-theme='formal'] .kp-alarm__title {
+        font-variation-settings: 'opsz' 144;
+        font-weight: 600;
+    }
+
+    [data-theme='formal'] .kp-alarm__title::after {
+        content: '';
+        display: block;
+        inline-size: min(100%, 24rem);
+        block-size: 8px;
+        margin: 0.35em auto 0;
+        background:
+            linear-gradient(var(--border-strong) 0 0) left top / 100% 1px no-repeat,
+            linear-gradient(var(--primary) 0 0) center 4px / 3rem 4px no-repeat;
+        font-size: 1rem;
+    }
+
+    [data-theme='formal'] .kp-alarm__detail {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__hint,
+    [data-theme='formal'] .kp-alarm__countdown {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-alarm__track {
+        background: var(--muted);
+    }
+
+    [data-theme='formal'] .kp-alarm__fill {
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 2px 2px 0 0 var(--fx-signal);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        text-shadow: none;
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-alarm__ack::after {
+        border-color: currentColor;
+    }
+
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='formal'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: var(--border-strong);
+        background: transparent;
+        color: var(--primary);
+        text-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            transition: opacity 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            transition:
+                opacity 450ms var(--fx-ease),
+                transform 450ms var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease) 450ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+            transition: transform 450ms var(--fx-ease) 300ms;
+        }
+
+        [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            transition: opacity 450ms var(--fx-ease) 250ms;
+        }
+
+        @starting-style {
+            [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+                opacity: 0;
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+                transform: scaleX(0);
+            }
+
+            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+                opacity: 0;
+            }
+        }
     }
 }

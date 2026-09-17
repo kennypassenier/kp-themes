@@ -27,6 +27,10 @@ export type SidenavProps = {
      */
     title?: import('react').ReactNode;
     /**
+     * What stays under the list, in `.kp-sidenav__footer` — an account row, or the rail's own SidenavSlimToggle. Omit for no footer.
+     */
+    footer?: import('react').ReactNode;
+    /**
      * How it sits beside the content. Default: the module's 'side'.
      */
     mode?: 'over' | 'side' | 'push';
@@ -51,6 +55,10 @@ export type SidenavProps = {
      */
     slimCollapsed?: boolean;
     /**
+     * Become the `over` panel while the box it lives in is this wide or narrower: `true` for the package's 40rem step, or a length. Its toggles are shown only then, its slim toggles only above it [scope-80].
+     */
+    overBelow?: boolean | string;
+    /**
      * Widen while the pointer is over it.
      */
     expandOnHover?: boolean;
@@ -71,7 +79,7 @@ export type SidenavProps = {
      */
     contentSelector?: string;
     /**
-     * A storage key, so the narrow state survives a reload.
+     * A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
      */
     remember?: string;
     /**
@@ -104,3 +112,15 @@ export type SidenavToggleProps = {
     children?: import('react').ReactNode;
 };
 export declare const SidenavToggle: import("react").ForwardRefExoticComponent<SidenavToggleProps & import("react").ButtonHTMLAttributes<HTMLButtonElement> & import("react").RefAttributes<HTMLButtonElement>>;
+export type SidenavSlimToggleProps = {
+    /**
+     * The `id` of the rail this collapses and expands.
+     */
+    controls: string;
+    className?: string;
+    /**
+     * The consumer's own word or glyph [KT5]. A glyph alone, marked aria-hidden, takes its accessible name from js/strings.js and the name follows the state.
+     */
+    children?: import('react').ReactNode;
+};
+export declare const SidenavSlimToggle: import("react").ForwardRefExoticComponent<SidenavSlimToggleProps & import("react").ButtonHTMLAttributes<HTMLButtonElement> & import("react").RefAttributes<HTMLButtonElement>>;

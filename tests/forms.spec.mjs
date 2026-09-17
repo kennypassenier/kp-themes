@@ -6,6 +6,8 @@
 
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 // Driven in both channels [AR7]: the framework-free half attaches to a
@@ -31,7 +33,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`forms — ${channel.name}`, () => {
+    test.describe(`forms — ${channel.name}`, { tag: ['@component:field'] }, () => {
         test('a failed submit summarises the errors and takes focus [TH38]', async ({ page }) => {
             await page.goto(URL);
             const form = page.locator(channel.form);
@@ -192,7 +194,7 @@ const RICH = [
 ];
 
 for (const channel of RICH) {
-    test.describe(`form field types — ${channel.name}`, () => {
+    test.describe(`form field types — ${channel.name}`, { tag: ['@component:field'] }, () => {
         test('a select, a textarea, a checkbox and a radio group all render and all validate [TH61]', async ({ page }) => {
             await page.goto(URL);
             await expect(page.locator(channel.land)).toHaveCount(1);
@@ -241,7 +243,7 @@ for (const channel of RICH) {
 }
 
 // TH62: the consumer's own link component.
-test('NavBar renders its links through the component a consumer hands in [TH62]', async ({ page }) => {
+test('NavBar renders its links through the component a consumer hands in [TH62]', { tag: ['@component:navigation'] }, async ({ page }) => {
     await page.goto(URL);
     const nav = page.locator('[data-test="react-router-nav"]');
     // Drill: with `linkComponent: Link = 'a'` ignored and a literal <a>
@@ -256,3 +258,33 @@ test('NavBar renders its links through the component a consumer hands in [TH62]'
     // needs into a navigation.
     await expect(nav.locator('a.kp-skip-link[data-routed]')).toHaveCount(0);
 });
+
+// ── gap-11, the field faults of catalogue batch 2 [2026-09-13] ────────────
+
+test(
+    'the switch page shows the package switch, and it flips with Space [gap-11]',
+    { tag: ['@component:switch', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: there was no switch at all, so a toggle had to be a checkbox; the concept page Kenny approved now shows the package's .kp-switch.
+        // The behaviour in both channels and every theme is tests/switch.spec.mjs; this holds the catalogue page on the package class.
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/switch.html');
+        await waitForJudging(page);
+        const control = page.locator('#states .kp-switch__input').first();
+        await expect(control).toHaveAttribute('role', 'switch');
+        const paint = () =>
+            control.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el, '::before').insetInlineStart].join(' | '));
+        const off = await paint();
+        await control.focus();
+        await page.keyboard.press('Space');
+        await expect(control).toBeChecked();
+        await expect.poll(paint).not.toBe(off);
+        // Enter does not flip it: that is a checkbox's behaviour, and the reason the switch is one.
+        await page.keyboard.press('Enter');
+        await expect(control).toBeChecked();
+        await expect(page.locator('#states .kp-switch__input[disabled]')).toHaveCount(2);
+        // No page-scoped concept styles are left: the paint comes from the package.
+        await expect(page.locator('.cat-switch-concept, .cat-switch-concept__input')).toHaveCount(0);
+    },
+);

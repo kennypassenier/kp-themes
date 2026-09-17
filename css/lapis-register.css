@@ -102,13 +102,10 @@
     [data-theme='lapis'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        line-height: 1.1;
         letter-spacing: 0.01em;
     }
 
     [data-theme='lapis'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.1;
         margin-block: 0 0.35em;
         text-wrap: balance;
     }
@@ -256,7 +253,9 @@
     [data-theme='lapis'] .kp-nav {
         background: var(--sidebar-background);
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='lapis'] .kp-nav__brand {
@@ -296,6 +295,10 @@
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
+        /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+           page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): 0px
+           before, the plate ended at the first and last letter. Formal's 16px. */
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='lapis'] .kp-nav__link--cta:hover,
@@ -314,6 +317,19 @@
             var(--kp-ring-on-popover),
             0 10px 24px hsl(from var(--sidebar-background) h s l / 0.5);
         min-width: 180px;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='lapis'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
     }
 
     [data-theme='lapis'] .kp-nav__menu a {
@@ -359,9 +375,30 @@
         [data-theme='lapis'] .kp-palette__input {
             transition: box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
         }
+
+        /* The button keeps the package's own transitions beside the ruling
+           (Kenny, 2026-09-16, register-faults [scope-100]): the list above
+           replaced them, so the plate's colour, its border and the lift
+           landed in one frame. Restated from css/components.css, with the
+           box-shadow the ruling eases in. */
+        [data-theme='lapis'] .kp-button {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 150ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 300ms) var(--fx-ease, ease);
+        }
     }
 
-    [data-theme='lapis'] .kp-button:hover,
+    /* A disabled button does not answer the pointer (Kenny, 2026-09-16,
+       register-faults [scope-100]): before, its ink and its ruling turned
+       gold under the cursor. Every button hover below is guarded. The two
+       that draw the ruling (this one and the mirror's) guard inside
+       :where(), which adds no specificity, so the keyboard ring's
+       box-shadow rules still win over them as before; the variants' hovers
+       paint no box-shadow and guard with a plain :not(:disabled), which
+       keeps them level with the pressed rules at the end of this file. */
+    [data-theme='lapis'] .kp-button:hover:where(:not(:disabled)),
     [data-theme='lapis'] .kp-field__input:focus,
     [data-theme='lapis'] .kp-datatable__search:focus,
     [data-theme='lapis'] .kp-combobox__input:focus,
@@ -392,7 +429,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='lapis'] .kp-button:hover {
+    [data-theme='lapis'] .kp-button:hover:where(:not(:disabled)) {
         color: var(--primary);
     }
 
@@ -408,7 +445,7 @@
         box-shadow: var(--kp-lapis-rule), var(--kp-lapis-gloss);
     }
 
-    [data-theme='lapis'] .kp-button--mirror:hover {
+    [data-theme='lapis'] .kp-button--mirror:hover:where(:not(:disabled)) {
         box-shadow: var(--kp-lapis-rule-closed), var(--kp-lapis-gloss);
     }
 
@@ -425,7 +462,7 @@
         border-color: var(--primary);
     }
 
-    [data-theme='lapis'] .kp-button--primary:hover,
+    [data-theme='lapis'] .kp-button--primary:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--primary:focus-visible {
         background: var(--foreground);
         color: var(--background);
@@ -438,7 +475,7 @@
         color: var(--destructive);
     }
 
-    [data-theme='lapis'] .kp-button--destructive:hover,
+    [data-theme='lapis'] .kp-button--destructive:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--destructive:focus-visible {
         background: var(--destructive);
         color: var(--destructive-foreground);
@@ -449,7 +486,7 @@
         background: transparent;
     }
 
-    [data-theme='lapis'] .kp-button--ghost:hover,
+    [data-theme='lapis'] .kp-button--ghost:hover:not(:disabled),
     [data-theme='lapis'] .kp-button--ghost:focus-visible {
         border-color: var(--border);
         color: var(--primary);
@@ -490,6 +527,15 @@
         caret-color: var(--primary);
     }
 
+    /* Invalid wins over the gold ruling [gap-11]: the border underneath is
+       transparent and the ruling is a box-shadow set in kp.register, so
+       .kp-field--invalid in kp.components changed nothing that painted.
+       The ruling itself turns to the alarm colour — the same double rule,
+       in the colour that says something is wrong. */
+    [data-theme='lapis'] .kp-field--invalid .kp-field__input {
+        --kp-lapis-rule: 0 0 0 1px var(--destructive), 0 0 0 3px var(--card), 0 0 0 4px hsl(from var(--destructive) h s l / 0.45);
+    }
+
     [data-theme='lapis'] select.kp-field__input::picker-icon {
         color: var(--primary);
     }
@@ -500,6 +546,16 @@
 
     [data-theme='lapis'] .kp-fieldset {
         border: 1px solid var(--border-strong);
+    }
+
+    /* The switch [gap-11]: the pill, on the card with the fieldset's strong edge. */
+    [data-theme='lapis'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:not(:checked) {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
     }
 
     [data-theme='lapis'] .kp-form__summary {
@@ -515,18 +571,23 @@
         box-shadow: var(--kp-ring-on-card);
     }
 
-    [data-theme='lapis'] .kp-card__title {
-        font-size: 1.3rem;
-    }
-
     /* The stamp: a vermilion plate — the boundary DI1 asks for stays
        intact, and vermilion is never used as text (anatomy.md's own rule),
-       only as this filled chip. */
+       only as this filled chip.
+       It floats at the card's top end, as formal's and pastel's do
+       (Kenny, 2026-09-16, register-faults [scope-100]; scope-98): placed
+       absolutely it only landed on the dossier, the one positioned card,
+       and on any other labelled card it anchored to the page. A float
+       lives in the card's own flow; the header beside it is a flex
+       container, which narrows beside the float or drops below it. The
+       margins hold the -8deg rotation's corners inside the card, so the
+       plate no longer hangs over the card's edge. */
     [data-theme='lapis'] .kp-card[data-kp-label]::before {
         content: attr(data-kp-label);
-        position: absolute;
-        inset-block-start: 0.9rem;
-        inset-inline-end: -0.5rem;
+        float: inline-end;
+        margin-block: 0.9rem;
+        margin-inline: 0.6rem 0.9rem;
+        display: inline-block;
         transform: rotate(-8deg);
         background: var(--accent);
         color: var(--accent-foreground);
@@ -540,6 +601,12 @@
         box-shadow: 0 3px 8px hsl(from var(--sidebar-background) h s l / 0.45);
     }
 
+    /* The header beside the stamp keeps its title's longest word, and
+       drops below the stamp where that no longer fits [scope-98]. */
+    [data-theme='lapis'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
+    }
+
     [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -547,8 +614,13 @@
     /* The seal lifts [§(1)/(5)]: a solid void plate covers the redacted
        phrase; the trigger clears each plate on a stagger, once, never
        autoplaying — the same double-stroke-adjacent idea as the ring
-       frame, a plate rather than a fade. */
-    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
+       frame, a plate rather than a fade.
+       The seal is laid only where the script runs (Kenny, 2026-09-16,
+       register-faults [scope-100]): without it nothing ever clears the
+       plate, and the phrases read 1:1 — ink transparent on the void. So
+       without JavaScript the dossier's marks stand at rest, like every
+       other reveal of this register. */
+    [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
         background: var(--sidebar-background);
         color: transparent;
         padding: 0 0.25em;
@@ -556,7 +628,7 @@
         border-bottom: 0;
     }
 
-    [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+    [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
         background: transparent;
         color: inherit;
     }
@@ -575,6 +647,49 @@
         color: var(--popover-foreground);
         border: 1px solid var(--border-strong);
         box-shadow: var(--kp-ring-on-popover);
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='lapis'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='lapis'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='lapis'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='lapis'] .kp-toast--destructive,
+    [data-theme='lapis'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='lapis']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='lapis'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
     }
 
     [data-theme='lapis'] .kp-menu__item:hover {
@@ -660,10 +775,6 @@
         padding: 1px;
     }
 
-    [data-theme='lapis'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     [data-theme='lapis'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
@@ -700,6 +811,22 @@
     [data-theme='lapis'] .kp-copyable__button {
         border: 1px solid var(--border-strong);
         background: transparent;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='lapis'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='lapis'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -751,6 +878,19 @@
 
     [data-theme='lapis'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest like its tabs, the full ink once open. */
+    [data-theme='lapis'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='lapis'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
     }
 
     [data-theme='lapis'] .kp-reorder {
@@ -854,11 +994,11 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='lapis'] .kp-field {
-        gap: 4px;
+        gap: var(--kp-space-xs);
     }
 
     [data-theme='lapis'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='lapis'] .kp-table {
@@ -907,8 +1047,10 @@
     /* Every animation and transition of this register lives here, inside
        the no-preference guard, so a reader who asked for reduced motion
        never receives one: the rest states above are what they get. The
-       durations are literal because check-motion.mjs computes DI5's rate
-       from them; the matching --kp-* knobs are what js/effects.js reads. */
+       durations are the --kp-* knobs at the top of this file, which
+       js/effects.js reads too; check-motion.mjs cannot read a var()
+       duration and rates such an animation at the worst case, and DI5's
+       report takes each keyframe's row from TIMINGS in js/effects.js. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='lapis'] [data-kp-reveal='headline'].is-gilding {
             animation: kp-burnish var(--kp-burnish) var(--fx-ease) 1 both;
@@ -928,7 +1070,7 @@
             transition-delay: var(--kp-inscribe-lead);
         }
 
-        [data-theme='lapis'] .kp-card[data-kp-reveal='emphasis'] mark {
+        [data-theme='lapis'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
                 background var(--kp-seal) var(--fx-ease),
                 color var(--kp-seal) var(--fx-ease);
@@ -977,7 +1119,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='lapis'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='lapis'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='lapis'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         letter-spacing: 0.16em;
         border-block-end: 1px solid var(--primary);
@@ -1080,5 +1224,87 @@
     [data-theme='lapis'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='lapis'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the full
+       ink, with a hairline under them that, with the text, takes the primary
+       gold when pointed at. The link's typeface, case, spacing, shape and
+       pointer answer are restated here, because the trigger is a button
+       beside the list rather than a link in it. The underline a plain link
+       carries is not: it says "this is a link", and the trigger is not one. */
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-block-end: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='lapis'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-block-end-color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       An illuminated warning: a deep lapis plate, the headline in its coral red, a gold frame, gold bars and a gold glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='lapis'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 8% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 68));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 8%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 3% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='lapis'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

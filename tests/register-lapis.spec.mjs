@@ -5,14 +5,13 @@
 // What the demo showed and this suite holds: the headline burnishing in
 // with one gold clip-path wipe and landing flat gold, the lede's marks
 // standing in ivory and then inscribed — ink to gold, an underline drawn
-// in — once and staggered, the rule drawing in under a heading, the two
-// ruled dividers (the wide one carrying the four-ring frame and the girih
-// dot, the narrow one a plain hatch), the girih tile confined to the hero
-// and app surfaces with the theme's old page-wide texture turned off, the
+// in — once and staggered, the rule drawing in under a heading, the
 // navbar's double-stroke ruling and its dropdown, the buttons (the plain
 // ring, the filled gold plate, the mirror gloss), the dossier's seal
 // covering its redactions until the trigger clears them on a stagger, and
-// the whole approved inventory on the page.
+// the whole approved inventory on the page. The two ruled dividers and the
+// girih tile on the hero and app surfaces are judged by eye on the
+// catalogue since scope-73 (page-effects#dividers, page-effects#surfaces).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -23,8 +22,7 @@
 //     burnish runs, and lands flat gold";
 //   - `--fx-texture-opacity: 0` removed from the root block → the old
 //     page-wide girih texture from css/_rules.css shows through again
-//     (0.05, not 0), red on both "the old page-wide texture stays off"
-//     and "the page-wide texture is turned off";
+//     (0.05, not 0), red on "the old page-wide texture stays off";
 //   - `background: var(--sidebar-background); color: transparent;`
 //     removed from `.kp-card[data-kp-reveal='emphasis'] mark` → the
 //     dossier's redacted phrases read transparent-background (the base
@@ -97,43 +95,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the lapis register, ${channel}`, () => {
-        test('the fourfold ruling closes around a control that is touched [Kenny, 2026-09-11]', async ({ page }) => {
-            // His own choice between two proposals for this theme: "A de
-            // vierdubbele liniëring". A page of tazhib is ruled before it is
-            // written, so the edge of a control is four lines at unequal
-            // intervals, and touching it adds a fifth — the ruling closing
-            // around the word rather than a colour changing.
-            //
-            // Counted rather than matched: every layer of the stack is an
-            // inset-less shadow, so the number of `0px 0px 0px` runs IS the
-            // number of rules. Three at rest, five once touched.
-            //
-            // Drill: `--kp-lapis-rule` removed at its source in
-            // css/lapis-register.css — four red, this test and the existing
-            // button test, in both channels.
-            //
-            // Two earlier attempts reported green and were both wrong. The
-            // first edited the register without regenerating, and the page
-            // reads the generated stylesheet. The second removed only the
-            // base rule's `box-shadow`, and the first button on the page
-            // wears `--mirror`, whose own rule re-applies the ruling beside
-            // its gloss. A drill takes the thing away, not one of the places
-            // that reaches for it.
-            await open(page, url);
-            const button = page.locator('.kp-button').first();
-
-            const rules = (s) => (s.match(/0px 0px 0px/g) ?? []).length;
-            expect(rules(await button.evaluate((el) => getComputedStyle(el).boxShadow)), 'three rules at rest').toBe(3);
-
-            await button.hover();
-            await expect
-                .poll(() => button.evaluate((el) => (getComputedStyle(el).boxShadow.match(/0px 0px 0px/g) ?? []).length), {
-                    message: 'and the ruling closes: two more',
-                })
-                .toBe(5);
-        });
-
+    test.describe(`the lapis register, ${channel}`, { tag: ['@theme:lapis', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion there is no wipe, no page-wide texture, and every reveal is at rest', async ({ page }) => {
             await open(page, url, { reduced: true });
             await expect(page.locator('[data-kp-reveal="headline"]').first()).toHaveClass(/is-deciphered/);
@@ -191,42 +153,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the dividers are ruled: the wide one carries the four-ring frame and the girih dot, the narrow one a plain hatch [TH121]', async ({
-            page,
-        }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => ({
-                h: getComputedStyle(el).height,
-                shadow: getComputedStyle(el).boxShadow,
-                bg: getComputedStyle(el).backgroundImage,
-            }));
-            expect(first.h).toBe('34px');
-            expect(first.shadow.match(/inset/g)?.length, 'the four-ring frame').toBe(3);
-            expect(first.bg, 'the hatch and the girih dot').toMatch(/repeating-linear-gradient/);
-            expect(first.bg, 'the girih dot').toMatch(/radial-gradient/);
-            const second = await dividers.nth(1).evaluate((el) => ({ h: getComputedStyle(el).height, shadow: getComputedStyle(el).boxShadow }));
-            expect(second.h).toBe('16px');
-            expect(second.shadow).toBe('none');
-        });
-
-        test('the girih tile is confined to the hero and app surfaces, and the page-wide texture is turned off [DI9]', async ({ page }) => {
-            await open(page, url);
-            const texture = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--fx-texture-opacity').trim());
-            expect(texture, 'the old page-wide texture is turned off in this register').toBe('0');
-            const hero = await page
-                .locator('[data-kp-surface="hero"]')
-                .first()
-                .evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(hero, 'the girih tile paints the hero').toMatch(/conic-gradient/);
-            const outside = await page
-                .locator('.kp-footer')
-                .first()
-                .evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(outside, 'the tile does not reach the footer').not.toMatch(/conic-gradient/);
-        });
-
         test('the navbar: the double-stroke ruling, the dropdown, and the call to action is a filled gold plate', async ({ page }) => {
             await open(page, url);
             const wrap = page.locator('.kp-nav-wrap');
@@ -244,20 +170,6 @@ for (const [channel, url] of CHANNELS) {
             const menu = page.locator('.kp-nav__menu').first();
             await expect(menu).toBeVisible();
             await style(menu, 'background-color').toBe(await paint(page, '--popover'));
-        });
-
-        test('the buttons: a plain ring, the filled gold plate, and the mirror gloss', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the filled gold plate').toBe(
-                await paint(page, '--primary'),
-            );
-            const mirror = await primary.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(mirror.match(/inset/g)?.length, 'the mirror gloss (highlight and shadow)').toBe(2);
-            const plain = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await plain.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
-            await plain.hover();
-            await expect.poll(() => plain.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
         });
 
         test('the dossier: the seal covers the redactions before the trigger, and clears on a stagger', async ({ page }) => {
@@ -283,3 +195,130 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// The measured faults of scope-100 (Kenny, 2026-09-16, register-faults): the
+// dossier's seal without JavaScript, the buttons' transitions, the disabled
+// button answering the pointer. The stamp is held in
+// tests/stamp-cards.spec.mjs. Each was made to fail first [KT3], 2026-09-16,
+// firefox, on c9f58c08's register; the reading before sits above each test.
+
+/** The WCAG contrast of an element's text against the ground painted under it. */
+const textContrast = (/** @type {import('@playwright/test').Locator} */ locator) =>
+    locator.evaluate((el) => {
+        /** @param {string} c */
+        const rgba = (c) => {
+            const m = c.match(/[\d.]+/g) ?? ['0', '0', '0', '0'];
+            return { r: +m[0], g: +m[1], b: +m[2], a: m[3] === undefined ? 1 : +m[3] };
+        };
+        /** @param {{r:number,g:number,b:number,a:number}} top @param {{r:number,g:number,b:number,a:number}} under */
+        const over = (top, under) => ({
+            r: top.r * top.a + under.r * (1 - top.a),
+            g: top.g * top.a + under.g * (1 - top.a),
+            b: top.b * top.a + under.b * (1 - top.a),
+            a: 1,
+        });
+        // The ground: every background colour from the root down to the element, composited.
+        const chain = [];
+        for (let n = /** @type {Element | null} */ (el); n; n = n.parentElement) chain.unshift(rgba(getComputedStyle(n).backgroundColor));
+        let ground = { r: 255, g: 255, b: 255, a: 1 };
+        for (const layer of chain) ground = over(layer, ground);
+        const ink = over(rgba(getComputedStyle(el).color), ground);
+        /** @param {{r:number,g:number,b:number}} c */
+        const lum = (c) =>
+            [c.r, c.g, c.b]
+                .map((v) => v / 255)
+                .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+                .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const [hi, lo] = [lum(ink), lum(ground)].sort((a, b) => b - a);
+        return (hi + 0.05) / (lo + 0.05);
+    });
+
+test.describe('the lapis register, measured faults [scope-100]', { tag: ['@theme:lapis', '@component:page-effects', '@component:button'] }, () => {
+    test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+
+        // Before: every dossier mark 1.00:1, its ink transparent on the void plate.
+        test('the dossier’s sealed phrases read at rest [scope-100]', async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto('/examples/concept-lapis.html');
+            expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('lapis');
+            expect(await page.evaluate(() => document.documentElement.hasAttribute('data-kp-effects')), 'no script ran').toBe(false);
+            const marks = page.locator('.kp-card[data-kp-reveal="emphasis"] mark');
+            const count = await marks.count();
+            expect(count).toBeGreaterThan(0);
+            for (let i = 0; i < count; i++) {
+                expect(await textContrast(marks.nth(i)), `dossier mark ${i}`).toBeGreaterThanOrEqual(4.5);
+            }
+        });
+    });
+
+    // Before: no value between rest and hover — the plate changed in one frame.
+    test('a button’s plate eases into its hover, as the package’s transition does [scope-100]', async ({ page }) => {
+        await open(page, '/examples/concept-lapis.html');
+        const button = page.locator('button.kp-button--primary[type="submit"]').first();
+        await button.scrollIntoViewIfNeeded();
+        await page.mouse.move(2, 2);
+        await settled(page);
+        await page.waitForTimeout(500);
+        const box = /** @type {{x:number,y:number,width:number,height:number}} */ (await button.boundingBox());
+        await button.evaluate((el) => {
+            const w = /** @type {any} */ (window);
+            w.kpSamples = [];
+            const rest = getComputedStyle(el).backgroundColor;
+            const start = performance.now();
+            const tick = () => {
+                const t = performance.now() - start;
+                w.kpSamples.push({ t, bg: getComputedStyle(el).backgroundColor, rest });
+                if (t < 1200) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        });
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await expect.poll(() => page.evaluate(() => /** @type {any} */ (window).kpSamples.at(-1).t)).toBeGreaterThanOrEqual(1200);
+        const samples = /** @type {{t:number,bg:string,rest:string}[]} */ (await page.evaluate(() => /** @type {any} */ (window).kpSamples));
+        const rest = samples[0].rest;
+        const end = samples.at(-1)?.bg;
+        expect(end, 'the hover changes the plate').not.toBe(rest);
+        const first = samples.find((s) => s.bg !== rest);
+        const between = new Set(samples.filter((s) => first && s.t <= first.t + 200 && s.bg !== rest && s.bg !== end).map((s) => s.bg));
+        expect(between.size, `values between ${rest} and ${end} within 200ms`).toBeGreaterThanOrEqual(3);
+    });
+
+    // Before: the plain disabled button's ink 242,233,212 → 213,165,42 on hover.
+    test('a disabled button does not answer the pointer [scope-100]', async ({ page }) => {
+        await open(page, '/examples/concept-lapis.html');
+        await page.evaluate(() => {
+            const holder = document.createElement('div');
+            holder.setAttribute('data-probe-disabled', '');
+            holder.style.cssText = 'display:flex;gap:2rem;padding:3rem;';
+            holder.innerHTML = ['', ' kp-button--primary', ' kp-button--ghost', ' kp-button--destructive', ' kp-button--mirror']
+                .map(
+                    (m) =>
+                        `<button type="button" class="kp-button${m}" disabled><span class="kp-button__edge" aria-hidden="true"></span><span class="kp-button__label">Filed</span></button>`,
+                )
+                .join('');
+            document.querySelector('[data-kp-surface="app"]')?.prepend(holder);
+        });
+        const buttons = page.locator('[data-probe-disabled] .kp-button');
+        const read = (/** @type {import('@playwright/test').Locator} */ b) =>
+            b.evaluate((el) => {
+                const props = ['color', 'background-color', 'border-top-color', 'box-shadow', 'translate'];
+                /** @param {Element} e @param {string} [p] */
+                const of = (e, p) => props.map((n) => getComputedStyle(e, p).getPropertyValue(n)).join('|');
+                return [of(el), of(el, '::before'), of(el, '::after'), ...[...el.children].map((k) => of(k))].join(' / ');
+            });
+        const count = await buttons.count();
+        for (let i = 0; i < count; i++) {
+            const b = buttons.nth(i);
+            await b.scrollIntoViewIfNeeded();
+            await page.mouse.move(2, 2);
+            await page.waitForTimeout(600);
+            const rest = await read(b);
+            const box = /** @type {{x:number,y:number,width:number,height:number}} */ (await b.boundingBox());
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            expect(await b.evaluate((el) => el.matches(':hover')), 'the pointer is on it').toBe(true);
+            await page.waitForTimeout(600);
+            expect(await read(b), `disabled button ${i} on hover`).toBe(rest);
+        }
+    });
+});

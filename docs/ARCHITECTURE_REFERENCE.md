@@ -1,6 +1,6 @@
 # Architecture reference
 
-The system as built. `docs/ARCHITECTURE_DECISIONS.md` says what was
+The system as built. `docs/archive/ARCHITECTURE_DECISIONS.md` says what was
 decided and why; this says what is there.
 
 ## The shape of it
@@ -17,7 +17,7 @@ themes/<name>/tokens.json   authored: the colours, one file per theme
 css/_header.css  ─┐
 css/_rules.css   ─┴─ concatenated verbatim into css/themes.css
 css/components.css   separate: only for consumers who take the components
-css/layout.css       separate: nineteen classes for the shape of a page
+css/layout.css       separate: twenty-one classes for the shape of a page
 css/utilities.css    separate: 118 generated one-property classes
 css/fonts.css        separate: the @font-face block for the shipped faces
 css/<name>-register.css      opt-in, one per theme, 22 of them
@@ -28,18 +28,28 @@ css/tailwind-bridge.css  separate: the tokens as Tailwind's own names
 
 js/theme-core.js     the state, in the document
 js/theme-registry.js the generated list: name, label, whether it is dark
-js/no-flash.js       the snippet for <head>, before the stylesheet
+js/no-flash.js       the snippet for <head>: before the stylesheet, or below
+                     css/themes.css when it also writes the register
+js/lazy-register.js  the active theme's register, fetched at runtime (opt-in)
+js/remember.js       the one memory: what a reader chose, put back
 js/strings.js        every user-visible string, English by default [KT5]
 js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one
-js/components.js     the DI4 and DI10 contracts │ attaches nothing. Only
-js/overlays.js       dialogs, tabs, toasts      │ js/auto.js has a side
+js/components.js     contracts; sticky, menus   │ attaches nothing. Only
+js/overlays.js       dialogs, tabs, toasts,     │ js/auto.js has a side
+                     whether an overlay scrolls │
+js/alarm.js          the full-screen alarm      │
 js/effects.js        the hooks, the marquee,    │ effect, by design
-                     the pointer bus, the count │
-js/sidenav.js        the side navigation        │
+                     the pointer bus and its    │
+                     light, the count           │
+
+                     the pointer and press      │
+                     buses, the count           │js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │
 js/datatable.js      search, paging             │
+js/top-layer.js      an open list or calendar   │
+                     above a clipping container │
 js/listbox.js        the shared listbox         │
 js/combobox.js       typeahead over it          │
 js/palette.js        the command palette        │
@@ -56,8 +66,9 @@ js/contrast.js       the reading, for a consumer ┘
 hooks/use-theme.js   React, sitting on theme-core
 hooks/use-strings.jsx  React, the strings provider
 components/*.jsx     React, rendering the same classes as the CSS above
-                     — nineteen of them, including the side navigation,
-                     which has both channels since 2026-09-12
+                     — twenty-one of them, including the side navigation,
+                     which has both channels since 2026-09-12, and the
+                     alarm since 2026-09-15
 fx/*.jsx             cyberpunk effects
 ```
 
@@ -100,6 +111,53 @@ click in either picker
              └→ the fx components re-read the theme
 ```
 
+## Where remembered state lives
+
+On the ELEMENT, as a name, and in `localStorage` under a key composed from
+it — never under a key written in a module [Kenny, 2026-09-16: *"die key in
+localStorage moet niet hardcoded zijn, stel dat we twee van dezelfde
+elementen naast mekaar op de pagina willen ofzo"*].
+
+```text
+kp-remember : <component> : <name> : <slot>
+   prefix      the package    data-kp-remember   which piece of state
+   (settable)  names the kind on the element     groups · open · rail ·
+                                                 branches · value ·
+                                                 columns · sort · density
+```
+
+The page is not in the key, on purpose: the case this exists for is a group
+that stays folded after following a link.
+
+`js/remember.js` is the only file that knows about storage. What keeps it
+ONE mechanism rather than five is that it paints MARKUP: the stored state
+goes back on the element as the attributes an author could have written by
+hand — `data-kp-sidenav-expanded`, `open`, `aria-valuenow`, `aria-sort`,
+`data-kp-column-hidden`, `data-density` — and every module goes on reading
+its own markup exactly as it did before. No module gained a second way to
+start up.
+
+```
+js/auto.js (deferred, before DOMContentLoaded)
+   └→ restoreRemembered(document)
+        └→ paintRemembered(element, component)   attributes only
+             └→ attachSidenavs / attachStructure / attachDataTables
+                  read the markup, as they always did, and write
+                  memory.write(slot, value) when the reader changes it
+```
+
+A name is claimed by the first element that asks for it: a second element
+of the same component with the same name gets no memory, keeps its markup
+default and reports `kp-remember-clash`. Sharing one key between two panels
+would make them mirror each other, which is the fault the name prevents.
+
+Not everything remembers. The components that do are the ones a reader
+arranges — the side navigation's groups and rail, the accordion, the tree,
+the split pane, the data table's columns, sort and density. Dialogs,
+popovers, menus, tooltips, toasts, the combobox, the date picker, the
+wizard's step and the alarm deliberately do not: each is opened for a
+moment, and a page that reopens one by itself is arguing with its reader.
+
 ## Colour, and the four numbers that are not ours
 
 Everything about colour goes through `gates/colour.mjs`. Values are
@@ -139,7 +197,12 @@ colour space, and lightness alone left their pressed state invisible.
 ## The gates, and the advice beside them
 
 Thirty checks, all in Node, the whole chain in seconds, all run by
-`.claude/hooks/gates.sh` before every commit. Nothing runs on a server:
+`.claude/hooks/gates.sh` before every commit. Since scope-76 older
+checks run inside them rather than on their own line — tokens in `npm test`,
+the bundle in `generate-min --check`, the migration note in
+`check-docs-runnable`, the fonts stylesheet in `check-fonts`, the package in
+`check-manifest`; the tear check that ran in `generate-themes --check` went
+with cyberpunk's razor tear at scope-96. Nothing runs on a server:
 Kenny deleted the CI on 2026-09-09 and runs the browser suite himself.
 `package.json`'s `gates` script is the authoritative list; the table below
 is the shape of it rather than the whole.
@@ -147,7 +210,7 @@ is the shape of it rather than the whole.
 | Gate | Reads | Answers |
 | --- | --- | --- |
 | `generate-themes --check` | source + artefact | has the generated output drifted |
-| `check-tokens` | token sources | do all twenty-five declare the same 96 names |
+| `check-tokens`, via `npm test` | token sources | do all twenty-five declare the same 96 names |
 | `check-layers` | the authored stylesheets | does any colour live outside the token layer |
 | `check-hooks` | the registers | does every theme answer all six hooks |
 | `check-register-coverage` | the registers | does a register answer every component root, and the nav dropdown [KT14] |
@@ -155,7 +218,6 @@ is the shape of it rather than the whole.
 | `check-strings` | the source | does every user-visible string come from the dictionary [KT5] |
 | `generate-showcase --check` | source + artefact | has the showcase drifted |
 | `generate-min --check` | source + artefact | does the minified build match, and its size table |
-| `compliance --check` | the other gates | does the published table match what they measure |
 | `tsc --noEmit`, `check-types` | everything | the type check, and the shipped declarations [KT4] |
 
 Five more checks are **advice, not gates** [Kenny, 2026-09-09]. They run
@@ -165,7 +227,9 @@ colour pair and every token accounted for), `check-invariants`
 badge plates), `check-motion` (flashes per second, reduced-motion guards),
 its DI5 report, and `check-texture` (DI9's ceiling). The package measures
 those floors and does not promise to have met them; `README.md` says so
-in the same words.
+in the same words. Four more joined them on 2026-09-14 [scope-76]:
+`check-variant-ground`, `compliance --check` (does the published table
+match what the checks measure), `check-baseline` and `prettier --check .`.
 
 Two properties matter more than the list.
 
@@ -178,16 +242,16 @@ because a table that lies by omission is worse than a gap.
 
 **A gate must have been red.** Every one of them has been shown failing on
 a deliberately injected violation, and those drills are recorded in
-`docs/REALIZATION_PLAN.md`. One check in this project was written,
+`docs/archive/REALIZATION_PLAN.md`. One check in this project was written,
 reported as built, and never ran once — it guarded on a derived token that
 no theme declares. That is why the drill is not optional.
 
 ## The browser tests
 
 Playwright, Chromium and Firefox, against a small static server
-(`tests/global-setup.mjs`). 2,594 tests over 76 spec files — counted by `npx playwright test --list`
-on 2026-09-12, not by hand — run when
-Kenny runs them — `npm run test:affected` for what a change touches,
+(`tests/global-setup.mjs`). How many there are is whatever
+`npx playwright test --list` counts today, not a number kept here. They run when
+Kenny runs them — `npm run test:tags` for what a change touches, selected by tag (`tests/tags.json`),
 `npm run test:browser` for all of it.
 They cover what Node cannot see: whether the browser received a
 `color-scheme`, whether a page reflows at 320 px, whether forced text

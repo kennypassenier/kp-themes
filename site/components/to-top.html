@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -156,9 +158,9 @@
                         <figcaption class="kp-fw-semibold">A control that knows when it is needed</figcaption>
                         <p class="kp-text-muted">It is invisible until the reader has scrolled past the threshold, and `visibility: hidden` keeps it out of the tab order while it is. Pressing it scrolls to the top and moves the focus to the top of the document, so the next Tab starts where the eye is.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
+<button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-btn kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top</span> <span class="kp-code__keyword">data-kp-to-top-after</span><span class="kp-code__string">=&quot;400&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top</span> <span class="kp-code__keyword">data-kp-to-top-after</span><span class="kp-code__string">=&quot;400&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -190,6 +192,7 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-glyph-to-top</code></td><td><code>'↑'</code></td></tr>
                             <tr><td><code>--kp-to-top-layer</code></td><td><code>50</code></td></tr>
                             <tr><td><code>--kp-to-top-offset</code></td><td><code>1.5rem</code></td></tr>
                     </tbody></table></div>
@@ -211,6 +214,7 @@
                             <tr><td><code>data-kp-to-top-shown</code></td><td>Written by the module while the control is on the screen. Read it, do not set it.</td></tr>
                             <tr><td><code>kp-to-top</code></td><td>The event, on the control, whenever it appears or goes away: `{ shown }`.</td></tr>
                             <tr><td><code>--kp-to-top-offset</code></td><td>How far it sits from the corner, both ways at once. Default 1.5rem.</td></tr>
+                            <tr><td><code>--kp-glyph-to-top</code></td><td>The arrow an empty control draws. The module puts an empty `.kp-to-top__glyph` in a button that has nothing of its own and takes it out again on detach; a button with its own words or icon gets none. Default ↑.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

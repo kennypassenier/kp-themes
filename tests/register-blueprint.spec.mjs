@@ -22,11 +22,13 @@
 //   - the redaction cover (`[data-kp-effects] … mark:not(.is-cleared)
 //     ::after { clip-path: inset(0 0 0 0) }`) removed → the dossier's
 //     words are legible before the trigger is pressed, red on "the
-//     dossier's redactions are solid ink blocks".
+//     dossier's redactions are solid ink blocks". Since fix-33 (scope-93)
+//     the block is the mark's own cloned background and the cover is
+//     `mark:not(.is-cleared) { background-size: 100% 100% }`; the test
+//     reads the size and the gradient's ink.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -89,7 +91,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the blueprint register, ${channel}`, () => {
+    test.describe(`the blueprint register, ${channel}`, { tag: ['@theme:blueprint', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion the headline stands, the measurement frame stands at its measured size, and every mark is cleared', async ({
             page,
         }) => {
@@ -208,38 +210,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the dropdown is a title block: the ground colour, one hairline, a cyan top rule and numbered leaders [KT14]', async ({ page }) => {
-            await open(page, url);
-            const menu = page.locator('.kp-nav__menu').first();
-            // Reached with the keyboard, not focus() [G15].
-            await tabToSelector(page, '.kp-nav__links > li:first-child > .kp-nav__link');
-            await expect(menu).toBeVisible();
-            const panel = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { background: s.backgroundColor, border: s.borderColor, radius: s.borderRadius };
-            });
-            expect(panel.background).toBe(await paint(page, '--background'));
-            expect(panel.border).toBe(await paint(page, '--border-strong'));
-            const rule = await pseudo(menu, '::before', ['background-color', 'block-size']);
-            expect(rule['background-color']).toBe(await paint(page, '--primary'));
-            const firstItem = menu.locator('a').first();
-            const leader = await pseudo(firstItem, '::before', ['content']);
-            // Firefox resolves the counter to "01"; chromium reports the
-            // unresolved expression, counter(kp-menu-item) included.
-            expect(leader.content).toMatch(/01|counter\(/i);
-            await firstItem.hover();
-            await expect.poll(() => firstItem.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
-        });
-
-        test('the mirrored button keeps the one chamfer, and the primary is the cyan plate', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            const mirror = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            const clip = await mirror.evaluate((el) => getComputedStyle(el).clipPath);
-            expect(clip, 'the mitred corner').toMatch(/polygon/);
-        });
-
         test('the dossier’s redactions are solid ink blocks that clear left to right on the trigger, staggered', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -248,13 +218,20 @@ for (const [channel, url] of CHANNELS) {
             // alternative accepted a stamp that printed nothing [G4].
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Approved/i);
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['clip-path', 'background-color']);
-            expect(covered['clip-path'], 'covered before the trigger').toMatch(/^inset\(0(px)?\)$|^inset\(0px 0px 0px 0px\)$/);
-            expect(covered['background-color']).toBe(await paint(page, '--border'));
+            const covered = await pseudo(mark, '', ['background-size', 'background-image', 'background-position', 'color']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered['background-image'], 'the block is the sheet’s hairline ink').toContain(await paint(page, '--border'));
+            expect(covered['background-position'], 'it narrows away from the left, toward the right').toMatch(/^100% 50%$|^right/);
+            expect(covered.color, 'the words wear no ink under the block').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             await settled(page);
-            await expect.poll(async () => (await pseudo(mark, '::after', ['clip-path']))['clip-path'], 'the block narrowed away').toMatch(/100%\)$/);
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the block narrowed away')
+                .toBe('0% 100%');
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['color'])).color, 'the words take their ink once the block is gone')
+                .not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

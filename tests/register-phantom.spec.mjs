@@ -7,14 +7,12 @@
 // another and end as its own text, the plate a <mark> is shoved under
 // (black ink on red once cleared, white while armed), the rail under a
 // heading sweeping from grey to red when it enters the viewport, the
-// torn-paper divider (three clipped plates, the second mirrored), the
 // skewed bar growing behind a hovered nav link and the key-cap button,
 // the censor plates of the dossier shearing off on the trigger, and the
-// whole approved inventory on the page.
+// whole approved inventory on the page. The torn-paper divider is judged
+// by eye on the catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
-//   - the divider's clip-path removed from the register → the plates
-//     paint whole, red on "the divider is torn paper";
 //   - `--kp-arrival: card` removed → no overlay, red on "the page arrives";
 //   - the armed fold (`mark:not(.is-cleared)::before { transform: … scaleX(0) }`)
 //     removed → the plate never folds away, red on "the plate arrives".
@@ -73,7 +71,7 @@ const settled = (page) =>
     );
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the phantom register, ${channel}`, () => {
+    test.describe(`the phantom register, ${channel}`, { tag: ['@theme:phantom', '@component:page-effects', '@component:examples'] }, () => {
         test('the page arrives as a calling card once per session, and Skip ends it at once [PH2]', async ({ page }) => {
             await open(page, url);
             const boot = page.locator('.kp-boot');
@@ -190,48 +188,6 @@ for (const [channel, url] of CHANNELS) {
             await expect
                 .poll(async () => (await pseudo(rule, '::after', ['background-position']))['background-position'])
                 .toMatch(/^0(%|px) 0(%|px)$/);
-        });
-
-        test('the divider is torn paper: three clipped plates, the second one mirrored [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const paper = await pseudo(dividers.first(), '::before', ['clip-path', 'background-color']);
-            const red = await pseudo(dividers.first(), '::after', ['clip-path', 'background-color']);
-            expect(paper['clip-path']).toMatch(/polygon/);
-            expect(red['clip-path']).toMatch(/polygon/);
-            expect(paper['background-color']).not.toBe(red['background-color']);
-            expect(await dividers.first().evaluate((el) => getComputedStyle(el).height)).toBe('58px');
-            expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).transform), 'the second tear is mirrored').toMatch(/matrix\(-1,/);
-        });
-
-        test('the skewed bar grows behind a hovered nav link; the button is a key cap that fills on hover', async ({ page }) => {
-            await open(page, url);
-            await page
-                .locator('.kp-boot__skip')
-                .click()
-                .catch(() => {});
-            // The click is dispatched, not finished: the overlay is fixed over
-            // the whole page until it is actually removed [TF1].
-            await bootGone(page);
-            const link = page.locator('.kp-nav__link').nth(1);
-            expect((await pseudo(link, '::before', ['width'])).width).toBe('0px');
-            expect((await pseudo(link, '::before', ['transform'])).transform, 'the bar is skewed').toMatch(/matrix\(1, 0, -0\.28/);
-            await link.hover();
-            await expect.poll(async () => parseFloat((await pseudo(link, '::before', ['width'])).width)).toBeGreaterThan(40);
-            // The button IS the parallelogram [S49, A7, Kenny 2026-09-08]:
-            // the element carries the skew, so the box a click lands in
-            // follows the plate, and the label is set upright again on
-            // its own element. Drill [KT3]: the skew moved back to
-            // `::before` → the element reads "none" and this goes red.
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            await style(button, 'transform', 'the button is skewed').toMatch(/matrix\(1, 0, -0\.14/);
-            const plate = await pseudo(button, '::before', ['border-top-width']);
-            expect(plate['border-top-width']).toBe('2px');
-            const label = button.locator('.kp-button__label');
-            await style(label, 'transform', 'and the label is set upright again').toMatch(/matrix\(1, 0, 0\.14/);
-            await button.hover();
-            await expect.poll(async () => parseFloat((await pseudo(button, '::after', ['width'])).width)).toBeGreaterThan(40);
         });
 
         test('the dossier stamp is a rotated red plate, and the censor plates shear off on the trigger', async ({ page }) => {

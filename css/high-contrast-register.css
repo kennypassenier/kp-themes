@@ -67,6 +67,16 @@
             0 0 0 4px var(--foreground);
     }
 
+    /* The same two channels inside a keyboard grid's cell [Kenny's form of
+       2026-09-13, #keyboard]: an outer ring on a cell is covered by the next
+       cell's ground and cut by the scroll box, so here it is drawn inward,
+       ink at the edge and paper inside it. */
+    [data-theme='high-contrast'] .kp-table[role='grid'] :is(th, td):focus-visible {
+        box-shadow:
+            inset 0 0 0 2px var(--foreground),
+            inset 0 0 0 4px var(--background);
+    }
+
     [data-theme='high-contrast'] ::selection {
         background: var(--foreground);
         color: var(--background);
@@ -164,12 +174,12 @@
         box-shadow: none;
     }
 
-    /* No script sets data-scrolled today [finding, S49]: the demo's nav
-       recolour on scroll has no shared JS hook to drive it (no module in
-       this package writes [data-scrolled], and a page-local script is
-       forbidden, TH109). The rule is kept, inert, so the mechanism is
-       exactly what the demo specifies the moment such a hook exists. */
-    [data-theme='high-contrast'] .kp-nav-wrap[data-scrolled] {
+    /* The demo's nav recolour on scroll [S49]. It was written for a
+       [data-scrolled] no module ever set, and sat inert until the shrinking
+       header gave it a hook: a sticky bar that has turned compact
+       (`data-kp-nav-compact`, set by attachStickyNavs or NavBar's `sticky`)
+       draws the accent line under itself [scope-85, hc-scrolled]. */
+    [data-theme='high-contrast'] .kp-nav-wrap[data-kp-nav-compact] {
         border-bottom-color: var(--border-strong);
         box-shadow: 0 3px 0 0 var(--accent);
     }
@@ -178,10 +188,29 @@
         letter-spacing: 0.01em;
     }
 
-    [data-theme='high-contrast'] .kp-nav__link {
+    /* No blue in a navigation (Kenny, 2026-09-16, navigation#app-shell "ook
+       hier is nog blauw", navigation#bar-sticky "ook hier is het blauw",
+       navigation#bar-search "ik dacht dat we voor high contrast de blauwe
+       links hadden vervangen door een donkerdere versie ... Dit geldt voor
+       alle navbars" [scope-107]). Before, every bar link took the package's
+       `a { color: var(--link) }` — this theme's --link is a blue at hue 220
+       and full saturation — at rest, under the pointer, on the current page
+       and when visited, where `a:visited` put a hue-275 purple in its place.
+       The constraint of this theme is that nothing may lean on a hue, so the
+       ink is the theme's own darkest: --foreground, its black, measured at
+       21:1 on the white bar against the blue's 10.86:1. The states were never
+       the colour's to carry and are not now: the two-pixel bottom rule
+       already marks the pointer and the page you are on [DI4].
+       `:visited` is named outright. Firefox answers getComputedStyle for a
+       visited link with its unvisited style, so this is not a rule a computed
+       reading could have caught; it is measured from the cascade instead
+       (tests/high-contrast-navigation.spec.mjs). */
+    [data-theme='high-contrast'] .kp-nav__link,
+    [data-theme='high-contrast'] .kp-nav__link:visited {
         font-weight: 700;
         border-bottom: 2px solid transparent;
         border-radius: 0;
+        color: var(--foreground);
     }
 
     [data-theme='high-contrast'] .kp-nav__link:hover,
@@ -212,6 +241,29 @@
         border: 2px solid var(--border-strong);
         border-radius: var(--radius);
         box-shadow: none;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='high-contrast'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    /* A dropdown's and a mega menu's items are part of the bar, so they take
+       the bar's ink and not --link either [scope-107]. The pointer and the
+       focus keep answering with the muted plate below. */
+    [data-theme='high-contrast'] .kp-nav__menu a,
+    [data-theme='high-contrast'] .kp-nav__menu a:visited,
+    [data-theme='high-contrast'] .kp-nav__group a,
+    [data-theme='high-contrast'] .kp-nav__group a:visited {
+        color: var(--foreground);
     }
 
     [data-theme='high-contrast'] .kp-nav__menu a:hover,
@@ -317,8 +369,13 @@
        of the text in the DOM; the shared Button renderer emits one
        [finding, S49]. Kept instead: a bar rises from the bottom edge on
        hover/focus, the same "something arrives from below" gesture,
-       CSS-only and content-free. */
+       CSS-only and content-free.
+       The bar is white on every variant that carries it (Kenny,
+       2026-09-15, button#variants: "de balk die naar boven komt moet
+       overal in het wit"). Before, Cancel's bar was --foreground, black on
+       its own black hover ground, so it rose unseen. */
     [data-theme='high-contrast'] .kp-button--ghost {
+        --kp-hc-bar-ink: var(--background);
         border-color: var(--border-strong);
         overflow: hidden;
         position: relative;
@@ -330,12 +387,48 @@
         inset-inline: 0;
         inset-block-end: 0;
         block-size: 3px;
-        background: var(--foreground);
+        background: var(--kp-hc-bar-ink);
         transform: translateY(100%);
     }
 
     [data-theme='high-contrast'] .kp-button--ghost:hover::after,
     [data-theme='high-contrast'] .kp-button--ghost:focus-visible::after {
+        transform: translateY(0);
+    }
+
+    /* The filled two take the ghost's gesture (Kenny, 2026-09-15,
+       hc-filled-hover "De opstijgende balk van Cancel" [scope-93]). Their
+       hover ground is their own border colour, which is their fill, so
+       under the pointer nothing changed at all. Now the same bar rises
+       from the bottom edge, and the same inset bars stand down each side
+       (in the hover rule below), both in the variant's own ink — white on
+       the blue and on the red — because the ghost's black bar would be
+       lost on either fill. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive) {
+        overflow: hidden;
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 3px;
+        background: var(--kp-hc-bar-ink);
+        transform: translateY(100%);
+        pointer-events: none;
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary {
+        --kp-hc-bar-ink: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive {
+        --kp-hc-bar-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled)::after,
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):focus-visible::after {
         transform: translateY(0);
     }
 
@@ -359,6 +452,14 @@
         border-color: var(--border-strong);
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='high-contrast'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='high-contrast'] .kp-field__label {
         font-weight: 700;
     }
@@ -366,8 +467,12 @@
     [data-theme='high-contrast'] .kp-field__required,
     [data-theme='high-contrast'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.78rem;
         font-weight: 400;
+    }
+
+    /* The help text's type size is the package's [scope-87]; the required mark keeps this register's. */
+    [data-theme='high-contrast'] .kp-field__required {
+        font-size: 0.78rem;
     }
 
     [data-theme='high-contrast'] .kp-field__check {
@@ -376,6 +481,26 @@
 
     [data-theme='high-contrast'] .kp-fieldset {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The switch [gap-11]: the pill with the inputs' two-pixel boundary,
+       and no transition, as the fields here have none. */
+    [data-theme='high-contrast'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input {
+        border-width: 2px;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input:not(:checked) {
+        border-color: var(--border);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input,
+    [data-theme='high-contrast'] .kp-switch__input::before {
+        transition: none;
     }
 
     [data-theme='high-contrast'] .kp-form__summary {
@@ -481,6 +606,63 @@
         border-color: var(--success);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='high-contrast'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='high-contrast'] .kp-toast--destructive,
+    [data-theme='high-contrast'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='high-contrast']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover; the
+       :not()s match the length of this register's own button hover, which
+       would otherwise win on specificity. */
+    [data-theme='high-contrast'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled):not(:active):not(.kp-button--mirror) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* On a toast the ghost's rising bar is drawn in the toast's own ink
+       (Kenny, 2026-09-15, hc-bar "De drie knoppen, en Undo in de neutrale
+       toast zwart" [scope-96]). The hover ground there is a veil over the
+       plate, not the page's black, so the white bar of the three buttons
+       vanished on the plain toast: white on a grey of 229 in each channel,
+       1.26:1. The ink is the colour the plate was drawn for and the veil
+       only deepens the plate away from it, so the bar is black on the
+       plain toast and white on the four of meaning. */
+    [data-theme='high-contrast'] .kp-toast .kp-button--ghost {
+        --kp-hc-bar-ink: currentColor;
+    }
+
     [data-theme='high-contrast'] .kp-menu__item:hover,
     [data-theme='high-contrast'] .kp-menu__item:focus-visible {
         background: var(--muted);
@@ -504,14 +686,17 @@
         inline-size: 2px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='high-contrast'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 2px;
+    }
+
     /* ── The footer ────────────────────────────────────────────────────── */
 
     [data-theme='high-contrast'] .kp-footer {
         border-top: 3px solid var(--border-strong);
-    }
-
-    [data-theme='high-contrast'] .kp-footer h4 {
-        font-size: 0.9rem;
     }
 
     [data-theme='high-contrast'] .kp-footer a {
@@ -546,10 +731,6 @@
 
     [data-theme='high-contrast'] .kp-progress {
         border: 2px solid var(--border-strong);
-    }
-
-    [data-theme='high-contrast'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='high-contrast'] .kp-spinner {
@@ -591,6 +772,22 @@
 
     [data-theme='high-contrast'] .kp-copyable__button {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='high-contrast'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -675,10 +872,25 @@
         font-weight: 700;
     }
 
+    /* A crumb and a page number are navigation too, so neither is --link
+       [scope-107, the same note as the bar]. Black on the white ground,
+       21:1; the underline every link in this package carries stays, and the
+       page you are on keeps the thicker one besides [DI4]. */
+    [data-theme='high-contrast'] .kp-breadcrumb a,
+    [data-theme='high-contrast'] .kp-breadcrumb a:visited,
+    [data-theme='high-contrast'] .kp-pagination a,
+    [data-theme='high-contrast'] .kp-pagination a:visited {
+        color: var(--foreground);
+    }
+
+    /* The page you are on was the blue plate (--primary, the same hue-220
+       blue); it is the ink's own plate now — white on black, 21:1
+       [scope-107]. */
     [data-theme='high-contrast'] .kp-pagination a[aria-current],
+    [data-theme='high-contrast'] .kp-pagination a[aria-current]:visited,
     [data-theme='high-contrast'] .kp-pagination [aria-current] {
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: var(--foreground);
+        color: var(--background);
         border-radius: var(--radius);
     }
 
@@ -721,7 +933,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='high-contrast'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='high-contrast'] .kp-form {
@@ -753,6 +965,20 @@
 
     [data-theme='high-contrast'] .kp-tree {
         font-weight: 500;
+    }
+
+    /* The accordion [gap-12]: heavier, and open is underlined — a shape, not a shade. */
+    [data-theme='high-contrast'] .kp-accordion__summary {
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
     }
 
     /* ── The scrollbar joins the theme ────────────────────────────────── */
@@ -795,7 +1021,8 @@
             transition: none;
         }
 
-        [data-theme='high-contrast'] .kp-button--ghost::after {
+        [data-theme='high-contrast'] .kp-button--ghost::after,
+        [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive)::after {
             transition: transform var(--kp-ghost-bar) var(--fx-ease);
         }
 
@@ -819,7 +1046,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='high-contrast'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='high-contrast'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='high-contrast'] .kp-nav__menu--wide .kp-nav__menu-heading {
         background: var(--foreground);
         color: var(--background);
         font-weight: 700;
@@ -896,25 +1125,161 @@
         transition: none;
     }
 
-    /* Not the mirror variant, and not while pressed: the approved demo
-       draws that button dropping onto its own offset with NO shadow, and
-       these bars are a hover decoration. S49 — the demo is exact, and a
-       quirk does not quietly redraw a value it approved. */
-    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active):not(.kp-button--mirror) {
-        background: var(--foreground);
+    /* The hover takes the colour of the variant's own border (Kenny,
+       2026-09-15, button#variants: "change the hover color to the border
+       color, and only do the effect that's unique to the 'cancel'
+       button"). Before, every variant inverted to the text colour with a
+       white inset bar down each side, so the blue primary and the red
+       destructive went black under the pointer. Now each ground is the
+       border it already draws, with the ink paired to that ground: the
+       bare, secondary and mirror buttons (border-strong) print white on
+       black, the primary and destructive keep their own plate. The inset
+       side bars and the rising bottom bar are the ghost's gesture, and
+       since scope-93 the primary's and the destructive's too, whose
+       plate alone showed no hover; the bare, secondary and mirror buttons
+       change their ground and carry no bars.
+       The mirror keeps its offset shadow from the rule above; the bars
+       were never its to carry (S49). Not while pressed: the press paints
+       below. */
+    [data-theme='high-contrast'] .kp-button:hover:not(:disabled):not(:active) {
+        background: var(--border-strong);
         color: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:hover:not(:disabled):not(:active) {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:hover:not(:disabled):not(:active) {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* In the bar's ink, so a ghost on a toast draws its side bars in the
+       toast's ink as its rising bar already did (Kenny, 2026-09-15,
+       hc-side-bars "Ook in de tekstkleur" [scope-98]). Off a toast the ink is
+       --background, the white these bars always were. */
+    [data-theme='high-contrast'] .kp-button--ghost:hover:not(:disabled):not(:active) {
         box-shadow:
-            inset 0.35rem 0 0 var(--background),
-            inset -0.35rem 0 0 var(--background);
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
+    }
+
+    /* Cancel's inset bars on the filled two, in their own ink [scope-93]. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled):not(:active) {
+        box-shadow:
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
+    }
+
+    /* Pointed at while focused: the ring is kept in front of the bars, since
+       the rule above replaces the focus ring's box-shadow. */
+    [data-theme='high-contrast'] :is(.kp-button--primary, .kp-button--destructive):hover:focus-visible:not(:disabled):not(:active) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            inset 0.35rem 0 0 var(--kp-hc-bar-ink),
+            inset -0.35rem 0 0 var(--kp-hc-bar-ink);
     }
 
     /* ── The pressed state the register had been cancelling [fix-12] ───
        A layer beats a state: this register's hover background sits in
        kp.register, later than the kp.components rule that says what the
        button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+       nothing. The base layer's own values, put back token for token —
+       per variant, since the one rule for every button painted the
+       primary and destructive presses in the secondary grey under their
+       white ink, at 1.45:1 (measured 2026-09-15). */
 
     [data-theme='high-contrast'] .kp-button:active:not(:disabled) {
         background: var(--secondary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+    }
+
+    [data-theme='high-contrast'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): bold words in the bar's ink with a two-pixel
+       rule in the full ink under them when pointed at. The word "Search" was
+       the last thing in a bar still drawn in --link, and Kenny named it when
+       he rejected navigation#bar-search — "ook de 'Search' text moet in de
+       nieuwe, donkerdere, kleur zijn" [scope-107]. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        font-weight: 700;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='high-contrast'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        border-bottom-color: var(--foreground);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       Nothing half-transparent: an opaque white page, the headline in its red, black hazard bars and a four-pixel black frame, no glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='high-contrast'] .kp-alarm {
+        --kp-alarm-ground: var(--background);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 4px solid var(--foreground);
+        --kp-alarm-bar: 1rem;
+        /* At 864x450 the headline stood 9px past the frame [scope-108];
+           legibility is this theme's whole point, so it loses size, not
+           weight. */
+        --kp-alarm-title-size: clamp(1.9rem, 9cqi, 7rem);
+    }
+
+    [data-theme='high-contrast'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='high-contrast'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

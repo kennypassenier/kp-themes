@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Data table, the seven features of 2026-09-13 — both channels</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+        <link rel="stylesheet" href="/css/light-register.css" />
+        <link rel="stylesheet" href="/css/dark-register.css" />
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="/css/synthwave-register.css" />
+        <link rel="stylesheet" href="/css/pastel-register.css" />
+        <link rel="stylesheet" href="/css/terminal-register.css" />
+        <link rel="stylesheet" href="/css/forest-register.css" />
+        <link rel="stylesheet" href="/css/high-contrast-register.css" />
+        <link rel="stylesheet" href="/css/sepia-register.css" />
+        <link rel="stylesheet" href="/css/blueprint-register.css" />
+        <link rel="stylesheet" href="/css/solstice-register.css" />
+        <link rel="stylesheet" href="/css/brutalism-register.css" />
+        <link rel="stylesheet" href="/css/deco-register.css" />
+        <link rel="stylesheet" href="/css/phantom-register.css" />
+        <link rel="stylesheet" href="/css/shade-light-register.css" />
+        <link rel="stylesheet" href="/css/shade-dark-register.css" />
+        <link rel="stylesheet" href="/css/retro-register.css" />
+        <link rel="stylesheet" href="/css/grotesk-register.css" />
+        <link rel="stylesheet" href="/css/lapis-register.css" />
+        <link rel="stylesheet" href="/css/nostromo-register.css" />
+        <link rel="stylesheet" href="/css/titanium-register.css" />
+    </head>
+    <body>
+        <h1>Data table, seven features, two channels</h1>
+
+        <!-- Kenny's form of 2026-09-13, item datatable-build, "Alle zeven, nu":
+             multi-sort, column choice, row expansion, a fixed first column,
+             server rows, inline edit and a keyboard grid. One table per
+             feature, written once per channel with the same data-test names
+             so one suite drives both [AR7]. The rows come from
+             datatable-data.mjs in both halves; the only styling is a width on
+             the host of the fixed-column table, because a column that stays
+             while the box scrolls sideways needs a box narrower than its
+             table [KT3]. -->
+
+        <section id="plain">
+            <h2>Framework-free</h2>
+
+            <div class="kp-datatable" data-kp-datatable data-kp-sort-multi data-kp-page-sizes="none" data-test="plain-multi">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, sorted on several columns
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-sort="text">Reference</th>
+                                <th scope="col" data-kp-sort="text">Site</th>
+                                <th scope="col" data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical">Severity</th>
+                                <th scope="col" data-kp-sort="number">Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site severity hours"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+
+            <div class="kp-datatable" data-kp-datatable data-kp-column-menu data-kp-page-sizes="none" data-test="plain-columns">
+                <div class="kp-datatable__bar"></div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, with a choice of columns
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Reference</th>
+                                <th scope="col">Site</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Severity</th>
+                                <th scope="col" data-kp-column-hidden>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site status severity note"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+
+            <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-page-size="10" data-kp-page-sizes="none" data-test="plain-expand">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, each row opens for details
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-sort="text">Reference</th>
+                                <th scope="col">Site</th>
+                                <th scope="col" data-kp-sort="number">Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site hours" data-details></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+
+            <div style="inline-size: 30rem">
+                <div class="kp-datatable" data-kp-datatable data-kp-fixed-columns data-kp-max-height="14rem" data-test="plain-fixed">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                Incidents, wider than their box
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Reference</th>
+                                    <th scope="col">Site</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Severity</th>
+                                    <th scope="col">Hours</th>
+                                    <th scope="col">Opened</th>
+                                    <th scope="col">Note</th>
+                                    <th scope="col">Again</th>
+                                </tr>
+                            </thead>
+                            <tbody data-rows="ref site status severity hours opened note note" data-nowrap></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kp-datatable" data-kp-datatable data-kp-server data-kp-page-size="10" data-kp-page-sizes="none" data-test="plain-server">
+                <div class="kp-datatable__bar">
+                    <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search incidents" />
+                </div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, served page by page
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-sort="text" data-kp-field="ref">Reference</th>
+                                <th scope="col" data-kp-sort="text" data-kp-field="site">Site</th>
+                                <th scope="col" data-kp-sort="number" data-kp-field="hours">Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+
+            <div class="kp-datatable" data-kp-datatable data-kp-page-size="10" data-kp-page-sizes="none" data-test="plain-edit">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, Site, Status, Hours and Opened can be edited in place
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Reference</th>
+                                <th scope="col" data-kp-edit="text" data-kp-edit-required>Site</th>
+                                <th scope="col" data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+                                <th scope="col" data-kp-edit="number">Hours</th>
+                                <th scope="col" data-kp-edit="date">Opened</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site status hours opened"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+
+            <button type="button" data-test="plain-before-grid">Before the grid</button>
+            <div class="kp-datatable" data-kp-datatable data-kp-grid data-kp-page-sizes="none" data-test="plain-grid">
+                <div class="kp-table-wrap" data-kp-region="off">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, navigable with the arrow keys
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-sort="text">Reference</th>
+                                <th scope="col">Site</th>
+                                <th scope="col" data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
+                                <th scope="col">Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site status severity"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                </div>
+            </div>
+            <button type="button" data-test="plain-after-grid">After the grid</button>
+
+            <!-- Kenny's form of 2026-09-14, filter-design, "Allebei, per tabel":
+                 the add-filter mode, one choice, a second choice, a number
+                 range and a date range. -->
+            <div
+                class="kp-datatable"
+                data-kp-datatable
+                data-kp-filter-mode="add"
+                data-kp-page-size="50"
+                data-kp-page-sizes="none"
+                data-test="plain-addfilter"
+            >
+                <div class="kp-datatable__bar"></div>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption>
+                            Incidents, filtered one column at a time
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Reference</th>
+                                <th scope="col" data-kp-filter="choice">Site</th>
+                                <th scope="col" data-kp-filter="choice" data-kp-sort-order="Open,Watching,Closed">Status</th>
+                                <th scope="col" data-kp-filter="range">Hours</th>
+                                <th scope="col" data-kp-filter="date">Opened</th>
+                            </tr>
+                        </thead>
+                        <tbody data-rows="ref site status hours opened"></tbody>
+                    </table>
+                </div>
+                <div class="kp-datatable__bar">
+                    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>React</h2>
+            <div id="react-datatable"></div>
+        </section>
+
+        <script type="module">
+            import { INCIDENTS } from '/tests/fixtures/datatable-data.mjs';
+            import { attachDataTables, dataTable } from '/js/datatable.js';
+            import { createServer } from '/tests/fixtures/datatable-server.mjs';
+
+            // The server's half: the rows written into the markup before the
+            // tables are attached, the way kyu and Almanac render them.
+            for (const body of document.querySelectorAll('#plain tbody[data-rows]')) {
+                const keys = body.dataset.rows.split(' ');
+                const table = body.closest('table');
+                const labels = [...table.tHead.rows[0].cells].map((th) => th.textContent.trim());
+                for (const row of INCIDENTS) {
+                    const tr = document.createElement('tr');
+                    tr.dataset.kpRowKey = row.ref;
+                    keys.forEach((key, i) => {
+                        const td = document.createElement('td');
+                        td.dataset.label = labels[i];
+                        if (key === 'status') {
+                            const badge = document.createElement('span');
+                            badge.className = 'kp-badge';
+                            badge.textContent = row.status;
+                            td.append(badge);
+                        } else td.textContent = String(row[key]);
+                        if (body.dataset.nowrap !== undefined) td.style.whiteSpace = 'nowrap';
+                        tr.append(td);
+                    });
+                    if (row.ref === 'INC-4400' && body.dataset.details !== undefined) tr.dataset.kpExpanded = '';
+                    body.append(tr);
+                    if (body.dataset.details !== undefined) {
+                        const detail = document.createElement('tr');
+                        detail.dataset.kpRowDetail = '';
+                        detail.hidden = true;
+                        const td = document.createElement('td');
+                        td.colSpan = keys.length;
+                        td.textContent = `Note: ${row.note} Severity ${row.severity}, opened ${row.opened}.`;
+                        detail.append(td);
+                        body.append(detail);
+                    }
+                }
+            }
+
+            const server = createServer(INCIDENTS);
+            const log = [];
+            window.kpFixture = { ...window.kpFixture, server, editLog: { plain: log } };
+            document.querySelector('[data-test="plain-edit"]').addEventListener('kp-datatable-edit', (event) => {
+                const { key, label, value, previous, undo } = event.detail;
+                log.push({ key, label, value, previous, undo });
+                if (label === 'Hours' && Number(value) > 100) event.detail.reject('Hours must be 100 or fewer');
+            });
+
+            attachDataTables(document.getElementById('plain'), {
+                load: (request) =>
+                    server.load({
+                        query: request.query,
+                        sort: request.sorts.map((key) => ({ field: ['ref', 'site', 'hours'][key.column], direction: key.direction })),
+                        page: request.page,
+                        pageSize: request.pageSize,
+                        signal: request.signal,
+                    }),
+            });
+            const handle = (name) => dataTable(document.querySelector(`[data-test="plain-${name}"]`));
+            const labelsOf = (name, columns) =>
+                // The header's own words, without the sort order a multi-sort writes beside them.
+                columns.map((at) => document.querySelector(`[data-test="plain-${name}"] thead tr`).cells[at].firstChild.textContent.trim());
+            window.kpFixture.plain = {
+                sorts: () =>
+                    handle('multi')
+                        .view()
+                        .sorts.map((key) => [labelsOf('multi', [key.column])[0], key.direction]),
+                hidden: () => labelsOf('columns', handle('columns').view().hidden),
+                expanded: () => handle('expand').view().expanded,
+                reload: () => handle('server').reload(),
+                filters: () => handle('addfilter').view().filters,
+                viewFilters: () => window.kpFixture.plainViewFilters,
+            };
+            document.querySelector('[data-test="plain-addfilter"]').addEventListener('kp-datatable-view', (event) => {
+                window.kpFixture.plainViewFilters = event.detail.filters;
+            });
+        </script>
+        <script type="module" src="/tests/fixtures/.build/react-datatable-more.js"></script>
+    </body>
+</html>

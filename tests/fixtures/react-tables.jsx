@@ -63,18 +63,6 @@ function Cases() {
                 />
             </div>
 
-            <div data-test="react-cards" style={{ inlineSize: '400px' }}>
-                <Table
-                    cards
-                    caption="Contacts"
-                    columns={[
-                        { key: 'name', label: 'Name' },
-                        { key: 'role', label: 'Role' },
-                    ]}
-                    rows={[{ name: 'Acme', role: 'Customer' }]}
-                />
-            </div>
-
             <div data-test="react-datatable-cards" style={{ inlineSize: '400px' }}>
                 <DataTable
                     caption="Orders"

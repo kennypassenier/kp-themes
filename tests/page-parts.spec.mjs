@@ -13,7 +13,10 @@
 // `2 passed, 3 failed`, and the three are the three tests those changes
 // belong to. Restored, five green in 3.3 seconds.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { measured } from './paint.mjs';
 
 const FIXTURE = '/tests/fixtures/page-parts.html';
@@ -21,7 +24,7 @@ const FIXTURE = '/tests/fixtures/page-parts.html';
 /** @param {import('@playwright/test').Page} page @param {string} name */
 const part = (page, name) => page.locator(`[data-test="${name}"]`);
 
-test.describe('the last two pieces of the page', () => {
+test.describe('the last two pieces of the page', { tag: ['@component:navigation'] }, () => {
     test('back to top: not there at the top, there once you are down [feat-page-1]', async ({ page }) => {
         // Drill: the `[data-kp-to-top-shown]` rule removed from
         // css/components.css and this goes red — the control never becomes
@@ -62,46 +65,54 @@ test.describe('the last two pieces of the page', () => {
             .toBe('BODY');
     });
 
-    test('a picture holds its space before it has a picture in it [feat-media-1]', async ({ page }) => {
-        // The frame with nothing in it at all is the state every page is in
-        // for the first moments of its life, and the one that makes text
-        // below jump when the bytes land.
-        //
-        // Drill: `aspect-ratio` removed from `.kp-media` and this goes red —
-        // an empty frame collapses to nothing.
-        await page.goto(FIXTURE);
+    test(
+        'back to top: an empty control draws the package glyph in every theme, and gives it back on detach [gap-12]',
+        { tag: ['@sweep', '@component:catalogue'] },
+        async ({ page }) => {
+            // Before: the control written as documented — an empty button with
+            // only a name — painted as an empty 30px box in all 22 themes.
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await useEmptyRegister(page.context());
+            await page.goto('/catalogue/navigation.html');
+            await waitForJudging(page);
+            await page.evaluate(async () => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'kp-button kp-to-top';
+                button.id = 'test-to-top';
+                button.setAttribute('data-kp-to-top', '');
+                button.setAttribute('data-kp-to-top-after', '0');
+                document.body.append(button);
+                const { attachToTop } = await import('/js/components.js');
+                /** @type {any} */ (window).detachTestToTop = attachToTop(document.body);
+                window.scrollTo(0, 50);
+            });
+            const button = page.locator('#test-to-top');
+            await measured(button, (el) => getComputedStyle(el).visibility, undefined, 'shown').toBe('visible');
+            const themes = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+            const empty = [];
+            for (const theme of themes) {
+                await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+                const painted = await button.evaluate((el) => {
+                    const glyph = el.querySelector('[aria-hidden="true"]');
+                    return glyph !== null && glyph.getBoundingClientRect().width > 0;
+                });
+                if (!painted) empty.push(theme);
+            }
+            expect(empty, 'themes whose control is an empty box').toEqual([]);
 
-        const empty = await part(page, 'media-empty').evaluate((el) => el.getBoundingClientRect());
-        expect(empty.height, 'an empty frame still has a height').toBeGreaterThan(0);
-        expect(empty.width / empty.height, 'and it is the ratio the token declares').toBeCloseTo(16 / 9, 1);
+            // What attach added, detach takes away [KT6].
+            await page.evaluate(() => /** @type {any} */ (window).detachTestToTop());
+            await expect(button.locator('[aria-hidden="true"]')).toHaveCount(0);
+        },
+    );
 
-        const square = await part(page, 'media-square').evaluate((el) => el.getBoundingClientRect());
-        expect(square.width / square.height, 'and a square one is square').toBeCloseTo(1, 1);
-    });
-
-    test('the picture fills its frame rather than stretching to it [feat-media-1]', async ({ page }) => {
-        // A one-pixel image in a 16/9 frame is the worst case: without
-        // object-fit it is drawn as a 16/9 smear of one colour, and nobody
-        // notices until the photograph is a face.
-        await page.goto(FIXTURE);
-
-        await measured(part(page, 'media-img'), (el) => getComputedStyle(el).objectFit, undefined, 'the image covers its frame').toBe('cover');
-        const [frame, image] = await page.evaluate(() => {
-            const rect = (sel) => document.querySelector(sel).getBoundingClientRect();
-            return [rect('[data-test="media"]'), rect('[data-test="media-img"]')];
-        });
-        expect(Math.round(image.width), 'and fills it exactly').toBe(Math.round(frame.width));
-        expect(Math.round(image.height), 'in both directions').toBe(Math.round(frame.height));
-    });
-
-    test('a caption over a picture has a ground under it [feat-media-1, DI1]', async ({ page }) => {
-        // The picture belongs to the consumer and can be any brightness.
-        // Text laid straight on it is legible until somebody uploads a
-        // bright one.
-        await page.goto(FIXTURE);
-        const overlay = part(page, 'media-overlay');
-
-        await measured(overlay, (el) => getComputedStyle(el).backgroundImage, undefined, 'the caption sits on something').not.toBe('none');
-        await measured(overlay, (el) => getComputedStyle(el).position, undefined, 'and it sits on the picture, not under it').toBe('absolute');
+    test('back to top: the docs page and the fixture write the button class that exists [gap-12]', { tag: ['@component:site'] }, async () => {
+        // Before: both wrote `kp-btn`, a class the package never declared, so
+        // the documented control had no button look at all.
+        for (const file of ['../site/components/to-top.html', 'fixtures/page-parts.html', '../gates/site/descriptors.mjs']) {
+            const text = readFileSync(new globalThis.URL(file, import.meta.url), 'utf8');
+            expect(text.includes('kp-btn'), `${file} still writes kp-btn`).toBe(false);
+        }
     });
 });

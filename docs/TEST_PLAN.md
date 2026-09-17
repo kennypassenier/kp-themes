@@ -26,7 +26,7 @@ It is written here rather than left unsaid, because the reason the step
 exists is exactly this shape of confidence: latch 2.0.1 passed CI, a
 hardening round and an external security review and was still unusable in
 every real project — the first genuine use found it in one command. So
-what this release has instead is thirty-two gates, 2,594 browser tests
+what this release has instead is the blocking gates, the browser suite
 over both engines, and Kenny's own look at the pages. What it does not
 have is one run through a consumer's own path: `npm pack`, install into
 an empty directory, build a page with a theme, a register and a component
@@ -42,10 +42,10 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 
 | Command | What it runs | When |
 | --- | --- | --- |
-| `npm run gates` | the thirty blocking checks, seconds | every commit, by the hook |
-| `npm run test:affected` | the specs a change actually touches, Firefox only | during work, when there is something to see |
+| `npm run gates` | the blocking checks, seconds [scope-76] | every commit, by the hook |
+| `npm run test:tags` | the tests tagged with what a change touches (building), plus every `@sweep` test (commit), Firefox only | during work, and once before a commit |
 | `npm run test:browser` | the whole suite, Chromium and Firefox | when Kenny asks for it |
-| `npm run advice` | contrast, invariants, motion, texture — a reading, never a verdict | when Kenny wants the reading |
+| `npm run advice` | contrast, invariants, motion, texture, and since scope-76 variant grounds, the compliance table, the baseline checksums and prettier — a reading, never a verdict | when Kenny wants the reading |
 | `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
 
 `verify` is `gates/verify.mjs` rather than three commands joined by `&&`:
@@ -66,17 +66,96 @@ less rather than the reason it is faster:
    test, and is fixed as one — not tolerated with a wider assertion.
 2. **`forbidOnly` is always on.** With no CI behind it, a stray `.only`
    would quietly reduce the suite to a single test and still print green.
-3. **What a change touches is computed, not guessed.**
-   `gates/affected.mjs` reads `git diff` and answers `none`, `all`, or a
-   list. It says `all` for anything it cannot prove narrow — a change to
-   `js/effects.js` reaches 71% of the suite, and a map clever enough to
-   split that would be wrong exactly where nobody looks.
+3. **What a change touches is computed from tags, and the map is
+   measured.** See "Tags decide what runs" below.
+
+## Tags decide what runs [scope-33, 2026-09-14]
+
+Every browser test carries at least one tag through Playwright's own
+mechanism (`test('…', { tag: [...] }, …)` or a tagged `test.describe`):
+
+- `@component:<name>` — the component or area it exercises; the
+  vocabulary is `components` in `tests/tags.json` (the catalogue pages,
+  plus `picker`, `layout`, `utilities`, `fonts`, `examples`, `showcase`,
+  `site`, `bundle`, `catalogue`);
+- `@theme:<name>` — a register spec, a theme-specific test, or one
+  theme's instance of a per-theme loop (`@theme:${theme}`);
+- `@sweep` — a cross-theme or cross-component invariant. A test whose own
+  body walks every theme must carry it.
+
+`tests/tags.json` maps changed files to tags, first rule wins: a register
+selects `@theme:<theme>` plus `@sweep`-and-component for the rules it
+changed (formal, the default theme, selects the components themselves);
+a changed rule in `css/components.css` selects the component its selector
+names, and a rule naming none selects `@sweep` and every component in the
+file; a module selects its components; a changed spec runs whole; a helper
+or fixture runs the specs that name it; `js/strings.js`, `js/auto.js`,
+`hooks/**`, `package.json` and the test server select everything; a
+comment-only stylesheet change and documentation select nothing.
+`npm run check:tags`, part of `npm run gates`, reads the sources without a
+browser and refuses an untagged test, a tag outside the vocabulary, a
+theme walk without `@sweep`, and a file no rule covers.
+
+| Level    | Command                                   | Runs                                   | Theme sweeps |
+| -------- | ----------------------------------------- | -------------------------------------- | ------------ |
+| building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox | formal, dark, cyberpunk |
+| commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  | formal, dark, cyberpunk |
+| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 22 |
+
+**A theme sweep is a level too** (`scope-103`, 2026-09-16). Fourteen
+declarations loop over the 22 themes, which turned 804 written tests into
+1,593. A spec now asks `sweepThemes()` from
+`tests/helpers/sweep-themes.mjs` for the list; `gates/run-tags.mjs` sets
+`KP_SWEEP_THEMES` for the first two levels and nothing for release, and an
+unset variable means all 22, so a bare `npx playwright test` is unchanged.
+Measured 2026-09-16 in firefox over the four loops narrowed
+(`fixtures.spec.mjs`, `surfaces.spec.mjs`, `concept-confirm.spec.mjs`,
+`registers.spec.mjs`): the whole suite 1,593 → 1,423 per engine, a commit
+level on `css/sepia-register.css` 430 → 266, `tests/fixtures.spec.mjs`
+132 tests in 26.7 s → 18 in 5.4 s (132 in 25.3 s again at release). No
+assertion was removed. Four theme loops stay whole because each has a
+per-theme fault behind it — `focus-visible.spec.mjs` (fix-38),
+`registers.spec.mjs:91` (fix-12), `reflow.spec.mjs` (brutalism, firefox
+only) and `overflow.spec.mjs` (sepia and solstice, chromium only).
+
+`--dry-run` prints the selection per file, the `--grep` and the count from
+`playwright test --list`; `--files <paths>` and `--commit <sha>` change
+what counts as the change (default: everything since
+`git merge-base HEAD main`, plus uncommitted and untracked files).
+
+**Measured once against what it skips** (standing rule 7i). The old
+affected map (gates/affected.mjs, removed at scope-33) answered `all` for each of the last 20 commits that
+touched `css/`, `js/`, `components/` or `catalogue/` — 25,020 test runs.
+The building level selected 9,156 and the commit level 13,599. Every test
+the old selection ran and the building level skips is one the map holds
+uncoupled: a catalogue-shell commit (47 tests) skips every test that never
+opens a catalogue page; a register commit skips the other themes' sweep
+slices, which the commit level runs. What no tag can see: a module that
+fails to load breaks every page that bundles it, and a keyframe name
+declared in several registers is decided by load order. The commit
+level's sweeps catch the first on every sweep page; only the release level
+catches everything. The full numbers are under `measured` in
+`tests/tags.json`.
+
+## The five thin places, closed [scope-103, 2026-09-16]
+
+The same audit that counted the sweeps counted where the suite was thin:
+areas with faults behind them and few tests over them. Each got its own
+test, and each was shown red against a deliberately broken version first.
+
+| Area                          | Where it now lives                                              | What it measures                                                                                                             |
+| ----------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| fonts (fix-28)                | `tests/fonts.spec.mjs`, on `tests/fixtures/control-fonts.html`  | under a forced desktop default, every package control of all four kinds resolves the family the body resolves, in the sweep themes |
+| overlay placement (fix-30, fix-36) | `tests/overlay-flip.spec.mjs`, on `tests/fixtures/dialog-in-dialog.html` | a flipped overlay opens downward again at the top of the window; a long dialog opened from inside another dialog keeps its cap at two window sizes |
+| the cascade order             | `tests/cascade-order.spec.mjs`                                   | a utility beats the layout layer; the layout layer beats the component layer at lower specificity; the base layer's `[hidden]` beats both |
+| motion that must restart (fix-31) | `tests/still-frame-release.spec.mjs`, on `tests/fixtures/still-frame.html` | an infinite animation runs again after the still frame is lifted, including one the CSS had already stopped                     |
+| redaction (fix-33)            | `tests/redaction-cover.spec.mjs`                                 | a redaction covers its phrase at three widths and after a resize, each also at the phrase's break, in the sweep themes         |
 
 ## What a gate must be able to do
 
 **Fail.** Every check in this project has been shown red on a deliberately
 injected violation before being trusted, and those drills are recorded in
-`docs/REALIZATION_PLAN.md`. The Phase 7 audit found the reason that rule
+`docs/archive/REALIZATION_PLAN.md`. The Phase 7 audit found the reason that rule
 exists: a check for the visited link had been written, reported as built,
 and never ran once — it guarded on a token that is derived rather than
 declared, so its condition was false for all seven themes on every run. It
@@ -123,7 +202,7 @@ a reason, written down; a silent hole is neither.
 - **Nothing compares how the page looks.** Every check here is a number —
   contrast, distance, flashes per second, whether an element exists — and
   there are no screenshot comparisons. A theme can therefore look wrong
-  while every one of the 2500-odd tests passes. The cost is real and was paid once already: at
+  while every test passes. The cost is real and was paid once already: at
   L3-EXIT, 42 colours were converted to tokens and the proof that nothing
   changed on screen had to be computed by hand, because no test could see
   it.
@@ -167,34 +246,65 @@ rather than before it.
 
 What that costs is measurable from this package's own record. The reflow
 spec states that brutalism overflows in firefox only, and sepia and
-solstice in chromium only; `gates/run-affected.mjs` records firefox as the
+solstice in chromium only; `gates/run-tags.mjs` records firefox as the
 odd engine fourteen times against chromium's six. The properties this
 round measures are the engine-divergent kind: computed `clip-path` polygon
 serialisation, `scale` shorthand strings, pseudo-element `background-size`,
 `mix-blend-mode` on an absolutely positioned child, canvas
 `fontBoundingBoxAscent`, and `border-image` against a row background. The
-suite is 2,734 tests over 79 files across both engines and 1,367 in
-firefox alone; the second engine roughly doubles the wall-clock.
+suite runs across both engines, and firefox alone is half of it (scope-32
+and scope-73 removed the appearance-only tests the catalogue now shows);
+the second engine roughly doubles the wall-clock. How many tests there are
+is what `npx playwright test --list` counts, not a number kept here.
 
-**One engine-conditional skip, by design.** `tests/fixtures.spec.mjs`
-skips the themed select list where `appearance: base-select` is not
-supported, naming the engine. The support is probed, not assumed.
+**No support-probed skip any more.** `tests/fixtures.spec.mjs` used to
+skip the themed select list where `appearance: base-select` is not
+supported. That test measured appearance only and went with scope-32 on
+2026-09-14; the list is judged by eye on `catalogue/field.html`. The
+firefox-only tests that remain are scoped to one engine by decision, not
+by a probe.
 
-**Two readings that stay under the floor, by decision.** Both were put to
-Kenny on 2026-09-12 and both are answered, so neither is an open finding
-any more — they are choices with their numbers written down.
+**Two readings that stayed under the floor, by decision, and one of them
+is now closed.** Both were put to Kenny on 2026-09-12 and both were
+answered, so neither was an open finding — they were choices with their
+numbers written down.
 
-`shade-light`'s muted colour is `hsl(194, 14%, 46%)`, measured at 3.99 on
-the page ground, 4.13 on a card and 3.61 on a muted panel, against a 4.5
-floor. It was identical to `--foreground` before Phase 7, which meant
-nothing in the theme was muted at all: captions, hints, timestamps and
-the text of an empty field all read as body text. There is no lighter
-colour that clears the floor, because shade-light's BODY text only
-reaches 5.01 itself — the choice was between a visible difference under
-the floor and no difference at all, and Kenny took the difference. The
-readings are quoted into `docs/DESIGN_INVARIANTS.md` by the compliance
-table and named in `tests/surfaces.spec.mjs`, which requires them to keep
-measuring what they claim.
+`shade-light`'s muted colour **was** `hsl(194, 14%, 46%)`, measured at
+3.99 on the page ground, 4.13 on a card and 3.61 on a muted panel,
+against a 4.5 floor. It was identical to `--foreground` before Phase 7,
+which meant nothing in the theme was muted at all: captions, hints,
+timestamps and the text of an empty field all read as body text. There
+was no LIGHTER colour that clears the floor, because shade-light's body
+text only reaches 5.01 itself, so the choice at the time was between a
+visible difference under the floor and no difference at all.
+
+**Closed at `scope-101`, 2026-09-16** (Kenny, shade-light-contrast
+"Donkerder maken"): the token went the other way, to `hsl(194, 14%, 39%)`,
+and the three pairs measure 4.71, 5.21 and 5.39. Its two entries in
+`tests/surfaces.spec.mjs` are gone — that list refuses an entry for a
+pair the package no longer paints under the floor, which is how the
+cleanup was found. That move cleared the floor and left one cost behind:
+the body ink was still at 40% and reached only 4.52 on `--muted`, so the
+quiet text read 0.19 to 0.22 STRONGER than the running text on all three
+grounds. It was reported rather than worked around, and Kenny answered
+it.
+
+**And the order put back at `scope-102`, the same day** (Kenny,
+shade-light-muted "Gewone tekst ook donkerder"): the answer was to darken
+the body ink rather than lift the muted one, because no colour lighter
+than the old 40% ink clears 4.5 on all three grounds (the best that
+existed was 0.02:1 quieter). `--foreground` went to `hsl(194, 14%, 36%)`
+— with `--card-foreground`, `--popover-foreground`, `--surface-hero-fg`
+and `--surface-hero-card-foreground`, which carry the same ink — and
+`--muted-foreground` stayed at 39%. The muted ink is now the quieter of
+the two on every ground: 4.71 against 5.30 on `--muted`, 5.21 against
+5.86 on `--background`, 5.39 against 6.07 on `--card`, 0.59 to 0.68 of
+separation with both over 4.5:1. `tests/register-shade-light.spec.mjs`
+holds all three grounds, the floor and the separation in one test ("the
+two inks"), drilled red on `223e1597` before the tokens moved. The
+theme's "no black" line now reads 36%; `--surface-hero-muted`, left at
+40%, became the hero's own quiet ink (4.99 against the hero body's 5.86),
+which it had never been. Nothing here is an open finding any more.
 
 `blueprint`'s witness lines moved inside the control rather than outside
 it, so the six pixels of scrollable overflow on every one of its buttons

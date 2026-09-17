@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -188,6 +190,7 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-dismiss-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-semantic</code></td><td>selector</td></tr>
                     </tbody></table></div>
                 </section>
@@ -214,7 +217,9 @@
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <p class="kp-text-muted">This unit fires no events.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-alert-dismiss</code></td><td>Dispatched on an alert, bubbling and cancelable, before its close button hides it: `{ alert, button }`.</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>

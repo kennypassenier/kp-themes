@@ -6,12 +6,13 @@
 // a faint ghost of the ink colour settling to the full one, once, the
 // whole line together, no per-word stagger; the two lede marks as a
 // wash that deepens on the same schedule; the drawn rule under a
-// heading, growing from nothing when it enters the viewport; the double
-// warm-brown divider, and the alt variant's diamond; the navbar's
+// heading, growing from nothing when it enters the viewport; the navbar's
 // dropdown (KT14); the quiet-plate buttons; the dossier's stamp and its
 // redactions, covered until the file opens and lifting in order; the
 // confirmation dialog, a real <dialog> with Cancel focused by default
-// (never Wipe); and the whole approved inventory.
+// (never Wipe); and the whole approved inventory. The double warm-brown
+// divider and its diamond are judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -27,11 +28,15 @@
 //     "not drawn before it is in view";
 //   - the redaction's `:not(.is-cleared)::after { transform: scaleX(1) }`
 //     emptied in the register → the dossier's words read before the file
-//     opens, red on "covered before the trigger".
+//     opens, red on "covered before the trigger". Since fix-33 (scope-93)
+//     the bar is the mark's own cloned background and that rule is
+//     `:not(.is-cleared) { background-size: 100% 100% }`; the test reads
+//     the size.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle, style } from './paint.mjs';
+import { expectMenuDisplayTransition, measureMenuClose } from './helpers/menu-fade.mjs';
+import { style } from './paint.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -92,8 +97,42 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
         return v;
     }, token);
 
+/**
+ * How many pixels of `clip` (page coordinates) change when `offCss` is
+ * injected — the paint of the rule that stylesheet switches off [KT13].
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} offCss
+ * @param {{ x: number, y: number, width: number, height: number }} clip
+ */
+async function washPixels(page, offCss, clip) {
+    const shot = async () => (await page.screenshot({ clip, fullPage: true, animations: 'disabled', caret: 'hide' })).toString('base64');
+    const on = await shot();
+    const tag = await page.addStyleTag({ content: offCss });
+    const off = await shot();
+    await tag.evaluate((el) => el.remove());
+    return page.evaluate(
+        async ([a, b]) => {
+            const load = async (/** @type {string} */ b64) => {
+                const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
+                const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                const ctx = /** @type {OffscreenCanvasRenderingContext2D} */ (canvas.getContext('2d'));
+                ctx.drawImage(bitmap, 0, 0);
+                return ctx.getImageData(0, 0, bitmap.width, bitmap.height).data;
+            };
+            const [one, two] = await Promise.all([load(a), load(b)]);
+            let n = 0;
+            for (let i = 0; i < Math.min(one.length, two.length); i += 4) {
+                if (Math.abs(one[i] - two[i]) + Math.abs(one[i + 1] - two[i + 1]) + Math.abs(one[i + 2] - two[i + 2]) > 24) n++;
+            }
+            return n;
+        },
+        [on, off],
+    );
+}
+
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the sepia register, ${channel}`, () => {
+    test.describe(`the sepia register, ${channel}`, { tag: ['@theme:sepia', '@component:page-effects', '@component:examples'] }, () => {
         test('under reduced motion the headline, the marks and the rule are already at rest, and the dialog does not fade [DI7]', async ({
             page,
         }) => {
@@ -190,41 +229,12 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const after = await pseudo(rule, '::after', ['transform', 'background-color']);
             expect(after.transform, 'drawn full width').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-            expect(after['background-color']).toBe(await paint(page, '--border-strong'));
-        });
-
-        test('the divider is a double warm-brown rule, and the second carries a diamond at its centre [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(first.match(/linear-gradient/g)?.length, 'two rules layered as backgrounds').toBe(2);
-            const mark = await pseudo(dividers.nth(1), '::after', ['content']);
-            expect(mark.content.replace(/"/g, '')).toContain('◆');
-        });
-
-        test('the dropdown opens in the theme’s own language, sienna on hover [KT14]', async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            const li = page.locator('.kp-nav__links > li', { has: trigger }).first();
-            await li.hover();
-            const menu = li.locator('.kp-nav__menu');
-            await expect(menu).toBeVisible();
-            await style(menu, 'background-color').toBe(await paint(page, '--popover'));
-            const item = menu.locator('a').first();
-            await item.hover();
-            await style(item, 'color').toBe(await paint(page, '--primary'));
-        });
-
-        test('the primary, ghost and destructive buttons carry the theme’s own quiet plates', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('6px');
-            const ghost = page.locator('[data-kp-surface="hero"] .kp-button--ghost').first();
-            expect(await ghost.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
-            const wipe = page.locator('.kp-button--destructive').first();
-            expect(await wipe.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--destructive'));
+            // Sienna, not the border brown, since scope-101: the rule is the
+            // swelled stroke of the approved gestures demo, drawn in the ink
+            // this register gives its drop cap. The reveal itself, and this
+            // test's reading of it, are unchanged — only the colour and the
+            // shape are. Its measurements are in tests/sepia-gestures.spec.mjs.
+            expect(after['background-color']).toBe(await paint(page, '--primary'));
         });
 
         test('the dossier: a rotated stamp from data-kp-label, and redactions covered until the file opens, lifting in order [TH120]', async ({
@@ -237,15 +247,83 @@ for (const [channel, url] of CHANNELS) {
             expect(stamp.rotate).not.toBe('none');
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
-            const covered = await pseudo(marks.first(), '::after', ['transform']);
-            expect(covered.transform, 'covered before the trigger').toMatch(/matrix\(1,|scale\(1/);
+            const covered = await pseudo(marks.first(), '', ['background-size', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect([covered['box-decoration-break'], covered['-webkit-box-decoration-break']], 'the bar is cloned onto every line').toContain(
+                'clone',
+            );
             expect(await marks.first().evaluate((el) => getComputedStyle(el).color), 'the word itself is not painted').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(marks.first()).toHaveClass(/is-cleared/);
             await settled(page);
-            const lifted = await pseudo(marks.first(), '::after', ['transform']);
-            expect(lifted.transform, 'the bar lifted').toMatch(/matrix\(0,|scale\(0/);
+            await expect
+                .poll(async () => (await pseudo(marks.first(), '', ['background-size']))['background-size'], 'the bar lifted')
+                .toBe('0% 100%');
             await style(marks.first(), 'color', 'the word now reads').not.toBe('rgba(0, 0, 0, 0)');
+        });
+
+        test('the dossier stamp has its ink wash behind it, and the wash covers none of the stamp [scope-100]', async ({ page }) => {
+            await open(page, url);
+            await settled(page);
+            const card = page.locator('.kp-card[data-kp-label]').first();
+            await card.scrollIntoViewIfNeeded();
+            const box = await card.evaluate((el) => {
+                const r = el.getBoundingClientRect();
+                const s = getComputedStyle(el, '::before');
+                const px = (v) => parseFloat(v) || 0;
+                const right = r.right - px(s.insetInlineEnd);
+                const top = r.top + px(s.insetBlockStart);
+                return {
+                    card: { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height },
+                    // The stamp's inside, 6px in from its rotated border.
+                    stamp: { x: right - px(s.width) + scrollX + 6, y: top + scrollY + 6, width: px(s.width) - 12, height: px(s.height) - 12 },
+                };
+            });
+            const off = "[data-theme='sepia'] .kp-card[data-kp-label]::after { background: none !important; }";
+            expect(await washPixels(page, off, box.card), 'the wash paints within the card').toBeGreaterThan(0);
+            expect(await washPixels(page, off, box.stamp), "and none of it over the stamp's word").toBe(0);
+        });
+
+        test("the drop cap's ink wash paints behind the drop cap, not at the page corner [scope-100]", async ({ page }) => {
+            await open(page, url);
+            await settled(page);
+            const lede = await page
+                .locator('.kp-lede')
+                .first()
+                .evaluate((el) => {
+                    const r = el.getBoundingClientRect();
+                    return { x: Math.max(0, r.left + scrollX - 8), y: Math.max(0, r.top + scrollY - 8), width: 90, height: 90 };
+                });
+            const off = "[data-theme='sepia'] .kp-lede::before { background: none !important; }";
+            expect(await washPixels(page, off, lede), 'the wash paints at the drop cap').toBeGreaterThan(0);
+            expect(await washPixels(page, off, { x: 0, y: 0, width: 80, height: 80 }), 'and nothing at the page corner').toBe(0);
+        });
+
+        test('the dropdown closes with its fade, as it opens [scope-100]', async ({ page, browserName }) => {
+            await open(page, url);
+            await expectMenuDisplayTransition(page);
+            // Firefox closes every theme's dropdown at once (measured
+            // 2026-09-16, the package's own formal included), so the
+            // frames are read in chromium only.
+            if (browserName !== 'chromium') return;
+            const closing = await measureMenuClose(page);
+            expect(closing.lastShownMs, `still fading 100ms after closing (seen ${closing.opacities.join(' ')})`).toBeGreaterThanOrEqual(100);
+            expect(closing.opacities.length, 'through more than one opacity').toBeGreaterThan(1);
+        });
+
+        test("a footer link's hover eases its ink, the drawn underline with it [scope-100]", async ({ page }) => {
+            await open(page, url);
+            const link = page.locator('.kp-footer a').first();
+            await link.scrollIntoViewIfNeeded();
+            await settled(page);
+            await link.hover();
+            const running = await link.evaluate((el) =>
+                el
+                    .getAnimations()
+                    .map((a) => /** @type {CSSTransition} */ (a).transitionProperty)
+                    .filter(Boolean),
+            );
+            expect(running, 'a colour transition runs on hover').toContain('color');
         });
 
         test('the wipe confirmation is a real dialog, Cancel focused by default, never Wipe [DI10]', async ({ page }) => {
@@ -258,35 +336,6 @@ for (const [channel, url] of CHANNELS) {
             const focusedIsDestructive = await page.evaluate(() => document.activeElement?.classList.contains('kp-button--destructive') ?? false);
             expect(focusedIsDestructive, 'focus is not on the destructive action').toBe(false);
             await style(dialog, 'background-color').toBe(await paint(page, '--popover'));
-        });
-
-        test('the marginal bracket is drawn beside the touched control, not on it [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the `::before` rule's border
-            // removed -> red on the bracket's colour; the hover's
-            // `opacity: 1` removed -> red on it appearing at all.
-            // The first attempt removed the WRONG one of three identical
-            // `border: 1px solid var(--primary)` lines — sepia's sidenav
-            // bracket, which this quirk deliberately echoes — and reported
-            // green. The drill now anchors on `inset-inline-start: -0.65rem`,
-            // which only this rule has [KT3].
-            await open(page, url);
-            // The PLAIN button, named explicitly. `.kp-button` with `.first()`
-            // reaches the hero's `--mirror` variant, which carries its own
-            // later rules — so this test passed with the rule under it
-            // removed, until the drill of 2026-09-12 said so [KT3].
-            const btn = page.locator('[class="kp-button"]').first();
-            expect(Number((await pseudo(btn, '::before', ['opacity']))['opacity']), 'blank margin at rest').toBe(0);
-            const box = await btn.evaluate((el) => el.getBoundingClientRect().left);
-            const mark = await btn.evaluate((el) => {
-                const s = getComputedStyle(el, '::before');
-                return { start: s.insetInlineStart, colour: s.borderTopColor, end: s.borderInlineEndStyle };
-            });
-            expect(mark.colour, 'the bracket is drawn in the theme primary').toBe(await paint(page, '--primary'));
-            expect(mark.end, 'and it is open toward the text').toBe('none');
-            expect(box, 'the control itself sits clear of the margin').toBeGreaterThan(0);
-            await btn.hover();
-            // Polled: the bracket fades in over the theme's duration [fix-1].
-            await pseudoStyle(btn, '::before', 'opacity', 'the reader marks what they touch').toBe('1');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

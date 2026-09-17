@@ -21,6 +21,7 @@
 // and the detach.
 
 import { getStrings } from './strings.js';
+import { paintRemembered, sidenavGroups } from './remember.js';
 
 export const SIDENAV_TOGGLE_EVENT = 'kp-sidenav-toggle';
 export const SIDENAV_SLIM_EVENT = 'kp-sidenav-slim';
@@ -53,12 +54,24 @@ export const OPTIONS = {
     lockScroll: 'data-kp-sidenav-lock-scroll',
     focusTrap: 'data-kp-sidenav-focus-trap',
     content: 'data-kp-sidenav-content',
+    /** The older spelling of `data-kp-remember`, still read [js/remember.js]. */
     remember: 'data-kp-sidenav-remember',
     toggle: 'data-kp-sidenav-toggle',
+    slimToggle: 'data-kp-sidenav-slim-toggle',
     slimHide: 'data-kp-sidenav-slim-hide',
     slimShow: 'data-kp-sidenav-slim-show',
     expanded: 'data-kp-sidenav-expanded',
+    overBelow: 'data-kp-sidenav-over-below',
+    narrow: 'data-kp-sidenav-narrow',
 };
+
+/**
+ * The width at and below which a panel with `data-kp-sidenav-over-below`
+ * and no length of its own becomes an `over` panel [scope-80]: the 40rem
+ * the bar collapses at and the table falls into cards at, so the package
+ * steps at one width rather than at two [TH104, TH26].
+ */
+const NARROW_STEP = '40rem';
 
 /** @type {WeakMap<Element, Sidenav>} */
 const handles = new WeakMap();
@@ -66,9 +79,9 @@ const handles = new WeakMap();
 /**
  * @typedef {object} Sidenav
  * @property {HTMLElement} element
- * @property {() => void} open
- * @property {() => void} close
- * @property {() => void} toggle
+ * @property {(options?: { remember?: boolean }) => void} open
+ * @property {(options?: { remember?: boolean }) => void} close  `{ remember: false }` for a close the reader did not ask for — a layout adapting to the room it has
+ * @property {(options?: { remember?: boolean }) => void} toggle
  * @property {(mode: 'over' | 'side' | 'push') => void} setMode
  * @property {(collapsed?: boolean) => void} setSlim
  * @property {() => boolean} isOpen
@@ -85,14 +98,22 @@ export function sidenavOf(element) {
     return element === null ? undefined : handles.get(element);
 }
 
-/** localStorage where there is one, null where reaching it throws. */
-function storage() {
-    try {
-        return globalThis.localStorage ?? null;
-    } catch {
-        // A browser set to refuse site data throws on the property itself.
-        return null;
-    }
+/**
+ * Whether a toggler has no name of its own, so the module gives it one.
+ *
+ * A toggler that already carries `aria-label` is renamed as the state
+ * changes; one with words in it keeps them. What counts as words is what a
+ * screen reader would read: a button holding only an `aria-hidden` glyph —
+ * the arrow a rail toggle usually is — has text content and no name, and
+ * was left as a bare "button" [scope-48].
+ *
+ * @param {Element} toggler
+ */
+function wantsName(toggler) {
+    if (toggler.getAttribute('aria-label') !== null) return true;
+    const clone = /** @type {Element} */ (toggler.cloneNode(true));
+    for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+    return (clone.textContent ?? '').trim() === '';
 }
 
 const FOCUSABLE =
@@ -108,7 +129,6 @@ const FOCUSABLE =
 export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
     /** @type {(() => void)[]} */
     const cleanups = [];
-    const memory = store === undefined ? storage() : store;
 
     for (const element of root.querySelectorAll('.kp-sidenav')) {
         const panel = /** @type {HTMLElement} */ (element);
@@ -122,7 +142,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             const value = read(attribute);
             return value === null ? fallback : value !== 'false';
         };
-        const key = read(OPTIONS.remember);
+        // What this panel remembers, and where: the name comes off the
+        // element, never from here [Kenny, 2026-09-16]. The paint happens
+        // before anything below reads the markup, so the starting state is
+        // read from the memory the same way it is read from the markup.
+        const memory = paintRemembered(panel, 'sidenav', { storage: store });
 
         /** @type {HTMLElement | null} */
         let backdrop = null;
@@ -170,7 +194,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
                 toggler.setAttribute('aria-expanded', String(open));
                 toggler.setAttribute('aria-controls', panel.id);
-                if (toggler.getAttribute('aria-label') !== null || toggler.textContent?.trim() === '') {
+                if (wantsName(toggler)) {
                     toggler.setAttribute('aria-label', open ? s.closeSidebar : s.sidebar);
                 }
             }
@@ -211,8 +235,15 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
         };
 
-        /** @param {boolean} open @param {boolean} [moveFocus] */
-        const set = (open, moveFocus = true) => {
+        /**
+         * @param {boolean} open
+         * @param {boolean} [moveFocus]
+         * @param {boolean} [save] whether this is a state to remember — a
+         *   person's choice is, an adaptation to the room the panel is in is
+         *   not. A window narrowed past the step closes the panel; widening
+         *   it again must not find it closed because of that [Kenny, 2026-09-16].
+         */
+        const set = (open, moveFocus = true, save = true) => {
             panel.setAttribute(OPTIONS.open, String(open));
             say(open);
             const offset = offsetContent(open);
@@ -231,43 +262,69 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 }
             }
 
-            if (key && memory) {
-                try {
-                    memory.setItem(key, String(open));
-                } catch {
-                    // A full or refused quota loses the memory, never the panel.
-                }
-            }
+            if (save) memory?.write('open', open);
             panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
             panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset } }));
         };
 
-        const close = () => set(false);
-        const open = () => set(true);
+        /** @param {{ remember?: boolean }} [options] */
+        const close = ({ remember = true } = {}) => set(false, true, remember);
+        /** @param {{ remember?: boolean }} [options] */
+        const open = ({ remember = true } = {}) => set(true, true, remember);
+
+        /**
+         * The buttons that collapse and expand this rail without a line of
+         * script [gap-12]: `data-kp-sidenav-slim-toggle`, pointed at the panel
+         * by `aria-controls` — or at every rail, when it names none, the way
+         * `data-kp-sidenav-toggle` does.
+         */
+        const slimTogglers = () =>
+            [...doc.querySelectorAll(`[${OPTIONS.slimToggle}]`)].filter(
+                (t) => (t.getAttribute('aria-controls') ?? '') === panel.id || t.getAttribute('aria-controls') === null,
+            );
+
+        /** @param {boolean} collapsed */
+        const saySlim = (collapsed) => {
+            if (read(OPTIONS.slim) === null) return;
+            const s = { ...getStrings(), ...strings };
+            for (const toggler of slimTogglers()) {
+                if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
+                // Expanded is the state a button reports: pressed, a
+                // collapsed rail widens [ARIA disclosure].
+                toggler.setAttribute('aria-expanded', String(!collapsed));
+                toggler.setAttribute('aria-controls', panel.id);
+                if (wantsName(toggler)) {
+                    toggler.setAttribute('aria-label', collapsed ? s.expandRail : s.collapseRail);
+                }
+            }
+        };
 
         /** @param {boolean} [collapsed] */
         const setSlim = (collapsed) => {
             if (read(OPTIONS.slim) === null) return;
             const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
             panel.toggleAttribute(OPTIONS.slimCollapsed, next);
-            if (key && memory) {
-                try {
-                    memory.setItem(`${key}:slim`, String(next));
-                } catch {
-                    // As above: the rail still works, it is only forgotten.
-                }
-            }
+            saySlim(next);
+            memory?.write('rail', next);
             panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
         };
 
         /** @param {'over' | 'side' | 'push'} next */
         const setMode = (next) => {
             panel.setAttribute(OPTIONS.mode, next);
-            set(isOpen(), false);
+            set(isOpen(), false, false);
         };
 
         // Categories. The accordion option is the reference's: with it on,
         // opening one closes the others.
+        const saveGroups = () => {
+            if (memory === null) return;
+            /** @type {Record<string, boolean>} */
+            const state = {};
+            for (const { group, id } of sidenavGroups(panel)) state[id] = group.hasAttribute(OPTIONS.expanded);
+            memory.write('groups', state);
+        };
+
         /** @param {Event} event */
         const onCategory = (event) => {
             const toggle = /** @type {HTMLElement | null} */ (
@@ -285,6 +342,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
             category.toggleAttribute(OPTIONS.expanded, !expanded);
             toggle.setAttribute('aria-expanded', String(!expanded));
+            saveGroups();
         };
 
         /** @param {Event} event */
@@ -297,28 +355,106 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             set(!isOpen());
         };
 
+        /** @param {Event} event */
+        const onSlimClick = (event) => {
+            const toggler = /** @type {Element | null} */ (event.target instanceof Element ? event.target.closest(`[${OPTIONS.slimToggle}]`) : null);
+            if (!toggler) return;
+            if (ownedBy !== '' && toggler.matches(ownedBy)) return;
+            const controls = toggler.getAttribute('aria-controls');
+            if (controls !== null && controls !== panel.id) return;
+            setSlim();
+        };
+
         /** @param {KeyboardEvent} event */
         const onEsc = (event) => {
             if (event.key !== 'Escape' || !on(OPTIONS.closeOnEsc, true) || mode() === 'side' || !isOpen()) return;
             close();
         };
 
+        // Narrow [scope-80]. A rail beside the content is right on a wide
+        // screen and a column of its own on a phone, so a panel that says
+        // `data-kp-sidenav-over-below` — with a length, or the package's
+        // 40rem — becomes the `over` panel while the box it lives in is that
+        // wide or narrower: away until its toggle opens it, with the focus
+        // trap, Escape, the backdrop and the focus return that mode already
+        // has, and its words back even when the rail was collapsed to
+        // icons. Above the width it is what the markup declared again, slim
+        // state included. The box is the panel's parent, as the bar measures
+        // its own wrapper [TH104]; an over panel is fixed, so it does not
+        // change the width it is measured by.
+        //
+        // The controls follow the state, through `hidden`, which the package
+        // lets win over every display rule [KT13]: this panel's
+        // `data-kp-sidenav-toggle` buttons — the one in the bar and the close
+        // inside the panel, which is the way out while the panel covers the
+        // bar — are shown only while narrow, and its slim toggles only while
+        // wide. Markup that starts them `hidden` stays right without the
+        // module. `data-kp-sidenav-narrow` on the panel says which it is.
+        const overBelow = read(OPTIONS.overBelow);
+        /** @type {{ mode: string | null, slim: boolean } | null} */
+        let declared = null;
+        /** @type {Map<HTMLElement, boolean>} */
+        const hiddenAtAttach = new Map();
+        /** @param {Element} control @param {boolean} hide */
+        const hideControl = (control, hide) => {
+            if (!(control instanceof HTMLElement) || (ownedBy !== '' && control.matches(ownedBy))) return;
+            if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute('hidden'));
+            control.toggleAttribute('hidden', hide);
+        };
+        const threshold = () => {
+            const length = (overBelow ?? '').trim() || NARROW_STEP;
+            const size = parseFloat(length);
+            if (length.endsWith('rem')) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
+            if (length.endsWith('em')) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
+            return size;
+        };
+        /** Change the mode without the slide: a resize is not an opening. @param {() => void} change */
+        const still = (change) => {
+            const before = panel.style.transition;
+            panel.style.transition = 'none';
+            change();
+            void panel.offsetWidth;
+            panel.style.transition = before;
+        };
+        const applyNarrow = () => {
+            const box = panel.parentElement;
+            if (overBelow === null || box === null) return;
+            const narrow = box.clientWidth <= threshold();
+            for (const control of togglers()) hideControl(control, !narrow);
+            if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
+            if (narrow === (declared !== null)) return;
+            still(() => {
+                if (narrow) {
+                    declared = { mode: read(OPTIONS.mode), slim: panel.hasAttribute(OPTIONS.slimCollapsed) };
+                    panel.setAttribute(OPTIONS.narrow, '');
+                    panel.removeAttribute(OPTIONS.slimCollapsed);
+                    panel.setAttribute(OPTIONS.mode, 'over');
+                    set(false, false, false);
+                } else {
+                    const was = /** @type {{ mode: string | null, slim: boolean }} */ (declared);
+                    declared = null;
+                    panel.removeAttribute(OPTIONS.narrow);
+                    if (was.mode === null) panel.removeAttribute(OPTIONS.mode);
+                    else panel.setAttribute(OPTIONS.mode, was.mode);
+                    panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
+                    saySlim(was.slim);
+                    set(mode() === 'side', false, false);
+                }
+            });
+        };
+        const narrowWatch =
+            overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === 'function' ? new ResizeObserver(applyNarrow) : null;
+
         // The starting state. A side panel is there unless told otherwise;
         // the two that cover are away until asked, which is the reference's
         // `hidden` default written as a mode rather than as a flag.
         let start = mode() === 'side';
         if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === 'true';
-        if (key && memory) {
-            try {
-                const remembered = memory.getItem(key);
-                if (remembered === 'true' || remembered === 'false') start = remembered === 'true';
-                if (memory.getItem(`${key}:slim`) === 'true') panel.setAttribute(OPTIONS.slimCollapsed, '');
-            } catch {
-                // Nothing remembered is a valid answer.
-            }
-        }
         if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, '');
-        set(start, false);
+        set(start, false, false);
+        saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
+        applyNarrow();
+        if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
 
         for (const toggle of panel.querySelectorAll('.kp-sidenav__category-toggle')) {
             const category = toggle.closest('.kp-sidenav__category');
@@ -326,6 +462,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         }
 
         doc.addEventListener('click', onToggleClick);
+        doc.addEventListener('click', onSlimClick);
         panel.addEventListener('click', onCategory);
         doc.addEventListener('keydown', /** @type {EventListener} */ (onEsc));
         panel.addEventListener('keydown', /** @type {EventListener} */ (onTrap));
@@ -335,7 +472,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             element: panel,
             open,
             close,
-            toggle: () => set(!isOpen()),
+            toggle: ({ remember = true } = {}) => set(!isOpen(), true, remember),
             setMode,
             setSlim,
             isOpen,
@@ -343,7 +480,17 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         };
 
         const detach = () => {
+            narrowWatch?.disconnect();
+            if (declared !== null) {
+                panel.removeAttribute(OPTIONS.narrow);
+                if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
+                else panel.setAttribute(OPTIONS.mode, declared.mode);
+                panel.toggleAttribute(OPTIONS.slimCollapsed, declared.slim);
+                declared = null;
+            }
+            for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute('hidden', hidden);
             doc.removeEventListener('click', onToggleClick);
+            doc.removeEventListener('click', onSlimClick);
             panel.removeEventListener('click', onCategory);
             doc.removeEventListener('keydown', /** @type {EventListener} */ (onEsc));
             panel.removeEventListener('keydown', /** @type {EventListener} */ (onTrap));
@@ -354,6 +501,13 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             for (const toggler of togglers()) {
                 toggler.removeAttribute('aria-expanded');
                 toggler.removeAttribute('aria-label');
+            }
+            if (read(OPTIONS.slim) !== null) {
+                for (const toggler of slimTogglers()) {
+                    if (ownedBy !== '' && toggler.matches(ownedBy)) continue;
+                    toggler.removeAttribute('aria-expanded');
+                    toggler.removeAttribute('aria-label');
+                }
             }
             delete panel.dataset.kpSidenavAttached;
             handles.delete(panel);

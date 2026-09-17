@@ -44,7 +44,7 @@ const FIXTURE = '/tests/fixtures/sticky.html';
 /** The bar's own height in the fixture, which is also its scroll offset. */
 const BAR = 64;
 
-test.describe('staying put', () => {
+test.describe('staying put', { tag: ['@component:navigation', '@component:page'] }, () => {
     test('a bar with the attribute stays where it was while the page scrolls [stage 1.2]', async ({ page }) => {
         await page.goto(FIXTURE);
         const bar = page.locator('[data-case="bar"]');
@@ -111,7 +111,7 @@ test.describe('staying put', () => {
 
 const SMOOTH = '/tests/fixtures/smooth-scroll.html';
 
-test.describe('smooth scrolling', () => {
+test.describe('smooth scrolling', { tag: ['@component:page'] }, () => {
     test('a page that asks for it gets it [stage 1.1]', async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto(SMOOTH);

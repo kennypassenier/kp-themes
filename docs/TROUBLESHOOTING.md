@@ -97,6 +97,15 @@ It carries a semantic colour and no words. Put the status in the badge as
 text, or add an element with an accessible name — an `aria-hidden` icon
 carries nothing.
 
+### A mega menu's button does nothing
+
+The panel shows only while its `data-kp-nav-disclosure` button says
+`aria-expanded="true"`, and that attribute is written by `attachNavMenus`
+(js/components.js, attached by js/auto.js). A page that renders the bar
+after `js/auto.js` ran calls `attachNavMenus(bar)` itself. If the button has
+`aria-expanded` and the panel still does not appear, the button and the
+`.kp-nav__menu--wide` must be siblings in the same bar item.
+
 ### A menu appears at the top-left instead of under its trigger
 
 Anchor positioning did not apply. The trigger needs `anchor-name` and the
@@ -104,6 +113,28 @@ popover needs a matching `position-anchor`; both are set by the React
 `DropdownMenu` and must be set by hand in the framework-free channel. If
 they are set and it still happens, the browser is older than the baseline
 — `tests/baseline.spec.mjs` names the four features this package needs.
+
+### A list or calendar opens above its field, or scrolls inside itself
+
+That is the placement, not a fault [fix-30]. An open combobox list, drawn
+select list or date picker calendar is fixed to the window
+(`js/top-layer.js`), so it cannot be scrolled into view: with too little room
+under the field and more above it, it opens above and carries
+`data-kp-overlay-side="above"`; with too little room on either side, it
+takes the larger one with a `max-block-size` and scrolls. A register that
+draws something only on the list's top edge can answer the attribute.
+
+### A sticky bar does not stick, or never turns compact
+
+`.kp-nav-wrap--sticky` sticks inside its parent, so a parent exactly as
+tall as the bar — a React mount point, a `<header>` around the wrapper —
+leaves it nowhere to go. Put the wrapper directly in the page or the
+column that scrolls, or make that parent `display: contents`. The compact
+state is set by `js/components.js` (`attachStickyNavs`, which `js/auto.js`
+calls): without the module the bar still sticks but keeps its height, and
+anchors land under it because nothing wrote `--kp-nav-sticky-height`. It
+turns compact only once the scrolling box has moved further than the bar
+is tall; `data-kp-nav-sticky-after` can make that later, never earlier.
 
 ### The tokens change but the page does not
 
@@ -133,6 +164,38 @@ The effects read `prefers-reduced-motion` through a subscribing hook and
 stop within the same session. If yours does not, you are on a copy from
 before that fix — the components used to read the setting once at mount.
 
+### In shade-light or shade-dark the shadows do not follow the pointer
+
+They are not meant to everywhere. The light is the pointer [scope-101,
+from scope-25], and it goes out on purpose in five cases: a touch screen,
+the moment a reader presses Tab, the pointer leaving the window,
+`prefers-reduced-motion: reduce`, and a page that never attached
+`js/effects.js`. In each of those the register falls back to the fixed
+light at the top left — `var(--kp-light-x, 1)` — which is what these two
+themes painted before scope-101, so a shadow that stands still is a
+correct picture, not a broken one.
+
+If it does not follow with a mouse on an effects-enabled page, check that
+the root still carries `--kp-pointer: track`: that one declaration arms the
+bus, and `--kp-light: pointer` only says which surfaces it lights.
+
+### In sepia the ink of a press always starts in the middle of the button
+
+That is the theme's own declared default, and it is what you get without
+the module: `js/effects.js` is what writes `--kp-press-x` and
+`--kp-press-y` onto the button a pointer went down on, and only for a
+theme that declares `--kp-press: point`. So either the module is not
+attached on that page (`js/auto.js`, or `attachEffects()`), or it was
+detached, or the register on the page predates scope-101. A key press has
+no point of its own and puts the stain in the middle deliberately.
+### The boot screen ignores the `arrivalLine` I set
+
+Since scope-84 (2026-09-15) a theme with words of its own reads them
+first: synthwave's boot takes `arrivalWordsByTheme.synthwave`, terminal's
+and retro's take `arrivalLinesByTheme`. `arrivalLine`, `arrivalProgress`
+and `arrivalReady` are the neutral words for a theme without an entry.
+Set the theme's own entry with `setStrings({ arrivalWordsByTheme: { … } })`.
+
 ## When a gate says no
 
 Every gate names the theme, the token and the number. The messages below
@@ -145,7 +208,9 @@ the design invariants, the flash threshold, the reduced-motion guards and
 the texture ceiling print their findings in `npm run advice` and refuse
 nothing. They read exactly as below; what differs is that seeing one does
 not stop a commit. The rows from `hsl(…) is a colour written outside the
-token layer` down are gates and do.
+token layer` down are gates and do — except the compliance table's, which
+moved to `npm run advice` on 2026-09-14 [scope-76] and refuses nothing
+either.
 
 | It says | It means | Where to look |
 | --- | --- | --- |
@@ -171,9 +236,9 @@ npm run generate:all      # every generator, in order, then prettier — the one
                           # the gates then fail one at a time (2026-09-08)
 npm run generate          # only the token stylesheets, when that is all you touched
 npm run gates             # everything that blocks a commit, in seconds
-npm run test:affected     # only the specs your change touches, Firefox
+npm run test:tags         # the tests tagged with what your change touches, Firefox
 npm run test:browser      # Chromium and Firefox, all of it — when you ask for it
-npm run advice            # contrast, invariants, motion, texture: a reading
+npm run advice            # contrast, invariants, motion, texture, prettier…: a reading
 npm run verify            # gates, then the whole suite, then the advice
 ```
 

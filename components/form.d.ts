@@ -30,6 +30,10 @@ export type FormFieldProps = {
      * For a radio group. Default stacked.
      */
     layout?: 'stacked' | 'inline';
+    /**
+     * For a select: lay the package's drawn list over it. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select="native"`).
+     */
+    drawn?: boolean;
     wrapperProps?: import('react').HTMLAttributes<HTMLElement>;
     classNames?: {
         label?: string;

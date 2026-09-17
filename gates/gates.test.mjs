@@ -17,7 +17,14 @@ import { STYLESHEET_ROLES, stylesheets } from './stylesheets.mjs';
 import { execFileSync } from 'node:child_process';
 import { discoverThemesFromCss, EXPECTED_THEMES, STATUS_NAMES } from './check-contrast.mjs';
 import { tokenNamesByTheme, findAsymmetry, knownAsymmetry } from './check-tokens.mjs';
-import { animations, flashesPerSecond, parseOpacityKeyframes, unguardedMotion, unsubscribedPreferenceReads } from './check-motion.mjs';
+import {
+    animations,
+    flashesPerSecond,
+    parseOpacityKeyframes,
+    reachableKeyframes,
+    unguardedMotion,
+    unsubscribedPreferenceReads,
+} from './check-motion.mjs';
 import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
 import { swallowedVariants, variantGrounds } from './check-variant-ground.mjs';
 import { checkSecondHalves, checkStateVisibility, themes } from './check-invariants.mjs';
@@ -92,7 +99,10 @@ test('TH22: no token is asymmetric beyond the recorded exceptions', () => {
     assert.deepEqual(
         unexpected,
         [],
-        'new asymmetric tokens:\n' + unexpected.map((a) => `  --${a.token}: missing from ${a.missing.join(', ')}`).join('\n'),
+        // scope-76: this test is the commit's token-parity gate now, so it
+        // refuses in the words gates/check-tokens.mjs always used.
+        `${unexpected.length} token name(s) are not declared by every theme (TH22):\n` +
+            unexpected.map((a) => `  --${a.token}\n      declared by: ${a.have.join(', ')}\n      missing from: ${a.missing.join(', ')}`).join('\n'),
     );
 });
 
@@ -100,7 +110,7 @@ test('TH22: the ratchet refuses to list a token that is already symmetric', () =
     // A list that outlives its problem is how an exception becomes permanent.
     const asymmetric = new Set(findAsymmetry(tokenNamesByTheme()).map((a) => a.token));
     const stale = [...knownAsymmetry()].filter((t) => !asymmetric.has(t));
-    assert.deepEqual(stale, [], `known-asymmetry.json is stale for: ${stale.join(', ')}`);
+    assert.deepEqual(stale, [], `themes/known-asymmetry.json lists ${stale.length} token(s) that are now declared everywhere: ${stale.join(', ')}`);
 });
 
 test('TH22: the parity check notices a token removed from one theme', () => {
@@ -145,7 +155,9 @@ test('DI5: a swing under ten percent is not a flash', () => {
 // duration and iteration count.
 test('DI5: every opacity keyframe the cyberpunk register animates stays under the threshold [TH131]', () => {
     const css = readFileSync(new URL('../css/cyberpunk-register.css', import.meta.url), 'utf8');
-    const keyframes = parseOpacityKeyframes(css);
+    // Since scope-98 the register names the package's alarm keyframes, so
+    // the keyframes it can reach include css/components.css's.
+    const keyframes = reachableKeyframes(css, parseOpacityKeyframes(readFileSync(new URL('../css/components.css', import.meta.url), 'utf8')));
     const rated = [];
     for (const anim of animations(css)) {
         const stops = keyframes.get(anim.name);
@@ -155,6 +167,24 @@ test('DI5: every opacity keyframe the cyberpunk register animates stays under th
         assert.ok(flashesPerSecond(stops, anim.durationMs, anim.cycles) <= 3, `${anim.name} exceeds three opposing changes per second`);
     }
     assert.ok(rated.length >= 3, `only ${rated.length} opacity animations rated — the register ships more than that`);
+});
+
+// scope-98: a register that names a keyframe another stylesheet declares is
+// measured with that keyframe's stops, not reported as unmeasurable. Before
+// the fix the gate read the using file alone and this name had no stops.
+test('DI5: a register naming a package keyframe is rated with the package stops [scope-98]', () => {
+    const pkg =
+        '@layer kp.components { @keyframes kp-alarm-flicker-in { 0% { opacity: 0; } 18% { opacity: 1; } 30% { opacity: 0.3; } 42% { opacity: 1; } 100% { opacity: 1; } } }';
+    const register =
+        "@layer kp.register { @media (prefers-reduced-motion: no-preference) { [data-theme='x'] .kp-alarm__panel { animation: kp-alarm-flicker-in 600ms steps(1, end) both; } } }";
+    assert.equal(parseOpacityKeyframes(register).get('kp-alarm-flicker-in'), undefined);
+    const [anim] = animations(register);
+    const stops = reachableKeyframes(register, parseOpacityKeyframes(pkg)).get(anim.name);
+    assert.ok(stops, 'the package keyframe is reachable from the register');
+    assert.equal(flashesPerSecond(stops, anim.durationMs ?? 0, anim.cycles), 3);
+    // The register's own keyframe of the same name wins, as the later layer's would.
+    const own = `${register} @keyframes kp-alarm-flicker-in { 0% { opacity: 0; } 100% { opacity: 1; } }`;
+    assert.equal(reachableKeyframes(own, parseOpacityKeyframes(pkg)).get('kp-alarm-flicker-in')?.length, 2);
 });
 
 // Drill [TH131]: a 5/s loop turns the same reading red.
@@ -419,6 +449,34 @@ test('AR28: the closure walk reads an import it must not miss', () => {
     assert.deepEqual(specifiers("// import { a } from './f.js';"), []);
 });
 
+test('AR28: the closure walk reads code, not the words inside a string or a template', () => {
+    // Before: the scan ran from `export` to the first `from` followed by a
+    // quote anywhere after it, so `bound === 'from' ? `…` : …` in js/strings.js
+    // read as an import of " ? `${column} on or after` : …" (2026-09-14).
+    const strings = [
+        'export const S = Object.freeze({',
+        '    bound: (kind, bound, column) => {',
+        "        if (kind === 'date') return bound === 'from' ? `${column} on or after` : `${column} on or before`;",
+        "        return bound === 'from' ? 'From' : 'To';",
+        '    },',
+        '    span: (from, to) => `from ${from} to ${to}`,',
+        '    quoted: "import { a } from \'./g.js\'",',
+        "    nested: (a) => `${a ? `from '${a}'` : 'none'} // import('./h.js')`,",
+        '});',
+    ].join('\n');
+    assert.deepEqual(specifiers(strings), []);
+    // A regular expression with a quote in it does not open a string that swallows the import after it.
+    assert.deepEqual(specifiers("const q = /['\"]/g;\nimport { a } from './i.js';"), ['./i.js']);
+    // The shapes the six use still read, next to such code, and a bare side-effect import too.
+    assert.deepEqual(specifiers(`${strings}\nimport { a } from './b.js';\nexport * from './c.js';\nimport './d.js';`), [
+        './b.js',
+        './c.js',
+        './d.js',
+    ]);
+    assert.deepEqual(specifiers('const x = y / 2; const m = import(\'./e.js\'); export { z } from "./f.js";'), ['./e.js', './f.js']);
+    assert.deepEqual(specifiers('const url = import.meta.url;'), []);
+});
+
 test('TH104: the wrapper check answers by ancestry, not by proximity', () => {
     // The whole point of the gate is depth: a container query binds to the
     // NEAREST container at ANY depth, so a wrapper three elements up is a
@@ -498,9 +556,27 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     for (const name of checks) {
         assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
         // The hook runs the same file the script does; match on the
-        // command the script names, which is what the hook copies.
+        // command the script names, which is what the hook copies. A
+        // script that chains two commands with `&&` is checked half by
+        // half: since gate-cache (2026-09-16) the hook gives each half
+        // its own `gate` line, so each gets its own input set and its own
+        // skip decision, and the joined string no longer appears.
+        for (const part of pkg.scripts[name].split('&&')) {
+            const command = part.trim().replace(/^node /, '');
+            assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+        }
+    }
+    // scope-76 moved variant-ground, compliance, baseline and prettier to
+    // advice. The other direction holds that: a check listed in `advice`
+    // that also sits in the chain or the hook refuses a commit, which is
+    // exactly what advice promises not to do.
+    for (const name of advisory) {
+        assert.ok(!chain.includes(`npm run ${name}`), `\`${name}\` is advice and still in \`npm run gates\``);
         const command = pkg.scripts[name].replace(/^node /, '');
-        assert.ok(hook.includes(command), `\`${name}\` (${command}) is not in .claude/hooks/gates.sh`);
+        assert.ok(
+            !hook.split('\n').some((line) => line.trim() === command || line.trim() === `npx ${command}` || line.trim() === `node ${command}`),
+            `\`${name}\` is advice and still in .claude/hooks/gates.sh`,
+        );
     }
     // The CI list is gone [Kenny, 2026-09-09]: there is no CI. He runs the
     // suite himself with `npm run verify`, which is the fourth list this
@@ -517,6 +593,25 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     // the tag, and until then nothing held it: it ran the hook script,
     // which is equivalent only for as long as nobody changes either.
     assert.ok(/run:\s*npm run gates/.test(release), 'release.yml does not run `npm run gates`');
+});
+
+test('scope-76: every merged check still runs, inside the target that took it', () => {
+    // Six checks lost their own `check:` script and hook line. KT7 cannot
+    // see them any more — there is no script to hold — so this does: each
+    // target must still spawn the old script, and the old script must still
+    // be there to spawn. Token parity is the seventh name on the list and
+    // needs no spawn: the TH22 tests above run it over the real themes.
+    const merged = [
+        ['generate-min.mjs', 'generate-bundle.mjs'],
+        ['check-docs-runnable.mjs', 'check-migration.mjs'],
+        ['check-fonts.mjs', 'generate-fonts-css.mjs'],
+        ['check-manifest.mjs', 'check-package.mjs'],
+    ];
+    for (const [target, old] of merged) {
+        const source = readFileSync(new URL(target, import.meta.url), 'utf8');
+        assert.ok(source.includes(`spawnSync(`) && source.includes(`'${old}'`), `gates/${target} no longer runs gates/${old}`);
+        assert.ok(existsSync(new URL(old, import.meta.url)), `gates/${old} is gone, and gates/${target} spawns it`);
+    }
 });
 
 test('KT7: the strings gate does not flag code that only looks like text', () => {
@@ -683,7 +778,6 @@ test('R5-BADGE: every status has a badge rule, and every badge rule has a status
 import { audit as auditHooks } from './check-hooks.mjs';
 import { audit as auditCoverage, missingParts } from './check-register-coverage.mjs';
 import { audit as auditFonts, declaredFamilies } from './check-fonts.mjs';
-import { block as tearBlock, ridge, withBlock } from './generate-tear.mjs';
 import { references } from './check-manifest.mjs';
 import { tableProblems } from './check-motion.mjs';
 import { audit as auditTexture, strongestAlpha, textures } from './check-texture.mjs';
@@ -794,15 +888,6 @@ test('AR39: a theme over the font budget fails', () => {
         problems.some((p) => p.includes('(budget)')),
         problems.join('\n'),
     );
-});
-
-test('AR41: the tear is deterministic per seed, two seeds differ, and the block round-trips', () => {
-    assert.deepEqual(ridge(7), ridge(7));
-    assert.notDeepEqual(ridge(7), ridge(23));
-    const once = withBlock('@layer kp.register {\n    .a { }\n}');
-    assert.ok(once.includes('--fx-tear:') && once.includes('--fx-tear-alt:') && once.includes('--fx-tear-line:'));
-    assert.equal(withBlock(once), once);
-    assert.equal(tearBlock(), tearBlock());
 });
 
 test('AR39: a stylesheet url() is a reference the manifest walk follows; a data: URI is not', () => {
@@ -930,7 +1015,6 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
         '--kp-slice': '600ms',
         '--kp-slice-hover': '320ms',
         '--kp-charge': '520ms',
-        '--kp-tear-height': '44px',
         '--fx-notch-sm': '8px',
     };
     const block = register.match(/\[data-theme='cyberpunk'\]\s*\{([^}]*)\}/)?.[1] ?? '';
@@ -1195,6 +1279,8 @@ test('the no-flash snippet cannot break out of the script element it lives in', 
         noFlashSnippet({ key: hostile }),
         noFlashSnippet({ attribute: hostile }),
         noFlashSnippet({ key: hostile, effects: true }),
+        // The register variant interpolates a pattern as well [scope-50].
+        noFlashSnippet({ key: hostile, register: { pattern: `${hostile}{theme}${hostile}` } }),
     ]) {
         assert.ok(!snippet.includes('</script'), 'the snippet closes the script element it is inlined in');
     }
@@ -1217,25 +1303,92 @@ test('the no-flash snippet cannot break out of the script element it lives in', 
     assert.equal(wrote, hostile, 'escaping changed the attribute the snippet writes');
 });
 
-test('a register edit runs the sweeps that read every register, not only its own spec [Phase 7]', async () => {
-    const { affected, themeSweeps } = await import('./affected.mjs');
+test('a register edit selects its theme, and the commit level adds every sweep [Phase 7, scope-33]', async () => {
+    const { grepFor, select } = await import('./tags.mjs');
+    // Phase 7 found a register edit running twenty tests while the every-theme
+    // press, alert, focus-ring and reflow sweeps never ran. Under tags the
+    // register selects its theme — its own spec and its slice of every sweep —
+    // plus the sweeps of the components its changed rules name; the commit
+    // level adds every @sweep test. Both halves are asserted here.
+    const before = "[data-theme='dark'] .kp-button {\n    color: red;\n}\n";
+    const after = "[data-theme='dark'] .kp-button {\n    color: blue;\n}\n";
+    const sel = select([{ file: 'css/dark-register.css', before, after, diff: '@@ -2 +2 @@' }]);
+    assert.equal(sel.all, false, 'a register edit should not fall back to everything');
+    const building = grepFor(sel, 'building');
+    assert.ok(typeof building === 'string' && building.length > 0);
+    const matches = (/** @type {string} */ title) => new RegExp(/** @type {string} */ (building)).test(title);
+    assert.ok(
+        matches('firefox register-dark.spec.mjs the dark register › x @theme:dark @component:page-effects'),
+        "the register's own spec is not selected",
+    );
+    assert.ok(
+        matches('firefox registers.spec.mjs .kp-button reacts to being pressed under dark @sweep @theme:dark @component:button'),
+        "dark's slice of the press sweep is not selected",
+    );
+    assert.ok(
+        matches('firefox button.spec.mjs the button › ring in every theme @component:button @sweep'),
+        'the button sweep the changed rule names is not selected',
+    );
+    assert.ok(
+        !matches('firefox button.spec.mjs the button › the size scale is configurable @component:button'),
+        'a non-sweep button test in the default theme was selected for a dark rule',
+    );
+    assert.ok(
+        !matches('firefox registers.spec.mjs the destructive alert can be read under light @sweep @theme:light @component:feedback'),
+        "another theme's sweep slice was selected at building level",
+    );
+    // …and the commit level runs that slice after all.
+    const commit = new RegExp(/** @type {string} */ (grepFor(sel, 'commit')));
+    assert.ok(
+        commit.test('firefox registers.spec.mjs the destructive alert can be read under light @sweep @theme:light @component:feedback'),
+        'the commit level skips a sweep',
+    );
+    // A tag is matched whole: @theme:shade-dark is not @theme:dark.
+    assert.ok(!matches('firefox register-shade-dark.spec.mjs x @theme:shade-dark'), 'a theme tag matched as a prefix');
 
-    // The sweeps are found by reading the specs, so this asserts the
-    // finding works at all — an empty list would make the widening a
-    // no-op and leave the map exactly as narrow as it was.
-    const sweeps = themeSweeps();
-    assert.ok(sweeps.length >= 12, `only ${sweeps.length} specs sweep every theme, which cannot be right`);
-    assert.ok(sweeps.includes('tests/registers.spec.mjs'), 'the every-theme press and alert sweeps are not in the list');
-    assert.ok(sweeps.includes('tests/dashboard.spec.mjs'), 'the every-theme focus-ring sweeps are not in the list');
+    // An anatomy edit is the same coupling by another route; a comment is none.
+    assert.equal(
+        grepFor(select([{ file: 'themes/dark/anatomy.md', before: 'a', after: 'b', diff: '@@ -1 +1 @@' }]), 'building'),
+        '(?:^|\\s)@theme:dark(?=\\s|$)',
+    );
+    const comment = select([{ file: 'css/dark-register.css', before, after: `/* note */\n${before}`, diff: '@@ -0,0 +1 @@' }]);
+    assert.equal(grepFor(comment, 'building'), '', 'a comment-only register edit selected tests');
+    assert.equal(grepFor(comment, 'release'), null, 'the release level is not every test');
+});
 
-    const forRegister = affected([{ file: 'css/dark-register.css', commentOnly: false }]);
-    assert.ok(Array.isArray(forRegister), 'a register edit should resolve to specs, not to "all" or "none"');
-    assert.ok(forRegister.includes('tests/register-dark.spec.mjs'), "the register's own spec is missing");
-    for (const sweep of sweeps) assert.ok(forRegister.includes(sweep), `${sweep} reads every register and is not run`);
-
-    // An anatomy edit is the same coupling by another route.
-    const forAnatomy = affected([{ file: 'themes/dark/anatomy.md', commentOnly: false }]);
-    assert.ok(Array.isArray(forAnatomy) && forAnatomy.includes('tests/registers.spec.mjs'), 'an anatomy edit skips the sweeps');
+test('the tag gate refuses an untagged test, an unknown tag, a theme walk without @sweep and an unmapped file [scope-33]', async () => {
+    const { audit } = await import('./check-tags.mjs');
+    const { loadMap } = await import('./tags.mjs');
+    const map = loadMap();
+    const clean =
+        "import { test } from '@playwright/test';\ntest.describe('d', { tag: ['@component:button'] }, () => {\n    test('t', async () => {});\n});\n";
+    assert.deepEqual(
+        (await audit([{ file: 'tests/x.spec.mjs', source: clean }], ['css/components.css'], { ...map, components: { button: '' } })).problems,
+        [],
+    );
+    /** @type {[string, RegExp][]} */
+    const cases = [
+        ["test('t', async () => {});", /carries no tag/],
+        ["test('t', { tag: ['@component:nope'] }, async () => {});", /names no component/],
+        ["test('t', { tag: ['@theme:nope'] }, async () => {});", /names no theme/],
+        ["test('t', { tag: ['@button'] }, async () => {});", /is not @sweep/],
+        ["test('t', { tag: ['@component:button'] }, async () => { for (const t of THEMES) {} });", /walks every theme/],
+    ];
+    for (const [source, expected] of cases) {
+        const { problems } = await audit([{ file: 'tests/x.spec.mjs', source }], [], { ...map, components: { button: '' } });
+        assert.ok(
+            problems.some((p) => expected.test(p)),
+            `${source} passed: ${problems.join('; ')}`,
+        );
+    }
+    // test.skip(condition, reason) is not a declaration and needs no tag.
+    const skip = "test.describe('d', { tag: ['@sweep'] }, () => { test('t', async () => { test.skip(true, 'why'); }); });";
+    assert.deepEqual((await audit([{ file: 'tests/x.spec.mjs', source: skip }], [], { ...map, components: {} })).problems, []);
+    const { problems } = await audit([{ file: 'tests/x.spec.mjs', source: clean }], ['nowhere/unmapped.bin'], { ...map, components: { button: '' } });
+    assert.ok(
+        problems.some((p) => /matches no rule/.test(p)),
+        'an unmapped file passed',
+    );
 });
 
 test("every showcase page carries its own theme's register [Phase 7]", () => {
@@ -1331,13 +1484,22 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
     const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
     const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
 
-    const ran = hook.split('\n').filter((line) => line.startsWith('echo "→')).length;
-    assert.ok(ran >= 25, `only ${ran} gate headings in the hook, which cannot be right`);
+    // Until 2026-09-16 the hook announced each check with `echo "→ …"`
+    // and this counted those. gate-cache turned the announcements into
+    // comments — an echo printed whether or not the check ran, which is
+    // the one thing the runner now has to be honest about — so the
+    // countable thing is the `gate` line itself.
+    const ran = hook.split('\n').filter((line) => /^gate(_glob)? /.test(line)).length;
+    assert.ok(ran >= 25, `only ${ran} gate lines in the hook, which cannot be right`);
 
     /** @type {Record<string, number>} */
     const WORDS = {
         twenty: 20,
         'twenty-five': 25,
+        'twenty-six': 26,
+        'twenty-seven': 27,
+        'twenty-eight': 28,
+        'twenty-nine': 29,
         thirty: 30,
         'thirty-one': 31,
         'thirty-two': 32,
@@ -1345,6 +1507,8 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
         'thirty-four': 34,
         'thirty-five': 35,
         'thirty-six': 36,
+        'thirty-seven': 37,
+        'thirty-eight': 38,
         forty: 40,
     };
     const stated = /\b([A-Za-z-]+) gates run in seconds\b/.exec(readme);

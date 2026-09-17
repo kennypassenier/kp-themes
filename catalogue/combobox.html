@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Combobox · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Combobox</h1>
+            <p class="cat-intro">
+                <code>.kp-combobox</code>: a text input that filters a list, driven by <code>js/combobox.js</code>, and the same thing as a tag input.
+                Anything that opens is shown open on this page as well as live: the open copies are frozen in the exact markup the module writes, so
+                they can be compared across themes without chasing a list that closes when you look away.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#closed">Closed</a></li>
+                <li><a href="#open">Open</a></li>
+                <li><a href="#nothing">Filtered to nothing</a></li>
+                <li><a href="#long">A very long option</a></li>
+                <li><a href="#many">Forty options</a></li>
+                <li><a href="#tags">Tag input</a></li>
+                <li><a href="#keyboard">Keyboard</a></li>
+            </ul>
+
+            <section class="cat-block" id="closed">
+                <h2>Closed</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> closed, a combobox is a text input with a label, and it must sit in a form beside a <code>.kp-field__input</code>
+                    without looking like a different control — compare the two. The combobox takes the field's ground, boundary, ink and height, so
+                    the two boxes must match in every theme; a theme where they do not is a finding, not a matter of taste. The status line under it
+                    is empty until you type.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-combobox" data-kp-combobox>
+                        <label class="kp-field__label" for="cb-closed">Site</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-closed"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="cb-closed-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="cb-closed-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="weigh">Weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="boiler">Boiler room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="bay">Loading bay</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="cb-beside">A plain field, for comparison</label>
+                        <input class="kp-field__input" id="cb-beside" type="text" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="open">
+                <h2>Open, with the list showing</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the list floats <i>over</i> what follows it, on a surface of its own with a boundary that stays visible against
+                    whatever is behind — here the list covers the note under the box, and the note must not show through. The highlighted option (<b
+                        >Cold store</b
+                    >, moved to with the arrow keys) must be told apart from the others by more than a hair of tint: in a theme with a loud register,
+                    check that the highlight is still readable and that the text on it keeps its contrast. The list is as wide as the input, no wider,
+                    and it opens directly under the input it belongs to — over the status line, not below it — so the two read as one control. The
+                    third option is disabled: it must look faded and must not light up under the pointer.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 17rem">
+                    <div class="kp-combobox">
+                        <label class="kp-field__label" for="cb-open">Site</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-open"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="true"
+                            aria-controls="cb-open-list"
+                            aria-activedescendant="cb-open-list-option-1"
+                            autocomplete="off"
+                            value="o"
+                        />
+                        <ul class="kp-combobox__list" id="cb-open-list" role="listbox">
+                            <li class="kp-combobox__option" role="option" id="cb-open-list-option-0" aria-selected="false" data-kp-option>
+                                Pump house 4
+                            </li>
+                            <li class="kp-combobox__option is-active" role="option" id="cb-open-list-option-1" aria-selected="true" data-kp-option>
+                                Cold store
+                            </li>
+                            <li class="kp-combobox__option" role="option" aria-disabled="true" data-kp-option>Weighbridge (closed for repairs)</li>
+                            <li class="kp-combobox__option" role="option" id="cb-open-list-option-2" aria-selected="false" data-kp-option>
+                                Boiler room
+                            </li>
+                            <li class="kp-combobox__option" role="option" id="cb-open-list-option-3" aria-selected="false" data-kp-option>
+                                Loading bay
+                            </li>
+                        </ul>
+                        <p class="kp-combobox__status" role="status" aria-live="polite">4 results</p>
+                    </div>
+                    <p class="cat-note">
+                        This note sits under the combobox, outside it. The open list must cover it completely, with no text bleeding through.
+                    </p>
+                </div>
+            </section>
+
+            <section class="cat-block" id="nothing">
+                <h2>Filtered to nothing</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> when nothing matches, the list stays open under the input with one row that says <b>No results</b>, in the muted
+                    ink — where the eye already is — and the status line says it for a screen reader. The row is not an option: the arrows do not land
+                    on it and Enter takes nothing. It must be legible on the list's surface in every theme. A server that wants to offer "add this"
+                    writes its own <code>[data-kp-combobox-empty]</code> row into the list and the module uses that one instead. Type
+                    <code>zzz</code> into the live box beside the frozen one: both must look the same.
+                </div>
+                <div class="cat-stage" style="min-block-size: 9rem">
+                    <div class="kp-combobox">
+                        <label class="kp-field__label" for="cb-none">Site (frozen)</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-none"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="true"
+                            aria-controls="cb-none-list"
+                            autocomplete="off"
+                            value="Pump house 9"
+                        />
+                        <ul class="kp-combobox__list" id="cb-none-list" role="listbox">
+                            <li class="kp-combobox__option" role="option" data-kp-option hidden>Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option hidden>Cold store</li>
+                            <li class="kp-combobox__empty" role="presentation" data-kp-combobox-empty>No results</li>
+                        </ul>
+                        <p class="kp-combobox__status" role="status" aria-live="polite">No results</p>
+                    </div>
+                    <div class="kp-combobox" data-kp-combobox>
+                        <label class="kp-field__label" for="cb-none-live">Site (live — type zzz)</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-none-live"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="cb-none-live-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="cb-none-live-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Weighbridge</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="long">
+                <h2>A very long option</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the second option is a sentence of 129 characters and the third an identifier with no space in it. Both must stay
+                    inside the list: the sentence wraps onto several lines with the same inset as the short options, and the identifier breaks inside
+                    itself rather than widening the list past the input or making it scroll sideways. The highlight on the long option must cover all
+                    of its lines, not just the first. Narrow the pane to see it worsen.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 22rem">
+                    <div class="cat-resize" style="min-block-size: 20rem">
+                        <div class="kp-combobox">
+                            <label class="kp-field__label" for="cb-long">Cause</label>
+                            <input
+                                class="kp-combobox__input"
+                                id="cb-long"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="true"
+                                aria-controls="cb-long-list"
+                                aria-activedescendant="cb-long-list-option-1"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="cb-long-list" role="listbox">
+                                <li class="kp-combobox__option" role="option" id="cb-long-list-option-0" aria-selected="false" data-kp-option>
+                                    Sensor drift
+                                </li>
+                                <li
+                                    class="kp-combobox__option is-active"
+                                    role="option"
+                                    id="cb-long-list-option-1"
+                                    aria-selected="true"
+                                    data-kp-option
+                                >
+                                    Pressure loss upstream of the manifold that recovers without intervention and returns within the hour, seen on
+                                    more than one line
+                                </li>
+                                <li class="kp-combobox__option" role="option" id="cb-long-list-option-2" aria-selected="false" data-kp-option>
+                                    telemetry.pumphouse4.line2.manifold.pressure.upstream.raw_unfiltered_1hz
+                                </li>
+                                <li class="kp-combobox__option" role="option" id="cb-long-list-option-3" aria-selected="false" data-kp-option>
+                                    Operator error
+                                </li>
+                            </ul>
+                            <p class="kp-combobox__status" role="status" aria-live="polite">4 results</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="many">
+                <h2>Forty options</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the list stops at its maximum height and scrolls <i>inside itself</i>; the page must not grow to fit it. The
+                    scrollbar, where the platform draws one, must sit inside the list's boundary and not hide the right edge of the options. Scroll
+                    the list to the end and keep scrolling: the page behind it should not start to move, or should move only once the list is
+                    exhausted. Open the live copy with the keyboard and press End — the last option must scroll into view.
+                </div>
+                <div class="cat-stage" style="min-block-size: 22rem">
+                    <div class="kp-combobox">
+                        <label class="kp-field__label" for="cb-many">Line (frozen open)</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-many"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="true"
+                            aria-controls="cb-many-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="cb-many-list" role="listbox">
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 1 — pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 2 — pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 3 — pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 4 — pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 5 — cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 6 — cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 7 — cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 8 — cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 9 — weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 10 — weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 11 — weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 12 — weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 13 — boiler room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 14 — boiler room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 15 — boiler room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 16 — boiler room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 17 — loading bay</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 18 — loading bay</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 19 — loading bay</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 20 — loading bay</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 21 — main gate</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 22 — main gate</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 23 — main gate</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 24 — main gate</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 25 — server room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 26 — server room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 27 — server room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 28 — server room</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 29 — canteen</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 30 — canteen</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 31 — canteen</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 32 — canteen</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 33 — workshop</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 34 — workshop</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 35 — workshop</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 36 — workshop</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 37 — yard</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 38 — yard</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 39 — yard</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Line 40 — yard</li>
+                        </ul>
+                        <p class="kp-combobox__status" role="status" aria-live="polite">40 results</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tags">
+                <h2>Tag input</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-tags</code> turns the combobox into a tag input. The tags already chosen sit above the input as
+                    <code>.kp-tag</code> pills; each has a remove button that must be hittable, must turn to the alarm colour on hover, and must be
+                    named "Remove …" to a screen reader. Click an option: it becomes a tag, disappears from the list, and the list stays open for the
+                    next one. Type a few letters and press ArrowDown once: the first option still showing is highlighted, never one the typing hid.
+                    Type a label and press Enter, or end it with a comma: text that names an option takes that option, and any other text becomes a
+                    tag of its own, because this box carries <code>data-kp-creatable</code>. Backspace only edits the text: pressing it once too often
+                    in an empty input must not remove a tag. A tag goes through its own remove button, which Shift+Tab reaches from the input; a box
+                    that wants the old Backspace behaviour opts in with <code>data-kp-backspace-removes</code>. The tag row must wrap rather than
+                    scroll when it fills.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 16rem">
+                    <div class="kp-combobox" data-kp-combobox data-kp-tags data-kp-creatable>
+                        <label class="kp-field__label" for="cb-tags">Labels on this incident</label>
+                        <ul class="kp-tag-list" data-kp-tag-list>
+                            <li class="kp-tag" data-value="pressure">
+                                <span>Pressure</span><button type="button" class="kp-tag__remove" aria-label="Remove Pressure">×</button>
+                            </li>
+                            <li class="kp-tag" data-value="night">
+                                <span>Night shift</span><button type="button" class="kp-tag__remove" aria-label="Remove Night shift">×</button>
+                            </li>
+                        </ul>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-tags"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="cb-tags-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="cb-tags-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="pressure">Pressure</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="night">Night shift</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="vendor">Needs the vendor</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="repeat">Repeat of an earlier incident</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="safety">Safety</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="keyboard">
+                <h2>Keyboard</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> Tab into the box and never touch the mouse. Focus opens the list. <b>Down</b> and <b>Up</b> move the highlight
+                    while the caret stays in the input — typing must keep working at every moment. <b>Home</b> and <b>End</b> jump to the ends;
+                    <b>Down</b> on the last option stays on the last (this box does not loop). <b>Enter</b> takes the highlighted option and closes
+                    the list; with nothing highlighted, Enter does nothing here and would submit a form around it. <b>Escape</b> closes without
+                    choosing. <b>Tab</b> leaves and closes. The highlight you see must always be the option Enter would take — if hover and the arrows
+                    disagree, that is the fault.
+                </div>
+                <div class="cat-stage" style="min-block-size: 16rem">
+                    <div class="kp-combobox" data-kp-combobox>
+                        <label class="kp-field__label" for="cb-keys">Who takes this incident?</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-keys"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="cb-keys-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="cb-keys-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Anneleen Verhoeven — site manager</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Mathias Dries — deputy</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Hydroflow — vendor hotline</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option>Night shift lead</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

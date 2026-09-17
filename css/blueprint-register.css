@@ -98,12 +98,9 @@
     [data-theme='blueprint'] h2,
     [data-theme='blueprint'] h3 {
         font-family: var(--theme-font-display);
-        line-height: 1.15;
     }
 
     [data-theme='blueprint'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.05;
         max-width: 16ch;
         margin-block: 0;
     }
@@ -327,9 +324,30 @@
         padding-inline-start: 0.4rem;
     }
 
+    /* ── The laurels stand in the measure frame [scope-107] ────────────
+       Kenny, 2026-09-16, reviewing the catalogue: "we hadden voor
+       blueprint toch zo een cool meetkader? kan dat niet rond de items
+       hier? Want nu is er enkel de linkerbovenhoek?" He is right about
+       what was there: the `⌐` this register printed before each claim is
+       ONE corner of the measurement frame and nothing else, so the row
+       read as three top-left marks with no boxes under them.
+
+       So the instrument the headline wears — `[data-kp-measure-bracket]`
+       above, four corner brackets reporting the box they hold — is drawn
+       around each claim instead. Same 1px in `--border-strong`, same arm
+       length, four corners, nothing spanning between them: a claim's box
+       is its own, measured by the browser, so no script is needed here
+       and no size is fixed.
+
+       Eight gradient stops on one overlay rather than four elements,
+       because a register may not add nodes to the page. The overlay is
+       `inset: 0` on the claim's own box and takes no pointer events; the
+       padding is what holds the brackets off the words, the way the
+       headline's wrap does it. */
     [data-theme='blueprint'] .kp-laurels {
         font-size: 0.8rem;
         color: var(--muted-foreground);
+        gap: 1.1rem 1.8rem;
     }
 
     [data-theme='blueprint'] .kp-laurels b {
@@ -338,10 +356,39 @@
         font-weight: 600;
     }
 
-    [data-theme='blueprint'] .kp-laurels li::before {
-        content: '⌐';
-        color: var(--border-strong);
-        margin-inline-end: 0.35em;
+    [data-theme='blueprint'] .kp-laurels > li {
+        position: relative;
+        padding: 0.5rem 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-laurels > li::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(var(--border-strong) 0 0), linear-gradient(var(--border-strong) 0 0), linear-gradient(var(--border-strong) 0 0),
+            linear-gradient(var(--border-strong) 0 0), linear-gradient(var(--border-strong) 0 0), linear-gradient(var(--border-strong) 0 0),
+            linear-gradient(var(--border-strong) 0 0), linear-gradient(var(--border-strong) 0 0);
+        background-repeat: no-repeat;
+        background-size:
+            var(--kp-laurel-arm, 0.6rem) 1px,
+            1px var(--kp-laurel-arm, 0.6rem),
+            var(--kp-laurel-arm, 0.6rem) 1px,
+            1px var(--kp-laurel-arm, 0.6rem),
+            var(--kp-laurel-arm, 0.6rem) 1px,
+            1px var(--kp-laurel-arm, 0.6rem),
+            var(--kp-laurel-arm, 0.6rem) 1px,
+            1px var(--kp-laurel-arm, 0.6rem);
+        background-position:
+            left top,
+            left top,
+            right top,
+            right top,
+            left bottom,
+            left bottom,
+            right bottom,
+            right bottom;
     }
 
     [data-theme='blueprint'] .kp-lede {
@@ -371,7 +418,9 @@
     [data-theme='blueprint'] .kp-nav {
         background: var(--background);
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     [data-theme='blueprint'] .kp-nav__brand {
@@ -391,7 +440,6 @@
     [data-theme='blueprint'] .kp-nav__link {
         color: var(--muted-foreground);
         text-decoration: none;
-        font-size: 0.9rem;
         border-block-end: 1px solid transparent;
         border-radius: 0;
         background: none;
@@ -424,7 +472,7 @@
         background: var(--primary);
         border: 1px solid var(--primary);
         border-radius: 2px;
-        padding: 0.4rem 0.9rem;
+        padding-inline: 0.9rem;
         font-weight: 600;
     }
 
@@ -451,6 +499,19 @@
         counter-reset: kp-menu-item;
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='blueprint'] .kp-nav__menu::before {
         content: '';
         display: block;
@@ -473,10 +534,9 @@
         display: flex;
         align-items: baseline;
         gap: 0.5em;
-        padding: 0.42rem 0.6rem;
+        padding-inline: 0.6rem;
         color: var(--foreground);
         text-decoration: none;
-        font-size: 0.85rem;
         border-radius: 0;
     }
 
@@ -566,6 +626,14 @@
         border-radius: 2px;
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='blueprint'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='blueprint'] .kp-field__check {
         accent-color: var(--selected);
     }
@@ -573,6 +641,26 @@
     [data-theme='blueprint'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: 2px;
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: the drafting corner of
+       the inputs, and the selection colour the check uses once on. */
+    [data-theme='blueprint'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input {
+        background: var(--card);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked {
+        background: var(--selected);
+        border-color: var(--selected);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked::before {
+        background: var(--card);
     }
 
     [data-theme='blueprint'] .kp-form__summary {
@@ -594,7 +682,13 @@
        node of its own — only `data-kp-label`); the redactions are solid
        ink blocks the same border colour as the sheet's own hairlines,
        cleared left to right on the trigger, staggered by 150ms apart
-       [S48, LIFT_PLAN row 6]. */
+       [S48, LIFT_PLAN row 6]. The block is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a block on an absolutely
+       positioned ::after covered none of it. The block reaches 0.05em above
+       and below and 0.1em past the mark's former padding at each end, all of
+       it padding the words make room for, so no block reaches past the line
+       it sits on. */
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -618,28 +712,17 @@
 
     [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
+        background: linear-gradient(var(--border), var(--border)) right center / 0% 100% no-repeat;
         color: inherit;
-        padding: 0 0.15em;
+        padding: 0.05em 0.25em;
         border-radius: 2px;
-    }
-
-    [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: -0.05em -0.1em;
-        background: var(--border);
-        border-radius: 2px;
-        clip-path: inset(0 0 0 100%);
-        pointer-events: none;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
-    }
-
-    [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        background-size: 100% 100%;
     }
 
     [data-theme='blueprint'] .kp-dialog,
@@ -658,8 +741,54 @@
         box-shadow: 0 12px 28px hsl(from var(--background) h s 0% / 0.45);
     }
 
-    [data-theme='blueprint'] .kp-dialog__title {
-        font-size: 1.05rem;
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='blueprint'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='blueprint'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='blueprint'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='blueprint'] .kp-toast--destructive,
+    [data-theme='blueprint'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='blueprint']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='blueprint'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='blueprint'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border: 0;
+        border-radius: 0;
     }
 
     [data-theme='blueprint'] .kp-menu__item:hover {
@@ -704,7 +833,6 @@
     [data-theme='blueprint'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
         font-weight: 600;
-        font-size: 0.85rem;
         letter-spacing: 0.06em;
     }
 
@@ -725,8 +853,12 @@
         border-radius: 2px;
         border: 1px solid var(--border-strong);
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='blueprint'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     [data-theme='blueprint'] .kp-health__dot {
@@ -742,10 +874,6 @@
         background: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
-    }
-
-    [data-theme='blueprint'] .kp-progress__value {
-        background: var(--primary);
     }
 
     [data-theme='blueprint'] .kp-spinner {
@@ -783,10 +911,28 @@
         border-radius: 2px;
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: hairline tables and panels ─────────────────────────────── */
 
     [data-theme='blueprint'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-block-end: 1px solid var(--border-strong);
         font-weight: 600;
     }
@@ -831,6 +977,20 @@
         font-size: 0.9rem;
     }
 
+    /* The accordion [gap-12]: the drafting mono its category toggle and tree use. */
+    [data-theme='blueprint'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+    }
+
+    [data-theme='blueprint'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
     [data-theme='blueprint'] .kp-reorder {
         border: 1px solid var(--border-strong);
         border-radius: 2px;
@@ -857,7 +1017,6 @@
     [data-theme='blueprint'] .kp-breadcrumb,
     [data-theme='blueprint'] .kp-pagination {
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
     }
 
     [data-theme='blueprint'] .kp-pagination a[aria-current],
@@ -914,11 +1073,11 @@
     }
 
     [data-theme='blueprint'] .kp-field {
-        gap: 0.3rem;
+        gap: calc(var(--kp-space-xs) * 1.2);
     }
 
     [data-theme='blueprint'] .kp-form {
-        gap: 0.85rem;
+        gap: calc(var(--kp-space-lg) * 0.85);
     }
 
     [data-theme='blueprint'] .kp-grid {
@@ -995,18 +1154,36 @@
         }
 
         /* The redactions: the ink block narrows away from the left,
-           staggered 150ms apart — a clip-path, not a colour cross-fade, so
-           no mid-transition shade is ever legible [KT8]. */
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 400ms ease-out;
+           staggered 150ms apart — a size, not a colour cross-fade, so no
+           mid-transition shade is ever legible [KT8]. The words take their
+           ink in no time once their block is gone, because the block is a
+           different colour from the words it hides. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size 400ms ease-out,
+                color 0s linear;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
-            transition-delay: var(--kp-redact-stagger);
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
         }
 
-        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
-            transition-delay: calc(2 * var(--kp-redact-stagger));
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
+        }
+
+        /* Opened, each phrase's words wait for its own block to go; covered
+           again, they go at once, before the block grows. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            transition-delay: 0s, 400ms;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), calc(400ms + var(--kp-redact-stagger));
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(400ms + 2 * var(--kp-redact-stagger));
         }
     }
 
@@ -1049,7 +1226,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='blueprint'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='blueprint'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='blueprint'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         font-family: var(--theme-font-mono);
         letter-spacing: 0.12em;
@@ -1077,7 +1256,6 @@
         border-radius: 0;
         padding-inline-start: 1.5rem;
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
     }
 
     [data-theme='blueprint'] .kp-sidenav__link::before {
@@ -1213,5 +1391,93 @@
     [data-theme='blueprint'] .kp-button:focus-visible::before,
     [data-theme='blueprint'] .kp-button:focus-visible::after {
         opacity: 1;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='blueprint'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): muted drafting text with no plate, a
+       hairline that inks in under it when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-block-end: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='blueprint'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--foreground);
+        border-block-end-color: var(--border-strong);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A red line on the drawing: the plate is its deep blue, the frame a cyan dashed construction line, and a drafting grid replaces the scanlines. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='blueprint'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 8% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 64));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 8%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 3% / 0.7);
+        --kp-alarm-frame: 1px dashed var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='blueprint'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-alarm__scan {
+        background:
+            linear-gradient(to right, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
+            linear-gradient(to bottom, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
+            radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
     }
 }

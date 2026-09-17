@@ -97,143 +97,149 @@ for (const channel of CHANNELS) {
     // Behaviour, so: two themes rather than 24, and the second one only
     // because the cyberpunk register hooks `.kp-button` since W0.
     for (const theme of ['formal', 'cyberpunk']) {
-        test(`the journey: a row is deleted with the keyboard alone, exactly once — ${channel.name}, ${theme} [W4, TH107, AR27, AR28]`, async ({
-            page,
-        }) => {
-            await page.setViewportSize({ width: 1280, height: 900 });
-            await page.goto(PAGE);
-            await ready(page);
-            await wearTheme(page, theme);
+        test(
+            `the journey: a row is deleted with the keyboard alone, exactly once — ${channel.name}, ${theme} [W4, TH107, AR27, AR28]`,
+            { tag: ['@component:table', '@component:overlays', '@component:button', `@theme:${theme}`] },
+            async ({ page }) => {
+                await page.setViewportSize({ width: 1280, height: 900 });
+                await page.goto(PAGE);
+                await ready(page);
+                await wearTheme(page, theme);
 
-            const before = await page.locator(channel.rows).count();
-            expect(before).toBe(3);
+                const before = await page.locator(channel.rows).count();
+                expect(before).toBe(3);
 
-            // 1 + 2. The menu opens from the keyboard and the destructive
-            // item is reachable from the keyboard.
-            await openMenu(page, channel, 'r1');
-            const item = page.locator(`[data-test="${channel.prefix}-delete-r1"]`);
-            await expect(item).toBeFocused();
+                // 1 + 2. The menu opens from the keyboard and the destructive
+                // item is reachable from the keyboard.
+                await openMenu(page, channel, 'r1');
+                const item = page.locator(`[data-test="${channel.prefix}-delete-r1"]`);
+                await expect(item).toBeFocused();
 
-            // 3. Activating it asks rather than acts.
-            await page.keyboard.press('Enter');
-            const dialog = page.locator('[data-kp-confirm-dialog]');
-            await expect(dialog).toHaveCount(1);
-            await expect(dialog.locator('.kp-dialog__title')).toHaveText('Delete Bakker?');
-            expect(await page.evaluate(() => document.querySelector('[data-kp-confirm-dialog]')?.matches(':modal'))).toBe(true);
-            expect(await acts(page), 'the question must not act').toEqual([]);
+                // 3. Activating it asks rather than acts.
+                await page.keyboard.press('Enter');
+                const dialog = page.locator('[data-kp-confirm-dialog]');
+                await expect(dialog).toHaveCount(1);
+                await expect(dialog.locator('.kp-dialog__title')).toHaveText('Delete Bakker?');
+                expect(await page.evaluate(() => document.querySelector('[data-kp-confirm-dialog]')?.matches(':modal'))).toBe(true);
+                expect(await acts(page), 'the question must not act').toEqual([]);
 
-            // 4a. Escape. The menu comes back and the keyboard is on the
-            // item it left, not on <body>.
-            //
-            // Drill [KT3]: the `displaced` restore loop removed from
-            // openConfirmation() in js/components.js — "expected visible,
-            // received hidden" on the menu, in both channels and both
-            // browsers.
-            await page.keyboard.press('Escape');
-            await expect(dialog).toHaveCount(0);
-            await expect(page.locator(channel.menu('r1')), 'the menu showModal() displaced is shown again').toBeVisible();
-            expect(await focused(page)).toBe(`${channel.prefix}-delete-r1`);
-            expect(await acts(page)).toEqual([]);
+                // 4a. Escape. The menu comes back and the keyboard is on the
+                // item it left, not on <body>.
+                //
+                // Drill [KT3]: the `displaced` restore loop removed from
+                // openConfirmation() in js/components.js — "expected visible,
+                // received hidden" on the menu, in both channels and both
+                // browsers.
+                await page.keyboard.press('Escape');
+                await expect(dialog).toHaveCount(0);
+                await expect(page.locator(channel.menu('r1')), 'the menu showModal() displaced is shown again').toBeVisible();
+                expect(await focused(page)).toBe(`${channel.prefix}-delete-r1`);
+                expect(await acts(page)).toEqual([]);
 
-            // 4b. And Cancel, reached with the keyboard from inside the
-            // dialog, does the same.
-            await page.keyboard.press('Enter');
-            await expect(dialog).toHaveCount(1);
-            expect(await page.evaluate(() => document.activeElement?.hasAttribute('data-kp-confirm-cancel'))).toBe(true);
-            await page.keyboard.press('Enter');
-            await expect(dialog).toHaveCount(0);
-            await expect(page.locator(channel.menu('r1'))).toBeVisible();
-            expect(await focused(page)).toBe(`${channel.prefix}-delete-r1`);
-            expect(await acts(page)).toEqual([]);
+                // 4b. And Cancel, reached with the keyboard from inside the
+                // dialog, does the same.
+                await page.keyboard.press('Enter');
+                await expect(dialog).toHaveCount(1);
+                expect(await page.evaluate(() => document.activeElement?.hasAttribute('data-kp-confirm-cancel'))).toBe(true);
+                await page.keyboard.press('Enter');
+                await expect(dialog).toHaveCount(0);
+                await expect(page.locator(channel.menu('r1'))).toBeVisible();
+                expect(await focused(page)).toBe(`${channel.prefix}-delete-r1`);
+                expect(await acts(page)).toEqual([]);
 
-            // 5. Once more, and this time take it. Tab reaches the accept
-            // button; the dialog opens on Cancel so a stray Enter is not
-            // the destructive answer.
-            //
-            // Drill [KT3]: the `unlocked === button` branch removed from
-            // onDialogClick() in js/components.js (framework-free) and the
-            // `unlocked.current` branch from handle() in
-            // components/button.jsx (React) — the re-fired click is caught
-            // by the listener that opened the dialog, so the dialog opens
-            // again and the row is still there: `acts: []`, 3 rows.
-            await page.keyboard.press('Enter');
-            await expect(dialog).toHaveCount(1);
-            await page.keyboard.press('Tab');
-            expect(await page.evaluate(() => document.activeElement?.hasAttribute('data-kp-confirm-accept'))).toBe(true);
-            await page.keyboard.press('Enter');
+                // 5. Once more, and this time take it. Tab reaches the accept
+                // button; the dialog opens on Cancel so a stray Enter is not
+                // the destructive answer.
+                //
+                // Drill [KT3]: the `unlocked === button` branch removed from
+                // onDialogClick() in js/components.js (framework-free) and the
+                // `unlocked.current` branch from handle() in
+                // components/button.jsx (React) — the re-fired click is caught
+                // by the listener that opened the dialog, so the dialog opens
+                // again and the row is still there: `acts: []`, 3 rows.
+                await page.keyboard.press('Enter');
+                await expect(dialog).toHaveCount(1);
+                await page.keyboard.press('Tab');
+                expect(await page.evaluate(() => document.activeElement?.hasAttribute('data-kp-confirm-accept'))).toBe(true);
+                await page.keyboard.press('Enter');
 
-            await expect(dialog).toHaveCount(0);
-            await expect(page.locator(`[data-test="${channel.prefix}-delete-r1"]`)).toHaveCount(0);
-            await expect(page.locator(channel.rows), 'the row is gone').toHaveCount(before - 1);
-            expect(await acts(page), 'exactly once').toEqual([`${channel.prefix === 'plain' ? 'plain' : 'react'}:r1`]);
-            // The two rows it did not point at are untouched.
-            await expect(page.locator(`[data-test="${channel.prefix}-menu-trigger-r0"]`)).toHaveCount(1);
-            await expect(page.locator(`[data-test="${channel.prefix}-menu-trigger-r2"]`)).toHaveCount(1);
-        });
+                await expect(dialog).toHaveCount(0);
+                await expect(page.locator(`[data-test="${channel.prefix}-delete-r1"]`)).toHaveCount(0);
+                await expect(page.locator(channel.rows), 'the row is gone').toHaveCount(before - 1);
+                expect(await acts(page), 'exactly once').toEqual([`${channel.prefix === 'plain' ? 'plain' : 'react'}:r1`]);
+                // The two rows it did not point at are untouched.
+                await expect(page.locator(`[data-test="${channel.prefix}-menu-trigger-r0"]`)).toHaveCount(1);
+                await expect(page.locator(`[data-test="${channel.prefix}-menu-trigger-r2"]`)).toHaveCount(1);
+            },
+        );
     }
 
     // The same journey in a 320px viewport, where W2's container query
     // has turned the table into cards and W3's wrapper is the only thing
     // allowed to scroll. Behaviour again, so one theme — but a second
     // LAYOUT, because that is what changed under it.
-    test(`the journey survives the narrow layout, and the page does not scroll sideways — ${channel.name} [W4, TH104, TH113]`, async ({ page }) => {
-        await page.setViewportSize({ width: 320, height: 900 });
-        await page.goto(PAGE);
-        await ready(page);
+    test(
+        `the journey survives the narrow layout, and the page does not scroll sideways — ${channel.name} [W4, TH104, TH113]`,
+        { tag: ['@component:table', '@component:navigation', '@component:layout'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 320, height: 900 });
+            await page.goto(PAGE);
+            await ready(page);
 
-        // The narrow layout is really the narrow one: without this the
-        // test could be driving the wide table and reporting nothing.
-        // Drill [KT3]: the `@container kp-table (max-width: 40rem)` block
-        // removed from css/components.css — "table-cell" in both channels
-        // and both browsers, and the wrapper measurement below goes with it.
-        // `not table-cell` rather than a value: the query lays the cells
-        // out as blocks and a later rule inside it makes the ones with a
-        // `data-label` flex, so naming one of them would pin the wrong
-        // thing.
-        expect(
-            await page.evaluate((sel) => getComputedStyle(/** @type {Element} */ (document.querySelector(sel))).display, `${channel.rows} td`),
-        ).not.toBe('table-cell');
+            // The narrow layout is really the narrow one: without this the
+            // test could be driving the wide table and reporting nothing.
+            // Drill [KT3]: the `@container kp-table (max-width: 40rem)` block
+            // removed from css/components.css — "table-cell" in both channels
+            // and both browsers, and the wrapper measurement below goes with it.
+            // `not table-cell` rather than a value: the query lays the cells
+            // out as blocks and a later rule inside it makes the ones with a
+            // `data-label` flex, so naming one of them would pin the wrong
+            // thing.
+            expect(
+                await page.evaluate((sel) => getComputedStyle(/** @type {Element} */ (document.querySelector(sel))).display, `${channel.rows} td`),
+            ).not.toBe('table-cell');
 
-        await openMenu(page, channel, 'r0');
-        await page.keyboard.press('Enter');
-        await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(1);
-        await page.keyboard.press('Tab');
-        await page.keyboard.press('Enter');
-        await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(0);
-        await expect(page.locator(channel.rows)).toHaveCount(2);
-        expect(await acts(page)).toHaveLength(1);
+            await openMenu(page, channel, 'r0');
+            await page.keyboard.press('Enter');
+            await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(1);
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('Enter');
+            await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(0);
+            await expect(page.locator(channel.rows)).toHaveCount(2);
+            expect(await acts(page)).toHaveLength(1);
 
-        // Nothing on the assembled page pushes it sideways — and the box
-        // that would have to give first does not either.
-        //
-        // Two measurements, because the first one alone would have been a
-        // test that cannot fail. Drill [KT3]: the shared
-        // `max-inline-size: 100%` / `overflow-wrap: anywhere` rule
-        // removed from css/components.css [AR32]. The PAGE stayed 320/320
-        // in both channels — W3's `.kp-table-wrap` absorbed it — and the
-        // WRAPPER read 354 against a client width of 304, in both
-        // channels and both browsers. So AR32's floor is what keeps the
-        // reference inside its card, and this is where it shows.
-        const sideways = await page.evaluate(
-            (sel) => {
-                const doc = /** @type {HTMLElement} */ (document.scrollingElement);
-                const wrap = /** @type {HTMLElement} */ (document.querySelector(sel));
-                return {
-                    page: { scrollWidth: doc.scrollWidth, clientWidth: doc.clientWidth },
-                    wrap: { scrollWidth: wrap.scrollWidth, clientWidth: wrap.clientWidth },
-                };
-            },
-            `${channel.rows.split(' ')[0]} .kp-table-wrap`,
-        );
-        expect(
-            sideways.page.scrollWidth,
-            `the page scrolls sideways: ${sideways.page.scrollWidth} > ${sideways.page.clientWidth}`,
-        ).toBeLessThanOrEqual(sideways.page.clientWidth);
-        expect(
-            sideways.wrap.scrollWidth,
-            `the card scrolls sideways inside the table wrapper: ${sideways.wrap.scrollWidth} > ${sideways.wrap.clientWidth}`,
-        ).toBeLessThanOrEqual(sideways.wrap.clientWidth);
-    });
+            // Nothing on the assembled page pushes it sideways — and the box
+            // that would have to give first does not either.
+            //
+            // Two measurements, because the first one alone would have been a
+            // test that cannot fail. Drill [KT3]: the shared
+            // `max-inline-size: 100%` / `overflow-wrap: anywhere` rule
+            // removed from css/components.css [AR32]. The PAGE stayed 320/320
+            // in both channels — W3's `.kp-table-wrap` absorbed it — and the
+            // WRAPPER read 354 against a client width of 304, in both
+            // channels and both browsers. So AR32's floor is what keeps the
+            // reference inside its card, and this is where it shows.
+            const sideways = await page.evaluate(
+                (sel) => {
+                    const doc = /** @type {HTMLElement} */ (document.scrollingElement);
+                    const wrap = /** @type {HTMLElement} */ (document.querySelector(sel));
+                    return {
+                        page: { scrollWidth: doc.scrollWidth, clientWidth: doc.clientWidth },
+                        wrap: { scrollWidth: wrap.scrollWidth, clientWidth: wrap.clientWidth },
+                    };
+                },
+                `${channel.rows.split(' ')[0]} .kp-table-wrap`,
+            );
+            expect(
+                sideways.page.scrollWidth,
+                `the page scrolls sideways: ${sideways.page.scrollWidth} > ${sideways.page.clientWidth}`,
+            ).toBeLessThanOrEqual(sideways.page.clientWidth);
+            expect(
+                sideways.wrap.scrollWidth,
+                `the card scrolls sideways inside the table wrapper: ${sideways.wrap.scrollWidth} > ${sideways.wrap.clientWidth}`,
+            ).toBeLessThanOrEqual(sideways.wrap.clientWidth);
+        },
+    );
 
     // ── The focus indicator, every theme ────────────────────────────
     //
@@ -242,26 +248,28 @@ for (const channel of CHANNELS) {
     // offset alone, `0px 0px 0px 0px` on the inner half, and all 24
     // themes are named, in both channels and both browsers. The same
     // removal takes the painted measurement below to 0 in 20 of them.
-    test(`both halves of the focus ring reach the destructive item in the row menu, every theme — ${channel.name} [W4, AR30, DI2]`, async ({
-        page,
-    }) => {
-        await page.setViewportSize({ width: 1280, height: 900 });
-        await page.goto(PAGE);
-        await ready(page);
-        await openMenu(page, channel, 'r1');
+    test(
+        `both halves of the focus ring reach the destructive item in the row menu, every theme — ${channel.name} [W4, AR30, DI2]`,
+        { tag: ['@component:table', '@component:overlays', '@component:button', '@sweep'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(PAGE);
+            await ready(page);
+            await openMenu(page, channel, 'r1');
 
-        /** @type {string[]} */
-        const broken = [];
-        for (const theme of THEMES) {
-            await wearTheme(page, theme);
-            // Read until the ring is whole, not once [fix-1]: the theme just
-            // changed and the ring arrives through a transition.
-            const { found, outer, inner } = await wholeRing(page, `${channel.prefix}-delete-r1`);
-            expect(found.focused, `${theme}: the keyboard lost the menu item`).toBe(true);
-            if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
-        }
-        expect(broken, `half a ring on the destructive menu item in:\n${broken.join('\n')}`).toEqual([]);
-    });
+            /** @type {string[]} */
+            const broken = [];
+            for (const theme of THEMES) {
+                await wearTheme(page, theme);
+                // Read until the ring is whole, not once [fix-1]: the theme just
+                // changed and the ring arrives through a transition.
+                const { found, outer, inner } = await wholeRing(page, `${channel.prefix}-delete-r1`);
+                expect(found.focused, `${theme}: the keyboard lost the menu item`).toBe(true);
+                if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+            }
+            expect(broken, `half a ring on the destructive menu item in:\n${broken.join('\n')}`).toEqual([]);
+        },
+    );
 
     // What the theme declares and what the browser paints are different
     // questions: `.kp-popover` sets `overflow: auto` and 4px of padding,
@@ -276,59 +284,67 @@ for (const channel of CHANNELS) {
     // brutalism, grotesk and woodblock, whose `--border-strong` equals
     // their `--focus-ring`, so the popover's own 1px border is counted.
     // Neither measurement alone would have caught both faults.
-    test(`the focus indicator PAINTS on the destructive item inside the menu, every theme — ${channel.name} [W4, AR30]`, async ({ page }) => {
-        test.slow();
-        await page.setViewportSize({ width: 1280, height: 900 });
-        await page.goto(PAGE);
-        await ready(page);
-        await openMenu(page, channel, 'r1');
+    test(
+        `the focus indicator PAINTS on the destructive item inside the menu, every theme — ${channel.name} [W4, AR30]`,
+        { tag: ['@component:table', '@component:overlays', '@component:button', '@sweep'] },
+        async ({ page }) => {
+            test.slow();
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(PAGE);
+            await ready(page);
+            await openMenu(page, channel, 'r1');
 
-        /** @type {string[]} */
-        const blank = [];
-        for (const theme of THEMES) {
-            await wearTheme(page, theme);
-            // The DIFFERENCE focus makes, on whichever side of the box the
-            // theme draws it [MR-NOTCH]. A bare count read 0 under
-            // cyberpunk once the bevel came back and the ring moved
-            // inside — and it counted the popover's own border as a ring
-            // in the four themes whose --border-strong equals their
-            // --focus-ring. A difference has the border in both terms.
-            const { delta, side, focused, idle } = await paintedFocusDelta(page, `${channel.prefix}-delete-r1`, { settleMs: 150 });
-            if (delta <= 0) blank.push(`${theme} (${side}: ${focused} focused, ${idle} at rest)`);
-        }
-        expect(blank, `focus painted no ring in:\n${blank.join('\n')}`).toEqual([]);
-    });
+            /** @type {string[]} */
+            const blank = [];
+            for (const theme of THEMES) {
+                await wearTheme(page, theme);
+                // The DIFFERENCE focus makes, on whichever side of the box the
+                // theme draws it [MR-NOTCH]. A bare count read 0 under
+                // cyberpunk once the bevel came back and the ring moved
+                // inside — and it counted the popover's own border as a ring
+                // in the four themes whose --border-strong equals their
+                // --focus-ring. A difference has the border in both terms.
+                const { delta, side, focused, idle } = await paintedFocusDelta(page, `${channel.prefix}-delete-r1`, { settleMs: 150 });
+                if (delta <= 0) blank.push(`${theme} (${side}: ${focused} focused, ${idle} at rest)`);
+            }
+            expect(blank, `focus painted no ring in:\n${blank.join('\n')}`).toEqual([]);
+        },
+    );
 
     // The confirmation's own buttons are built by js/components.js at
     // runtime and exist on no page any other suite measures per theme.
     // The keyboard lands on Cancel, so Cancel is the one that has to show
     // where it is.
-    test(`the confirmation's buttons carry both halves of the ring, every theme — ${channel.name} [W4, TH107, DI2]`, async ({ page }) => {
-        await page.setViewportSize({ width: 1280, height: 900 });
-        await page.goto(PAGE);
-        await ready(page);
-        await openMenu(page, channel, 'r1');
-        await page.keyboard.press('Enter');
-        await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(1);
-        // The dialog's buttons carry no data-test of their own — they are
-        // the package's markup, not the fixture's — so one is put on them
-        // here rather than into js/components.js, where it would ship.
-        await page.evaluate(() => {
-            document.querySelector('[data-kp-confirm-cancel]')?.setAttribute('data-test', 'confirm-cancel');
-            document.querySelector('[data-kp-confirm-accept]')?.setAttribute('data-test', 'confirm-accept');
-        });
+    test(
+        `the confirmation's buttons carry both halves of the ring, every theme — ${channel.name} [W4, TH107, DI2]`,
+        { tag: ['@component:table', '@component:overlays', '@component:button', '@sweep'] },
+        async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.goto(PAGE);
+            await ready(page);
+            await openMenu(page, channel, 'r1');
+            await page.keyboard.press('Enter');
+            await expect(page.locator('[data-kp-confirm-dialog]')).toHaveCount(1);
+            // The dialog's buttons carry no data-test of their own — they are
+            // the package's markup, not the fixture's — so one is put on them
+            // here rather than into js/components.js, where it would ship.
+            await page.evaluate(() => {
+                document.querySelector('[data-kp-confirm-cancel]')?.setAttribute('data-test', 'confirm-cancel');
+                document.querySelector('[data-kp-confirm-accept]')?.setAttribute('data-test', 'confirm-accept');
+            });
 
-        /** @type {string[]} */
-        const broken = [];
-        for (const theme of THEMES) {
-            await wearTheme(page, theme);
-            // The reading that failed in Kenny's verify run of 2026-09-10,
-            // mid-transition on forest: the second shadow layer at nought
-            // spread on its way to two. Read until it is the value [fix-1].
-            const { found, outer, inner } = await wholeRing(page, 'confirm-cancel');
-            expect(found.focused, `${theme}: the keyboard is not on Cancel`).toBe(true);
-            if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
-        }
-        expect(broken, `half a ring on the confirmation's Cancel in:\n${broken.join('\n')}`).toEqual([]);
-    });
+            /** @type {string[]} */
+            const broken = [];
+            for (const theme of THEMES) {
+                await wearTheme(page, theme);
+                // The reading that failed in Kenny's verify run of 2026-09-10,
+                // mid-transition on forest: the second shadow layer at nought
+                // spread on its way to two. Read until it is the value [fix-1].
+                const { found, outer, inner } = await wholeRing(page, 'confirm-cancel');
+                expect(found.focused, `${theme}: the keyboard is not on Cancel`).toBe(true);
+                if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+            }
+            expect(broken, `half a ring on the confirmation's Cancel in:\n${broken.join('\n')}`).toEqual([]);
+        },
+    );
 }

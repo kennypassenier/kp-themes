@@ -103,6 +103,20 @@ export declare const KNOBS: Readonly<{
      * phantom"; the picker was fine.
      */
     arrivalDismiss: "--kp-arrival-dismiss";
+    /**
+     * How fast the arrival plays, as a factor [scope-84]. Default 1.
+     *
+     * Every wait of the arrival — a boot line's step, a percentage's step,
+     * the card's hold, the pause before it switches off — is divided by
+     * it, and every CSS animation on the overlay (the CRT switching off,
+     * the card's bar and its shove) plays at it as its playback rate. So
+     * `0.5` takes twice as long and `2` half as long, and the sequence
+     * stays the same sequence. A value that is not a number above zero
+     * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+     * sets it on the root of a frame; no register declares it, and a page
+     * that never sets it plays exactly as before.
+     */
+    arrivalRate: "--kp-arrival-rate";
 }>;
 /**
  * How long a counting number takes, in milliseconds [feat-count-1].
@@ -141,6 +155,66 @@ export declare const POINTER_KNOB = "--kp-pointer";
 export declare const POINTER: Readonly<{
     x: "--kp-px";
     y: "--kp-py";
+}>;
+/**
+ * The knob a theme sets on the surfaces the pointer LIGHTS [scope-101,
+ * from scope-25]: `--kp-light: pointer`.
+ *
+ * Kenny's sentence for the shade pair, verbatim: "the pointer is the
+ * light, and the light half throws its shade away from it while the dark
+ * half is lifted out of shade by it". A shadow's direction depends on
+ * where its element is, which the two root numbers `POINTER_KNOB` writes
+ * cannot say — so this is written per element instead of per page. It
+ * rides on that same bus: the same `--kp-pointer: track` arms it, the
+ * same `pointermove` listener feeds it, the same animation frame writes
+ * both. Off wherever the bus is off, which includes reduced motion.
+ */
+export declare const LIGHT_KNOB = "--kp-light";
+/**
+ * The six properties `LIGHT_KNOB` drives on each lit element: the
+ * direction away from the pointer (`x`, `y`), how near it is (`near`,
+ * `lift`) and where the pointer sits inside the element's own box
+ * (`atX`, `atY`). A register declares its fallback for every one of them,
+ * so a page with no pointer paints the fixed light it painted before.
+ */
+export declare const LIGHT: Readonly<{
+    x: "--kp-light-x";
+    y: "--kp-light-y";
+    near: "--kp-light-near";
+    lift: "--kp-light-lift";
+    atX: "--kp-light-at-x";
+    atY: "--kp-light-at-y";
+}>;
+/** What the light can fall on, the approved demo's own list. */
+export declare const LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+/** Past this many pixels the shade is at full length; under it, shorter. */
+export declare const LIGHT_REACH = 240;
+/** Past this many pixels the light no longer reaches the surface at all. */
+export declare const LIGHT_FAR = 560;
+/**
+ * The knob a theme sets to have the point a press started at written to the
+ * button it started on [scope-25, built at scope-101]: `--kp-press: point`.
+ *
+ * Sepia's approved gesture is the ink spreading into the paper on a press,
+ * and ink spreads from where the nib touched down, not from the middle of
+ * the plate. CSS knows a button is being pressed; it cannot know WHERE, so
+ * something has to write the two numbers down. That is all this does — the
+ * whole gesture is the register's, and this is the coordinate it reads.
+ *
+ * Unlike `POINTER_KNOB` it stays armed under reduced motion: someone asking
+ * for less movement is not asking for the stain to appear in the wrong
+ * place, and the register gives them the same stain with no transition.
+ *
+ * Without the module, on a key press, or after `detach()`, the two
+ * properties are whatever the stylesheet declared — sepia's own default is
+ * the middle of the button, so the gesture is whole before a pointer has
+ * ever touched it [KT6].
+ */
+export declare const PRESS_KNOB = "--kp-press";
+/** The properties `PRESS_KNOB` drives: the press point inside the button's box. */
+export declare const PRESS: Readonly<{
+    x: "--kp-press-x";
+    y: "--kp-press-y";
 }>;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";

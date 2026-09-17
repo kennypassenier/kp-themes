@@ -6,9 +6,9 @@ brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
 cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
 shade-dark, lapis, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
-form fields, print), eighteen components, a theme picker, and a register
+form fields, print), twenty-one components, a theme picker, and a register
 for every one of the twenty-two themes — the opt-in stylesheet that
-carries a theme's own expression, from cyberpunk's notches and razor tear
+carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
 **Everything exists in two channels.** React, for a consumer with a build
@@ -16,11 +16,14 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty-five gates run in seconds and refuse a commit that breaks them:
-token parity, layer discipline, the hook vocabulary, the register
-coverage, the shipped fonts, the strings dictionary, the types, whether
-every command, path and quoted message a document carries is real, and
-whether every generated file still matches its source. A behaviour suite of 2,736 tests
+Thirty-four gates run in seconds and refuse a commit that breaks them: token parity, layer
+discipline, the hook vocabulary, the register coverage, the shipped
+fonts, the strings dictionary, the types, whether every command, path and
+quoted message a document carries is real, and whether every generated
+file still matches its source. A gate whose input files have not moved
+since it last passed is skipped, so a commit pays for what it touched
+rather than for everything; the full set runs on the first commit of each
+day and before every release. A behaviour suite of 2,736 tests
 runs in Chromium and Firefox on demand (`npm run test:browser`).
 
 Five checks are **advice, not gates** [Kenny, 2026-09-09]: contrast, the
@@ -35,6 +38,11 @@ excuses. If you consume this package and
 need those floors held, run `npm run advice` yourself and read it: the
 package tells you what it measures, and does not promise to have obeyed
 it.
+
+Four more joined the advice on 2026-09-14 [scope-76]: the variant-ground
+check, the compliance table, the vendored baseline's checksums and
+`prettier --check .` (`npm run check:format`). They print and never refuse a
+commit either.
 
 Consumers: JobTracker and kp-soft (React, git dependency), kyu and almanac
 (framework-free — they copy the stylesheet).
@@ -153,7 +161,7 @@ passage _is_, and every theme answers — some loudly, most quietly:
 | `data-kp-surface="hero\|app"`               | which ground a section stands on | signal yellow / the void          | the night sky / the void            |
 | `<mark>`                                    | an emphasis the theme may reveal | a redaction that lifts            | a neon tube that switches on        |
 | `data-kp-reveal="headline\|emphasis\|rule"` | something that arrives           | decipher, clearance, a drawn rule | tracking and shine, the tube, laser |
-| `data-kp-divider`                           | a section transition             | the razor tear                    | the horizon                         |
+| `data-kp-divider`                           | a section transition             | the data stream                   | the horizon                         |
 | `h1`/`h2` inside a surface                  | the heading accent               | brackets, display type            | chrome type, a cyan tube            |
 | `--kp-arrival` (on the root)                | how the page comes on            | quiet                             | `boot`: a boot line with a Skip     |
 
@@ -161,7 +169,11 @@ The reveals run through `js/effects.js` (`attachEffects()`, which
 `js/auto.js` attaches); once per session per page by default,
 `data-kp-reveal-every="load"` opts back in, reduced motion resolves every
 one to its rest state, and a page without the script shows the rest
-states. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
+states. The arrival speaks in its theme's own words
+(`arrivalWordsByTheme` and `arrivalLinesByTheme` in `js/strings.js`; a
+theme without an entry gets the neutral "Loading") and plays at
+`--kp-arrival-rate` on the root, 1 by default, 0.5 for twice as long
+[scope-84]. `catalogue/intros.html` plays every theme's arrival on demand. `themes/hooks.json` is the matrix, and `gates/check-hooks.mjs`
 refuses a theme that leaves a hook unanswered.
 
 ### `data-theme` and the `.dark` class
@@ -239,24 +251,65 @@ shell — that is not a number worth engineering around, and it removes a
 moving part: no load on switch, no flash while the new register arrives,
 no error path when it does not.
 
-**Per theme — load the one in use.**
+**Per theme — the shared stylesheets, and the active register fetched
+when it is needed.** Opt-in, through `js/lazy-register.js`
+(`@kp-soft/themes/js/lazy-register`); a page that links every register,
+or the bundle, is unaffected.
 
 ```html
+<link rel="stylesheet" href="/kp/css/fonts.css" />
 <link rel="stylesheet" href="/kp/css/themes.css" />
-<link rel="stylesheet" id="register" href="/kp/css/formal-register.css" />
+<link rel="stylesheet" href="/kp/css/components.css" />
+<link rel="stylesheet" href="/kp/css/layout.css" />
+<link rel="stylesheet" href="/kp/css/utilities.css" />
+<script>
+    /* the output of noFlashSnippet({ register: { pattern: '/kp/css/{theme}-register.css' } }) */
+</script>
 <script type="module">
-    import { onThemeChange } from '@kp-soft/themes/js/core';
-    onThemeChange((theme) => {
-        document.getElementById('register').href = `/kp/css/${theme}-register.css`;
-    });
+    import { attachLazyRegisters } from '@kp-soft/themes/js/lazy-register';
+    attachLazyRegisters({ pattern: '/kp/css/{theme}-register.css' });
 </script>
 ```
 
-A register averages 20 kB minified — `dark` is the heaviest at 44 kB,
-`light` the lightest at 12 kB — so a visitor who never leaves one theme
-downloads about 3% of what the bundle costs. Worth it for a public site
-over a slow connection; the price is a request on every switch and a
-frame where the old register has gone and the new one has not arrived.
+The page downloads the shared stylesheets and one register; a switch
+fetches the new theme's register once and keeps it, and switching back
+fetches nothing. Measured in `research/loading/README.md` on 2026-09-13:
+371,900 bytes of CSS on a first load under formal against 1,320,113 with
+every register linked, and one register — 31 to 66 kB raw — per theme a
+visitor switches to. `pattern` is where the registers are served from,
+with `{theme}` in it (default `/css/{theme}-register.css`;
+`/kp/dist/css/{theme}-register.min.css` takes the minified twins), and the
+snippet and the module must be given the same one. `hold` and `prune` are
+the other two knobs, both described in the module.
+
+Two things work differently on such a page, and both are contracts:
+
+1. **The no-flash snippet goes below `themes.css`, and writes the first
+   register.** `noFlashSnippet({ register: true })` — or an object with
+   `pattern` and `fallback` in place of `true` — copies the stored theme onto `<html>` as always,
+   and then writes the register link for that theme with
+   `document.write`, which every browser holds the first paint for — a
+   link a module inserts arrives after the page has painted without it.
+   It has to sit BELOW the `css/themes.css` link: the cascade layer order
+   is stated by whichever stylesheet states it first, `themes.css` states
+   it, and a register written above it would state `kp.register` before
+   `kp.components` exists, so the components would beat every register
+   rule. Written below, the register lands in `kp.register` and the
+   snippet never states a layer order of its own. An unknown stored name
+   asks for the fallback's register (default `formal`), not a missing
+   file. Without `register` the snippet is unchanged and still goes
+   before the stylesheets.
+2. **`applyTheme()` holds the previous theme until the new register has
+   loaded.** Tokens without their register are a theme that is not that
+   theme, so while the file is on its way the root keeps wearing the
+   previous theme, `applyTheme()` returns the previous name, and
+   `pendingTheme()` (from `@kp-soft/themes/js/core`) names the one on its
+   way. The change lands, with its `kp-theme-change`, the moment the
+   register has; a choice made meanwhile supersedes it. The picker and
+   `useTheme()` store the chosen theme, not the one still worn. A
+   register that fails to load leaves the theme as it was and fires
+   `kp-register-error`; `attachLazyRegisters({ hold: false })` flips at
+   once instead and accepts the frame without a register.
 
 Neither is more supported than the other. If you are not counting bytes,
 take the bundle: it is the one that cannot go wrong.
@@ -290,8 +343,10 @@ for.
 | `@kp-soft/themes/js/picker`              | the framework-free picker                                |
 | `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                               |
 | `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                    |
+| `@kp-soft/themes/js/alarm`               | the full-screen alarm, `showAlarm()` and its triggers    |
 | `@kp-soft/themes/js/registry`            | the generated theme list                                 |
 | `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                  |
+| `@kp-soft/themes/js/lazy-register`       | the active theme's register, fetched at runtime          |
 | `@kp-soft/themes/js/strings`             | the dictionary and its defaults                          |
 | `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region               |
 | `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                  |
@@ -441,8 +496,8 @@ same treatment.
 
 ## Links inside a router
 
-`NavBar`, `Breadcrumb` and `Pagination` render `<a href>` by default,
-which reloads the page. Inside React Router or Next that throws the state
+`NavBar`, `Breadcrumb`, `Pagination` and a `CommandPalette` command with
+an `href` render `<a href>` by default, which reloads the page. Inside React Router or Next that throws the state
 away, so hand in your own:
 
 ```jsx
@@ -465,7 +520,7 @@ navigation.
 configurable, with a default — the norm mature component libraries hold
 themselves to, applied here after an audit found the package short of it
 in some two hundred places. The record of that audit and what was done is
-[docs/GENERIC_SWEEP.md](docs/GENERIC_SWEEP.md). The shape, in five rules:
+[docs/archive/GENERIC_SWEEP.md](docs/archive/GENERIC_SWEEP.md). The shape, in five rules:
 
 **State is yours to own.** Every React component takes its state
 controlled (`value` + `onChange`) or uncontrolled (`defaultValue`), through
@@ -542,7 +597,7 @@ your own `@theme` aliases.
 ```sh
 npm run check:contrast            # css/themes.css
 node gates/check-contrast.mjs path/to/other.css
-npm run advice                    # contrast, and the other four readings
+npm run advice                    # contrast, and the other eight readings
 ```
 
 The script discovers every `[data-theme='…']` block that declares
@@ -595,7 +650,7 @@ readable on that theme's card. A test asserts all four ink colours clear
 | [docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md) | the system as built                                        |
 | [docs/TEST_PLAN.md](docs/TEST_PLAN.md)                           | what is tested, and what is not by decision                |
 | [docs/DESIGN_INVARIANTS.md](docs/DESIGN_INVARIANTS.md)           | the rules every theme must keep, with the compliance table |
-| [MIGRATION.md](MIGRATION.md)                                     | the five breaks in v1                                      |
+| [MIGRATION.md](MIGRATION.md)                                     | every break, from v1 to 6.0.0, and what to do about each   |
 
 ## Provenance
 
@@ -604,8 +659,8 @@ Extracted from kp-soft at commit `2983abb`
 `resources/css/app.css`, `resources/js/hooks/use-appearance.tsx`,
 `resources/js/components/theme-switcher.tsx`,
 `resources/js/components/fx/{boot-sequence,decipher-text,digital-rain,scramble-number}.tsx`,
-`gates/check-contrast.mjs`, `docs/legacy/THEMING.md`,
-`docs/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
+`gates/check-contrast.mjs`, `docs/archive/legacy/THEMING.md`,
+`docs/archive/legacy/CYBERPUNK_THEME_RESEARCH.md`. v0.1.0 is extraction only; the only
 additions are the status tokens and the de-Inertia'd hook API. The
 `docs/` copies are verbatim and still describe kp-soft's file layout.
 
@@ -651,7 +706,7 @@ git config core.hooksPath .githooks
 ```
 
 After that a commit runs the gates and refuses a message without feature
-IDs. Both were proved by making them fail; see `docs/REALIZATION_PLAN.md`.
+IDs. Both were proved by making them fail; see `docs/archive/REALIZATION_PLAN.md`.
 
 ## Installing from the git tag (npm 12)
 
@@ -704,12 +759,12 @@ including the screen-reader-only announcements, which are the half that
 fails silently.
 
 ```js
-import { DEFAULT_STRINGS, STRINGS_NL, setStrings } from '@kp-soft/themes/js/strings';
+import { DEFAULT_STRINGS, setStrings } from '@kp-soft/themes/js/strings';
 ```
 
-`DEFAULT_STRINGS` is the English set, frozen. `STRINGS_NL` is the Dutch
-that this package used to render by default, kept as one import for the
-projects that want those words back.
+`DEFAULT_STRINGS` is the English set, frozen. The package ships no other
+language since 4.0.0: a project that wants Dutch writes its own object of
+the keys it needs, called `NL` below.
 
 ### Three ways in, nearest wins
 
@@ -726,7 +781,7 @@ doing:
 ```jsx
 import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 
-<StringsProvider value={STRINGS_NL}>
+<StringsProvider value={NL}>
     <App />
 </StringsProvider>;
 ```
@@ -735,7 +790,7 @@ import { StringsProvider } from '@kp-soft/themes/hooks/strings';
 also seeds the React default:
 
 ```js
-setStrings({ ...STRINGS_NL, tableSearch: 'Zoeken in de tabel' });
+setStrings({ ...NL, tableSearch: 'Zoeken in de tabel' });
 ```
 
 Every override is partial: what you do not name keeps its default.
@@ -753,7 +808,7 @@ setStrings({
 });
 ```
 
-`js/strings.js` is the full list — 111 keys, each with its English default
+`js/strings.js` is the full list — 197 keys on 2026-09-15, each with its English default
 beside it.
 
 ### Theme names

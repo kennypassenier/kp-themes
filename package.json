@@ -1,6 +1,6 @@
 {
     "name": "@kp-soft/themes",
-    "version": "6.0.0",
+    "version": "6.1.0",
     "license": "MIT",
     "description": "The kp-soft house themes (seven data-theme palettes, registers, cyberpunk fx) as a shared package for React 19 apps.",
     "private": true,
@@ -68,6 +68,10 @@
             "types": "./js/no-flash.d.ts",
             "default": "./js/no-flash.js"
         },
+        "./js/lazy-register": {
+            "types": "./js/lazy-register.d.ts",
+            "default": "./js/lazy-register.js"
+        },
         "./js/components": {
             "types": "./js/components.d.ts",
             "default": "./js/components.js"
@@ -75,6 +79,10 @@
         "./js/overlays": {
             "types": "./js/overlays.d.ts",
             "default": "./js/overlays.js"
+        },
+        "./js/alarm": {
+            "types": "./js/alarm.d.ts",
+            "default": "./js/alarm.js"
         },
         "./js/listbox": {
             "types": "./js/listbox.d.ts",
@@ -107,6 +115,10 @@
         "./js/sidenav": {
             "types": "./js/sidenav.d.ts",
             "default": "./js/sidenav.js"
+        },
+        "./js/remember": {
+            "types": "./js/remember.d.ts",
+            "default": "./js/remember.js"
         },
         "./js/datepicker": {
             "types": "./js/datepicker.d.ts",
@@ -227,6 +239,7 @@
         "gates",
         "ha",
         "docs",
+        "!docs/archive",
         "README.md",
         "MIGRATION.md",
         "CHANGELOG.md"
@@ -234,28 +247,31 @@
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
         "format": "prettier --write .",
-        "gates": "npm run check:generated && npm run check:tokens && npm run check:layers && npm run check:relative-colour && npm run check:pressed-state && npm run check:variant-ground && npm run check:closure && npm run check:utilities && npm run check:bundle && npm run check:min && npm run check:migration && npm run check:wrappers && npm run check:docs-private && npm run check:docs-runnable && npm run check:doc-quotes && npm run check:strings && npm run check:compliance && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:baseline && npm run check:ids && npm run check:hooks && npm run check:register-coverage && npm run check:fonts && npm run check:fonts-css && npm run check:tear && npm run check:inline-styles && npm run check:ha && npm run check:package && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test && prettier --check .",
+        "check:format": "prettier --check .",
+        "check:signature": "node gates/advice-signature.mjs",
+        "gates": "npm run check:generated && npm run check:layers && npm run check:relative-colour && npm run check:pressed-state && npm run check:closure && npm run check:utilities && npm run check:min && npm run check:wrappers && npm run check:docs-private && npm run check:docs-runnable && npm run check:doc-quotes && npm run check:drift && npm run check:strings && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:ids && npm run check:catalogue && npm run check:round && npm run check:verdicts && npm run check:hooks && npm run check:tags && npm run check:register-coverage && npm run check:fonts && npm run check:inline-styles && npm run check:ha && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test",
         "generate": "node gates/generate-themes.mjs",
-        "generate:all": "npm run generate && npm run generate:fonts-css && npm run generate:utilities && npm run generate:tear && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:showcase && npm run generate:site && npm run generate:ha && node gates/generate-compare.mjs && npm run report:di5 && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
-        "check:generated": "node gates/generate-themes.mjs --check",
-        "check:tokens": "node gates/check-tokens.mjs",
+        "generate:all": "npm run generate && npm run generate:code-version && npm run generate:fonts-css && npm run generate:utilities && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:portraits && npm run generate:showcase && npm run generate:site && npm run generate:ha && node gates/generate-compare.mjs && npm run report:di5 && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
+        "check:generated": "node gates/generate-themes.mjs --check && node gates/generate-code-version.mjs --check",
         "test": "node --test gates/",
         "check:invariants": "node gates/check-invariants.mjs",
         "check:motion": "node gates/check-motion.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
         "test:browser": "playwright test",
         "generate:bundle": "node gates/generate-bundle.mjs",
-        "check:bundle": "node gates/generate-bundle.mjs --check",
-        "check:migration": "node gates/check-migration.mjs",
         "check:wrappers": "node gates/check-wrappers.mjs",
         "generate:utilities": "node gates/generate-utilities.mjs",
         "check:utilities": "node gates/generate-utilities.mjs --check && node gates/check-utilities.mjs",
         "generate:showcase": "node gates/generate-showcase.mjs",
         "check:showcase": "node gates/generate-showcase.mjs --check",
         "generate:examples": "node gates/generate-examples.mjs",
+        "generate:portraits": "node gates/generate-portraits.mjs",
         "check:examples": "node gates/generate-examples.mjs --check",
         "check:examples-wired": "node gates/check-examples-wired.mjs",
         "check:ids": "node gates/check-ids.mjs",
+        "check:catalogue": "node gates/check-catalogue.mjs",
+        "check:verdicts": "node gates/check-verdicts.mjs",
+        "catalogue": "node tests/fixtures/serve-catalogue.mjs",
         "check:inline-styles": "node gates/check-inline-styles.mjs",
         "generate:site": "node gates/generate-site.mjs",
         "check:site": "node gates/generate-site.mjs --check && node gates/check-site.mjs",
@@ -270,30 +286,32 @@
         "check:strings": "node gates/check-strings.mjs",
         "generate:ha": "node gates/generate-ha-themes.mjs",
         "check:ha": "node gates/generate-ha-themes.mjs --check",
-        "check:package": "node gates/check-package.mjs",
         "check:manifest": "node gates/check-manifest.mjs",
         "generate:types": "node gates/check-types.mjs --write",
         "check:types:consumer": "node gates/check-types.mjs",
         "check:hooks": "node gates/check-hooks.mjs",
         "check:register-coverage": "node gates/check-register-coverage.mjs",
         "check:fonts": "node gates/check-fonts.mjs",
-        "generate:tear": "node gates/generate-tear.mjs",
-        "check:tear": "node gates/generate-tear.mjs --check",
         "check:texture": "node gates/check-texture.mjs",
         "report:di5": "node gates/check-motion.mjs --report",
         "check:di5-report": "node gates/check-motion.mjs --report --check",
         "generate:fonts-css": "node gates/generate-fonts-css.mjs",
-        "check:fonts-css": "node gates/generate-fonts-css.mjs --check",
         "check:baseline": "node gates/check-baseline.mjs",
         "generate:min": "node gates/generate-min.mjs",
         "check:min": "node gates/generate-min.mjs --check",
-        "test:affected": "node gates/run-affected.mjs",
+        "test:tags": "node gates/run-tags.mjs",
+        "check:tags": "node gates/check-tags.mjs",
         "test:firefox": "playwright test --project=firefox",
-        "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants",
+        "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:signature ; npm run check:approvals ; npm run check:format",
         "verify": "node gates/verify.mjs",
+        "check:approvals": "node gates/advice-approvals.mjs",
         "check:docs-private": "node gates/check-docs-private.mjs",
         "check:docs-runnable": "node gates/check-docs-runnable.mjs",
-        "check:doc-quotes": "node gates/check-doc-quotes.mjs"
+        "check:doc-quotes": "node gates/check-doc-quotes.mjs",
+        "check:drift": "node gates/check-drift.mjs --check",
+        "drift:seen": "node gates/check-drift.mjs --seen",
+        "check:round": "node gates/check-round.mjs",
+        "generate:code-version": "node gates/generate-code-version.mjs"
     },
     "peerDependencies": {
         "motion": ">=12",

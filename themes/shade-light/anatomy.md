@@ -36,9 +36,22 @@ already carried to the whole desktop.
 
 1. **The ink is base01, not base00.** Solarized's own light-mode text
    colour `#657b83` measures 4.13:1 on `#fdf6e3` and fails AA; the
-   darker `#586e75` — `hsl(194, 14%, 40%)` — measures 4.99:1 and is the
+   darker `#586e75` — `hsl(194, 14%, 40%)` — measures 4.99:1 and was the
    text. That is the whole meaning of "medium contrast" here: as low as
-   AA allows, and not lower.
+   AA allows, and not lower. **Deepened to `hsl(194, 14%, 36%)` at
+   `scope-102`** (Kenny, 2026-09-16, shade-light-muted "Gewone tekst ook
+   donkerder"), the same hue and saturation four steps down: base01 at
+   40% left no room under it for a muted ink, because `scope-101` had to
+   push `--muted-foreground` to 39% to clear AA at all, and the quiet
+   text then read stronger than the running text. The body ink now
+   measures 5.30 on `--muted`, 5.86 on `--background` and 6.07 on
+   `--card`, against the muted ink's 4.71, 5.21 and 5.39 — 0.59 to 0.68
+   of separation, with both over 4.5:1 everywhere. One ink, one value:
+   `--card-foreground`, `--popover-foreground`, `--surface-hero-fg` and
+   `--surface-hero-card-foreground` carry the same colour and moved with
+   it. `--surface-hero-muted` stayed at 40% and so became the hero's own
+   quiet ink (4.99 against the hero body's 5.86), which it had never
+   been.
 2. **Accents are plates, never words.** Solarized's blue, cyan, yellow,
    magenta and red were drawn for syntax highlighting, where 3:1 is
    normal. As text they fail, so each is deepened where it carries text
@@ -58,10 +71,22 @@ already carried to the whole desktop.
    Sans" at build, because its OFL carries a Reserved Font Name clause
    (`fonts/families.json`) and a subset is a Modified Version that may
    not keep the original name.
-5. **The shadow is one token, three depths.** `--kp-shadow-1/2/3` in
+5. **The light is the pointer, since `scope-101`** (scope-25, Kenny:
+   "the pointer is the light, and the light half throws its shade away
+   from it while the dark half is lifted out of shade by it"). The plain
+   button, the card and the hero headline multiply the offsets scope-12
+   fixed at the top left by the direction away from the pointer that
+   `js/effects.js` writes on each of them. It is the same
+   `--kp-pointer: track` bus dark and titanium already arm, with
+   `--kp-light: pointer` naming the lit surfaces; every rule falls back
+   to the old fixed light, so a touch screen, a keyboard, reduced motion
+   or a page without the module paints exactly what shipped before.
+6. **The shadow is one token, three depths.** `--kp-shadow-1/2/3` in
    `css/shade-light-register.css` are all `hsl(from var(--foreground) h s l / a)`
-   at increasing blur and decreasing alpha — never a colour of the
-   register's own, and never applied to a flat surface.
+   at increasing blur and increasing alpha (0.1, 0.3, 0.35) — never a
+   colour of the register's own, and never applied to a flat surface.
+   Only the second and third are carried by a surface (below);
+   `--kp-shadow-1` is declared and nothing in the package uses it.
 
 ## The register (5.0.0)
 
@@ -116,10 +141,12 @@ The lede's ink-fill (`kp-mark-in`, a `background-size` change) and the
 dialog's rise (`kp-dialog-in`) are new keyframes with their own rows in
 `TIMINGS` and, for `kp-mark-in` (not opacity), an entry in
 `gates/check-motion.mjs`'s `OUT_OF_SCOPE`. The dossier's redaction bars
-use a plain CSS `transition` on `clip-path`, the same mechanism the demo
-itself uses, rather than a `@keyframes` — a `transition` is not scanned
-by the flash-rate table at all, and the demo was never animating it any
-other way. The rule reveal reuses the package's own shared `kp-rule-in`
+use a plain CSS `transition` rather than a `@keyframes` — a `transition`
+is not scanned by the flash-rate table at all, and the demo was never
+animating it any other way. The demo transitions `clip-path`; since
+`fix-33` (scope-93) the register transitions the plate's
+`background-size` instead, because the plate is the mark's own cloned
+background and a phrase that wraps is covered line by line. The rule reveal reuses the package's own shared `kp-rule-in`
 keyframe unchanged; nothing new was needed for it.
 
 **What the demo showed and the package now renders exactly (S49,
@@ -156,9 +183,11 @@ here, with its reason, because none of it is a silent adaptation:
   demo's own to within rounding; over any other ground it is the same
   mechanism the rest of the package already uses for a token-at-opacity
   tint.
-- The demo's redaction bars are the exact clip-path values
-  (`inset(0 0 0 0)` covered, `inset(0 100% 0 0)` clear) and the exact
-  stagger (90ms, `transition-delay`); the package's markup carries no
+- The demo's redaction bars clear by `clip-path` (`inset(0 0 0 0)`
+  covered, `inset(0 100% 0 0)` clear); the register clears the same
+  plate by its `background-size` (full width covered, `0%` clear,
+  narrowing toward the phrase's start as the clip did) since `fix-33`,
+  with the exact stagger (90ms, `transition-delay`); the package's markup carries no
   `--i` custom property per mark the way the demo's own hand-written
   HTML does, so the stagger is expressed as `:nth-of-type(2)` /
   `:nth-of-type(3)` instead of `calc(var(--i) * 90ms)` — three marks,
@@ -190,7 +219,9 @@ channel — `--focus-ring`/`--focus-ring-contrast` already resolve to
 exactly `--foreground`/`--background` for this theme in `css/themes.css`
 (measured: `hsl(194, 14%, 40%)` / `hsl(44, 87%, 94%)`, the demo's own
 hardcoded values to the digit), so the register makes no change here at
-all — DI2 was already answered before this lift began.
+all — DI2 was already answered before this lift began. Since `scope-102`
+the ring follows `--foreground` down to `hsl(194, 14%, 36%)`: the same
+token, one shade deeper, and nothing about the ring's own rule changed.
 
 **DI3 — states you can see.** Derived by lightness; the register adds
 one lightness step of its own, `--kp-primary-pressed`, for the one hover
@@ -206,7 +237,7 @@ the headline's words (opacity 0→1, staggered 70ms, up to four landing
 within one second — well under three opposing changes per second), the
 lede's ink-fill (a size change, not luminance), the rule's draw (a
 transform), the redaction clear (a discrete, user-triggered, one-shot
-`clip-path` transition per bar, outside the per-second accounting
+`background-size` transition per bar, outside the per-second accounting
 entirely), and the dialog's rise (opacity 0→1, once). Nothing loops,
 nothing blinks. Rated in `reports/di5.md`.
 
@@ -234,13 +265,28 @@ hazard in its own right, refused the same way its other hazards are.
   never a `color` on running text.
 - Glow or blink. No looping animation, no opacity flicker; every reveal
   in the register runs once.
-- Add a shadow to a flat surface (a card, an alert, a badge) or a border
-  to a floating one instead of the shadow — the two vocabularies do not
-  mix within one component.
+- Add a shadow to a flat surface (an alert, a badge) or a border to a
+  floating one instead of the shadow — the two vocabularies do not mix
+  within one component. **The card is the one exception, since
+  `scope-101`** (Kenny, 2026-09-16, scope25-build): it keeps its border
+  AND carries a shade at rest, turning with the pointer like every other
+  lit surface. The approved concept demo left it flat and this list said
+  so; the change is his, not the register's.
 - Add a second texture. The blurred seam is the one felt effect this
   theme carries; a grain, a halftone or a scanline would be the loud
   half's job, not this one's.
-- **No black.** The darkest text is 40% lightness; the darkest value
-  anywhere is the sidebar, which wears the dark half's ground.
+- **No black.** The darkest text is 36% lightness; the darkest value
+  anywhere is the sidebar, which wears the dark half's ground. The line
+  read 40% until `scope-102`, and the two moves that changed it are one
+  story: `scope-101` darkened `--muted-foreground` to 39% so its three
+  pairs clear 4.5:1 (4.71 on muted, 5.21 on background, 5.39 on card,
+  from 3.61 / 3.99 / 4.13), which left the muted ink 0.19 to 0.22
+  STRONGER than a body ink still at 40%; `scope-102` (Kenny, 2026-09-16,
+  shade-light-muted "Gewone tekst ook donkerder") answered that by
+  taking the body ink to 36% rather than lifting the muted one back over
+  the floor. The order is right again — muted 0.59 to 0.68 quieter than
+  body, both over 4.5:1 on every ground — and 36% is still a blue-grey,
+  not a black: `rgb(79, 99, 105)`, twenty-five points of lightness above
+  the sidebar's ground. See the `why` on `--foreground` in `tokens.json`.
 - **No warm accent.** The scheme's warmth is in the paper; every accent
   is cool or primary.

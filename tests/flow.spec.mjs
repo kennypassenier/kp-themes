@@ -1,7 +1,10 @@
 // Upload and wizard [TH44, TH48].
 
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { waitForJudging } from './helpers/catalogue.mjs';
+import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
@@ -34,7 +37,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`flow — ${channel.name}`, () => {
+    test.describe(`flow — ${channel.name}`, { tag: ['@component:upload'] }, () => {
         test('a dropped file gets a row with its name and size [TH44]', async ({ page }) => {
             await page.goto(URL);
             await page.setInputFiles(channel.uploadInput, {
@@ -83,7 +86,7 @@ for (const channel of CHANNELS) {
             await expect(page.locator(`${channel.upload} .kp-upload__file`)).toHaveCount(1);
         });
 
-        test('the wizard says which step you are on [TH48]', async ({ page }) => {
+        test('the wizard says which step you are on [TH48]', { tag: ['@component:structure'] }, async ({ page }) => {
             await page.goto(URL);
             await expect(page.locator(channel.status)).toHaveText(S.wizardStep(1, 2));
             // The attribute that exists for exactly this and is almost never used.
@@ -91,7 +94,7 @@ for (const channel of CHANNELS) {
             await expect(page.locator(channel.label1)).not.toHaveAttribute('aria-current', 'step');
         });
 
-        test('an invalid step does not advance [TH48]', async ({ page }) => {
+        test('an invalid step does not advance [TH48]', { tag: ['@component:structure'] }, async ({ page }) => {
             test.skip(!channel.validates, 'the React fixture mounts a wizard without a required field');
             await page.goto(URL);
             await page.locator(channel.next).click();
@@ -99,7 +102,7 @@ for (const channel of CHANNELS) {
             await expect(page.locator(channel.naam)).toBeFocused();
         });
 
-        test('a valid step advances, marks the last one done, and moves focus [TH48]', async ({ page }) => {
+        test('a valid step advances, marks the last one done, and moves focus [TH48]', { tag: ['@component:structure'] }, async ({ page }) => {
             await page.goto(URL);
             if (channel.naam !== null) await page.locator(channel.naam).fill('Kenny');
             await page.locator(channel.next).click();
@@ -112,3 +115,41 @@ for (const channel of CHANNELS) {
         });
     });
 }
+
+// ── gap-11, the upload faults of catalogue batch 2 [2026-09-13] ───────────
+
+const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+
+test(
+    'the drop zone shows a focus ring when its hidden input has keyboard focus, in every theme [gap-11]',
+    { tag: ['@component:upload', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        // gap-11: the file input is visually hidden and the zone is its label, so Tab landed on the input and nothing on screen changed.
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await useEmptyRegister(page.context());
+        await page.goto('/catalogue/upload.html');
+        await waitForJudging(page);
+        const zone = page.locator('#empty .kp-upload__zone');
+        const ring = () =>
+            zone.evaluate((el) => {
+                const s = getComputedStyle(el);
+                return `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor} | ${s.boxShadow}`;
+            });
+        // Reach the input the way a keyboard does: Tab from the element just before it.
+        await page.locator('#empty .cat-look').evaluate((el) => {
+            el.setAttribute('tabindex', '-1');
+            /** @type {HTMLElement} */ (el).focus();
+        });
+        const rest = await ring();
+        await page.keyboard.press('Tab');
+        expect(await page.evaluate(() => document.activeElement?.id)).toBe('up-empty');
+        const unseen = [];
+        for (const theme of THEME_NAMES) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+            const focused = await ring();
+            if (focused.startsWith('none') && focused.endsWith('| none')) unseen.push(`${theme}: ${focused}`);
+        }
+        expect(rest.startsWith('none'), `the zone at rest already paints a ring: ${rest}`).toBe(true);
+        expect(unseen).toEqual([]);
+    },
+);

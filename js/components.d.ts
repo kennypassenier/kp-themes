@@ -179,6 +179,113 @@ export declare function attachNavToggles(root?: ParentNode, { strings, ownedBy }
     strings?: Partial<import('./strings.js').Strings>;
     ownedBy?: string;
 }): () => void;
+/** Fired on the wrapper when a sticky bar turns compact or back: `{ compact }`. */
+export declare const NAV_COMPACT_EVENT = "kp-nav-compact";
+/** The mark the React NavBar puts on a sticky wrapper it wires itself [AR29]. */
+export declare const NAV_STICKY_OWNED = "[data-kp-nav-sticky-owner]";
+/**
+ * Wire every sticky nav bar under `root` [scope-48 wave 2].
+ *
+ * Opt-in by the modifier `.kp-nav-wrap--sticky`; the CSS makes the bar
+ * stick, this decides when it is compact and tells the scrolling box how
+ * tall it is. Two things, both undone by `detach`:
+ *
+ * - `data-kp-nav-compact` on the wrapper once the box has scrolled further
+ *   than `data-kp-nav-sticky-after` (px, and never less than the bar's own
+ *   height at rest, which is the default), and off again once it is back
+ *   within that distance less the bar's height. The gap between the two is not decoration: shrinking the
+ *   bar moves the content under it up, the browser's scroll anchoring moves
+ *   the scroll position with it, and without a gap at least that wide the
+ *   bar would flip between its two heights at the threshold.
+ * - `--kp-nav-sticky-height` and `data-kp-nav-sticky-root` on the scrolling
+ *   box (the document's root, or the nearest ancestor that scrolls), which
+ *   the box's `scroll-padding-block-start` reads, so an anchor or a focused
+ *   element lands below the bar. A page's own `--kp-scroll-offset` wins.
+ *
+ * @param {ParentNode} root
+ * @param {{ ownedBy?: string, after?: number }} [options]
+ * @returns {() => void} detach
+ */
+export declare function attachStickyNavs(root?: ParentNode, { ownedBy, after }?: {
+    ownedBy?: string;
+    after?: number;
+}): () => void;
+/**
+ * One sticky bar; the React NavBar calls this for the wrapper it renders.
+ *
+ * @param {HTMLElement} wrap the `.kp-nav-wrap--sticky` element
+ * @param {number} [after] px; overrides `data-kp-nav-sticky-after`
+ * @returns {() => void} detach
+ */
+export declare function stickyNav(wrap: HTMLElement, after?: number): () => void;
+/**
+ * Hang a bar item's open dropdown from whichever edge keeps it in the
+ * window [fix-27].
+ *
+ * The panel hangs from its item's start edge. Under the last item of a bar
+ * whose links sit at the window's end, that ran it past the window's right
+ * edge in all 22 themes (grotesk's catalogue bar, Kenny's note of
+ * 2026-09-14). A stylesheet cannot see where the window ends, so this
+ * measures the open panel on both edges and keeps the one that lies less
+ * outside — the start edge when both fit — writing
+ * `data-kp-nav-menu-end` on the panel for the other. Both channels call it:
+ * the module on hover and focus, the React NavBar from its item.
+ *
+ * Changing edges is not always enough, because the box that shows the bar
+ * is not always the window [fix-39]: in a box that clips, both of an item's
+ * edges can lie inside the window while the panel under it is cut. So the
+ * edge is chosen against the box the panel is really seen in, and what
+ * still hangs out afterwards is slid back in (`slideIntoView`).
+ *
+ * @param {Element} item the `.kp-nav__links > li` that holds the dropdown
+ * @param {boolean} [retry] measure once more on the next frame when the panel is not open yet; default true
+ * @returns {boolean} whether the panel now hangs from the end edge
+ */
+export declare function placeNavMenu(item: Element, retry?: boolean): boolean;
+/**
+ * Line an open mega menu's panel up with its bar's edges [scope-48].
+ *
+ * The panel is placed in whatever box contains it, and the registers
+ * disagree about which box that is: the `.kp-nav-wrap` in the base, the
+ * bar itself in eight registers, and cyberpunk's strip of links, which
+ * must stay positioned because its cut-corner plate hangs from it. So the
+ * bar is measured against that box, and the two offsets are written as
+ * `--kp-nav-mega-start` and `--kp-nav-mega-end` on the panel.
+ *
+ * Lined up with its bar the panel is normally inside whatever shows the
+ * bar, but it is placed against a box and judged against another, so it is
+ * held to the same question the dropdown is [fix-39]: a bar wider than the
+ * box that shows it would otherwise carry its panel out with it.
+ *
+ * @param {Element} panel the `.kp-nav__menu--wide`, open
+ */
+export declare function placeNavPanel(panel: Element): void;
+/**
+ * Wire every bar's dropdowns and mega menus [fix-27, scope-48].
+ *
+ * Dropdowns open on hover and on focus within, in CSS; this only places an
+ * open one so it stays in the window (`placeNavMenu`), when it opens and
+ * again when the window changes size.
+ *
+ * A mega menu is a `data-kp-nav-disclosure` button beside a
+ * `.kp-nav__menu--wide` panel. The button gets `aria-expanded` and an
+ * `aria-controls` naming the panel (an id is given when the panel has
+ * none), and the panel shows while it says `true`. Every open state has a
+ * way out [KT6]: the button again, Escape while the focus is in the bar
+ * (the focus goes back to the button), a click outside the item, and the
+ * focus leaving it. One panel is open at a time: opening one closes the
+ * others. A button with no words of its own is named from the dictionary
+ * (`navDisclosure`). The React NavBar wires its own bar and marks it
+ * `data-kp-nav-owner`, so this module leaves that bar alone [AR29].
+ *
+ * @param {ParentNode} root
+ * @param {{ strings?: Partial<import('./strings.js').Strings>, ownedBy?: string }} [options]
+ * @returns {() => void} detach
+ */
+export declare function attachNavMenus(root?: ParentNode, { strings, ownedBy }?: {
+    strings?: Partial<import('./strings.js').Strings>;
+    ownedBy?: string;
+}): () => void;
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.

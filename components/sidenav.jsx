@@ -34,12 +34,14 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @typedef {object} SidenavProps
  * @property {SidenavItem[]} [items]  The list. Omit and pass children to build it by hand.
  * @property {import('react').ReactNode} [title]  The heading above the list. Omit for no header.
+ * @property {import('react').ReactNode} [footer]  What stays under the list, in `.kp-sidenav__footer` — an account row, or the rail's own SidenavSlimToggle. Omit for no footer.
  * @property {'over' | 'side' | 'push'} [mode]  How it sits beside the content. Default: the module's 'side'.
  * @property {'fixed' | 'absolute'} [position]  Default: the module's own.
  * @property {'start' | 'end'} [side]  Which edge it lives on. Default: the module's own.
  * @property {boolean} [defaultOpen]  Open on first render. The module owns it afterwards.
  * @property {boolean} [slim]  Offer the narrow state at all.
  * @property {boolean} [slimCollapsed]  Start narrow.
+ * @property {boolean | string} [overBelow]  Become the `over` panel while the box it lives in is this wide or narrower: `true` for the package's 40rem step, or a length. Its toggles are shown only then, its slim toggles only above it [scope-80].
  * @property {boolean} [expandOnHover]  Widen while the pointer is over it.
  * @property {boolean} [accordion]  One nested list open at a time.
  * @property {boolean} [backdrop]  Dim the page behind it in `over`.
@@ -48,7 +50,7 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @property {boolean} [lockScroll]
  * @property {boolean} [focusTrap]
  * @property {string} [contentSelector]  What `push` moves over.
- * @property {string} [remember]  A storage key, so the narrow state survives a reload.
+ * @property {string} [remember]  A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
  * @property {import('react').ElementType} [linkComponent]  What renders a link [TH62]. Default 'a'.
  * @property {string} [label]  The accessible name of the navigation landmark.
  * @property {boolean} [autoAttach]  Hand the rendered markup to js/sidenav.js on mount. Default true.
@@ -95,12 +97,14 @@ function SidenavInner(
     {
         items,
         title,
+        footer,
         mode,
         position,
         side,
         defaultOpen,
         slim,
         slimCollapsed,
+        overBelow,
         expandOnHover,
         accordion,
         backdrop,
@@ -130,6 +134,7 @@ function SidenavInner(
         ...flag('data-kp-sidenav-open', defaultOpen),
         ...flag('data-kp-sidenav-slim', slim),
         ...flag('data-kp-sidenav-slim-collapsed', slimCollapsed),
+        ...(overBelow === undefined || overBelow === false ? null : { 'data-kp-sidenav-over-below': overBelow === true ? '' : overBelow }),
         ...flag('data-kp-sidenav-expand-on-hover', expandOnHover),
         ...flag('data-kp-sidenav-accordion', accordion),
         ...flag('data-kp-sidenav-backdrop', backdrop),
@@ -138,7 +143,7 @@ function SidenavInner(
         ...flag('data-kp-sidenav-lock-scroll', lockScroll),
         ...flag('data-kp-sidenav-focus-trap', focusTrap),
         ...value('data-kp-sidenav-content', contentSelector),
-        ...value('data-kp-sidenav-remember', remember),
+        ...value('data-kp-remember', remember),
     };
 
     // js/auto.js attaches on load; React mounts after that, so a
@@ -178,6 +183,7 @@ function SidenavInner(
                 </div>
             )}
             <div className="kp-sidenav__scroll">{items === undefined ? children : list(items, Link)}</div>
+            {footer === undefined ? null : <div className="kp-sidenav__footer">{footer}</div>}
         </nav>
     );
 }
@@ -216,3 +222,31 @@ function SidenavToggleInner({ controls, className = '', children, ...rest }, ref
 }
 
 export const SidenavToggle = forwardRef(SidenavToggleInner);
+
+/**
+ * @typedef {object} SidenavSlimToggleProps
+ * @property {string} controls  The `id` of the rail this collapses and expands.
+ * @property {string} [className]
+ * @property {import('react').ReactNode} [children]  The consumer's own word or glyph [KT5]. A glyph alone, marked aria-hidden, takes its accessible name from js/strings.js and the name follows the state.
+ */
+
+/**
+ * The button that collapses the rail to its icons and gives the words back
+ * [scope-48]. The React half of `data-kp-sidenav-slim-toggle`: it renders
+ * that attribute and nothing else of its own, and js/sidenav.js writes
+ * `aria-expanded`, `aria-controls` and — when the button has no words — the
+ * accessible name, exactly as it does for the markup a server writes. The
+ * button is not replaced when the rail changes, so the focus stays on it.
+ *
+ * @param {SidenavSlimToggleProps & import('react').ButtonHTMLAttributes<HTMLButtonElement>} props
+ * @param {import('react').ForwardedRef<HTMLButtonElement>} ref
+ */
+function SidenavSlimToggleInner({ controls, className, children, ...rest }, ref) {
+    return (
+        <button ref={ref} type="button" className={className} data-kp-sidenav-slim-toggle="" aria-controls={controls} {...rest}>
+            {children}
+        </button>
+    );
+}
+
+export const SidenavSlimToggle = forwardRef(SidenavSlimToggleInner);

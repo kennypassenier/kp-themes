@@ -15,15 +15,40 @@ import { DESCRIPTORS, GROUPS } from '../gates/site/descriptors.mjs';
 /** The nine sections S27 asks of every component page. */
 const SECTIONS = ['when', 'example', 'markup', 'react', 'props', 'events', 'knobs', 'a11y', 'variants'];
 
+/**
+ * The one address a documentation page names that nothing serves [fix-51].
+ *
+ * The media page's example is a picture the READER supplies: the frame holds
+ * its shape before the bytes land, which is the whole point of the component,
+ * and the snippet says so by pointing at `/hero.jpg`. The package ships no
+ * raster file at all — there is not one image in site/, examples/ or
+ * showcase/ — so that address 404s, and Chromium writes the failure into the
+ * console while Firefox says nothing. This test read the console, so it was
+ * red in one engine from the day the page was written (e6567608), through the
+ * release of v6.0.0, and only the release run of 6.1.0 stopped on it.
+ *
+ * Failed requests are now measured by their address rather than by a console
+ * line, which is the same in both engines and names this one exception. Any
+ * other 404 — a stylesheet, a module, a second picture — is a fault.
+ */
+const READERS_OWN = ['/hero.jpg'];
+
 for (const descriptor of DESCRIPTORS) {
     // Drill: emptying `examples` for one descriptor and regenerating
     // leaves a page with no live block at all. Drilled on `card`:
     // "expected: > 0, received: 0" on the page's own name, then restored.
-    test(`${descriptor.id} carries its nine sections and draws every example [TH100]`, async ({ page }) => {
+    test(`${descriptor.id} carries its nine sections and draws every example [TH100]`, { tag: ['@component:site'] }, async ({ page }) => {
         /** @type {string[]} */
         const errors = [];
         page.on('pageerror', (e) => errors.push(String(e)));
-        page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+        // The generic line Chromium writes for a failed request carries no
+        // address, so it cannot be judged; the response listener below reads
+        // the same failures with the address in hand, in both engines.
+        page.on('console', (m) => m.type() === 'error' && !m.text().startsWith('Failed to load resource') && errors.push(m.text()));
+        page.on('response', (r) => {
+            const path = new URL(r.url()).pathname;
+            if (r.status() >= 400 && !READERS_OWN.includes(path)) errors.push(`${r.status()} ${path}`);
+        });
 
         await page.goto(`/site/components/${descriptor.id}.html`);
 
@@ -74,7 +99,7 @@ const SIDEWAYS_EXCEPTIONS = {
 // budget grows with the corpus instead of being outgrown by it.
 const CORPUS_BUDGET_MS = 10_000 + DESCRIPTORS.length * 1_000;
 
-test('no documentation page scrolls sideways at 360px [DI11]', async ({ page }) => {
+test('no documentation page scrolls sideways at 360px [DI11]', { tag: ['@component:site'] }, async ({ page }) => {
     test.setTimeout(CORPUS_BUDGET_MS);
     await page.setViewportSize({ width: 360, height: 800 });
     /** @type {string[]} */
@@ -92,7 +117,7 @@ test('no documentation page scrolls sideways at 360px [DI11]', async ({ page }) 
 // dropped the measured height to 33.19px — the padding and the line box,
 // which is what a button is without the rule — and this failed on it.
 // Restored after.
-test('the package’s own stylesheet paints the live examples, not the site’s [KT3]', async ({ page }) => {
+test('the package’s own stylesheet paints the live examples, not the site’s [KT3]', { tag: ['@component:site'] }, async ({ page }) => {
     await page.goto('/site/components/button.html');
     const height = await page
         .locator('[data-sc-live] .kp-button')
@@ -107,7 +132,7 @@ test('the package’s own stylesheet paints the live examples, not the site’s 
 // regenerating left every entry resolving one directory too deep —
 // /site/site/index.html — and this went red on the first of them with a
 // 404. Restored.
-test('every navigation entry leads to a page that exists [TH100]', async ({ page, request }) => {
+test('every navigation entry leads to a page that exists [TH100]', { tag: ['@component:site'] }, async ({ page, request }) => {
     test.setTimeout(CORPUS_BUDGET_MS);
     await page.goto('/site/index.html');
     const hrefs = await page.locator('.sc-nav__link').evaluateAll((els) => els.map((el) => /** @type {HTMLAnchorElement} */ (el).href));
@@ -142,7 +167,7 @@ test('every navigation entry leads to a page that exists [TH100]', async ({ page
 //
 // Drill: put `kp-page` back on the <main> in gates/site/chrome.mjs and
 // the navigation measures well over its declared width again.
-test('the navigation keeps its width and the reading column follows it [MR-SITE]', async ({ page }) => {
+test('the navigation keeps its width and the reading column follows it [MR-SITE]', { tag: ['@component:site'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1600, height: 900 });
     await page.goto('/site/components/button.html');
     const box = await page.evaluate(() => {
@@ -172,7 +197,7 @@ test('the navigation keeps its width and the reading column follows it [MR-SITE]
 //
 // Drill: set `overflow-x: auto` on .sc-example__live in
 // gates/generate-site.mjs and the list is clipped again.
-test('an open list is not trapped inside its example box [MR-SITE]', async ({ page }) => {
+test('an open list is not trapped inside its example box [MR-SITE]', { tag: ['@component:site'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/site/components/combobox.html');
     const input = page.locator('.sc-example__live .kp-combobox__input').first();
@@ -208,7 +233,7 @@ test('an open list is not trapped inside its example box [MR-SITE]', async ({ pa
 //
 // Drill: stop calling indent() in gates/generate-site.mjs and every line
 // of every snippet starts at column zero.
-test('a printed snippet is indented by its nesting [MR-SITE]', async ({ page }) => {
+test('a printed snippet is indented by its nesting [MR-SITE]', { tag: ['@component:site'] }, async ({ page }) => {
     await page.goto('/site/components/field.html');
     const lines = await page.evaluate(() => {
         const block = document.querySelector('[data-sc-snippet] code');

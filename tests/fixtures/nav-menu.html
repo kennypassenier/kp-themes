@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>A bar's dropdown and its mega menu</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <style>
+            /* The one rule of the page's own: both bars put their links at
+               the window's far end. */
+            .kp-nav > .kp-nav__links {
+                margin-inline-start: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Both channels, one behaviour [AR7, rule 7g, fix-27, scope-48].
+
+             Each bar puts its links at the far end of the window, the way a
+             bar with the brand at the start and the places at the end does,
+             so the last item's dropdown has no room on its right: the case
+             grotesk's catalogue bar showed running past the window's edge.
+             The second item is a mega menu: a click-opened disclosure
+             button and a wide panel of grouped lists. No stylesheet of this
+             page's own beyond that push to the end (rule 7e, KT3). -->
+        <div data-test="free">
+            <div class="kp-nav-wrap">
+                <nav class="kp-nav" aria-label="Main navigation" data-test="free-nav">
+                    <span class="kp-nav__brand">kp-themes</span>
+                    <ul class="kp-nav__links">
+                        <li><a class="kp-nav__link" href="#overview">Overview</a></li>
+                        <li>
+                            <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure data-test="free-disclosure">
+                                Products
+                            </button>
+                            <div class="kp-nav__menu kp-nav__menu--wide" data-test="free-panel">
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Build</h2>
+                                    <ul>
+                                        <li><a href="#themes" data-test="free-first-link">Themes</a></li>
+                                        <li><a href="#components">Components</a></li>
+                                    </ul>
+                                </div>
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Run</h2>
+                                    <ul>
+                                        <li><a href="#tables">Data tables</a></li>
+                                        <li><a href="#forms">Forms</a></li>
+                                    </ul>
+                                </div>
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Learn</h2>
+                                    <ul>
+                                        <li><a href="#guide">User guide</a></li>
+                                        <li><a href="#layout" data-test="free-last-link">Layout</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure data-test="free-disclosure-2">
+                                Support
+                            </button>
+                            <div class="kp-nav__menu kp-nav__menu--wide" data-test="free-panel-2">
+                                <div class="kp-nav__group">
+                                    <h2 class="kp-nav__menu-heading">Help</h2>
+                                    <ul>
+                                        <li><a href="#faq">Questions</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-test="free-last">
+                            <a class="kp-nav__link" href="#account" aria-haspopup="true">Account</a>
+                            <ul class="kp-nav__menu" data-test="free-menu">
+                                <li><a href="#profile">Profile and preferences</a></li>
+                                <li><a href="#sessions">Signed-in devices</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <p><a href="#outside" data-test="free-outside">Outside the bar</a></p>
+        </div>
+
+        <div id="react" data-test="react"></div>
+
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module" src="/tests/fixtures/.build/react-nav-menu.js"></script>
+    </body>
+</html>

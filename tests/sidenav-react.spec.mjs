@@ -64,7 +64,7 @@ for (const [name, free, react] of [
     ['one that comes over the page', '[data-test="over"]', '[data-test="r-over"]'],
     ['one that pushes the page aside', '[data-test="push"]', '[data-test="r-push"]'],
 ]) {
-    test(`both channels build the same DOM for ${name} [feat-nav-3]`, async ({ page }) => {
+    test(`both channels build the same DOM for ${name} [feat-nav-3]`, { tag: ['@component:navigation'] }, async ({ page }) => {
         const a = await shape(page, free);
         const b = await shape(page, react);
         expect(a, 'the framework-free fixture is missing').not.toBe('MISSING');
@@ -75,7 +75,7 @@ for (const [name, free, react] of [
 
 // Drill: the `data-kp-sidenav-slim-show` attribute removed from the React
 // fixture's monogram -> red. Restored: green.
-test('a consumer writing the rich markup by hand gets the same DOM [feat-nav-3, KT6]', async ({ page }) => {
+test('a consumer writing the rich markup by hand gets the same DOM [feat-nav-3, KT6]', { tag: ['@component:navigation'] }, async ({ page }) => {
     // The slim case carries a theme's own furniture — a wordmark that
     // swaps for a monogram, categories that fold, a footer. The component
     // does not model any of that; the consumer writes it as children, and
@@ -102,7 +102,7 @@ test('a consumer writing the rich markup by hand gets the same DOM [feat-nav-3, 
 
 // Drill: the `data-kp-sidenav-toggle` attribute removed from
 // SidenavToggle -> red, the button opening nothing. Restored: green.
-test('the module drives the React navigation exactly as it drives the other [feat-nav-3]', async ({ page }) => {
+test('the module drives the React navigation exactly as it drives the other [feat-nav-3]', { tag: ['@component:navigation'] }, async ({ page }) => {
     const panel = page.locator('[data-test="r-over"]');
     const toggle = page.locator('[data-test="r-over-toggle"]');
 
@@ -121,7 +121,7 @@ test('the module drives the React navigation exactly as it drives the other [fea
 
 // Drill: the `sidenavOf` export removed from the module's handle map ->
 // red on the handle being undefined. Restored: green.
-test('the React navigation hands back the same handle [feat-nav-3, KT6]', async ({ page }) => {
+test('the React navigation hands back the same handle [feat-nav-3, KT6]', { tag: ['@component:navigation'] }, async ({ page }) => {
     const result = await page.evaluate(async () => {
         // The fixture's own copy of the module, which is the one that
         // attached the React half — see the note in react-sidenav.jsx.

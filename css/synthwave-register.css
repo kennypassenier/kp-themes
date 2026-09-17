@@ -4,7 +4,7 @@
    register. Scoped to [data-theme='synthwave'] and inert elsewhere;
    opt-in, imported after themes.css. The approved concept demo ("Outrun
    Horizon", 2026-09-08) is the reference for every value here, and
-   docs/RESEARCH_2026-09.md §25 is where each mechanism was measured.
+   docs/archive/RESEARCH_2026-09.md §25 is where each mechanism was measured.
 
    Cyberpunk is diagonal and day; synthwave is horizontal and night. What
    this file does, in order: the knobs and the texture; the type; the
@@ -109,7 +109,6 @@
         font-family: var(--theme-font-display);
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        line-height: 1.1;
     }
 
     /* Microlabels: the OSD face, pink, with the tape prefix. */
@@ -133,9 +132,7 @@
        in chrome — the 50/51 break of the genre's title treatment, a
        stroke of near-white, an extrusion below. */
     [data-theme='synthwave'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
         font-weight: 900;
-        line-height: 1;
         letter-spacing: 0.06em;
         margin-block: 0 0.4em;
         text-wrap: balance;
@@ -394,9 +391,12 @@
     [data-theme='synthwave'] .kp-nav {
         background: var(--background);
         border-bottom: 1px solid hsl(from var(--foreground) h s l / 0.08);
-        padding-block: 1.1rem 0;
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0px) * var(--kp-nav-pad-scale, 1));
         position: relative;
-        z-index: var(--kp-z-nav, 30);
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
     }
 
     /* The brand in small chrome. */
@@ -428,9 +428,8 @@
 
     [data-theme='synthwave'] .kp-nav__link {
         display: block;
-        padding: 0.7rem 1.1rem 1.2rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -462,6 +461,16 @@
         box-shadow: inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
     }
 
+    /* The keyboard keeps its ring [fix-38, DI2]: the glow above replaced
+       the inner half on a focused link, and the outer half is the page's
+       own ground, so a Tab showed only the stripe under the word. The ring
+       is restated beside the glow. */
+    [data-theme='synthwave'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
+    }
+
     [data-theme='synthwave'] .kp-nav__link:hover::after,
     [data-theme='synthwave'] .kp-nav__link:focus-visible::after,
     [data-theme='synthwave'] .kp-nav__link[aria-current]::after,
@@ -482,7 +491,7 @@
     /* The call to action is a neon frame. */
     [data-theme='synthwave'] .kp-nav__link--cta {
         margin-left: 0.6rem;
-        padding: 0.55rem 1.3rem;
+        padding-inline: 1.3rem;
         border: 2px solid var(--primary);
         border-radius: var(--radius);
         color: var(--kp-core);
@@ -515,10 +524,22 @@
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='synthwave'] .kp-nav__menu a {
         display: block;
-        padding: 0.55rem 1rem;
-        font-size: 0.85rem;
+        padding-inline: 1rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -544,8 +565,7 @@
         --kp-frame: var(--primary);
         --kp-glow: hsl(from var(--primary) h s l / 0.45);
         position: relative;
-        min-height: 3rem;
-        padding: 0.7rem 1.8rem;
+        padding-inline: 1.8rem;
         font-weight: 700;
         font-size: 0.95rem;
         letter-spacing: 0.16em;
@@ -651,12 +671,7 @@
 
     [data-theme='synthwave'] .kp-button--sm {
         min-width: 0;
-        min-height: 2.25rem;
-        padding: 0.4rem 1rem;
-    }
-
-    [data-theme='synthwave'] .kp-button--lg {
-        min-height: 3.5rem;
+        padding-inline: 1rem;
     }
 
     [data-theme='synthwave'] .kp-icon-button {
@@ -674,7 +689,6 @@
 
     [data-theme='synthwave'] .kp-field__label {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -690,7 +704,7 @@
         background: var(--sidebar-background);
         border: 2px solid hsl(from var(--kp-pink-text) h s l / 0.35);
         border-radius: var(--radius);
-        padding: 0.7rem 0.9rem;
+        padding-inline: 0.9rem;
         caret-color: var(--accent);
     }
 
@@ -708,7 +722,6 @@
 
     [data-theme='synthwave'] .kp-field__help {
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.06em;
     }
 
@@ -745,6 +758,30 @@
     [data-theme='synthwave'] .kp-fieldset {
         border: 1px solid var(--kp-hairline);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: the theme's radius on a
+       primary-edged track over the sidebar's night with a faint glow, and
+       a thumb that lights in the accent with its own glow once on. */
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-radius: var(--radius);
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        border: 2px solid var(--primary);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked {
+        background: var(--sidebar-background);
+        border-color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked::before {
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent);
     }
 
     [data-theme='synthwave'] .kp-form__summary {
@@ -831,6 +868,49 @@
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='synthwave'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='synthwave'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='synthwave'] .kp-toast--destructive,
+    [data-theme='synthwave'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='synthwave']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='synthwave'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='synthwave'] .kp-toasts {
         gap: 0.6rem;
     }
@@ -870,6 +950,20 @@
         border-left-color: var(--destructive);
     }
 
+    /* The data table's Try again takes the plate's own ink for its frame
+       [Kenny's synthwave note, 2026-09-15]. The frame is the primary pink,
+       and on the red plate of the failed state it measured 1.06:1 — "poorly
+       visible". The alert's label is `--destructive-foreground` on that
+       plate, 5.59:1, so the frame is drawn in it. Until scope-94 every
+       framed button on any destructive alert took it; Kenny narrowed it to
+       this one ("Alleen Try again"), so the retry control the data table
+       draws in its failed slot — js/datatable.js, `[data-kp-datatable-
+       retry]` inside `[data-kp-datatable-failed]`, whether the page wrote
+       the slot or the script did — is the only button it reaches. */
+    [data-theme='synthwave'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
+        --kp-frame: var(--destructive-foreground);
+    }
+
     [data-theme='synthwave'] .kp-alert--warning {
         border-left-color: var(--warning-foreground);
     }
@@ -900,6 +994,13 @@
         width: 3px;
     }
 
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='synthwave'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 3px;
+    }
+
     [data-theme='synthwave'] .kp-footer {
         background: var(--sidebar-background);
         color: var(--muted-foreground);
@@ -907,7 +1008,6 @@
 
     [data-theme='synthwave'] .kp-footer h4 {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--kp-pink-text);
@@ -933,10 +1033,14 @@
         border-radius: var(--radius);
         border: 1px solid currentColor;
         font-family: var(--kp-osd);
-        font-size: 0.95rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='synthwave'] .kp-tag {
+        font-size: 0.95rem;
     }
 
     [data-theme='synthwave'] .kp-health__dot {
@@ -957,11 +1061,6 @@
         background: var(--sidebar-background);
         border: 1px solid var(--kp-hairline);
         border-radius: 0;
-    }
-
-    [data-theme='synthwave'] .kp-progress__value {
-        background: var(--kp-stripe);
-        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.6);
     }
 
     [data-theme='synthwave'] .kp-spinner {
@@ -1012,6 +1111,22 @@
         border: 1px solid var(--kp-hairline);
         border-radius: var(--radius);
         color: var(--accent);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -1101,6 +1216,21 @@
         font-family: var(--kp-mono);
     }
 
+    /* The accordion [gap-12]: spaced capitals, and the hot core its selected tab burns with. */
+    [data-theme='synthwave'] .kp-accordion__summary {
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--kp-core);
+    }
+
     [data-theme='synthwave'] .kp-reorder {
         border: 1px solid var(--kp-hairline);
         border-radius: 0;
@@ -1129,7 +1259,6 @@
     [data-theme='synthwave'] .kp-breadcrumb,
     [data-theme='synthwave'] .kp-pagination {
         font-family: var(--kp-osd);
-        font-size: 1rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -1217,11 +1346,11 @@
     /* A field, a form, a fieldset of data: the OSD rhythm between rows. */
     [data-theme='synthwave'] .kp-field,
     [data-theme='synthwave'] .kp-form {
-        gap: 0.35rem;
+        gap: calc(var(--kp-space-xs) * 1.4);
     }
 
     [data-theme='synthwave'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     /* The data pickers and panels: a hairline frame, square. */
@@ -1588,7 +1717,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='synthwave'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
         border-block-end: 0;
@@ -1611,9 +1742,8 @@
 
     [data-theme='synthwave'] .kp-sidenav__link,
     [data-theme='synthwave'] .kp-sidenav__category-toggle {
-        padding: 0.6rem 1.1rem;
+        padding-inline: 1.1rem;
         font-weight: 600;
-        font-size: 0.9rem;
         border-radius: 0;
     }
 
@@ -1659,5 +1789,115 @@
     [data-theme='synthwave'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='synthwave'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): widely spaced capitals with room under them
+       for the gradient stripe that runs out beneath them, and the core ink
+       with a low inner glow, when pointed at. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
+        position: relative;
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--kp-core);
+        background: none;
+        box-shadow: inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+        content: '';
+        position: absolute;
+        left: 0.6rem;
+        right: 0.6rem;
+        bottom: 0;
+        height: 4px;
+        background: var(--kp-stripe);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover::after,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible::after {
+        transform: scaleX(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A neon sign in the night: a violet plate from its background, the red headline haloed in the pink of its primary, pink stripes and a pink frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='synthwave'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 4% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 4%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.45);
+        --kp-alarm-halo: hsl(from var(--primary) h s l / 0.6);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

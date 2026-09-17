@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html" aria-current="page">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -195,6 +197,7 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-busy</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-field</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-field-error</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-focus-summary</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-form</code></td><td>selector</td></tr>
@@ -246,6 +249,7 @@
                             <tr><td><code>type</code></td><td><code>string</code></td><td>optional</td><td>The control: an input type, or select, textarea, checkbox, radio.</td></tr>
                             <tr><td><code>options</code></td><td><code>{ value: string; label: import('react').ReactNode; disabled?: boolean; help?: import('react').ReactNode; }[]</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>layout</code></td><td><code>'stacked' | 'inline'</code></td><td>optional</td><td>For a radio group. Default stacked.</td></tr>
+                            <tr><td><code>drawn</code></td><td><code>boolean</code></td><td>optional</td><td>For a select: lay the package's drawn list over it. Default true since 2026-09-13; false keeps the browser's list (`data-kp-select=&quot;native&quot;`).</td></tr>
                             <tr><td><code>wrapperProps</code></td><td><code>import('react').HTMLAttributes&lt;HTMLElement&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>classNames</code></td><td><code>{ label?: string; control?: string; help?: string; error?: string; option?: string; }</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>children</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
@@ -267,20 +271,26 @@
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-control-accent</code></td><td><code>var(--primary)</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-control-line-height</code></td><td><code>1.25</code></td></tr>
+                            <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>
+                            <tr><td><code>--kp-field-error-size</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-field-gap</code></td><td><code>var(--kp-space-xs)</code></td></tr>
-                            <tr><td><code>--kp-field-label-size</code></td><td><code>0.875rem</code></td></tr>
+                            <tr><td><code>--kp-field-help-size</code></td><td><code>0.8rem</code></td></tr>
+                            <tr><td><code>--kp-field-label-size</code></td><td><code>0.9rem</code></td></tr>
                             <tr><td><code>--kp-field-max-width</code></td><td><code>28rem</code></td></tr>
                             <tr><td><code>--kp-field-option-size</code></td><td><code>0.875rem</code></td></tr>
+                            <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
                             <tr><td><code>--kp-form-gap</code></td><td><code>var(--kp-space-lg)</code></td></tr>
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-glyph-required</code></td><td><code>'\002A\00a0'</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
+                            <tr><td><code>--kp-line-height</code></td><td><code>1.5</code></td></tr>
                             <tr><td><code>--kp-menu-item-pad</code></td><td><code>0.375rem 0.625rem</code></td></tr>
                             <tr><td><code>--kp-popover-max-height</code></td><td><code>min(80vh, 40rem)</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
-                            <tr><td><code>--kp-space-lg</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
-                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>

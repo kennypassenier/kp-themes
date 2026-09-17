@@ -1,0 +1,725 @@
+/* The catalogue's own chrome: the bar, the stage a component sits on, and
+   the "Look at" note beside it. Nothing here styles a kp- class — the page
+   must show what the package paints, not what this file paints, which is
+   the same trap KT3 caught in showcase.css. Every selector is prefixed
+   `cat-`, and the whole file sits in its own layer above the package's so
+   a stage can never win a declaration from a register by accident. */
+@layer catalogue {
+    /* The shell catalogue.js builds around every page: the package's own
+       side navigation beside a column holding the bar and the page. */
+    body.cat-shell {
+        display: flex;
+        align-items: flex-start;
+        min-block-size: 100vh;
+    }
+
+    /* Sticky only while it sits beside the page: this layer is above the
+       package's, so an unconditional position here would also pin the
+       panel in its "over" mode and stop it covering the page. */
+    .cat-nav:not([data-kp-sidenav-mode='over']) {
+        position: sticky;
+        inset-block-start: 0;
+        block-size: 100vh;
+        flex: 0 0 auto;
+    }
+
+    .cat-column {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    /* The toggle only matters where the navigation lies over the page. */
+    .cat-nav-toggle {
+        display: none;
+    }
+
+    @media (max-width: 56rem) {
+        .cat-nav-toggle {
+            display: inline-flex;
+        }
+    }
+
+    .cat-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        border-block-end: 1px solid var(--border);
+        background: var(--card);
+        color: var(--card-foreground);
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 40;
+    }
+
+    .cat-bar__home {
+        font-weight: 600;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .cat-bar__spacer {
+        flex: 1 1 auto;
+    }
+
+    .cat-main {
+        max-inline-size: 70rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 6rem;
+    }
+
+    .cat-intro {
+        max-inline-size: 46rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        padding: 0.75rem 0 0;
+        margin: 0 0 2rem;
+        list-style: none;
+        border-block-start: 1px solid var(--border);
+        font-size: 0.9rem;
+    }
+
+    .cat-block {
+        margin-block: 2.5rem;
+        scroll-margin-block-start: 4rem;
+    }
+
+    .cat-block > h2 {
+        margin-block-end: 0.35rem;
+    }
+
+    /* The reviewer's instruction. It is the point of the page: a block
+       without one is a screenshot, and a screenshot answers nothing. */
+    .cat-look {
+        border-inline-start: 3px solid var(--accent);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        padding: 0.6rem 0.9rem;
+        margin-block: 0.75rem;
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+
+    .cat-look b {
+        color: var(--foreground);
+    }
+
+    .cat-look code {
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85em;
+    }
+
+    /* The stage is deliberately plain: a hairline and breathing room, so
+       what is inside it is the theme's doing and not this file's. */
+    .cat-stage {
+        border: 1px dashed var(--border);
+        padding: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .cat-stage--block {
+        display: block;
+    }
+
+    /* A block judged in a theme of its own (`data-cat-theme`, judging.js puts
+       it on the stage as `data-theme`) inherits nothing from the page theme:
+       what the body would pass down, it takes from its own [scope-86]. */
+    .cat-stage[data-theme] {
+        color: var(--foreground);
+        font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+    }
+
+    .cat-stage--tight {
+        gap: 0.5rem;
+    }
+
+    .cat-stage--dense {
+        padding: 0;
+    }
+
+    /* A surface needs room before its texture reads as one: the stage lays
+       its one child out as a grid row of at least this height, so the
+       surface grows without this file touching the surface itself. */
+    .cat-stage--surface {
+        display: grid;
+        grid-auto-rows: minmax(22rem, auto);
+    }
+
+    /* The live copy of a reveal (catalogue/page-effects.html): outside the
+       stage on purpose, since a verdict records the copy at rest, and marked
+       off by a dotted rule so the two are never taken for one. */
+    .cat-live {
+        border: 1px dotted var(--border);
+        padding: 0.75rem 1.25rem 1.25rem;
+        margin-block-end: 0.75rem;
+    }
+
+    .cat-live__bar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-block-end: 0.75rem;
+    }
+
+    .cat-live__bar .cat-note {
+        margin: 0;
+    }
+
+    /* Two copies side by side, and under each other where they do not fit. */
+    .cat-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .cat-width-400 {
+        inline-size: 400px;
+        max-inline-size: 100%;
+    }
+
+    /* A window of a given size (catalogue/frame/): its edge is drawn, so what
+       fits inside it can be judged. */
+    .cat-viewport {
+        border: 1px dashed var(--border-strong);
+        background: var(--background);
+    }
+
+    body.cat-viewport-page {
+        margin: 0;
+        padding-block: 0.5rem;
+    }
+
+    /* The intro inspector (catalogue/intros.html): a window tall enough for
+       a boot screen, and the words beside it as the dictionary gives them. */
+    .cat-intro-controls {
+        flex-wrap: wrap;
+    }
+
+    .cat-intro-controls .kp-field__label {
+        margin: 0;
+    }
+
+    /* The speed slider is the catalogue's own control, not one the package
+       draws, so the `font-family: inherit` list in css/components.css never
+       reaches it and the browser's own stylesheet hands it the desktop font
+       [fix-28]. tests/control-font.spec.mjs found it on 2026-09-17, the only
+       control on any review page still taking the forced default. */
+    .cat-intro-controls input[type='range'] {
+        font-family: inherit;
+    }
+
+    .cat-intro-frame {
+        display: block;
+        inline-size: 100%;
+        block-size: 22rem;
+    }
+
+    .cat-intro-words > h3 {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+        margin: 0 0 0.35rem;
+        font-weight: 600;
+    }
+
+    .cat-intro-words > pre {
+        white-space: pre-wrap;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85rem;
+        margin: 0 0 1rem;
+    }
+
+    .cat-note {
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+        margin-block-start: 0.4rem;
+    }
+
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .cat-cell {
+        min-inline-size: 0;
+    }
+
+    .cat-cell > h3 {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+    }
+
+    /* A pane the reviewer can widen and narrow to find the breaking point,
+       because an extreme that only shows at one width is half measured. */
+    /* Feedback under each block, and the prompt that gathers it. */
+    .cat-feedback-field {
+        margin-block-start: 0.75rem;
+        max-inline-size: 46rem;
+    }
+
+    .cat-feedback-input {
+        inline-size: 100%;
+        resize: vertical;
+    }
+
+    .cat-feedback {
+        margin-block-start: 4rem;
+        padding-block-start: 1.5rem;
+        border-block-start: 2px solid var(--border);
+    }
+
+    .cat-feedback-prompt {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.9rem 1rem;
+        font-size: 0.85rem;
+        max-block-size: 24rem;
+        overflow: auto;
+    }
+
+    .cat-feedback-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    /* The review page: a filter bar, a component heading per gathered page,
+       and the approval state under every block. */
+    .cat-review-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 0.75rem 1.5rem;
+        padding: 0.75rem 0;
+        margin-block: 1rem;
+        border-block: 1px solid var(--border);
+    }
+
+    .cat-component {
+        margin-block-start: 3.5rem;
+        scroll-margin-block-start: 4rem;
+    }
+
+    .cat-component__title {
+        margin-block-end: 0.2rem;
+    }
+
+    /* The judging panel under every judged block (judging.js): one unit, set
+       apart from the component on show by a surface and a rule. The state on
+       the left, the two verdicts as a pair on the right, the note below at
+       the panel's full width. Theme tokens only, so it reads in every theme. */
+    .cat-judge {
+        margin-block-start: 1rem;
+        padding: 0.85rem 1rem 1rem;
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-block-start: 3px solid var(--border);
+        border-radius: var(--radius, 0);
+        display: grid;
+        gap: 0.75rem;
+        container-type: inline-size;
+    }
+
+    .cat-judge[data-cat-state='approved'] {
+        border-block-start-color: var(--success-foreground, var(--border));
+    }
+
+    .cat-judge[data-cat-state='rejected'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    .cat-judge[data-cat-state='changed'] {
+        border-block-start-color: var(--warning-foreground, var(--border));
+    }
+
+    .cat-judge__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem 1rem;
+    }
+
+    .cat-judge__status {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.3rem 0.6rem;
+        margin: 0;
+        min-inline-size: 0;
+    }
+
+    /* Where the verdict is kept: in the register, or only in this browser so far. */
+    .cat-judge__source:empty {
+        display: none;
+    }
+
+    .cat-judge__glyph {
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .cat-judge__actions {
+        display: flex;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    /* A narrow column: the pair goes under the state, full width, halves. */
+    @container (max-width: 26rem) {
+        .cat-judge__actions {
+            flex: 1 1 100%;
+        }
+
+        .cat-judge__actions > * {
+            flex: 1 1 0;
+        }
+    }
+
+    /* Too narrow for two labels side by side (a compare column on a small
+       window broke "Not approved" mid-word): one above the other. */
+    @container (max-width: 20rem) {
+        .cat-judge__actions {
+            flex-direction: column;
+        }
+    }
+
+    .cat-judge__note {
+        margin: 0;
+        max-inline-size: none;
+    }
+
+    .cat-judge__note-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    /* Quiet by size and weight, not by a lighter ink: --muted-foreground on
+       the card measured 4.13:1 in shade-light. */
+    .cat-judge__label {
+        color: var(--card-foreground);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .cat-judge__saved {
+        font-size: 0.78rem;
+        color: var(--card-foreground);
+    }
+
+    .cat-judge__input {
+        inline-size: 100%;
+        min-block-size: 4.5rem;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+
+    /* A rejected block's temporary note (catalogue/review-notes.json): the
+       package's own warning alert, so its ink and ground are the theme's
+       measured pair; the panel only spaces it. Its text stays in the alert's
+       own foreground, no lighter ink for the date. */
+    .cat-judge__review-note {
+        margin-block-end: 0.85rem;
+    }
+
+    .cat-judge__review-note p {
+        margin: 0;
+        max-inline-size: 72ch;
+    }
+
+    .cat-judge__review-note p + p {
+        margin-block-start: 0.35rem;
+    }
+
+    .cat-judge__review-note-meta {
+        font-size: 0.8rem;
+    }
+
+    /* The review dialog (review-dialog.js) [scope-89, scope-90]: one fixed
+       size, 92% of the window wide and 90% high, whatever block it holds.
+       The header on top; the block's stage on the left, the note and the
+       verdicts on the right. The class sits on the package's own dialog, so
+       its surface, border and backdrop are the theme's.
+
+       Its size is set on its own properties, never through the package's
+       `--kp-dialog-max-width` / `--kp-dialog-max-height` [fix-36]: a custom
+       property inherits, and `none` set here reached every dialog of the
+       block under review. The sixty-row dialog then opened 2574px tall with
+       no cap, centred on a 900px window (top at -837px, "02:19" the first
+       row in sight) and its body never scrolled. This layer comes after the
+       package's, so the properties below win over `.kp-dialog[open]`. */
+    .cat-review-dialog {
+        box-sizing: border-box;
+        inline-size: 92vw;
+        block-size: 90vh;
+        max-inline-size: none;
+        max-block-size: none;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .cat-review-dialog[open] {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .cat-review-dialog__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.75rem;
+        padding: 0.75rem 1rem;
+        padding-inline-end: 3.5rem;
+        border-block-end: 1px solid var(--border);
+    }
+
+    .cat-review-dialog__head > h2 {
+        margin: 0;
+        flex: 1 1 18rem;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cat-review-dialog__position {
+        margin: 0;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-review-dialog__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 24rem;
+        min-block-size: 0;
+    }
+
+    /* The stage scrolls in both directions and never gives its size back to
+       the dialog: `contain: strict` keeps the block's own size out of the
+       dialog's layout. */
+    .cat-review-dialog__stage {
+        contain: strict;
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding: 1rem 1.25rem;
+    }
+
+    .cat-review-dialog__stage > .cat-block {
+        margin: 0;
+    }
+
+    /* The title is in the header, the look and the note at the side. */
+    .cat-review-dialog__stage > .cat-block > h2,
+    .cat-review-dialog__stage > .cat-block > h3,
+    .cat-review-dialog__stage > .cat-block > .cat-look,
+    .cat-review-dialog__stage > .cat-block > .cat-judge {
+        display: none;
+    }
+
+    /* The side is a body over a footer [scope-92]. The body trades room
+       inside itself — the frame shrinks when a refusal or a message shows —
+       and never gives any back to the footer, so the four buttons keep one
+       place for every block (measured before: a long review note pushed them
+       ~900 px down, out of the dialog; a verdict's message lifted them 19 px). */
+    .cat-review-dialog__side {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 0.75rem;
+        min-block-size: 0;
+        padding: 1rem;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .cat-review-dialog__body {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto auto;
+        gap: 0.75rem;
+        min-block-size: 0;
+        overflow: hidden;
+    }
+
+    /* One frame for the review note and the look, the note first; the frame
+       scrolls and opens at its top. */
+    .cat-review-dialog__frame {
+        margin: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+    }
+
+    /* The note in the look's own font and size, in the theme's warning pair —
+       the ink and ground the package measures together — so it reads apart
+       from the look's muted text in every theme. */
+    .cat-review-dialog__review-note {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding: 0.45rem 0.6rem;
+        margin-block-end: 0.6rem;
+    }
+
+    .cat-review-dialog__review-note b {
+        color: inherit;
+    }
+
+    .cat-review-dialog__review-note p {
+        margin: 0;
+    }
+
+    .cat-review-dialog__review-note p + p {
+        margin-block-start: 0.35rem;
+    }
+
+    .cat-review-dialog__live:empty {
+        display: none;
+    }
+
+    .cat-review-dialog__footer {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .cat-review-dialog__field {
+        margin: 0;
+    }
+
+    .cat-review-dialog__field textarea {
+        resize: none;
+    }
+
+    .cat-review-dialog__actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .cat-review-dialog__meta {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+    }
+
+    .cat-review-dialog__away {
+        padding: 1rem;
+        font-style: italic;
+    }
+
+    /* The prompt bar every page carries under its header. */
+    .cat-prompt-bar {
+        padding: 0.45rem 1rem;
+        background: var(--muted);
+        color: var(--foreground);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .cat-prompt-bar__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.75rem;
+    }
+
+    .cat-prompt-bar__count {
+        font-size: 0.85rem;
+    }
+
+    .cat-prompt-bar__status {
+        margin: 0;
+    }
+
+    .cat-prompt-bar .cat-feedback-prompt {
+        margin: 0.5rem 0 0.25rem;
+        background: var(--background);
+    }
+
+    .cat-main--wide {
+        max-inline-size: 110rem;
+    }
+
+    /* The compare page: two documents side by side, rows lined up by message. */
+    .cat-compare {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .cat-compare__frame {
+        inline-size: 100%;
+        block-size: 60vh;
+        border: 1px solid var(--border);
+    }
+
+    /* Inside a column. */
+    .cat-frame__main {
+        padding: 1rem;
+    }
+
+    .cat-frame__row {
+        display: flow-root;
+        box-sizing: border-box;
+        padding-block-end: 0.75rem;
+    }
+
+    .cat-frame__row > h2,
+    .cat-frame__row > h3 {
+        margin: 0.5rem 0 0;
+    }
+
+    /* A pane that narrows to a few characters, for the short buttons only. */
+    .cat-to-top {
+        position: fixed;
+        inset-block-end: 1.25rem;
+        inset-inline-end: 1.25rem;
+        z-index: 45;
+    }
+
+    .cat-review-bar {
+        position: sticky;
+        inset-block-start: 3.5rem;
+        z-index: 35;
+        background: var(--background);
+    }
+
+    .cat-resize.cat-resize--narrow {
+        min-inline-size: 2.5rem;
+        inline-size: 16rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .cat-resize {
+        resize: horizontal;
+        overflow: auto;
+        min-inline-size: 12rem;
+        max-inline-size: 100%;
+        inline-size: 32rem;
+        border: 1px dashed var(--border);
+        padding: 1rem;
+    }
+}

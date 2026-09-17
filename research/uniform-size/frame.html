@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-kp-theme-from-query>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Uniform size · one column · kp-themes research</title>
+        <script>
+            // The column's theme, option and density come from the address, set
+            // before the stylesheets apply so nothing is drawn in the wrong one.
+            // The storage guard is catalogue/frame/theme-guard.js's: a theme
+            // stored by another document must not reach this column.
+            (function () {
+                var q = new URLSearchParams(location.search);
+                var root = document.documentElement;
+                if (q.get('theme')) root.setAttribute('data-theme', q.get('theme'));
+                root.setAttribute('data-option', q.get('option') || 'a');
+                if (q.get('density') === 'compact') root.setAttribute('data-density', 'compact');
+                window.addEventListener(
+                    'storage',
+                    function (event) {
+                        if (event.key === 'theme') event.stopImmediatePropagation();
+                    },
+                    true,
+                );
+            })();
+        </script>
+        <!-- The package, exactly as a consumer links it. -->
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <!-- The research overrides, each inert unless <html data-option> names it.
+             Mock: none of these is in the package. -->
+        <link rel="stylesheet" href="./option-b.css" />
+        <link rel="stylesheet" href="./option-c.css" />
+        <link rel="stylesheet" href="./option-d.css" />
+        <link rel="stylesheet" href="./option-e.css" />
+        <style>
+            /* The column itself: mock scaffolding, not package classes. One fixed
+               width so every theme lays the same content into the same measure;
+               the composites stack with a fixed gap that no option touches. */
+            body {
+                margin: 0;
+            }
+            .us-frame {
+                box-sizing: border-box;
+                inline-size: 400px;
+                margin: 0;
+                padding: 12px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            .us-composite {
+                margin: 0;
+            }
+            .us-frame dialog[open] {
+                position: static;
+                margin: 0;
+                inline-size: auto;
+            }
+            .us-shell {
+                display: flex;
+                flex-direction: column;
+            }
+            .us-shell .kp-sidenav {
+                inline-size: 100%;
+                --kp-sidenav-width: 100%;
+            }
+            .us-buttons {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: flex-end;
+                align-items: flex-start;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="us-frame" data-us-frame>
+            <!-- 1 · The form card: heading, three fields, a checkbox, a switch, a button row. -->
+            <section class="us-composite" data-us-composite="form">
+                <div class="kp-card" data-us="card">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" data-us="card-title">Alarm rule</h3>
+                        <span class="kp-badge kp-badge--warning" data-us="badge">Draft</span>
+                    </div>
+                    <div class="kp-card__body">
+                        <form class="kp-stack" onsubmit="return false;">
+                            <div class="kp-field" data-us="field">
+                                <label class="kp-field__label" for="us-name" data-us="field-label">Rule name</label>
+                                <input class="kp-field__input" id="us-name" type="text" value="Line 2 pressure low" data-us="input" />
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="us-severity">Severity</label>
+                                <select class="kp-field__input" id="us-severity" data-kp-select="native" data-us="select">
+                                    <option>Critical</option>
+                                    <option>Warning</option>
+                                </select>
+                            </div>
+                            <div class="kp-field">
+                                <div class="kp-combobox" data-kp-combobox>
+                                    <label class="kp-field__label" for="us-site">Site</label>
+                                    <input
+                                        class="kp-combobox__input"
+                                        id="us-site"
+                                        type="text"
+                                        role="combobox"
+                                        aria-expanded="false"
+                                        aria-controls="us-site-list"
+                                        autocomplete="off"
+                                        value="Pump house 4"
+                                        data-us="combobox"
+                                    />
+                                    <ul class="kp-combobox__list" id="us-site-list" role="listbox" hidden>
+                                        <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                                        <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+                                    </ul>
+                                    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                                </div>
+                            </div>
+                            <div class="kp-field kp-field--check" data-us="checkbox">
+                                <input class="kp-field__check" id="us-night" type="checkbox" checked />
+                                <label class="kp-field__label" for="us-night">Also text the on-call engineer</label>
+                            </div>
+                            <label class="kp-switch" data-us="switch">
+                                <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                                <span class="kp-switch__state" aria-hidden="true"></span>
+                                <span>Rule is active</span>
+                            </label>
+                            <div class="us-buttons">
+                                <button type="button" class="kp-button kp-button--sm" data-us="button-sm">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Reset</span>
+                                </button>
+                                <button type="submit" class="kp-button kp-button--primary" data-us="button">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Save rule</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2 · The shell: a nav bar over a side navigation. -->
+            <section class="us-composite us-shell" data-us-composite="shell">
+                <div class="kp-nav-wrap">
+                    <nav class="kp-nav" aria-label="Pump house navigation" data-us="nav">
+                        <span class="kp-nav__brand">North site</span>
+                        <ul class="kp-nav__links">
+                            <li>
+                                <a class="kp-nav__link" href="#readings" aria-current="page" data-kp-text="Readings" data-us="nav-link">Readings</a>
+                            </li>
+                            <li><a class="kp-nav__link" href="#rota" data-kp-text="Rota">Rota</a></li>
+                            <li><a class="kp-nav__link" href="#docs" data-kp-text="Docs">Docs</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav class="kp-sidenav" aria-label="North site sections" data-us="sidenav">
+                    <div class="kp-sidenav__header"><p class="kp-sidenav__title">Sections</p></div>
+                    <div class="kp-sidenav__scroll">
+                        <ul class="kp-sidenav__list">
+                            <li>
+                                <a class="kp-sidenav__link" href="#overview" data-us="sidenav-item"
+                                    ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                                >
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#line-2" aria-current="page"
+                                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                                    ><span class="kp-sidenav__badge">2</span></a
+                                >
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#alarms"
+                                    ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                    ><span class="kp-sidenav__badge">14</span></a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </section>
+
+            <!-- 3 · Tabs, an alert. -->
+            <section class="us-composite" data-us-composite="tabs">
+                <div class="kp-tabs">
+                    <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471" data-us="tabs">
+                        <button type="button" class="kp-tab" role="tab" id="us-tab-1" aria-controls="us-panel-1" aria-selected="true" data-us="tab">
+                            Summary
+                        </button>
+                        <button type="button" class="kp-tab" role="tab" id="us-tab-2" aria-controls="us-panel-2" aria-selected="false">
+                            Readings
+                        </button>
+                        <button type="button" class="kp-tab" role="tab" id="us-tab-3" aria-controls="us-panel-3" aria-selected="false">
+                            Handover
+                        </button>
+                    </div>
+                    <div class="kp-tabs__panel" role="tabpanel" id="us-panel-1" aria-labelledby="us-tab-1">
+                        <div class="kp-alert kp-alert--warning" role="status" data-us="alert">
+                            <span class="kp-alert__body"
+                                ><span class="kp-alert__label">Warning:</span> pressure on line 2 dropped to 1.1 bar at 02:40.</span
+                            >
+                        </div>
+                    </div>
+                    <div class="kp-tabs__panel" role="tabpanel" id="us-panel-2" aria-labelledby="us-tab-2" hidden>
+                        Sixty readings from the last hour.
+                    </div>
+                    <div class="kp-tabs__panel" role="tabpanel" id="us-panel-3" aria-labelledby="us-tab-3" hidden>
+                        Day shift checks the gauge first.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4 · A table snippet and its pagination. -->
+            <section class="us-composite" data-us-composite="table">
+                <div class="kp-table-wrap">
+                    <table class="kp-table" data-us="table">
+                        <thead>
+                            <tr data-us="table-head">
+                                <th scope="col">Incident</th>
+                                <th scope="col">Site</th>
+                                <th scope="col">State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-us="table-row">
+                                <td>INC-4471</td>
+                                <td>Pump house 4</td>
+                                <td><span class="kp-badge">Open</span></td>
+                            </tr>
+                            <tr>
+                                <td>INC-4468</td>
+                                <td>Cold store</td>
+                                <td><span class="kp-badge">Closed</span></td>
+                            </tr>
+                            <tr>
+                                <td>INC-4460</td>
+                                <td>Weighbridge</td>
+                                <td><span class="kp-badge">Closed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav class="kp-pagination" aria-label="Incidents, page 2 of 9" data-us="pagination">
+                    <ul>
+                        <li><a href="#page-1">Previous</a></li>
+                        <li><a href="#page-1">1</a></li>
+                        <li><a href="#page-2" aria-current="page" data-us="page-link">2</a></li>
+                        <li><a href="#page-3">3</a></li>
+                        <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                        <li><a href="#page-3">Next</a></li>
+                    </ul>
+                </nav>
+            </section>
+
+            <!-- 5 · A dialog, shown open and in flow (it is not modal here). -->
+            <section class="us-composite" data-us-composite="dialog">
+                <dialog class="kp-dialog" open aria-labelledby="us-dialog-title" data-us="dialog">
+                    <h2 class="kp-dialog__title" id="us-dialog-title" data-us="dialog-title">Close incident INC-4471?</h2>
+                    <p class="kp-dialog__description">The line is reopened and the vendor is told the fault is fixed.</p>
+                    <div class="kp-dialog__actions">
+                        <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                        <button type="button" class="kp-button kp-button--primary">Close incident</button>
+                    </div>
+                </dialog>
+            </section>
+        </main>
+
+        <script type="module">
+            // Report what was drawn to the page around the column (demo.html), once
+            // the fonts are in, and again whenever the column resizes.
+            const round = (v) => Math.round(v * 10) / 10;
+            function report() {
+                const frame = document.querySelector('[data-us-frame]');
+                const composites = {};
+                const bottoms = {};
+                for (const el of document.querySelectorAll('[data-us-composite]')) {
+                    const box = el.getBoundingClientRect();
+                    composites[el.dataset.usComposite] = round(box.height);
+                    bottoms[el.dataset.usComposite] = round(box.bottom + scrollY);
+                }
+                const message = {
+                    kind: 'us-measure',
+                    id: new URLSearchParams(location.search).get('id'),
+                    theme: document.documentElement.getAttribute('data-theme'),
+                    option: document.documentElement.getAttribute('data-option'),
+                    composites,
+                    bottoms,
+                    frameBottom: round(document.querySelector('[data-us-frame]').getBoundingClientRect().bottom + scrollY),
+                    total: round(frame.getBoundingClientRect().height),
+                    scroll: document.documentElement.scrollHeight,
+                };
+                if (parent !== window) parent.postMessage(message, '*');
+                window.usLast = message;
+            }
+            window.usReport = report;
+            document.fonts.ready.then(() => requestAnimationFrame(() => requestAnimationFrame(report)));
+            new ResizeObserver(() => report()).observe(document.querySelector('[data-us-frame]'));
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

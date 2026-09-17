@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Switch · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Switch</h1>
+            <p class="cat-intro">
+                A switch is a checkbox that says <i>on</i> and <i>off</i> instead of <i>ticked</i>: the real control is an
+                <code>&lt;input type="checkbox" role="switch"&gt;</code>, so it submits with a form, reads its state from <code>checked</code>, and
+                flips without a script. It is the package's <code>.kp-switch</code> since your approval of the concept on 2026-09-13 ("Switch:
+                Akkoord"): the concept's geometry and states, on knobs (<code>--kp-switch-width</code>, <code>--kp-switch-height</code>,
+                <code>--kp-switch-radius</code>, …), and every theme's register answers it in its own voice. The words beside the track come from
+                <code>js/strings.js</code> (<code>switchOn</code>, <code>switchOff</code>), filled in by <code>attachSwitches()</code> here and by
+                <code>&lt;Switch&gt;</code> in React.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#states">States</a></li>
+                <li><a href="#invalid">Invalid</a></li>
+                <li><a href="#extremes">A long label</a></li>
+                <li><a href="#keyboard">Keyboard</a></li>
+            </ul>
+
+            <section class="cat-block" id="states">
+                <h2>States</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> off, on, and both of them disabled. <b>Off</b> is the theme's resting track with the thumb at the start;
+                    <b>on</b> moves the thumb to the end and changes the paint the theme's way — a primary fill in most, a lit thumb on a dark track
+                    in cyberpunk, synthwave and terminal, an inverted slab in grotesk. The position says the state as well as the colour, and the word
+                    beside the track says it a third time. Compare the track with the same theme's checkbox on the Fields page: the corner, the edge
+                    and the ground should be the same family. Click the label, not only the track: the whole row is the target. Tab to each: the focus
+                    ring must be visible around the track on the page's ground. <b>Disabled</b> fades and refuses the pointer, and a disabled switch
+                    that is on must still read as on.
+                </div>
+                <div class="cat-stage" style="flex-direction: column">
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Night alarms</span>
+                    </label>
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Weekly summary</span>
+                    </label>
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" disabled />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Vendor hotline (not in your contract)</span>
+                    </label>
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" checked disabled />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Audit log (always on)</span>
+                    </label>
+                </div>
+                <p class="cat-note">
+                    <code>role="switch"</code> on a checkbox is what makes a screen reader say "switch, on" rather than "checkbox, checked". The word
+                    beside the track is <code>aria-hidden</code>, because the role already announces the state. The state span is empty in the markup:
+                    <code>attachSwitches()</code> puts the two words in from the dictionary, so <code>setStrings()</code> reaches them, and a span a
+                    server already filled is left alone.
+                </p>
+            </section>
+
+            <section class="cat-block" id="invalid">
+                <h2>Invalid</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a switch that must be on before the form goes through. It takes the same outline an invalid checkbox takes, in the
+                    alarm colour, and the message under it says what is wrong in words. The outline must show in every theme, including the ones whose
+                    track carries its own shadow (brutalism, retro, synthwave). Turn it on: nothing here clears the message, because this block is not
+                    inside a form — in a <code>data-kp-form</code>, <code>js/forms.js</code> would.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-field kp-field--check kp-field--invalid">
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" aria-invalid="true" aria-describedby="sw-lock-error" />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Line locked out</span>
+                        </label>
+                        <span class="kp-field__error" id="sw-lock-error">Lock the line out before you start the repair.</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="extremes">
+                <h2>A long label</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a label of sixty characters. It wraps beside the track, every line starting at the same inset, and the track stays
+                    whole at its own size on the first line rather than shrinking or dropping under the text. Drag the pane narrow to see it wrap.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Text the deputies when pump house 4 reports a pressure fault</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="keyboard">
+                <h2>Keyboard</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> Tab lands on the switch, once per switch. <b>Space</b> flips it, as it ticks a checkbox — that is the browser's
+                    own behaviour, and the reason the switch is a checkbox rather than a button with a script. <b>Enter</b> does not flip it; inside a
+                    form it submits, as it does on a checkbox. The disabled switch is skipped by Tab. Shift+Tab walks back the same way. With reduced
+                    motion asked for, the thumb jumps instead of sliding.
+                </div>
+                <div class="cat-stage">
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Mute the alarm panel for an hour</span>
+                    </label>
+                    <label class="kp-switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                        <span class="kp-switch__state" aria-hidden="true"></span>
+                        <span>Show the live readings</span>
+                    </label>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

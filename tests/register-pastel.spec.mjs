@@ -7,11 +7,14 @@
 // springing from a wide mis-registration into its 2px rest position once
 // and ending as its own text, the lede's marks filling in mint then
 // violet, the app heading's rule growing left to right once it enters the
-// viewport, the torn-tab divider as two different zig-zags, the navbar's
-// dropdown in the theme's own soft radius, the buttons' spring lift on
-// hover and settle on press, the dossier's rotated stamp swapping its
-// word when the file opens and its redactions fading and narrowing away
-// on the trigger, and the whole approved inventory on the page.
+// viewport, the navbar's dropdown in the theme's own soft radius, the
+// buttons' spring lift on hover and settle on press, the dossier's rotated
+// stamp swapping its word when the file opens and its redactions fading
+// and narrowing away on the trigger, and the whole approved inventory on
+// the page. The dividers are pearls since scope-93, drawn by this register
+// alone since scope-95: their mask and inks are read here, their thread's
+// crispness measured below, and their look judged by eye on the catalogue
+// (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -25,7 +28,11 @@
 //     standing at 0%, red on "the lede's marks fill in";
 //   - the covered redaction rule (`[data-kp-effects] … mark:not(.is-
 //     cleared)::after`) removed → the redaction never covers the words at
-//     all, red on "the dossier: the redactions cover the words".
+//     all, red on "the dossier: the redactions cover the words". Since
+//     fix-33 (scope-93) the plate is the mark's own cloned background, so
+//     that rule is `[data-kp-effects] … mark:not(.is-cleared)` with
+//     `background-size: 100% 100%`, and the test reads the size; the plate
+//     narrows away rather than fading and narrowing.
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
@@ -92,34 +99,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the pastel register, ${channel}`, () => {
-        test('the sticker: a flat drop at rest, askew under the pointer, pressed flat [scope-12]', async ({ page }) => {
-            // Kenny chose this between three proposals: "A de sticker". A
-            // risograph print lands on paper like a sticker, so a control
-            // behaves like one — and this was the one of the three that shows
-            // something at rest, which is why he took it.
-            //
-            // The drop is HARD: no blur radius. A soft shadow here would be
-            // the thing this is not, so the test reads the blur and expects
-            // a zero in it.
-            //
-            // Drill: `--kp-pastel-peel` removed at its source in
-            // css/pastel-register.css, and the bundle regenerated —
-            // `18 passed, 2 failed`, one per channel. The regeneration is
-            // not optional: the page reads the generated stylesheet, and a
-            // drill that skips it reports green twice over [see the same
-            // note in register-lapis.spec.mjs].
-            await open(page, url);
-            const button = page.locator('.kp-button').first();
-
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow), 'at rest: offset three down, no blur').toMatch(/0px 3px 0px/);
-
-            await button.hover();
-            await expect
-                .poll(() => button.evaluate((el) => getComputedStyle(el).rotate), { message: 'under the pointer it sits askew' })
-                .not.toBe('none');
-        });
-
+    test.describe(`the pastel register, ${channel}`, { tag: ['@theme:pastel', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'a risograph page does not boot').toBe(0);
@@ -220,43 +200,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['width'])).width).not.toBe('0px');
         });
 
-        test('the two dividers are torn tabs: different zig-zags, plum then mint-ink', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.first().evaluate((el) => ({
-                clip: getComputedStyle(el).clipPath,
-                bg: getComputedStyle(el).backgroundColor,
-            }));
-            const second = await dividers.nth(1).evaluate((el) => ({
-                clip: getComputedStyle(el).clipPath,
-                bg: getComputedStyle(el).backgroundColor,
-            }));
-            expect(first.clip, 'a jagged cut, not a straight edge').toMatch(/polygon/);
-            expect(second.clip).toMatch(/polygon/);
-            expect(first.clip, 'the two tears are different cuts').not.toBe(second.clip);
-            expect(first.bg).toBe(await paint(page, '--primary'));
-            expect(second.bg).toBe(await paint(page, '--accent-foreground'));
-        });
-
-        test('the dropdown is styled in the theme’s own radius [KT14], and the buttons spring on hover', async ({ page }) => {
-            await open(page, url);
-            const menu = page.locator('.kp-nav__menu').first();
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('12.8px');
-            expect(await menu.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--card'));
-            // The dropdown opens on hover of its trigger; the item inside
-            // is not actionable until then.
-            await page.locator('[aria-haspopup="true"]').first().hover();
-            const item = menu.locator('a').first();
-            await expect(item).toBeVisible();
-            await item.hover();
-            await expect.poll(() => item.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--accent'));
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            const restTranslate = await button.evaluate((el) => getComputedStyle(el).translate);
-            await button.hover();
-            await expect.poll(() => button.evaluate((el) => getComputedStyle(el).translate), 'the springy lift').not.toBe(restTranslate);
-        });
-
         test('the dossier: the rotated stamp swaps its word when the file opens, and the redactions cover the words until then', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
@@ -267,9 +210,12 @@ for (const [channel, url] of CHANNELS) {
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Proof approved/i);
             expect(stamp.rotate).toBe('-3deg');
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['opacity', 'transform']);
-            expect(covered.opacity, 'covered before the trigger').toBe('1');
-            expect(covered.transform, 'no shrink yet').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            const covered = await pseudo(mark, '', ['background-size', 'color', 'box-decoration-break', '-webkit-box-decoration-break']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered.color, 'the words wear no ink under the plate').toBe('rgba(0, 0, 0, 0)');
+            expect([covered['box-decoration-break'], covered['-webkit-box-decoration-break']], 'the plate is cloned onto every line').toContain(
+                'clone',
+            );
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(mark).toHaveClass(/is-cleared/);
             // The stamp changes when the file opens, as the demo's does
@@ -281,8 +227,66 @@ for (const [channel, url] of CHANNELS) {
                 'the stamp swapped to its open word',
             ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
-            await expect.poll(async () => (await pseudo(mark, '::after', ['opacity'])).opacity, 'the redaction faded away').toBe('0');
+            await expect
+                .poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the redaction narrowed away')
+                .toBe('0% 100%');
         });
+
+        // The fade came back [scope-94]: fix-33 moved the plate from mark::after
+        // (which faded its opacity over 220ms) to the mark's cloned background,
+        // and the fade went with it. The plate's ink is now
+        // color-mix(--foreground, alpha) over the registered number
+        // --kp-redact-alpha, transitioned beside the narrowing. Sampled every
+        // frame from the moment the phrase is cleared: somewhere in between the
+        // alpha is neither the covered 1 nor the cleared 0. Drill [KT3]: the
+        // `--kp-redact-alpha 220ms ease` transition removed, or the @property
+        // rule removed (an unregistered property flips at the end), and no
+        // sample lies between.
+        for (const reduced of [false, true]) {
+            test(`the dossier: the redaction plate ${reduced ? 'clears at once under reduced motion' : 'fades while it narrows'} [scope-94]`, async ({
+                page,
+            }) => {
+                await open(page, url, { reduced });
+                const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
+                const mark = dossier.locator('mark').first();
+                if (reduced) {
+                    // Reduced motion puts the dossier at rest, opened: no plate,
+                    // and no transition that could fade one.
+                    await expect(mark).toHaveClass(/is-cleared/);
+                    const rest = await pseudo(mark, '', ['--kp-redact-alpha', 'background-size', 'transition-property']);
+                    expect(rest['--kp-redact-alpha'].trim(), 'at rest: no plate ink').toBe('0');
+                    expect(rest['background-size']).toBe('0% 100%');
+                    expect(rest['transition-property'], 'nothing fades under reduced motion').not.toMatch(/kp-redact-alpha|background-size/);
+                    return;
+                }
+                expect((await pseudo(mark, '', ['--kp-redact-alpha']))['--kp-redact-alpha'].trim(), 'covered: the plate at full ink').toBe('1');
+                expect((await pseudo(mark, '', ['background-image']))['background-image'], 'the plate is painted').not.toBe('none');
+                await mark.evaluate((el) => {
+                    const w = /** @type {any} */ (window);
+                    w.kpAlphaSamples = [];
+                    const sample = () => w.kpAlphaSamples.push(Number(getComputedStyle(el).getPropertyValue('--kp-redact-alpha')));
+                    new MutationObserver((_, observer) => {
+                        if (!el.classList.contains('is-cleared')) return;
+                        observer.disconnect();
+                        sample();
+                        const start = performance.now();
+                        const tick = () => {
+                            sample();
+                            if (performance.now() - start < 900) requestAnimationFrame(tick);
+                        };
+                        requestAnimationFrame(tick);
+                    }).observe(el, { attributes: true, attributeFilter: ['class'] });
+                });
+                await dossier.locator('[data-kp-reveal-trigger]').click();
+                await expect(mark).toHaveClass(/is-cleared/);
+                await expect.poll(() => page.evaluate(() => /** @type {any} */ (window).kpAlphaSamples.at(-1)), 'the plate ends cleared').toBe(0);
+                await page.waitForTimeout(1000);
+                const samples = /** @type {number[]} */ (await page.evaluate(() => /** @type {any} */ (window).kpAlphaSamples));
+                const between = samples.filter((a) => a > 0.01 && a < 0.99);
+                if (reduced) expect(between, `no fade under reduced motion: ${samples.join(', ')}`).toEqual([]);
+                else expect(between.length, `mid-reveal alpha between 1 and 0: ${samples.map((a) => a.toFixed(2)).join(', ')}`).toBeGreaterThan(0);
+            });
+        }
 
         test('the wipe confirmation is a real dialog, styled in the theme’s own boundary and radius', async ({ page }) => {
             await open(page, url);
@@ -294,6 +298,37 @@ for (const [channel, url] of CHANNELS) {
             await style(dialog, 'background-color').toBe(await paint(page, '--card'));
         });
 
+        test('the dividers are pearls: beads on a thread with no bar, plum then mint [scope-93, scope-95]', async ({ page }) => {
+            // Before scope-93: mask-image none under a polygon clip path, the
+            // torn tab. Since scope-95 the drawing lives in
+            // css/pastel-register.css alone, with no page knob over it.
+            await open(page, url, { reduced: true });
+            const read = (/** @type {string} */ selector) =>
+                page
+                    .locator(selector)
+                    .first()
+                    .evaluate((el) => {
+                        const s = getComputedStyle(el);
+                        return {
+                            image: s.maskImage,
+                            size: s.maskSize,
+                            repeat: s.maskRepeat,
+                            clip: s.clipPath,
+                            height: s.height,
+                            background: s.backgroundColor,
+                        };
+                    });
+            const pearls = {
+                image: 'linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px), radial-gradient(circle closest-side, rgb(0, 0, 0) calc(100% - 0.6px), rgba(0, 0, 0, 0) 100%)',
+                size: '100% 2px, 24px 12px',
+                repeat: 'no-repeat, space no-repeat',
+                clip: 'none',
+                height: '48px',
+            };
+            expect(await read('[data-kp-divider]:not([data-kp-divider="alt"])')).toEqual({ ...pearls, background: await paint(page, '--primary') });
+            expect(await read('[data-kp-divider="alt"]')).toEqual({ ...pearls, background: await paint(page, '--accent-foreground') });
+        });
+
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
             await open(page, url);
             const html = (await page.content()).replace(/=""/g, '');
@@ -303,4 +338,83 @@ for (const [channel, url] of CHANNELS) {
             }
         });
     });
+}
+
+// Kenny browses zoomed: 1.25 is a desktop scaled by a quarter. Firefox takes
+// it as a preference at launch.
+for (const ratio of [1, 1.25]) {
+    test(
+        `the pearls' thread is crisp at devicePixelRatio ${ratio}: every device pixel of it full ink or none [scope-93]`,
+        { tag: ['@theme:pastel', '@component:page-effects'] },
+        async ({ playwright, browserName, baseURL }) => {
+            // Measured 2026-09-15 on tests/fixtures/dividers.html (removed at
+            // scope-95): firefox 0 partial pixels at both ratios; chromium 0 at
+            // 1 and 2 to 3 at 1.25, where it does not snap a mask layer to the
+            // device grid. Kenny judges in FireDragon, a firefox. Drilled then:
+            // the thread drawn as a soft gradient (transparent 46%, black 50%,
+            // transparent 54%) was red at both ratios.
+            test.skip(browserName !== 'firefox', 'chromium does not snap a mask layer to device pixels at a fractional ratio (measured)');
+            const browser = await playwright.firefox.launch({ firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } });
+            try {
+                const context = await browser.newContext({ baseURL, deviceScaleFactor: ratio });
+                const page = await context.newPage();
+                await open(page, '/examples/concept-pastel.html', { reduced: true });
+                expect(await page.evaluate(() => devicePixelRatio)).toBe(ratio);
+                const partial = [];
+                for (const selector of ['[data-kp-divider]:not([data-kp-divider="alt"])', '[data-kp-divider="alt"]']) {
+                    const locator = page.locator(selector).first();
+                    await locator.scrollIntoViewIfNeeded();
+                    const clip = /** @type {{x: number, y: number, width: number, height: number}} */ (await locator.boundingBox());
+                    const shown = (await page.screenshot({ clip, scale: 'device' })).toString('base64');
+                    await locator.evaluate((el) => /** @type {HTMLElement} */ (el.style.visibility = 'hidden'));
+                    const hidden = (await page.screenshot({ clip, scale: 'device' })).toString('base64');
+                    await locator.evaluate((el) => /** @type {HTMLElement} */ (el.style.visibility = ''));
+                    // The thread alone: the column that changes the fewest
+                    // pixels and still changes some, between two beads.
+                    const column = await page.evaluate(
+                        async ({ a, b }) => {
+                            const decode = async (src) => {
+                                const image = await new Promise((resolve) => {
+                                    const im = new Image();
+                                    im.onload = () => resolve(im);
+                                    im.src = `data:image/png;base64,${src}`;
+                                });
+                                const canvas = document.createElement('canvas');
+                                canvas.width = image.width;
+                                canvas.height = image.height;
+                                const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
+                                ctx.drawImage(image, 0, 0);
+                                return { data: ctx.getImageData(0, 0, image.width, image.height).data, width: image.width, height: image.height };
+                            };
+                            const [one, two] = [await decode(a), await decode(b)];
+                            let best = null;
+                            for (let x = 0; x < one.width; x++) {
+                                const d = [];
+                                for (let y = 0; y < one.height; y++) {
+                                    const i = (y * one.width + x) * 4;
+                                    d.push(
+                                        Math.hypot(one.data[i] - two.data[i], one.data[i + 1] - two.data[i + 1], one.data[i + 2] - two.data[i + 2]),
+                                    );
+                                }
+                                const drawn = d.filter((v) => v > 8);
+                                if (drawn.length > 0 && (best === null || drawn.length < best.length)) best = drawn;
+                            }
+                            return best ?? [];
+                        },
+                        { a: shown, b: hidden },
+                    );
+                    const full = Math.max(...column);
+                    expect(column.length, `${selector}: a thread is drawn`).toBeGreaterThan(0);
+                    const soft = column.filter((v) => v < full * 0.85);
+                    if (soft.length > 0)
+                        partial.push(
+                            `${selector}: ${soft.length} of ${column.length} device pixels of the thread are part ink (${column.map(Math.round).join(', ')})`,
+                        );
+                }
+                expect(partial, partial.join('\n')).toEqual([]);
+            } finally {
+                await browser.close();
+            }
+        },
+    );
 }

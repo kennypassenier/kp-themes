@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en" data-theme="sepia" data-cat-theme="sepia">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The scope-25 gestures beside what ships · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only; NOT the package.
+               `sg-` classes are page chrome (tags, switcher, panel captions)
+               or the wrapper `.sg-proposed` that holds one proposal. Every
+               proposal rule reads
+                 [data-theme='<theme>'] .sg-proposed <selector>
+               and goes into css/<theme>-register.css by dropping
+               `.sg-proposed`. The rules here are unlayered, so they beat the
+               register's kp.register layer; in the register they would sit in
+               that layer after the rules they replace. The CURRENT panels
+               carry no `sg-` class on anything the register styles: they are
+               the register untouched.
+
+               Colour (DI9): nothing names a colour; every paint is a token or
+               a relative colour of one. Motion (DI7): every transition is
+               inside a no-preference guard with a literal duration; under
+               reduced motion each gesture shows its end state only.
+               ================================================================== */
+            .sg-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .sg-tag--package {
+                color: var(--success-foreground);
+            }
+            .sg-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .sg-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .sg-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .sg-caption {
+                margin: 1rem 0 0.6rem;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.72rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .sg-quote {
+                margin: 0.5rem 0;
+                padding-inline-start: 0.9rem;
+                border-inline-start: 3px solid var(--border-strong);
+                font-style: italic;
+            }
+            .sg-cost {
+                font-size: 0.9rem;
+                color: var(--muted-foreground);
+            }
+            .sg-cost output {
+                font-family: var(--theme-font-mono, monospace);
+                color: var(--foreground);
+            }
+            .sg-panel {
+                background: var(--background);
+                color: var(--foreground);
+                padding: 1.25rem;
+            }
+            .sg-panel .kp-row {
+                flex-wrap: wrap;
+                gap: 0.75rem 1rem;
+                align-items: center;
+            }
+            .sg-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+                gap: 1.25rem;
+                margin-block-start: 1.25rem;
+            }
+            .sg-wrongtheme {
+                display: none;
+                margin: 0 0 0.75rem;
+                font-weight: 600;
+            }
+            html:not([data-theme='sepia']) .sg-for-sepia .sg-wrongtheme,
+            html:not([data-theme='shade-light']):not([data-theme='shade-dark']) .sg-for-shade .sg-wrongtheme {
+                display: block;
+            }
+
+            /* The CURRENT panel's pressed state, held so it can be seen
+               without holding a button down. MOCK: a copy of what
+               css/sepia-register.css paints on :active (the inset shadow,
+               and the primary's --primary-active fill), nothing more. */
+            [data-theme='sepia'] .sg-current-hold .kp-button {
+                box-shadow: inset 0 1px 3px hsl(from var(--foreground) h s l / 0.18);
+            }
+            [data-theme='sepia'] .sg-current-hold .kp-button--primary {
+                background: var(--primary-active);
+                border-color: var(--primary-active);
+            }
+            [data-theme='sepia'] .sg-current-hold .kp-button--ghost {
+                color: var(--foreground);
+                background: var(--card);
+            }
+
+            /* ─────────────────────────────────────────────────────────────────
+               PROPOSED 1 · sepia · the ink spreads into the paper on a press
+               BEGIN sepia-press
+               ───────────────────────────────────────────────────────────────── */
+            /* In the register this @property goes at the top level of the
+               file, outside @layer. A registered number is what lets the
+               spread transition: gradients cannot transition, a number they
+               read can. */
+            @property --kp-ink-spread {
+                syntax: '<number>';
+                inherits: false;
+                initial-value: 0;
+            }
+            /* The press point: the centre by default (keyboard, no script);
+               js sets it where the pointer went down. `isolation` makes the
+               button its own stacking context, so the ink (z-index -1) paints
+               over the button's fill and under its label, and the paper
+               outside the button takes it too. No box changes size: the ink
+               is a pseudo-element with a negative inset, so nothing reflows. */
+            [data-theme='sepia'] .sg-proposed .kp-button {
+                isolation: isolate;
+                --kp-press-x: calc(50% - 12px);
+                --kp-press-y: calc(50% - 12px);
+            }
+            [data-theme='sepia'] .sg-proposed .kp-button::after {
+                --kp-ink-r: calc(var(--kp-ink-spread) * 58px);
+                content: '';
+                position: absolute;
+                inset: -12px;
+                z-index: -1;
+                pointer-events: none;
+                border-radius: 18px;
+                /* Four blots of one ink, offset from the press point by
+                   fractions of the radius, so the stain grows unevenly, as
+                   ink does along the fibres. */
+                background:
+                    radial-gradient(
+                        calc(var(--kp-ink-r) * 1.15) calc(var(--kp-ink-r) * 0.62) at calc(var(--kp-press-x) + 12px) calc(var(--kp-press-y) + 12px),
+                        hsl(from var(--primary) h s l / 0.3),
+                        hsl(from var(--primary) h s l / 0.16) 55%,
+                        transparent
+                    ),
+                    radial-gradient(
+                        calc(var(--kp-ink-r) * 0.62) calc(var(--kp-ink-r) * 0.5) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.55)
+                            calc(var(--kp-press-y) + 12px - var(--kp-ink-r) * 0.16),
+                        hsl(from var(--primary) h s l / 0.2),
+                        transparent
+                    ),
+                    radial-gradient(
+                        calc(var(--kp-ink-r) * 0.5) calc(var(--kp-ink-r) * 0.4) at calc(var(--kp-press-x) + 12px - var(--kp-ink-r) * 0.62)
+                            calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.2),
+                        hsl(from var(--primary) h s l / 0.18),
+                        transparent
+                    ),
+                    radial-gradient(
+                        calc(var(--kp-ink-r) * 0.34) calc(var(--kp-ink-r) * 0.3) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.12)
+                            calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.42),
+                        hsl(from var(--primary) h s l / 0.16),
+                        transparent
+                    );
+                /* The fibres: outside the button a fractal-noise mask thins the
+                   stain unevenly, so its edge feathers into the paper instead
+                   of ending on a clean ellipse. Over the button itself (the
+                   content box, 12px in) the mask is solid, so the ground under
+                   the label stays smooth: no mottle behind text. */
+                padding: 12px;
+                mask-image:
+                    linear-gradient(currentColor 0 0),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.2 1.4'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23f)'/%3E%3C/svg%3E");
+                mask-clip: content-box, border-box;
+                mask-size:
+                    auto,
+                    90px 90px;
+                mask-composite: add;
+            }
+            [data-theme='sepia'] .sg-proposed .kp-button:active:not(:disabled)::after,
+            [data-theme='sepia'] .sg-proposed.sg-hold .kp-button:not(:disabled)::after {
+                --kp-ink-spread: 1;
+            }
+            /* The press darkens the plate as the register already does
+               (--primary-active); the plain and ghost buttons have no fill,
+               so the ink alone is their darker state. */
+            [data-theme='sepia'] .sg-proposed.sg-hold .kp-button--primary {
+                background: var(--primary-active);
+                border-color: var(--primary-active);
+            }
+            [data-theme='sepia'] .sg-proposed.sg-hold .kp-button--ghost {
+                color: var(--foreground);
+                background: var(--card);
+            }
+            /* In quickly, out slowly: a click is shorter than 240ms, so the
+               stain is still visible after the finger leaves and settles back
+               into the paper over the next 900ms. */
+            @media (prefers-reduced-motion: no-preference) {
+                [data-theme='sepia'] .sg-proposed .kp-button::after {
+                    transition: --kp-ink-spread 900ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+                }
+                [data-theme='sepia'] .sg-proposed .kp-button:active:not(:disabled)::after {
+                    transition: --kp-ink-spread 240ms cubic-bezier(0.2, 0.7, 0.3, 1);
+                }
+            }
+            /* END sepia-press */
+
+            /* ─────────────────────────────────────────────────────────────────
+               PROPOSED 2 · sepia · the rule that is thickest in the middle
+               BEGIN sepia-rule
+               ───────────────────────────────────────────────────────────────── */
+            /* A swelled rule: one shape, never tiled, stretched to the width
+               with preserveAspectRatio='none', so it has no tile edge to
+               split at any devicePixelRatio. Its outline is 4 units tall: a
+               hairline of 0.5px at both ends that swells to 3px in the middle.
+               Stretching a path sideways keeps its vertical profile, so the
+               ends stay hairlines at every width. Drawn in the sienna ink
+               (--primary), the colour this register gives its drop cap. */
+            [data-theme='sepia'] .sg-proposed [data-kp-divider] {
+                background: none;
+            }
+            [data-theme='sepia'] .sg-proposed [data-kp-divider]::before {
+                content: '';
+                position: absolute;
+                inset-inline: 0;
+                inset-block-start: calc(50% - 2px);
+                block-size: 4px;
+                background: var(--primary);
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 4' preserveAspectRatio='none'%3E%3Cpath d='M0 1.75C220 1.75 330 0.5 500 0.5S780 1.75 1000 1.75V2.25C780 2.25 670 3.5 500 3.5S220 2.25 0 2.25Z'/%3E%3C/svg%3E")
+                    0 0 / 100% 100% no-repeat;
+            }
+            /* The heading's rule: the same swell, 6rem long, drawn by the
+               register's own scaleX reveal (unchanged). */
+            [data-theme='sepia'] .sg-proposed [data-kp-reveal='rule']::after {
+                block-size: 4px;
+                background: var(--primary);
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 4' preserveAspectRatio='none'%3E%3Cpath d='M0 1.75C220 1.75 330 0.5 500 0.5S780 1.75 1000 1.75V2.25C780 2.25 670 3.5 500 3.5S220 2.25 0 2.25Z'/%3E%3C/svg%3E")
+                    0 0 / 100% 100% no-repeat;
+            }
+            /* END sepia-rule */
+
+            /* ─────────────────────────────────────────────────────────────────
+               PROPOSED 3 · shade-light and shade-dark · the pointer is the light
+               BEGIN shade-light
+               ───────────────────────────────────────────────────────────────── */
+            /* The contract with the script: a theme that says
+               `--kp-light: pointer` gets, on each lit element,
+                 --kp-light-x, --kp-light-y  the direction AWAY from the pointer,
+                                             about 1 at 240px and further,
+                                             shrinking to 0 under the pointer;
+                 --kp-light-near            1 under the pointer, 0 at 560px;
+                 --kp-light-lift            0.6 + near;
+                 --kp-light-at-x, -at-y     the pointer in the element's box.
+               Without them (no pointer, touch, keyboard, reduced motion, no
+               script) every fallback below is scope-12's fixed light at the
+               top left: x 1, y 1, lift 1, near 0, which paints exactly what
+               the register paints today. */
+            [data-theme='shade-light'] .sg-proposed {
+                --kp-light: pointer;
+            }
+            [data-theme='shade-light'] .sg-proposed .kp-button:not([class*='kp-button--']) {
+                box-shadow: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
+            }
+            [data-theme='shade-light'] .sg-proposed .kp-button:not([class*='kp-button--']):focus-visible {
+                box-shadow:
+                    0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+                    calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
+            }
+            [data-theme='shade-light'] .sg-proposed .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
+                translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+                box-shadow: calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 4px) 6px hsl(from var(--foreground) h s l / 0.22);
+            }
+            [data-theme='shade-light'] .sg-proposed .kp-button:not([class*='kp-button--']):active:not(:disabled) {
+                translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+                box-shadow: inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+            }
+            /* New: the card and the dossier lie on the paper and throw a
+               short shade too (today they carry a border and no shadow). */
+            [data-theme='shade-light'] .sg-proposed .kp-card {
+                box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 5px) 12px -3px hsl(from var(--foreground) h s l / 0.26);
+            }
+            /* The headline sits on the page: a faint, hard-edged shade on
+               the paper beside each letter. */
+            [data-theme='shade-light'] .sg-proposed [data-kp-surface='hero'] h1 {
+                text-shadow: calc(var(--kp-light-x, 1) * 1.5px) calc(var(--kp-light-y, 1) * 2px) 2px hsl(from var(--foreground) h s l / 0.16);
+            }
+            /* END shade-light */
+
+            /* BEGIN shade-dark */
+            /* The dark half: what the light reaches is lifted out of the
+               shade. The surface nearest the pointer takes a pale wash of the
+               ink on the side the pointer is, and its shadow under it grows
+               with the lift. The shadow is the page's own ground, darkened,
+               because a shadow in --background on --background is invisible. */
+            [data-theme='shade-dark'] .sg-proposed {
+                --kp-light: pointer;
+            }
+            [data-theme='shade-dark'] .sg-proposed .kp-button:not([class*='kp-button--']) {
+                box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+                    hsl(from var(--background) h s l / 0.9);
+                background-image: radial-gradient(
+                    circle 8rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+                    hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.08)),
+                    transparent
+                );
+            }
+            [data-theme='shade-dark'] .sg-proposed .kp-button:not([class*='kp-button--']):focus-visible {
+                box-shadow:
+                    0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+                    calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 2px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 3px) 5px
+                        hsl(from var(--background) h s l / 0.9);
+            }
+            [data-theme='shade-dark'] .sg-proposed .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
+                translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+                box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 6px) 10px hsl(from var(--background) h s l / 0.95);
+            }
+            [data-theme='shade-dark'] .sg-proposed .kp-button:not([class*='kp-button--']):active:not(:disabled) {
+                translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+                box-shadow: inset calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 3px) 5px hsl(from var(--background) h s l / 0.95);
+            }
+            [data-theme='shade-dark'] .sg-proposed .kp-card {
+                box-shadow: calc(var(--kp-light-x, 1) * var(--kp-light-lift, 1) * 4px) calc(var(--kp-light-y, 1) * var(--kp-light-lift, 1) * 6px)
+                    14px -4px hsl(from var(--background) h s calc(l - 7) / 0.9);
+                background-image: radial-gradient(
+                    circle 16rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+                    hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+                    transparent
+                );
+            }
+            [data-theme='shade-dark'] .sg-proposed [data-kp-surface='hero'] {
+                background-image: radial-gradient(
+                    circle 22rem at var(--kp-light-at-x, 0) var(--kp-light-at-y, 0),
+                    hsl(from var(--foreground) h s l / calc(var(--kp-light-near, 0) * 0.06)),
+                    transparent
+                );
+            }
+            /* END shade-dark */
+
+            /* The held lights (MOCK): the values the script would write,
+               fixed by class so the reviewer and the contrast check can see a
+               lit state without moving the pointer. */
+            [data-theme] .sg-proposed.sg-light-west,
+            [data-theme] .sg-proposed.sg-light-east,
+            [data-theme] .sg-proposed.sg-light-over {
+                --kp-light: held;
+            }
+            .sg-proposed.sg-light-west .kp-card {
+                --kp-light-x: 1.4;
+                --kp-light-y: 0;
+                --kp-light-near: 0.62;
+                --kp-light-lift: 1.22;
+                --kp-light-at-x: -60px;
+                --kp-light-at-y: 50%;
+            }
+            .sg-proposed.sg-light-east .kp-card {
+                --kp-light-x: -1.4;
+                --kp-light-y: 0;
+                --kp-light-near: 0.62;
+                --kp-light-lift: 1.22;
+                --kp-light-at-x: calc(100% + 60px);
+                --kp-light-at-y: 50%;
+            }
+            .sg-proposed.sg-light-over .kp-card {
+                --kp-light-x: 0;
+                --kp-light-y: 0;
+                --kp-light-near: 1;
+                --kp-light-lift: 1.6;
+                --kp-light-at-x: 50%;
+                --kp-light-at-y: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>The scope-25 gestures beside what ships</h1>
+            <p class="cat-intro">
+                At scope-25 (2026-09-11) Kenny approved one gesture for sepia and one for the shade pair; none was built. At scope-100 (2026-09-16) he
+                asked to see them next to what ships before choosing. Each block below puts <b>CURRENT</b>, the shipped register with nothing added
+                (<span class="sg-tag sg-tag--package">package</span>), beside <b>PROPOSED</b>, the same markup inside a
+                <code>.sg-proposed</code> wrapper whose rules sit in this page's <code>&lt;style&gt;</code> and its last script (<span
+                    class="sg-tag sg-tag--mock"
+                    >mock</span
+                >). Every proposal rule starts with the theme's own selector and moves into <code>css/&lt;theme&gt;-register.css</code> by dropping
+                <code>.sg-proposed</code>. The buttons, cards, surfaces, dividers and the dossier stamp are package classes; the panel captions, the
+                switcher and the "held" copies are mock. Blocks 1 and 2 are read in sepia, blocks 3 and 4 in shade-light and again in shade-dark; in
+                any other theme CURRENT and PROPOSED are identical, which is the proof that nothing leaks. Loaded registers: sepia, shade-light,
+                shade-dark. The line counts in the cost notes are read live from this page's source between each proposal's BEGIN and END markers:
+                non-blank lines, comments included.
+            </p>
+            <div class="sg-switcher" role="group" aria-label="Theme for this page">
+                <span class="sg-tag sg-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-sg-theme="sepia" aria-pressed="true">sepia</button>
+                <button type="button" class="kp-button kp-button--ghost" data-sg-theme="shade-light" aria-pressed="false">shade-light</button>
+                <button type="button" class="kp-button kp-button--ghost" data-sg-theme="shade-dark" aria-pressed="false">shade-dark</button>
+                <button type="button" class="kp-button kp-button--ghost" data-sg-theme="formal" aria-pressed="false">formal (nothing changes)</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="cat-block sg-for-sepia" id="press">
+                <h2>1 · sepia · the ink spreads on a press <span class="sg-tag sg-tag--mock">mock</span></h2>
+                <p class="sg-wrongtheme">This block is about sepia: switch the theme to sepia to judge it.</p>
+                <div class="cat-look">
+                    <b>Look at:</b> press and hold each PROPOSED button, then let go. A brown stain grows from the exact point you pressed, unevenly
+                    and with a feathered, fibrous edge, over the button's fill and out about 12px into the paper around it; it never covers the label,
+                    which stays where it was (no button moves or changes size). On release the stain sinks back into the paper over about a second. A
+                    quick click still leaves a visible stain that fades. With reduced motion the stain appears and disappears at once, at its full
+                    size. Compare CURRENT, where a press only darkens the primary fill and adds a faint inset shadow. The marginal bracket on hover
+                    (scope-12) stays in both.
+                </div>
+                <blockquote class="sg-quote">"the ink spreading into the paper on a press" (scope-25, sepia)</blockquote>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-pair">
+                        <div class="sg-panel sg-current">
+                            <p class="sg-caption">Current · press and hold</p>
+                            <div class="kp-row">
+                                <button type="button" class="kp-button kp-button--primary">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Sign the reading</span>
+                                </button>
+                                <button type="button" class="kp-button">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Add a note</span>
+                                </button>
+                                <button type="button" class="kp-button kp-button--ghost">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Skip for now</span>
+                                </button>
+                            </div>
+                            <p class="sg-caption">Current · pressed, held (mock copy of :active)</p>
+                            <div class="kp-row sg-current-hold">
+                                <button type="button" class="kp-button kp-button--primary" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Sign the reading</span>
+                                </button>
+                                <button type="button" class="kp-button" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Add a note</span>
+                                </button>
+                                <button type="button" class="kp-button kp-button--ghost" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Skip for now</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sg-panel">
+                            <p class="sg-caption">Proposed · press and hold</p>
+                            <div class="kp-row sg-proposed" data-sg-press>
+                                <button type="button" class="kp-button kp-button--primary">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Sign the reading</span>
+                                </button>
+                                <button type="button" class="kp-button">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Add a note</span>
+                                </button>
+                                <button type="button" class="kp-button kp-button--ghost">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Skip for now</span>
+                                </button>
+                            </div>
+                            <p class="sg-caption">Proposed · pressed, held at the centre</p>
+                            <div class="kp-row sg-proposed sg-hold">
+                                <button type="button" class="kp-button kp-button--primary" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Sign the reading</span>
+                                </button>
+                                <button type="button" class="kp-button" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Add a note</span>
+                                </button>
+                                <button type="button" class="kp-button kp-button--ghost" tabindex="-1">
+                                    <span class="kp-button__edge" aria-hidden="true"></span>
+                                    <span class="kp-button__label">Skip for now</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="sg-cost">
+                    <b>Cost:</b> <output data-sg-lines="sepia-press">…</output> lines of CSS and <output data-sg-lines="press-js">…</output> lines of
+                    script (the press point; without it the stain starts at the centre). Risk: the stain reaches 12px past the button and can touch a
+                    neighbour closer than that; the ink sits under the label, never over it. Text contrast in the held state, measured from pixels in
+                    firefox: <output data-sg-contrast="press">primary 9.52, plain 7.41, ghost 7.79 (the lowest pixel under each label)</output>.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block sg-for-sepia" id="rule">
+                <h2>2 · sepia · the rule thickest in the middle <span class="sg-tag sg-tag--mock">mock</span></h2>
+                <p class="sg-wrongtheme">This block is about sepia: switch the theme to sepia to judge it.</p>
+                <div class="cat-look">
+                    <b>Look at:</b> the heading rule under "Handover, pump house 4" and the two section dividers. CURRENT draws two even 1px lines
+                    (the double warm-brown rule) and a straight 2px heading rule. PROPOSED draws each as one stroke of sienna ink that swells to 3px
+                    in the middle and tapers to a hairline at both ends, like a printer's swelled rule; the second divider keeps its diamond, which
+                    now sits on the thickest part. Zoom in (or view at 225%): the stroke must be one continuous shape with no break, notch or lighter
+                    column anywhere along it, and the ends must stay visible. Static: the heading rule still draws once on scroll, as today.
+                </div>
+                <blockquote class="sg-quote">"the rule that is thickest in the middle" (scope-25, sepia)</blockquote>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-pair">
+                        <div class="sg-current">
+                            <p class="sg-caption">Current</p>
+                            <section class="kp-section kp-stack" data-kp-surface="app">
+                                <h2 data-kp-reveal="rule">Handover, pump house 4</h2>
+                                <p class="kp-prose">Both pumps ran through the night. Line 2 held 4.1 bar after the valve was replaced at 03:40.</p>
+                            </section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section kp-stack" data-kp-surface="app">
+                                <p class="kp-prose">The day shift reads the log before the first round and signs it at the gate.</p>
+                            </section>
+                            <div data-kp-divider="alt"></div>
+                            <footer class="kp-footer">
+                                <p class="microlabel">Pump house 4 · handover log</p>
+                            </footer>
+                        </div>
+                        <div class="sg-proposed">
+                            <p class="sg-caption">Proposed</p>
+                            <section class="kp-section kp-stack" data-kp-surface="app">
+                                <h2 data-kp-reveal="rule">Handover, pump house 4</h2>
+                                <p class="kp-prose">Both pumps ran through the night. Line 2 held 4.1 bar after the valve was replaced at 03:40.</p>
+                            </section>
+                            <div data-kp-divider data-sg-rule="divider"></div>
+                            <section class="kp-section kp-stack" data-kp-surface="app">
+                                <p class="kp-prose">The day shift reads the log before the first round and signs it at the gate.</p>
+                            </section>
+                            <div data-kp-divider="alt"></div>
+                            <footer class="kp-footer">
+                                <p class="microlabel">Pump house 4 · handover log</p>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+                <p class="sg-cost">
+                    <b>Cost:</b> <output data-sg-lines="sepia-rule">…</output> lines of CSS, no script. It replaces the two background lines of the
+                    divider and restyles the heading rule; the heading rule grows from 2px to 4px tall, so the text under a heading moves down 2px
+                    once, at rest. Risk: none for reading, the rule is decoration and carries no text. The seam and the swell are checked at
+                    devicePixelRatio 2.222 in verify.spec.mjs.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block sg-for-shade" id="light">
+                <h2>3 · shade-light and shade-dark · the pointer is the light <span class="sg-tag sg-tag--mock">mock</span></h2>
+                <p class="sg-wrongtheme">This block is about the shade pair: switch the theme to shade-light, then to shade-dark.</p>
+                <div class="sg-switcher" role="group" aria-label="Theme for this block">
+                    <span class="sg-tag sg-tag--mock">mock</span>
+                    <span>Read it in:</span>
+                    <button type="button" class="kp-button kp-button--ghost" data-sg-theme="shade-light" aria-pressed="false">shade-light</button>
+                    <button type="button" class="kp-button kp-button--ghost" data-sg-theme="shade-dark" aria-pressed="false">shade-dark</button>
+                </div>
+                <div class="cat-look">
+                    <b>Look at:</b> move the mouse slowly around and across the PROPOSED panel. <b>In shade-light</b> the plain button, the two cards
+                    and the headline throw their shade away from the pointer: pointer to the left of a card, shade on its right; pointer below, shade
+                    above; pointer right over it, the shade shrinks under it. <b>In shade-dark</b> the same elements are lifted toward the pointer:
+                    the card or button nearest to it takes a pale wash on the side the pointer is, and the dark shadow under it lengthens, away from
+                    the pointer; far away they settle back. In CURRENT nothing follows the pointer: the light stays at the top left. Then take the
+                    mouse off the page, or press Tab: PROPOSED falls back to that same top-left light and matches CURRENT's buttons exactly. With
+                    reduced motion PROPOSED never follows the pointer. The coloured buttons stay flat in both, as they ship.
+                </div>
+                <blockquote class="sg-quote">
+                    "the pointer is the light, and the light half throws its shade away from it while the dark half is lifted out of shade by it"
+                    (scope-25, shade-light and shade-dark)
+                </blockquote>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-pair">
+                        <div class="sg-current">
+                            <p class="sg-caption">Current · fixed light, top left</p>
+                            <section class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="microlabel">Reading room · second floor</p>
+                                <h1>A book read in the shade.</h1>
+                                <p class="kp-prose">Returns are shelved by noon; the reserve desk closes at five.</p>
+                                <div class="kp-row">
+                                    <button type="button" class="kp-button">
+                                        <span class="kp-button__edge" aria-hidden="true"></span>
+                                        <span class="kp-button__label">Renew a loan</span>
+                                    </button>
+                                    <button type="button" class="kp-button kp-button--primary">
+                                        <span class="kp-button__edge" aria-hidden="true"></span>
+                                        <span class="kp-button__label">Reserve a seat</span>
+                                    </button>
+                                </div>
+                                <div class="sg-cards">
+                                    <div class="kp-card">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Due this week</h3></div>
+                                        <div class="kp-card__body">
+                                            <p>Three books, the last one on Friday.</p>
+                                            <button type="button" class="kp-button">
+                                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                                <span class="kp-button__label">Renew all</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="kp-card" data-kp-reveal="emphasis" data-kp-label="Archive">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Dossier 1907</h3></div>
+                                        <div class="kp-card__body">
+                                            <p>Letters of the harbour master, boxed and numbered.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="sg-proposed" data-sg-light-panel>
+                            <p class="sg-caption">Proposed · the pointer is the light</p>
+                            <section class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="microlabel">Reading room · second floor</p>
+                                <h1>A book read in the shade.</h1>
+                                <p class="kp-prose">Returns are shelved by noon; the reserve desk closes at five.</p>
+                                <div class="kp-row">
+                                    <button type="button" class="kp-button">
+                                        <span class="kp-button__edge" aria-hidden="true"></span>
+                                        <span class="kp-button__label">Renew a loan</span>
+                                    </button>
+                                    <button type="button" class="kp-button kp-button--primary">
+                                        <span class="kp-button__edge" aria-hidden="true"></span>
+                                        <span class="kp-button__label">Reserve a seat</span>
+                                    </button>
+                                </div>
+                                <div class="sg-cards">
+                                    <div class="kp-card" data-sg-card="due">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Due this week</h3></div>
+                                        <div class="kp-card__body">
+                                            <p>Three books, the last one on Friday.</p>
+                                            <button type="button" class="kp-button">
+                                                <span class="kp-button__edge" aria-hidden="true"></span>
+                                                <span class="kp-button__label">Renew all</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="kp-card" data-kp-reveal="emphasis" data-kp-label="Archive">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Dossier 1907</h3></div>
+                                        <div class="kp-card__body">
+                                            <p>Letters of the harbour master, boxed and numbered.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <p class="sg-cost">
+                    <b>Cost:</b> <output data-sg-lines="shade-light">…</output> lines of CSS for shade-light,
+                    <output data-sg-lines="shade-dark">…</output> for shade-dark, and one shared script of
+                    <output data-sg-lines="light-js">…</output> lines (in the package it would sit in <code>js/effects.js</code>). The script reads
+                    the pointer at most once per frame, measures only the elements on screen and writes five custom properties on each; no layout
+                    property changes. Risk: motion that follows the pointer can bother some readers, so reduced motion turns it off; the cards gain a
+                    shadow at rest that S49 left out ("border only, no shadow"), which is Kenny's to accept; a touch screen never sees it.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block sg-for-shade" id="light-held">
+                <h2>4 · The light, held in three places <span class="sg-tag sg-tag--mock">mock</span></h2>
+                <p class="sg-wrongtheme">This block is about the shade pair: switch the theme to shade-light, then to shade-dark.</p>
+                <div class="cat-look">
+                    <b>Look at:</b> the same card three times with the light fixed where the pointer would be, so the states can be compared without
+                    moving the mouse: to the left of the card, to its right, and right over its middle. In shade-light the shade falls on the right,
+                    then on the left, then almost none. In shade-dark the pale wash sits on the left edge, then on the right edge, then in the middle
+                    at its strongest, with the shadow under it on the far side. The text must read equally well in all three; the contrast measured in
+                    the brightest spot is below.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <section class="kp-section sg-cards" data-kp-surface="hero">
+                        <div class="sg-proposed sg-light-west">
+                            <p class="sg-caption">Light at the left</p>
+                            <div class="kp-card">
+                                <div class="kp-card__header"><h3 class="kp-card__title">Due this week</h3></div>
+                                <div class="kp-card__body"><p>Three books, the last one on Friday.</p></div>
+                            </div>
+                        </div>
+                        <div class="sg-proposed sg-light-east">
+                            <p class="sg-caption">Light at the right</p>
+                            <div class="kp-card">
+                                <div class="kp-card__header"><h3 class="kp-card__title">Due this week</h3></div>
+                                <div class="kp-card__body"><p>Three books, the last one on Friday.</p></div>
+                            </div>
+                        </div>
+                        <div class="sg-proposed sg-light-over">
+                            <p class="sg-caption">Light over the middle</p>
+                            <div class="kp-card" data-sg-card="over">
+                                <div class="kp-card__header"><h3 class="kp-card__title">Due this week</h3></div>
+                                <div class="kp-card__body"><p>Three books, the last one on Friday.</p></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <p class="sg-cost">
+                    Text contrast of the card's body text in the brightest spot of the lit card, measured from pixels in firefox:
+                    <output data-sg-contrast="light"
+                        >shade-light 5.17 lit, 5.17 CURRENT (a shadow never reaches the text); shade-dark 4.64 lit, 5.12 CURRENT; the plain button lit
+                        and hovered 7.30 in shade-light and 5.38 in shade-dark</output
+                    >.
+                </p>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // MOCK theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu follows it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-sg-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.sgTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.sgTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            mark();
+
+            // MOCK cost readout: counts the lines between the BEGIN and END
+            // markers of each proposal in this page's own source, so the
+            // numbers in the notes are measured, not typed.
+            const source = [...document.querySelectorAll('style, script')].map((node) => node.textContent).join('\n');
+            for (const out of document.querySelectorAll('[data-sg-lines]')) {
+                const name = out.getAttribute('data-sg-lines');
+                const match = source.match(new RegExp(`BEGIN ${name}[^\\n]*\\n([\\s\\S]*?)\\n[^\\n]*END ${name}`));
+                out.textContent = match ? String(match[1].split('\n').filter((line) => line.trim() !== '').length) : '?';
+            }
+        </script>
+        <script type="module">
+            /* ──────────────────────────────────────────────────────────────
+               PROPOSED · sepia · the press point
+               BEGIN press-js
+               ────────────────────────────────────────────────────────────── */
+            // Where the pointer went down becomes the centre of the stain; a
+            // key press leaves the stain at the centre. In the package the
+            // listener would be one delegated listener in js/effects.js,
+            // armed when the theme is sepia.
+            document.addEventListener('pointerdown', (event) => {
+                const button = event.target instanceof Element ? event.target.closest('.sg-proposed .kp-button') : null;
+                if (!button) return;
+                const box = button.getBoundingClientRect();
+                button.style.setProperty('--kp-press-x', `${Math.round(event.clientX - box.left)}px`);
+                button.style.setProperty('--kp-press-y', `${Math.round(event.clientY - box.top)}px`);
+            });
+            document.addEventListener('keydown', (event) => {
+                const button = event.target instanceof Element ? event.target.closest('.sg-proposed .kp-button') : null;
+                if (!button || (event.key !== ' ' && event.key !== 'Enter')) return;
+                button.style.removeProperty('--kp-press-x');
+                button.style.removeProperty('--kp-press-y');
+            });
+            /* END press-js */
+        </script>
+        <script type="module">
+            /* ──────────────────────────────────────────────────────────────
+               PROPOSED · shade-light and shade-dark · the pointer is the light
+               BEGIN light-js
+               ────────────────────────────────────────────────────────────── */
+            // Lights every element whose theme says `--kp-light: pointer`.
+            // Writes the direction away from the pointer (x, y), how near it
+            // is (near, lift) and where it is inside the element (at-x, at-y)
+            // at most once per frame. No pointer, a touch, a key press or
+            // reduced motion removes them, and the CSS falls back to the fixed
+            // light at the top left.
+            const LIT = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+            const PROPS = ['--kp-light-x', '--kp-light-y', '--kp-light-near', '--kp-light-lift', '--kp-light-at-x', '--kp-light-at-y'];
+            const REACH = 240;
+            const FAR = 560;
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+            let lit = [];
+            let pointer = null;
+            let frame = 0;
+            const collect = () => {
+                for (const el of lit) for (const p of PROPS) el.style.removeProperty(p);
+                lit = [...document.querySelectorAll(LIT)].filter((el) => getComputedStyle(el).getPropertyValue('--kp-light').trim() === 'pointer');
+            };
+            const paint = () => {
+                frame = 0;
+                const off = !pointer || reduce.matches;
+                for (const el of lit) {
+                    const box = el.getBoundingClientRect();
+                    if (off || box.bottom < 0 || box.top > innerHeight) {
+                        for (const p of PROPS) el.style.removeProperty(p);
+                        continue;
+                    }
+                    const dx = box.left + box.width / 2 - pointer.x;
+                    const dy = box.top + box.height / 2 - pointer.y;
+                    const distance = Math.hypot(dx, dy);
+                    const k = 1.4 / Math.max(distance, REACH);
+                    const near = 1 - Math.min(distance / FAR, 1);
+                    el.style.setProperty('--kp-light-x', (dx * k).toFixed(3));
+                    el.style.setProperty('--kp-light-y', (dy * k).toFixed(3));
+                    el.style.setProperty('--kp-light-near', near.toFixed(3));
+                    el.style.setProperty('--kp-light-lift', (0.6 + near).toFixed(3));
+                    el.style.setProperty('--kp-light-at-x', `${Math.round(pointer.x - box.left)}px`);
+                    el.style.setProperty('--kp-light-at-y', `${Math.round(pointer.y - box.top)}px`);
+                }
+            };
+            const schedule = () => {
+                if (!frame) frame = requestAnimationFrame(paint);
+            };
+            document.addEventListener(
+                'pointermove',
+                (event) => {
+                    pointer = event.pointerType === 'touch' ? null : { x: event.clientX, y: event.clientY };
+                    schedule();
+                },
+                { passive: true },
+            );
+            document.addEventListener('pointerdown', (event) => {
+                if (event.pointerType === 'touch') {
+                    pointer = null;
+                    schedule();
+                }
+            });
+            document.documentElement.addEventListener('pointerleave', () => {
+                pointer = null;
+                schedule();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key !== 'Tab') return;
+                pointer = null;
+                schedule();
+            });
+            addEventListener('scroll', schedule, { passive: true });
+            reduce.addEventListener('change', schedule);
+            new MutationObserver(() =>
+                requestAnimationFrame(() => {
+                    collect();
+                    schedule();
+                }),
+            ).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            collect();
+            /* END light-js */
+        </script>
+    </body>
+</html>

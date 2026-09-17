@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Structure · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Structure</h1>
+            <p class="cat-intro">
+                The components that arrange content rather than hold it: <code>.kp-accordion</code>, <code>.kp-tree</code>, <code>.kp-timeline</code>,
+                <code>.kp-split</code>, <code>.kp-reorder</code> and <code>.kp-wizard</code>. Each is trivial with a mouse and is where keyboard
+                access usually stops, so most of the notes below ask for the keyboard.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#accordion">Accordion</a></li>
+                <li><a href="#tree">Tree</a></li>
+                <li><a href="#tree-deep">Tree extremes</a></li>
+                <li><a href="#timeline">Timeline</a></li>
+                <li><a href="#split">Split pane</a></li>
+                <li><a href="#reorder">Reorder</a></li>
+                <li><a href="#wizard">Wizard, frozen</a></li>
+                <li><a href="#wizard-live">Wizard, live</a></li>
+            </ul>
+
+            <section class="cat-block" id="accordion">
+                <h2>Accordion</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each item is a native <code>&lt;details&gt;</code>: the summary is bold, the body is in the muted ink, and a
+                    hairline separates the items. The first item is open. The open and closed marker is the browser's own triangle, and every register
+                    now answers the summary in its own voice — the marker's colour, the summary's type, and a mark on the open one — so switch themes
+                    and judge whether each still reads as a disclosure, with the triangle visible on the summary's baseline in the dark themes. Press
+                    Enter or Space on a summary to toggle it. The third summary is a whole question: it must wrap with its marker staying at the start
+                    of the first line.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-accordion">
+                        <details class="kp-accordion__item" open>
+                            <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                            <div class="kp-accordion__body">
+                                Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+                            </div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+                            <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">
+                                If the gauge on the wall and the sensor disagree by more than half a bar, which one do we believe until the vendor has
+                                been out?
+                            </summary>
+                            <div class="kp-accordion__body">
+                                <p style="margin-block-start: 0">Neither, on its own. Close the line and log both readings:</p>
+                                <ul>
+                                    <li>the gauge, read at eye level;</li>
+                                    <li>the sensor, from the readings page, at the same minute.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tree">
+                <h2>Tree</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a selectable tree (<code>data-kp-selectable</code>). The twisty before each branch points the way the branch
+                    <i>will</i> go and sits in the muted ink; leaves have none and must still line up with the branch labels. <b>Line 2</b> is open,
+                    <b>Line 1</b> is closed, and <b>readings-0240.csv</b> is written as selected (<code>aria-selected="true"</code>): it must carry a
+                    bar at its start edge, a wash of the primary colour over its own row only, and a heavier weight, in every theme. Click once into
+                    the tree and use the keyboard: Down skips the closed branch's children, Right opens a branch and then steps into it, Left closes
+                    it and then steps out, Home and End jump, and typing "pu" finds <b>pump-log.txt</b>. Enter selects the focused item. The focus
+                    ring must hug one row, not the whole branch under it.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ul class="kp-tree" role="tree" data-kp-tree data-kp-selectable aria-label="Pump house 4 files">
+                        <li role="treeitem" aria-expanded="false">
+                            Line 1
+                            <ul role="group">
+                                <li role="treeitem">readings-0100.csv</li>
+                                <li role="treeitem">readings-0200.csv</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                            Line 2
+                            <ul role="group">
+                                <li role="treeitem" aria-expanded="true">
+                                    Manifold
+                                    <ul role="group">
+                                        <li role="treeitem" aria-selected="true">readings-0240.csv</li>
+                                        <li role="treeitem">pump-log.txt</li>
+                                    </ul>
+                                </li>
+                                <li role="treeitem">lock-out-signed.pdf</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem">site-plan.pdf</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tree-deep">
+                <h2>Tree extremes</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> six levels deep, in a narrow pane. Each level must step in by the same amount; by the sixth the label still needs
+                    room to read. The deepest file has a name with no space to break at: it wraps inside the pane (the package breaks it anywhere
+                    rather than let it push the pane wider). The branch with a long name must wrap under its own twisty, not under the twisty of its
+                    parent.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 18rem">
+                        <ul class="kp-tree" role="tree" data-kp-tree aria-label="Archive">
+                            <li role="treeitem" aria-expanded="true">
+                                Archive
+                                <ul role="group">
+                                    <li role="treeitem" aria-expanded="true">
+                                        2026
+                                        <ul role="group">
+                                            <li role="treeitem" aria-expanded="true">
+                                                September
+                                                <ul role="group">
+                                                    <li role="treeitem" aria-expanded="true">
+                                                        Incidents closed after the vendor's second visit to the manifold
+                                                        <ul role="group">
+                                                            <li role="treeitem" aria-expanded="true">
+                                                                INC-4471
+                                                                <ul role="group">
+                                                                    <li role="treeitem">
+                                                                        pumphouse4_line2_manifold_pressure_readings_20260913T021000Z.csv
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="timeline">
+                <h2>Timeline</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each event has a ring in the primary colour and a hairline running down to the next ring — and the last event must
+                    have no line hanging under it. The time sits above the text in tabular figures, muted and smaller, so a column of times lines up
+                    digit for digit. The fourth event's text is a long paragraph: it must wrap in its own column, never under the ring. The second
+                    timeline has one event, and must show a ring with no line at all.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ol class="kp-timeline">
+                        <li class="kp-timeline__item">
+                            <span class="kp-timeline__marker" aria-hidden="true"></span>
+                            <span><time class="kp-timeline__when" datetime="2026-09-13T02:10">02:10</time>Pressure on line 2 starts to fall.</span>
+                        </li>
+                        <li class="kp-timeline__item">
+                            <span class="kp-timeline__marker" aria-hidden="true"></span>
+                            <span><time class="kp-timeline__when" datetime="2026-09-13T02:14">02:14</time>Low-pressure alarm raised.</span>
+                        </li>
+                        <li class="kp-timeline__item">
+                            <span class="kp-timeline__marker" aria-hidden="true"></span>
+                            <span
+                                ><time class="kp-timeline__when" datetime="2026-09-13T02:40">02:40</time>Line closed at the manifold by the night
+                                shift.</span
+                            >
+                        </li>
+                        <li class="kp-timeline__item">
+                            <span class="kp-timeline__marker" aria-hidden="true"></span>
+                            <span
+                                ><time class="kp-timeline__when" datetime="2026-09-13T03:15">03:15</time>The pressure recovered to 3.2 bar without
+                                anyone touching the valve, then dropped again; the gauge on the wall agreed with the sensor both times, so this is not
+                                drift but something upstream of the manifold that nobody has looked into yet.</span
+                            >
+                        </li>
+                        <li class="kp-timeline__item">
+                            <span class="kp-timeline__marker" aria-hidden="true"></span>
+                            <span><time class="kp-timeline__when" datetime="2026-09-13T06:00">06:00</time>Handed over to the day shift.</span>
+                        </li>
+                    </ol>
+                    <div style="margin-block-start: 1.5rem">
+                        <ol class="kp-timeline">
+                            <li class="kp-timeline__item">
+                                <span class="kp-timeline__marker" aria-hidden="true"></span>
+                                <span><time class="kp-timeline__when" datetime="2026-09-12T22:00">22:00</time>Night shift started.</span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="split">
+                <h2>Split pane</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> two panes and a separator you can grab. The separator is a narrow bar on the muted ground with a rule on each
+                    side; the pointer turns into a column-resize arrow over it. Drag it, then Tab to it and use Left and Right (Shift for big steps,
+                    Home and End for the limits of 20 % and 80 %): the focus ring must be drawn <i>inside</i> the bar so the panes do not cover it.
+                    Each pane scrolls on its own when its content is taller. The second split is <code>data-kp-orientation="horizontal"</code> — a top
+                    and bottom split: the panes stack, the separator is a bar across the full width with a rule above and below it and a row-resize
+                    pointer, and Up and Down (or a drag) move it. Registers that give the separator a thickness keep that thickness here.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div style="display: grid; block-size: 14rem">
+                        <div class="kp-split" data-kp-split>
+                            <div class="kp-split__pane">
+                                <p style="margin-block-start: 0"><b>Open incidents</b></p>
+                                <p>INC-4471 · line 2</p>
+                                <p>INC-4468 · cold store</p>
+                                <p>INC-4460 · weighbridge</p>
+                                <p>INC-4455 · line 1</p>
+                            </div>
+                            <div
+                                class="kp-split__separator"
+                                role="separator"
+                                tabindex="0"
+                                aria-orientation="vertical"
+                                aria-valuemin="20"
+                                aria-valuemax="80"
+                                aria-valuenow="35"
+                                aria-label="Resize the incident list"
+                            ></div>
+                            <div class="kp-split__pane">
+                                <p style="margin-block-start: 0"><b>INC-4471</b></p>
+                                <p>
+                                    Pressure on line 2 dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without anyone touching the
+                                    valve. The line is locked out at the manifold until the day shift has checked the gauge against the sensor.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; block-size: 14rem; margin-block-start: 1rem">
+                        <div class="kp-split" data-kp-split data-kp-orientation="horizontal">
+                            <div class="kp-split__pane">Readings table for line 2, last hour.</div>
+                            <div
+                                class="kp-split__separator"
+                                role="separator"
+                                tabindex="0"
+                                aria-orientation="horizontal"
+                                aria-valuemin="20"
+                                aria-valuemax="80"
+                                aria-valuenow="50"
+                                aria-label="Resize the readings and the chart"
+                            ></div>
+                            <div class="kp-split__pane">Pressure chart for line 2, last hour.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="reorder">
+                <h2>Reorder</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> each row is on the card surface with a boundary, and its handle is a real button with a boundary of its own and a
+                    grab pointer. Tab to a handle and press Down: the row moves, focus stays on the <i>same</i> handle, and a screen reader hears
+                    "Pressure moved to position 2 of 5". Drag a handle with the mouse: the row you hold (<code>data-kp-dragging</code>) turns its
+                    frame to the primary colour, dashed, and lifts off the list with a shadow; letting go takes all of it away. Drag Time's handle all
+                    the way to the bottom in one movement: the row must follow the pointer past every row it crosses, while the button is still held,
+                    not stop after one; the screen reader hears "Time moved to position 5 of 5", and the order is the one four presses of Down would
+                    have left. The fourth row's label is long: it must wrap beside the handle, with the handle staying at the top of the row.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div style="max-inline-size: 28rem">
+                        <ul class="kp-reorder" data-kp-reorder aria-label="Columns in the handover report">
+                            <li data-kp-item="time" data-kp-label="Time">
+                                <button type="button" data-kp-handle aria-label="Move Time">⠿</button> Time
+                            </li>
+                            <li data-kp-item="pressure" data-kp-label="Pressure">
+                                <button type="button" data-kp-handle aria-label="Move Pressure">⠿</button> Pressure
+                            </li>
+                            <li data-kp-item="flow" data-kp-label="Flow rate">
+                                <button type="button" data-kp-handle aria-label="Move Flow rate">⠿</button> Flow rate
+                            </li>
+                            <li data-kp-item="note" data-kp-label="Note">
+                                <button type="button" data-kp-handle aria-label="Move Note">⠿</button> Note from the engineer who read the gauge on
+                                the wall, as typed on the handheld
+                            </li>
+                            <li data-kp-item="signed" data-kp-label="Signed by">
+                                <button type="button" data-kp-handle aria-label="Move Signed by">⠿</button> Signed by
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="wizard">
+                <h2>Wizard, frozen on step 3 of 4</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the step list as <code>js/wizard.js</code> writes it on the third step, not attached. Done steps show a check in
+                    the success colour inside their circle, the current step a filled circle in the primary colour with a bold label and
+                    <code>aria-current="step"</code>, and the step still to come a plain numbered circle in the muted ink. The three states must be
+                    told apart without colour: check, fill, and outline. The second list has seven steps with long names in a narrow pane: it must
+                    wrap onto rows with each circle staying beside its own label. In every theme that draws a frame around the wizard, nothing inside
+                    may touch it: the step list, the step and the buttons keep at least 0.75rem from the frame on all four sides
+                    (<code>--kp-wizard-padding</code>, 1rem by default).
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-wizard">
+                        <ol class="kp-wizard__steps">
+                            <li data-state="done">Incident</li>
+                            <li data-state="done">Readings</li>
+                            <li data-state="current" aria-current="step">Lock-out</li>
+                            <li data-state="todo">Handover</li>
+                        </ol>
+                        <section>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" id="st-wz-lock" type="checkbox" checked />
+                                <label class="kp-field__label" for="st-wz-lock">The line is locked out at the manifold</label>
+                            </div>
+                        </section>
+                        <div class="kp-wizard__actions">
+                            <button type="button" class="kp-button">Back</button>
+                            <button type="button" class="kp-button kp-button--primary">Next</button>
+                        </div>
+                    </div>
+                    <div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+                        <div class="kp-wizard">
+                            <ol class="kp-wizard__steps">
+                                <li data-state="done">Where it happened</li>
+                                <li data-state="done">What you saw</li>
+                                <li data-state="done">Readings at the time</li>
+                                <li data-state="current" aria-current="step">Who was told</li>
+                                <li data-state="todo">Lock-out and sign-off</li>
+                                <li data-state="todo">Vendor</li>
+                                <li data-state="todo">Handover to the day shift</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="wizard-live">
+                <h2>Wizard, live</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the wizard exactly as the package documents it, with no form around it. Press <b>Next</b> with the reference
+                    empty: the wizard must refuse, keep the step list where it is, put focus on the field, and say why under it — the wizard writes
+                    the message itself when no <code>form[data-kp-form]</code> is around it. Type into the field and the message goes. Fill it in and
+                    press <b>Next</b>: the second label turns current, the first gets its check, focus moves to the new step, and the status line
+                    announces "Step 2 of 3". <b>Back</b> on the first step must be unavailable, and on the last step the <b>Next</b> button must read
+                    <b>Finish</b>. The same room inside the frame as the frozen wizard, on every step.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-wizard" data-kp-wizard>
+                        <ol class="kp-wizard__steps">
+                            <li data-kp-step-label>Incident</li>
+                            <li data-kp-step-label>Readings</li>
+                            <li data-kp-step-label>Handover</li>
+                        </ol>
+                        <p class="cat-note" data-kp-wizard-status role="status" aria-live="polite"></p>
+                        <section data-kp-step>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="st-live-ref"
+                                    >Incident reference <span class="kp-field__required">required</span></label
+                                >
+                                <input class="kp-field__input" id="st-live-ref" type="text" required />
+                                <span class="kp-field__error" data-kp-field-error hidden></span>
+                            </div>
+                        </section>
+                        <section data-kp-step hidden>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="st-live-bar">Lowest pressure (bar)</label>
+                                <input class="kp-field__input" id="st-live-bar" type="number" step="0.1" value="1.1" />
+                            </div>
+                        </section>
+                        <section data-kp-step hidden>
+                            <p>The day shift sees this incident first at 06:00.</p>
+                        </section>
+                        <div class="kp-wizard__actions">
+                            <button type="button" class="kp-button" data-kp-wizard-back>Back</button>
+                            <button type="button" class="kp-button kp-button--primary" data-kp-wizard-next>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

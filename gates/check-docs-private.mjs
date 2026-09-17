@@ -19,7 +19,7 @@
 // These are NOT a leak and calling them one would be wrong: a Claude
 // artifact is private by default, so the link is simply dead for anyone
 // who was not given access. What they are is thirty-nine references a
-// reader of a public repository cannot follow — docs/LIFT_PLAN.md cites
+// reader of a public repository cannot follow — docs/archive/LIFT_PLAN.md cites
 // "the approved demo" twenty-three times and opens none of them — and a
 // session id that means nothing outside the machine it ran on.
 //
@@ -50,17 +50,26 @@ export const RATCHETED = [
     // than one document.
     ['a link to a private artifact', /https:\/\/claude\.ai\/code\/artifact\/[a-f0-9-]{8,}/g, 39],
     ["a session's own id", /\b0f370a8a-aa0a-4f17-8db1-4774735a6a56\b/g, 5],
-    // Two are Kenny's own working directory; the third is a CI runner's
+    // Two were Kenny's own working directory; the third is a CI runner's
     // path quoted inside a correction, which is a fact about a build and
-    // not about a person.
-    ["an absolute path through someone's home", /\/home\/[a-z][a-z0-9_-]*\/[A-Za-z]/g, 3],
+    // not about a person. HANDOFF.md, which carried one of the two, was
+    // removed at scope-77, so the ceiling went from 3 to 2.
+    ["an absolute path through someone's home", /\/home\/[a-z][a-z0-9_-]*\/[A-Za-z]/g, 2],
 ];
+
+/**
+ * docs/archive/ holds dated records kept for provenance [scope-77]: out of
+ * the document index, out of the npm package, and out of this gate, whose
+ * question is what a reader of the current documents meets.
+ */
+export const ARCHIVED = /^docs\/archive\//;
 
 /** @param {(f: string) => string} [read] */
 export function scan(read = (f) => readFileSync(new URL(f, root), 'utf8')) {
     const files = execFileSync('git', ['-C', new URL('.', root).pathname, 'ls-files', '*.md'], { encoding: 'utf8' })
         .trim()
-        .split('\n');
+        .split('\n')
+        .filter((f) => !ARCHIVED.test(f));
     /** @type {string[]} */
     const refused = [];
     /** @type {Map<string, number>} */

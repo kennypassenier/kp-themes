@@ -1,0 +1,507 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Six Hovers, One Each</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Poiret+One&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+    :root {
+        --page: hsl(220, 8%, 96%);
+        --ink: hsl(220, 10%, 12%);
+        --mute: hsl(220, 6%, 44%);
+        --rule: hsl(220, 8%, 86%);
+        --mark: hsl(212, 70%, 42%);
+        --panel: hsl(0, 0%, 100%);
+        --sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+            --page: hsl(220, 10%, 9%);
+            --ink: hsl(220, 12%, 92%);
+            --mute: hsl(220, 6%, 62%);
+            --rule: hsl(220, 8%, 22%);
+            --mark: hsl(212, 85%, 70%);
+            --panel: hsl(220, 10%, 13%);
+        }
+    }
+
+    :root[data-theme='dark'] {
+        --page: hsl(220, 10%, 9%);
+        --ink: hsl(220, 12%, 92%);
+        --mute: hsl(220, 6%, 62%);
+        --rule: hsl(220, 8%, 22%);
+        --mark: hsl(212, 85%, 70%);
+        --panel: hsl(220, 10%, 13%);
+    }
+
+    body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    .wrap {
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 0 1.4rem 6rem;
+    }
+
+    header.top {
+        padding-block: 3.4rem 1.2rem;
+        border-block-end: 1px solid var(--rule);
+    }
+
+    .kicker {
+        font-family: var(--mono);
+        font-size: 0.67rem;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        color: var(--mark);
+        margin: 0 0 0.9rem;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 5.2vw, 3rem);
+        line-height: 1.04;
+        letter-spacing: -0.028em;
+        font-weight: 700;
+        margin: 0 0 0.7rem;
+        text-wrap: balance;
+    }
+
+    .lede {
+        max-width: 37rem;
+        color: var(--mute);
+        margin: 0;
+    }
+
+    .card {
+        background: var(--panel);
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        margin-block-start: 1.6rem;
+        overflow: hidden;
+    }
+
+    .card > header {
+        padding: 1.1rem 1.3rem 0.4rem;
+        display: flex;
+        gap: 0.7rem;
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+
+    .card h2 {
+        font-size: 1.08rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+
+    .who {
+        font-family: var(--mono);
+        font-size: 0.63rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mark);
+        border: 1px solid currentcolor;
+        border-radius: 999px;
+        padding: 0.1rem 0.55rem;
+    }
+
+    .card p {
+        margin: 0;
+        padding: 0 1.3rem 1rem;
+        color: var(--mute);
+        font-size: 0.92rem;
+        max-width: 45rem;
+    }
+
+    .stage {
+        padding: 2.2rem 1.3rem 2.4rem;
+        border-block-start: 1px solid var(--rule);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.4rem;
+        align-items: center;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .hint {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted-foreground);
+    }
+
+    .btn {
+        position: relative;
+        font-family: var(--body, inherit);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.2;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.6rem 1.3rem;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .btn:focus-visible {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* ═══ blueprint · the dimension witness ═══════════════════════════ */
+    .t-blueprint {
+        --background: hsl(215, 65%, 12%);
+        --foreground: hsl(190, 55%, 92%);
+        --secondary: hsl(215, 45%, 24%);
+        --secondary-foreground: hsl(190, 45%, 88%);
+        --border: hsl(210, 40%, 26%);
+        --border-strong: hsl(200, 45%, 58%);
+        --muted-foreground: hsl(195, 30%, 72%);
+        --accent: hsl(35, 85%, 60%);
+        --radius: 0.125rem;
+    }
+
+    .btn--blueprint::before,
+    .btn--blueprint::after {
+        content: '';
+        position: absolute;
+        inset-block: -0.4rem;
+        inline-size: 1px;
+        background: var(--accent);
+        opacity: 0;
+    }
+
+    .btn--blueprint::before {
+        inset-inline-start: -0.35rem;
+    }
+
+    .btn--blueprint::after {
+        inset-inline-end: -0.35rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--blueprint::before,
+        .btn--blueprint::after {
+            transition: opacity 180ms ease;
+        }
+    }
+
+    .btn--blueprint:hover::before,
+    .btn--blueprint:hover::after,
+    .btn--blueprint:focus-visible::before,
+    .btn--blueprint:focus-visible::after {
+        opacity: 1;
+    }
+
+    /* ═══ deco · the fan opens ════════════════════════════════════════ */
+    .t-deco {
+        --background: hsl(200, 25%, 8%);
+        --foreground: hsl(42, 60%, 88%);
+        --secondary: hsl(200, 18%, 18%);
+        --secondary-foreground: hsl(42, 50%, 86%);
+        --border: hsl(200, 18%, 20%);
+        --border-strong: hsl(43, 35%, 50%);
+        --muted-foreground: hsl(42, 30%, 72%);
+        --primary: hsl(43, 65%, 52%);
+        --radius: 0rem;
+        --body: 'Poiret One', serif;
+    }
+
+    .btn--deco {
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .btn--deco::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(
+            from 200deg at 0% 120%,
+            hsl(43 65% 52% / 0.34) 0deg 3deg,
+            transparent 3deg 9deg
+        );
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--deco::before {
+            transition: opacity 260ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--deco:hover::before,
+    .btn--deco:focus-visible::before {
+        opacity: 1;
+    }
+
+    /* ═══ formal · the rule doubles ═══════════════════════════════════ */
+    .t-formal {
+        --background: hsl(40, 25%, 97%);
+        --foreground: hsl(220, 30%, 13%);
+        --secondary: hsl(40, 18%, 90%);
+        --secondary-foreground: hsl(220, 25%, 18%);
+        --border: hsl(40, 15%, 85%);
+        --border-strong: hsl(220, 14%, 56%);
+        --muted-foreground: hsl(220, 12%, 36%);
+        --primary: hsl(218, 45%, 24%);
+        --radius: 0.375rem;
+    }
+
+    .btn--formal::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--formal::after {
+            transition: opacity 200ms ease;
+        }
+    }
+
+    .btn--formal:hover::after,
+    .btn--formal:focus-visible::after {
+        opacity: 1;
+    }
+
+    /* ═══ light · the shade tightens ══════════════════════════════════ */
+    .t-light {
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(224, 25%, 12%);
+        --secondary: hsl(220, 15%, 94%);
+        --secondary-foreground: hsl(224, 20%, 20%);
+        --border: hsl(220, 13%, 88%);
+        --border-strong: hsl(220, 10%, 57%);
+        --muted-foreground: hsl(224, 12%, 38%);
+        --radius: 0.5rem;
+    }
+
+    .btn--light {
+        box-shadow: 0 6px 14px hsl(224 25% 12% / 0.12);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--light {
+            transition:
+                box-shadow 180ms ease,
+                translate 180ms ease;
+        }
+    }
+
+    .btn--light:hover,
+    .btn--light:focus-visible {
+        translate: 0 2px;
+        box-shadow: 0 2px 5px hsl(224 25% 12% / 0.2);
+    }
+
+    /* ═══ retro · the accelerator shows ═══════════════════════════════ */
+    .t-retro {
+        --background: hsl(0, 0%, 75%);
+        --foreground: hsl(0, 0%, 10%);
+        --secondary: hsl(0, 0%, 87%);
+        --secondary-foreground: hsl(0, 0%, 10%);
+        --border: hsl(0, 0%, 50%);
+        --border-strong: hsl(0, 0%, 38%);
+        --muted-foreground: hsl(0, 0%, 25%);
+        --radius: 0rem;
+    }
+
+    .btn--retro {
+        box-shadow:
+            inset 1px 1px 0 hsl(0 0% 100%),
+            inset -1px -1px 0 hsl(0 0% 38%);
+    }
+
+    .btn--retro .key {
+        border-block-end: 1px solid transparent;
+    }
+
+    .btn--retro:hover .key,
+    .btn--retro:focus-visible .key {
+        border-block-end-color: currentcolor;
+    }
+
+    /* ═══ terminal · the cursor arrives ═══════════════════════════════ */
+    .t-terminal {
+        --background: hsl(120, 10%, 5%);
+        --foreground: hsl(120, 85%, 68%);
+        --secondary: hsl(120, 16%, 9%);
+        --secondary-foreground: hsl(120, 50%, 75%);
+        --border: hsl(120, 20%, 18%);
+        --border-strong: hsl(120, 30%, 34%);
+        --muted-foreground: hsl(120, 25%, 62%);
+        --primary: hsl(120, 90%, 50%);
+        --radius: 0rem;
+        --body: ui-monospace, 'SF Mono', Menlo, monospace;
+    }
+
+    .btn--terminal::after {
+        content: '';
+        position: absolute;
+        inset-block: 0.55rem;
+        inset-inline-end: 0.5rem;
+        inline-size: 0.5rem;
+        background: var(--primary);
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--terminal:hover::after,
+        .btn--terminal:focus-visible::after {
+            animation: kp-caret-arrive 1s steps(1) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .btn--terminal:hover::after,
+        .btn--terminal:focus-visible::after {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-caret-arrive {
+        0%,
+        50% {
+            opacity: 1;
+        }
+
+        50.01%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .measure {
+        font-family: var(--mono);
+        font-size: 0.71rem;
+        color: var(--mute);
+        padding: 0.9rem 1.3rem 1.1rem;
+        border-block-start: 1px solid var(--rule);
+    }
+
+    footer {
+        margin-block-start: 3.4rem;
+        border-block-start: 1px solid var(--rule);
+        padding-block-start: 1rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+    }
+</style>
+
+<div class="wrap">
+    <header class="top">
+        <p class="kicker">kp-themes · ronde zeven · gap-4</p>
+        <h1>Zes hovers,<br />elk uit zijn eigen wereld</h1>
+        <p class="lede">
+            Je vroeg om per thema, zoals bij de eigenaardigheden. Het waren er geen twaalf maar zes — de eigenaardigheden hadden meer opgelost dan
+            mijn eerste telling zag. Elk gebaar hieronder komt uit de zin die dat thema al gebruikte om zichzelf te beschrijven. Hover, en tab er
+            ook eens naartoe: elk werkt met het toetsenbord.
+        </p>
+    </header>
+
+    <div class="card">
+        <header><h2>De maatstreepjes verschijnen</h2><span class="who">blueprint</span></header>
+        <p>
+            Een technische tekening roept een maat aan met twee streepjes aan de uiteinden van wat ze meet. Aanraken zet die streepjes naast de
+            knop, in het oranje dat dit thema voor zijn aanduidingen gebruikt — de knop wordt even een gemeten lengte.
+        </p>
+        <div class="stage t-blueprint">
+            <button class="btn btn--blueprint" type="button">Verstuur</button>
+            <button class="btn btn--blueprint" type="button">Annuleer</button>
+            <span class="hint">↑ de streepjes staan buiten de knop, zoals op een tekening</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <header><h2>De waaier opent</h2><span class="who">deco</span></header>
+        <p>
+            De zonnestraal is het motief van deze stijl: het Chrysler Building, elke lift-deur uit 1930. Aanraken opent een waaier van stralen uit
+            de onderhoek van de knop, afgesneden door de knop zelf, in het goud dat het thema al heeft.
+        </p>
+        <div class="stage t-deco">
+            <button class="btn btn--deco" type="button">Verstuur</button>
+            <button class="btn btn--deco" type="button">Annuleer</button>
+            <span class="hint">↑ de stralen komen uit de linkeronderhoek</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <header><h2>De regel verdubbelt</h2><span class="who">formal</span></header>
+        <p>
+            Een formeel document omkadert wat het wil laten opvallen twee keer: een dunne lijn binnen een dikke, zoals een diploma of een
+            briefhoofd. Aanraken tekent die tweede lijn net binnen de eerste, in het marineblauw van het thema.
+        </p>
+        <div class="stage t-formal">
+            <button class="btn btn--formal" type="button">Verstuur</button>
+            <button class="btn btn--formal" type="button">Annuleer</button>
+            <span class="hint">↑ twee pixels naar binnen, niets beweegt</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <header><h2>De schaduw trekt samen</h2><span class="who">light</span></header>
+        <p>
+            Dit is het enige thema zonder eigen wereld om uit te putten — het is de gewone lichte, en dat is de bedoeling. Dus geen versiering maar
+            natuurkunde: de knop zweeft boven het papier en zakt er bij aanraken naar toe, waardoor zijn schaduw korter en harder wordt. Omgekeerd
+            van shade-light, dat juist omhoog komt.
+        </p>
+        <div class="stage t-light">
+            <button class="btn btn--light" type="button">Verstuur</button>
+            <button class="btn btn--light" type="button">Annuleer</button>
+            <span class="hint">↑ hij komt naar het papier toe, niet ervan af</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <header><h2>De sneltoets komt tevoorschijn</h2><span class="who">retro</span></header>
+        <p>
+            Windows 95 onderstreepte één letter in elk label — de sneltoets — en liet die pas zien als je Alt indrukte. Aanraken doet hier
+            hetzelfde: de onderstreping verschijnt onder de eerste letter. Geen beweging, geen kleur, precies het soort terugkoppeling dat die
+            bureaubladen gaven.
+        </p>
+        <div class="stage t-retro">
+            <button class="btn btn--retro" type="button"><span class="key">V</span>erstuur</button>
+            <button class="btn btn--retro" type="button"><span class="key">A</span>nnuleer</button>
+            <span class="hint">↑ kijk naar de eerste letter</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <header><h2>De cursor komt erbij staan</h2><span class="who">terminal</span></header>
+        <p>
+            Een terminal zet een knipperend blokje waar hij je invoer verwacht. Aanraken laat dat blokje achter het label verschijnen, knipperend
+            op één hertz — het thema heeft dit blokje al voor zijn invoervelden, en dit is hetzelfde blokje op de knop.
+        </p>
+        <div class="stage t-terminal">
+            <button class="btn btn--terminal" type="button">Verstuur&nbsp;&nbsp;&nbsp;</button>
+            <button class="btn btn--terminal" type="button">Annuleer&nbsp;&nbsp;&nbsp;</button>
+            <span class="hint">↑ één keer per seconde, zoals een echte cursor</span>
+        </div>
+        <p class="measure">
+            Eén hertz is ver onder de drempel van drie flitsen per seconde waar de bewegingspoort op let, en de cursor van dit thema staat daar al
+            met die snelheid in de tabel.
+        </p>
+    </div>
+
+    <footer>
+        Niets hiervan zit in het pakket. De zes thema's zijn blueprint, deco, formal, light, retro en terminal — gemeten op 12 september als de
+        enige die op een hover alleen kleur en een lift van een paar pixels antwoorden.
+    </footer>
+</div>
+
+</body></html>

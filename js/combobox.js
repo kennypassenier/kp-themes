@@ -35,12 +35,14 @@
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
+import { placeBlockSide, raiseInPlace, raiseOverlay, raised } from './top-layer.js';
 
 const COMBOBOX = '[data-kp-combobox]';
 const INPUT = 'input[role="combobox"]';
 const LIST = '[role="listbox"]';
 const STATUS = '[data-kp-combobox-status]';
 const TAGS = '[data-kp-tag-list]';
+const EMPTY = '[data-kp-combobox-empty]';
 
 /** Announced when the list changes; the words come from the dictionary [KT5]. */
 const RESULTS_TEXT = /** @param {number} n */ (n) => {
@@ -89,8 +91,11 @@ export function combobox(element) {
  * Attach every combobox and tag input under `root`.
  *
  * @param {ParentNode} root
- * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
- *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`.
+ * @param {{ match?: keyof typeof MATCHERS | Matcher, loop?: boolean, openOnFocus?: boolean, closeOnBlur?: boolean, backspaceRemoves?: boolean, stayOpen?: boolean, maxTags?: number, allowDuplicates?: boolean, debounceMs?: number, emptyRow?: boolean, creatable?: boolean, renderTag?: (value: string, label: string) => HTMLElement, removeGlyph?: string }} [options]
+ *   Defaults; per box as data-attributes: `data-kp-match`, `data-kp-loop`, `data-kp-open-on-focus`, `data-kp-close-on-blur`, `data-kp-backspace-removes`, `data-kp-stay-open`, `data-kp-max-tags`, `data-kp-duplicates`, `data-kp-debounce`, `data-kp-empty-row`, `data-kp-creatable`.
+ *   A tag input adds from typed text with Enter or a comma [scope-60]: text that names an option (its label, any case) takes that option; other text becomes a tag of its own only with `creatable` (default false, as the React channel's prop).
+ *   `backspaceRemoves` (default false since Kenny's second nostromo pass, 2026-09-13): Backspace in an empty field removes the last tag; `data-kp-backspace-removes` opts one box in.
+ *   `emptyRow` (default true): a query that matches nothing keeps the list open with a "no results" row — the server's own `[data-kp-combobox-empty]` element inside the list if it wrote one, else one built from the dictionary; `false` closes the list instead, as before 6.1 [gap-11].
  * @returns {(() => void) & { handles: ComboboxHandle[] }} detach
  */
 export function attachComboboxes(
@@ -100,11 +105,13 @@ export function attachComboboxes(
         loop = false,
         openOnFocus = true,
         closeOnBlur = true,
-        backspaceRemoves = true,
+        backspaceRemoves = false,
         stayOpen = true,
         maxTags = Infinity,
         allowDuplicates = false,
         debounceMs = 0,
+        emptyRow = true,
+        creatable = false,
         renderTag,
         removeGlyph = '×',
     } = {},
@@ -135,6 +142,24 @@ export function attachComboboxes(
         const cap = Number.parseInt(box.dataset.kpMaxTags ?? '', 10) || maxTags;
         const debounce = Number.parseInt(box.dataset.kpDebounce ?? '', 10) || debounceMs;
         const matcher = typeof match === 'function' ? match : (MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring);
+        const showsEmpty = flag('kpEmptyRow', emptyRow);
+        const creates = flag('kpCreatable', creatable);
+        // The row that says nothing matched, inside the list and directly under
+        // the input [gap-11]. Filtering to nothing used to close the list, and
+        // the only answer left was the status line. The server's own row is
+        // used when it wrote one (it may offer "add this"); otherwise one is
+        // built, and taken away again at detach.
+        const serverEmpty = /** @type {HTMLElement | null} */ (list.querySelector(EMPTY));
+        /** @type {HTMLElement | null} */
+        let empty = serverEmpty;
+        if (showsEmpty && empty === null) {
+            empty = document.createElement('li');
+            empty.className = 'kp-combobox__empty';
+            empty.setAttribute('role', 'presentation');
+            empty.dataset.kpComboboxEmpty = '';
+            list.append(empty);
+        }
+        const emptyWasHidden = serverEmpty?.hidden ?? true;
 
         /** Tags the server rendered are the starting set, not invisible. */
         /** @type {string[]} */
@@ -149,10 +174,18 @@ export function attachComboboxes(
             status: status?.textContent ?? '',
         };
 
+        /** Takes the open list out of the top layer again (js/top-layer.js). */
+        let lower = () => {};
         /** @param {boolean} next */
         const setOpen = (next) => {
             const was = list.hidden === false;
             list.hidden = !next;
+            // Above a container that clips — a card's cut corners hid every option in four themes — where it was drawn.
+            if (next && !was) lower = raiseInPlace(list, box, input);
+            if (!next && was) {
+                lower();
+                lower = () => {};
+            }
             input.setAttribute('aria-expanded', String(next));
             if (!next) listbox.clear();
             if (was !== next) box.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next } }));
@@ -174,6 +207,10 @@ export function attachComboboxes(
             }
             listbox.refresh();
             if (status !== null) status.textContent = RESULTS_TEXT(visible);
+            if (empty !== null) {
+                empty.hidden = !showsEmpty || visible > 0;
+                if (empty !== serverEmpty) empty.textContent = getStrings().noResults;
+            }
             return visible;
         };
 
@@ -217,6 +254,23 @@ export function attachComboboxes(
             return tag;
         };
 
+        /** @param {string} value @param {string} label */
+        const addTag = (value, label) => {
+            if (chosen.length >= cap) return;
+            if (duplicates || !chosen.includes(value)) {
+                chosen.push(value);
+                if (tagList !== null) tagList.append(tagElement(value, label));
+            }
+            input.value = '';
+            filter();
+            // Kept open: adding one tag almost always means adding
+            // another, and reopening the list by hand is friction the
+            // keyboard user pays and the mouse user does not.
+            if (stays) open();
+            else close();
+            announce(value, label, 'add');
+        };
+
         /** @param {HTMLElement} option */
         const take = (option) => {
             // Two different things, and conflating them is a real bug the
@@ -227,23 +281,37 @@ export function attachComboboxes(
             const label = (option.textContent ?? '').trim();
             const value = option.dataset.value ?? label;
             if (isTags) {
-                if (chosen.length >= cap) return;
-                if (duplicates || !chosen.includes(value)) {
-                    chosen.push(value);
-                    if (tagList !== null) tagList.append(tagElement(value, label));
-                }
-                input.value = '';
-                filter();
-                // Kept open: adding one tag almost always means adding
-                // another, and reopening the list by hand is friction the
-                // keyboard user pays and the mouse user does not.
-                if (stays) open();
-                else close();
-            } else {
-                input.value = label;
-                close();
+                addTag(value, label);
+                return;
             }
+            input.value = label;
+            close();
             announce(value, label, 'add');
+        };
+
+        /**
+         * Typed text ends a tag [scope-60]. Before this, Enter with nothing
+         * highlighted had nothing to take, so a tag input filtered and removed
+         * but never added from the keyboard. Text naming an option takes it;
+         * other text becomes its own tag where the box allows new values.
+         *
+         * @returns {boolean} whether a tag was added
+         */
+        const addTyped = () => {
+            const typed = input.value.trim();
+            if (typed === '') return false;
+            const named = [...list.querySelectorAll(OPTION_SELECTOR)].find(
+                (element) =>
+                    !element.matches('[aria-disabled="true"], [data-kp-disabled]') &&
+                    (element.textContent ?? '').trim().toLowerCase() === typed.toLowerCase(),
+            );
+            if (named instanceof HTMLElement) {
+                take(named);
+                return true;
+            }
+            if (!creates) return false;
+            addTag(typed, typed);
+            return true;
         };
 
         /** @param {string} value */
@@ -271,7 +339,7 @@ export function attachComboboxes(
             clearTimeout(pending);
             const run = () => {
                 const visible = filter();
-                if (visible > 0) open();
+                if (visible > 0 || (showsEmpty && input.value.trim() !== '')) open();
                 else close();
             };
             if (debounce > 0) pending = window.setTimeout(run, debounce);
@@ -280,10 +348,20 @@ export function attachComboboxes(
 
         /** @param {KeyboardEvent} event */
         const onKeyDown = (event) => {
-            if (!isTags || !backspaces) return;
-            // Backspace in an empty field removes the last tag: the
-            // behaviour every mail client has, and the one people try
-            // first.
+            if (!isTags) return;
+            // The listbox runs first: an Enter that took a highlighted option
+            // is already spent, and the field is empty by now.
+            if ((event.key === 'Enter' || event.key === ',') && !event.defaultPrevented && !event.isComposing) {
+                if (event.key === 'Enter' && listbox.index !== -1) return;
+                if (addTyped()) event.preventDefault();
+                return;
+            }
+            // Backspace in an empty field removes the last tag only where the
+            // box opts in. It was the default until Kenny's second nostromo
+            // pass (2026-09-13): one Backspace too many while correcting a
+            // typo took away a tag already chosen. Each tag's own remove
+            // button is the way out, and it is in the tab order.
+            if (!backspaces) return;
             if (event.key === 'Backspace' && input.value === '' && chosen.length > 0) removeValue(chosen[chosen.length - 1] ?? '');
         };
 
@@ -310,10 +388,23 @@ export function attachComboboxes(
             }, 0);
         };
 
+        /**
+         * A press in the list keeps DOM focus in the input. Without this the
+         * press moved focus to the page, the focusout above closed the list
+         * a tick later, and the click that followed the release landed on a
+         * hidden list: choosing an option with the mouse did nothing [note 2
+         * of Kenny's second nostromo pass, 2026-09-13]. The React channel
+         * always did this on its options.
+         *
+         * @param {MouseEvent} event
+         */
+        const onListMouseDown = (event) => event.preventDefault();
+
         input.addEventListener('input', onInput);
         input.addEventListener('keydown', onKeyDown);
         input.addEventListener('focus', onFocus);
         box.addEventListener('focusout', onFocusOut);
+        list.addEventListener('mousedown', onListMouseDown);
         tagList?.addEventListener('click', onTagClick);
         filter();
         list.hidden = true;
@@ -355,11 +446,13 @@ export function attachComboboxes(
 
         cleanups.push(() => {
             clearTimeout(pending);
+            lower();
             listbox.destroy();
             input.removeEventListener('input', onInput);
             input.removeEventListener('keydown', onKeyDown);
             input.removeEventListener('focus', onFocus);
             box.removeEventListener('focusout', onFocusOut);
+            list.removeEventListener('mousedown', onListMouseDown);
             tagList?.removeEventListener('click', onTagClick);
             if (before.expanded === null) input.removeAttribute('aria-expanded');
             else input.setAttribute('aria-expanded', before.expanded);
@@ -369,11 +462,319 @@ export function attachComboboxes(
             });
             if (tagList) tagList.replaceChildren(...before.tags);
             if (status) status.textContent = before.status;
+            if (empty !== null && empty !== serverEmpty) empty.remove();
+            if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;
             handles.delete(box);
             delete box.dataset.kpComboboxAttached;
         });
     }
 
+    const detach = () => {
+        for (const c of cleanups) c();
+    };
+    return Object.assign(detach, { handles: created });
+}
+
+// ── The drawn select [scope-54, Kenny's form of 2026-09-13] ──────────────
+//
+// Firefox cannot style a native select's open list, so the one list in a
+// form that did not wear the theme was the select's. A listbox in the
+// combobox's look is laid over every single select the package styles —
+// `select.kp-field__input` — without asking. It was an opt-in under scope-54;
+// Kenny's form of 2026-09-13 made it the default, because a form whose one
+// unthemed list is the select's is the fault the opt-in left in place:
+//
+//   <select class="kp-field__input">…</select>                        drawn
+//   <select class="kp-field__input" data-kp-select="native">…</select> the browser's
+//   <select multiple>…</select>                                        always the browser's
+//
+// A bare `data-kp-select` still asks for the drawn list on a select without
+// the class, as it did in 6.1.
+//
+// The native select stays exactly where it was and stays the control: it
+// keeps DOM focus, holds the value, submits with the form, fires `change`,
+// and is what a screen reader reads (a single select is already a
+// combobox to assistive technology, so `aria-expanded`, `aria-controls`
+// and `aria-activedescendant` on it mean what they mean on the combobox's
+// input). What is drawn is only the open list, a sibling directly after
+// the select, rebuilt from the select's own options every time it opens —
+// so a value or an option the page changed behind its back is what shows.
+
+/**
+ * Whether a select gets the drawn list: a single select that is the
+ * package's field (`.kp-field__input`) or asks for it (`data-kp-select`),
+ * unless it opts out with `data-kp-select="native"`.
+ *
+ * @param {Element} element
+ * @returns {element is HTMLSelectElement}
+ */
+export function drawsSelect(element) {
+    if (!(element instanceof HTMLSelectElement) || element.multiple) return false;
+    const asked = element.getAttribute('data-kp-select');
+    if (asked === 'native') return false;
+    return asked !== null || element.classList.contains('kp-field__input');
+}
+
+/**
+ * @typedef {object} SelectHandle
+ * @property {HTMLSelectElement} element
+ * @property {HTMLElement} list the drawn listbox
+ * @property {() => void} open
+ * @property {() => void} close
+ * @property {() => void} refresh re-read the options and the value
+ */
+
+/** @type {WeakMap<Element, SelectHandle>} */
+const selectHandles = new WeakMap();
+
+/** The handle for an attached drawn select. @param {Element} element */
+export function drawnSelect(element) {
+    return selectHandles.get(element) ?? null;
+}
+
+let selectCount = 0;
+
+/**
+ * Lay a drawn list over one select. Returns its detach.
+ *
+ * @param {HTMLSelectElement} select
+ * @param {{ loop?: boolean, typeaheadMs?: number }} [options]
+ * @returns {(() => void) & { handle: SelectHandle }}
+ */
+export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
+    const before = {
+        expanded: select.getAttribute('aria-expanded'),
+        controls: select.getAttribute('aria-controls'),
+    };
+    selectCount += 1;
+    const list = document.createElement('ul');
+    list.className = 'kp-combobox__list';
+    list.id = `${select.id || 'kp-select'}-drawn-${selectCount}`;
+    list.setAttribute('role', 'listbox');
+    list.dataset.kpSelectList = '';
+    list.hidden = true;
+    const labelled = select.labels?.[0];
+    if (labelled) {
+        if (!labelled.id) labelled.id = `${list.id}-label`;
+        list.setAttribute('aria-labelledby', labelled.id);
+    }
+    select.after(list);
+    select.setAttribute('aria-controls', list.id);
+    select.setAttribute('aria-expanded', 'false');
+
+    /** Rebuild the options from the select's own, and mark the chosen one. */
+    const build = () => {
+        list.replaceChildren(
+            ...[...select.options].map((native, i) => {
+                const option = document.createElement('li');
+                option.className = 'kp-combobox__option';
+                option.id = `${list.id}-option-${i}`;
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', 'false');
+                option.dataset.kpOption = '';
+                option.dataset.value = native.value;
+                option.textContent = native.label || native.text;
+                if (native.disabled) option.setAttribute('aria-disabled', 'true');
+                if (native.selected) option.dataset.kpChosen = '';
+                return option;
+            }),
+        );
+        listbox.refresh();
+    };
+
+    /**
+     * Put the open list under the select and as wide as it. A first guess from
+     * the offsets both siblings share, then one correction measured against
+     * the paint, because a register may give the list a margin or the page a
+     * containing block the offsets do not see. The gap under the select is
+     * the list's own top margin, held to at most 0.5rem.
+     */
+    const place = () => {
+        list.style.left = `${select.offsetLeft}px`;
+        list.style.top = `${select.offsetTop + select.offsetHeight}px`;
+        list.style.width = `${select.offsetWidth}px`;
+        const box = select.getBoundingClientRect();
+        const drawn = list.getBoundingClientRect();
+        const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
+        list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
+        list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
+        list.style.width = `${box.width}px`;
+        // Above the select when the window has no room under it [fix-30].
+        if (raised(list)) placeBlockSide(list, box);
+    };
+
+    const isOpen = () => list.hidden === false;
+
+    /** Takes the open list out of the top layer again (js/top-layer.js). */
+    let lower = () => {};
+    const open = () => {
+        if (select.disabled) return;
+        build();
+        list.hidden = false;
+        // Above a container that clips, placed by the same measurement as before; it follows the select while open.
+        lower();
+        lower = raiseOverlay(list, place);
+        select.setAttribute('aria-expanded', 'true');
+        const chosen = listbox.options.findIndex((option) => option.dataset.kpChosen !== undefined);
+        listbox.highlight(Math.max(chosen, 0));
+        select.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: true } }));
+    };
+
+    const close = () => {
+        if (!isOpen()) return;
+        lower();
+        lower = () => {};
+        list.hidden = true;
+        select.setAttribute('aria-expanded', 'false');
+        listbox.clear();
+        select.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
+    };
+
+    /** @param {HTMLElement} option */
+    const take = (option) => {
+        const value = option.dataset.value ?? '';
+        const changed = select.value !== value;
+        select.value = value;
+        close();
+        select.focus();
+        // The events a person choosing in the native list would have caused,
+        // so a form library, React's onChange and forms.js all hear it.
+        if (changed) {
+            select.dispatchEvent(new Event('input', { bubbles: true }));
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
+
+    const listbox = createListbox({
+        input: select,
+        list,
+        loop,
+        typeahead: true,
+        typeaheadMs,
+        onChoose: (_, option) => take(option),
+        onDismiss: close,
+    });
+
+    /**
+     * What the listbox does not do: open from a closed box, and keep the
+     * browser's own select behaviour — its popup, its arrow keys and letters
+     * changing the value directly — out of the way.
+     *
+     * @param {KeyboardEvent} event
+     */
+    const onKeyDownCapture = (event) => {
+        if (event.ctrlKey || event.metaKey) return;
+        const printable = event.key.length === 1 && !event.altKey;
+        if (!isOpen()) {
+            if (['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' ', 'F4'].includes(event.key) || printable) {
+                event.preventDefault();
+                open();
+                // Arrows and Enter only open; the listbox must not also move.
+                if (!printable) event.stopImmediatePropagation();
+                else if (event.key === ' ') event.stopImmediatePropagation();
+            }
+            return;
+        }
+        if (event.key === 'Tab') {
+            close();
+            return;
+        }
+        if (event.key === ' ' && listbox.index !== -1) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            listbox.choose();
+            return;
+        }
+        if (event.key === 'Escape') event.preventDefault();
+        if (printable || event.key === 'Enter') event.preventDefault();
+    };
+
+    /** A press on the box opens the drawn list instead of the browser's. @param {MouseEvent} event */
+    const onMouseDown = (event) => {
+        if (event.button !== 0 || select.disabled) return;
+        event.preventDefault();
+        select.focus();
+        if (isOpen()) close();
+        else open();
+    };
+
+    /** A press in the list must not take focus from the select. @param {MouseEvent} event */
+    const onListMouseDown = (event) => event.preventDefault();
+
+    const onFocusOut = () => {
+        setTimeout(() => {
+            if (document.activeElement !== select) close();
+        }, 0);
+    };
+
+    /** The page changed the value: the mark follows at once if the list is open. */
+    const onChange = () => {
+        if (isOpen()) build();
+    };
+
+    // Capture on the select itself runs before the listbox's bubble-phase
+    // listener, which is what lets a closed box open without the listbox
+    // also moving the highlight.
+    select.addEventListener('keydown', onKeyDownCapture, { capture: true });
+    select.addEventListener('mousedown', onMouseDown);
+    select.addEventListener('focusout', onFocusOut);
+    select.addEventListener('change', onChange);
+    list.addEventListener('mousedown', onListMouseDown);
+    build();
+
+    /** @type {SelectHandle} */
+    const handle = { element: select, list, open, close, refresh: build };
+    selectHandles.set(select, handle);
+    select.dataset.kpSelectAttached = '';
+
+    const detach = () => {
+        lower();
+        listbox.destroy();
+        select.removeEventListener('keydown', onKeyDownCapture, { capture: true });
+        select.removeEventListener('mousedown', onMouseDown);
+        select.removeEventListener('focusout', onFocusOut);
+        select.removeEventListener('change', onChange);
+        list.remove();
+        if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute('id');
+        for (const [name, value] of /** @type {const} */ ([
+            ['aria-expanded', before.expanded],
+            ['aria-controls', before.controls],
+        ])) {
+            if (value === null) select.removeAttribute(name);
+            else select.setAttribute(name, value);
+        }
+        select.removeAttribute('aria-activedescendant');
+        selectHandles.delete(select);
+        delete select.dataset.kpSelectAttached;
+    };
+    return Object.assign(detach, { handle });
+}
+
+/**
+ * Lay a drawn list over every select under `root` that `drawsSelect` accepts:
+ * each single `select.kp-field__input` and each `select[data-kp-select]`, but
+ * never one marked `data-kp-select="native"` and never a multiple select
+ * [scope-54; the default since Kenny's form of 2026-09-13].
+ *
+ * @param {ParentNode} [root]
+ * @param {{ loop?: boolean, typeaheadMs?: number }} [options] Defaults; per select `data-kp-loop`.
+ * @returns {(() => void) & { handles: SelectHandle[] }} detach
+ */
+export function attachSelects(root = document, options = {}) {
+    /** @type {(() => void)[]} */
+    const cleanups = [];
+    /** @type {SelectHandle[]} */
+    const created = [];
+    const found = root instanceof Element && root.matches('select') ? [root] : [...root.querySelectorAll('select')];
+    for (const element of found) {
+        if (!drawsSelect(element)) continue;
+        const select = element;
+        if (select.dataset.kpSelectAttached !== undefined) continue;
+        const loopFlag = select.dataset.kpLoop;
+        const detach = attachSelect(select, { ...options, ...(loopFlag === undefined ? {} : { loop: loopFlag !== 'false' }) });
+        cleanups.push(detach);
+        created.push(detach.handle);
+    }
     const detach = () => {
         for (const c of cleanups) c();
     };

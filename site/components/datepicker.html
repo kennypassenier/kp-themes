@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html" aria-current="page">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -202,22 +204,28 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-align</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-close-on-select</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-date-input</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-date-open</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-date-panel</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-date-input</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-open</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-panel</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-date-value</code></td><td>read, written</td></tr>
-                            <tr><td><code>data-kp-datepicker</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-datepicker</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datepicker-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-day</code></td><td>selector, written, read</td></tr>
-                            <tr><td><code>data-kp-disabled</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-disabled</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-disabled-days</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-locale</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-max</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-min</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-month</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-next-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-overlay-side</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-previous-glyph</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-view</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-week-starts-on</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-year</code></td><td>selector, written, read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -230,6 +238,7 @@
                     <h3 class="kp-fw-semibold"><code>DatePicker</code></h3>
                     <div class="kp-table-wrap" data-kp-region-label="DatePicker props"><table class="kp-table"><thead><tr><th>Prop</th><th>Type</th><th>Required</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>label</code></td><td><code>string</code></td><td>required</td><td></td></tr>
+                            <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td>optional</td><td>The label stays for assistive technology but is not drawn, for a picker a visible heading already names (a data table's date filter). Default false.</td></tr>
                             <tr><td><code>value</code></td><td><code>string</code></td><td>optional</td><td>Controlled text.</td></tr>
                             <tr><td><code>defaultValue</code></td><td><code>string</code></td><td>optional</td><td>Initial text when uncontrolled.</td></tr>
                             <tr><td><code>onChange</code></td><td><code>(iso: string | null, date: Date | null) =&gt; void</code></td><td>optional</td><td></td></tr>
@@ -266,6 +275,7 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-datepicker-input-min</code></td><td><code>8rem</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-z-popover</code></td><td><code>20</code></td></tr>
@@ -275,6 +285,7 @@
                     <h2 class="kp-fw-semibold">Accessibility</h2>
                     <ul class="kp-stack">
                         <li>Built in — the grid is a real grid: arrows by day, Page keys by month, Home and End to the ends of the week, and one tab stop for the whole month.</li>
+                        <li>Built in — the month and year grids take the same keys a size up, Escape steps back one grid, and the grid that opens is named and announced.</li>
                         <li>Built in — typing is a complete route to a date, so nobody is forced through the calendar at all.</li>
                         <li>Built in — the month and the chosen date are announced when they change, in the page’s own locale.</li>
                         <li>Yours — label the input and name the button that opens the calendar.</li>
@@ -286,7 +297,8 @@
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-datepicker__panel</code></td><td>The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.</td></tr>
-                            <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it.</td></tr>
+                            <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.</td></tr>
+                            <tr><td><code>month and year grids</code></td><td>Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.</td></tr>
                             <tr><td><code>.kp-datepicker__grid / __weekday</code></td><td>Seven columns with the week starting where the locale says, unless the markup overrules it.</td></tr>
                             <tr><td><code>.kp-datepicker__day</code></td><td>One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.</td></tr>
                             <tr><td><code>selected day</code></td><td>Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.</td></tr>

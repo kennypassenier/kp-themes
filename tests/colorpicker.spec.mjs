@@ -32,7 +32,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
-    test.describe(`colour picker — ${channel.name}`, () => {
+    test.describe(`colour picker — ${channel.name}`, { tag: ['@component:colorpicker'] }, () => {
         test('it reports the ratio and the verdict, not just a number [TH57]', async ({ page }) => {
             await page.goto(URL);
             const report = page.locator(channel.report);

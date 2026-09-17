@@ -85,6 +85,33 @@ export const HELPERS = {
  */
 export const REQUIRED_PARTS = {
     nav__menu: 'the dropdown: a theme that styles the bar and not the menu loses the reader the moment it opens (Kenny, 2026-09-08)',
+    // The mega menu's wide panel [scope-48]: a `.kp-nav__menu` too, so the
+    // dropdown's voice dresses it already, but its group headings are new
+    // and a register that answers only the dropdown leaves them neutral.
+    'nav__menu--wide':
+        'the mega menu: a panel of grouped links opened from the bar, whose headings have to speak in the theme the dropdown speaks in [scope-48]',
+    // The command palette's trigger in the bar's end slot [scope-48]: a part
+    // of the nav root, so the root audit alone would let a register style
+    // the bar and leave its one control in the package's neutral voice.
+    nav__search:
+        'the palette trigger in the bar: the one control the bar holds besides its links, so it has to wear the theme the bar wears [scope-48]',
+    // The `.kp-switch` root is required like every root, read from
+    // css/components.css at run time; this is its track. A register can
+    // answer the row with a knob and leave the part that changes when it
+    // is flipped in the package's neutral voice [gap-11].
+    switch__input: 'the switch track and thumb: the part that changes when it is flipped, so the theme has to be there when it does [gap-11]',
+    // The alarm's one way out [scope-94]. It is a `.kp-button`, so it keeps
+    // the register's button shape, and every register repaints its buttons
+    // in the later layer: a register that answered `.kp-alarm` and not its
+    // button left the theme's own button paint on the alarm's plate, as the
+    // first build of the alarm showed in every theme.
+    alarm__ack:
+        'the alarm’s button: the one way out of a screen that blocks everything else, painted by this register’s own button rules unless it answers it [scope-94]',
+    // `.kp-accordion` itself carries no rule in css/components.css, so it is
+    // not a root the audit above could ask for; its summary is the control
+    // a reader presses and the place the open-and-closed marker lives.
+    accordion__summary:
+        'the accordion: no register answered it, so in every theme it was the browser’s own triangle on a bold line (gap-12, Kenny 2026-09-13)',
 };
 
 /**

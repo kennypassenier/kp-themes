@@ -1,189 +1,210 @@
 # dark — anatomy
 
 > How this theme answers the questions in
-> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md). Dark is the
-> seventh theme lifted in 5.0.0 (S48, LIFT_PLAN row 15). The concept demo
-> Kenny approved on 2026-09-08, at its second reading, is "Small Hours"
-> (stars II) — `dark-demo-stars-v2.html`; the plain first draft
-> ("Small Hours") and the first, tiled starfield try
-> (`dark-demo-stars.html`) stay comparison points beside it.
+> [DESIGN_INVARIANTS.md](../../docs/DESIGN_INVARIANTS.md), written from what
+> `css/dark-register.css` and `themes/dark/tokens.json` do; where this text
+> and those two files disagree, the files are the truth (scope-98).
+>
+> Dark was lifted in 5.0.0 as "Small Hours" (S48, LIFT_PLAN row 15): a
+> slate ground, a luminous violet and a starfield. None of that is left.
+> Kenny took the starfield out on 2026-09-11, and the same day decided that
+> the spectral instrument — the concept world he had called the best of six
+> — becomes dark and replaces it outright (scope-16). Its measurement frame
+> also replaced blueprint's (scope-18). This document describes that
+> instrument.
 
 ## The idea
 
-The ordinary dark theme, done properly. A deep slate ground with a blue
-cast (`hsl(226, 22%, 8%)` — not black), soft off-white text, and a
-luminous, unsaturated violet that lifts off the ground without glaring.
-The whole job of this theme is to be the one someone reads in for two
-hours.
+A spectral instrument. A near-black ground with a faint grid ruled on it,
+near-white ink, and one mechanism the whole theme is about: an oxide film.
+Anodising does not add pigment; it grows a film whose thickness decides
+which wavelength survives, so the colour shifts with the angle you look
+from. Here that film is a conic gradient through the four chart colours —
+cyan, violet, magenta and lime — whose start angle turns with the pointer,
+and it runs along every edge that matters: a panel's border, a button's
+bottom edge, a field's underline, a heading's rule, the divider's centre
+line.
 
-The one ornament is a starfield of 112 irregular, once-generated points —
-"a starfield you cannot quite see" resolved, on Kenny's second reading, to
-one you **can**: still faint at this theme's own scale, but no longer
-invisible, with ten of the brightest points carrying a soft JWST-style
-diffraction shimmer.
+Everything else is quiet so the film can be seen. The controls are machined
+parts: corners cut at forty-five degrees rather than rounded, brackets that
+close on a button's label under the pointer, a label that draws itself in a
+little. The headline arrives the way an instrument brings a line into
+register — each word split into two of the film's wavelengths, out of
+focus, the halves converging as the blur clears.
 
 ## What is load-bearing
 
-1. **Not black, not white.** The ground is 8% lightness and the text is
-   93%, giving 14.85:1 rather than the 21:1 of pure black on pure white.
-   That gap is deliberate: the extreme ratio causes halation around glyphs
-   and pupil fatigue.
-2. **The violet is light, not saturated.** `hsl(255, 85%, 74%)` works on a
-   dark ground because it is bright; a dark saturated violet would vibrate
-   against it.
-3. **A blue cast throughout.** Ground, border and muted text all carry the
-   same hue family. A neutral grey would read as cheap.
-4. **The starfield is static.** No `@keyframes`, no opacity cycling,
-   nothing that could ever oppose luminance — a still photograph, painted
-   once, of 112 literal positions from a seeded PRNG run once at build
-   time (seed 20260908; nothing here is randomised in the browser).
+1. **Near-black, near-white, and one film.** The ground is
+   `hsl(220, 16%, 5%)`, the ink `hsl(205, 20%, 94%)` (17.11:1), and the
+   primary is near-white too (`hsl(200, 22%, 93%)`): an action is a light
+   plate on the dark, not a hue. Colour lives in the oxide film and in
+   meaning (status, danger), nowhere else.
+2. **The film follows the hand.** `--kp-iris` is a
+   `conic-gradient(from calc(var(--kp-px) * 1turn), …)` of `--chart-1` to
+   `--chart-4`; the register sets `--kp-pointer: track`, and `js/effects.js`
+   writes the pointer's position into `--kp-px` and `--kp-py`. The
+   stylesheet declares both at 0.5, so the film is valid before anything
+   moves, without the module, and under reduced motion, where the module
+   does not track.
+3. **Cut, never rounded.** The token radius is 0; controls (buttons,
+   fields, badges) lose two opposite corners to a 0.55rem chamfer
+   (`--fx-notch`), panels (cards, dialogs, alerts) to a 1rem one, both as
+   a `clip-path` because the corner is a straight edge and a radius is an
+   arc.
+4. **Motion is notation, not colour.** A hover or a press changes the
+   brackets, the label's scale and the film's edge; the ground of a button
+   barely moves. What moves without being touched is only what a hand
+   moves: the film's angle and a faint pool of light under the pointer.
 
-## The register (5.0.0)
+## The register
 
-`css/dark-register.css` is the theme's answer to the hook vocabulary
-(S45):
+`css/dark-register.css` is the theme's answer to the hook vocabulary (S45):
 
-- **Surface.** The void, quiet on purpose: no chrome beyond the ground and
-  the two texture layers. The laurels are three quiet panels; the spec
-  sheet a plain card; the side note a difference-blend margin note over
-  the hero's own violet glow (there is no photograph to invert over, S48,
-  so the "imagery" is the glow itself — decorative, `aria-hidden`, checked
-  for contrast on every surface it might land on though it carries no
-  required text).
-- **Emphasis.** Two readings of the same hook, both answering `mark`, by
-  context — the general rule (`ignite`) is the lede's own: a mark stands
-  muted until the reader scrolls it into range, then its ink and
-  underline resolve to violet, bound to the reader's own scroll position
-  (`animation-timeline: view()`, `entry 30%` to `entry 80%`) rather than a
-  timer, so it cannot free-run and cannot loop. Inside the dossier a more
-  specific rule takes over: the mark is a redact bar in the theme's edge
-  colour that lifts right to left on the trigger, staggered 90ms apart —
-  the demo's own mechanism for that slot, distinct from the lede's
-  colour-only ignite.
-- **Reveal.** The headline resolves word by word out of a blur
-  (`resolve`): each word settles from invisible and blurred, offset a
-  little below its line, to its rest state over 640ms, staggered 28ms
-  apart, Dead North's measured word-stagger timing reused but reskinned
-  from its own skew-and-shout into a blur-and-settle, because this theme
-  is read for two hours, not shouted at. The rule under a heading sweeps
-  in the same still-life way as the mark — a scroll-bound background
-  slide, not a timed one-shot (`sweep`).
-- **Divider.** A night seam: one step darker than the page ground
-  (`--sidebar-background`), its own denser local sample of the starfield
-  technique (twelve hand-placed points, not the page's global field), a
-  thin violet line at true centre.
-- **Accent.** Nothing beyond the heading's own type and the word-resolve
-  above; there is no accent mechanism the demo adds beyond the reveal.
-- **Arrival.** Quiet. The demo has no boot sequence; the page is simply
-  there.
-
-Every button is a flat panel with an edge, no bevel; fields are the same
-panel with a violet focus border; the dropdown carries its own violet
-keyboard ring, replacing the page-wide ink outline for that one context
-(KT14 — the part every one of the first batch's demos left unstyled).
-Panels (dialog, popover, menu, toast, confirm, palette, theme-menu) share
-one quiet dark ground and a shadow derived from the background token
-itself, never a raw black. One answer per component root (56 of 64, the
-eight helpers excused).
-
-**What the demo showed and the package now renders exactly (S49,
-2026-09-08).**
-
-- **The starfield, exactly.** All 112 positions, radii and per-dot alphas
-  are the literal values the demo's own header comment carries (its own
-  stdout from `scratchpad/dks2-generate-stars.mjs`, seed 20260908),
-  translated only from the demo's own `var(--ink)` token name to the
-  package's `var(--foreground)` — no position was moved, no alpha
-  retuned. The field's own opacity is 0.35, exactly as measured, over
-  DI9's 0.06 ceiling and **reported, not corrected** (S42) —
-  `gates/config.json`'s `textureOpacityCeiling.perTheme.dark` is 0.35,
-  the demo named as the reason.
-- **The shimmer, as a mechanism substitution.** The demo built its ten
-  brightest stars as an inline SVG `<symbol>` reused by ten `<use>`
-  elements. A register is CSS only, and the concept page's markup is
-  shared by every theme in the package — a register cannot add an SVG
-  block to it. The same look — a soft core plus eight thin rays, subtle,
-  fading with distance from the centre, only ten of 112 stars carrying it
-  at all — is rebuilt as layered `conic-gradient` rays (the demo's own
-  per-star rotation, recomputed as angle offsets) masked by a small
-  `radial-gradient` window per star, so the rays taper by distance the
-  way the SVG's own gradient stroke did. This is named here as a build
-  note rather than a finding that changes the demo's appearance: the
-  visual target — the glyph Kenny asked for, "subtly please" — is the
-  same; only the drawing technique differs, because the alternative was
-  not offered by the architecture at all.
-- **The dossier's second paragraph and the stamp's open-state word** have
-  no equivalent in the demo (its dossier carries one paragraph, and its
-  stamp never swaps its label), so `showcase/concept-copy.mjs`'s
-  `dossierPara2` and `stampLabelOpen` slots are written in the demo's own
-  voice rather than taken from it, and are listed as invented in the
-  lift's report.
-- **The spec sheet's eight labels** answer the page's own fixed eight
-  slots (hero ground, page ground, alert, label, a theme's own fifth
-  colour, display, body, mono) in the demo's own vocabulary (`ground`,
-  `void`, `danger`, `accent`, `edge`, `display`, `body`, `mono`) — the
-  demo's own sheet has ten rows in a different shape (no separate
-  hero-ground row, an extra `ink`/`tokens` pair), so this is an
-  interpretive mapping onto the template's fixed slots, not a literal
-  transcription.
+- **The ground.** The page's own background carries an instrument grid —
+  hairlines of the ink at 4.5 % every 5.5rem (`--kp-grid`), both ways —
+  and a faint pool of `--chart-1` light (13 %) centred where the pointer
+  is. There is no texture layer and no starfield.
+- **Headline (`resolve`).** Each word, wrapped by `js/effects.js`, runs
+  `kp-resolve` over 640ms on `--kp-settle`, 28ms apart
+  (`--kp-word-stagger`): from invisible, blurred 3px and 0.22em low, with a
+  text-shadow split into `--chart-3` on one side and `--chart-1` on the
+  other, to sharp, in place and single. The split is a text-shadow rather
+  than a second copy, so a screen reader reads each word once.
+- **Emphasis (`ignite`).** A `<mark>` has no plate: its ink is the primary
+  with a 2px underline in the boundary colour. Where the browser supports
+  scroll-driven animation it starts muted and resolves to that as the
+  reader scrolls it into range (`animation-timeline: view()`, entry 30 % to
+  80 %), bound to the scroll position rather than a clock. In the dossier a
+  more specific rule takes over: each phrase is covered by a bar in
+  `--border-strong` on the mark's `::after` that lifts off right to left on
+  the trigger (380ms, 90ms apart, `--kp-redact-stagger`); the words turn
+  visible in the same instant.
+- **Rule (`sweep`).** A heading marked `[data-kp-reveal='rule']` carries a
+  2px band of the film across its whole width, which draws itself from the
+  leading edge (`kp-draw`, a scale) as the heading scrolls in (entry 10 % to
+  85 %). At rest it stands drawn.
+- **Divider.** The edge of a ruler: a hairline in `--border` that fades at
+  both ends, tick marks in `--border-strong` every 3rem
+  (`--kp-divider-tick`), and a line of the film across its middle at 75 %.
+  The alt divider is the same ruler mirrored.
+- **Buttons.** A flat card-grounded panel with a boundary edge and the
+  control chamfer. Under the pointer or the keyboard, `[` and `]` in the
+  mono face slide in and close on the label, the label scales to 94 %, and
+  `.kp-button__edge` draws the film along the bottom edge. A press arrives
+  at once and eases back: the brackets close another step, the label goes
+  to 90 %, the edge doubles to 4px. A button's readout, above the control,
+  takes the film through its letters; a strip is kept clear of the chamfer
+  so the readout is not clipped. The primary is the near-white plate; the
+  destructive button is an outline in the danger colour that fills under
+  the pointer; the ghost button has no edge until pointed at.
+- **Fields.** The same panel and edge; focus turns the border to the
+  primary and draws a 1px line of the film under the field from the left.
+- **Panels.** Cards and dialogs wear the film as their 1px border (the
+  card ground painted over it on the padding box). Since `scope-102` that
+  plate — the ground, the film edge and the chamfer — is on a
+  pseudo-element for both of them, `.kp-dialog::before` and
+  `.kp-card::after`, because a `clip-path` clips the element's own
+  box-shadow and a chamfered panel could otherwise cast nothing at all.
+  Popovers, menus, toasts, tooltips, confirmations, pickers and the
+  palette share the card ground and the boundary edge.
+- **The halo** (`scope-102`, Kenny, 2026-09-16, dark-shadow "Gloed van de
+  oxidefilm"). A raised panel stands off the ground in the film's own four
+  wavelengths rather than in a shadow made from the background token,
+  which on a ground at 5 % lightness moved 0.4 % of the band past a
+  just-noticeable step. `--kp-halo` is four fixed shadows — `--chart-2`
+  below, `--chart-1` left, `--chart-3` right, `--chart-4` above, where the
+  conic gradient puts each colour — carried by the dialog, the card and
+  the popover family. Four shadows rather than the film itself, blurred,
+  because `.kp-popover` is `overflow: auto` and a modal dialog is
+  `overflow: auto` by the UA stylesheet: both clip a pseudo-element, and
+  the blurred film measured zero on both. The cost, stated: unlike the
+  border, the halo does not turn with the pointer. The nav's dropdown
+  (`.kp-nav__menu`) is the one panel left on the old background-token
+  shadow — `scope-102` names the dialog, the card and the popover.
+- **The stamp.** A near-white pill in the primary with the consumer's
+  label in mono capitals, on the dossier card.
+- **Small parts of the film.** The boot overlay's bar carries the film.
+  The register also paints a `.kp-nav__marker` in the film and a
+  `.kp-measure__bracket` at 55 % of `--chart-1` (the measurement frame of
+  scope-18), but no component or module of the package renders either
+  class today (searched 2026-09-16), so neither shows.
+- **Navbar and footer.** The bar is the card ground over a boundary rule,
+  links muted until pointed at or current; the call to action is the
+  near-white plate. The footer is one step darker than the page
+  (`--sidebar-background`).
+- **Microlabels and platforms.** Spaced muted capitals after a dot in the
+  primary.
+- **The side note.** A vertical mono line in the hero, blended by
+  difference; decorative and hidden below 40rem.
+- **Arrival.** None. The page is simply there.
 
 ## Answers to the invariant questions
 
-**DI1 — hairline or boundary?** Both exist and are distinct: `--border`
-(`hsl(226, 15%, 20%)`) stays the ungated hairline, never used as a
-boundary; `--border-strong`/`--input` (`hsl(226, 16%, 45%)`, the demo's
-own `--edge`) is the boundary DI1 measures, clearing 3:1 against both the
-void and the panel.
+**DI1 — hairline or boundary?** Both exist and are distinct in role:
+`--border` (`hsl(214, 12%, 17%)`, 1.37:1 on the ground) is the hairline;
+`--border-strong` and `--input` (`hsl(214, 12%, 30%)`) are the boundary a
+control wears. The boundary does **not** reach DI1's floor:
+`gates/check-invariants.mjs` measures it at 2.22:1 on the ground, 2.11:1 on
+a card and 2.02:1 on a popover, against 3.0. That is advice, not a gate
+(Kenny, 2026-09-09), and it stands as an open finding rather than a value
+this text claims is fine.
 
-**DI3 — does this theme follow the derivation?** Yes, inverted: on a dark
-ground "one step" moves toward lighter, not darker, because the ground is
-dark. Buttons and fields already follow it — a relative-colour lighten of
-`--primary` on a primary button's hover, `--accent` on a ghost or a nav
-link's hover.
+**DI2 — the focus ring.** Two channels, reversed from the base default:
+the background touches the element and the ink rings outside it, as the
+demo drew it. One of the two always clears 3:1 on the surface behind it.
+The dropdown's items take an inset outline in the primary, and a menu item
+draws both channels inside itself, where the rounded popover cannot clip
+them.
 
-**DI4 — palette or code?** A code; status colours are lighter than their
-light-theme equivalents, not darker, per the design invariant's own
-warning against reusing the same hex in a dark theme.
+**DI3 — does this theme follow the derivation?** Not by derivation: the
+token file authors `--primary-hover` and `--primary-active` itself, stepping
+the near-white primary darker (86 % and 78 %), because a primary at 93 %
+has almost nowhere lighter to go. The register's primary button hovers six
+points lighter instead and presses to `--primary-active`; the other
+buttons hover to `--accent` and press to the derived `--secondary-active`.
 
-**DI5 — animation?** Every reveal on this page is one monotonic change:
-the word resolve (640ms, once per word, staggered), the mark's ignite and
-the rule's sweep (both scroll-bound via `animation-timeline: view()`,
-bound to the reader's own scroll position rather than a clock — they
-cannot free-run and cannot loop, and `gates/check-motion.mjs`'s
-`OUT_OF_SCOPE` carries the reason for each), and the dossier's redact bar
-(one clip transition per redaction on the trigger, staggered 90ms apart,
-one-shot). None of it is a repeating cycle. The starfield itself carries
-zero animation of any kind.
+**DI4 — palette or code?** A code, with lighter inks on darker plates for
+every status. It does not yet separate the pair that matters:
+`gates/check-invariants.mjs` finds offer and rejected 5.8 apart for the
+commonest colour deficiency, against a floor of 12. An open finding, like
+DI1's.
 
-**DI6 — light or dark, and is the ordering deliberate?** Dark; L3 already
-corrected the ordering this theme's Phase 2 anatomy flagged as accidental
-(background → card → popover rising by getting lighter, as a dark theme's
-layers should).
+**DI5 — animation?** One timed keyframe, `kp-resolve`, one-shot per word,
+with its row in `TIMINGS` (`js/effects.js`). The ignite and the rule's draw
+are scroll-bound: the browser scrubs them by position, so they cannot
+free-run or loop. Everything else is a transition — the brackets, the
+label's scale, the edges, the redaction bars — and nothing loops. The only
+things that change without a transition are the film's angle and the pool
+of light, and they change only as fast as the pointer moves.
+
+**DI6 — light or dark, and is the ordering deliberate?** Dark, and
+deliberate: background 5 % → card 8 % → popover 10 %, raised by getting
+lighter, with the footer one step below the page at 7 %.
 
 **DI7 — reduced motion.** Every animation and transition of the register
-lives inside `@media (prefers-reduced-motion: no-preference)`; at rest
-every word of the headline already stands sharp, every mark already
-stands violet (or, in the dossier, already cleared once the trigger is
-pressed), the rule already fully drawn. The two view-timeline mechanisms
-degrade to the same finished rest state in a browser that supports
-`prefers-reduced-motion` but not `animation-timeline: view()`, because the
-`@supports` guard sits inside the `@media` one.
+lives inside `@media (prefers-reduced-motion: no-preference)`, and the two
+scroll-bound ones sit inside an `@supports (animation-timeline: view())`
+guard within it. At rest every word of the headline stands sharp, every
+mark stands in the primary, and the rule stands drawn; the brackets, the
+label's scale and the edges still answer a hover or a press, at once. The
+pointer is not tracked, so the film holds its middle angle and the pool of
+light stays centred.
 
-**DI9 — theme colour stays in the token layer.** Every stop in both
-texture layers and every other rule is a token or a relative colour of
-one; nothing is named.
+**DI9 — theme colour stays in the token layer.** The register names no
+colour: every stop is a token or a relative colour of one, including the
+four wavelengths of the film. The page's texture layer is empty
+(`css/_rules.css` declares none for dark since the starfield went); the
+grid and the pool of light sit on the page background itself.
 
 ## What this theme may not do
 
 - Reach pure black or pure white.
-- Use a saturated mid-lightness colour over a large area; it vibrates.
-- Let the starfield move, cycle, or gain a keyframe of any kind — it is a
-  photograph, not an effect.
-- Let the shimmer stop being a minority: only ten of 112 stars may carry
-  the spike glyph, or it reads as a wash rather than "a little brighter."
-
-## Open for L3
-
-Closed: L3 already resolved the boundary gap and the layer-ordering fault
-this theme's Phase 2 anatomy flagged before the round-six lift; both are
-verified above rather than left open.
+- Give colour a job the film or a meaning does not have: the primary is
+  near-white, and violet appears only as one of the film's wavelengths and
+  in the interview status.
+- Round a corner that the chamfer cuts.
+- Move anything the reader did not move: no loop, no starfield, no drift
+  of the film on its own.
+- Change a button's box on hover or press: every gesture is paint — a
+  pseudo-element, a child's transform, an out-of-flow edge — so no row
+  shifts.

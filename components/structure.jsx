@@ -285,13 +285,22 @@ function ReorderInner(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
 
+    // The order a drag works from. A pointer drag lives across renders, and
+    // the handler it registered on pointerdown would otherwise keep the
+    // order of that one render: every move after the first was computed
+    // from a list that no longer existed [held-60].
+    const latest = useRef(order);
+    latest.current = order;
+
     /** @param {number} from @param {number} to */
     const move = (from, to) => {
-        if (to < 0 || to >= order.length || from === to) return;
-        const next = [...order];
+        const current = latest.current;
+        if (from < 0 || to < 0 || to >= current.length || from === to) return;
+        const next = [...current];
         const [taken] = next.splice(from, 1);
         if (taken === undefined) return;
         next.splice(to, 0, taken);
+        latest.current = next;
         setOrder(next);
         onChange?.(next, { id: taken, from, to });
         // Said in words: a list that reorders silently is one a screen
@@ -306,37 +315,48 @@ function ReorderInner(
         return taken;
     };
 
+    /** @type {import('react').MutableRefObject<((up?: PointerEvent) => void) | null>} */
+    const endDrag = useRef(null);
     /** @param {import('react').PointerEvent<HTMLButtonElement>} event @param {string} id */
     const onPointerDown = (event, id) => {
         if (!pointer || event.button !== 0) return;
         event.preventDefault();
-        const handle = event.currentTarget;
-        handle.setPointerCapture(event.pointerId);
-        const item = handle.closest('[data-kp-item]');
+        endDrag.current?.();
+        const pointerId = event.pointerId;
+        const item = event.currentTarget.closest('[data-kp-item]');
         if (item instanceof HTMLElement) item.dataset.kpDragging = '';
+        // Heard on the window, not on the handle: React moves rows in the
+        // DOM as the order changes, which releases the handle's pointer
+        // capture, and the first version stopped after one row [held-60].
         /** @param {PointerEvent} moved */
         const onMove = (moved) => {
-            const children = [...(list.current?.children ?? [])];
-            const from = children.findIndex((c) => /** @type {HTMLElement} */ (c).dataset.kpItem === id);
-            for (let i = 0; i < children.length; i++) {
-                if (i === from) continue;
-                const box = children[i]?.getBoundingClientRect();
-                if (box && moved.clientY >= box.top && moved.clientY <= box.bottom) {
-                    move(from, i);
+            if (moved.pointerId !== pointerId) return;
+            for (const child of list.current?.children ?? []) {
+                const over = /** @type {HTMLElement} */ (child).dataset.kpItem;
+                if (over === undefined || over === id) continue;
+                const box = child.getBoundingClientRect();
+                if (moved.clientY >= box.top && moved.clientY <= box.bottom) {
+                    move(latest.current.indexOf(id), latest.current.indexOf(over));
                     break;
                 }
             }
         };
-        const onUp = () => {
+        /** @param {PointerEvent} [up] */
+        const onUp = (up) => {
+            if (up && up.pointerId !== pointerId) return;
             if (item instanceof HTMLElement) delete item.dataset.kpDragging;
-            handle.removeEventListener('pointermove', onMove);
-            handle.removeEventListener('pointerup', onUp);
-            handle.removeEventListener('pointercancel', onUp);
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+            window.removeEventListener('pointercancel', onUp);
+            endDrag.current = null;
         };
-        handle.addEventListener('pointermove', onMove);
-        handle.addEventListener('pointerup', onUp);
-        handle.addEventListener('pointercancel', onUp);
+        endDrag.current = onUp;
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
     };
+    // A list unmounted mid-drag leaves no listener on the window.
+    useEffect(() => () => endDrag.current?.(), []);
 
     return (
         <>

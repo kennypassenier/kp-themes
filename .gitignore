@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 tests/fixtures/.build/
 test-results/
 playwright-report/
@@ -18,3 +18,11 @@ tests/tmp-*.spec.mjs
 # The release asset the workflow builds from fonts/ [AR39].
 fonts.tar
 consumer.tar
+
+# The loading research's generated samples: 66 stylesheets and 33 chunks a
+# script writes in seconds (research/loading/run.mjs). The measurements are in
+# that folder's README; the bytes themselves are 7.5 MB of nobody's source.
+research/loading/out/
+
+# Portrait screenshots are working aids, not kept [scope-99]
+research/theme-portraits/*.png

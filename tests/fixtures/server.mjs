@@ -42,7 +42,9 @@ createServer(async (req, res) => {
             res.writeHead(404).end('not found');
             return;
         }
-        res.writeHead(200, { 'content-type': TYPES[extname(path)] ?? 'application/octet-stream' });
+        // no-store: a reviewer reloading after a change must get the change,
+        // not a module the browser kept from the last load.
+        res.writeHead(200, { 'content-type': TYPES[extname(path)] ?? 'application/octet-stream', 'cache-control': 'no-store' });
         createReadStream(path).pipe(res);
     } catch {
         res.writeHead(404).end('not found');

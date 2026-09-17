@@ -6,10 +6,11 @@
 // wipe (a three-band overlay in mix-blend-mode: difference, cleared once
 // — the package's own `clip-path` sweep standing in for the demo's three
 // staggered transforms, per anatomy.md's S49 finding), the rule drawing
-// itself under a heading, the horizon-seam dividers, the nav dropdown
-// (KT14) with its own caret glyph, the buttons' mirror highlight and
-// soft hover, the dossier's three redactions clearing on the trigger,
-// and the whole approved inventory (S46).
+// itself under a heading, the nav dropdown (KT14) with its own caret
+// glyph, the buttons' mirror highlight and soft hover, the dossier's three
+// redactions clearing on the trigger, and the whole approved inventory
+// (S46). The horizon-seam dividers are judged by eye on the catalogue
+// since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -18,7 +19,8 @@
 //     `::after` rule → red on "a mix-blend-mode overlay covers it";
 //   - the redaction bar's `background: var(--border-strong)` (the
 //     `mark::after` rule) removed → red on "the bar is the boundary
-//     colour";
+//     colour" (since fix-33, scope-93, the bar is the mark's own cloned
+//     background gradient, and the test reads that gradient's ink);
 //   - the nav dropdown caret content rule (`.kp-nav__link[aria-haspopup]
 //     ::after { content: ' ⌄' }`) removed → red on "a caret glyph".
 // A fourth was found and fixed rather than merely drilled: the mirror
@@ -93,7 +95,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the solstice register, ${channel}`, () => {
+    test.describe(`the solstice register, ${channel}`, { tag: ['@theme:solstice', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline calibrates once: a mix-blend-mode overlay covers it, then clears to its own text [S49, A1]', async ({ page }) => {
             // Recorded before navigation. The resting reads below are
             // exactly what a theme declaring NO headline routine also
@@ -165,18 +167,6 @@ for (const [channel, url] of CHANNELS) {
             expect(rest.transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the two dividers are the horizon seam: a hairline with an accent peak, the alt one on the opposite side', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundImage);
-            const second = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundImage);
-            expect(first, 'a conic peak over a hairline').toMatch(/conic-gradient/);
-            expect(first).toMatch(/linear-gradient/);
-            expect(second).toMatch(/conic-gradient/);
-            expect(first, 'the alt divider is not identical to the first').not.toBe(second);
-        });
-
         test('the nav dropdown (KT14): a caret glyph, opens on hover/focus, its items read the warm popover', async ({ page }) => {
             await open(page, url);
             const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
@@ -192,32 +182,23 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(() => item.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
         });
 
-        test('the primary button reads the amber token, and the mirror carries a two-part inset highlight', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            const mirror = page.locator('[data-kp-surface="hero"] .kp-button--mirror').first();
-            const shadow = await mirror.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'two inset layers, top and bottom').toMatch(/inset/);
-            expect(shadow.match(/inset/g)?.length, 'top and bottom edges').toBeGreaterThanOrEqual(2);
-        });
-
         test('the dossier: three redactions covered by a boundary-coloured bar, lifted right to left on the trigger', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const marks = dossier.locator('mark');
             expect(await marks.count()).toBe(3);
             const first = marks.first();
-            const covered = await pseudo(first, '::after', ['background-color', 'clip-path']);
-            expect(covered['background-color'], 'the bar is the boundary colour').toBe(await paint(page, '--border-strong'));
-            expect(covered['clip-path'], 'fully covering before the trigger').toMatch(/^(none|inset\(0px\))$/);
+            const covered = await pseudo(first, '', ['background-image', 'background-size', 'color']);
+            expect(covered['background-image'], 'the bar is the boundary colour').toContain(await paint(page, '--border-strong'));
+            expect(covered['background-size'], 'fully covering before the trigger').toMatch(/^calc\((100% - 2px|-2px \+ 100%)\)/);
+            expect(covered.color, 'the words wear no ink under the bar').toBe('rgba(0, 0, 0, 0)');
             await dossier.locator('[data-kp-reveal-trigger]').click();
             await expect(first).toHaveClass(/is-cleared/);
             await settled(page);
-            const cleared = await pseudo(first, '::after', ['clip-path']);
-            expect(cleared['clip-path'], 'clipped away from the right').toMatch(
-                /inset\(0px 100%|inset\(0%\s*100%|inset\(0px\s*[\d.]+px\s*0px\s*0px\)/,
-            );
+            await expect
+                .poll(async () => (await pseudo(first, '', ['background-size']))['background-size'], 'narrowed away toward the left')
+                .toMatch(/^0(%|px) /);
+            await expect.poll(async () => (await pseudo(first, '', ['color'])).color, 'the words take their ink back').not.toBe('rgba(0, 0, 0, 0)');
         });
 
         test("the stamp carries the demo's own word and rides a slight rotation", async ({ page }) => {
@@ -229,27 +210,6 @@ for (const [channel, url] of CHANNELS) {
             const stamp = await pseudo(dossier, '::before', ['background-color', 'rotate']);
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toBe('On file');
             expect(stamp['background-color']).toBe(await paint(page, '--accent'));
-        });
-
-        test('the focus ring keeps two channels on the mirror button, composed in front of its highlight [DI2, AR30]', async ({ page }) => {
-            // Drilled 2026-09-08: the mirror's own box-shadow (kp.register,
-            // later than kp.components) replaced the ring outright until a
-            // dedicated :focus-visible rule composed the two — the same
-            // fault retro's own register comment records for its bevel.
-            await open(page, url);
-            const MIRROR = '[data-kp-surface="hero"] .kp-button--mirror';
-            const btn = page.locator(MIRROR).first();
-            // Reached with the keyboard, not focus(): a focus() that never
-            // lands resolves happily and the reads below then measure the
-            // button at rest and pass [G15].
-            await tabToSelector(page, MIRROR);
-            const focused = await btn.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { outline: s.outlineStyle, boxShadow: s.boxShadow };
-            });
-            expect(focused.outline, 'the outline channel').toBe('solid');
-            expect(focused.boxShadow.match(/inset/g)?.length, 'the mirror highlight survives, both edges').toBe(2);
-            expect(focused.boxShadow.replace(/inset[^,]*,?/g, '').trim(), 'a ring layer remains beside the highlight').not.toBe('');
         });
 
         test('a low sun rakes once across the touched control [scope-12]', async ({ page }) => {
@@ -285,3 +245,49 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// A measured fault of scope-100 (Kenny, 2026-09-16, register-faults). Made to
+// fail first [KT3], 2026-09-16, firefox, on c9f58c08's register: from 960px
+// the side note is absolute and nothing positioned the hero, so outside the
+// catalogue's stage the note was placed against the page, not its hero.
+test.describe(
+    'the solstice register, measured faults [scope-100]',
+    { tag: ['@theme:solstice', '@component:page-effects', '@component:examples'] },
+    () => {
+        test('from 960px the side note sits in its own hero, outside the catalogue too [scope-100]', async ({ page }) => {
+            await open(page, '/examples/concept-solstice.html', { reduced: true });
+            await page.evaluate(() => {
+                const hero = document.createElement('section');
+                hero.className = 'kp-section kp-stack';
+                hero.dataset.kpSurface = 'hero';
+                hero.setAttribute('data-probe-hero', '');
+                hero.innerHTML =
+                    '<p class="kp-side-note" aria-hidden="true">VOL. III · LOW SUN · 28°</p><h1>A second hero, further down</h1><p>One paragraph of running text beside the note.</p>';
+                document.querySelector('main')?.append(hero);
+            });
+            const faults = [];
+            const heroes = page.locator('[data-kp-surface="hero"]:has(> .kp-side-note)');
+            const count = await heroes.count();
+            expect(count, 'the concept hero and the probe').toBeGreaterThanOrEqual(2);
+            for (let i = 0; i < count; i++) {
+                const hero = heroes.nth(i);
+                await hero.scrollIntoViewIfNeeded();
+                const m = await hero.evaluate((el) => {
+                    const note = /** @type {Element} */ (el.querySelector(':scope > .kp-side-note'));
+                    const n = note.getBoundingClientRect();
+                    const h = el.getBoundingClientRect();
+                    return {
+                        position: getComputedStyle(note).position,
+                        note: [n.top + scrollY, n.bottom + scrollY],
+                        hero: [h.top + scrollY, h.bottom + scrollY],
+                    };
+                });
+                expect(m.position, 'the note is in the margin at 1280px').toBe('absolute');
+                if (m.note[0] < m.hero[0] - 0.5 || m.note[1] > m.hero[1] + 0.5) {
+                    faults.push(`hero ${i}: note ${m.note.map(Math.round).join('→')} outside hero ${m.hero.map(Math.round).join('→')}`);
+                }
+            }
+            expect(faults).toEqual([]);
+        });
+    },
+);

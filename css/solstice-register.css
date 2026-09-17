@@ -158,18 +158,7 @@
     }
 
     [data-theme='solstice'] [data-kp-surface='hero'] h1 {
-        font-size: clamp(2.5rem, 10vw, 10.5rem);
-        line-height: 0.91;
         letter-spacing: -0.04em;
-    }
-
-    /* The emphasised word inside the headline, small-caps rather than a
-       second colour on the overlay's own band (anatomy: amber leads). */
-    [data-theme='solstice'] [data-kp-surface='hero'] h1 em {
-        font-style: normal;
-        font-variant: all-small-caps;
-        letter-spacing: -0.03em;
-        color: var(--primary);
     }
 
     /* ── Nav: chrome, no bevel — a warm strip over the app ─────────────── */
@@ -222,9 +211,22 @@
         box-shadow: 0 12px 28px var(--kp-shadow-soft);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='solstice'] .kp-nav__menu a {
         border-radius: calc(var(--radius) - 3px);
-        padding: 0.5rem 0.6rem;
+        padding-inline: 0.6rem;
     }
 
     [data-theme='solstice'] .kp-nav__menu a:hover,
@@ -233,11 +235,16 @@
         color: var(--primary);
     }
 
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
     [data-theme='solstice'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
         border-radius: var(--radius);
         font-weight: 600;
+        padding-inline: var(--kp-space-lg, 1rem);
     }
 
     [data-theme='solstice'] .kp-nav__link--cta:hover {
@@ -283,14 +290,11 @@
     /* The demo's answer to "mirror" [S49, A7]: a thin calibration-bar
        highlight riding the top and bottom inset edges, echoing the
        headline's fg/ink pair — this theme carries no gradients
-       (anatomy.md), so this is a highlight, not a flip. */
+       (anatomy.md), so this is a highlight, not a flip. One rule for every
+       mirror button: a second, identical rule for the primary mirror was
+       merged into it [scope-100], since nothing in this layer gives the
+       primary button a box-shadow of its own to beat. */
     [data-theme='solstice'] .kp-button--mirror {
-        box-shadow:
-            inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
-            inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
-    }
-
-    [data-theme='solstice'] .kp-button--primary.kp-button--mirror {
         box-shadow:
             inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
             inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
@@ -312,7 +316,6 @@
 
     [data-theme='solstice'] .kp-field__label {
         font-weight: 600;
-        font-size: 0.8125rem;
     }
 
     [data-theme='solstice'] .kp-field__required {
@@ -328,6 +331,14 @@
         border-color: var(--border-strong);
     }
 
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='solstice'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
     [data-theme='solstice'] .kp-field__help {
         color: var(--muted-foreground);
     }
@@ -339,6 +350,16 @@
     [data-theme='solstice'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: the pill, on the page's ground with the inputs' edge. */
+    [data-theme='solstice'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='solstice'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
     }
 
     [data-theme='solstice'] .kp-form__summary {
@@ -356,7 +377,6 @@
     [data-theme='solstice'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     /* The dossier: the stamp rides a slight rotation the way a printed
@@ -382,34 +402,27 @@
     /* The redactions: three marks inside the dossier, covered by a bar in
        the theme's own boundary colour until the trigger opens the file,
        then lifted one after another, right to left — the demo's own
-       clip-path direction. The ink underneath is present throughout
-       (color kept, never removed): the bar is what hides it, not the
-       text itself, which is how the demo's own `.kp-redaction` reads. */
+       clip-path direction. The bar is the phrase's own background, 1px
+       inside its padding and cloned onto every line the phrase takes, so a
+       phrase that wraps is covered line by line [fix-33, scope-93]; a bar
+       on an absolutely positioned ::after covered none of it. A background
+       paints under the words rather than over them, and the bar is not the
+       words' colour, so the words wear no ink while the bar is there and
+       take it back once their bar has gone. */
     [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark {
         position: relative;
-        background: none;
-        color: var(--card-foreground);
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 1px center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+        color: transparent;
         padding: 0.05em 0.15em;
         font-weight: 400;
         border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 1px;
-        background: var(--border-strong);
-        border-radius: 3px;
-        clip-path: inset(0 0 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='solstice'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
-    }
-
-    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
-        clip-path: inset(0 100% 0 0);
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 2px);
+        color: var(--card-foreground);
     }
 
     /* Windows: a plain popover panel with the demo's soft drop shadow —
@@ -428,6 +441,49 @@
         box-shadow: 0 24px 56px var(--kp-shadow-deep);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='solstice'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='solstice'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='solstice'] .kp-toast--destructive,
+    [data-theme='solstice'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='solstice']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='solstice'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='solstice'] .kp-toasts {
         gap: var(--kp-space-sm);
     }
@@ -435,7 +491,6 @@
     [data-theme='solstice'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        font-size: 1.4rem;
     }
 
     [data-theme='solstice'] .kp-menu__item:hover {
@@ -475,7 +530,6 @@
 
     [data-theme='solstice'] .kp-footer h4 {
         font-weight: 600;
-        font-size: 0.8125rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
@@ -514,10 +568,6 @@
         background: var(--popover);
     }
 
-    [data-theme='solstice'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     [data-theme='solstice'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
@@ -553,6 +603,22 @@
 
     [data-theme='solstice'] .kp-copyable__button {
         border-radius: calc(var(--radius) - 3px);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* ── Data: table, datatable, diff, timeline, tree, reorder ─────────── */
@@ -603,6 +669,15 @@
 
     [data-theme='solstice'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the warm primary its selected tab wears. */
+    [data-theme='solstice'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
     }
 
     [data-theme='solstice'] .kp-reorder {
@@ -683,11 +758,11 @@
     /* ── The roots the rules above reach only by their parts ───────────── */
 
     [data-theme='solstice'] .kp-field {
-        gap: 0.4rem;
+        gap: calc(var(--kp-space-xs) * 1.6);
     }
 
     [data-theme='solstice'] .kp-form {
-        gap: 1.1rem;
+        gap: calc(var(--kp-space-lg) * 1.1);
     }
 
     [data-theme='solstice'] .kp-combobox,
@@ -718,6 +793,14 @@
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             max-width: none;
+        }
+
+        /* The note's containing block is its own hero (Kenny, 2026-09-16,
+           register-faults [scope-100]): nothing positioned the hero, so
+           outside the catalogue's stage the note was placed against the
+           page — at y=24 while its hero stood thousands of pixels lower. */
+        [data-theme='solstice'] [data-kp-surface='hero']:has(> .kp-side-note) {
+            position: relative;
         }
     }
 
@@ -757,7 +840,10 @@
         font-weight: 700;
     }
 
-    /* The platforms line: a rust tick before every name. */
+    /* The platforms line: the names in the full ink and a heavier weight
+       over the line's muted ink, spaced by the package's own gap — no tick
+       or mark before a name [scope-100: this comment used to promise a
+       rust tick the rules never drew]. */
     [data-theme='solstice'] .kp-platforms {
         font-weight: 500;
         color: var(--muted-foreground);
@@ -800,16 +886,19 @@
             animation: kp-cal-rule var(--kp-rule-duration) var(--fx-ease) var(--kp-rule-delay) 1 both;
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
             animation: kp-cal-redact var(--kp-redact-duration) var(--fx-ease) 1 both;
+            transition: color 0s linear var(--kp-redact-duration);
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
             animation-delay: var(--kp-redact-stagger);
+            transition-delay: calc(var(--kp-redact-duration) + var(--kp-redact-stagger));
         }
 
-        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3)::after {
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
             animation-delay: calc(2 * var(--kp-redact-stagger));
+            transition-delay: calc(var(--kp-redact-duration) + 2 * var(--kp-redact-stagger));
         }
     }
 
@@ -847,11 +936,11 @@
        direction (`clip-path: inset(0 100% 0 0)` at rest-cleared). */
     @keyframes kp-cal-redact {
         from {
-            clip-path: inset(0 0 0 0);
+            background-size: calc(100% - 2px) calc(100% - 2px);
         }
 
         to {
-            clip-path: inset(0 100% 0 0);
+            background-size: 0% calc(100% - 2px);
         }
     }
     /* The band [M1, M4]: Kenny picked this theme's own version over the
@@ -865,7 +954,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='solstice'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='solstice'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='solstice'] .kp-nav__menu--wide .kp-nav__menu-heading {
         color: var(--primary);
         font-family: var(--theme-font-mono);
         border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
@@ -976,5 +1067,73 @@
     [data-theme='solstice'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the muted
+       ink, taking the primary ink when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The last light: a warm near-black plate, the headline in its red, amber bars and an amber glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='solstice'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.45);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='solstice'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

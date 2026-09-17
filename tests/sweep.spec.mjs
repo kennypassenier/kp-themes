@@ -9,7 +9,7 @@ import { THEMES as REGISTRY } from '../js/theme-registry.js';
 
 const URL = '/tests/fixtures/components.html';
 
-test('detaching a data table puts the rows back in the order the server rendered [KT6]', async ({ page }) => {
+test('detaching a data table puts the rows back in the order the server rendered [KT6]', { tag: ['@component:datatable'] }, async ({ page }) => {
     await page.goto(URL);
     const order = await page.evaluate(async () => {
         const { attachDataTables } = await import('/js/datatable.js');
@@ -32,7 +32,7 @@ test('detaching a data table puts the rows back in the order the server rendered
     expect(order.restored).toEqual(['3', '1', '2']);
 });
 
-test('enforcement can be taken back: a contract-broken button comes back enabled [KT6, D7]', async ({ page }) => {
+test('enforcement can be taken back: a contract-broken button comes back enabled [KT6, D7]', { tag: ['@component:button'] }, async ({ page }) => {
     await page.goto(URL);
     const states = await page.evaluate(async () => {
         const { enforceContracts } = await import('/js/components.js');
@@ -56,7 +56,7 @@ test('enforcement can be taken back: a contract-broken button comes back enabled
     expect(states).toEqual({ disabled: true, after: false, healed: false, count: 1 });
 });
 
-test('a nested StringsProvider layers over the outer one [KT6]', async ({ page }) => {
+test('a nested StringsProvider layers over the outer one [KT6]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     // The inner provider set only `copy`; `copied` must still be the
     // outer one's. The second Copyable is controlled into the copied
@@ -73,17 +73,21 @@ const PICKERS = [
     { name: 'React', url: '/tests/fixtures/picker.html', open: '#react-mount .kp-icon-button', picker: '#react-mount [data-kp-theme-picker]' },
 ];
 for (const channel of PICKERS) {
-    test(`the theme picker groups light and dark, with a label each — ${channel.name} [TH63]`, async ({ page }) => {
-        await page.goto(channel.url);
-        if (channel.open) await page.locator(channel.open).click();
-        const picker = page.locator(channel.picker);
-        // Drill: with `grouped` defaulting to false (or the group markup
-        // removed), there are no group elements and this reads 0.
-        await expect(picker.locator('[data-kp-theme-group="light"]')).toHaveCount(1);
-        await expect(picker.locator('[data-kp-theme-group="dark"]')).toHaveCount(1);
-        await expect(picker.locator('[data-kp-theme-group="light"] .kp-theme-group__label')).toHaveText(S.themeGroupLight);
-        await expect(picker.locator('[data-kp-theme-group="dark"] .kp-theme-group__label')).toHaveText(S.themeGroupDark);
-        // Every theme is in exactly one group.
-        await expect(picker.locator('[data-kp-theme-group] [data-kp-theme]')).toHaveCount(REGISTRY.length);
-    });
+    test(
+        `the theme picker groups light and dark, with a label each — ${channel.name} [TH63]`,
+        { tag: ['@component:picker', '@sweep'] },
+        async ({ page }) => {
+            await page.goto(channel.url);
+            if (channel.open) await page.locator(channel.open).click();
+            const picker = page.locator(channel.picker);
+            // Drill: with `grouped` defaulting to false (or the group markup
+            // removed), there are no group elements and this reads 0.
+            await expect(picker.locator('[data-kp-theme-group="light"]')).toHaveCount(1);
+            await expect(picker.locator('[data-kp-theme-group="dark"]')).toHaveCount(1);
+            await expect(picker.locator('[data-kp-theme-group="light"] .kp-theme-group__label')).toHaveText(S.themeGroupLight);
+            await expect(picker.locator('[data-kp-theme-group="dark"] .kp-theme-group__label')).toHaveText(S.themeGroupDark);
+            // Every theme is in exactly one group.
+            await expect(picker.locator('[data-kp-theme-group] [data-kp-theme]')).toHaveCount(REGISTRY.length);
+        },
+    );
 }

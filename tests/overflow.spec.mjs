@@ -58,7 +58,7 @@ const CONFIG = JSON.parse(readFileSync(new URL('../gates/config.json', import.me
 const WIDTHS = CONFIG.overflow.viewportWidths;
 const MIN_GAP = CONFIG.overflow.minBlockGap;
 
-test.describe('the overflow and rhythm gate', () => {
+test.describe('the overflow and rhythm gate', { tag: ['@component:examples', '@component:layout'] }, () => {
     test('it runs over the ten pages TH98 names, from the descriptor list [AR26]', () => {
         // Ten pages TH98 names, plus the concept demo that joined at round
         // six's C0 [TH126]. C0's CI went red on this line — the browser

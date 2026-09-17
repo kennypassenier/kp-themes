@@ -9,7 +9,7 @@ import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const URL = '/tests/fixtures/components.html';
 
-test('the copy button copies the value and confirms in words [TH53]', async ({ page }) => {
+test('the copy button copies the value and confirms in words [TH53]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     // writeText is stubbed rather than the real clipboard granted: Firefox
     // has no clipboard-read permission in Playwright, and what is under
@@ -29,7 +29,7 @@ test('the copy button copies the value and confirms in words [TH53]', async ({ p
     await expect(button).toHaveAttribute('data-kp-copied', '');
 });
 
-test('a refused clipboard is said out loud, not swallowed [TH53]', async ({ page }) => {
+test('a refused clipboard is said out loud, not swallowed [TH53]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     await page.evaluate(() => {
         navigator.clipboard.writeText = async () => {
@@ -44,7 +44,7 @@ test('a refused clipboard is said out loud, not swallowed [TH53]', async ({ page
     await expect(page.locator('.kp-toast')).toContainText(S.copyBlockedAnnouncement);
 });
 
-test('an optimistic delete hides the row and offers an undo [TH51]', async ({ page }) => {
+test('an optimistic delete hides the row and offers an undo [TH51]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     const row = page.locator('[data-test="plain-undo-row"]');
     await expect(row).toBeVisible();
@@ -55,7 +55,7 @@ test('an optimistic delete hides the row and offers an undo [TH51]', async ({ pa
     await expect(page.getByRole('button', { name: S.undo })).toBeVisible();
 });
 
-test('undo brings the row back and never commits [TH51]', async ({ page }) => {
+test('undo brings the row back and never commits [TH51]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     await page.evaluate(() => {
         window.__committed = false;
@@ -73,7 +73,7 @@ test('undo brings the row back and never commits [TH51]', async ({ page }) => {
     expect(await page.evaluate(() => window.__committed)).toBe(false);
 });
 
-test('left alone, the action commits once the window closes [TH51]', async ({ page }) => {
+test('left alone, the action commits once the window closes [TH51]', { tag: ['@component:data'] }, async ({ page }) => {
     await page.goto(URL);
     await page.evaluate(() => {
         window.__committed = 0;

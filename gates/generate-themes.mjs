@@ -400,12 +400,11 @@ if (process.argv.includes('--check')) {
             console.error(`${a.name} does not match its source.`);
         }
     }
-    if (stale > 0) {
-        console.error('Run `npm run generate` and commit the result.');
-        process.exit(1);
-    }
-    console.log(`${artefacts.length} generated files match their source (${ORDER.length} themes).`);
-    process.exit(0);
+    if (stale > 0) console.error('Run `npm run generate` and commit the result.');
+    else console.log(`${artefacts.length} generated files match their source (${ORDER.length} themes).`);
+    // scope-96: the tear check that ran here is gone with cyberpunk's
+    // razor tear, the only theme it generated.
+    process.exit(stale > 0 ? 1 : 0);
 }
 
 for (const a of artefacts) writeFileSync(a.url, a.content);

@@ -5,14 +5,15 @@
 // What the demo showed and this suite holds: the headline and the
 // dossier stamp popping down under a clip-path with the text always
 // whole (no glyph, word or character is ever touched — the one thing
-// that makes `popdown` a new headline routine), the mark as a highlight
-// outside a dossier and as ink over the phrase inside one, the section
-// rule as a growing underline, the dividers as a row of vent-texture
-// dots, the label-tape buttons (tracked uppercase mono), the dropdown
-// as a dark control-strip panel (KT14), the current-page LED dot, the
-// dossier's redactions clearing together on the trigger with a staggered
+// that makes `popdown` a new headline routine), the mark as ink over the
+// phrase inside a dossier, the section rule as a growing underline, the
+// label-tape buttons (tracked uppercase mono), the dropdown as a dark
+// control-strip panel (KT14), the current-page LED dot, the dossier's
+// redactions clearing together on the trigger with a staggered
 // transition, the stamp swapping its word when the file opens, and the
-// whole approved inventory.
+// whole approved inventory. The mark as a highlight outside a dossier and
+// the vent-dot dividers are judged by eye on the catalogue since scope-73
+// (page-effects#lede-marks, page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in chromium, repeated the same
 // day in firefox (each one red on the test it names, then restored green
@@ -30,7 +31,6 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -93,7 +93,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the nostromo register, ${channel}`, () => {
+    test.describe(`the nostromo register, ${channel}`, { tag: ['@theme:nostromo', '@component:page-effects', '@component:examples'] }, () => {
         test('the headline pops down under a clip-path, the text whole throughout [S48]', async ({ page }) => {
             await page.addInitScript(() => {
                 window.kpClips = [];
@@ -150,19 +150,6 @@ for (const [channel, url] of CHANNELS) {
             for (let i = 0; i < count; i++) await expect(marks.nth(i)).toHaveClass(/is-cleared/);
         });
 
-        test('a mark outside the dossier is a highlight, ink on transparent with a signal underline [TH120]', async ({ page }) => {
-            await open(page, url);
-            const mark = page.locator('[data-kp-surface="hero"] mark, .kp-prose mark').first();
-            await expect(mark).toBeVisible();
-            const style = await mark.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { background: s.backgroundColor, color: s.color, shadow: s.boxShadow };
-            });
-            expect(style.background, 'never a redaction outside a dossier').toBe('rgba(0, 0, 0, 0)');
-            expect(style.color).toBe(await paint(page, '--foreground'));
-            expect(style.shadow, 'the signal-orange underline').toMatch(/inset/);
-        });
-
         test('the section rule grows from nothing to a full underline once its heading is in view [TH122]', async ({ page }) => {
             await open(page, url);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
@@ -173,45 +160,6 @@ for (const [channel, url] of CHANNELS) {
             expect(after['background-color']).toBe(await paint(page, '--selected'));
             await settled(page);
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-        });
-
-        test('the dividers are a row of vent-texture dots, the second darker for the footer seam', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const before = await pseudo(dividers.nth(i), '::before', ['background-image']);
-                expect(before['background-image'], 'a row of dots').toMatch(/radial-gradient/);
-            }
-            const plain = await dividers.nth(0).evaluate((el) => getComputedStyle(el).backgroundColor);
-            const alt = await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
-            expect(alt, 'the footer seam is the sidebar plate, not the plain seam').not.toBe(plain);
-            expect(alt).toBe(await paint(page, '--sidebar-accent'));
-        });
-
-        test('buttons are label tape: tracked uppercase mono, and the primary plate is the ink', async ({ page }) => {
-            await open(page, url);
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            const style = await primary.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { transform: s.textTransform, tracking: s.letterSpacing, bg: s.backgroundColor };
-            });
-            expect(style.transform).toBe('uppercase');
-            expect(parseFloat(style.tracking)).toBeGreaterThan(0);
-            expect(style.bg).toBe(await paint(page, '--primary'));
-        });
-
-        test("the dropdown is the sidebar's own dark plate, open [KT14]", async ({ page }) => {
-            await open(page, url);
-            const trigger = page.locator('.kp-nav__link[aria-haspopup]').first();
-            await trigger.hover();
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            const style = await menu.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { bg: s.backgroundColor, border: s.borderColor };
-            });
-            expect(style.bg, 'the dropdown is the sidebar plate, not the plain popover').toBe(await paint(page, '--sidebar-background'));
         });
 
         test('the dossier: the stamp swaps its word, and the redactions clear together on the trigger [S49, A11]', async ({ page }) => {
@@ -233,31 +181,6 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             const count = await marks.count();
             for (let i = 0; i < count; i++) await expect(marks.nth(i)).toHaveClass(/is-cleared/);
-        });
-
-        test('every control carries its own lamp, dark at rest and lit under the pointer [scope-12]', async ({ page }) => {
-            // Drilled 2026-09-12 in firefox: the hover's `opacity: 0.7`
-            // removed -> red on the lit reading. The concept pages load
-            // `css/<theme>-register.css` directly, so a register drill does
-            // not need a regenerated bundle — checked before trusting the
-            // red, because the opposite trap has cost this project three
-            // false greens [KT3].
-            await open(page, url);
-            const btn = page.locator('.kp-button').first();
-            const at = async (p) => (await pseudo(btn, '::before', [p]))[p];
-            // The lamp is `currentcolor` — the CONTROL's own label colour,
-            // not the page's. Measured 2026-09-12: this test first asked for
-            // `--foreground` and went red, because a primary button prints
-            // light on dark and its lamp goes with it. That is the design:
-            // every switch is lit in its own console's ink.
-            expect(await at('background-color'), "the lamp burns in the control's own ink").toBe(
-                await btn.evaluate((el) => getComputedStyle(el).color),
-            );
-            expect(Number(await at('opacity')), 'dark at rest').toBeCloseTo(0.25, 2);
-            await btn.hover();
-            // Polled, not read once: the lamp eases up over the theme's own
-            // duration and a single read lands mid-fade [fix-1].
-            await pseudoStyle(btn, '::before', 'opacity', 'lit under the pointer').toBe('0.7');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

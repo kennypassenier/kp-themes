@@ -36,8 +36,9 @@
 // and disabled weekdays exist; the date is settable through the handle;
 // the day cells can be decorated; and the panel's glyphs are attributes.
 
-import { getStrings } from './strings.js';
-import { datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
+import { DEFAULT_STRINGS, getStrings } from './strings.js';
+import { placeBlockSide, raiseOverlay, raised } from './top-layer.js';
+import { calendarNames, datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
 
 const PICKER = '[data-kp-datepicker]';
 
@@ -92,6 +93,159 @@ export function parseDate(text, locale) {
  * @property {() => void} open
  * @property {() => void} close
  */
+
+/**
+ * Keep an open calendar inside the window [Kenny's note of 2026-09-13]. The
+ * panel hangs from the picker's inline start, so a picker near the inline
+ * end of the window — the last filter of a data table — opened its calendar
+ * past the edge: measured at x=1374 of a 1280px page. When it would cross
+ * that edge it hangs from the picker's inline end instead and opens toward
+ * the inline start; when that is worse (a picker narrower than its calendar
+ * in a window narrower than both), the side that overflows less is kept.
+ * `data-kp-align="end"` says which side was taken. A panel in the top layer
+ * (js/top-layer.js) is placed in window coordinates under its picker; one
+ * that is not keeps hanging from the picker and only the side changes.
+ *
+ * @param {HTMLElement} panel an open `.kp-datepicker__panel`
+ */
+export function placeDatePanel(panel) {
+    delete panel.dataset.kpAlign;
+    const width = document.documentElement.clientWidth;
+    const rtl = getComputedStyle(panel).direction === 'rtl';
+    /** How far past the window's inline-end edge a panel starting at x runs. @param {number} x @param {number} w */
+    const pastEnd = (x, w) => (rtl ? -x : x + w - width);
+    /** @param {number} x @param {number} w */
+    const pastStart = (x, w) => (rtl ? x + w - width : -x);
+
+    if (raised(panel)) {
+        const anchor = (panel.closest('[data-kp-datepicker]') ?? panel.parentElement ?? panel).getBoundingClientRect();
+        const w = panel.offsetWidth;
+        const fromStart = rtl ? anchor.right - w : anchor.left;
+        const fromEnd = rtl ? anchor.left : anchor.right - w;
+        let x = fromStart;
+        if (pastEnd(fromStart, w) > 0 && Math.max(0, pastStart(fromEnd, w)) <= pastEnd(fromStart, w)) {
+            x = fromEnd;
+            panel.dataset.kpAlign = 'end';
+        }
+        panel.style.left = `${Math.round(x)}px`;
+        panel.style.top = `${Math.round(anchor.bottom)}px`;
+        // Above the picker when the window has no room under it [fix-30].
+        placeBlockSide(panel, anchor);
+        return;
+    }
+
+    const start = panel.getBoundingClientRect();
+    if (pastEnd(start.left, start.width) <= 0) return;
+    panel.dataset.kpAlign = 'end';
+    const end = panel.getBoundingClientRect();
+    if (Math.max(0, pastStart(end.left, end.width)) > pastEnd(start.left, start.width)) delete panel.dataset.kpAlign;
+}
+
+/**
+ * Open a calendar above every container it sits in (js/top-layer.js: a
+ * card's clip-path cut every day of it away in four themes), inside the
+ * window, and following its field while it is open. Both channels open
+ * with it. Returns the way back down.
+ *
+ * @param {HTMLElement} panel an open `.kp-datepicker__panel`
+ * @returns {() => void} lower
+ */
+export function raiseDatePanel(panel) {
+    const lower = raiseOverlay(panel, placeDatePanel);
+    return () => {
+        lower();
+        panel.style.removeProperty('left');
+        panel.style.removeProperty('top');
+        delete panel.dataset.kpAlign;
+    };
+}
+
+// ── The month and year grids [scope-89] ──────────────────────────────────
+//
+// The title opens the twelve months of the shown year, and in that view the
+// year opens twelve years. Both grids are three cells a row and draw their
+// cells with the day's class, so every register that paints a day paints a
+// month and a year without knowing they exist. The helpers below are shared
+// by both channels: two implementations of "which months does a maximum
+// leave" is how the channels come to disagree.
+
+/** @typedef {'days' | 'months' | 'years'} DateView */
+
+/** Cells a row in the month and year grids. */
+const JUMP_COLUMNS = 3;
+
+/** The first year of the block of twelve that holds `year`. @param {number} year */
+export function yearBlockStart(year) {
+    return Math.floor(year / 12) * 12;
+}
+
+/**
+ * A day of a month, the day kept where the month has it and the month's last
+ * day otherwise: 31 January to February lands on the 28th, not in March.
+ *
+ * @param {number} year @param {number} month may run past 0-11 @param {number} day
+ */
+export function clampToMonth(year, month, day) {
+    const first = new Date(year, month, 1);
+    const last = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    return new Date(first.getFullYear(), first.getMonth(), Math.min(day, last));
+}
+
+/**
+ * Whether a span of days lies wholly before the minimum or after the maximum:
+ * a month or a year that still holds one day to choose stays a way in.
+ *
+ * @param {Date} from first day @param {Date} to last day @param {Date | null} min @param {Date | null} max
+ */
+export function outsideRange(from, to, min, max) {
+    return (min !== null && to < min) || (max !== null && from > max);
+}
+
+/**
+ * How far a key moves the focus in a month or year grid, in cells; null for a
+ * key the grid does not take. Arrows by a cell and a row, Home and End to the
+ * ends of the row, PageUp and PageDown by twelve — the day grid's keys, one
+ * size up. A move past the drawn grid crosses into the next year or block.
+ *
+ * @param {string} key @param {number} index the focused cell, 0-11
+ * @returns {number | null}
+ */
+export function jumpMove(key, index) {
+    const column = index % JUMP_COLUMNS;
+    /** @type {Record<string, number>} */
+    const moves = {
+        ArrowRight: 1,
+        ArrowLeft: -1,
+        ArrowDown: JUMP_COLUMNS,
+        ArrowUp: -JUMP_COLUMNS,
+        Home: -column,
+        End: JUMP_COLUMNS - 1 - column,
+        PageDown: 12,
+        PageUp: -12,
+    };
+    return moves[key] ?? null;
+}
+
+/**
+ * The size of the day view, to hold while the month or year grid shows, so
+ * the panel does not jump under the pointer. Read as the computed sizes, in
+ * each element's own box-sizing, so writing them back as minimums lands on
+ * the same box whatever a register set.
+ *
+ * @param {HTMLElement} panel an open `.kp-datepicker__panel` showing days
+ * @returns {{ inline: string, block: string, gridInline: string, gridBlock: string }}
+ */
+export function measureDateView(panel) {
+    const grid = panel.querySelector('.kp-datepicker__grid');
+    const own = getComputedStyle(panel);
+    const cells = grid === null ? null : getComputedStyle(grid);
+    return {
+        inline: own.width,
+        block: own.height,
+        gridInline: cells?.width ?? 'auto',
+        gridBlock: cells?.height ?? 'auto',
+    };
+}
 
 /** @type {WeakMap<Element, DatePickerHandle>} */
 const handles = new WeakMap();
@@ -161,62 +315,150 @@ export function attachDatePickers(
         };
         const read = () => parseDate(input.value, locale);
         let cursor = read() ?? new Date();
+        /** Which grid the panel shows [scope-89]. @type {DateView} */
+        let view = 'days';
+        /** Where Escape steps back to: the cursor as it was when each view opened. @type {Date[]} */
+        let back = [];
+        /** The day view's size, held while the month or year grid shows. @type {ReturnType<typeof measureDateView> | null} */
+        let pin = null;
+        /** The month the day grid last drew, so the month event fires on a change only. */
+        let shown = '';
+        // Says which grid opened. One element kept across redraws: a live
+        // region created together with its text is one a screen reader may
+        // never read.
+        const live = document.createElement('span');
+        live.className = 'kp-sr-only';
+        live.setAttribute('aria-live', 'polite');
 
         const draw = () => {
             const year = cursor.getFullYear();
             const month = cursor.getMonth();
-            const first = new Date(year, month, 1);
-            const lead = (first.getDay() - firstDay + 7) % 7;
-            const days = new Date(year, month + 1, 0).getDate();
             const chosen = read();
             const s = getStrings();
+            // The names follow the picker's locale; a consumer's own dictionary still wins [gap-11].
+            const names = calendarNames(s, DEFAULT_STRINGS, locale);
+            const from = yearBlockStart(year);
 
-            panel.textContent = '';
+            for (const child of [...panel.children]) if (child !== live) child.remove();
             const head = document.createElement('div');
             head.className = 'kp-datepicker__head';
-            const back = document.createElement('button');
-            back.type = 'button';
-            back.className = 'kp-button kp-button--ghost';
-            back.setAttribute('aria-label', s.previousMonth);
-            back.textContent = picker.dataset.kpPreviousGlyph ?? previousGlyph;
-            back.addEventListener('click', () => {
-                cursor = new Date(year, month - 1, 1);
-                draw();
-                picker.dispatchEvent(
-                    new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }),
-                );
-            });
-            const title = document.createElement('span');
+            /** @param {string} label @param {string} glyph @param {() => Date} to @param {number} slot */
+            const step = (label, glyph, to, slot) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'kp-button kp-button--ghost';
+                button.setAttribute('aria-label', label);
+                button.textContent = glyph;
+                button.addEventListener('click', () => {
+                    cursor = to();
+                    redraw();
+                    // The redraw replaced the button; the focus stays on its successor.
+                    /** @type {HTMLElement | undefined} */ (panel.querySelector('.kp-datepicker__head')?.children[slot])?.focus();
+                });
+                return button;
+            };
+            const day = cursor.getDate();
+            const moves = {
+                days: [s.previousMonth, s.nextMonth, () => new Date(year, month - 1, 1), () => new Date(year, month + 1, 1)],
+                months: [s.previousYear, s.nextYear, () => clampToMonth(year - 1, month, day), () => clampToMonth(year + 1, month, day)],
+                years: [s.previousYears, s.nextYears, () => clampToMonth(year - 12, month, day), () => clampToMonth(year + 12, month, day)],
+            }[view];
+            const previous = step(
+                /** @type {string} */ (moves[0]),
+                picker.dataset.kpPreviousGlyph ?? previousGlyph,
+                /** @type {() => Date} */ (moves[2]),
+                0,
+            );
+            const next = step(/** @type {string} */ (moves[1]), picker.dataset.kpNextGlyph ?? nextGlyph, /** @type {() => Date} */ (moves[3]), 2);
+
+            // The title opens the next grid up; the year grid is the top, so its title is only a title.
+            const title = document.createElement(view === 'years' ? 'span' : 'button');
             title.className = 'kp-datepicker__title';
             title.id = `${input.id || 'kp-date'}-title`;
-            title.textContent = s.monthTitle(s.months[month] ?? '', year);
-            const next = document.createElement('button');
-            next.type = 'button';
-            next.className = 'kp-button kp-button--ghost';
-            next.setAttribute('aria-label', s.nextMonth);
-            next.textContent = picker.dataset.kpNextGlyph ?? nextGlyph;
-            next.addEventListener('click', () => {
-                cursor = new Date(year, month + 1, 1);
-                draw();
-                picker.dispatchEvent(
-                    new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }),
-                );
-            });
-            head.append(back, title, next);
+            const monthTitle = s.monthTitle(names.months[month] ?? '', year);
+            title.textContent = view === 'days' ? monthTitle : view === 'months' ? String(year) : s.yearRange(from, from + 11);
+            if (title instanceof HTMLButtonElement) {
+                title.type = 'button';
+                title.setAttribute('aria-label', view === 'days' ? s.chooseMonth(monthTitle) : s.chooseYear(year));
+                title.addEventListener('click', () => go(view === 'days' ? 'months' : 'years'));
+            }
+            head.append(previous, title, next);
 
             const grid = document.createElement('div');
             grid.className = 'kp-datepicker__grid';
+            grid.dataset.kpView = view;
             grid.setAttribute('role', 'grid');
-            grid.setAttribute('aria-labelledby', title.id);
+            if (view !== 'days' && pin !== null) {
+                panel.style.minInlineSize = pin.inline;
+                panel.style.minBlockSize = pin.block;
+                // The width exactly: a grid of fractions in a panel that sizes to its content would otherwise grow to its longest month name.
+                grid.style.inlineSize = pin.gridInline;
+                grid.style.minBlockSize = pin.gridBlock;
+            } else {
+                panel.style.removeProperty('min-inline-size');
+                panel.style.removeProperty('min-block-size');
+            }
+
+            /** A month or a year: a day cell to every register. @param {string} text @param {boolean} current @param {boolean} off */
+            const jumpCell = (text, current, off) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'kp-datepicker__day';
+                button.setAttribute('role', 'gridcell');
+                button.setAttribute('aria-selected', String(current));
+                if (off) {
+                    button.setAttribute('aria-disabled', 'true');
+                    button.dataset.kpDisabled = '';
+                }
+                button.tabIndex = current ? 0 : -1;
+                button.textContent = text;
+                return button;
+            };
+
+            if (view === 'months') {
+                grid.setAttribute('aria-label', s.monthGrid(year));
+                for (let m = 0; m < 12; m += 1) {
+                    const cell = jumpCell(
+                        names.monthsShort[m] ?? '',
+                        m === month,
+                        outsideRange(new Date(year, m, 1), new Date(year, m + 1, 0), min, max),
+                    );
+                    cell.dataset.kpMonth = `${year}-${String(m + 1).padStart(2, '0')}`;
+                    cell.setAttribute('aria-label', s.monthTitle(names.months[m] ?? '', year));
+                    grid.append(cell);
+                }
+                panel.prepend(head, grid);
+                return;
+            }
+            if (view === 'years') {
+                grid.setAttribute('aria-label', s.yearGrid(from, from + 11));
+                for (let y = from; y < from + 12; y += 1) {
+                    const cell = jumpCell(String(y), y === year, outsideRange(new Date(y, 0, 1), new Date(y, 11, 31), min, max));
+                    cell.dataset.kpYear = String(y);
+                    grid.append(cell);
+                }
+                panel.prepend(head, grid);
+                return;
+            }
+
+            shown = `${year}-${month}`;
+            const lead = (new Date(year, month, 1).getDay() - firstDay + 7) % 7;
+            const days = new Date(year, month + 1, 0).getDate();
+            // Named by what the title shows; the title's own name now also says what it opens.
+            grid.setAttribute('aria-label', monthTitle);
             // The weekday headings rotate with the first day: Sunday first
             // for a locale that starts there, Monday for one that does not.
+            // Column i holds the days whose getDay() is (firstDay + i) % 7,
+            // so the names are counted the same way — the dictionary is
+            // Monday first, and indexing it with a Sunday-zero day put every
+            // heading one column off [gap-11].
             for (let i = 0; i < 7; i += 1) {
-                const day = s.weekdays[(firstDay + i) % 7] ?? '';
+                const weekday = names.weekdays[(firstDay + i) % 7] ?? '';
                 const cell = document.createElement('span');
                 cell.className = 'kp-datepicker__weekday';
                 cell.setAttribute('role', 'columnheader');
-                cell.setAttribute('aria-label', day);
-                cell.textContent = day;
+                cell.setAttribute('aria-label', weekday);
+                cell.textContent = weekday;
                 grid.append(cell);
             }
             for (let i = 0; i < lead; i += 1) {
@@ -224,8 +466,8 @@ export function attachDatePickers(
                 blank.className = 'kp-datepicker__blank';
                 grid.append(blank);
             }
-            for (let day = 1; day <= days; day += 1) {
-                const date = new Date(year, month, day);
+            for (let d = 1; d <= days; d += 1) {
+                const date = new Date(year, month, d);
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'kp-datepicker__day';
@@ -233,8 +475,8 @@ export function attachDatePickers(
                 button.setAttribute('role', 'gridcell');
                 // The full date as the name: "4" alone tells a screen
                 // reader nothing about which month it is in.
-                button.setAttribute('aria-label', s.dayLabel(day, s.months[month] ?? '', year));
-                button.textContent = String(day);
+                button.setAttribute('aria-label', s.dayLabel(d, names.months[month] ?? '', year));
+                button.textContent = String(d);
                 const isChosen = chosen !== null && toISO(chosen) === toISO(date);
                 button.setAttribute('aria-selected', String(isChosen));
                 if (disabled(date)) {
@@ -245,23 +487,92 @@ export function attachDatePickers(
                 }
                 // Exactly one day in the tab order, so Tab leaves the grid
                 // instead of walking 31 buttons.
-                button.tabIndex = day === cursor.getDate() ? 0 : -1;
+                button.tabIndex = d === day ? 0 : -1;
                 renderDay?.(button, date);
                 grid.append(button);
             }
-            panel.append(head, grid);
+            panel.prepend(head, grid);
         };
 
+        /** Draw, and say so when the day grid now shows another month. */
+        const redraw = () => {
+            const before = shown;
+            draw();
+            if (view === 'days' && shown !== before)
+                picker.dispatchEvent(
+                    new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }),
+                );
+        };
+        const focusCurrent = () => /** @type {HTMLElement | null} */ (panel.querySelector('.kp-datepicker__grid [tabindex="0"]'))?.focus();
+        /** Redraw after the view changed, say which grid shows, and put the focus in it. */
+        const settle = () => {
+            if (view === 'days') pin = null;
+            redraw();
+            const s = getStrings();
+            const year = cursor.getFullYear();
+            const from = yearBlockStart(year);
+            live.textContent =
+                view === 'days'
+                    ? s.monthTitle(calendarNames(s, DEFAULT_STRINGS, locale).months[cursor.getMonth()] ?? '', year)
+                    : view === 'months'
+                      ? s.monthGrid(year)
+                      : s.yearGrid(from, from + 11);
+            focusCurrent();
+        };
+        /** Open the month or year grid over the current one. @param {DateView} next */
+        const go = (next) => {
+            if (view === 'days') pin = measureDateView(panel);
+            back.push(cursor);
+            view = next;
+            settle();
+        };
+        /** Escape in the month or year grid: the grid below, where it was. */
+        const stepBack = () => {
+            cursor = back.pop() ?? cursor;
+            view = view === 'years' ? 'months' : 'days';
+            settle();
+        };
+        /** A month or year cell chosen: the grid below, on that month or year. @param {HTMLElement} cell */
+        const pick = (cell) => {
+            if (cell.getAttribute('aria-disabled') === 'true') return;
+            if (cell.dataset.kpMonth !== undefined) {
+                const [y, m] = cell.dataset.kpMonth.split('-').map(Number);
+                cursor = clampToMonth(y ?? cursor.getFullYear(), (m ?? 1) - 1, cursor.getDate());
+                view = 'days';
+            } else {
+                cursor = clampToMonth(Number(cell.dataset.kpYear), cursor.getMonth(), cursor.getDate());
+                view = 'months';
+            }
+            back.pop();
+            settle();
+        };
+
+        /** Takes the open panel out of the top layer again. */
+        let lower = () => {};
         /** @param {boolean} next */
         const setOpen = (next) => {
             if (panel.hidden === !next) return;
+            // Every opening starts on the days.
+            view = 'days';
+            back = [];
+            pin = null;
+            live.textContent = '';
             if (next) {
                 cursor = read() ?? new Date();
+                if (!panel.contains(live)) panel.append(live);
                 draw();
+            } else {
+                panel.style.removeProperty('min-inline-size');
+                panel.style.removeProperty('min-block-size');
             }
             panel.hidden = !next;
+            if (next) lower = raiseDatePanel(panel);
+            else {
+                lower();
+                lower = () => {};
+            }
             open.setAttribute('aria-expanded', String(next));
-            if (next) /** @type {HTMLElement | null} */ (panel.querySelector('[tabindex="0"]'))?.focus();
+            if (next) focusCurrent();
             picker.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next } }));
         };
         const show = () => setOpen(true);
@@ -293,14 +604,38 @@ export function attachDatePickers(
 
         /** @param {KeyboardEvent} event */
         const onPanelKey = (event) => {
-            const day = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (event.target).closest('[data-kp-day]'));
-            if (day === null) {
-                if (event.key === 'Escape') {
+            // Escape steps back one grid, and closes from the days.
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                if (view === 'days') {
                     hide();
                     open.focus();
-                }
+                } else stepBack();
                 return;
             }
+            const target = /** @type {HTMLElement} */ (event.target);
+            const jump = /** @type {HTMLElement | null} */ (target.closest('[data-kp-month], [data-kp-year]'));
+            if (jump !== null) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    pick(jump);
+                    return;
+                }
+                const year = cursor.getFullYear();
+                const month = cursor.getMonth();
+                const delta = jumpMove(event.key, jump.dataset.kpMonth !== undefined ? month : year - yearBlockStart(year));
+                if (delta === null) return;
+                event.preventDefault();
+                cursor =
+                    jump.dataset.kpMonth !== undefined
+                        ? clampToMonth(year, month + delta, cursor.getDate())
+                        : clampToMonth(year + delta, month, cursor.getDate());
+                redraw();
+                focusCurrent();
+                return;
+            }
+            const day = /** @type {HTMLElement | null} */ (target.closest('[data-kp-day]'));
+            if (day === null) return;
             const current = new Date(`${day.dataset.kpDay}T00:00:00`);
             const y = current.getFullYear();
             const m = current.getMonth();
@@ -322,28 +657,23 @@ export function attachDatePickers(
                 choose(current);
                 return;
             }
-            if (event.key === 'Escape') {
-                event.preventDefault();
-                hide();
-                open.focus();
-                return;
-            }
             const moved = moves[event.key];
             if (moved === undefined) return;
             event.preventDefault();
-            const monthChanged = moved.getMonth() !== cursor.getMonth() || moved.getFullYear() !== cursor.getFullYear();
             cursor = moved;
-            draw();
-            if (monthChanged)
-                picker.dispatchEvent(
-                    new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }),
-                );
+            redraw();
             /** @type {HTMLElement | null} */ (panel.querySelector(`[data-kp-day="${toISO(moved)}"]`))?.focus();
         };
 
         /** @param {MouseEvent} event */
         const onPanelClick = (event) => {
-            const day = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (event.target).closest('[data-kp-day]'));
+            const target = /** @type {HTMLElement} */ (event.target);
+            const jump = /** @type {HTMLElement | null} */ (target.closest('[data-kp-month], [data-kp-year]'));
+            if (jump !== null) {
+                pick(jump);
+                return;
+            }
+            const day = /** @type {HTMLElement | null} */ (target.closest('[data-kp-day]'));
             if (day === null) return;
             choose(new Date(`${day.dataset.kpDay}T00:00:00`));
         };
@@ -386,7 +716,10 @@ export function attachDatePickers(
             panel.removeEventListener('keydown', onPanelKey);
             panel.removeEventListener('click', onPanelClick);
             picker.removeEventListener('focusout', onFocusOut);
+            lower();
             panel.textContent = '';
+            panel.style.removeProperty('min-inline-size');
+            panel.style.removeProperty('min-block-size');
             panel.hidden = before.panelHidden;
             input.placeholder = before.placeholder;
             if (before.value === undefined) delete input.dataset.kpDateValue;

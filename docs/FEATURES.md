@@ -172,7 +172,7 @@ defines themes and builds components on them.
 ## Round three — themes, rated 2026-09-05
 
 Kenny's form of 2026-09-05 over eleven candidates and ten ideas; the
-research and the overlap scores are in `THEME_CANDIDATES.md`. One test
+research and the overlap scores are in `docs/archive/THEME_CANDIDATES.md`. One test
 bar for every theme: `tokens.json` passes every gate in `npm run gates`
 (all 39 contrast pairs, the invariants, the layers), an `anatomy.md`
 answers the invariant questions, the bare fixture and the showcase render
@@ -185,7 +185,7 @@ built first.
 | TH64 | Theme `brutalism` — neo-brutalism, light | Essential | 3px black borders, hard offset shadow, candy plates; needs TH85 |
 | TH65 | Theme `deco` — art deco, dark | Essential | gold on near-black, jewel accents, geometric display face, chevron texture |
 | TH66 | Theme `academia` — dark academia, dark variant | Essential | ink/mahogany ground, oxblood + forest, candle gold, Garamond display; the parchment version is not built (sepia) **Removed 2026-09-11 (`scope-11`); the promise stands for the set as it was, and is not measurable against the package as it ships.** |
-| TH67 | Themes `shade-light` and `shade-dark` — a medium-contrast pair | Essential | Solarized-derived, one scheme, two themes; light foreground is base01 (4.99), accents are plates |
+| TH67 | Themes `shade-light` and `shade-dark` — a medium-contrast pair | Essential | Solarized-derived, one scheme, two themes; light foreground is base01 (4.99), accents are plates **Amended 2026-09-16 (`scope-102`): shade-light's foreground darkened from 40% to 36% lightness so muted text reads quieter again; it now measures 5.86 on the page ground, 6.07 on a card.** |
 | TH68 | Theme `ticker` — amber on black, data-dense | Essential | IBM Plex Mono numerals, ledger rules, no motion; the theme JobTracker's tables want **Removed 2026-09-11 (`scope-11`); the promise stands for the set as it was, and is not measurable against the package as it ships.** |
 | TH69 | Theme `woodblock` — ukiyo-e, light | Essential | washi, Prussian blue, beni red, 2px black key-block outline as `--border-strong` **Removed 2026-09-11 (`scope-11`); the promise stands for the set as it was, and is not measurable against the package as it ships.** |
 | TH70 | Theme `phantom` — playful dark, Persona 5 | Essential | black, white, one red (plate with white ink), halftone, condensed italic display |
@@ -397,8 +397,8 @@ Essential, one Later.
 | TH131 | The DI5 test reads the register's real keyframes instead of pinning `fx-flicker` by name | Essential | stays green after the register is replaced; drill: a 5/s keyframe turns it red                                                           |
 | TH132 | `.fx-pulse` capped with `--fx-pulse-cycles` (default 3)                  | Later     | queued in `docs/MINI_ROUNDS.md`; the pulse still appears in TH129's report                                                               |
 | TH133 | Three repairs from the inventory: `.kp-card` instead of `[data-slot]`, a mono fallback for `.microlabel`, the phantom "doubled selector" comment | Essential | a bare `.kp-card` gets the register rule (computed); `.microlabel` renders mono without the Tailwind bridge; the README claim holds      |
-| TH134 | The lift plan for 5.0.0, `docs/LIFT_PLAN.md`                             | Essential | 24 rows, each with research, demo and build status; the CLAUDE.md status block points at it                                              |
-| TH135 | The research as a repository document (`docs/RESEARCH_2026-09.md`)      | Essential | every reference carries a URL and the label measured/observed; every theme has a row, "nothing found" included — **delivered 2026-09-07** |
+| TH134 | The lift plan for 5.0.0, `docs/archive/LIFT_PLAN.md`                             | Essential | 24 rows, each with research, demo and build status; the CLAUDE.md status block points at it                                              |
+| TH135 | The research as a repository document (`docs/archive/RESEARCH_2026-09.md`)      | Essential | every reference carries a URL and the label measured/observed; every theme has a row, "nothing found" included — **delivered 2026-09-07** |
 | TH136 | The hook vocabulary as a contract in README, USER_GUIDE and the site     | Essential | `check-site` truth: every attribute the section names exists in the effects module; every hook in the parity gate is in the table        |
 
 **M1, M3 and M4 re-put and confirmed unchanged. M2 re-put and confirmed

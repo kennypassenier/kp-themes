@@ -11,8 +11,9 @@
 // What this suite holds is the handful of things that would make it a
 // different theme if they moved: the corner cut on the leading diagonal
 // with the tool's bright line along the top, the film catching rather
-// than sweeping, sixty milliseconds and linear, the carbon twill, and the
-// milled groove between sections.
+// than sweeping, sixty milliseconds and linear, and the carbon twill. The
+// milled groove between sections is judged by eye on the catalogue since
+// scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-12 in firefox, each red on the test it
 // names and then green again — listed at the test that names them.
@@ -50,23 +51,7 @@ async function open(page, url, { reduced = false } = {}) {
 }
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the titanium register, ${channel}`, () => {
-        test('the corner is milled on the leading diagonal, with the line the tool left [scope-17]', async ({ page }) => {
-            // Drilled: the `clip-path` rule removed -> red on the cut;
-            // `--kp-tool-edge` removed -> red on the bright line.
-            await open(page, url);
-            const button = page.locator('[class="kp-button"]').first();
-            const cut = await button.evaluate((el) => getComputedStyle(el).clipPath);
-            expect(cut, 'the corner is cut, not rounded').toMatch(/polygon/);
-            // The leading-TOP corner, which is the other diagonal from the
-            // spectral instrument's: its first point is inset on x, not on y.
-            const first = cut.match(/polygon\(([\d.]+)px ([\d.]+)px/);
-            expect(first, 'the polygon starts at a measured inset').not.toBeNull();
-            expect(Number(first[1]), 'inset along the top edge').toBeGreaterThan(0);
-            expect(Number(first[2]), 'and flush at the top').toBe(0);
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow), "the tool's bright line, inside the top face").toMatch(/inset/);
-        });
-
+    test.describe(`the titanium register, ${channel}`, { tag: ['@theme:titanium', '@component:page-effects', '@component:examples'] }, () => {
         test('the film catches rather than sweeps, and turns with the pointer [scope-17, scope-16]', async ({ page }) => {
             // Drilled: the hover's `opacity: 0.26` removed -> red on the
             // film appearing; `mix-blend-mode: screen` removed -> red on it
@@ -112,22 +97,6 @@ for (const [channel, url] of CHANNELS) {
             const ground = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
             expect(ground, 'the light under the hand').toMatch(/radial-gradient/);
             expect((ground.match(/repeating-linear-gradient/g) ?? []).length, 'two diagonals crossing, which is a twill').toBe(2);
-        });
-
-        test('the divider is a milled groove with the film lying in it [TH121, scope-17]', async ({ page }) => {
-            // Drilled: the `::before` box-shadow removed -> red on the lip;
-            // the `::after` background removed -> red on the film.
-            await open(page, url);
-            const divider = page.locator('[data-kp-divider]').first();
-            const groove = await divider.evaluate((el) => {
-                const s = getComputedStyle(el, '::before');
-                return { shadow: s.boxShadow, height: s.height };
-            });
-            expect(groove.shadow, 'a bright lip above and a bright lip below: that is a cut in metal').toMatch(/inset/);
-            expect(groove.height, 'three pixels deep').toBe('3px');
-            expect(await divider.evaluate((el) => getComputedStyle(el, '::after').backgroundImage), 'and the film lying in it').toMatch(
-                /linear-gradient/,
-            );
         });
 
         test('nothing moves for someone who asked for less motion [DI7]', async ({ page }) => {

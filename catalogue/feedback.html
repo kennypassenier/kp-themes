@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Feedback · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Feedback</h1>
+            <p class="cat-intro">
+                Everything that tells a person what happened or what is happening: <code>.kp-alert</code>, <code>.kp-toast</code> in its
+                <code>.kp-toasts</code> stack, <code>.kp-badge</code>, <code>.kp-tag</code>, <code>.kp-progress</code>, <code>.kp-spinner</code>,
+                <code>.kp-skeleton</code> and <code>.kp-empty</code>. Each in every variant the package has, and each at the length that breaks it.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#alerts">Alerts</a></li>
+                <li><a href="#alert-long">A long alert</a></li>
+                <li><a href="#toasts">Toasts</a></li>
+                <li><a href="#badges">Badges</a></li>
+                <li><a href="#badge-long">A long badge</a></li>
+                <li><a href="#tags">Tags</a></li>
+                <li><a href="#progress">Progress</a></li>
+                <li><a href="#spinner">Spinner</a></li>
+                <li><a href="#skeleton">Skeleton</a></li>
+                <li><a href="#empty">Empty state</a></li>
+            </ul>
+
+            <section class="cat-block" id="alerts">
+                <h2>Alerts</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> five alerts — the plain one and the four flavours. Each flavour is a full plate in its status colour, and the text
+                    on it must pass contrast <i>on that plate</i>, not on the page: check the warning one in particular, where yellow grounds tempt a
+                    theme into pale ink. Each flavour also names itself in words ("Warning: ") so the plates do not rely on colour. The icon sits on
+                    the first line of the text, not centred on the block, and the close button sits at the far end at a size you can hit. An alert has
+                    no hover state: pointing at one must change nothing.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-alert" role="status">
+                        <span class="kp-alert__body">The export schedule changes to 02:00 from Monday.</span>
+                    </div>
+                    <p></p>
+                    <div class="kp-alert kp-alert--success" role="status" data-kp-semantic>
+                        <span class="kp-alert__icon" aria-hidden="true">✓</span>
+                        <span class="kp-alert__body"
+                            ><span class="kp-alert__label">Success: </span>The incident was closed and the vendor was told.</span
+                        >
+                        <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                    </div>
+                    <p></p>
+                    <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+                        <span class="kp-alert__icon" aria-hidden="true">!</span>
+                        <span class="kp-alert__body"
+                            ><span class="kp-alert__label">Warning: </span>The service contract for pump house 4 ends in 12 days.</span
+                        >
+                        <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                    </div>
+                    <p></p>
+                    <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                        <span class="kp-alert__icon" aria-hidden="true">i</span>
+                        <span class="kp-alert__body"
+                            ><span class="kp-alert__label">Info: </span>Readings are delayed by up to five minutes tonight.</span
+                        >
+                        <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                    </div>
+                    <p></p>
+                    <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+                        <span class="kp-alert__icon" aria-hidden="true">✕</span>
+                        <span class="kp-alert__body"><span class="kp-alert__label">Error: </span>The alarm panel stopped reporting at 03:12.</span>
+                        <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                    </div>
+                </div>
+                <p class="cat-note">
+                    The close buttons work without a framework: <code>js/overlays.js</code> hides the alert after a cancelable
+                    <code>kp-alert-dismiss</code> event, and a toast's close button removes its toast. Reload the page to bring them back.
+                </p>
+            </section>
+
+            <section class="cat-block" id="alert-long">
+                <h2>A long alert</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> four sentences in a warning. The text wraps into a comfortable block, and every wrapped line starts at the same
+                    inset as the first — never back under the icon. The icon stays at the top beside the first line, and the close button stays at the
+                    top of its column rather than drifting to the vertical middle. Narrow the pane: the text column shrinks while the icon and the
+                    close button keep their size. Read it in the theme with the loudest warning plate; if you have to squint by the third line, the
+                    ink on the plate is too weak for body text.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 44rem">
+                        <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+                            <span class="kp-alert__icon" aria-hidden="true">!</span>
+                            <span class="kp-alert__body"
+                                ><span class="kp-alert__label">Warning: </span>The nightly export of the pressure telemetry for pump house 4 did not
+                                finish. It stopped at 03:12, after 41 of the 60 files had been written. The files that were written are complete and
+                                can be used as they are. Run the export again from the admin page to write the remaining 19, or ask the on-call
+                                engineer to do it before the day shift starts.</span
+                            >
+                            <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="toasts">
+                <h2>Toasts</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the stack below is a real <code>.kp-toasts</code> region, pinned to the corner of this stage instead of the window
+                    so it can be reviewed in place. Five toasts: the plain one on the popover surface, and four with a meaning — success, info,
+                    warning and destructive — each on the same plate and ink as the severity badge and the alert of that meaning, with its words
+                    saying the meaning as well; every theme restates the four, so no toast of meaning may look like the plain one. The words and the
+                    buttons on each plate must pass contrast on it. The toasts float on the popover surface with a boundary that must stay visible
+                    over anything behind them. The words sit in <code>.kp-toast__body</code>; the action button and the close button sit at the
+                    toast's right end, level with the words, in every toast and whatever the length of its text — so the buttons of the five line up
+                    down the stack. A close button that drops below the text or hugs it with no gap is a fault. Hover each button: its ground turns a
+                    shade of that toast's own plate (green on the success toast, red on the error toast, the popover colour on the plain one), never
+                    the theme's page hover, and its word still reads on it. Then press the buttons to raise real toasts in the window's corner: they
+                    must stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 24rem">
+                    <div class="kp-toasts" role="status" aria-live="polite">
+                        <div class="kp-toast">
+                            <span class="kp-toast__body">Saved. The handover note is visible to the day shift.</span>
+                            <button type="button" class="kp-button kp-button--ghost">Undo</button>
+                        </div>
+                        <div class="kp-toast kp-toast--success" data-kp-variant="success">
+                            <span class="kp-toast__body"><b>Success:</b> incident INC-4471 closed.</span>
+                            <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                        </div>
+                        <div class="kp-toast kp-toast--info" data-kp-variant="info">
+                            <span class="kp-toast__body"><b>Info:</b> 3 new readings since you opened this page.</span>
+                            <button type="button" class="kp-button kp-button--ghost">Refresh</button>
+                        </div>
+                        <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
+                            <span class="kp-toast__body"><b>Warning:</b> the vendor has not answered in 2 hours.</span>
+                            <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                        </div>
+                        <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
+                            <span class="kp-toast__body"><b>Error:</b> the note was not saved; you are offline.</span>
+                            <button type="button" class="kp-button kp-button--ghost">Retry</button>
+                        </div>
+                    </div>
+                    <p style="margin: 0">
+                        <button type="button" class="kp-button kp-button--secondary" data-cat-toast="">Raise a plain toast</button>
+                        <button type="button" class="kp-button kp-button--secondary" data-cat-toast="success">Raise a success toast</button>
+                        <button type="button" class="kp-button kp-button--secondary" data-cat-toast="error">Raise an error toast</button>
+                    </p>
+                </div>
+            </section>
+
+            <section class="cat-block" id="badges">
+                <h2>Badges</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the plain badge is a muted pill; the seven status badges take their plate from <code>data-status</code>, and each
+                    plate's text must pass contrast on that plate in every theme — <b>draft</b> and <b>withdrawn</b> are the two that drift towards
+                    grey-on-grey. The second row is severity: <code>.kp-badge--success</code>, <code>--info</code>, <code>--warning</code> and
+                    <code>--destructive</code>, on the same four token pairs an alert of that severity wears, so a badge and an alert that mean the
+                    same thing are one colour; each word must pass contrast on its plate in every theme. All of them share one height and one baseline
+                    with the text around them, so a row reads as a sentence with pills in it, not a staircase.
+                </div>
+                <div class="cat-stage cat-stage--tight" style="align-items: baseline">
+                    <span class="kp-badge">Plain</span>
+                    <span class="kp-badge" data-kp-semantic data-status="draft">Draft</span>
+                    <span class="kp-badge" data-kp-semantic data-status="sent">Sent</span>
+                    <span class="kp-badge" data-kp-semantic data-status="screening">Screening</span>
+                    <span class="kp-badge" data-kp-semantic data-status="interview">Interview</span>
+                    <span class="kp-badge" data-kp-semantic data-status="offer">Offer</span>
+                    <span class="kp-badge" data-kp-semantic data-status="rejected">Rejected</span>
+                    <span class="kp-badge" data-kp-semantic data-status="withdrawn">Withdrawn</span>
+                </div>
+                <div class="cat-stage cat-stage--tight" style="align-items: baseline; margin-block-start: 1rem" id="badge-severity">
+                    <span class="kp-badge kp-badge--success" data-kp-semantic>Healthy</span>
+                    <span class="kp-badge kp-badge--info" data-kp-semantic>Scheduled</span>
+                    <span class="kp-badge kp-badge--warning" data-kp-semantic>Degraded</span>
+                    <span class="kp-badge kp-badge--destructive" data-kp-semantic>Down</span>
+                </div>
+                <p>
+                    In running text: incident INC-4471 is <span class="kp-badge" data-kp-semantic data-status="sent">Sent</span> to the vendor and the
+                    quote is <span class="kp-badge" data-kp-semantic data-status="draft">Draft</span>.
+                </p>
+            </section>
+
+            <section class="cat-block" id="badge-long">
+                <h2>A long badge</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a badge holding 40 characters, and a badge holding an identifier with no spaces. By default the badge is allowed
+                    to break anywhere, so in a narrow pane it wraps — the pill must grow taller with its rounded ends intact (in nostromo a pill too,
+                    since 2026-09-13), not clip the text and not leave the text hanging outside the pill. The third copy sits under
+                    <code>--kp-badge-wrap: normal</code>, the knob for a column of labels: it breaks only between words. Drag the pane narrow and
+                    compare the three.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 20rem">
+                        <p style="margin-block-start: 0">
+                            <span class="kp-badge" data-kp-semantic data-status="screening">Awaiting a spare part from the supplier.</span>
+                        </p>
+                        <p>
+                            <span class="kp-badge">f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3</span>
+                        </p>
+                        <p style="margin-block-end: 0; --kp-badge-wrap: normal">
+                            <span class="kp-badge" data-kp-semantic data-status="screening">Awaiting a spare part from the supplier.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tags">
+                <h2>Tags</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a <code>.kp-tag-list</code> of <code>.kp-tag</code> pills. A tag differs from a badge by its hairline border and
+                    its remove button; side by side, nobody should mistake one for the other. Hover a remove button: it fills with the alarm colour,
+                    and the × on it must stay visible. The remove buttons have names ("Remove Night shift") — a row of identical × is useless to a
+                    screen reader. The tag holding a sentence must wrap inside its pill; the list must wrap onto new lines rather than scroll.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize">
+                        <ul class="kp-tag-list">
+                            <li class="kp-tag">
+                                <span>Pressure</span><button type="button" class="kp-tag__remove" aria-label="Remove Pressure">×</button>
+                            </li>
+                            <li class="kp-tag">
+                                <span>Night shift</span><button type="button" class="kp-tag__remove" aria-label="Remove Night shift">×</button>
+                            </li>
+                            <li class="kp-tag">
+                                <span>Needs the vendor</span
+                                ><button type="button" class="kp-tag__remove" aria-label="Remove Needs the vendor">×</button>
+                            </li>
+                            <li class="kp-tag">
+                                <span>Repeat of an incident first reported on 2 September by the night operator</span
+                                ><button type="button" class="kp-tag__remove" aria-label="Remove Repeat of an incident">×</button>
+                            </li>
+                            <li class="kp-tag"><span>Read-only tag, no button</span></li>
+                        </ul>
+                        <p><span class="kp-badge">A badge, for comparison</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="progress">
+                <h2>Progress</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> four native <code>&lt;progress&gt;</code> bars painted by the theme: empty, a third, full, and indeterminate (no
+                    value). The track must be the theme's muted ground with a hairline, and the fill the theme's accent — never the browser's own grey
+                    track or blue fill, which is the fault that shows first in a dark theme. The empty bar must still show its track, so an empty bar
+                    is not an invisible one. The indeterminate bar wears diagonal stripes in the accent on the muted track, so it can never be
+                    mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion
+                    preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar
+                    sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. The filled
+                    part of each bar follows the shape of its track: square in a square track, rounded in a rounded one.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>
+                    <p>
+                        <span class="kp-progress__wrap"
+                            ><progress class="kp-progress" value="35" max="100" aria-label="Export progress"></progress
+                            ><span class="kp-progress__value">35%</span></span
+                        >
+                    </p>
+                    <p><progress class="kp-progress" value="100" max="100" aria-label="Export finished"></progress></p>
+                    <p style="margin-block-end: 0"><progress class="kp-progress" aria-label="Waiting for the export service"></progress></p>
+                </div>
+            </section>
+
+            <section class="cat-block" id="spinner">
+                <h2>Spinner</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the spinner is a ring with one bright quarter turning over a track in the same hue at a quarter strength, so it
+                    turns visibly even in a theme where primary is black. It must be round, not an ellipse, at every size, and it must not wobble.
+                    Switch the system to reduced motion: the spinner stops, and a stopped spinner must still read as "busy" from the ring's shape.
+                    Beside a label, the spinner sits on the text's centre line. The large one sets <code>--kp-spinner-size</code>, the knob the React
+                    component writes.
+                </div>
+                <div class="cat-stage" style="align-items: center">
+                    <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                    <span><span class="kp-spinner" role="status" aria-label="Loading readings"></span> Loading readings…</span>
+                    <span class="kp-spinner" role="status" aria-label="Working…" style="--kp-spinner-size: 3rem"></span>
+                    <button type="button" class="kp-button kp-button--secondary" aria-busy="true" disabled>
+                        <span class="kp-spinner" aria-hidden="true"></span> Exporting
+                    </button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="skeleton">
+                <h2>Skeleton</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a skeleton comes in the shape of what it stands in for: three lines of a paragraph, a circle for an avatar, a
+                    block for an image. It pulses gently — slowly enough that it never approaches a flash, and not at all under reduced motion. The
+                    pulse must be visible on the page's ground and on a card's; in a theme where the muted colour equals the ground, a skeleton is an
+                    invisible one. Consecutive lines keep a small gap between them.
+                </div>
+                <div class="cat-stage">
+                    <div aria-hidden="true" style="inline-size: 18rem">
+                        <span class="kp-skeleton" style="inline-size: 100%"></span>
+                        <span class="kp-skeleton" style="inline-size: 92%"></span>
+                        <span class="kp-skeleton" style="inline-size: 60%"></span>
+                    </div>
+                    <span aria-hidden="true" style="inline-size: 3rem"
+                        ><span class="kp-skeleton kp-skeleton--circle" style="inline-size: 3rem"></span
+                    ></span>
+                    <div class="kp-card" aria-hidden="true" style="inline-size: 14rem">
+                        <span class="kp-skeleton kp-skeleton--block" style="inline-size: 100%"></span>
+                        <span class="kp-skeleton" style="inline-size: 70%"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="empty">
+                <h2>Empty state</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-empty</code> is what a list, a table or a search result shows when it has nothing in it — the component
+                    on its own, before any list around it. There are two here, and they must not say the same thing. <b>Nothing yet</b> is a list that
+                    has never had an item: it says so and offers to create the first one. <b>Nothing found</b> is a search that matched nothing: it
+                    offers to clear the search, because offering "create" to someone who just typed a filter is noise. In every theme both sit in a
+                    frame, centred, the title in full ink and the body muted but readable, the action a real button; narrow the pane and the text
+                    wraps inside the frame.
+                </div>
+                <div class="cat-stage cat-grid">
+                    <div class="kp-empty" data-kp-empty>
+                        <p class="kp-empty__title">No incidents yet</p>
+                        <p class="kp-empty__body">When an alarm is raised or someone reports a fault, it appears here.</p>
+                        <button type="button" class="kp-button">Report an incident</button>
+                    </div>
+                    <div class="kp-empty" data-kp-empty data-filtered>
+                        <p class="kp-empty__title">Nothing matches “pump house 9”</p>
+                        <p class="kp-empty__body">There are four pump houses. Check the number, or clear the search to see every incident.</p>
+                        <button type="button" class="kp-button kp-button--secondary">Clear the search</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="kp-toasts" role="status" aria-live="polite" id="cat-live-toasts"></div>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

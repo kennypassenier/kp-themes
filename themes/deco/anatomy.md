@@ -13,7 +13,7 @@ a palace. The approved concept demo, "The Gilded Ascent" (2026-09-08,
 Kenny), is the reference this register is built from exactly (S49); the
 measured references are Le Bathyscaphe's concentric inset-shadow frame
 and its `border-style: double` divider, and the Empire State Building's
-chevron corner cut — both in `docs/RESEARCH_2026-09.md` §13.
+chevron corner cut — both in `docs/archive/RESEARCH_2026-09.md` §13.
 
 The light ivory-and-gold Deco exists too and is not built: on paper it
 sits within a step of formal and sepia. The dark one has no sibling.

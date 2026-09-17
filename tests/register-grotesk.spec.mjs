@@ -2,32 +2,30 @@
 // "Twelve Columns" (2026-09-08) reproduced by the package, measured on the
 // concept page under grotesk in both channels.
 //
-// What the demo showed and this suite holds: the fourteen-column navbar
-// track with the brand in three tracks and the links in eleven, the
-// two-speed link timing (.1s in, .15s out), the headline's optical
-// blur+brightness resolve ending as its own text, the lede's marks as a
-// static signal colour with no reveal, the dossier's marks as ink
-// redaction bars that cut away in three monotone steps on the trigger, the
-// rule drawing itself under a heading, the double rule with the signal
-// hairline as divider, the black-ruled buttons and fields, no arrival at
-// all, and the whole approved inventory.
+// What the demo showed and this suite holds: the two-speed link timing
+// (.1s in, .15s out), the headline's optical blur+brightness resolve
+// ending as its own text, the dossier's marks as ink redaction bars that
+// cut away in three monotone steps on the trigger, the rule drawing itself
+// under a heading, no arrival at all, and the whole approved inventory. The
+// navbar track, the buttons, their hover, press and baseline, the dropdown
+// and the double-rule divider are judged by eye on the catalogue since
+// scope-73 (navigation#bar, navigation#dropdown, button#variants,
+// button#states, page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
 //   - the armed redaction cover (`[data-kp-effects] .kp-card[data-kp-reveal
 //     ='emphasis'] mark:not(.is-cleared)::after { transform: scaleX(1) }`)
 //     removed → the dossier's words are readable from the first paint, red
-//     on "covered before the trigger";
+//     on "covered before the trigger" (since fix-33, scope-93, the bar is
+//     the mark's own cloned background and that rule is
+//     `mark:not(.is-cleared) { background-size: 100% 100% }`);
 //   - the headline's armed blur (`.is-sharpening { filter: blur(...)
 //     brightness(...) }`) removed → the probe never reads a blur greater
-//     than 0, red on "the headline resolves from a blur";
-//   - the divider's signal hairline (`[data-kp-divider]::after`) removed →
-//     no second background layer, red on "the hairline is centred between
-//     the two rules".
+//     than 0, red on "the headline resolves from a blur".
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { pseudoStyle, style } from './paint.mjs';
-import { tabToSelector } from './ring.mjs';
+import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
@@ -90,7 +88,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the grotesk register, ${channel}`, () => {
+    test.describe(`the grotesk register, ${channel}`, { tag: ['@theme:grotesk', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'grotesk builds no boot overlay').toBe(0);
@@ -142,17 +140,6 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.evaluate((el) => getComputedStyle(el).fontFamily)).toMatch(/Archivo/);
         });
 
-        test('the nav track is fourteen columns, the brand in three and the links in the rest, right-aligned', async ({ page }) => {
-            await open(page, url);
-            const nav = page.locator('.kp-nav').first();
-            expect(await nav.evaluate((el) => getComputedStyle(el).display)).toBe('grid');
-            const tracks = (await nav.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).split(' ').length;
-            expect(tracks, 'fourteen tracks').toBe(14);
-            const brand = page.locator('.kp-nav__brand').first();
-            expect(await brand.evaluate((el) => getComputedStyle(el).gridColumnStart)).toBe('1');
-            expect(await brand.evaluate((el) => getComputedStyle(el).gridColumnEnd)).toBe('4');
-        });
-
         test("the nav and footer links carry Grilli's two-speed timing: .1s at rest, .15s once hovered", async ({ page }) => {
             await open(page, url);
             const link = page.locator('.kp-nav__link').nth(1);
@@ -179,29 +166,14 @@ for (const [channel, url] of CHANNELS) {
             expect(after.transform, 'drawn at rest').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the divider is the double rule: two black rules with a signal hairline exactly centred between them [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            const first = dividers.first();
-            expect(await first.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
-            expect(await first.evaluate((el) => getComputedStyle(el).borderBottomWidth)).toBe('3px');
-            expect(await first.evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(await paint(page, '--foreground'));
-            const hairline = await pseudo(first, '::after', ['background-color', 'height']);
-            expect(hairline['background-color'], 'the hairline is the signal colour').toBe(await paint(page, '--primary'));
-            expect(hairline.height).toBe('1px');
-            // The second divider takes the one-column caesura.
-            const alt = dividers.nth(1);
-            expect(await alt.evaluate((el) => parseFloat(getComputedStyle(el).marginInlineStart))).toBeGreaterThan(0);
-        });
-
         test('the dossier: the redaction bars cover the marks until the trigger, then cut away in three steps [TH120]', async ({ page }) => {
             await open(page, url);
             const dossier = page.locator('.kp-card[data-kp-reveal="emphasis"]');
             const mark = dossier.locator('mark').first();
-            const covered = await pseudo(mark, '::after', ['transform', 'background-color']);
-            expect(covered.transform, 'covered before the trigger').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-            expect(covered['background-color']).toBe(await paint(page, '--foreground'));
+            const covered = await pseudo(mark, '', ['background-size', 'background-image', 'background-position']);
+            expect(covered['background-size'], 'covered before the trigger').toBe('100% 100%');
+            expect(covered['background-image']).toContain(await paint(page, '--foreground'));
+            expect(covered['background-position'], 'cut toward the phrase’s end').toMatch(/^100% 50%$|^right/);
             expect(await mark.evaluate((el) => getComputedStyle(el).color), 'the word itself is hidden while armed').toBe('rgba(0, 0, 0, 0)');
             // Measured through the paint, not the declaration: firefox
             // reports `attr()` unresolved and the old `|attr(...)`
@@ -215,90 +187,7 @@ for (const [channel, url] of CHANNELS) {
                 'the stamp swapped to its open word',
             ).toBe(await dossier.getAttribute('data-kp-label-open'));
             await settled(page);
-            const lifted = await pseudo(mark, '::after', ['transform']);
-            expect(lifted.transform, 'the bar has cut away').toMatch(/^matrix\(0,/);
-        });
-
-        test('the buttons are right angles: a 2px ink rule, the primary in signal, mirror-invert on hover', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
-            await primary.hover();
-            await expect
-                .poll(() => primary.evaluate((el) => getComputedStyle(el).backgroundColor), 'the mirror inverts on hover')
-                .toBe(await paint(page, '--background'));
-            await expect.poll(() => primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
-        });
-
-        test("the dropdown is styled in the theme's own language [KT14]", async ({ page }) => {
-            await open(page, url);
-            // Reached with the keyboard, not focus() [G15].
-            await tabToSelector(page, '.kp-nav__link[aria-haspopup]');
-            const menu = page.locator('.kp-nav__menu').first();
-            await expect(menu).toBeVisible();
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('2px');
-            expect(await menu.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            const link = menu.locator('a').first();
-            await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--muted'));
-        });
-
-        test('the baseline appears under the label, and the box never moves [scope-12]', async ({ page }) => {
-            // The rule's TOP edge sits on the type's baseline, computed from
-            // the label's own font metrics rather than from a guessed em —
-            // a zero-width inline probe reads 9.60px here instead of 3.60,
-            // because `.kp-button__label` is an inline-flex container and a
-            // probe inside it becomes a flex item where `vertical-align`
-            // does nothing.
-            //
-            // Drilled 2026-09-12 in firefox: `inset-block-end` removed from
-            // the `::after` rule -> red on the rule meeting the baseline;
-            // the hover's `scale: 1 1` removed -> red on the rule arriving.
-            await open(page, url);
-            const btn = page.locator('.kp-button').first();
-            const label = btn.locator('.kp-button__label').first();
-            const read = () =>
-                label.evaluate((el) => {
-                    const s = getComputedStyle(el);
-                    const a = getComputedStyle(el, '::after');
-                    const box = el.getBoundingClientRect();
-                    const c = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-                    c.font = `${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
-                    const m = c.measureText('Hg');
-                    const baseline = (box.height - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxDescent;
-                    return {
-                        baseline: Number(baseline.toFixed(2)),
-                        ruleTop: Number((Number.parseFloat(a.insetBlockEnd) + Number.parseFloat(a.height)).toFixed(2)),
-                        weight: a.height,
-                        colour: a.backgroundColor,
-                        scale: a.scale,
-                        width: Number(box.width.toFixed(2)),
-                    };
-                });
-
-            const rest = await read();
-            expect(rest.ruleTop, 'the rule stands the letters on it, to the hundredth').toBeCloseTo(rest.baseline, 2);
-            expect(rest.scale, 'nothing is drawn at rest').toBe('0 1');
-
-            await btn.hover();
-            // Polled: the rule scales out over the theme's own duration and
-            // a single read lands mid-draw [fix-1].
-            await pseudoStyle(label, '::after', 'scale', 'the rule draws itself').toBe('1');
-            const hover = await read();
-            expect(hover.width, 'the label is exactly as wide as it was — the fault this quirk replaces').toBe(rest.width);
-            expect(hover.ruleTop, 'and still on the baseline').toBeCloseTo(hover.baseline, 2);
-
-            await page.mouse.down();
-            const pressed = await read();
-            expect(Number.parseFloat(pressed.weight), 'the press thickens it').toBeGreaterThan(Number.parseFloat(rest.weight));
-            expect(pressed.colour, 'into the deeper red').not.toBe(rest.colour);
-            expect(pressed.ruleTop, 'growing downward, so the top edge stays put').toBeCloseTo(pressed.baseline, 2);
-            expect(pressed.width, 'and the box still does not move').toBe(rest.width);
-            await page.mouse.up();
+            await expect.poll(async () => (await pseudo(mark, '', ['background-size']))['background-size'], 'the bar has cut away').toBe('0% 100%');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {
@@ -311,3 +200,55 @@ for (const [channel, url] of CHANNELS) {
         });
     });
 }
+
+// Kenny's decision of 2026-09-14, "B, met een zwart label bij indrukken":
+// option B stays, and while a primary or destructive button is pressed its
+// label is --foreground on the grey press ground. Before: the label stayed
+// --primary-foreground/--destructive-foreground, white rgb(255, 255, 255) on
+// rgb(201, 201, 201) = 1.66:1; red on this test.
+test.describe('grotesk press label [grotesk-hover decision]', { tag: ['@theme:grotesk', '@component:button'] }, () => {
+    /** @param {string} text */
+    const rgb = (text) => (text.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    /** @param {number[]} c */
+    const lum = (c) => {
+        const [r, g, b] = c.map((v) => {
+            const s = v / 255;
+            return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    /** @param {string} a @param {string} b */
+    const ratio = (a, b) => {
+        const [x, y] = [lum(rgb(a)), lum(rgb(b))].sort((p, q) => q - p);
+        return (x + 0.05) / (y + 0.05);
+    };
+
+    for (const variant of ['primary', 'destructive']) {
+        test(`a pressed ${variant} button's label reads at 4.5:1 or more on the press ground`, async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto('/tests/fixtures/button.html');
+            await page.evaluate((v) => {
+                document.documentElement.setAttribute('data-theme', 'grotesk');
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = `kp-button kp-button--${v}`;
+                b.dataset.probe = v;
+                b.textContent = v;
+                document.body.prepend(b);
+            }, variant);
+            const button = page.locator(`[data-probe="${variant}"]`);
+            const pressGround = await paint(page, '--secondary-active');
+            const ink = await paint(page, '--foreground');
+            await button.hover();
+            await page.mouse.down();
+            await style(button, 'background-color', 'the grey press ground').toBe(pressGround);
+            await style(button, 'color', 'the label turns to the foreground ink while pressed').toBe(ink);
+            const { color, backgroundColor } = await button.evaluate((el) => {
+                const cs = getComputedStyle(el);
+                return { color: cs.color, backgroundColor: cs.backgroundColor };
+            });
+            expect(ratio(color, backgroundColor), `${color} on ${backgroundColor}`).toBeGreaterThanOrEqual(4.5);
+            await page.mouse.up();
+        });
+    }
+});

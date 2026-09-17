@@ -31,6 +31,15 @@
         gap: var(--kp-picker-gap, 0.25rem);
     }
 
+    /* A picker written as a list is a list of options, not a bulleted list
+       [gap-12]: the options lose the browser's 40px indent and its markers.
+       `:where` keeps this at one attribute's weight, so .kp-menu — which is
+       a list too, later in this file — still sets its own padding. */
+    :where(ul, ol)[data-kp-theme-picker] {
+        padding-inline-start: 0;
+        list-style: none;
+    }
+
     /* Grouped light and dark [TH63]. A group is a list item that presents a
  * small label and its own list, so a flat picker becomes two short rows
  * with a title each, and a menu becomes two sections with a rule between
@@ -382,6 +391,13 @@
         font-size: var(--kp-footer-size, 0.875rem);
     }
 
+    /* A footer column's heading: its size is the package's [scope-87],
+     * titanium's 0.95rem taken to 15px. */
+    .kp-footer h4 {
+        font-size: var(--kp-footer-heading-size, 0.9375rem);
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
     /* An error page is a message, not a wall: the destructive colour names
  * the failure, the body text explains it on the ordinary surface. */
     .kp-error {
@@ -441,14 +457,29 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        /* min-height, not height: forced text spacing must make this taller
-     * rather than clip the label [DI11]. */
+        /* The height is the package's, in every theme [scope-80, option E of
+     * research/uniform-size/]: a border-box floor on --kp-control-height,
+     * one line height, the label centred in what is left. A register
+     * keeps its inline padding, type, border and paint;
+     * gates/box-metrics.test.mjs refuses a register that restates any of
+     * the box's block metrics. min-height, not height: forced text spacing
+     * must make this taller rather than clip the label [DI11]. The floor
+     * follows the density mode down with --kp-control-height [TH105].
+     *
+     * The block padding is only what a label that wraps needs to keep off
+     * the border, and never enough to lift a one-line button past the
+     * floor: a quarter rem, or less where the floor has no room for it —
+     * half of what the floor leaves around one line (`1lh`), less a
+     * border of up to 3px. Option E's own mock had none, and a
+     * two-line label touched its frame in brutalism, titanium and phantom. */
+        box-sizing: border-box;
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.875rem;
+        padding: var(--kp-control-padding-block, max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px)))
+            0.875rem;
         border: 1px solid transparent;
         border-radius: var(--radius, 0.5rem);
         font: inherit;
-        line-height: 1.2;
+        line-height: var(--kp-control-line-height, 1.25);
         cursor: pointer;
         background: var(--secondary);
         color: var(--secondary-foreground);
@@ -457,6 +488,26 @@
      * down and right — brutalism's signature [TH85]. 0px everywhere else,
      * which paints nothing: the knob is the only theme-shaped thing here. */
         box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* The theme's typeface on every other control the package draws
+       [fix-28, scope-83]. A browser's own stylesheet gives a button, a
+       checkbox, a range and a file input the SYSTEM font, not the page's:
+       Kenny's FireDragon read his desktop's Fira Sans on these, Playwright's
+       Firefox the generic sans-serif, and 39 of his 158 verdict hashes of
+       2026-09-14 differed from the tools' for that reason alone. The family
+       only, not the `font` shorthand: the size stays what each control
+       measured before, so no glyph and no box moves in any theme.
+       tests/control-font.spec.mjs forces a distinctive default and finds
+       every control on the review pages that still shows it. */
+    .kp-icon-button,
+    .kp-nav__toggle,
+    .kp-sidenav__toggle,
+    .kp-field__check,
+    .kp-switch__input,
+    .kp-colorpicker input,
+    input[type='file']:has(+ .kp-upload__zone) {
+        font-family: inherit;
     }
 
     /* Two surfaces a theme may paint on, and nothing else [scope-16,
@@ -502,6 +553,36 @@
         display: inline-flex;
         align-items: center;
         gap: inherit;
+    }
+
+    /* A marked accelerator letter stays in its label's text run [scope-57].
+       In a flex row every child is an item and the row's gap goes between
+       items, so `<span data-kp-key>S</span>ave` read "S ave" — half a rem
+       inside a word, in every theme — and the space in "Save as" collapsed
+       at the item's edge. A label that marks a letter is laid out as text
+       instead: one line box, the letter an inline box inside it (retro still
+       underlines it), centred both ways as the flex row was. An icon beside
+       such a label floats to its own side with the row's gap as its margin;
+       the float also swallows the markup's whitespace at the line's start,
+       so the gap is exactly the one an unmarked button has. */
+    .kp-button:has(> [data-kp-key]),
+    .kp-button__label:has(> [data-kp-key]) {
+        display: inline-block;
+        align-content: center;
+        text-align: center;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label):has(~ [data-kp-key]) {
+        float: inline-start;
+        margin-inline-end: 0.5rem;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > [data-kp-key]
+        ~ :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label) {
+        float: inline-end;
+        margin-inline-start: 0.5rem;
     }
 
     /* The focus ring composed with the offset shadow, not instead of it
@@ -633,13 +714,18 @@
  */
     .kp-button--sm {
         min-height: var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
-        padding: var(--kp-button-padding-block-sm, var(--kp-space-xs, 0.25rem)) var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
+        padding: var(--kp-button-padding-block-sm, max(0px, min(var(--kp-space-xs, 0.25rem), (1.75rem - 1lh) / 2 - 3px)))
+            var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
         font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
     }
 
     .kp-button--lg {
         min-height: var(--kp-button-height-lg, calc(var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem)));
-        padding: var(--kp-button-padding-block-lg, var(--kp-space-sm, 0.5rem)) var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem));
+        padding: var(
+                --kp-button-padding-block-lg,
+                var(--kp-control-padding-block, max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px)))
+            )
+            var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem));
         font-size: var(--kp-button-text-lg, calc(var(--kp-text-md, 1rem) * 1.125));
     }
 
@@ -649,10 +735,15 @@
         display: inline-flex;
         align-items: center;
         gap: 0.3em;
-        padding: 0.125rem 0.5rem;
+        /* The badge's block metrics and type size are the package's in every
+     * theme [scope-87, option B of research/uniform-size/]: the values are
+     * titanium's, the median theme's [scope-82]. A register keeps its
+     * inline padding, colour, border, face, case and letter spacing;
+     * gates/box-metrics.test.mjs refuses the rest. */
+        padding: var(--kp-badge-padding-block, 0.125rem) 0.5rem;
         border-radius: var(--kp-radius-pill, 999px);
-        font-size: var(--kp-text-sm, 0.8125rem);
-        line-height: 1.4;
+        font-size: var(--kp-badge-size, var(--kp-text-sm, 0.8125rem));
+        line-height: var(--kp-badge-line-height, 1.4);
         background: var(--muted);
         color: var(--muted-foreground);
         /* The overflow floor above puts five components on `anywhere`, and
@@ -683,7 +774,10 @@
 
     .kp-card__title {
         margin: 0 0 0.25rem;
-        font-size: var(--kp-text-md, 1rem);
+        /* A title's size is the package's [scope-87]: titanium's 1.5rem at
+     * the heading line height. */
+        font-size: var(--kp-card-title-size, 1.5rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     .kp-card__body {
@@ -762,6 +856,35 @@
         color: var(--status-withdrawn-foreground);
     }
 
+    /* Severity, beside the application statuses rather than instead of them
+ * [gap-11]. The seven names above are JobTracker's and say where an
+ * application stands; a service that is healthy, degraded or down had no
+ * badge. Modifiers on the alert's four token pairs, written the way the
+ * alert writes them, so a badge and an alert of one severity are one
+ * colour and the contrast gate already holds every pair. Not `data-status`
+ * values: that attribute names the application statuses, one token family
+ * each, and the unit test that ties them together stays true. The word on
+ * the badge still carries the meaning [DI4]. */
+    .kp-badge--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-badge--info {
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-badge--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-badge--destructive {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
     /* A destructive button with an undo offers it inline, beside itself. */
     .kp-button__undo {
         display: inline-flex;
@@ -837,13 +960,19 @@
     }
 
     .kp-field__label {
-        font-size: var(--kp-field-label-size, 0.875rem);
+        /* The label's and the help text's size are the package's [scope-87]:
+     * titanium's, on the running line height. */
+        font-size: var(--kp-field-label-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
     .kp-field__input {
+        /* The button's box [scope-80]: the floor, no block padding and one
+     * line height are the package's; a register keeps the rest. */
         min-height: var(--kp-control-height, 2.25rem);
-        padding: 0.375rem 0.625rem;
+        padding: 0 0.625rem;
+        line-height: var(--kp-control-line-height, 1.25);
         border: 1px solid var(--input);
         border-radius: var(--radius, 0.5rem);
         background: var(--background);
@@ -857,6 +986,18 @@
         inline-size: 100%;
         min-inline-size: 0;
         box-sizing: border-box;
+    }
+
+    /* The field's ring, composed with its offset shadow [fix-38, DI2]: the
+     * rule above sets box-shadow in kp.components, which beats the ring in
+     * kp.base, so a focused input kept only the outer half — the page's own
+     * ground, on a field grounded in the same colour. Tabbing to a field
+     * changed 0 pixels in formal, light, pastel, blueprint, solstice and
+     * shade-light. Restated as .kp-button:focus-visible does. */
+    .kp-field__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     /* The native <select>'s open list is drawn by the browser in the
@@ -904,14 +1045,19 @@
     }
 
     .kp-field__help {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--muted-foreground);
     }
 
     /* The error is text, and it names what is wrong. A red border alone is
  * colour as the only carrier [DI4], and says nothing to a screen reader. */
     .kp-field__error {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        /* Its size is the package's [scope-88]: titanium's 13px, on the
+     * running line height; a register keeps its face and its ornaments. */
+        padding-block: 0;
+        font-size: var(--kp-field-error-size, 0.8125rem);
+        line-height: var(--kp-line-height, 1.5);
         color: var(--destructive);
     }
 
@@ -924,24 +1070,58 @@
  * beside it — without the label, the error and the describedby wiring
  * that are the point of the component. */
 
+    /* Disabled and read-only are two promises and look like two [gap-11].
+ * Disabled cannot be used: it fades and refuses the pointer. Read-only can
+ * be focused, selected and copied but not changed: it keeps full ink, so
+ * the value stays a value, and loses the editable look — a dashed
+ * boundary on the muted ground, a record rather than a box to type in.
+ * All three painted the same, and a reviewer typed into the read-only
+ * field and thought the page had frozen. `[readonly]` rather than
+ * `:read-only`, which also matches every <select>. */
+    .kp-field__input:disabled {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
     .kp-field__input--multiline {
         min-height: 5.5rem;
+        /* Several lines, so a text box and not a one-line control: it keeps
+     * block padding and the running text's line height [scope-80]. */
+        padding-block: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        line-height: var(--kp-line-height, 1.5);
         /* Vertical only: a textarea dragged wider than its column breaks the
      * layout it sits in, and nobody needs it. */
         resize: vertical;
     }
 
     /* The box comes before its label, because that is the order it is read in
- * and the order it is clicked in. */
+ * and the order it is clicked in. The label's words sit on the box's centre,
+ * not on its baseline [scope-92]: a checkbox's baseline is its bottom edge,
+ * so baseline alignment put the words at the height of the box's bottom in
+ * every theme; and a register that draws its own box (appearance: none, a
+ * grid whose only child is the ::before tick) has no baseline until the
+ * tick exists, so the words rose by 2 to 6px when the box was ticked
+ * (cyberpunk, dark, brutalism, retro, titanium). Centring reads no
+ * baseline, so the state cannot move the words. */
     .kp-field--check {
         flex-direction: row;
-        align-items: baseline;
+        align-items: center;
         flex-wrap: wrap;
         gap: 0.5rem;
     }
 
     .kp-field--check .kp-field__label {
         font-weight: 400;
+        /* Beside the box, and wrapping there: at its max-content width a long
+     * label went down to a line of its own, under the box, in every theme
+     * whose face is wide (cyberpunk, brutalism, deco, nostromo) [scope-92]. */
+        flex: 1 1 0;
+        min-inline-size: 0;
     }
 
     .kp-field--check .kp-field__help,
@@ -964,9 +1144,11 @@
         padding: 0;
     }
 
+    /* The same centre as a checkbox field's, for the same two reasons
+ * [scope-92]. */
     .kp-field__option {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: 0.5rem;
         font-size: var(--kp-field-option-size, 0.875rem);
     }
@@ -986,10 +1168,135 @@
         flex: none;
     }
 
+    /* The browser's margin on a radio is 3px above and none below, so a
+ * centred radio's box sat 1.5px above its words [scope-92]. Beside its
+ * words the control carries no margin across the line; the gap holds the
+ * two apart. A register that sets its own margin still wins. */
+    .kp-field--check > .kp-field__check,
+    .kp-field__option > .kp-field__check {
+        margin-block: 0;
+    }
+
     /* The error text carries the message [DI4]; this only makes the control
  * itself findable when the summary sends someone to it. A checkbox has no
- * border to colour, so it is an outline. */
-    .kp-field--invalid .kp-field__check {
+ * border to colour, so it is an outline. The child combinator keeps it on
+ * the checkbox that IS the field: the radios inside an invalid group were
+ * framed one by one, a square frame around every round control, which
+ * read as several wrong answers rather than one [gap-11]. */
+    .kp-field--invalid > .kp-field__check {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: 2px;
+    }
+
+    /* An invalid radio group is one wrong answer, so it carries one mark:
+ * an outline around the whole group, legend and options together
+ * [gap-11]. An outline rather than a border, because a register that
+ * frames its fieldsets sets the border in a later layer and would
+ * silently take the mark away. Either spelling counts: the attribute on
+ * the group, or the group inside an invalid field. */
+    .kp-fieldset[aria-invalid='true'],
+    .kp-field--invalid > .kp-fieldset {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
+    }
+
+    /* --- Switch [gap-11] ------------------------------------------------- */
+
+    /* A checkbox that says on and off instead of ticked: the real control is
+ * an <input type="checkbox" role="switch">, so it submits with a form,
+ * reads its state from `checked`, flips with Space and needs no script.
+ * The geometry and the states are the concept Kenny approved on
+ * 2026-09-13 ("Switch: Akkoord", catalogue/switch.html), moved onto knobs
+ * whose defaults are the concept's own values [KT6]. The label is the
+ * whole target: the row is a <label>. */
+    .kp-switch {
+        display: inline-flex;
+        /* The track stays on the first line of a label that wraps: the text
+     * lines are as tall as the track. */
+        align-items: flex-start;
+        line-height: var(--kp-switch-height, 1.5rem);
+        gap: var(--kp-switch-gap, 0.625rem);
+        max-inline-size: var(--kp-switch-max-width, 28rem);
+        cursor: pointer;
+    }
+
+    .kp-switch__input {
+        appearance: none;
+        position: relative;
+        flex: none;
+        inline-size: var(--kp-switch-width, 2.5rem);
+        block-size: var(--kp-switch-height, 1.5rem);
+        margin: 0;
+        border: var(--kp-switch-border, 1px) solid var(--border-strong);
+        /* A knob, so a register squares the track from the row without
+     * restating the track's own rule; the thumb has its own. */
+        border-radius: var(--kp-switch-radius, var(--kp-radius-pill, 999px));
+        background: var(--muted);
+        cursor: inherit;
+    }
+
+    /* The thumb: a disc that travels. Its position carries the state as well
+ * as the colour does [DI4]. Sized from the track, its inset and the
+ * border on both sides, so a register that thickens the border keeps the
+ * thumb inside. */
+    .kp-switch__input::before {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-switch-inset, 0.125rem);
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        inline-size: calc(var(--kp-switch-height, 1.5rem) - 2 * var(--kp-switch-inset, 0.125rem) - 2 * var(--kp-switch-border, 1px));
+        border-radius: var(--kp-switch-thumb-radius, 50%);
+        background: var(--muted-foreground);
+    }
+
+    .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .kp-switch__input:checked::before {
+        inset-inline-start: calc(100% - var(--kp-switch-height, 1.5rem) + var(--kp-switch-inset, 0.125rem) + 2 * var(--kp-switch-border, 1px));
+        background: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-switch__input,
+        .kp-switch__input::before {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* On and off in words beside the track, so the state never rests on
+ * colour or position alone. The words are two spans from js/strings.js —
+ * never a `content` literal, which no consumer could replace [KT5] — and
+ * the one that does not apply is not rendered. aria-hidden on the
+ * wrapper, because the role already announces the state. */
+    .kp-switch__state {
+        min-inline-size: var(--kp-switch-state-min, 2rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-switch__on,
+    .kp-switch:has(:checked) .kp-switch__off {
+        display: none;
+    }
+
+    .kp-switch:has(:checked) .kp-switch__on {
+        display: inline;
+    }
+
+    .kp-switch:has(:disabled) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The same mark an invalid checkbox takes, in the alarm colour; the
+ * message under it says what is wrong in words [DI4]. */
+    .kp-switch__input[aria-invalid='true'] {
         outline: var(--focus-ring-width, 2px) solid var(--destructive);
         outline-offset: 2px;
     }
@@ -1071,10 +1378,20 @@
 
     .kp-table th,
     .kp-table td {
-        /* --kp-space-sm is 0.5rem, which is what the block padding was. The
-     * inline half has no step equal to 0.625rem, so it keeps its literal
-     * and gets a knob of its own instead [TH94, TH105]. */
-        padding: var(--kp-table-cell-block, var(--kp-space-sm)) var(--kp-table-cell-inline, 0.625rem);
+        /* The row height is the package's, in every theme [scope-80]: a cell's
+     * block size is a floor in a table (a taller value still grows the
+     * row), with one line height, so a face's own
+     * ascent and descent no longer decide how tall a row is.
+     * --kp-row-height is a step above --kp-control-height, so a field
+     * edited in its cell fits and the density mode brings rows down with
+     * the controls. The inline padding has no step equal to 0.625rem, so it
+     * keeps its literal and a knob of its own [TH94, TH105]. */
+        box-sizing: border-box;
+        block-size: var(--kp-row-height, calc(var(--kp-control-height, 2.25rem) + 0.25rem));
+        /* A quarter rem keeps a wrapped value off the row's rules and leaves
+     * a one-line row at its height (1.25 lines of text in 2.5rem). */
+        padding: var(--kp-table-cell-block, var(--kp-space-xs, 0.25rem)) var(--kp-table-cell-inline, 0.625rem);
+        line-height: var(--kp-control-line-height, 1.25);
         text-align: start;
         border-bottom: 1px solid var(--border);
     }
@@ -1106,6 +1423,15 @@
      * zero. `auto` is the initial value in every context, so the default
      * is a true no-op [R3-CQ, KT6]. */
         min-inline-size: var(--kp-nav-wrap-min, auto);
+        /* The bar's layer, in the base so every theme gives the same answer
+     * [scope-48, research/navbar finding 3]. Two registers lifted the
+     * wrapper and nine the nav inside it; in six themes nothing did, and
+     * the next element on the popover layer painted over an open dropdown
+     * (tests/app-shell.spec.mjs). One layer for the whole bar: its dropdown rides on it, and
+     * a page stacks against one number. Knob: --kp-z-nav (30), between the
+     * popover layer (20) and back-to-top (50). */
+        position: relative;
+        z-index: var(--kp-z-nav, 30);
     }
 
     .kp-nav {
@@ -1118,7 +1444,7 @@
      * was given the padding of a 1280px page. The two ends of that ramp
      * are now the wide default here and the narrow value in the
      * @container block below [TH104]. Both are knobs [KT6]. */
-        padding: var(--kp-nav-pad-block, 0.625rem) var(--kp-nav-pad-inline, 1.5rem);
+        padding: calc(var(--kp-nav-pad-block, 0.625rem) * var(--kp-nav-pad-scale, 1)) var(--kp-nav-pad-inline, 1.5rem);
         background: var(--card);
         color: var(--card-foreground);
         border-bottom: 1px solid var(--border-strong);
@@ -1135,6 +1461,46 @@
      * at one width rather than at two. */
         .kp-nav {
             padding-inline: var(--kp-nav-pad-inline-narrow, 0.75rem);
+        }
+    }
+
+    /* The shrinking header [scope-48 wave 2, research/navbar].
+ *
+ * Opt-in by the modifier on the wrapper: the bar sticks to the top of the
+ * box that scrolls it, on the bar's one layer (--kp-z-nav, above). Once the
+ * page has scrolled past a threshold, attachStickyNavs (js/components.js)
+ * or NavBar's `sticky` sets `data-kp-nav-compact`, and the compact state
+ * scales the bar's own block padding: every register reads
+ * --kp-nav-pad-block since research finding 2 was closed, and multiplies it,
+ * per side, by --kp-nav-pad-scale (1 at rest). The compact bar keeps half of
+ * whatever its theme or its page gave it [scope-85] — cyberpunk's 1.2rem top
+ * and 0.4rem bottom become 0.6rem and 0.2rem, retro's 3px becomes 1.5px — so
+ * it gets shorter in all 22 themes and is never taller than at rest. Knobs:
+ * --kp-nav-sticky-shrink (0.5), the factor the compact bar's block padding
+ * is multiplied by; --kp-nav-sticky-duration (the theme's --fx-duration),
+ * how long it glides. The factor is set on the nav itself, so a consumer's
+ * at-rest --kp-nav-pad-block on the nav is halved rather than replaced. The same module measures the bar and writes its height to
+ * --kp-nav-sticky-height on the scrolling box, which scroll-padding reads
+ * when --kp-scroll-offset is not set: an anchor or a focused element lands
+ * below the bar instead of under it. */
+    .kp-nav-wrap--sticky {
+        position: sticky;
+        inset-block-start: 0;
+    }
+
+    .kp-nav-wrap--sticky[data-kp-nav-compact] > .kp-nav {
+        --kp-nav-pad-scale: var(--kp-nav-sticky-shrink, 0.5);
+    }
+
+    [data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky) {
+        scroll-padding-block-start: var(--kp-scroll-offset, var(--kp-nav-sticky-height, 0px));
+    }
+
+    /* The shrink moves; a reader who asked for less motion gets the end state
+ * at once [DI7]. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav-wrap--sticky > .kp-nav {
+            transition: padding-block var(--kp-nav-sticky-duration, var(--fx-duration, 220ms)) var(--fx-ease, ease);
         }
     }
 
@@ -1244,12 +1610,96 @@
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
             border: 0;
             background: transparent;
+            /* No frame, no ground, and no shadow either: a shadow under a
+             * list with no ground is a panel's ghost [gap-12]. Every register
+             * dresses the floating panel in kp.register, which beats this
+             * layer, so each register restates this reset for itself. */
+            box-shadow: none;
         }
+
+        /* A mega menu's panel [scope-48] is that nested list too — one
+         * column, in the flow — and still opens only when its button is
+         * pressed. */
+        .kp-nav[data-kp-nav-open] li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+            display: none;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu--wide {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* The command palette's trigger in the bar [scope-48]. A hotkey alone is
+ * a secret, so the bar keeps a visible door to the palette at its end:
+ * a slot that pushes itself to the far edge, holding a button that reads
+ * as a quiet search box — a word in the muted ink and the key beside it —
+ * rather than as one more loud action. The button is an ordinary
+ * `data-kp-palette-open` opener; js/palette.js fills its empty
+ * `<kbd data-kp-palette-keys>` with ⌘K or Ctrl K. Every register answers
+ * the slot (gates/check-register-coverage.mjs, REQUIRED_PARTS). */
+    .kp-nav__search {
+        display: flex;
+        align-items: center;
+        margin-inline-start: auto;
+    }
+
+    .kp-nav__search-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        /* Never wider than the bar it sits in: a narrow bar gives the
+     * row to the brand and the toggle rather than to an empty box. */
+        min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
+        /* As tall as a bar link and in its type size [scope-87], whatever
+     * border the register draws: a border-box floor of one line and the
+     * link's two block paddings, the label centred in it. */
+        box-sizing: border-box;
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)));
+        padding: 0 0.5rem 0 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        /* One line: squeezed on grotesk's bar, the key hint broke into
+     * "Ctrl" over "K" inside its own chip [scope-80]. */
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    /* The key sits at the button's far end, the way it sits at a palette
+ * row's end. Empty until the module fills it, and then out of the way. */
+    .kp-nav__search-trigger .kp-palette__keys:empty {
+        display: none;
     }
 
     /* The current page is marked by more than colour: aria-current is what a
  * screen reader announces, and the underline is what everyone else
  * sees [DI4]. */
+    /* A bar link's size is the package's in every theme [scope-87, option B
+ * of research/uniform-size/]: its type size, line height and block
+ * padding are titanium's, the median theme's [scope-82]. A register keeps
+ * its inline padding, colour, border, face, case, letter spacing and
+ * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
+ * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
+ * two layout units, and the bar's measured height and the scroll offset
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The call to
+ * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
+ * a column item (below), so the padding holds its room even where a
+ * register leaves the link inline. */
+    .kp-nav__link {
+        padding-block: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
     .kp-nav__link[aria-current='page'] {
         font-weight: 600;
         text-decoration-thickness: 2px;
@@ -1260,6 +1710,19 @@
      * keyboard reaches every item by Tab; the register decides its look. */
     .kp-nav__links > li {
         position: relative;
+        /* The item is a column, so the link in it is a flex item, and a flex
+     * item is a block box whatever `display` a register gives the link
+     * [scope-80]. An inline link takes no room for its block padding: a
+     * register's plate under the current page, on a bar that wraps, painted
+     * 13px over the row above in dark (catalogue/navigation.html#bar-long,
+     * Kenny's note of 2026-09-14), and a label that wraps inside itself
+     * laid its second line's plate over its first. As a block, the plate
+     * holds its own room, the row gap sits between plates, and a text
+     * underline still follows each line. The column keeps a collapsed
+     * bar's nested menu under its link (tests/nav-wrap.spec.mjs). */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     /* A marquee [S45, M1 of 2026-09-08]: a row that runs, and the first
@@ -1343,6 +1806,15 @@
         top: 100%;
         inset-inline-start: 0;
         z-index: var(--kp-z-popover, 20);
+        /* How far the panel slides along the inline axis to stay inside the
+         * box that shows it [fix-39]. Changing edges is not always enough —
+         * a panel can be cut while both of its item's edges lie inside the
+         * window — so the module writes the pixels here after it has
+         * measured. Physical pixels, signed: negative moves it left, in a
+         * right-to-left page too, which is what "inside the window" means
+         * on either axis direction. Nothing but js/components.js writes it;
+         * unset, the panel sits exactly where the stylesheet put it. */
+        translate: var(--kp-nav-menu-shift, 0) 0;
         min-width: 12rem;
         margin: 0;
         padding: 0.25rem 0;
@@ -1360,8 +1832,13 @@
         opacity: 0;
     }
 
+    /* `data-kp-nav-menu-open` on the item declares the panel open [gap-12]:
+     * for a page that shows it open (a catalogue, a screenshot, a guided
+     * tour) or a script that opens it on a press. Hover and focus still
+     * open it too; taking the attribute away is the way back [KT6]. */
     .kp-nav__links > li:hover > .kp-nav__menu,
-    .kp-nav__links > li:focus-within > .kp-nav__menu {
+    .kp-nav__links > li:focus-within > .kp-nav__menu,
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
         display: block;
         opacity: 1;
     }
@@ -1375,15 +1852,144 @@
 
         @starting-style {
             .kp-nav__links > li:hover > .kp-nav__menu,
-            .kp-nav__links > li:focus-within > .kp-nav__menu {
+            .kp-nav__links > li:focus-within > .kp-nav__menu,
+            .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
                 opacity: 0;
             }
         }
     }
 
+    /* A dropdown's and a mega menu's links: their size is the package's
+     * [scope-87], titanium's padding and its 0.92rem taken to 14px. */
     .kp-nav__menu a {
         display: block;
-        padding: 0.375rem 0.875rem;
+        padding: var(--kp-nav-menu-link-padding-block, calc(var(--kp-space-sm, 0.5rem) * 0.9)) 0.875rem;
+        font-size: var(--kp-nav-menu-link-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    /* A dropdown with no room on its item's end side hangs from the other
+     * edge instead [fix-27]. Grotesk's catalogue bar showed the panel under
+     * the last item running past the window's right edge; measured on a bar
+     * whose links sit at the window's end, it lay 36 to 106px past it at
+     * 1400px in all 22 themes (tests/nav-menu.spec.mjs). A stylesheet cannot
+     * know where the window ends relative to an item, so the module that
+     * wires the bar (js/components.js, placeNavMenu) measures the panel as
+     * it opens and writes this attribute; the React NavBar calls the same
+     * function. Without script the panel keeps its start edge.
+     *
+     * The edge is chosen first and `--kp-nav-menu-shift` finishes the job
+     * [fix-39]: the box that shows a bar is not always the window. */
+    .kp-nav__menu[data-kp-nav-menu-end] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    /* The mega menu [scope-48, research/navbar "Mega menu"]: one bar item
+     * opens a wide panel of grouped links. It is a disclosure, not a hover
+     * dropdown — a panel this size cannot follow a pointer, and a touch or
+     * keyboard reader must be able to open it on purpose — so its item holds
+     * a `data-kp-nav-disclosure` button, and the panel is shown only while
+     * that button says `aria-expanded="true"` (or the item carries
+     * `data-kp-nav-menu-open`, the declared open state). The panel is a
+     * `.kp-nav__menu` too, so every register's dropdown voice dresses it, and
+     * each register answers `--wide` besides (KT14). Plain lists with
+     * headings inside, never `role="menu"`: this is site navigation.
+     *
+     * The button reads as one of the bar's links (give it `kp-nav__link`
+     * too) with a caret after its word that turns while open. */
+    .kp-nav__disclosure {
+        margin: 0;
+        /* The bar link's block padding and type size [scope-87], restated
+         * after `font: inherit`, which would reset them. */
+        padding: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        cursor: pointer;
+    }
+
+    .kp-nav__disclosure::after {
+        content: '';
+        /* Inline-block, not a flex item: a register that makes its links
+         * blocks makes this button one, and an inline box has no size. */
+        display: inline-block;
+        vertical-align: middle;
+        margin-inline-start: 0.35em;
+        inline-size: 0.4em;
+        block-size: 0.4em;
+        border-inline-end: 1.5px solid currentColor;
+        border-block-end: 1.5px solid currentColor;
+        rotate: 45deg;
+        translate: 0 -0.15em;
+    }
+
+    .kp-nav__disclosure[aria-expanded='true']::after {
+        rotate: -135deg;
+        translate: 0 0.1em;
+    }
+
+    /* The panel spans the bar, so its item is no containing block. Whatever
+     * box is — the `.kp-nav-wrap` positioned in the base, a register's
+     * positioned bar, or cyberpunk's positioned strip of links — the module
+     * (js/components.js, placeNavPanel) measures the bar against it as the
+     * panel opens and writes the two offsets that line the panel up with
+     * the bar's edges; both default to 0, which is right for a bar whose
+     * own box is the containing block. */
+    .kp-nav__links > li:has(> .kp-nav__menu--wide) {
+        position: static;
+    }
+
+    .kp-nav__menu--wide {
+        inset-inline-start: var(--kp-nav-mega-start, 0);
+        inset-inline-end: var(--kp-nav-mega-end, 0);
+        min-width: 0;
+        /* Three to four columns (NN/g: beyond that, choice overload): never
+         * narrower than the knob, never more than four across. */
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(max(min(var(--kp-nav-mega-min, 11rem), 100%), calc((100% - 3 * var(--kp-nav-mega-gap, 1.5rem)) / 4)), 1fr)
+        );
+        gap: var(--kp-nav-mega-gap, 1.5rem);
+        padding: var(--kp-space-md, 1rem) var(--kp-nav-pad-inline, 1.5rem);
+    }
+
+    /* Hover and focus open a dropdown; they do not open this one. */
+    .kp-nav__links > li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+        display: none;
+        opacity: 0;
+    }
+
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu--wide,
+    .kp-nav__links > li:has(> [data-kp-nav-disclosure][aria-expanded='true']) > .kp-nav__menu--wide {
+        display: grid;
+        opacity: 1;
+    }
+
+    .kp-nav__group {
+        min-inline-size: 0;
+    }
+
+    .kp-nav__group > ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* A group's heading takes the voice of the dropdown's own caption
+     * (`data-kp-menu-label`), which every register already draws. */
+    .kp-nav__menu-heading {
+        margin: 0 0 0.25rem;
+        padding: var(--kp-space-xs, 0.25rem) 0.75rem;
+        font-size: var(--kp-text-xs);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border);
     }
 
     /* ====================================================================
@@ -1497,6 +2103,18 @@
     .kp-to-top[data-kp-to-top-shown] {
         opacity: 1;
         visibility: visible;
+    }
+
+    /* The glyph an empty control gets [gap-12]. Written the documented way —
+       a button with only a name — the control painted as an empty box in
+       every theme. js/components.js puts this element in a button that has
+       nothing of its own, and takes it out again on detach; the arrow is
+       drawn here rather than typed there, like the tree's twisty, so a theme
+       or a consumer changes it with one knob. Its own element rather than
+       the button's pseudo-elements, because those are the two surfaces a
+       register paints a button on [scope-16]. */
+    .kp-to-top__glyph::before {
+        content: var(--kp-glyph-to-top, '↑');
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -1628,15 +2246,31 @@
         --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
     }
 
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
     .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) [data-kp-sidenav-slim-hide],
     .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
         display: none;
     }
 
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label,
     .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover [data-kp-sidenav-slim-hide] {
         display: none;
+    }
+
+    /* A label leaves the eye, never the accessibility tree [scope-45]. With
+       display:none a rail entry whose only visible content is an icon had no
+       name at all, so a screen reader said "button". The consumer's own
+       slim-hide hooks keep display:none: those are ornaments the consumer
+       chose to drop, where a label is the entry's name. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
     }
 
     /* Hovering a rail that was told to expand gives the labels back without
@@ -1655,7 +2289,11 @@
 
     .kp-sidenav__title {
         margin: 0;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        /* Its size is the package's [scope-88]: titanium's 14px, on the
+           running line height; a register keeps its face, case and spacing. */
+        padding-block: 0;
+        font-size: var(--kp-sidenav-title-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
         font-weight: 600;
     }
 
@@ -1693,9 +2331,13 @@
         box-sizing: border-box;
         inline-size: 100%;
         min-inline-size: 0;
-        padding: var(--kp-sidenav-item-pad, 0.5rem 0.6rem);
+        /* The row's block padding, type size and line height are the
+           package's in every theme [scope-87], titanium's values; a
+           register keeps its inline padding (gates/box-metrics.test.mjs). */
+        padding: var(--kp-sidenav-item-pad, var(--kp-sidenav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0.6rem);
         font: inherit;
-        font-size: var(--kp-font-size-sm, 0.875rem);
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: var(--kp-line-height, 1.5);
         text-align: start;
         text-decoration: none;
         color: inherit;
@@ -1867,6 +2509,42 @@
         color: var(--popover-foreground);
     }
 
+    /* A dialog stops short of the window and scrolls its body, not itself
+ * [gap-11]. With no maximum height of its own, sixty rows scrolled the
+ * whole dialog (the browser's cap on a modal one) and took the title and
+ * the actions away with the rows. Open, a dialog with a body is a column:
+ * the title, the description and the actions keep their size, and the
+ * body takes what is left and scrolls inside it. A dialog without a
+ * `.kp-dialog__body` keeps its block flow and only gains the cap. */
+    .kp-dialog[open] {
+        max-block-size: var(--kp-dialog-max-height, calc(100dvh - 2rem));
+        box-sizing: border-box;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) > :not(.kp-dialog__body) {
+        flex: none;
+    }
+
+    .kp-dialog__body {
+        flex: 1 1 auto;
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-dialog__body > :first-child {
+        margin-block-start: 0;
+    }
+
+    .kp-dialog__body > :last-child {
+        margin-block-end: 0;
+    }
+
     .kp-dialog::backdrop {
         /* Not a token: a backdrop is a dimming of whatever is behind it, and
      * a theme colour here would tint the page rather than dim it. */
@@ -1875,6 +2553,10 @@
 
     .kp-dialog__title {
         margin: 0 0 0.5rem;
+        /* Titanium's 1.2rem, taken to 1.25rem so the line is a whole pixel
+     * count (22px) at the heading line height [scope-87]. */
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.1);
     }
 
     /* The confirmation TH107 opens is a .kp-dialog with one question in
@@ -1904,6 +2586,16 @@
         position: absolute;
         inset-inline-end: var(--kp-space-sm);
         inset-block-start: var(--kp-space-sm);
+    }
+
+    /* The title stops short of the close button, by at least half a rem
+ * [scope-60]. The button is out of flow in the corner, so the title's
+ * line ran under it in fifteen themes — formal's words 24px beneath it.
+ * The room is the button's size, its inset and the half rem, whatever
+ * padding the dialog has; padding rather than margin, because several
+ * registers restate the title's margin. */
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__title {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
     }
 
     .kp-menu__separator {
@@ -1975,6 +2667,16 @@
         color: inherit;
     }
 
+    /* A disabled item looks unavailable and does not answer the pointer
+ * [gap-11]. It painted like an enabled one and lit up under the pointer
+ * in every theme. `pointer-events: none` rather than a :not() on the
+ * hover rule, because nineteen registers write their own item hover in a
+ * later layer, and an item the pointer cannot reach matches none of them. */
+    .kp-menu__item:is(:disabled, [aria-disabled='true']) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        pointer-events: none;
+    }
+
     .kp-tooltip {
         max-width: var(--kp-tooltip-max-width, 18rem);
         padding: 0.25rem 0.5rem;
@@ -1995,7 +2697,16 @@
         z-index: var(--kp-z-toast, 90);
     }
 
+    /* A row: the words, then the buttons at the toast's end. As a block the
+ * buttons ran on after the text and stopped wherever it did — 163px short of
+ * the end on one toast, flush on the next — so no two toasts lined up
+ * (Kenny's second nostromo pass, 2026-09-13). The words go in
+ * .kp-toast__body, which both channels write; a toast without one still
+ * pushes its first button to the end. */
     .kp-toast {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
         padding: 0.625rem 0.875rem;
         border: 1px solid var(--border-strong);
         border-radius: var(--radius, 0.5rem);
@@ -2003,27 +2714,93 @@
         color: var(--popover-foreground);
     }
 
-    /* A toast with a meaning wears the status colour as a leading rule, and
- * says it in words too: the variant class is never the only carrier
- * [DI4]. The assertive region is a second stack for errors. */
+    .kp-toast__body {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) {
+        flex: none;
+        margin-inline-start: auto;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) ~ :is(button, .kp-button, .kp-icon-button) {
+        margin-inline-start: 0;
+    }
+
+    /* A button hovered on a toast takes a shade of that toast's own plate
+ * instead of the theme's standard hover, which is drawn for the page and not
+ * for a coloured plate (Kenny's second nostromo pass, 2026-09-13). The
+ * ground is a veil over the plate, so the plate need not be known:
+ *   - on a toast of meaning the veil is black under a light ink and white
+ *     under a dark one, so the plate deepens away from its ink and the words
+ *     read better on hover, never worse — the four plates sit close to 4.5:1
+ *     already, and a veil of the ink measured 3.5 to 4.4 on 39 of them;
+ *   - on the plain toast, whose plate is often the page's own white or
+ *     near-black and cannot deepen further, the veil is the ink itself.
+ * Every register restates the hover rule, because each repaints its buttons'
+ * hover in the later register layer. The knobs [KT6]: `--kp-toast-button-hover`
+ * is the whole veil; `--kp-toast-button-ink` is the colour a toast of
+ * meaning judges its veil from (default: the button's own ink). */
+    .kp-toast {
+        --kp-toast-button-hover: color-mix(in srgb, currentColor 10%, transparent);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) {
+        --kp-toast-button-hover: oklch(from var(--kp-toast-button-ink, currentColor) clamp(0, (0.6 - l) * 1000, 1) 0 0 / 0.2);
+    }
+
+    .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* A toast with a meaning wears its severity on the alert's four token
+ * pairs, as the severity badge does [scope-60]: a plate and the ink drawn
+ * for it, so a toast, a badge and an alert that mean one thing are one
+ * colour and the contrast gate already holds every pair. It says the
+ * meaning in words too: the variant class is never the only carrier
+ * [DI4]. `--error` is the name the React channel and 6.0 used for the
+ * destructive one, and paints the same. The leading rule stays, in the
+ * plate's own colour. Registers repaint the plain toast in a later layer,
+ * so every register restates these four [gap-1's shape]. Buttons on the
+ * plate take its ink. */
     .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
         border-inline-start: 3px solid var(--success);
     }
 
     .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
         border-inline-start: 3px solid var(--warning);
     }
 
     .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
         border-inline-start: 3px solid var(--info);
     }
 
+    .kp-toast--destructive,
     .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
         border-inline-start: 3px solid var(--destructive);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
     }
 
     .kp-toast__close {
         margin-inline-start: auto;
+        flex: none;
     }
 
     /* --- Accordion ------------------------------------------------------- */
@@ -2051,13 +2828,56 @@
         border-bottom: 1px solid var(--border-strong);
     }
 
+    /* A row longer than its box scrolls inside the box [gap-12]. It ran past
+     * a 384px pane by 344px and widened the page; wrapping was the other
+     * answer, and it was not taken because a wrapped row puts the selected
+     * tab's rule in the middle of the list rather than on its edge.
+     *
+     * Only a row that does not fit becomes a scroller: js/overlays.js (and
+     * the React Tabs) write `data-kp-tabs-overflow` while it does, and keep
+     * the selected tab in view. A scroller clips whatever paints outside
+     * it, and several registers draw their selected tab past the row — a
+     * rule above it, a raised tab two pixels up — so a row that fits keeps
+     * exactly the look it had. */
+    .kp-tabs__list[data-kp-tabs-overflow] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        /* Room above the tabs for what a register draws there, given back by
+         * a margin so nothing around the row moves. Upward only: a negative
+         * margin at the row's ends would widen the pane it sits in. */
+        padding-block-start: var(--kp-tabs-overhang, 0.5rem);
+        margin-block-start: calc(-1 * var(--kp-tabs-overhang, 0.5rem));
+    }
+
+    /* In a scroller the tabs keep their width rather than squeezing their
+     * labels onto two lines. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab {
+        flex: none;
+    }
+
+    /* The base focus ring paints outside the control, where the scroller
+     * clips it, so in a scrolling row the ring is drawn inside the tab: the
+     * same two parts, the contrast outline and the inner ring, turned
+     * inward [DI2]. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
     .kp-tab {
-        padding: 0.5rem 0.75rem;
+        /* The tab's block padding, type size and line height are the
+     * package's in every theme [scope-87], titanium's values; a register
+     * keeps its inline padding, border, face and case. */
+        padding: var(--kp-tab-padding-block, var(--kp-space-sm, 0.5rem)) 0.75rem;
         border: 0;
         border-bottom: 2px solid transparent;
         background: none;
         color: var(--muted-foreground);
         font: inherit;
+        font-size: var(--kp-tab-size, var(--kp-text-md, 1rem));
+        line-height: var(--kp-line-height, 1.5);
         cursor: pointer;
     }
 
@@ -2074,6 +2894,17 @@
     }
 
     /* --- Breadcrumb and pagination --------------------------------------- */
+
+    /* Both trails' type size is the package's [scope-87]: titanium's. */
+    .kp-breadcrumb {
+        font-size: var(--kp-breadcrumb-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-pagination {
+        font-size: var(--kp-pagination-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
 
     .kp-breadcrumb ol,
     .kp-pagination ul {
@@ -2148,12 +2979,55 @@
         background: var(--muted);
     }
 
+    /* The fill follows the holder's shape [scope-60]: square in every theme
+ * before, under holders rounded up to a pill. `inherit` takes the holder's
+ * own radius, whatever a register set it to. */
     .kp-progress::-webkit-progress-value {
         background: var(--kp-control-accent, var(--primary));
+        border-radius: inherit;
     }
 
     .kp-progress::-moz-progress-bar {
         background: var(--kp-control-accent, var(--primary));
+        border-radius: inherit;
+    }
+
+    /* An indeterminate bar is not a full one [gap-11]. With the theme's own
+ * appearance Firefox drew the bar across the whole track and stopped
+ * animating it, so "no idea yet" looked exactly like "done". The track
+ * wears diagonal stripes in the accent instead, and the bar itself steps
+ * aside; under no reduced-motion preference the stripes drift, slowly
+ * and without any change of light [DI5]. */
+    .kp-progress:indeterminate {
+        background-color: var(--muted);
+        background-image: linear-gradient(
+            -45deg,
+            var(--kp-control-accent, var(--primary)) 25%,
+            transparent 25% 50%,
+            var(--kp-control-accent, var(--primary)) 50% 75%,
+            transparent 75%
+        );
+        background-size: var(--kp-progress-stripe, 1rem) var(--kp-progress-stripe, 1rem);
+    }
+
+    .kp-progress:indeterminate::-moz-progress-bar {
+        background: transparent;
+    }
+
+    .kp-progress:indeterminate::-webkit-progress-bar {
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-progress:indeterminate {
+            animation: kp-progress-stripes 1200ms linear infinite;
+        }
+    }
+
+    @keyframes kp-progress-stripes {
+        to {
+            background-position: var(--kp-progress-stripe, 1rem) 0;
+        }
     }
 
     .kp-spinner {
@@ -2291,6 +3165,21 @@
         z-index: var(--kp-z-popover, 20);
     }
 
+    /* The theme menu scrolls inside its rounded box, not as it [scope-60].
+ * The popover was itself the scroll box, so its scrollbar ran square into
+ * the rounded corners. Now the popover clips and the list inside it
+ * scrolls, in both shapes: the markup's `.kp-popover > .kp-menu` and the
+ * React switcher's `.kp-theme-menu__list > .kp-menu`. */
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list):has(> .kp-menu) {
+        overflow: hidden;
+    }
+
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        max-block-size: calc(var(--kp-popover-max-height, min(80vh, 40rem)) - 1rem);
+        overflow-y: auto;
+        border-radius: 0;
+    }
+
     .kp-theme-menu__status {
         padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
         color: var(--destructive);
@@ -2352,25 +3241,48 @@
 
     /* --- Combobox and tag input [TH39, TH41] ----------------------------- */
 
+    /* Block flow rather than a flex column [gap-11]. The list is positioned
+ * absolutely and used to hang from `top: 100%` of the whole box, so with
+ * the status line inside the box it opened a line below the input it
+ * belongs to. In block flow an absolutely positioned box with no `top`
+ * sits at its static position — directly after the input, whatever comes
+ * before it (a label, a row of tags) and whatever follows (the status).
+ * In a flex container that static position is the container's start, so
+ * the flex column had to go; the gap it gave is a margin now. */
     .kp-combobox {
         position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 0.375rem;
+        display: flow-root;
     }
 
+    .kp-combobox > :where(label, .kp-field__label) {
+        display: block;
+    }
+
+    .kp-combobox > :not(:first-child, .kp-combobox__list, .kp-combobox__clear) {
+        margin-block-start: var(--kp-combobox-gap, 0.375rem);
+    }
+
+    /* The same ground, boundary, ink and size as .kp-field__input [gap-11]:
+ * the combobox read --card and --border where a field reads --background
+ * and --input, so a theme whose card and page differ showed two different
+ * boxes side by side in one form. */
     .kp-combobox__input {
         /* Border-box, or `width: 100%` plus padding and a border overflows the
      * wrapper. Found by putting this on the showcase: at 320 px it pushed
      * the page 10 px sideways and DI11 went red on all eleven themes. */
         box-sizing: border-box;
+        display: block;
         width: 100%;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border);
+        /* The field's box [scope-80]. */
+        min-height: var(--kp-control-height, 2.25rem);
+        padding: 0 0.625rem;
+        line-height: var(--kp-control-line-height, 1.25);
+        border: 1px solid var(--input);
         border-radius: var(--radius, 0.5rem);
-        background: var(--card);
-        color: var(--card-foreground);
+        background: var(--background);
+        color: var(--foreground);
         font: inherit;
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     /* The theme's own timing, and only for someone who did not ask for less
@@ -2392,7 +3304,7 @@
     .kp-combobox__list {
         position: absolute;
         inset-inline: 0;
-        top: 100%;
+        /* No top: the static position, directly under the input [gap-11]. */
         z-index: var(--kp-z-popover, 20);
         max-height: var(--kp-combobox-list-max-height, 15rem);
         margin: 0.25rem 0 0;
@@ -2423,10 +3335,64 @@
         display: none;
     }
 
+    /* An option that cannot be chosen looks it [gap-11]: faded, and the
+ * pointer says no. The listbox already skips it for the arrows and the
+ * hover; it painted exactly like one that can be taken. */
+    .kp-combobox__option:is([aria-disabled='true'], [data-kp-disabled]) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The "no results" row: in the list, where the eye already is, and not an
+ * option — nothing for Enter to take [gap-11]. */
+    .kp-combobox__empty {
+        padding: 0.375rem 0.625rem;
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
     .kp-combobox__status {
         margin: 0;
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The drawn select [scope-54]: `select[data-kp-select]` gets a listbox in
+ * the combobox's own classes laid over it, so every register that answers
+ * the combobox list answers this one with the same rule. What is its own:
+ * js/combobox.js places it under the select (a flex column like .kp-field
+ * gives an absolute box no useful static position), and the value the box
+ * holds is marked the way the native picker marks it — weight and a check. */
+    [data-kp-select-list] {
+        box-sizing: border-box;
+        inset-inline: auto;
+    }
+
+    /* An open list lives in the top layer, where no container's clip-path or
+ * overflow reaches it (js/top-layer.js): a combobox's or a drawn select's
+ * options were out of reach inside a card in dark, cyberpunk, phantom and
+ * titanium. js/combobox.js places it in window coordinates under its field
+ * and as wide as the list was; the popover's UA inset, margin and ink are
+ * put back to the list's own. With no room below, it opens above the field
+ * at the same distance, with `data-kp-overlay-side="above"` written for a
+ * register that mirrors something [fix-30]. */
+    .kp-combobox__list:popover-open {
+        position: fixed;
+        inset: auto;
+        box-sizing: border-box;
+        margin: 0.25rem 0 0;
+        color: inherit;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen] {
+        display: flex;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen]::after {
+        content: var(--kp-glyph-check, '✓');
+        margin-inline-start: auto;
     }
 
     .kp-tag-list {
@@ -2557,6 +3523,13 @@
         cursor: pointer;
     }
 
+    /* A command that is a link [scope-48] looks like every other command:
+ * the row is the affordance, not an underline. */
+    a.kp-palette__option {
+        color: inherit;
+        text-decoration: none;
+    }
+
     .kp-palette__option.is-active {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
@@ -2621,34 +3594,446 @@
 
     /* The sort control is a button inside the header, so it is reachable
  * from the keyboard [KT6]; it wears the header's own text and nothing of
- * a button's. */
-    .kp-table th:has(> .kp-datatable__sort) {
-        padding: 0;
-    }
-
+ * a button's.
+ *
+ * Inline, and the header keeps its own padding [gap-13]. The first cut
+ * made the button a block that took the header's padding, and three
+ * things followed: the arrow the header draws after its content dropped
+ * to a line of its own (nostromo 65 px against 32 px), the button reset
+ * the case and the letter-spacing a register gives its headers, and the
+ * padding read a cell-pad knob that nothing else had. The whole
+ * cell still sorts: the React header listens for the click itself, and
+ * the button's own click reaches it. */
     .kp-datatable__sort {
-        /* The whole cell: the button takes the header's padding, so a click
-     * anywhere in the header sorts — the first cut was an 18 px strip at
-     * the top of a 52 px cell, and a click in the middle hit nothing. */
-        display: block;
-        inline-size: 100%;
-        padding: var(--kp-table-cell-pad, 0.5rem 0.625rem);
+        display: inline;
+        margin: 0;
+        padding: 0;
         border: 0;
         background: none;
         color: inherit;
         font: inherit;
-        font-weight: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
         text-align: inherit;
         cursor: pointer;
     }
 
     .kp-datatable__page-size {
-        margin-inline-end: var(--kp-space-sm);
         font: inherit;
+    }
+
+    /* A select in a bar — the "In" choice, the density, the page size, the
+ * card layout's sort — wears `.kp-field__input` for the theme and this
+ * for its width: a field fills its row, a choice in a toolbar does not. */
+    .kp-datatable__select {
+        flex: 0 0 auto;
+        inline-size: auto;
+    }
+
+    .kp-datatable__label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The filter panel, the pills, the action bar, the loading slot and the
+ * card layout's sort control sit between the bars and the table, and take
+ * the bars' inset, so nothing touches the frame a register draws
+ * [gap-11]. */
+    .kp-datatable__filters,
+    .kp-datatable__pills,
+    .kp-datatable__actions,
+    .kp-datatable__loading,
+    .kp-datatable__card-sort {
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-datatable__filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-datatable__range {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__range > input {
+        flex: 1 1 7rem;
+        min-inline-size: 0;
+    }
+
+    /* A date bound is the package's date picker (scope-58): each takes a
+ * whole row of the range, so its calendar button stays beside its field. */
+    .kp-datatable__range > .kp-datepicker {
+        --kp-datepicker-input-min: 5rem;
+        flex: 1 1 100%;
+        min-inline-size: 0;
+    }
+
+    /* A date filter takes two columns where the panel has them [Kenny's note
+ * of 2026-09-13]. One column holds a number range or a list of choices,
+ * but a date field beside its calendar button did not hold the date: in a
+ * 238px column the date was cut in eighteen of the twenty-two themes with
+ * the old ghost button, and still 2px short in brutalism with the glyph
+ * (97px of room for 99px). From 40rem the panel always has two columns at its 12rem
+ * floor, so the span never makes a column the grid does not have. */
+    @container kp-table (min-width: 40rem) {
+        .kp-datatable__filter:has(.kp-datepicker) {
+            grid-column: span 2;
+        }
+    }
+
+    .kp-datatable__pills {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], as the
+ * approved mock of research/datatable/demo.html#filter-add draws it: a menu
+ * of columns under "+ Add filter", an editor between the bar and the
+ * pills, and one pill per filter whose words reopen its editor. */
+
+    /* Under its button, and above it where the window has no room below.
+ * Fixed, not the popover's absolute: in the top layer an absolute box is
+ * placed in the initial containing block, which a page scrolled down has
+ * left, so the fallback never found room and the menu opened below the
+ * window — where its focused first item then pulled the whole page up
+ * (measured 2026-09-14 at 720px, all 22 themes, both channels). A fixed
+ * box is tried against the window and still follows its anchor. */
+    .kp-datatable__add-menu {
+        position: fixed;
+        position-try-fallbacks: flip-block;
+    }
+
+    /* Block, not flex: a register may put a ::before on a menu item
+ * (cyberpunk's dash), and in a flex row it becomes an item. */
+    .kp-datatable__add-item {
+        display: block;
+        inline-size: 100%;
+        white-space: nowrap;
+        text-align: start;
+    }
+
+    .kp-datatable__add-item > .kp-badge {
+        margin-inline-start: var(--kp-datatable-add-mark-gap, 0.5rem);
+    }
+
+    /* Its own frame, not a .kp-card or a .kp-popover: both carry a clip-path
+ * in some registers, which cut off the calendar a date bound opens. The
+ * calendar goes to the top layer; the editor stays in the flow. */
+    .kp-datatable__filter-editor {
+        display: grid;
+        gap: var(--kp-datatable-filter-editor-gap, var(--kp-space-md, 0.75rem));
+        margin-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem)) 0;
+        margin-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+        padding: var(--kp-datatable-filter-editor-padding, var(--kp-space-md, 0.75rem));
+        max-inline-size: var(--kp-datatable-filter-editor-max-width, 34rem);
+        border: var(--kp-datatable-filter-editor-border-width, 1px) solid var(--kp-datatable-filter-editor-border, var(--border-strong));
+        border-radius: var(--kp-datatable-filter-editor-radius, var(--radius, 0.5rem));
+        background: var(--kp-datatable-filter-editor-ground, var(--card));
+        color: var(--kp-datatable-filter-editor-ink, var(--card-foreground));
+    }
+
+    .kp-datatable__filter-editor-title {
+        margin: 0;
+        font-weight: var(--kp-datatable-filter-editor-title-weight, 600);
+    }
+
+    .kp-datatable__filter-editor-choices {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-datatable-filter-choice-min, 9rem)), 1fr));
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-bound-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair > .kp-datepicker {
+        --kp-datepicker-input-min: 6rem;
+        min-inline-size: 0;
+    }
+
+    .kp-datatable__filter-editor-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A pill's words are a button that reopens its editor; it reads as the
+ * pill's text, with a dotted underline to say it can be pressed. */
+    .kp-datatable__pill-edit {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: start;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-datatable__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-datatable__loading {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The card layout's sort control is for the card layout only: in the
+ * table shape the headers sort, and a second control would be a second
+ * way to say the same thing [gap-13]. */
+    .kp-datatable__card-sort {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A refresh keeps the old rows, dimmed, so the page does not jump; a
+ * first load has no rows and shows the loading slot instead. */
+    .kp-datatable[aria-busy='true'] .kp-table tbody {
+        opacity: var(--kp-datatable-busy-opacity, 0.55);
+    }
+
+    /* A header that stays whenever the table has a max height [Kenny,
+ * 2026-09-13]: `data-kp-max-height` on the data table, which the script
+ * carries into the knob. The ground is opaque so rows do not show through
+ * the header; a register whose data table stands on another surface
+ * names it in `--kp-datatable-head-ground`, and a register that paints its
+ * headers keeps its own paint, because it is a later layer. */
+    .kp-datatable[data-kp-max-height] > .kp-table-wrap {
+        max-block-size: var(--kp-datatable-max-height, 24rem);
+        overflow: auto;
+    }
+
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 1;
+        background-color: var(--kp-datatable-head-ground, var(--background));
+    }
+
+    /* The header's ground reaches 2px above the header [fix-32]: Kenny saw
+ * slivers of row text just above it while wheel-scrolling in FireDragon,
+ * the box starting on a half pixel. An unblurred shadow in the header's
+ * own ground, clipped by the scroll box. The shadow is a knob: a register
+ * that paints its header in another colour names that colour in
+ * `--kp-datatable-head-ground` on the cell, and one that draws its own
+ * shadow on the cell adds `var(--kp-datatable-head-reach)` to its list,
+ * under `[data-kp-scrolled]` only.
+ *
+ * The reach is drawn only while the box is scrolled away from the top
+ * [scope-90]: at rest it painted the bottom 2px of a caption standing
+ * directly above the header. js/datatable.js (both channels) sets
+ * `data-kp-scrolled` on the data table while its scroll box is scrolled;
+ * without script the attribute never comes, and there is no reach at all,
+ * which is accepted: the slivers it covers only appear while scrolling. */
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        --kp-datatable-head-reach: 0 -2px 0 0 var(--kp-datatable-head-ground, var(--background));
+    }
+
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
+        box-shadow: var(--kp-datatable-head-reach);
+    }
+
+    /* The box clips its own top edge while scrolled [fix-32, 2026-09-15
+ * follow-up]. Kenny still saw row letters above the header in FireDragon,
+ * zoomed. Recorded from the compositor (FireDragon 155 on a virtual
+ * display, real wheel clicks): when the box's top edge falls in the lower
+ * half of a device pixel, the box's ground and the sticky header start on
+ * the next pixel row, but row text still paints one device pixel above
+ * them, outside the box, at every zoom 1 to 1.75 and in every theme. The
+ * reach cannot cover it — the box clips the reach too — and a larger reach,
+ * a backing pseudo-element or a layer on the header left it; a clip-path
+ * with its top at 0 took it away. Only the top edge is clipped, and only
+ * while scrolled and not keyboard-focused, so a caption above is untouched
+ * at rest and the focus ring keeps its top side. */
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] > .kp-table-wrap:not(:focus-visible) {
+        clip-path: inset(0 -100vmax -100vmax);
+    }
+
+    /* A status label in a table keeps its word whole [gap-13]: the badge's
+ * default `anywhere` broke "WATCHING" into WATCHI / NG in nostromo, in a
+ * column squeezed by a long note. The knob is the badge's own. */
+    .kp-datatable,
+    .kp-table {
+        --kp-badge-wrap: normal;
     }
 
     .kp-table tr[data-kp-clickable] {
         cursor: pointer;
+    }
+
+    /* The seven of Kenny's form of 2026-09-13 ("Alle zeven, nu"), each as
+ * its approved mock in research/datatable/demo.html drew it. */
+
+    /* Sorting on more than one column: each sorted header carries its place
+ * in a small ring beside its label, on the header's line [#multi-sort]. */
+    .kp-datatable[data-kp-sort-multi] .kp-table thead th {
+        white-space: nowrap;
+    }
+
+    .kp-datatable__sort-order {
+        display: inline-block;
+        margin-inline-start: 0.3rem;
+        min-inline-size: 1.2em;
+        padding: 0 0.25em;
+        border: 1px solid currentColor;
+        border-radius: var(--kp-datatable-sort-order-radius, 999px);
+        font-size: var(--kp-datatable-sort-order-size, 0.7em);
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .kp-datatable__sort-summary {
+        flex: 1 1 auto;
+    }
+
+    /* Refreshing: a spinner beside the status words [#states]. */
+    .kp-datatable__status:has(> .kp-spinner) {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__status > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    /* Choosing which columns show [#columns]. The menu hangs under its
+ * button, and above it where the window has no room below, placed as the
+ * "+ Add filter" menu is (fixed, see there): opened at the bottom of a
+ * 720px window it ran 212 to 288px past the edge in all 22 themes. */
+    .kp-datatable__columns {
+        position: fixed;
+        position-try-fallbacks: flip-block;
+    }
+
+    /* A checkbox and its column on one line in the menu. */
+    .kp-datatable__column-option {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Rows that open: the detail row wraps its prose rather than widening
+ * the table, and the toggle keeps its width when its glyph turns
+ * [#expansion]. */
+    .kp-datatable__expand {
+        min-inline-size: var(--kp-datatable-expand-size, 2em);
+    }
+
+    .kp-table tr.kp-datatable__detail > td {
+        padding-block: var(--kp-datatable-detail-padding-block, 0.75rem 1rem);
+        white-space: normal;
+    }
+
+    /* A first column that stays [#sticky]. The script marks the cells of the
+ * fixed columns and writes the offset each sticks at; the ground is opaque
+ * so the scrolled cells do not show through, and the last fixed column
+ * draws a hairline. The header's cells stay above the body's, and the
+ * corner above both. */
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed] {
+        position: sticky;
+        inset-inline-start: var(--kp-datatable-fixed-start, 0);
+        z-index: 1;
+        background-color: var(--kp-datatable-fixed-ground, var(--kp-datatable-head-ground, var(--background)));
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed='last'] {
+        box-shadow: inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong));
+    }
+
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th {
+        z-index: 2;
+    }
+
+    /* The last fixed header cell keeps its hairline and, while the box is
+ * scrolled, the reach above the sticky header [fix-32, scope-90]. At rest
+ * the hairline rule above draws it alone. */
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height][data-kp-scrolled] .kp-table thead th[data-kp-fixed='last'] {
+        box-shadow:
+            inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong)),
+            var(--kp-datatable-head-reach);
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table thead th[data-kp-fixed] {
+        z-index: 3;
+    }
+
+    /* Editing a value in its cell [#inline-edit]: an editable value is a
+ * button with a dashed underline and a pencil, so it can be told apart
+ * before a pointer finds it; the editor is the package's own field, in
+ * the compact density so the row does not jump. */
+    .kp-datatable__edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-block-end: 1px dashed var(--kp-datatable-edit-rule, var(--border-strong));
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: inherit;
+        cursor: pointer;
+    }
+
+    /* The pencil is paint, not text: it stays out of the value a search, a
+ * sort or an export reads, and out of what a screen reader says (the
+ * second declaration, for a browser that reads alternative text). */
+    .kp-datatable__edit::after {
+        content: var(--kp-datatable-edit-glyph, '✎');
+        content: var(--kp-datatable-edit-glyph, '✎') / '';
+    }
+
+    .kp-datatable__editor {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: var(--kp-datatable-editor-min, 8rem);
+    }
+
+    .kp-datatable__editor > .kp-field__input {
+        inline-size: 100%;
+    }
+
+    /* Moving through cells with the arrow keys [#keyboard]: the two-part
+ * ring drawn inside the cell, so the next cell's ground and the scroll box
+ * cannot cut it away. */
+    .kp-table[role='grid'] :is(th, td):focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
     .kp-datatable {
@@ -2673,12 +4058,26 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
+        /* An inset of its own [gap-11, Kenny 2026-09-13, seen in nostromo].
+     * Twenty registers frame the data table and draw its bars as strips,
+     * and with no padding the row count sat on the frame's left edge and
+     * the pager on its bottom edge. The bar carries the inset rather than
+     * the table, so the rows still run to the frame.
+     * Two knobs rather than one shorthand [Kenny's note of 2026-09-13, "Bars
+     * inset" chosen in research/datatable/demo.html]: the inset is the
+     * default, and a theme or a consumer moves the inline and the block half
+     * on their own. */
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
     }
 
     .kp-datatable__search {
         box-sizing: border-box;
         flex: 1 1 12rem;
-        padding: 0.5rem 0.75rem;
+        /* The spacing steps rather than their comfortable values [gap-13]:
+     * the same 0.5rem and 0.75rem in the default density, and the density
+     * switch reaches the search box as it reaches the rows. */
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
@@ -2720,6 +4119,7 @@
 
     .kp-datatable__pager {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
     }
@@ -2756,6 +4156,18 @@
      * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
      * the same number as the one this block used as a media query up to
      * 3.1.1, so no table changes shape at a width it did not before. */
+        /* The headers are the sort control and they are hidden, so the
+     * control that stands in for them shows [gap-13]. */
+        .kp-datatable[data-kp-cards] > .kp-datatable__card-sort {
+            display: flex;
+        }
+
+        /* A card has no columns to keep in place. */
+        .kp-datatable[data-kp-cards] .kp-table :is(th, td)[data-kp-fixed] {
+            position: static;
+            box-shadow: none;
+        }
+
         .kp-datatable[data-kp-cards] .kp-table thead,
         .kp-table[data-kp-cards] thead {
             position: absolute;
@@ -2796,6 +4208,11 @@
         .kp-datatable[data-kp-cards] .kp-table td,
         .kp-table[data-kp-cards] td {
             display: flex;
+            /* A card's line is a block, where a block size is a height and
+         * not a floor: it sizes to its value, with the padding it had
+         * before the row height was fixed [scope-80]. */
+            block-size: auto;
+            padding-block: var(--kp-table-cell-block, var(--kp-space-sm, 0.5rem));
             gap: 0.75rem;
             justify-content: space-between;
             border: 0;
@@ -2820,11 +4237,19 @@
 
     /* --- Forms [TH38] ---------------------------------------------------- */
 
-    /* A radio group laid out in a row rather than a column. */
+    /* A radio group laid out in a row rather than a column. The fieldset is
+ * made a flex container here: the rule used to set only the direction, on
+ * an element that was never flex, so it did nothing at all [gap-11]. The
+ * rendered legend stays above the row, outside the flex flow, as a
+ * fieldset's legend does. */
     .kp-fieldset[data-kp-layout='inline'] {
+        display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        align-items: baseline;
+        /* Not baseline: an option's baseline is its control's, and a register
+     * that draws its own radio has none until the dot exists, so ticking
+     * one moved the whole row by 4 to 5px (cyberpunk, dark) [scope-92]. */
+        align-items: center;
         column-gap: var(--kp-space-md);
     }
 
@@ -2915,11 +4340,25 @@
     }
 
     /* Confirmed in words on the button, not by colour: a green flash is
- * invisible to a screen reader and to anyone who looked away. */
+ * invisible to a screen reader and to anyone who looked away.
+ *
+ * Both states are restated in every register [gap-12]: a register paints
+ * its buttons in kp.register, which beats this layer, and 19 of 22 themes
+ * painted their own ghost ground over the success plate. */
     .kp-copyable__button[data-kp-copied] {
         border-color: var(--success);
         color: var(--success-foreground);
         background: var(--success);
+    }
+
+    /* A copy the clipboard refused says so on the button as well as in the
+     * toast [gap-12]: the destructive ink and a dashed frame, so the two
+     * carriers are a colour and a shape. The word stays "Copy", because
+     * pressing it again is the way out [KT6]. */
+    .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
     }
 
     /* Status parts [TH52] */
@@ -3064,10 +4503,33 @@
         /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
         padding-inline-start: calc(var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* A file name with nowhere to break wraps inside its pane rather than
+         * pushing it wider: 64 characters made a 320px pane 632px wide
+         * [gap-12, DI11]. Inherited, so every level below has it too. */
+        overflow-wrap: anywhere;
     }
 
     .kp-tree [role='treeitem']:hover {
         background: var(--muted);
+    }
+
+    /* The selected item is marked, and marked twice [gap-12, DI4]: a bar at
+     * its start edge and a wash of the primary colour, plus the weight. It
+     * painted exactly like its unselected sibling in all 22 themes.
+     *
+     * A branch holds its children inside its own element, so a background
+     * would paint the whole subtree as selected. Both marks are gradients
+     * sized to the item's own row instead — one line plus the row's block
+     * padding — and the weight is handed back to the group below. */
+    .kp-tree [role='treeitem'][aria-selected='true'] {
+        background:
+            linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0) no-repeat 0 0 / 3px calc(1lh + 0.5rem),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0) no-repeat 0 0 / 100% calc(1lh + 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-tree [role='treeitem'][aria-selected='true'] [role='group'] {
+        font-weight: 400;
     }
 
     /* The twisty is a second carrier beside aria-expanded, and it points the
@@ -3117,6 +4579,21 @@
         cursor: grab;
     }
 
+    /* The row under a held handle [gap-12]. js/structure.js writes
+     * data-kp-dragging for as long as the pointer holds it, and nothing
+     * answered it: in all 22 themes the row you held looked like the rows
+     * you did not. The frame turns primary and dashed (a colour and a shape)
+     * and the row lifts off the list; releasing takes all of it away. */
+    .kp-reorder [data-kp-item][data-kp-dragging] {
+        border-color: var(--primary);
+        border-style: dashed;
+        box-shadow: 0 6px 16px -8px hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    .kp-reorder [data-kp-item][data-kp-dragging] [data-kp-handle] {
+        cursor: grabbing;
+    }
+
     .kp-split {
         display: grid;
         /* One custom property drives the whole layout, so the keyboard and
@@ -3147,6 +4624,25 @@
         outline-offset: -2px;
     }
 
+    /* Top and bottom [gap-12]. js/structure.js has moved a horizontal split
+     * with Up and Down since 3.0.0, but this stylesheet only ever set
+     * columns, so data-kp-orientation="horizontal" drew a second left and
+     * right split. The same custom property drives the rows. A register that
+     * sets the separator's thickness as an inline size restates it here as
+     * a block size, in its own value. */
+    .kp-split[data-kp-orientation='horizontal'] {
+        grid-template-columns: none;
+        grid-template-rows: var(--kp-split, 50%) auto 1fr;
+    }
+
+    .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        width: auto;
+        block-size: 0.5rem;
+        border-inline: 0;
+        border-block: 1px solid var(--border);
+        cursor: row-resize;
+    }
+
     /* --- Date picker [TH43] ---------------------------------------------- */
 
     .kp-datepicker {
@@ -3155,6 +4651,21 @@
         flex-wrap: wrap;
         align-items: end;
         gap: 0.5rem;
+    }
+
+    /* The calendar button on the line with its input [gap-11]. The input's
+ * `inline-size: 100%` filled the wrapping row on its own, so the button
+ * always fell to the next line. The label takes the row above, the input
+ * the room that is left, and the button stays beside it; the React
+ * channel wraps label and input in a .kp-field, which grows the same way. */
+    .kp-datepicker > .kp-field__label {
+        flex-basis: 100%;
+    }
+
+    .kp-datepicker > .kp-field__input,
+    .kp-datepicker > .kp-field {
+        flex: 1 1 var(--kp-datepicker-input-min, 8rem);
+        inline-size: auto;
     }
 
     .kp-datepicker__panel {
@@ -3171,6 +4682,28 @@
         box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
     }
 
+    /* Opened toward the inline start, hanging from the picker's inline end,
+ * when the window has no room past it [Kenny's note of 2026-09-13]; the
+ * module measures and sets the attribute (placeDatePanel). */
+    .kp-datepicker__panel[data-kp-align='end'] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    /* An open calendar lives in the top layer, where no container's clip-path
+ * or overflow reaches it (js/top-layer.js). js/datepicker.js places it in
+ * window coordinates; what the popover's UA sheet gives every popover —
+ * an inset of 0, auto margins, its own overflow and ink — is put back to
+ * what the panel had. With no room below, it opens above the picker, with
+ * `data-kp-overlay-side="above"` [fix-30]. */
+    .kp-datepicker__panel:popover-open {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+        margin-block-start: 0.25rem;
+        overflow: visible;
+    }
+
     .kp-datepicker__head {
         display: flex;
         align-items: center;
@@ -3183,11 +4716,42 @@
         font-weight: 600;
     }
 
+    /* The title that opens the month or the year grid [scope-89]: still the
+ * title to look at, so no button chrome of its own — only the day cell's
+ * hover, which says it can be pressed. A register's title rule reaches it
+ * through the same class. */
+    button.kp-datepicker__title {
+        padding: 0.125rem 0.375rem;
+        /* The padding and border give the hover ground room without taking
+         * room from the head: a span's width, so the day view keeps the size
+         * it had (without this, nine themes' panels grew 12 to 14px). */
+        margin-inline: calc(-0.375rem - 1px);
+        border: 1px solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button.kp-datepicker__title:hover {
+        background: var(--muted);
+    }
+
     .kp-datepicker__grid {
         display: grid;
         grid-template-columns: repeat(7, 2rem);
         gap: 0.125rem;
         text-align: center;
+    }
+
+    /* Twelve months or twelve years, three a row, filling the size the day
+ * grid had: the module holds that size while they show, so the panel does
+ * not jump under the pointer [scope-89]. */
+    .kp-datepicker__grid:is([data-kp-view='months'], [data-kp-view='years']) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: repeat(4, minmax(0, 1fr));
     }
 
     .kp-datepicker__weekday {
@@ -3219,6 +4783,21 @@
         color: var(--primary-foreground);
     }
 
+    /* A disabled day stays in the grid and says it is not a choice [gap-11]:
+ * struck through in the muted ink, so it reads as unavailable without
+ * relying on the colour, and it does not light up under the pointer. It
+ * painted exactly like a day that could be chosen, and the only sign was
+ * a click that did nothing. */
+    .kp-datepicker__day[aria-disabled='true'] {
+        color: var(--muted-foreground);
+        text-decoration-line: line-through;
+        cursor: not-allowed;
+    }
+
+    .kp-datepicker__day[aria-disabled='true']:hover {
+        background: none;
+    }
+
     /* --- Upload and wizard [TH44, TH48] ---------------------------------- */
 
     .kp-upload__zone {
@@ -3230,6 +4809,17 @@
         color: var(--muted-foreground);
         text-align: center;
         cursor: pointer;
+    }
+
+    /* The zone is the label of a visually hidden file input, so Tab lands on
+ * the input and the base focus ring draws round an element nobody can see
+ * [gap-11]. The zone wears the ring instead, the same two parts the base
+ * layer draws: the contrast outline and the inner ring. */
+    :focus-visible + .kp-upload__zone,
+    [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     .kp-upload__zone[data-kp-dragging] {
@@ -3245,13 +4835,30 @@
 
     .kp-upload__file {
         display: grid;
-        grid-template-columns: 1fr auto auto;
+        /* minmax(0, …): a name with nowhere to break gives way first, and the
+     * size and the remove button stay whole [DI11]. */
+        grid-template-columns: minmax(0, 1fr) auto auto;
         align-items: center;
         gap: 0.5rem;
         padding: 0.375rem 0.5rem;
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         margin-block-end: 0.375rem;
+    }
+
+    .kp-upload__name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* The remove button on the line with the name and the size [gap-11]. The
+ * row has three columns and five children (name, size, bar, message,
+ * button) in that order, so the button was auto-placed onto a row of its
+ * own under the message. Placed, not moved in the markup: a screen reader
+ * still meets it after the message, where the module writes it. */
+    .kp-upload__file > [data-kp-upload-remove] {
+        grid-row: 1;
+        grid-column: -2;
     }
 
     .kp-upload__size {
@@ -3281,6 +4888,13 @@
 
     .kp-upload__file[data-state='error'] .kp-upload__message {
         color: var(--destructive);
+    }
+
+    /* The frame a register draws around the wizard needs room inside it:
+ * without padding the step list, the step and the buttons touched the
+ * border in every theme [scope-60, held-60]. A knob, 1rem by default. */
+    .kp-wizard {
+        padding: var(--kp-wizard-padding, 1rem);
     }
 
     .kp-wizard__steps {
@@ -3477,6 +5091,550 @@
          * top of each other in the single column. The height stays the
          * tile's own. */
             grid-row: auto / span var(--kp-tile-h, 1);
+        }
+    }
+
+    /* A surface keeps its content off its own edges [Kenny, 2026-09-15]. A
+     * surface paints a ground (css/_rules.css), and in every theme the
+     * heading, the prose and the first button stood on the ground's very
+     * edge: 0px between the text and the colour change, on the left where
+     * the eye starts a line. The room is the package's, in every theme, on
+     * the inline axis only — the block axis is the section rhythm's. The
+     * room gives way before the content does: a surface of 20rem or less (a
+     * 320px phone, where the concept page's 16rem grid already fills the
+     * surface to the pixel) keeps none, and from 22rem it keeps the whole lg
+     * step. Knob: --kp-surface-padding-inline (the lg step, from 22rem
+     * wide). Its companion,
+     * data-kp-surface-align="center", sits beside the ground in
+     * css/_rules.css, because it reaches the layout layer's row. */
+    [data-kp-surface] {
+        padding-inline: var(--kp-surface-padding-inline, max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2)));
+    }
+
+    /* --- Alarm [scope-94] -------------------------------------------------
+ * A full-screen dramatic alert: a code line, one huge word, the reason
+ * under it and one way out, over a plate that takes the whole window. The
+ * prototype Kenny approved on 2026-09-15 (research/alarm/demo.html), with
+ * the full drama in every theme: nothing here names a theme, every paint is
+ * a token or a relative colour of one, so each theme's own --destructive,
+ * --primary and faces make it that theme's alarm, and each register adds its
+ * own voice on the knobs below. js/alarm.js builds it and opens it with
+ * showModal(), which puts it in the top layer and makes the page inert.
+ *
+ * The default arrives whole [scope-98]: the plate fades in, the panel
+ * settles, the headline arrives in one piece and the reason follows. The
+ * glitch is not the default any more — Kenny, judging formal's and pastel's
+ * portraits: "het alarm geeft nog altijd het glitch effect, dat enkel bij
+ * cyberpunk thuishoort". Its parts stay in the markup and its keyframes stay
+ * here, for a register that opts in (cyberpunk's does, and only cyberpunk's):
+ * the split copies (.kp-alarm__glyphs::before/::after, content: none until a
+ * register gives them attr(data-text)), the letter cells' noise glyphs
+ * (.kp-alarm__char::before/::after, content: none until attr(data-n1) and
+ * attr(data-n2)), the caret (.kp-alarm__detail::after, display: none), the
+ * scanlines and the sweeping band (.kp-alarm__scan, a vignette alone by
+ * default; its ::after has no content), and the hazard stripes (a
+ * transparent --kp-alarm-stripe by default); and the keyframes
+ * kp-alarm-jitter, kp-alarm-slice-in, kp-alarm-slice, kp-alarm-decode-letter,
+ * kp-alarm-decode-noise, kp-alarm-caret, kp-alarm-march and kp-alarm-sweep.
+ * The panel's flicker is cyberpunk's own keyframe since scope-100
+ * (kp-alarm-cyberpunk-flicker, in its register). tests/alarm.spec.mjs holds
+ * that they run in cyberpunk alone.
+ *
+ * The knobs [KT6], the colours defaulting to the prototype's dark plate:
+ * --kp-alarm-ground (the plate), --kp-alarm-ink (the headline, the frame,
+ * the bars), --kp-alarm-soft (the detail line), --kp-alarm-split (the second
+ * colour of the glitch split), --kp-alarm-on-ink (words on the ink: the
+ * button), --kp-alarm-glow (the frame's breathing inner glow),
+ * --kp-alarm-halo (the glow around the headline), --kp-alarm-scan (the
+ * scanlines), --kp-alarm-vignette (the darkened edges), --kp-alarm-stripe
+ * (the hazard bars), --kp-alarm-bar (their height), --kp-alarm-frame (the
+ * frame's border), the
+ * headline's --kp-alarm-title-font, --kp-alarm-title-size,
+ * --kp-alarm-title-case and --kp-alarm-title-tracking, and the panel's
+ * --kp-alarm-panel-ground, --kp-alarm-panel-border, --kp-alarm-panel-shadow,
+ * --kp-alarm-panel-padding and --kp-alarm-panel-radius, for a theme whose
+ * alarm is a box (a 1995 error window, a slammed stamp). --kp-alarm-left and
+ * --kp-alarm-left-step are written by the script: the share of the time
+ * left, continuous and in whole seconds. */
+    .kp-alarm {
+        container-type: inline-size;
+        position: fixed;
+        inset: 0;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        max-inline-size: none;
+        max-block-size: none;
+        margin: 0;
+        padding: calc(var(--kp-alarm-bar, 0.9rem) + 2.5rem) 1.5rem;
+        border: 0;
+        border-radius: 0;
+        overflow: hidden auto;
+        background: var(--kp-alarm-ground, hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95));
+        color: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        font-family: var(--theme-font-body);
+        text-align: center;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .kp-alarm::backdrop {
+        background: transparent;
+    }
+
+    .kp-alarm:is([open], [data-kp-alarm-inline]) {
+        display: grid;
+        place-items: center;
+    }
+
+    /* A held-open frame for a page that shows the alarm without raising it
+     * (the catalogue, a style guide): the same markup in the flow of the
+     * page, not in the top layer, as tall as its words need and at least a
+     * small screen's worth. Mark it inert: its button is a picture. */
+    .kp-alarm[data-kp-alarm-inline] {
+        position: relative;
+        inset: auto;
+        block-size: auto;
+        min-block-size: 22rem;
+        padding: calc(var(--kp-alarm-bar, 0.9rem) + 1.75rem) 1.75rem;
+    }
+
+    /* The frame: a hairline box inside the bars. */
+    .kp-alarm::before {
+        content: '';
+        position: absolute;
+        inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem) 0.75rem;
+        border: var(--kp-alarm-frame, 2px solid);
+        pointer-events: none;
+    }
+
+    /* The glow the frame breathes with. */
+    .kp-alarm::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 7rem var(--kp-alarm-glow, hsl(from var(--destructive) h s max(l, 45) / 0.5));
+        pointer-events: none;
+    }
+
+    .kp-alarm__scan,
+    .kp-alarm__bars {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The darkened edges. The scanlines are a part a register opts into: it
+     * restates this background with a repeating gradient of --kp-alarm-scan
+     * over the vignette [scope-98]. */
+    .kp-alarm__scan {
+        background: radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette, hsl(from var(--destructive) h s 2% / 0.7)));
+    }
+
+    /* A faint band that sweeps down the plate: the geometry, for a register
+     * that opts in with content: '' and kp-alarm-sweep [scope-98]. */
+    .kp-alarm__scan::after {
+        content: none;
+        position: absolute;
+        inset-inline: 0;
+        block-size: 18%;
+        inset-block-start: -18%;
+        background: linear-gradient(to bottom, transparent, var(--kp-alarm-scan, hsl(from var(--destructive) h s max(l, 50) / 0.09)), transparent);
+    }
+
+    /* The hazard bars, top and bottom: transparent unless a register names
+     * --kp-alarm-stripe, still unless it opts into kp-alarm-march [scope-98]. */
+    .kp-alarm__bars::before,
+    .kp-alarm__bars::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: var(--kp-alarm-bar, 0.9rem);
+        background: repeating-linear-gradient(-45deg, var(--kp-alarm-stripe, transparent) 0 1rem, transparent 1rem 2rem);
+        background-size: 2.8284rem 100%;
+    }
+
+    .kp-alarm__bars::before {
+        inset-block-start: 0;
+    }
+
+    .kp-alarm__bars::after {
+        inset-block-end: 0;
+    }
+
+    .kp-alarm__panel {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        justify-items: center;
+        gap: clamp(0.5rem, 1.6cqi, 1.25rem);
+        box-sizing: border-box;
+        inline-size: min(100%, 72rem);
+        padding: var(--kp-alarm-panel-padding, 0);
+        border: var(--kp-alarm-panel-border, 0);
+        border-radius: var(--kp-alarm-panel-radius, 0);
+        background: var(--kp-alarm-panel-ground, transparent);
+        box-shadow: var(--kp-alarm-panel-shadow, none);
+    }
+
+    .kp-alarm__code {
+        margin: 0;
+        font-family: var(--theme-font-mono, monospace);
+        font-size: clamp(0.7rem, 1.3cqi, 0.95rem);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__title {
+        margin: 0;
+        font-family: var(--kp-alarm-title-font, var(--theme-font-display, var(--theme-font-body)));
+        font-size: var(--kp-alarm-title-size, clamp(2.5rem, 12cqi, 10rem));
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: var(--kp-alarm-title-tracking, 0.04em);
+        text-transform: var(--kp-alarm-title-case, uppercase);
+        overflow-wrap: anywhere;
+        text-wrap: balance;
+        text-shadow: 0 0 0.3em var(--kp-alarm-halo, hsl(from var(--destructive) h s max(l, 50) / 0.55));
+    }
+
+    .kp-alarm__glyphs {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* The chromatic split: two copies of the words, clipped to nothing at
+     * rest and to thin bands during a burst. A part a register opts into
+     * with content: attr(data-text) [scope-98]; the default draws neither. */
+    .kp-alarm__glyphs::before,
+    .kp-alarm__glyphs::after {
+        content: none;
+        position: absolute;
+        inset: 0;
+        clip-path: inset(50% 0 50% 0);
+        text-shadow: none;
+        pointer-events: none;
+    }
+
+    .kp-alarm__glyphs::before {
+        color: var(--kp-alarm-split, hsl(from var(--primary) h s max(l, 60)));
+        translate: -0.04em 0;
+    }
+
+    .kp-alarm__glyphs::after {
+        color: var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        translate: 0.04em 0;
+    }
+
+    .kp-alarm__word {
+        white-space: nowrap;
+    }
+
+    .kp-alarm__char {
+        position: relative;
+    }
+
+    /* The two noise glyphs of a letter cell, drawn over the letter, so the
+     * layout never changes while it decodes. A part a register opts into with
+     * content: attr(data-n1) and attr(data-n2) [scope-98]. */
+    .kp-alarm__char::before,
+    .kp-alarm__char::after {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .kp-alarm__char::before,
+    .kp-alarm__char::after {
+        content: none;
+    }
+
+    .kp-alarm__detail {
+        max-inline-size: 60ch;
+        margin: 0;
+        color: var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        font-family: var(--theme-font-mono, monospace);
+        font-size: clamp(0.85rem, 1.9cqi, 1.35rem);
+        line-height: 1.45;
+        text-wrap: pretty;
+    }
+
+    /* A caret at the end of the line: one character cell. A part a register
+     * opts into with display: inline-block [scope-98]. */
+    .kp-alarm__detail::after {
+        content: '';
+        display: none;
+        inline-size: 0.6em;
+        block-size: 1.05em;
+        margin-inline-start: 0.2em;
+        vertical-align: text-bottom;
+        background: currentColor;
+    }
+
+    .kp-alarm__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem 1rem;
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-size: 0.8rem;
+    }
+
+    .kp-alarm__hint {
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.08em;
+    }
+
+    /* The one way out: a .kp-button, so the register keeps its button's
+     * shape (a notch, a radius, a bevel); the paint is the alarm's, and every
+     * register restates it, because each repaints its buttons in the later
+     * layer. */
+    .kp-alarm__ack {
+        min-inline-size: 14rem;
+        border: 2px solid var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        background: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        color: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__ack:is(:hover, :focus-visible) {
+        background: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        color: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+    }
+
+    .kp-alarm :is(.kp-alarm__ack, .kp-alarm__keep):focus-visible {
+        outline: 3px solid var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        outline-offset: 4px;
+    }
+
+    .kp-alarm__countdown {
+        display: grid;
+        gap: 0.5rem;
+        justify-items: center;
+        inline-size: min(100%, 36rem);
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__track {
+        display: block;
+        inline-size: 100%;
+        block-size: 0.375rem;
+        background: color-mix(in srgb, currentColor 22%, transparent);
+    }
+
+    /* The bar reads as time running out: it shrinks towards the start. Under
+     * reduced motion it steps a whole second at a time. */
+    .kp-alarm__fill {
+        display: block;
+        block-size: 100%;
+        background: currentColor;
+        transform: scaleX(var(--kp-alarm-left-step, 1));
+        transform-origin: left center;
+    }
+
+    .kp-alarm__keep {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+    }
+
+    .kp-alarm:not([data-kp-alarm-mode='auto']) .kp-alarm__countdown,
+    .kp-alarm[data-kp-alarm-mode='auto'] .kp-alarm__actions {
+        display: none;
+    }
+
+    /* Motion, only when the reader has not asked for less, and never on a
+     * held-open frame marked still. The default arrives whole [scope-98]; the
+     * budget per one-second window (WCAG 2.3.1 allows three flashes; each
+     * keyframe has its row in TIMINGS in js/effects.js):
+     *   kp-alarm-ground-in    the plate, 0 -> 1, once
+     *   kp-alarm-settle       the panel, 0 -> 1 with a rise and a scale, once
+     *   kp-alarm-arrive       the headline, whole, 0 -> 1 from a larger size, once
+     *   kp-alarm-detail-in    the reason, 0 -> 1, once
+     *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
+     * The glitch keyframes below (jitter, slice-in, slice,
+     * decode-letter, decode-noise, caret, march, sweep) run only where a
+     * register names them. Under reduced motion nothing runs: the words are
+     * there at once, and the drama is the plate, the glow at full strength,
+     * the frame and the size. The rendered frames are measured in
+     * tests/alarm.spec.mjs. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-alarm-ground-in 240ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still'])::after {
+            animation: kp-alarm-pulse 1400ms ease-in-out infinite alternate;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-alarm-settle 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: kp-alarm-arrive 480ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            animation: kp-alarm-detail-in 300ms 360ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
+            transform: scaleX(var(--kp-alarm-left, 1));
+            transition: transform 100ms linear;
+        }
+    }
+
+    @keyframes kp-alarm-settle {
+        0% {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-arrive {
+        0% {
+            opacity: 0;
+            scale: 1.06;
+        }
+        100% {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-ground-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-pulse {
+        0% {
+            opacity: 0.4;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-jitter {
+        0%,
+        94% {
+            opacity: 1;
+            translate: 0 0;
+        }
+        95% {
+            opacity: 0.6;
+            translate: -0.03em 0;
+        }
+        97% {
+            opacity: 1;
+            translate: 0.02em 0;
+        }
+        99% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-alarm-slice-in {
+        0% {
+            clip-path: inset(10% 0 72% 0);
+        }
+        20% {
+            clip-path: inset(62% 0 22% 0);
+        }
+        40% {
+            clip-path: inset(34% 0 52% 0);
+        }
+        60% {
+            clip-path: inset(80% 0 6% 0);
+        }
+        80%,
+        100% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+
+    @keyframes kp-alarm-slice {
+        0%,
+        94% {
+            clip-path: inset(50% 0 50% 0);
+        }
+        95% {
+            clip-path: inset(20% 0 66% 0);
+        }
+        97% {
+            clip-path: inset(58% 0 28% 0);
+        }
+        99% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+
+    @keyframes kp-alarm-decode-letter {
+        0% {
+            color: transparent;
+            text-shadow: none;
+        }
+    }
+
+    @keyframes kp-alarm-decode-noise {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-detail-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-caret {
+        0%,
+        49.9% {
+            opacity: 1;
+        }
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-march {
+        100% {
+            background-position-x: 2.8284rem;
+        }
+    }
+
+    @keyframes kp-alarm-sweep {
+        100% {
+            translate: 0 680%;
         }
     }
 }

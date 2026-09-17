@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — the review dialog (research demo)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               DEMO CHROME — every class prefixed `rd-` is mock, written for this
+               page only, and is NOT part of the package or the catalogue. The
+               `kp-` classes are the package as it ships; the `cat-` classes are
+               the catalogue's own. The blocks inside the dialog are the real
+               catalogue blocks, read from their component pages at load.
+               ================================================================== */
+            .rd-tag {
+                display: inline-block;
+                padding: 0.1rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                font-family: var(--theme-font-mono, monospace);
+                vertical-align: middle;
+            }
+
+            /* ---- the dialog: one fixed size, whatever block it holds ---- */
+            .rd-dialog {
+                --kp-dialog-max-width: none;
+                --kp-dialog-max-height: none;
+                box-sizing: border-box;
+                inline-size: 92vw;
+                block-size: 90vh;
+                max-inline-size: none;
+                max-block-size: none;
+                padding: 0;
+                overflow: hidden;
+            }
+            .rd-dialog[open],
+            .rd-dialog--pinned {
+                display: grid;
+                grid-template-rows: auto minmax(0, 1fr);
+            }
+            .rd-dialog--pinned {
+                position: relative;
+                inline-size: 100%;
+                block-size: 34rem;
+            }
+            .rd-head {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem 0.75rem;
+                padding: 0.75rem 1rem;
+                padding-inline-end: 3.5rem;
+                border-block-end: 1px solid var(--border);
+            }
+            .rd-head .kp-dialog__title {
+                margin: 0;
+                flex: 1 1 18rem;
+                min-inline-size: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .rd-position {
+                margin: 0;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.85rem;
+                color: var(--muted-foreground);
+            }
+            .rd-grid {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 24rem;
+                min-block-size: 0;
+            }
+            /* The stage scrolls in both directions and never gives its size back
+               to the dialog: `contain: strict` keeps the block's own size out of
+               the dialog's layout. */
+            .rd-stage {
+                contain: strict;
+                overflow: auto;
+                overscroll-behavior: contain;
+                padding: 1rem 1.25rem;
+            }
+            .rd-stage > .cat-block {
+                margin: 0;
+            }
+            .rd-stage > .cat-block > h2,
+            .rd-stage > .cat-block > .cat-look {
+                display: none;
+            }
+            .rd-side {
+                display: grid;
+                grid-template-rows: minmax(0, 1fr) auto auto auto;
+                gap: 0.75rem;
+                min-block-size: 0;
+                padding: 1rem;
+                border-inline-start: 1px solid var(--border);
+            }
+            .rd-side .cat-look {
+                margin: 0;
+                overflow: auto;
+            }
+            .rd-side .kp-field {
+                margin: 0;
+            }
+            .rd-side textarea {
+                resize: none;
+            }
+            .rd-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+            .rd-meta {
+                margin: 0;
+                font-size: 0.8rem;
+                color: var(--muted-foreground);
+            }
+            .rd-reason[hidden] {
+                display: none;
+            }
+
+            /* ---- the page around it ---- */
+            .rd-item {
+                margin-block: 1.5rem;
+                padding: 0.75rem 1rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+                scroll-margin-block-start: 5rem;
+            }
+            .rd-item__head {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem 0.75rem;
+            }
+            .rd-item__head h3 {
+                margin: 0;
+                flex: 1 1 auto;
+            }
+            .rd-item .cat-block {
+                margin-block: 0.5rem 0;
+            }
+            .rd-item .cat-block > h2 {
+                display: none;
+            }
+            .rd-away {
+                padding: 1rem;
+                color: var(--muted-foreground);
+                font-style: italic;
+            }
+            .rd-variants {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem 1.5rem;
+            }
+            .rd-prompt {
+                white-space: pre-wrap;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.8rem;
+                padding: 0.75rem 1rem;
+                border: 1px dashed var(--border);
+                min-block-size: 6rem;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--primary" data-rd-open="0">Review in a dialog</button>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>The review dialog: one block at a time, by keyboard</h1>
+            <p class="cat-intro">
+                Kenny asked on 2026-09-15 [scope-89] for a large dialog of fixed size that opens one block, puts the cursor in the note so he can type
+                at once, moves between blocks with Left and Right, approves with Up and rejects with Down — a rejection only with a note — and moves
+                on by itself after each verdict. This page builds that dialog over eight real catalogue blocks. <b>What is mock:</b> the dialog, its
+                keys, the arrow switch and the prompt preview below (every <code>rd-</code> class). <b>What is real:</b> the eight blocks, read at
+                load from their component pages exactly as <code>catalogue/review.js</code> reads them, the package's <code>.kp-dialog</code>,
+                <code>.kp-button</code>, <code>.kp-field</code> and <code>.kp-badge</code>, and the block hash from
+                <code>catalogue/block-hash.js</code>. Verdicts and notes made in the dialog stay on this page: nothing is written to the register or
+                to this browser's storage.
+            </p>
+
+            <section class="cat-block" id="try">
+                <h2>Try it <span class="rd-tag">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> press <b>Review in a dialog</b> in the top bar, or <b>Open in the dialog</b> beside any block below. The cursor
+                    must be in the note field at once, on every block you reach. Press <kbd>Down</kbd> with the field empty: nothing is rejected and
+                    the reason is shown under the field. Type a few words and press <kbd>Down</kbd> again: the block is rejected and the next one
+                    opens by itself. <kbd>Up</kbd> approves the same way. Then try each arrow setting below while a note is half written, and decide
+                    which one you want: the setting only changes what <kbd>Left</kbd> and <kbd>Right</kbd> do. <kbd>Escape</kbd> closes the dialog and
+                    brings you back to the block you were on; <kbd>Tab</kbd> never leaves the dialog. Switch the theme in the bar and open it again:
+                    the dialog is drawn by the theme's own <code>.kp-dialog</code>.
+                </div>
+                <fieldset class="kp-fieldset">
+                    <legend>What Left and Right do while you type</legend>
+                    <div class="rd-variants">
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" type="radio" name="rd-variant" id="rd-variant-a" value="a" />
+                            <label class="kp-field__label" for="rd-variant-a">(a) Always move to another block</label>
+                        </div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" type="radio" name="rd-variant" id="rd-variant-b" value="b" checked />
+                            <label class="kp-field__label" for="rd-variant-b">(b) Move only while the note is empty</label>
+                        </div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" type="radio" name="rd-variant" id="rd-variant-c" value="c" />
+                            <label class="kp-field__label" for="rd-variant-c">(c) Alt+Left/Right move while the note has text</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <table class="kp-table">
+                    <caption class="kp-sr-only">
+                        What each key does in the dialog
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Key</th>
+                            <th scope="col">(a) always</th>
+                            <th scope="col">(b) only while empty</th>
+                            <th scope="col">(c) Alt while text</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><kbd>Left</kbd> / <kbd>Right</kbd>, note empty</td>
+                            <td>previous / next block</td>
+                            <td>previous / next block</td>
+                            <td>previous / next block</td>
+                        </tr>
+                        <tr>
+                            <td><kbd>Left</kbd> / <kbd>Right</kbd>, note has text</td>
+                            <td>previous / next block; the draft stays with its block</td>
+                            <td>moves the cursor in the note</td>
+                            <td>moves the cursor in the note</td>
+                        </tr>
+                        <tr>
+                            <td><kbd>Alt</kbd>+<kbd>Left</kbd> / <kbd>Right</kbd></td>
+                            <td>not used</td>
+                            <td>not used</td>
+                            <td>previous / next block, always</td>
+                        </tr>
+                        <tr>
+                            <td><kbd>Up</kbd></td>
+                            <td colspan="3">
+                                approve, then the next block not yet judged; an approval clears the note, as on the review page (fix-29)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><kbd>Down</kbd></td>
+                            <td colspan="3">not approved, only with text in the note; then the next block not yet judged</td>
+                        </tr>
+                        <tr>
+                            <td><kbd>Escape</kbd> / <kbd>Tab</kbd></td>
+                            <td colspan="3">close and return to the block on the page / cycle inside the dialog only</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="cat-note">
+                    The keys only act while focus is in the note or on the dialog's own buttons. Inside the block under review — a date picker's grid,
+                    a data table's cells, a tab row — the arrows stay the component's own.
+                </p>
+            </section>
+
+            <section class="cat-block" id="opened">
+                <h2>The dialog, opened <span class="rd-tag">mock, drawn in place</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a still copy of the open dialog, laid in the page so it can be judged without opening it (the live one is 92% of
+                    the window wide and 90% high; this copy is the page's width and 34rem high). Header: the position, the block's title, the theme
+                    and engine, the verdict so far, the close button. Left: the block's stage, which scrolls when the block is larger. Right: the
+                    block's own <b>Look at</b> text, the note, the four buttons with their keys, and the reason Down is refused while the note is
+                    empty. The copy is inert: nothing in it responds.
+                </div>
+                <div data-rd-pinned></div>
+            </section>
+
+            <section class="cat-block" id="blocks">
+                <h2>Eight real blocks <span class="rd-tag">real blocks, mock buttons</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the eight blocks as they stand on their component pages: a row of buttons, the data table, the navigation bar, a
+                    dialog, the open date picker, the marquee, a form's error summary, and the application shell as the tall one. The badge beside
+                    each is its verdict in this demo, per theme. While a block is in the dialog its place here says so; Escape puts it back and
+                    scrolls here.
+                </div>
+                <p class="cat-note" role="status" data-rd-loading>Reading the component pages…</p>
+                <div data-rd-list></div>
+            </section>
+
+            <section class="cat-block" id="prompt">
+                <h2>What the verdicts would say <span class="rd-tag">mock, not stored</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the lines the catalogue's <b>Copy prompt</b> would produce for the verdicts and notes given in the dialog on this
+                    page: approved and not approved per theme and engine, every note, and the verdict lines with the block's hash as the dialog read
+                    it. A rejection always carries its note here, because the dialog refuses one without. Nothing here reaches the real prompt at the
+                    foot of the page.
+                </div>
+                <pre class="rd-prompt" data-rd-prompt>No verdicts yet. Open the dialog and press Up or Down.</pre>
+            </section>
+        </main>
+
+        <script type="module">
+            import { readPage, suffixIds } from '../../catalogue/review.js';
+            import { COMPONENT_PAGES } from '../../catalogue/pages.js';
+            import { readBlocks, HASH_VERSION } from '../../catalogue/block-hash.js';
+            import { ENGINE, engineLabel } from '../../catalogue/engine.js';
+            import { themeLabel } from '../../catalogue/review-state.js';
+            import { currentTheme, THEME_EVENT } from '../../js/theme-core.js';
+            import { attachAll } from '../../js/auto.js';
+
+            // The eight blocks: [component page, block id].
+            const PICKS = [
+                ['catalogue/button.html', 'variants'],
+                ['catalogue/table.html', 'datatable'],
+                ['catalogue/navigation.html', 'bar'],
+                ['catalogue/overlays.html', 'dialog'],
+                ['catalogue/datepicker.html', 'open'],
+                ['catalogue/media.html', 'marquee'],
+                ['catalogue/field.html', 'summary'],
+                ['catalogue/navigation.html', 'app-shell'],
+            ];
+
+            const list = document.querySelector('[data-rd-list]');
+            const variantOf = () => document.querySelector('input[name="rd-variant"]:checked')?.value ?? 'b';
+
+            /** verdicts: `${key}|${theme}` -> { verdict, hash }; notes: same key -> text */
+            const verdicts = new Map();
+            const notes = new Map();
+            const items = [];
+            let index = -1;
+
+            /* ------------------------------------------------ the dialog markup */
+
+            function chrome(prefix) {
+                return `
+                <div class="rd-head" data-rd-chrome>
+                    <p class="rd-position" data-rd-position>1 of 8</p>
+                    <h2 class="kp-dialog__title" id="${prefix}-title" data-rd-title>Block</h2>
+                    <span class="kp-badge" data-rd-theme>Theme</span>
+                    <span class="kp-badge" data-rd-state>Not yet judged</span>
+                    <button type="button" class="kp-button kp-button--ghost kp-dialog__close" aria-label="Close the review dialog (Escape)" data-rd-close>✕</button>
+                </div>
+                <div class="rd-grid">
+                    <div class="rd-stage" data-rd-stage></div>
+                    <div class="rd-side" data-rd-chrome>
+                        <div class="cat-look" data-rd-look></div>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="${prefix}-note" data-rd-note-label>Note</label>
+                            <textarea class="kp-field__input kp-field__input--multiline" id="${prefix}-note" rows="4" aria-describedby="${prefix}-reason ${prefix}-keys" data-rd-note></textarea>
+                            <p class="kp-field__error rd-reason" id="${prefix}-reason" data-rd-reason>Down needs a note: write what is wrong first, then press Down.</p>
+                        </div>
+                        <div class="rd-actions">
+                            <button type="button" class="kp-button" data-rd-go="-1">← Previous</button>
+                            <button type="button" class="kp-button" data-rd-go="1">Next →</button>
+                            <button type="button" class="kp-button kp-button--primary" data-rd-verdict="approved">↑ Approve</button>
+                            <button type="button" class="kp-button kp-button--destructive" data-rd-verdict="rejected">↓ Not approved</button>
+                        </div>
+                        <p class="rd-meta" id="${prefix}-keys" data-rd-keys></p>
+                        <p class="rd-meta" role="status" aria-live="polite" data-rd-live></p>
+                    </div>
+                </div>`;
+            }
+
+            const dialog = document.createElement('dialog');
+            dialog.className = 'kp-dialog rd-dialog';
+            dialog.id = 'rd-dialog';
+            dialog.setAttribute('aria-labelledby', 'rd-dialog-title');
+            dialog.innerHTML = chrome('rd-dialog');
+            document.body.append(dialog);
+            const $ = (sel, root = dialog) => root.querySelector(sel);
+            const note = $('[data-rd-note]');
+            const stage = $('[data-rd-stage]');
+            const reason = $('[data-rd-reason]');
+            const reject = $('[data-rd-verdict="rejected"]');
+            const live = $('[data-rd-live]');
+
+            const KEYS_TEXT = {
+                a: 'Arrows (a): Left/Right always move to another block. Up approves, Down rejects. Escape closes.',
+                b: 'Arrows (b): Left/Right move to another block while the note is empty, and the cursor once it has text. Up approves, Down rejects.',
+                c: 'Arrows (c): Left/Right move to another block while the note is empty; with text, Alt+Left/Right. Up approves, Down rejects.',
+            };
+
+            /* ------------------------------------------------ gathering blocks */
+
+            async function gather() {
+                const hrefs = [...new Set(PICKS.map(([href]) => href))];
+                const pages = new Map();
+                await Promise.all(hrefs.map(async (href) => pages.set(href, await readPage(COMPONENT_PAGES.find((p) => p.href === href)))));
+                for (const [href, id] of PICKS) {
+                    const { slug, blocks } = pages.get(href);
+                    const block = blocks.find((b) => b.id === `${slug}--${id}`);
+                    const section = /** @type {HTMLElement} */ (document.importNode(block.node, true));
+                    const look = section.querySelector(':scope > .cat-look')?.innerHTML ?? '';
+                    suffixIds(section, '', `rd-${slug}--`);
+                    // No id on the root: catalogue.js judges every `.cat-block[id]`
+                    // on a research page, and these are judged by the dialog only.
+                    section.removeAttribute('id');
+                    const wrap = document.createElement('div');
+                    wrap.className = 'rd-item';
+                    wrap.id = `rd-item-${block.id}`;
+                    wrap.innerHTML = `<div class="rd-item__head">
+                        <span class="rd-position">${items.length + 1} of ${PICKS.length}</span>
+                        <h3></h3>
+                        <span class="kp-badge" data-rd-item-state></span>
+                        <button type="button" class="kp-button kp-button--sm" data-rd-open="${items.length}">Open in the dialog</button>
+                    </div>
+                    <p class="rd-away" hidden>This block is in the review dialog now.</p>`;
+                    wrap.querySelector('h3').textContent = block.title;
+                    wrap.append(section);
+                    list.append(wrap);
+                    items.push({ key: block.id, title: block.title, source: block.source, look, section, wrap, hash: '' });
+                }
+                attachAll(list);
+                document.querySelector('[data-rd-loading]').remove();
+                pinnedCopy(pages.get('catalogue/button.html'));
+                renderList();
+                await document.fonts?.ready;
+                setTimeout(readPageHashes, 300);
+            }
+
+            /** The still copy of the open dialog, in the page. */
+            function pinnedCopy(page) {
+                const host = document.querySelector('[data-rd-pinned]');
+                const copy = document.createElement('div');
+                copy.className = 'kp-dialog rd-dialog rd-dialog--pinned';
+                copy.setAttribute('inert', '');
+                copy.innerHTML = chrome('rd-copy');
+                const block = page.blocks.find((b) => b.id === 'button--variants');
+                const section = /** @type {HTMLElement} */ (document.importNode(block.node, true));
+                suffixIds(section, '', 'rd-copy-');
+                section.removeAttribute('id');
+                $('[data-rd-stage]', copy).append(section);
+                $('[data-rd-position]', copy).textContent = `1 of ${PICKS.length}`;
+                $('[data-rd-title]', copy).textContent = block.title;
+                $('[data-rd-look]', copy).innerHTML = section.querySelector('.cat-look').innerHTML;
+                $('[data-rd-note]', copy).placeholder = 'The cursor is here as the block opens.';
+                $('[data-rd-note-label]', copy).textContent = `Note for ${themeLabel(currentTheme())}`;
+                $('[data-rd-keys]', copy).textContent = KEYS_TEXT.b;
+                $('[data-rd-verdict="rejected"]', copy).disabled = true;
+                host.append(copy);
+                paintHeader(copy, null);
+            }
+
+            /* ------------------------------------------------ state and render */
+
+            /** `${key}|${theme}` -> the block's hash at its place on the page. */
+            const pageHashes = new Map();
+            async function readPageHashes() {
+                const theme = currentTheme();
+                const onPage = items.filter((item) => item.wrap.contains(item.section));
+                if (!onPage.length) return;
+                const read = await readBlocks(onPage.map((item) => ({ root: item.section, source: item.source })));
+                if (theme !== currentTheme()) return;
+                onPage.forEach((item, i) => pageHashes.set(`${item.key}|${theme}`, read[i].hash));
+            }
+
+            const vkey = (item) => `${item.key}|${currentTheme()}`;
+
+            function paintHeader(root, item) {
+                const theme = currentTheme();
+                $('[data-rd-theme]', root).textContent = `${themeLabel(theme)} · ${engineLabel(ENGINE)}`;
+                const state = item ? verdicts.get(vkey(item))?.verdict : undefined;
+                const badge = $('[data-rd-state]', root);
+                badge.className = `kp-badge${state === 'approved' ? ' kp-badge--success' : state === 'rejected' ? ' kp-badge--destructive' : ''}`;
+                badge.textContent = state === 'approved' ? '✓ Approved' : state === 'rejected' ? '✕ Not approved' : '○ Not yet judged';
+            }
+
+            function renderList() {
+                for (const item of items) {
+                    const state = verdicts.get(vkey(item))?.verdict;
+                    const badge = item.wrap.querySelector('[data-rd-item-state]');
+                    badge.className = `kp-badge${state === 'approved' ? ' kp-badge--success' : state === 'rejected' ? ' kp-badge--destructive' : ''}`;
+                    badge.textContent = `${state === 'approved' ? '✓ Approved' : state === 'rejected' ? '✕ Not approved' : '○ Not yet judged'} · ${themeLabel(currentTheme())}`;
+                }
+                renderPrompt();
+            }
+
+            function refuseState() {
+                const empty = !note.value.trim();
+                reject.disabled = empty;
+                reject.title = empty ? 'Write a note first: a rejection needs one' : '';
+                reason.hidden = !empty;
+            }
+
+            /** Put the item at `next` in the dialog; the one there goes back to its place. */
+            function show(next) {
+                if (index >= 0 && items[index]) putBack(items[index]);
+                index = (next + items.length) % items.length;
+                const item = items[index];
+                item.wrap.querySelector('.rd-away').hidden = false;
+                stage.append(item.section);
+                stage.scrollTo(0, 0);
+                $('[data-rd-position]').textContent = `${index + 1} of ${items.length}`;
+                $('[data-rd-title]').textContent = item.title;
+                $('[data-rd-look]').innerHTML = item.look;
+                $('[data-rd-look]').scrollTop = 0;
+                $('[data-rd-note-label]').textContent = `Note for ${themeLabel(currentTheme())}`;
+                $('[data-rd-keys]').textContent = KEYS_TEXT[variantOf()];
+                note.value = notes.get(vkey(item)) ?? '';
+                note.removeAttribute('aria-invalid');
+                paintHeader(dialog, item);
+                refuseState();
+                // Every new item: the cursor in the note, at the end of any draft.
+                note.focus({ preventScroll: true });
+                note.setSelectionRange(note.value.length, note.value.length);
+                dialog.dataset.rdIndex = String(index);
+            }
+
+            function putBack(item) {
+                item.wrap.append(item.section);
+                item.wrap.querySelector('.rd-away').hidden = true;
+            }
+
+            function open(at) {
+                if (!items.length) return;
+                if (!dialog.open) dialog.showModal();
+                index = -1;
+                show(at);
+            }
+
+            dialog.addEventListener('close', (event) => {
+                if (event.target !== dialog || index < 0) return;
+                const item = items[index];
+                putBack(item);
+                index = -1;
+                item.wrap.scrollIntoView({ block: 'start' });
+                item.wrap.querySelector('[data-rd-open]').focus({ preventScroll: true });
+            });
+
+            let busy = false;
+            async function give(verdict) {
+                if (busy) return;
+                const item = items[index];
+                const text = note.value.trim();
+                if (verdict === 'rejected' && !text) {
+                    note.setAttribute('aria-invalid', 'true');
+                    reason.hidden = false;
+                    live.textContent = 'Not rejected: the note is empty.';
+                    note.focus();
+                    return;
+                }
+                const key = vkey(item);
+                // The hash the block has at its place on the page, read before it
+                // moved, so the verdict matches what the review page reads. For
+                // these eight blocks the dialog's narrower stage gave the same
+                // hash (measured in firefox); a block that follows its
+                // container's width would not.
+                let hash = pageHashes.get(key);
+                if (!hash) {
+                    busy = true;
+                    try {
+                        [{ hash }] = await readBlocks([{ root: item.section, source: item.source }]);
+                    } finally {
+                        busy = false;
+                    }
+                }
+                verdicts.set(key, { verdict, hash });
+                // As on the review page: an approval answers the note, a rejection keeps it.
+                if (verdict === 'approved') notes.delete(key);
+                else notes.set(key, note.value);
+                live.textContent = `${verdict === 'approved' ? 'Approved' : 'Not approved'}: ${item.title}.`;
+                renderList();
+                // The next block not yet judged in this theme, after this one.
+                for (let step = 1; step <= items.length; step += 1) {
+                    const at = (index + step) % items.length;
+                    if (!verdicts.has(vkey(items[at]))) return show(at);
+                }
+                paintHeader(dialog, item);
+                note.value = notes.get(key) ?? '';
+                refuseState();
+                live.textContent = `Every block is judged in ${themeLabel(currentTheme())}. Escape closes the dialog.`;
+            }
+
+            function go(step) {
+                live.textContent = '';
+                show(index + step);
+            }
+
+            /* ------------------------------------------------ keys */
+
+            const FOCUSABLE =
+                'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+            function trapTab(event) {
+                const all = [...dialog.querySelectorAll(FOCUSABLE)].filter(
+                    (el) => el.getClientRects().length && !el.closest('[inert], [hidden], [popover]:not(:popover-open)'),
+                );
+                if (!all.length) return;
+                const first = all[0];
+                const last = all[all.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+
+            /** Whether Left/Right move to another block, per the chosen variant. */
+            function navigates(event, inNote) {
+                const empty = !note.value.trim();
+                const variant = variantOf();
+                if (!inNote) return !event.altKey; // on a dialog button there is no cursor to move
+                if (variant === 'a') return !event.altKey;
+                if (variant === 'b') return !event.altKey && empty;
+                return empty || event.altKey; // c
+            }
+
+            dialog.addEventListener('keydown', (event) => {
+                const target = /** @type {Element} */ (event.target);
+                // A modal dialog opened by the block under review is its own. A
+                // dialog drawn open in the block (`<dialog open>`) is not modal
+                // and is part of the block.
+                const inner = target.closest('dialog');
+                if (inner !== dialog && inner?.matches(':modal')) return;
+                if (event.key === 'Tab') return trapTab(event);
+                const inNote = target === note;
+                const inChrome = inNote || target === dialog || (target.matches('button') && target.closest('[data-rd-chrome]'));
+                // Escape from the dialog's own controls closes it. Left to the
+                // browser, Firefox gave the key to the frozen <dialog open> inside
+                // the Dialog block and the review dialog stayed open (measured).
+                // Inside the block, a menu or a popover takes Escape first.
+                if (event.key === 'Escape') {
+                    if (inChrome || (!event.defaultPrevented && !stage.querySelector(':popover-open'))) {
+                        event.preventDefault();
+                        dialog.close();
+                    }
+                    return;
+                }
+                // Inside the block, the arrows are the component's.
+                if (!inChrome || event.ctrlKey || event.metaKey || event.shiftKey) return;
+                if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && !event.altKey) {
+                    event.preventDefault();
+                    give(event.key === 'ArrowUp' ? 'approved' : 'rejected');
+                } else if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && navigates(event, inNote)) {
+                    event.preventDefault();
+                    go(event.key === 'ArrowLeft' ? -1 : 1);
+                }
+            });
+
+            note.addEventListener('input', () => {
+                notes.set(vkey(items[index]), note.value);
+                if (note.value.trim()) note.removeAttribute('aria-invalid');
+                refuseState();
+                renderPrompt();
+            });
+
+            dialog.addEventListener('click', (event) => {
+                const target = event.target instanceof Element ? event.target : null;
+                if (target?.closest('[data-rd-close]')) return dialog.close();
+                const goButton = target?.closest('[data-rd-go]');
+                if (goButton) return go(Number(goButton.getAttribute('data-rd-go')));
+                const verdictButton = target?.closest('[data-rd-verdict]');
+                if (verdictButton) give(verdictButton.getAttribute('data-rd-verdict'));
+            });
+
+            document.addEventListener('click', (event) => {
+                const opener = event.target instanceof Element ? event.target.closest('[data-rd-open]') : null;
+                if (opener && !dialog.contains(opener)) open(Number(opener.getAttribute('data-rd-open')));
+            });
+
+            for (const radio of document.querySelectorAll('input[name="rd-variant"]')) {
+                radio.addEventListener('change', () => {
+                    for (const keys of document.querySelectorAll('[data-rd-keys]')) keys.textContent = KEYS_TEXT[variantOf()];
+                });
+            }
+
+            document.documentElement.addEventListener(THEME_EVENT, () => {
+                setTimeout(readPageHashes, 300);
+                renderList();
+                const pinned = document.querySelector('.rd-dialog--pinned');
+                if (pinned) {
+                    paintHeader(pinned, null);
+                    $('[data-rd-note-label]', pinned).textContent = `Note for ${themeLabel(currentTheme())}`;
+                }
+            });
+
+            /* ------------------------------------------------ the prompt preview */
+
+            function renderPrompt() {
+                const out = document.querySelector('[data-rd-prompt]');
+                const byTheme = new Map();
+                const lines = [];
+                for (const item of items) {
+                    for (const [key, entry] of [...verdicts, ...[...notes].map(([k, text]) => [k, { text }])]) {
+                        const [block, theme] = key.split('|');
+                        if (block !== item.key) continue;
+                        const t = byTheme.get(theme) ?? { approved: [], rejected: [], notes: [], lines: [] };
+                        byTheme.set(theme, t);
+                        if (entry.verdict) {
+                            t[entry.verdict].push(item.title);
+                            lines.push([block, theme, ENGINE, entry.verdict, entry.hash].join(' · '));
+                        } else if (entry.text.trim()) {
+                            t.notes.push(`- ${item.title} (#${block}): ${entry.text.trim().replace(/\n+/g, ' / ')}`);
+                        }
+                    }
+                }
+                if (!byTheme.size) {
+                    out.textContent = 'No verdicts yet. Open the dialog and press Up or Down.';
+                    return;
+                }
+                const text = ['Catalogue feedback (review dialog demo, not stored)', '', '== Every component, one page (catalogue/index.html)'];
+                for (const [theme, t] of byTheme) {
+                    text.push('', `Theme ${themeLabel(theme)}:`, `In ${engineLabel(ENGINE)}:`);
+                    if (t.approved.length) text.push(`Approved (${t.approved.length}): ${t.approved.join('; ')}`);
+                    if (t.rejected.length) text.push(`Not approved (${t.rejected.length}): ${t.rejected.join('; ')}`);
+                    if (t.notes.length) text.push('Notes:', ...t.notes);
+                }
+                if (lines.length) text.push('', `Verdict lines (hash version ${HASH_VERSION}):`, ...lines.sort());
+                out.textContent = text.join('\n');
+            }
+
+            // For the reviewer's own measurements in the console.
+            window.rdDemo = { open, items, verdicts, notes, dialog, pageHashes };
+            gather();
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

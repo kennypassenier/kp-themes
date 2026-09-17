@@ -926,7 +926,7 @@ brutalism cut none and he calls both very good, solstice cuts ten and he
 calls it sober. So the pass is about behaviour rather than decoration.
 The per-theme verdicts, the measurements behind them and the three
 observations that turned out differently than expected are in
-[THEME_VERDICTS.md](THEME_VERDICTS.md).
+[THEME_VERDICTS.md](archive/THEME_VERDICTS.md).
 
 **scope-13 · Six worlds refused, and what that says.** Kenny saw three
 concept worlds on 2026-09-11, called the spectral instrument the best but
@@ -1101,3 +1101,872 @@ theme: one step off a 93% signal barely moves, so a rule that serves
 twenty-four themes well cannot serve the twenty-fifth at all. S47 already
 says the token contract is a floor and not a ceiling; this says the same
 of the derivation.
+
+## Round eight — the working method itself (opened 2026-09-13)
+
+Kenny's brief of 2026-09-13 put the process under review rather than a
+theme. Sixteen decisions from one form; the measurements they rest on are
+in the session of that date (180 commits since v4.0.0, 90 touching
+`css/` or `themes/` and 90 not; 1,371 tests of which 217 in the register
+specs assert appearance; 887 gate runs and 137 whole-suite runs in one
+transcript; CLAUDE.md at 447 lines). Every decision below is
+**kp-themes only** unless it says otherwise; a wish that touches
+`~/Projects/dev-procedure` or a user-level hook is a separate item with its
+own go.
+
+**scope-29 · The order.** Layer 1 the small machine (this file's
+neighbours: CLAUDE.md slimmed, the lexicon, the status line, the cycle
+written down), layer 2 the catalogue with its developer overlay, layer 3
+tests, tags, gates, drift and purge, research in the background from
+layer 1 on, content rounds last.
+
+**scope-30 · The short route is the route.** Bouwen → Kijken → Uitrol,
+written out in `docs/CYCLE.md`. The route exists in PROCEDURE.md since
+2026-09-09; this project takes it. Versions stay: a released theme never
+changes in place.
+
+**scope-31 · One fixed catalogue.** `catalogue/`, hand-written HTML per
+component: every variant, state and extreme, a "Kijk naar:" text beside
+each block, a theme switcher, the ten example pages as fixed pages. A
+gate compares the classes `components.css` defines with the classes the
+catalogue shows and refuses a component nobody can see. Nothing else is
+generated but CSS and JS. The same folder is the website.
+
+**scope-32 · Appearance goes to the page.** The 217 register tests are
+removed as their catalogue blocks arrive. Invisible behaviour and
+cross-product sweeps stay tests.
+
+**scope-33 · Tags decide what runs.** Every test carries
+`@component:<name>`, `@theme:<name>` or `@sweep`; `tests/tags.json` maps
+file → tag; three gradations (building · commit · release); the map is
+measured once against what it skips. Replaces `test:affected`.
+
+**scope-34 · The gates get a table.** Per gate what it caught and how
+often; Kenny decides per gate in a form. No gate leaves unseen.
+
+**scope-35 · Drift: derive, fewer documents, a source-hash gate.** A
+document declares which files it describes; the gate refuses a commit
+where a source changed and the document was not looked at. Not
+infallible, and said so.
+
+**scope-36 · Purge per document.** One proposal line per document —
+keep, to the site, archive, remove — and Kenny decides per document.
+
+**scope-37 · CLAUDE.md carries status and commands.** The rules moved to
+`docs/RULES.md`, the cycle to `docs/CYCLE.md`; the document index stays
+because `gates/gates.test.mjs` reads it.
+
+**scope-38 · Three agents, invoked by the step, never by Kenny.**
+`researcher`, `theme-builder`, `checker` in `.claude/agents/`, each with
+a "use proactively" description and only its tools. Kenny's words: "ik ga
+niet micromanagen".
+
+**scope-39 · A lexicon with a hook.** One word list, read by the form
+linter and by a Stop hook on every reply. The hook lives in a user-level
+file, so its scope is a separate item (global or marker-scoped).
+
+**scope-40 · One session, research in the background.** Bouwen overlaps
+with Kijken: Claude builds batch N+1 while Kenny looks at batch N.
+
+**scope-41 · Three research streams started 2026-09-13.** Navbar and
+component alternatives, futuristic layouts, per-theme loading — each a
+`researcher` in its own worktree.
+
+**scope-42 · The developer overlay.** Colour-and-token under the cursor,
+an animation timeline (measured feasible: `document.getAnimations()`
+pauses and scrubs CSS transitions), a ruler; one `catalogue/devtools.js`.
+
+**scope-43 · The status line.** Four fields at the top of every reply
+(step · busy with · tests · gates). Enforcing it with the Stop hook is a
+user-level change and a separate item.
+
+**scope-44 · Worktrees for parallel streams.** Background agents work in
+their own worktree. Screenshots, Claude in Chrome and plan mode were
+offered and not taken.
+
+**The research-and-catalogue form, 2026-09-13.** Seven answers. They were
+given before the five review pages were reachable (`fix-19`), so the four
+that rest on looking — `scope-47`, `scope-48`, `scope-49` and `scope-51` —
+are put to Kenny once more now that the pages open.
+
+**scope-45 · The slim rail keeps its names.** A label in a collapsed rail
+leaves the eye and stays in the accessibility tree; the other four navbar
+findings wait for the navigation work. Test first:
+`tests/sidenav.spec.mjs` "a rail that hides its words still says them to a
+screen reader", red on the old rule (expected "Reports", received "").
+
+**scope-46 · The four orphan registers go.** `academia`, `mono`, `ticker`
+and `woodblock` minified registers and their maps are removed from
+`dist/css/`; no gate is added.
+
+**scope-47 · The catalogue's Look at notes stay English**, like the rest of
+the repository.
+
+**scope-48 · Navigation: all four.** The app shell (bar, rail and
+breadcrumb together, with a declared slim toggle), the command palette as
+navigation (a visible trigger, an option that is a link), the mega menu (a
+click-opened disclosure every register answers) and the shrinking header
+(after the three registers that bypass `--kp-nav-pad-block` are fixed).
+
+**scope-49 · Futuristic layouts: all four.** HUD brackets as a hook, the
+dispatch console, the LCARS elbow frame (with its colour trio on every
+theme in the same change) and the case file with its pinboard.
+
+**scope-50 · Loading: shared stylesheets and a lazily fetched register.**
+First paint from 1,320,113 to 371,900 bytes; the JavaScript split follows
+as its own step.
+
+**scope-51 · The catalogue page shape is approved** for the remaining
+components.
+
+**scope-52 · The catalogue is reviewed in the reviewer's own browser, with
+notes kept per theme.** Kenny, 2026-09-13, after opening the pages through
+`npm run catalogue`: *"goede start, zeker de navbar demo is al heel goed"*,
+and the four answers that rest on looking stand. Three additions, trial
+rather than final by his own words. Every page carries the package's own
+side navigation over every review page, built by `catalogue/catalogue.js`
+from one list the catalogue gate compares against the pages on disk. The
+tables page gains a data table (search, sort, select, pager, cards). And
+under every block a note field keeps a note per theme in the browser;
+switching theme swaps the note, and the foot of the page gathers every
+note of every theme into one prompt with a copy button.
+
+**scope-53 · One review page, approval by what the browser paints, and a
+compare page.** Kenny, 2026-09-13: every component on one long page so
+there is one prompt, a filter that shows only what changed, and two themes
+side by side with every element starting at the same height. The review
+page (`catalogue/index.html`) gathers the blocks of every component page at
+load, so each block is still written in one place. Approval is per block
+per theme: the browser hashes the block's markup as written plus the
+computed style of every element in it, over properties that do not depend
+on the window's width, with animations held still while it reads; the hash
+is kept in that browser and a block whose hash moves shows as changed.
+Measured before trusting it: stable across a reload, all 13 blocks; a
+letter-spacing change to `.kp-button` in cyberpunk marked the six button
+blocks and exactly the two table blocks that contain buttons, and reverting
+it approved all 13 again. The compare page (`catalogue/compare.html`) puts
+each theme in its own document — a theme nested in another leaks its
+register (`gap-10`) — and lines the rows up across the two by message:
+32 rows, none offset, before and after switching one column to brutalism.
+
+**The nostromo notes form, 2026-09-13.** Kenny's first full pass through
+one theme proved the review page; his 23 notes were answered in one form.
+
+**scope-54 · A drawn select, on request.** `data-kp-select` on a
+`<select>` lays a listbox in the combobox's style over it, built on
+`js/listbox.js`; a select without the attribute stays native, so no
+consumer's form changes unasked. Firefox cannot style a native select's
+list, which is why the note arose.
+
+**scope-55 · Badges rounder in nostromo only, for now.** Measured over 22
+themes: 8 pill, 7 small corner, 7 square. Kenny keeps the others for when
+he reaches them on the review page.
+
+**scope-56 · The palette matches literally by default.** `substring`
+becomes the default; "read" no longer finds "Report an incident", and
+"thm" no longer finds "Theme". Subsequence stays available per palette.
+
+**scope-57 · A marked accelerator letter never splits its label.** The
+package keeps `[data-kp-key]` in the button's text run in every theme.
+
+**scope-58 · A composition uses the styled components.** Every component
+is judged on its own block before it appears in a composition, and a
+catalogue composition carries the package's component wherever one exists
+(no bare date input outside a date picker); the catalogue gate refuses a
+bare control. Kenny's words: "elke component in een compositie moet het
+gestylede element zijn."
+
+**scope-59 · Nostromo's bar is put right**: readability of the site mark,
+the size and line of the current item, and the collapsed bar's spacing,
+without holding it to the concept demo first (Kenny: "Gewoon rechtzetten").
+
+**scope-60 · The direct fixes from the notes are approved**: progress label
+and fill shape, toast severity colours, the dialog title's distance from its
+close button, no dot on the current page in pagination, inner spacing in the
+wizard and the laurels, a theme menu scrollbar that follows its corners,
+adding a tag in the tag combobox, and dragging a reorder item across any
+number of rows.
+
+**scope-61 · Only retro underlines the accelerator letter.** Kenny,
+2026-09-13, after asking whether every theme should: it stays retro's alone,
+as decided on 2026-09-12. Every theme keeps a marked label whole (scope-57).
+
+**scope-62 · The drawn select is the default.** Kenny, 2026-09-13, after
+asking why a field page showed two selects: every single `select.kp-field__input`
+gets the drawn list without opting in; `data-kp-select="native"` keeps the
+browser's own, and a `multiple` select always does. This replaces the opt-in
+half of scope-54; consumers see it on their next update, which raises the
+version as every change does.
+
+**scope-63 · Grotesk hovers by inverting.** Kenny, 2026-09-13, on
+`research/grotesk-hover/demo.html`: option B. A primary or destructive button
+turns to the page ground with its label in its colour on hover and on keyboard
+focus, not while pressed; a bare mirror button takes the grey wash.
+
+**scope-64 · The data table's bars sit inset.** Kenny, 2026-09-13, on the data
+table demo's footer block: "Bars inset". The search bar and the status-and-pager
+bar carry inline and block padding by default, as a knob.
+
+**scope-65 · A research demo is judged like a component.** Kenny, 2026-09-13:
+the Approve and Not approved buttons "moeten er altijd staan en functioneel zijn
+als het over approvals gaat". Every block of a research demo carries them, with
+the same hash-kept verdicts as the review page; and a copied prompt is not
+repeated in the next one.
+
+**scope-66 · All seven data table features, now.** Kenny, 2026-09-13, form item
+datatable-build: "Alle zeven, nu". Multi-sort, column choice, row expansion, a
+fixed first column, server rows, inline editing and arrow-key cell navigation
+enter `.kp-datatable` in both channels. The last two reverse the "left out"
+of the data table form earlier that day. The filter design (panel or
+"+ Add filter") is not part of this; it waits for his look at the demo.
+
+**scope-67 · The review site is published under /review/.** Kenny, 2026-09-13,
+form item pages-review: "Publiceren onder /review/". The Pages workflow
+assembles the documentation from main and the catalogue with the research
+demos from round-six; Claude pushes round-six whenever it asks Kenny to look.
+Kenny's own answer on grotesk's pressed button waits until he has seen it
+there ("eerst zien op github pages").
+
+**scope-68 · Verdicts live in a register in the repository.** Kenny, 2026-09-13,
+form item verdict-ledger: "Register in de repository", after asking whether his
+judgements are kept for good ("dit mag nooit veranderen door een change").
+`catalogue/verdicts.json` holds every verdict with the hash and the commit it
+was given on; Claude records each pasted prompt and commits it; the hash recipe
+carries a version, and a gate refuses a recipe change until every entry is
+re-hashed on its own commit. A verdict only returns when the component itself
+looks different. Item verdict-import: "Terugzetten wat niet veranderde" — the
+131 verdicts of that day are restored where the block hashes alike at the
+commit they were given on and at the current one.
+Added the same day: verdicts are per browser engine as well — "er moet ook een
+verschil zijn tussen firedragon en chrome approved, dat zijn afzonderlijke
+testen". A block approved in Firefox is still to be judged in Chromium.
+
+**scope-69 · Every form says how long the step took, measured.** Kenny,
+2026-09-13, form item step-timing: "Alleen kp-themes, eerst". Each form carries
+an item `step-timing · …`: the time from his last message to the form, the
+longest tool calls and agents with their durations, the rest as Claude's own
+thinking and writing, one line of why per long part (or "niet vastgesteld")
+and what would shorten it, with Akkoord / Niet akkoord. The figures come from
+`~/Projects/dev-procedure/hooks/step-timing.py`, which reads the session
+transcript; `hooks/form-lint.py` refuses a form without the item wherever a
+CLAUDE.md carries `step-timing: required`. Only kp-themes carries it; after
+round eight Claude asks whether other projects should.
+
+**scope-70 · Both filter designs, chosen per table.** Kenny, 2026-09-14, form
+item filter-design: "Allebei, per tabel". "+ Add filter" joins the filter panel
+in `.kp-datatable`; a table picks it with an attribute, the panel stays the
+default.
+
+**scope-71 · Grotesk keeps B, with a black label while pressed.** Kenny,
+2026-09-14, form item grotesk-hover. Option E stays a demo option.
+
+**scope-72 · Every reference carries its link, to the block.** Kenny,
+2026-09-14: "je kan toch altijd links geven als je naar iets refereert. Vaak kan
+een anchorlink zelfs … Zie dat de catalogus dit ondersteunt. Doe dit vanaf nu."
+Forms and replies link every page they mention, with an anchor to the block;
+a catalogue page keeps and scrolls to a linked block even when it is judged.
+
+**scope-73 · Which appearance tests leave, and when.** Kenny, 2026-09-14,
+the tests form, on the inventory of that day (1612 tests per engine: 721
+behaviour, 319 sweeps, 315 appearance with a catalogue block, 68 appearance
+without one, 189 mixed). tests-register: the 98 appearance-only register tests
+go, mixed tests stay whole. tests-other: all 217 appearance tests outside the
+registers go, the 169 that loop all themes included, and
+`tests/data-surfaces.spec.mjs` with them. tests-no-block: a catalogue page
+"Page effects" gets the missing blocks first, the ten example pages join the
+catalogue navigation, and only then do the 68 go. step-timing: a catalogue
+test waits for the page's reading to finish by default.
+
+**scope-74 · After the test waves.** Kenny, 2026-09-14: filter-editor-title
+"Gewone tekst, zoals nu" — the add-filter editor's title stays a paragraph,
+the deviation from the mock is written in the user guide. density-compact
+"Compact overal krapper" — compact density must be measurably tighter in all
+22 themes, not only in formal, light, forest and high-contrast. step-timing
+"Akkoord" — the timing script counts time waiting on agents apart, work is
+split per file so agents run side by side, and whether one `generate:all`
+suffices is measured. Measured the same day: each run takes 8 s, and after
+an unformatted source edit the second run still rewrites a minified source
+map, because `generate:all` ends with prettier over the sources the first run
+had already read; two runs stay, or prettier on the changed sources first.
+
+**scope-75 · The commit level runs by hand, before every report.** Kenny,
+2026-09-14, form item commit-level: "Handmatig, voor elk verslag". The commit
+hook stays gates only; Claude or the checker agent runs
+`npm run test:tags -- --level commit` (measured: the 353 sweeps take 149 s in
+firefox) before every report to Kenny, and the status line names the result.
+step-timing "Akkoord": the status row is committed with the work it describes,
+never in a commit of its own.
+
+**scope-76 · Every gate judged once.** Kenny, 2026-09-14, the gates form of
+`scope-34`, one item per gate on the table of that day (39 gates, 18.5 s per
+commit, 18 recorded catches over 13 gates). All 39 answers follow the
+recommendation. Kept as blocking: 29. Merged, the check survives inside its
+target and blocks there: tokens into `npm test`, bundle into `check:min`,
+migration into `check:docs-runnable`, fonts-css into `check:fonts`, tear into
+`check:generated`, package into `check:manifest`. Moved to `npm run advice`,
+printed but never refusing a commit: variant-ground, compliance, baseline and
+prettier. Removed: none. step-timing "Akkoord": after the change Claude
+measures the new duration of `npm run gates`.
+
+**scope-77 · One decision per document.** Kenny, 2026-09-14, the documents form of `scope-36`, on the table of that day (71 tracked Markdown files; 46 judged, the 22 theme stories and 3 agent definitions left out as sources). Kept: 26. To the site: `docs/LAYOUT.md`, its prose and defaults now in the comments of `css/layout.css` that the layout page renders. Archived under `docs/archive/`, out of the document index, the path and privacy gates and the npm package: 18, among them `docs/ARCHITECTURE_DECISIONS.md` against the recommendation to keep it, so the ID gate no longer reads its IDs. Removed: `HANDOFF.md`. worktrees "Verwijderen": the 22 old agent worktrees are deleted. step-timing "Akkoord": the drift gate of `scope-35` follows for the documents that stayed.
+
+**scope-78 · The drift gate blocks, on the narrower sources.** Kenny,
+2026-09-14, the drift form of `scope-35`, on a replay of the last 100 commits
+(28 would have stopped with the sources first derived, 22 with the narrower
+ones; 10 and 6 of the last 30). drift-mode "Blokkerend": `check:drift` runs
+in `npm run gates` and the commit hook, and leaves `npm run advice`. Fifteen
+documents take the narrower sources — most leave `package.json` out, several
+follow a module's `.d.ts` instead of its implementation — and
+`docs/UTILITIES.md` keeps its one source. The gate is not infallible and says
+so: touching a document counts as looked at. step-timing "Akkoord": agents
+whose work does not overlap start together, and the tests run while they
+work.
+
+**scope-79 · After layer 3: uniform sizes are measured first, navigation starts.**
+Kenny, 2026-09-14, the next-round form. control-height, his own answer:
+not one control's height but whether every element can keep nearly the
+same size and layout when the theme changes — options on a demo page,
+comparing the themes with the largest elements against the smallest, with
+the median theme as control. A researcher measures every component's box in
+all 22 themes first and builds that demo; nothing in `css/` changes until he
+has looked. next-round "Navigatie": `scope-48` starts in two waves. The
+first builds the application shell (bar, rail and breadcrumb composed, a
+declared slim toggle) and the command palette as navigation (a visible
+trigger in the bar, an option that is a link) side by side; the second the
+mega menu and the shrinking header, after the three registers that set the
+bar's padding directly read `--kp-nav-pad-block`. step-timing "Akkoord":
+work that does not overlap starts together.
+
+**scope-80 · Wave 1 judged: E then B, per-theme search trigger, an off-canvas
+rail, and the catalogue notes of 2026-09-14.** Kenny, 2026-09-14, the wave-1
+form. uniform-size "E, daarna B": control and row heights plus one line
+height are fixed in the package first, in all 22 themes; B (headings, labels
+and navigation as tokens a register may not override, with a gate) follows as
+its own round after he judges E. search-voice "Per thema": each register
+draws `.kp-nav__search-trigger` in the voice of its own nav links.
+shell-narrow "Uitschuifpaneel": below a breakpoint the shell's rail becomes the
+existing `over` panel opened from the bar, and on wide screens the rail runs
+to the bottom of the window. fix-27 "Aanpassen", without a text: asked again.
+artifacts, his own answer: whether the unlinked ones can be archived and
+whether that touches the limit of five; answered in the next form.
+step-timing, his own answer: "akkoord", and from now on step durations are
+written in minutes and seconds, and in hours past sixty minutes. The notes of
+his catalogue prompt of the same day become work: the add-filter editor's
+Cancel brackets overlap its label (dark); a sixty-character bar label wraps
+over the line above; a click outside the search palette closes it; cyberpunk's
+button variants animate unevenly and the animation colour must differ from
+the ground; terminal's cursor sits at the text's height and is red on the
+destructive button; phantom's primary gets a press animation like the others;
+retro's accelerator appears on every button; titanium's primary shows a
+visible hover. 156 verdicts recorded in `catalogue/verdicts.json`.
+
+**scope-81 · Decided research demos move to an archive group.** Kenny,
+2026-09-14: a research demo that has served its purpose stays reachable but
+moves to its own group in the catalogue navigation, so the navigation shows
+which demos he still has to look at. All seven demos of the day have their
+decision taken — navigation (`scope-48`), futuristic layouts (`scope-49`),
+loading (`scope-50`), data tables (built), grotesk hover (option B),
+control heights (superseded by uniform sizes) and uniform sizes (`scope-80`)
+— and sit under "Archived research". A new demo goes in a "Research to look
+at" group above it and moves down once he has decided.
+
+**scope-82 · A new theme keeps the median's sizes.** Kenny, 2026-09-14:
+"nieuwe thema's blijven zo dicht mogelijk bij de maten van de mediaan zodat we
+geen nieuwe drift veroorzaken in sizes van elementen." Written as a rule in
+`docs/RULES.md`: a new theme's type sizes, paddings and gaps stay as close as
+possible to the median theme's, and its size index is measured with
+`research/uniform-size/` and reported in its integration form.
+
+**scope-83 · The questions after the catalogue notes.** Kenny, 2026-09-14.
+fix-27 "Zoals voorgesteld": a bar menu that has no room on the right opens
+to the left, measured in all 22 themes by a test that fails first. fix-28
+"Klopt": the package gives its unset controls the theme's font, and
+`verdicts.mjs record` compares a recorded hash with the test browser's.
+retro-accelerator "Alleen het teken": the underline only, no working
+shortcut; buttons with an icon before the label get it too. terminal-primary-
+cursor "Tekstkleur van de knop": the cursor on terminal's primary takes the
+button's ink. e-scope "Met B": tabs, badges and navigation links wait for
+option B's round. artifacts "Bewaren, dan verwijderen": the 17 artifacts no
+file links are saved under `docs/archive/artifacts/`, then deleted.
+step-timing "Akkoord", with a wish for later: the timing item names what each
+agent worked on, beside its duration.
+
+**scope-84 · A page to inspect the theme intros, and intro words per theme.**
+Kenny, 2026-09-15: a catalogue page where the intro screens some themes have
+can be inspected, played at a chosen speed with a slider; and the intro texts
+must match their theme ("Cyberpunk teksten passen niet bij een blueprint").
+Today four themes perform an arrival (`--kp-arrival`): synthwave, terminal
+and retro `boot`, phantom `card`. Retro and terminal carry their own lines in
+`arrivalLinesByTheme`; synthwave's boot shows the shared `arrivalLine`
+"▶ Calibrating neural uplink" with "Progress" and "OK". Every theme that
+performs an arrival gets words of its own world, proposed by Claude and
+judged by Kenny on the new page; a theme without its own words shows none of
+another theme's.
+
+**scope-85 · After the intro inspector.** Kenny, 2026-09-15, the review-and-
+intros form. fix-29 "Klopt". mega-headings "Via de review-site": judged per
+theme in his next catalogue prompt. sticky-shrink "De helft": a compact bar
+keeps half of its own block padding. control-font "Alleen de familie": as
+built. button-text "Beschrijven": `.kp-button__text` is documented public
+API. hc-scrolled "Aansluiten": high-contrast's scrolled-bar rule answers
+`data-kp-nav-compact`. step-timing "Akkoord". intro-words, his questions:
+what "Words now" and "On screen" mean; whether these are all the intros
+(cyberpunk seemed to have one); and whether an intro can make sure every
+resource (.css, .js) has loaded, or whether those load too fast to matter —
+measured by a researcher before anything changes. intro-verdict-theme, his
+question: what a block is here — asked again in plain words.
+
+**scope-86 · Intros stay on their timers; the headline reveal waits for the
+intro.** Kenny, 2026-09-15, the intros-and-loading form, on
+`research/intro-loading/` (192 loads). intro-loading "A": an intro does not
+wait for stylesheets, scripts or fonts; on a fast or warm load everything is
+ready within 0.32 s, and the slow cold case stays as measured. The research
+demo moves to "Archived research" (`scope-81`). reveal-under-intro "Na de
+intro": in synthwave, terminal, retro and phantom the headline reveal starts
+once the arrival has gone, so a first visit sees it. intro-verdict-theme "Het
+thema van de intro": on `catalogue/intros.html` each block records its verdict
+under its own theme, whatever the page wears, and shows that theme beside its
+buttons. bar-sticky-look "Nog niet gekeken": asked again. step-timing
+"Akkoord".
+
+**scope-87 · Option B starts; the futuristic layouts are dropped.** Kenny,
+2026-09-15, the next-round form. next-round "Optie B": the round of
+`scope-80` begins — headings, labels, tabs, badges and navigation links take
+package sizes a register may not override (e-scope "Met B" of `scope-83`), and
+`gates/box-metrics.test.mjs` refuses a register that sets them. His remark:
+"futuristische layouts gaan we volledig schrappen" — `scope-49` (HUD
+brackets, dispatch console, LCARS elbow frame, case file) is withdrawn and
+nothing of it is built; `research/futuristic/` stays under "Archived research"
+as the record of what was considered.
+
+**scope-88 · Option B's open questions.** Kenny, 2026-09-15, the option B
+form (commit `7c707d54`). combobox-flip "Klopt": `fix-30` is approved as
+proposed — every overlay raised into the top layer opens upward when there is
+too little room below and more above, with a capped, scrolling list when
+neither side has room; the same run covers `.kp-nav__link--cta`,
+`.kp-field__error` and `.kp-sidenav__title` with package sizes. solstice-hero
+"De pakketmaat houden": solstice's hero headline keeps the package's
+`--kp-text-display` (48px at 1920px wide, where it was 168px); no `MAY_KEEP`
+exception. trail-numerals "Cijfers van gelijke breedte houden": light,
+shade-light and pastel keep `font-variant-numeric: tabular-nums` on the
+breadcrumb and the pagination. step-timing "Akkoord".
+
+**scope-89 · The solstice review's answers.** Kenny, 2026-09-15, the solstice
+review form (commit `1b9c72bd`). marquee-frozen "Klopt": `fix-31` approved.
+sticky-slivers "Klopt": `fix-32` approved. datepicker-jump "Titel opent een
+raster": a click on the calendar's month title opens a grid of twelve months,
+a second click a grid of years (twelve at a time), keyboard reachable, in both
+channels and every theme. review-dialog, his own answer: "Build a demo" of a
+large review dialog of fixed size that opens a block, where every new item
+focuses the comment input so he can type freely; Left and Right move between
+blocks, Up approves, Down rejects; Backspace stays text correction. Rejecting
+works only when the input holds text — and from now on that holds for every
+rejection on every review surface, not only in the dialog. combobox-test
+"Klopt": `tests/combobox.spec.mjs` checks "against the input on the side it
+took" (`fix-30`). retro-cta-press "Dezelfde uitzondering als de knop": retro's
+pressed call to action steps one pixel down again, with a `MAY_KEEP` entry and
+its reason. step-timing "Akkoord".
+
+**scope-90 · The review dialog, the month grid and the header's reach.**
+Kenny, 2026-09-15, the form after `scope-89` (commit `c3c48b50`).
+review-arrows "b · Alleen bij een leeg veld": the review dialog is built on
+the review page and the component pages; Left and Right move between blocks
+only while the note is empty, and move the caret once it holds text; Up
+approves, Down rejects with a note. review-approve-text "Wissen, zoals nu": an
+approval clears the note, as `fix-29` has it, in the dialog too. review-last
+"Open laten met melding": after the last block without a verdict the dialog
+stays open with a message. month-names "Korte namen": the month grid keeps
+short names, the full name for screen readers. month-ellipse "Een pil": in
+formal and sepia a chosen month or year is a pill, not a stretched circle.
+frozen-calendars "Bijwerken": the still calendars in `#open`, `#limits` and
+`#locale` take the markup the module builds now. six-rows "Laten zoals nu":
+no change. caption-reach "Alleen bij scrollen": the header's 2px reach
+(`fix-32`) shows only while the scroll box is scrolled. step-timing "Akkoord".
+
+**scope-91 · The review dialog stays on the review pages.** Kenny,
+2026-09-15, the form after `scope-90` (commit `a2c30166`). dialog-research
+"Alleen review-site en componentpagina's": research demos, the intro page and
+the compare columns get no review dialog. step-timing "Akkoord".
+
+**scope-92 · The catalogue review comes first.** Kenny, 2026-09-15, the
+next-step form (commit `bec8bb07`). next-step "Eerst de catalogusreview":
+nothing new starts; Kenny reviews the returned blocks in the review dialog,
+and the JavaScript split of `scope-50` waits. step-timing "Akkoord".
+
+**scope-93 · The light-theme review's answers.** Kenny, 2026-09-15, the
+light-theme review form (commit `957e79ac`). redaction-fix "b": each register
+that draws a redaction bar paints it on the phrase itself with
+`box-decoration-break: clone`, so a wrapped phrase is covered line by line
+(`fix-33`). zoom-hashes "Klopt", with his hash-recovery answer: "niks
+opnieuw, ik gebruik die level van zoom standaard, dus mijn oordeel blijft
+gelden" — he reviews zoomed by default, so field 5 of `fix-34` holds: the
+review page records the zoom a verdict was read at and the comparison with the
+test browser reads at that zoom; no verdict is re-judged and the refusal at
+another zoom is not built. laurels-direction "B · Wreaths": each claim between
+two drawn laurel branches, platforms as app-store badges — in shade-light only, the theme his note was on; Kenny corrected the form, whose consequence line said every theme, the same day, and the other 21 themes keep their laurels.
+divider-shape, his own answer "pearls": the shape knob `data-kp-divider-shape`
+with pearls as pastel's default; the form offered three of the five shapes,
+which he caught. hc-filled-hover "De opstijgende balk van Cancel". light-indigo
+"Ook daar weg", with a catalogue prompt approving seven light navigation blocks
+and rejecting the application shell: "blauw moet uit navbar". retro-scrollbars
+"Tooltips zonder scrollbalk". cta-plates "Gelijktrekken": forest, solstice,
+shade-dark, lapis and nostromo get room around a drawn call-to-action plate.
+step-timing "Akkoord".
+
+**scope-94 · The dark-theme review and scope-93's follow-ups answered.**
+Kenny, 2026-09-15, the form after `scope-93` (commit `895fafbb`). form-scope
+"Klopt": `fix-35`. hash-recipe "Berekende stijl houden, met de zoom": the
+block hash stays hash version 2 over computed style, read at the verdict's
+recorded ratio. unmatched-110, his own answer: "ik wil gewoon die 110 oordelen
+niet meer opnieuw hoeven te maken, ze zijn goedgekeurd" — the 110 verdicts
+that match no ratio keep their verdict and are re-anchored to a reading at rest
+of the commit they were given at, so they do not return unless the block
+changed since. alarm-levels "Overal vol drama": `kp-alarm` is built with the
+full drama in all 22 themes, each in its own colours and faces. alarm-auto
+"Blokkerend, zoals de demo". press-looks "Nog niet gekeken": the dark and
+titanium presses wait for his catalogue review. redaction-costs "Aanvaarden, en
+pastel's vervaging terug": pastel's redaction fade returns through a
+registered custom property. light-breadcrumb "Ook weg". synthwave-reach
+"Alleen Try again": the dark frame is narrowed to the failed data table's
+retry button. laurels-badges "Met pictogram en Available on": the catalogue's
+platform badges carry a glyph and an "Available on" line. step-timing
+"Akkoord".
+
+**scope-95 · The divider shapes go; a Look-at text no longer brings a block
+back.** Kenny, 2026-09-15, the dividers form, after asking why the dividers
+returned in every theme when he only wanted pastel changed. dividers-carry
+"Overzetten, en de tekst uit de hash": the block hash stops reading the
+block's Look-at text, and existing verdicts carry over wherever the block
+itself did not change, so `#dividers` returns in pastel only.
+divider-shapes-block "Blok en optie weg": the `data-kp-divider-shape` knob, its
+gate and the `#divider-shapes` block are removed; pastel draws its pearls in its
+own register. step-timing "Akkoord".
+
+**scope-96 · After the 22-theme review: cyberpunk's data stream, alarms of
+each theme's own, and the rest of the hash.** Kenny, 2026-09-15, the form after
+his review of all 22 themes. cyberpunk-divider "Data stream": cyberpunk's razor
+tear is replaced in its own register by the data stream (three rows of muted
+yellow dashes with cyan packets under a scan hairline, two layers drifting at
+different speeds, the footer seam flowing the other way); the research demo is
+archived. hc-bar "De drie knoppen, en Undo in de neutrale toast zwart": the
+white rising bar stays on Cancel, Save changes and Delete account, and a ghost
+button on a light toast takes the dark bar again. light-blue, his own answer:
+"lijkt al opgelost, is goedgekeurd" — nothing changes. unmatched-218
+"Vastzetten zoals de 110": the 218 verdicts the test browser could not carry to
+hash version 3 are re-anchored at their commit, as scope-94 did. hash-labels
+"Ook uit de hash": a `.cat-note` label outside a stage leaves the hash, and
+verdicts carry over where nothing else changed. alarm-flicker, his own answer:
+"Die flicker moet enkel bij thema's waar het bij past. elk thema moet een
+aangepast alarm krijgen gebaseerd op wat het thema voorstelt, de unieke
+mannerismen van het thema en de kleuren" — each theme's alarm is redesigned from
+what the theme stands for, its mannerisms and its colours, and the flicker
+stays only where it belongs. alarm-button "Per register, zoals nu".
+dialog-scroll-reset "Bovenaan openen": a dialog's body opens at the top every
+time. fix-36 "Klopt". step-timing "Akkoord".
+
+**scope-97 · A portrait per theme, and a recipe new components follow.** Kenny,
+2026-09-15, asking whether the essence of each theme — what makes it unique, its
+mannerisms, colours and motion — can be shown on a page of its own, so new
+components find their place in every theme more easily. portrait-shape
+"Catalogus, en de site linkt ernaar": a live page per theme in the catalogue,
+built on the real stylesheets and registers; the site's theme page links to it.
+portrait-content, all nine sections in this order: idea, colour in its role,
+type, shape, surfaces, motion (enter, leave, press, hover, load, ask for
+attention, and what reduced motion keeps), ornaments, voice, and a recipe for a
+new component. portrait-data "Databestand, poort als advies":
+`themes/<theme>/signature.json` feeds the page, and `npm run advice` reports a
+component without an answer to a recipe verb, without refusing. portrait-pilot
+"Eerst cyberpunk, formal en pastel": three portraits first, as research to look
+at; the other nineteen follow once Kenny has judged the form. portrait-review
+"Per sectie, zoals blokken": each section is a hashed block with its own
+verdict. alarm-order "Stoppen tot de portretten er zijn": the per-theme alarm
+redesign of scope-96 is stopped and is rebuilt from the approved portraits.
+step-timing "Akkoord".
+
+**scope-98 · The pilot portraits judged: the alarm glitches only in cyberpunk,
+and the other nineteen portraits follow.** Kenny, 2026-09-15, the pilot form and
+his catalogue review of the three portraits. Cyberpunk's nine sections approved;
+formal and pastel approved except Motion. formal #motion: "het alarm geeft nog
+altijd het glitch effect, dat enkel bij cyberpunk thuishoort. het kleurenschema
+van het alarm passen volgens mij ook niet super hard bij dit thema". pastel
+#motion: "zelfde commentaar, glitch effect past helemaal niet bij pastel, maak
+het alarm eigen aan dit thema". So the glitch and the flicker leave the
+package's alarm and live in cyberpunk's register; formal and pastel get alarms
+of their own from their portraits; the portrait form is approved and the
+other nineteen portraits are built in it. anatomy-sync "Bijwerken, en de tekst
+naar het portret laten verwijzen": cyberpunk's, formal's, pastel's and dark's
+anatomy are corrected to their registers, the lists the portrait proves leave
+the text, and the text links to the portrait; the others follow with their
+portraits. stamp-cards "Op elke kaart met een label": formal's and pastel's
+stamp lands on every labelled card and keeps off the title. hc-side-bars "Ook
+in de tekstkleur": a ghost button's side bars on a toast take the toast's ink.
+Kenny also asked why the laurels demo was still under "Research to look at"
+when it was decided at scope-93: it moves to "Archived research".
+step-timing "Akkoord".
+
+**scope-99 · The portraits stop at the three pilots.** Kenny, 2026-09-16, after
+asking whether the portraits are useful enough for the work they take ("denk
+is mee, ik weet niet of die portretten die we aan het maken zijn nuttig genoeg
+zijn om zoveel werk in te steken"), and Claude's reckoning: the pilots showed
+him the alarm's misplaced glitch and gave the advice check its gaps; nineteen
+more meant about six times the pilot's 4776 lines and 171 blocks to judge.
+portrait-scope "Stoppen bij de drie proeven": the four agents building the other
+nineteen portraits are stopped and their work discarded; cyberpunk, formal and
+pastel keep their portraits and signatures; each theme's alarm is designed from
+its register and anatomy, as before scope-97 (formal's and pastel's from their
+portraits). portrait-screenshots "Buiten de repository": the three PNGs leave
+the branch and `research/theme-portraits/*.png` is ignored. fix-37 "Klopt".
+step-timing "Akkoord". While writing signatures, the stopped agents reported
+possible register faults in dark, shade-dark, sepia, shade-light, lapis and
+solstice (a focus ring clipped by dark's chamfer, menus that close without their
+fade, disabled buttons that still react, scope-25 gestures never built); they
+are unverified and wait for Kenny's decision.
+
+**scope-100 · The measured register faults are fixed; the scope-25 gestures get
+a demo first.** Kenny, 2026-09-16, the register-faults form. register-faults,
+all nine: dark's focus ring (fix-38), dark's disabled and primary-hover buttons,
+dark's clipped dialog shadow; lapis without JavaScript, lapis's button
+transitions, disabled hover and stamp; shade-light's secondary press; sepia's
+two ink washes; solstice's side note and looping band; the menus of shade-dark
+and sepia that close without their fade. The invisible and comment-only faults
+in the same registers are fixed alongside. scope25-gestures "Eerst een demo":
+sepia's ink spreading on a press and its rule thickest in the middle, and the
+pointer as the light in shade-light and shade-dark, are shown in a research
+demo next to what ships; no register changes until Kenny chooses.
+cyberpunk-flicker "Ondieper, en opnieuw kijken": cyberpunk's alarm flicker gets
+a shallower dip until the flash report reads under 2.5 per second, and its
+alarm returns for review. fix-38 "Klopt". step-timing "Akkoord".
+
+**scope-101 · The scope-25 gestures are built, and dark's dialog shadow gets a
+demo.** Kenny, 2026-09-16, the gestures-and-shadows form. scope25-build, all
+four: sepia's ink spreading from the press point and its rule thickest in the
+middle, the pointer as the light in shade-light and shade-dark, and cards
+carrying a shadow at rest (which the approved concept demo left flat), each
+implemented as the research demo draws it. dark-dialog-shadow, his own answer:
+"toon alle opties in een demo" — black with more depth, the oxide film's colour
+and the demo's own near-invisible shadow are shown side by side before anything
+is chosen. shade-light-contrast "Donkerder maken": shade-light's muted text is
+darkened until every pair clears 4.5:1 (now 3.61, 3.99 and 4.13).
+step-timing "Akkoord".
+
+**scope-102 · Dark's dialog wears the oxide halo; shade-light's ink gets its
+order back.** Kenny, 2026-09-16, the shadow-and-ink form. dark-shadow "Gloed van
+de oxidefilm": the dialog, card and popover are separated from the ground by the
+oxide film's own colours (measured 88.3% of the band past ΔL* 3 against 0.4%
+today) — a modal dialog clips a blurred halo away, so it is painted as the fixed
+four-shadow imitation the demo measured. shade-light-muted "Gewone tekst ook
+donkerder": the body ink darkens too, so muted text is measurably quieter again
+while both stay over 4.5:1 (today body 4.52 against muted 4.71 on the muted
+ground). sepia-findings "Klopt": the heading rule follows the approved demo in
+the primary colour rather than the border colour, and the ink stain's 11px reach
+is recorded in tests/reflow-findings.json. step-timing "Akkoord".
+
+**scope-103 · The theme sweeps become a level, and the thin places get tests.**
+Kenny, 2026-09-16, the test-suite form, after "Ik heb het gevoel dat er nog veel
+teveel getest wordt waar het niet relevant is". The audit measured: 804 written
+tests become 1593 because fourteen lines loop over 22 themes, 424 of them (27%)
+restate a claim made elsewhere, and the whole firefox suite takes 5 min 12 s at
+0.196 s per test. test-scope "Thema's als laag": a theme sweep runs on formal,
+dark and cyberpunk at the commit level and on all 22 at the release level — 36 s
+saved with no assertion removed. test-thin, all five: fonts (3 tests today,
+fix-28 behind them), overlay placement (6 tests, three of this round's faults),
+the cascade order between the utilities and the layout layer, motion that must
+restart (fix-31) and redaction (fix-33). Kenny also asked, in the remarks,
+whether the tests could be selected from the catalogue's block hashes — "Ik wil
+enkel supergericht testen indien mogelijk en bij release nog is de hele suite" —
+so a hash-driven selection is measured before it is built: what it costs to read
+the blocks of the changed files' components against their recorded hash, and how
+many tests it removes compared with the tag selection. step-timing "Akkoord".
+
+**scope-104 · A gate whose inputs did not move does not run.** Kenny,
+2026-09-16, the testselectie form in the dev-procedure session — the same
+instinct as scope-103 one level down: "enkel als die hash verandert dan
+testen we daarop." Where scope-103 is about which browser tests run, this
+is about the thirty-two gates in `.claude/hooks/gates.sh`, and the two do
+not overlap.
+
+Measured on this repository before it was built: 200 commits against 30
+checks is 6000 runs, of which 4239 (70%) could not have found anything
+because no file that check reads had changed. `gates/check-fonts.mjs` ran
+200 times and was relevant twice; `gates/generate-ha-themes.mjs --check`
+once. Measured after: a full round is 12,3 s, a commit that changes one
+document is 1,3 s with 2 of 32 checks running, one that changes a theme
+file 2,6 s with 3 of 32, and a re-run with nothing changed 0,6 s.
+
+Each check is loaded under `.githooks/trace-inputs.cjs`, which records
+every path it opens, so the input set is discovered rather than written
+down — Kenny chose that over a per-check list because a list a person
+keeps goes stale exactly when it matters. `.githooks/gate-cache.sh` holds
+three properties that are not configurable: only a green run is
+remembered, the check's own source is part of its input set, and the
+cache lives in `.git` so it never travels. The cache is ignored on the
+first commit of each day and whenever `GATE_FULL=1` is set.
+
+`npm run gates` still runs all thirty-two unconditionally; only the hook
+skips. Two unit tests moved with this: KT7 now reads a `&&` chain half by
+half, and the README gate count is read from the `gate` lines rather than
+from the `echo` headings the hook no longer prints.
+
+**scope-105 · A look is compared, not described.** Kenny, 2026-09-16, the
+after-the-tests form. hash-tool "Weg": the measurement script for a hash-driven
+test selection is not kept; its numbers stay in scope-103. features-shade
+"Cijfer bijwerken": FEATURES.md's TH67 row carries a dated amendment with
+shade-light's new figures (5.86 on the page ground, 6.07 on a card).
+dark-menu, his own answer: "maak een demo om het verschil te zien. Doe dit in
+het vervolg nog als er zulke keuzes zijn. Het is veel beter om dingen met het
+oog te vergelijken dan een tekst te lezen en mijn verbeelding te moeten
+gebruiken" — so dark's dropdown menu gets a demo of the two shadows side by
+side, and from now on every choice about how something looks comes with a demo
+the form links to (docs/RULES.md). step-timing "Akkoord".
+
+**scope-106 · The navbar's dropdown joins the halo, and a comparison demo is
+Claude's own work.** Kenny, 2026-09-16, the menu-shadow form, after looking at
+the demo. menu-shadow "De volle gloed": dark's `.kp-nav__menu` carries
+`--kp-halo`, the same four fixed shadows as the dialog, the card and the popover
+family; measured in the same probe it went from 1.3% of the 24px band past ΔL* 3
+(peak 4.87) to above the bar the other three clear. demo-speed "Snel, Claude
+zelf": a comparison demo is Claude filling `research/_compare/template.html` —
+no agent, no measurement, no spec of its own — unless the choice turns on a
+number, and then Claude says so before building it. The nine minutes that
+prompted this were the research around the page, not the page.
+
+**scope-107 · Nothing is released while an element is not approved.** Kenny,
+2026-09-16, answering what Claude should do while he reviews: "eerst alle
+problemen die er nog zijn oplossen, we releasen pas als elk element approved is.
+Dit is een vaste regel vanaf nu". So a release waits until every block in the
+catalogue carries an approval for every theme it is shown in; open rejections
+and blocks never judged both block it, and the retrospective and the version
+bump come after. His review of the whole catalogue the same evening recorded 566
+verdicts, of which thirteen are rejections: light's mega menu clipped at the
+window's edge; dark's app shell, dossier, long dialog and confirmation, where
+the new halo leaves an uncoloured strip that squares the chamfered corner, and
+its select with two arrows; high-contrast's app shell, bar search and shrinking
+header, where blue is still in the navigation and "Search" keeps the old ink;
+sepia's failed data table, whose "Try again" must read white; blueprint's
+laurels, which should sit in the theme's measure frame; brutalism's auto alarm,
+whose text breaks out of its frame, and its over-the-page menu, which stands on
+the page before it is opened; phantom's React theme menu, which shows almost
+nothing; shade-light's primary button, with no visible press; and retro's two
+alarms, whose face is too coarse to read.
+
+**scope-108 · Retro's alarm speaks the theme's own body face; two smaller things
+close with it.** Kenny, 2026-09-16, the retro-face form, after looking at the
+demo. retro-face "Instrument Sans": the alarm headline takes
+`--theme-font-body` instead of the pixel face he called too coarse; the window
+chrome carries the era. alarm-fit "Nu meteen": grotesk's headline (20px past the
+frame in Firefox, 7 in Chromium) and high-contrast's (9px in both) come down in
+size, and the test's tolerated overflow goes to zero for every theme.
+sepia-retry-border "Rand mee in het wit": the retry button's frame follows its
+label, which read 1.6:1 on the red plate. In his remarks: "archiveer de bestanden
+in 'research to look at'" — the retro face demo and the three theme portraits
+move to "Archived research", each with its decided line.
+
+**scope-109 · The approval count is printed, never enforced.** Kenny,
+2026-09-16, the review-again form. release-check "Een lijst in advies":
+`gates/advice-approvals.mjs` runs in `npm run advice` and prints how many
+block/theme pairs carry an approval, how many are open, and the first twenty by
+name; it always exits 0, because the work that earns an approval has to be able
+to commit. Measured at the moment it was built: 3037 of 3058 pairs approved, 21
+open, all of them the rejections of scope-107 waiting for Kenny's second look.
+while-review-2 "Wachten": nothing else is started while he reviews.
+step-timing "Akkoord".
+
+**scope-110 · A component remembers what the user set, under a name the author
+gives it.** Kenny, 2026-09-16: "de sidenav moet zijn state onthouden, ik heb bv
+de components dropdown gesloten en klik op een link, dan moet die nog altijd
+dicht zijn. Dit gedrag moet tellen voor alle elementen waar dit verwacht wordt
+door een user", and "die key in localStorage moet niet hardcoded zijn, stel dat
+we twee van dezelfde elementen naast mekaar op de pagina willen ofzo". So the
+package gets one mechanism, the way the theme is already remembered:
+`data-kp-remember="<name>"` opts an element in and names its key, two of the
+same component on one page keep separate state, a component without the
+attribute remembers nothing, and blocked storage leaves everything at its
+default. It covers the state a user sets and expects to find again — the side
+navigation's groups and collapsed rail, the split pane, the data table's
+columns, sort and density, the accordion and the tree — and deliberately not
+the transient overlays. The review site's own navigation is its first consumer.
+
+**scope-111 · What Kenny must judge is gathered by "Every component, one
+page".** Kenny, 2026-09-16: "ik ben per thema alle elementen afgegaan, dus als je
+wil dat ik een oordeel geef, dan moeten die elementen via 'every component, one
+page' beoordeeld kunnen worden". The review page gathers the pages marked
+`component: true`, so a block anywhere else can never be judged. Measured when
+the rule was written: `catalogue/intros.html` carried four blocks — the theme
+intros — and was listed without that mark, so those four had no verdict key at
+all. It is a component page now, and `gates/check-catalogue.mjs` refuses any
+catalogue page that carries blocks without being gathered. A block written for
+one theme (an intro carries `data-cat-theme`) counts in that theme alone in the
+approval advice.
+
+**scope-112 · The approval count follows the hash.** Kenny, 2026-09-16, the
+open-pairs form, item also-changed: "De telling volgt de hash". The count of
+scope-109 read the verdict alone, so a block approved before it changed — dark's
+panels before the halo was cut at the chamfer, every block with a select before
+its second arrow went — was still counted as approved; with scope-107's rule a
+release could then ship something Kenny never saw in that form. The block hash
+needs a browser, and advice must stay in seconds, so the reading is taken on its
+own: `node gates/verdicts.mjs snapshot` measures every judged component pair in
+the working tree, at the engine and the device pixel ratio its verdict was read
+at, and writes `catalogue/hashes-now.json`. `gates/advice-approvals.mjs` reads
+that file, counts a pair "changed since judged" where the reading no longer
+matches the hash the approval was given on, and prints the commit the readings
+were taken at together with the number of files under `catalogue/`, `css/`,
+`js/` and `themes/` that moved since — an advice that names its own age.
+Nothing refuses: the snapshot is a file, not a gate.
+
+Measured the first time at `1fa18938`: 7 min 13 s for 3058 pairs, of which 73
+were no longer the block their verdict was given on, and the count went from
+3044 of 3062 approved to 2978. On the three questions that answered
+(2026-09-16): the measurement runs **only when a release is prepared**
+(snapshot-when — a commit costs 12,3 s of gates today and would cost seven
+minutes more), the 66 reopened pairs travel with Kenny's ordinary review
+rather than in a list of their own (changed-again), and the readings stay in
+the repository, about 591 KB per measurement, so every checkout counts the
+same (snapshot-kept).
+
+**scope-113 · One dialog for a whole round: a finished theme walks on to the
+next.** Kenny, 2026-09-16: "als ik op every component, one page helemaal rond
+ben voor een thema, dan moet het gaan naar een nieuw thema en daarvan alle
+componenten geven in die dialoog zodat ik vanuit 1 dialoog kan vertrekken en
+alles wat mogelijk goedgekeurd moet worden, kan goedkeuren. Op het einde mag er
+dan een boodschap komen dat zegt dat ik rond ben." Until now the review dialog
+stopped at the end of a theme ("Every block is judged in Formal") and he had to
+close it, pick the next theme in the menu and open it again, 22 times.
+
+Now `catalogue/judging.js` hands the dialog a walk: at the end of a theme it
+switches the page to the next theme in the menu's order, waits for the register
+to paint and the blocks to be read again, and stops at the first theme that
+still has a block to judge — "Formal is done. Now judging in Titanium." The
+keys do nothing while the walk runs, so a held arrow cannot skip a block. When
+no theme has anything left the dialog stays open and says the round is over.
+A page that is one theme (a portrait, `data-cat-theme-fixed`) never walks.
+
+**scope-114 · A block's hash is what it is made of, not what it looks like.**
+Kenny, 2026-09-16, after four rounds in which the same blocks kept coming back:
+"Een component is de som van html+css+js+browserkeuze, daarop moet de hash
+gebaseerd zijn. Hoe het rendered kan mij geen fucking kloten schelen, dat is
+niet relevant. Als ik iets goedkeur op 125% dan is het voor alle zoom levels
+goedgekeurd."
+
+So hash version 5 reads four lines and nothing else: the block's markup as
+written (the recipe of scope-95 and scope-96, unchanged), the theme it is
+judged in, a digest of the code every theme shares (`css/` without the
+registers, `js/`, `components/`) and a digest of that theme's own code (its
+register and its tokens). The digests are written by
+`gates/generate-code-version.mjs` into `catalogue/code-version.json`, which a
+gate holds current.
+
+What that buys, measured the same day: the same block reads the same hash at
+two window sizes, with a value typed into it, with a control focused, on its
+own page and on the review page — five readings that used to be five different
+hashes. A change to dark's register asks Kenny about dark and leaves the other
+twenty-one alone. A reading no longer needs the paint, so `verdicts.mjs settle`
+reads all 3062 pairs from one page load.
+
+What it costs: the hash no longer notices a look that changed without the code
+changing (it cannot happen) and no longer distinguishes two zooms (which is the
+point). The carried-over readings of scope-95 and scope-96 (`EARLIER_VERSIONS`)
+go with it: nothing is carried over any more, because nothing about the reading
+depends on the moment it was taken. The whole register was read again at
+version 5 and every pair recorded as approved, on his instruction ("tag alles
+als approved en zie dat dit nooit meer terugkomt").

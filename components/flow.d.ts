@@ -1,6 +1,10 @@
 export type DatePickerProps = {
     label: string;
     /**
+     * The label stays for assistive technology but is not drawn, for a picker a visible heading already names (a data table's date filter). Default false.
+     */
+    hideLabel?: boolean;
+    /**
      * Controlled text.
      */
     value?: string;

@@ -74,34 +74,43 @@ with its amendments of 2026-09-10 and 2026-09-11. They are recorded in
 
 | Command                 | What it runs                                                                  | When, and whose                                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `npm run gates`         | 33 `check:` scripts, then the unit tests, then `prettier --check .` — 35 steps | every commit, by the hook. Seconds                                     |
-| `npm run test:affected` | the specs the change touches, Firefox only                                    | once before each report and each commit                                |
+| `npm run gates`         | 29 `check:` scripts, then the unit tests — 30 steps; six older checks run inside them [scope-76], the drift check among them [scope-78] | every commit, by the hook. Seconds                                     |
+| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit |
 | `npm run test:browser`  | `playwright test` — the whole suite, both engines                             | **Kenny's to authorise.** Before a release Claude asks in a form       |
-| `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants                     | when Kenny wants the reading                                           |
+| `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants, variant grounds, the compliance table, the baseline, prettier | when Kenny wants the reading                                           |
 | `npm run verify`        | gates, then the whole suite, then the advice, with a banner per phase         | before a release, on his go                                            |
 
 Three things about that table are not style, they are code:
 
 - **The gates chain and the hook are held together by a test.** `gates.test.mjs`
-  asserts that every `check:` script appears in `npm run gates` **and**
-  in `.claude/hooks/gates.sh`, and that `.github/workflows/release.yml`
+  asserts that every `check:` script outside `npm run advice` appears in
+  `npm run gates` **and** in `.claude/hooks/gates.sh`, that none inside it
+  does, and that `.github/workflows/release.yml`
   runs `npm run gates` (`gates/gates.test.mjs`, the test named
   `KT7: every check script runs in the gates chain, in the hook, and CI runs the chain`).
   Adding a gate therefore means three edits, not one, and the unit tests
   say so on the next commit.
+- **A document stops a commit when a file it describes moved.** `docs/drift.json`
+  names each kept document's sources; `npm run check:drift` refuses a commit
+  where one changed and the document did not. Read the document, update it if
+  it no longer holds, then `npm run drift:seen -- <document>` [scope-35,
+  scope-78]. Touching the document counts as looked at; the gate knows files,
+  not meaning.
 - **The advisory checks never refuse.** `npm run advice` separates its
-  five checks with `;`, not `&&`, so a non-zero exit does not stop the
+  nine checks with `;`, not `&&`, so a non-zero exit does not stop the
   next one; and `gates/verify.mjs` marks the advice phase
   `blocking: false`. Its closing line is
   `verify green. The advice above is a reading, not a verdict [Kenny, 2026-09-09].`
-- **`test:affected` usually means everything.** `gates/affected.mjs`
-  answers `none` for a change no browser can load, a list for a
-  register or a spec, and `all` for anything else — including any
-  stylesheet or module. While building one thing, run its single spec
-  instead:
+- **Tags decide what runs** [scope-33]. `gates/tags.mjs` reads `tests/tags.json`:
+  a register selects its theme, a changed rule in `css/components.css`
+  selects the component its selector names, a module selects its
+  components, a changed spec runs whole, and `js/strings.js`,
+  `package.json` or the test server still select everything.
+  `npm run check:tags` (in the gates) refuses an untagged test and a
+  file no rule covers. See what a change selects without a browser:
 
     ```sh
-    npx playwright test tests/<file>.spec.mjs --project=firefox
+    npm run test:tags -- --dry-run
     ```
 
 ### Procedure 1.1 — before every commit
@@ -117,18 +126,18 @@ Three things about that table are not style, they are code:
 
     ```
     2 generated files match their source (22 themes).
-    All 22 themes declare the same 96 token names (4 known exceptions, L3 clears them).
     Hooks: 22 themes answer 6 hooks (118 answers checked, quiet or scoped).
     ```
 
-2. Run the browser specs the change reaches:
+2. Run the browser tests the change reaches, with the sweeps:
 
     ```sh
-    npm run test:affected
+    npm run test:tags -- --level commit
     ```
 
-    Correct: `Nothing a browser can see has changed — no browser test to
-    run.` for a documentation-only change, or a Playwright run that ends
+    Correct: `level commit: nothing to run` never appears at this level
+    (the sweeps always run); a documentation-only change shows
+    `none: documentation` for each file, and the run ends
     with no failures. `retries` is 0 and stays 0 — a spec that needed a
     retry is a red spec.
 
@@ -160,11 +169,11 @@ Something rewrote files after they were staged. Re-add and retry.
 ## 2 · Regenerating the generated artefacts
 
 Most of what this package ships is assembled, not authored. `npm run
-generate:all` runs sixteen steps in order (`package.json`, script
+generate:all` runs fifteen steps in order (`package.json`, script
 `generate:all`):
 
 `generate` → `generate:fonts-css` → `generate:utilities` →
-`generate:tear` → `generate:bundle` → `generate:min` →
+`generate:bundle` → `generate:min` →
 `generate:examples` → `generate:showcase` → `generate:site` →
 `generate:ha` → `gates/generate-compare.mjs` → `report:di5` →
 `generate:types` → `gates/compliance.mjs` → `checksums` →
@@ -177,7 +186,6 @@ What that covers, by output:
 | `gates/generate-themes.mjs`      | `css/themes.css` and `js/theme-registry.js` from `themes/<name>/tokens.json`  |
 | `gates/generate-fonts-css.mjs`   | `css/fonts.css` from `fonts/families.json`                                    |
 | `gates/generate-utilities.mjs`   | `css/utilities.css`                                                           |
-| `gates/generate-tear.mjs`        | the tear geometry **inside** `css/cyberpunk-register.css`, from `gates/tear.json` |
 | `gates/generate-bundle.mjs`      | `dist/kp-themes.css` and `dist/kp-themes.js`                                  |
 | `gates/generate-min.mjs`         | `dist/css/*.min.css`, the minified bundles and `docs/MINIFIED.md`             |
 | `gates/generate-examples.mjs`    | the pages under `examples/`                                                   |
@@ -191,7 +199,7 @@ What that covers, by output:
 
 ### Procedure 2.1 — regenerate after changing a source
 
-1. Make the source change (a token file, `gates/tear.json`,
+1. Make the source change (a token file,
    `fonts/families.json`, a site descriptor).
 
 2. Regenerate everything:
@@ -241,7 +249,8 @@ The rule (S47, Kenny 2026-09-07): the token contract is a floor, not a
 ceiling. When a theme, a component or an element needs a token that does
 not exist, the token is added and **every other theme declares it in the
 same change**. `gates/check-tokens.mjs` enforces the parity half and
-refuses a name that is not declared everywhere:
+refuses a name that is not declared everywhere; a commit runs the same
+check through the TH22 tests in `npm test` [scope-76]:
 
 ```
 Every theme answers every question, even when the answer is "none".
@@ -260,7 +269,7 @@ Every theme answers every question, even when the answer is "none".
    drill, and it takes one command:
 
     ```sh
-    npm run check:tokens
+    node gates/check-tokens.mjs
     ```
 
     Correct at this point: **red**, naming your token, with
@@ -273,7 +282,7 @@ Every theme answers every question, even when the answer is "none".
 4. Re-run until green:
 
     ```sh
-    npm run check:tokens
+    node gates/check-tokens.mjs
     ```
 
     Correct: `All 22 themes declare the same 96 token names (…)`, with
@@ -313,7 +322,7 @@ themes author their own states rather than take the derived ones.
     3 pair(s) short of the floor. This is advice: it is measured and printed, never refused [Kenny, 2026-09-09].
     ```
 
-5. `npm run test:affected`, then commit.
+5. `npm run test:tags -- --level commit`, then commit.
 
 If the value came from an approved concept demo, S49 applies: a gate or a
 test that says the demo must change produces a **finding** put to Kenny,
@@ -369,7 +378,7 @@ The worked example throughout is `titanium`, added in commit `51f803e`.
 
     ```sh
     npm run check:generated
-    npm run check:tokens
+    node gates/check-tokens.mjs
     npm run check:hooks
     ```
 
@@ -458,7 +467,7 @@ eleven chances to forget one.
     `.kp-nav__menu` — open the dropdown before you publish.
 
 6. `npm run generate:all`, then `npm run gates`, then
-   `npm run test:affected`.
+   `npm run test:tags -- --level commit`.
 
 **Abort:** `gates/wire-register.mjs` writes only when run without
 `--check`. If step 3 went wrong, `git checkout -- .` undoes all eleven
@@ -527,7 +536,8 @@ Two facts decide the shape of this procedure, and both are in the code:
 3. Write the `CHANGELOG.md` section. It is not decoration: the workflow
    passes `--notes-file CHANGELOG.md`, so this file becomes the release
    notes body. Add the `MIGRATION.md` section too if anything breaks —
-   `gates/check-migration.mjs` holds every class it names.
+   `gates/check-migration.mjs` holds every class it names, inside
+   `npm run check:docs-runnable` [scope-76].
 
 4. Run the gates:
 
@@ -734,7 +744,7 @@ And three things that are **not** here, each checked:
   `gates/checksums.mjs` — it needs no key and can always be rebuilt.
 - **No npm token.** `package.json` declares `"private": true`, which
   blocks `npm publish`; consumers install from a git tag
-  (`docs/INVENTORY.md`, JobTracker's entry). There is no registry
+  (`docs/archive/INVENTORY.md`, JobTracker's entry). There is no registry
   credential to lose.
 
 So the single credential whose loss stops work is the maintainer's own

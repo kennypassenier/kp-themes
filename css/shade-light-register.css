@@ -64,6 +64,17 @@
        color-mix(in srgb, var(--primary) 88%, black)), as a lightness
        step on the token instead of a mix toward a named colour. */
         --kp-primary-pressed: hsl(from var(--primary) h s calc(l - 9));
+        /* The pointer is the light [scope-25, built at scope-101]. Two
+       declarations, and neither is a mechanism of this register's own:
+       `--kp-pointer: track` is the bus dark and titanium already arm, and
+       `--kp-light: pointer` names which surfaces that bus lights. The
+       module writes six numbers per lit element; every rule below carries
+       the fallback the register painted before this (x 1, y 1, lift 1,
+       near 0 — scope-12's fixed light at the top left), so a page with no
+       pointer, no script or reduced motion is pixel for pixel what
+       shipped. */
+        --kp-pointer: track;
+        --kp-light: pointer;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -73,7 +84,6 @@
     [data-theme='shade-light'] h3 {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        line-height: 1.1;
     }
 
     /* No accent beyond the serif face itself: the demo's headline and
@@ -83,8 +93,6 @@
        on purpose (anatomy.md records this as a considered choice, not an
        omission). */
     [data-theme='shade-light'] [data-kp-surface] h1 {
-        font-size: var(--kp-text-display);
-        line-height: 1.06;
         letter-spacing: -0.015em;
         max-width: 20ch;
     }
@@ -216,32 +224,74 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='shade-light'] .kp-laurels {
-        gap: 0.6rem;
-    }
-
-    [data-theme='shade-light'] .kp-side-note__index,
-    [data-theme='shade-light'] .kp-laurels li {
+    [data-theme='shade-light'] .kp-side-note__index {
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         background: var(--card);
     }
 
-    [data-theme='shade-light'] .kp-laurels li {
-        padding: 0.3em 0.7em;
+    /* The laurels are wreaths [scope-93]: each claim between two drawn laurel
+       branches in the accent, the value on one line over its label, the
+       whole centred. Replaces the pill and the dot, which went wrong once
+       the value was a block: the dot stood alone on the first line and the
+       pill's round ends crowded two lines of words. Every length is in em,
+       so the wreath scales with the font; the branch is one vector mask,
+       crisp at any zoom, mirrored at the inline end and turned round again
+       in a right-to-left list. */
+    [data-theme='shade-light'] .kp-laurels {
+        justify-content: center;
+        gap: 1.25em 1.75em;
+        font-size: var(--kp-text-xs);
     }
 
-    /* The laurel's dot: a plate, never a word — the accent as a small
-       filled circle, exactly the reading the demo's own marked phrase
-       states. */
-    [data-theme='shade-light'] .kp-laurels li::before {
+    [data-theme='shade-light'] .kp-laurels > li {
+        display: grid;
+        grid-template-columns: 1.85em minmax(min-content, 15em) 1.85em;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: 0.45em;
+        max-inline-size: 100%;
+        text-align: center;
+        line-height: 1.3;
+        text-wrap: balance;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::before,
+    [data-theme='shade-light'] .kp-laurels > li::after {
         content: '';
-        inline-size: 0.55em;
-        block-size: 0.55em;
-        border-radius: 999px;
+        grid-row: 1 / 3;
+        align-self: stretch;
+        min-block-size: 4.5em;
         background: var(--accent);
-        display: inline-block;
-        margin-inline-end: 0.4em;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 48'%3E%3Cpath d='M14 46Q3 34 8 4' fill='none' stroke='black' stroke-width='1.2'/%3E%3Cg fill='black'%3E%3Cellipse cx='8.4' cy='41.4' rx='1.5' ry='3.4' transform='rotate(-40 8.4 41.4)'/%3E%3Cellipse cx='13.6' cy='40.2' rx='1.5' ry='3.4' transform='rotate(40 13.6 40.2)'/%3E%3Cellipse cx='6' cy='36' rx='1.5' ry='3.4' transform='rotate(-30 6 36)'/%3E%3Cellipse cx='11.4' cy='35' rx='1.5' ry='3.4' transform='rotate(40 11.4 35)'/%3E%3Cellipse cx='4.6' cy='30.4' rx='1.5' ry='3.4' transform='rotate(-20 4.6 30.4)'/%3E%3Cellipse cx='9.8' cy='29.6' rx='1.5' ry='3.4' transform='rotate(35 9.8 29.6)'/%3E%3Cellipse cx='3.9' cy='24.2' rx='1.5' ry='3.4' transform='rotate(-12 3.9 24.2)'/%3E%3Cellipse cx='9.2' cy='23.4' rx='1.5' ry='3.4' transform='rotate(30 9.2 23.4)'/%3E%3Cellipse cx='4' cy='17.4' rx='1.5' ry='3.4' transform='rotate(-5 4 17.4)'/%3E%3Cellipse cx='9.2' cy='16.6' rx='1.5' ry='3.4' transform='rotate(28 9.2 16.6)'/%3E%3Cellipse cx='8.2' cy='3.6' rx='1.4' ry='3.2' transform='rotate(8 8.2 3.6)'/%3E%3C/g%3E%3C/svg%3E")
+            center / contain no-repeat;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::before {
+        grid-column: 1;
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li::after {
+        grid-column: 3;
+        transform: scaleX(-1);
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li:dir(rtl)::before {
+        transform: scaleX(-1);
+    }
+
+    [data-theme='shade-light'] .kp-laurels > li:dir(rtl)::after {
+        transform: none;
+    }
+
+    [data-theme='shade-light'] .kp-laurels b {
+        grid-column: 2;
+        align-self: end;
+        font-family: var(--theme-font-display);
+        font-size: 1.65em;
+        font-weight: 700;
+        line-height: 1.1;
+        white-space: nowrap;
     }
 
     /* ── The navbar: the strip and its dropdown ─────────────────────── */
@@ -324,6 +374,19 @@
         box-shadow: var(--kp-shadow-2);
     }
 
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='shade-light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
     [data-theme='shade-light'] .kp-nav__menu a {
         color: var(--foreground);
         border-radius: calc(var(--radius) - 2px);
@@ -393,7 +456,6 @@
     /* ── Fields: plain wells, the border carries the boundary [DI1] ──── */
 
     [data-theme='shade-light'] .kp-field__label {
-        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -408,7 +470,6 @@
 
     [data-theme='shade-light'] .kp-field__help {
         color: var(--muted-foreground);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-field--invalid .kp-field__input {
@@ -417,7 +478,6 @@
 
     [data-theme='shade-light'] .kp-field__error {
         color: var(--destructive);
-        font-size: 0.85rem;
     }
 
     [data-theme='shade-light'] .kp-fieldset {
@@ -425,8 +485,17 @@
         border-radius: var(--radius);
     }
 
+    /* The switch [gap-11]: the pill, on the card as the inputs are. */
+    [data-theme='shade-light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:not(:checked) {
+        background: var(--card);
+    }
+
     [data-theme='shade-light'] .kp-form {
-        gap: 1rem;
+        gap: var(--kp-space-lg);
     }
 
     [data-theme='shade-light'] .kp-form__summary {
@@ -446,7 +515,6 @@
     [data-theme='shade-light'] .kp-card__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.3rem;
     }
 
     /* The dossier: the stamp, and the redaction bars that clear on the
@@ -457,36 +525,40 @@
        finished state without the module, and a redaction a reader could
        never lift without JS working is a worse failure than showing the
        line plainly. Armed (module attached, not yet opened): covered.
-       Opened: uncovered again, through the same clip-path the demo uses,
-       staggered 90ms per line — the mechanism the demo's own DI5 entry
-       names "kp-redact-clear". */
+       Opened: uncovered again, the plate narrowing by its background-size
+       where the demo transitions a clip-path, staggered 90ms per line — the mechanism the demo's own DI5 entry
+       names "kp-redact-clear". The plate is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a plate on an absolutely
+       positioned ::after covered none of it. It stops 0.05em short of the
+       words' top and bottom and reaches 0.15em past each end as padding,
+       room the words around it make, so no plate reaches past the line it
+       sits on; it narrows
+       toward the phrase's start as the demo's clip did. */
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
 
     [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
         color: var(--popover-foreground);
-        background: none;
-        padding: 0;
-        font-weight: 400;
-    }
-
-    [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-        content: '';
-        position: absolute;
-        inset: 0.05em -0.15em;
-        background: var(--foreground);
+        background: linear-gradient(var(--foreground), var(--foreground)) left center / 0% calc(100% - 0.1em) no-repeat;
+        padding: 0 0.15em;
         border-radius: 2px;
-        clip-path: inset(0 100% 0 0);
-        pointer-events: none;
-    }
-
-    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
-        clip-path: inset(0 0 0 0);
+        font-weight: 400;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
     }
 
     [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
         color: transparent;
+        background-size: 100% calc(100% - 0.1em);
+    }
+
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-mark-in), and that rule would reach these too. */
+    [data-theme='shade-light'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 0.1em);
+        animation: none;
     }
 
     /* The stamp: a small pill, the way the demo's "Reviewer's copy"
@@ -533,6 +605,56 @@
         box-shadow: var(--kp-shadow-2);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='shade-light'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='shade-light'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='shade-light'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='shade-light'] .kp-toast--destructive,
+    [data-theme='shade-light'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='shade-light']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='shade-light'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='shade-light'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border: 0;
+        border-radius: 0;
+    }
+
     [data-theme='shade-light'] .kp-toasts {
         gap: 0.6rem;
     }
@@ -553,7 +675,6 @@
     [data-theme='shade-light'] .kp-dialog__title {
         font-family: var(--theme-font-display);
         font-weight: 600;
-        font-size: 1.15rem;
     }
 
     /* ── Badges, tags, status ──────────────────────────────────────── */
@@ -563,8 +684,12 @@
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='shade-light'] .kp-tag {
+        font-size: 0.72rem;
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -610,10 +735,6 @@
         overflow: hidden;
     }
 
-    [data-theme='shade-light'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     [data-theme='shade-light'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
@@ -654,6 +775,22 @@
         border-radius: var(--radius);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='shade-light'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='shade-light'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: tables, diffs, timelines, trees ────────────────────────── */
 
     [data-theme='shade-light'] .kp-table {
@@ -662,6 +799,8 @@
 
     [data-theme='shade-light'] .kp-table th {
         background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
         border-bottom: 1px solid var(--border-strong);
         font-weight: 600;
     }
@@ -726,6 +865,19 @@
         font-size: 0.9rem;
     }
 
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='shade-light'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='shade-light'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='shade-light'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
+    }
+
     [data-theme='shade-light'] .kp-reorder {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
@@ -749,9 +901,11 @@
         border-bottom: 1px solid var(--border);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='shade-light'] .kp-breadcrumb,
     [data-theme='shade-light'] .kp-pagination {
-        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
     }
 
     [data-theme='shade-light'] .kp-pagination a[aria-current],
@@ -818,12 +972,50 @@
 
     /* ── The demo's own pieces: platforms line, spec sheet, footer ────── */
 
+    /* The platforms are store badges [scope-93]: a plate in the ink with
+       the paper as its words, in the mono voice. A glyph (`<svg>`) before
+       the name and a `<small>` line over it are optional. */
     [data-theme='shade-light'] .kp-platforms {
+        justify-content: center;
+        gap: 0.6em;
+        font-size: var(--kp-text-sm);
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span {
+        display: inline-grid;
+        align-items: center;
+        max-inline-size: 100%;
+        padding: 0.4em 0.95em 0.45em;
+        border-radius: var(--radius);
+        background: var(--foreground);
+        color: var(--background);
         font-family: var(--theme-font-mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.04em;
-        color: var(--muted-foreground);
-        border-block-start: 1px solid var(--border);
+        font-size: 1.15em;
+        font-weight: 600;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span:has(> svg) {
+        grid-template-columns: auto auto;
+        column-gap: 0.55em;
+        padding-inline-start: 0.75em;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span > svg {
+        grid-row: 1 / span 2;
+        inline-size: 1.5em;
+        block-size: 1.5em;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span:has(> svg) > small {
+        grid-column: 2;
+    }
+
+    [data-theme='shade-light'] .kp-platforms > span > small {
+        font-size: 0.62em;
+        font-weight: 400;
+        opacity: 0.85;
     }
 
     [data-theme='shade-light'] .kp-spec {
@@ -864,7 +1056,6 @@
 
     [data-theme='shade-light'] .kp-footer h4 {
         font-family: var(--theme-font-mono);
-        font-size: 0.72rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -881,7 +1072,7 @@
     /* ── The roots the rules above reach only by their parts ──────────── */
 
     [data-theme='shade-light'] .kp-field {
-        gap: 0.35em;
+        gap: calc(0.35em - 0.25rem + var(--kp-space-xs));
     }
 
     [data-theme='shade-light'] .kp-grid {
@@ -924,20 +1115,20 @@
         }
 
         /* The redaction bars: a plain transition on the covering plate's
-           clip-path, exactly the mechanism the demo's own CSS uses
-           (`transition: clip-path 260ms var(--fx-ease); transition-delay:
-           calc(var(--i, 0) * 90ms)`) — a discrete, user-triggered,
+           width — the demo's own timing (`transition: clip-path 260ms
+           var(--fx-ease); transition-delay: calc(var(--i, 0) * 90ms)`), on
+           a background-size since fix-33 — a discrete, user-triggered,
            one-shot change per bar, staggered by nth-of-type since the
            package's markup carries no --i custom property per mark. */
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: clip-path 260ms var(--fx-ease);
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size 260ms var(--fx-ease);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
             transition-delay: var(--kp-redact-stagger);
         }
 
-        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+        [data-theme='shade-light'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
             transition-delay: calc(2 * var(--kp-redact-stagger));
         }
 
@@ -999,7 +1190,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='shade-light'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='shade-light'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='shade-light'] .kp-nav__menu--wide .kp-nav__menu-heading {
         font-family: var(--theme-font-mono);
         text-transform: none;
         letter-spacing: 0;
@@ -1064,7 +1257,19 @@
 
        On pale paper the shadow falls short and sharp — 1px against the
        dark twin's 2, blurred 3 against 5. Same law, different material,
-       and that is what makes the two read as a pair. */
+       and that is what makes the two read as a pair.
+
+       The source MOVES from scope-101 [scope-25, "the pointer is the
+       light, and the light half throws its shade away from it while the
+       dark half is lifted out of shade by it"]. Every offset below is the
+       value it always was, multiplied by the direction away from the
+       pointer that js/effects.js writes on this element — so the shade
+       swings around a control as the hand passes it, full length at
+       240px and further, shrinking to nothing directly under the pointer.
+       The fallbacks (x 1, y 1) are the fixed top-left light, which is
+       what a touch screen, a keyboard, reduced motion or a page without
+       the module gets: exactly the pixels this register painted before.
+       Implemented as research/scope25-gestures/demo.html draws it. */
     /* The plain control only. The approved demo (round six) draws the
        primary, ghost and destructive variants FLAT, and its own test pins
        that — so the light stops at the variants until Kenny rules on the
@@ -1080,7 +1285,7 @@
        it. Third face of the same fault as `fix-12` and `gap-1`: a later
        layer beating a state the earlier layer defines. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']) {
-        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+        box-shadow: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):focus-visible {
@@ -1090,7 +1295,7 @@
         outline-color: var(--focus-ring-contrast);
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            1px 2px 3px hsl(from var(--foreground) h s l / 0.18);
+            calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -1102,8 +1307,8 @@
     }
 
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):hover:not(:disabled) {
-        translate: -1px -1px;
-        box-shadow: 2px 4px 6px hsl(from var(--foreground) h s l / 0.22);
+        translate: calc(var(--kp-light-x, 1) * -1px) calc(var(--kp-light-y, 1) * -1px);
+        box-shadow: calc(var(--kp-light-x, 1) * 2px) calc(var(--kp-light-y, 1) * 4px) 6px hsl(from var(--foreground) h s l / 0.22);
     }
 
     /* The press is instant on the way in. A click is shorter than a
@@ -1111,8 +1316,24 @@
        finger leaves — Kenny pressed the demo and saw nothing. */
     [data-theme='shade-light'] .kp-button:not([class*='kp-button--']):active:not(:disabled) {
         transition-duration: 0s;
-        translate: 1px 1px;
-        box-shadow: inset 1px 2px 3px hsl(from var(--foreground) h s l / 0.22);
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The card lies on the paper and throws a short shade too [scope-101,
+       scope25-build]. The approved concept demo left every flat surface
+       flat and this register's own "Cards and flat containers: border
+       only" section says so [S49]; Kenny chose the shadow on 2026-09-16,
+       so the border stays and the shade is added on top of it. The
+       demo's own values, its own direction. */
+    [data-theme='shade-light'] .kp-card {
+        box-shadow: calc(var(--kp-light-x, 1) * 4px) calc(var(--kp-light-y, 1) * 5px) 12px -3px hsl(from var(--foreground) h s l / 0.26);
+    }
+
+    /* The headline sits ON the page: a faint, hard-edged shade on the
+       paper beside each letter, turning with the same light. */
+    [data-theme='shade-light'] [data-kp-surface='hero'] h1 {
+        text-shadow: calc(var(--kp-light-x, 1) * 1.5px) calc(var(--kp-light-y, 1) * 2px) 2px hsl(from var(--foreground) h s l / 0.16);
     }
 
     /* ── The pressed state the register had been cancelling [fix-12] ───
@@ -1127,13 +1348,136 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
+    /* The primary button is pressed INTO the paper [scope-107]. Kenny,
+       2026-09-16, on the variants block: "de primary knop heeft geen
+       klikanimatie, of toch niet zichtbaar". The colour step below was all
+       it had, and a press always starts from hover, not from rest: hovered
+       is `--kp-primary-pressed` and pressed is `--primary-active`, and
+       measured in firefox those two grounds are 22, 9 and 2 of a channel
+       apart — a step nobody sees.
+
+       So the primary joins the gesture the theme's own plain button makes
+       (the `:active` rule above): the light is the pointer here
+       [scope-101], and a pressed thing moves one pixel WITH the light and
+       turns its drop shade into an inset one, instantly, because a click
+       is shorter than a transition. Measured in firefox at
+       devicePixelRatio 2.222: `translate` none → 1px 1px (the box's own
+       corner moves from 284.9, 610.9 to 285.9, 611.9, which is 2.22 device
+       pixels each way at his ratio), and `box-shadow` from a spread of
+       zero that paints nothing to an inset 1px 2px 3px of the ink at 0.22.
+       The ground still steps as it did. The rest and hover looks are
+       untouched. */
     [data-theme='shade-light'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
         border-color: var(--primary-active);
+        transition-duration: 0s;
+        translate: calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 1px);
+        box-shadow: inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* Held down from the keyboard, the ring stays in front of the press
+       [DI2]. `kp.register` is a later layer than `kp.components`, so the
+       rule above would otherwise replace `.kp-button:focus-visible`'s
+       box-shadow for as long as Space is down and take the ring with it —
+       the same shape of fault as `fix-12` and `gap-1`, one property over.
+       Both halves, the ring first, spelled as css/components.css spells
+       it. */
+    [data-theme='shade-light'] .kp-button--primary:active:not(:disabled):focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset calc(var(--kp-light-x, 1) * 1px) calc(var(--kp-light-y, 1) * 2px) 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* The secondary button's press (Kenny, 2026-09-16, register-faults
+       [scope-100]): its hover above, in this layer, outranked the package's
+       `.kp-button:active`, so hover and press were one colour. */
+    [data-theme='shade-light'] .kp-button--secondary:active:not(:disabled) {
+        background: var(--secondary-active);
     }
 
     [data-theme='shade-light'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='shade-light'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the full ink
+       over a hairline that, with the text, takes the primary ink when
+       pointed at. The link's typeface, case, spacing, shape and pointer
+       answer are restated here, because the trigger is a button beside the
+       list rather than a link in it. The underline a plain link carries is
+       not: it says "this is a link", and the trigger is not one. */
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='shade-light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A correction in the margin: its cream ground, the headline in its red serif, a hairline frame and a blue glow at the edges. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='shade-light'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='shade-light'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='shade-light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

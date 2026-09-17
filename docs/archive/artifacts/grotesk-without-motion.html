@@ -1,0 +1,367 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Grotesk Without Motion</title>
+<style>
+    :root {
+        --bg: hsl(0, 0%, 100%);
+        --fg: hsl(0, 0%, 7%);
+        --red: hsl(355, 95%, 45%);
+        --red-deep: hsl(4, 78%, 38%);
+        --grey: hsl(0, 0%, 94%);
+        --line: hsl(0, 0%, 85%);
+        --mute: hsl(0, 0%, 40%);
+        --sans: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+        --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+        max-width: 62rem;
+        margin: 0 auto;
+        padding: 0 1.5rem 6rem;
+    }
+
+    header {
+        border-block-end: 2px solid var(--fg);
+        padding-block: 3.5rem 1rem;
+        margin-block-end: 2.5rem;
+    }
+
+    h1 {
+        font-size: clamp(2.4rem, 7vw, 4.6rem);
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+        margin: 0 0 0.6rem;
+        text-wrap: balance;
+    }
+
+    .lede {
+        max-width: 34rem;
+        color: var(--mute);
+        margin: 0;
+    }
+
+    .kicker {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin: 0 0 1.2rem;
+    }
+
+    section {
+        border-block-start: 1px solid var(--line);
+        padding-block-start: 1.6rem;
+        margin-block-start: 3rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.4rem;
+    }
+
+    .note {
+        max-width: 38rem;
+        margin: 0 0 1.6rem;
+    }
+
+    .tag {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.45rem;
+        margin-block-end: 0.7rem;
+    }
+
+    .tag--no {
+        background: var(--fg);
+        color: var(--bg);
+    }
+
+    .tag--yes {
+        background: var(--red);
+        color: var(--bg);
+    }
+
+    .stage {
+        background: var(--grey);
+        padding: 2.4rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        align-items: center;
+    }
+
+    /* The control, as the package draws it under grotesk: zero radius,
+       a hairline boundary, flat grey. */
+    .btn {
+        position: relative;
+        font: inherit;
+        font-weight: 700;
+        letter-spacing: 0;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background: var(--bg);
+        color: var(--fg);
+        padding: 0.55rem 1.4rem;
+        cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .btn span {
+        position: relative;
+        z-index: 1;
+    }
+
+    .ruler {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+    }
+
+    /* ── The rejected one: letter-spacing snaps, the box follows ─────── */
+    .btn--old {
+        transition: letter-spacing 1ms steps(1, end);
+    }
+
+    .btn--old:hover {
+        letter-spacing: 0.12em;
+    }
+
+    /* ── A · The ground arrives ─────────────────────────────────────── */
+    .btn--ground::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--red);
+        transform: scaleX(0);
+        transform-origin: left center;
+        mix-blend-mode: difference;
+        z-index: 2;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--ground::before {
+            transition: transform 260ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--ground:hover::before,
+    .btn--ground:focus-visible::before {
+        transform: scaleX(1);
+    }
+
+    .btn--ground:active::before {
+        background: var(--red-deep);
+    }
+
+    /* ── B · The grid shows ─────────────────────────────────────────── */
+    .btn--grid::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(90deg, var(--fg) 0 1px, transparent 1px 8px);
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--grid::before {
+            transition: opacity 160ms linear;
+        }
+    }
+
+    .btn--grid:hover::before,
+    .btn--grid:focus-visible::before {
+        opacity: 0.14;
+    }
+
+    .btn--grid::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        block-size: 3px;
+        background: var(--red);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .btn--grid::after {
+            transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    .btn--grid:hover::after,
+    .btn--grid:focus-visible::after {
+        transform: scaleX(1);
+    }
+
+    .measure {
+        margin-block-start: 1.2rem;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--mute);
+        border-block-start: 1px solid var(--line);
+        padding-block-start: 0.6rem;
+    }
+
+    .measure b {
+        color: var(--fg);
+        font-weight: 700;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+        margin-block-start: 1.4rem;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 0.5rem 0.7rem 0.5rem 0;
+        border-block-end: 1px solid var(--line);
+        vertical-align: top;
+    }
+
+    th {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mute);
+    }
+
+    .btn:focus-visible {
+        outline: 3px solid var(--red);
+        outline-offset: 2px;
+    }
+
+    footer {
+        margin-block-start: 4rem;
+        border-block-start: 2px solid var(--fg);
+        padding-block-start: 1rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--mute);
+    }
+</style>
+
+<div class="wrap">
+    <header>
+        <p class="kicker">kp-themes · round seven · scope-12</p>
+        <h1>Grotesk<br />without motion</h1>
+        <p class="lede">
+            The first proposal snapped the label's letter-spacing from 0 to 0.12em. That widens the label, so it widens the button — which is what
+            you rejected. Both replacements below leave the box geometrically frozen: same width, same height, same padding, hovered or not. Only
+            colour moves.
+        </p>
+    </header>
+
+    <section>
+        <span class="tag tag--no">rejected · what it did</span>
+        <h2>The letter clicked into the grid</h2>
+        <p class="note">Hover it. The button grows about 14 pixels wider, and anything beside it shifts.</p>
+        <div class="stage">
+            <button class="btn btn--old" type="button"><span>Verstuur</span></button>
+            <span class="ruler">↑ hover and watch the right edge</span>
+        </div>
+        <p class="measure">Measured: <b>letter-spacing 0 → 0.12em</b> over an 8-character label ≈ <b>+13.8px</b> of label width.</p>
+    </section>
+
+    <section>
+        <span class="tag tag--yes">A · recommended</span>
+        <h2>The ground arrives</h2>
+        <p class="note">
+            A block of the theme's one red slides in from the leading edge, inside the button's own box, and the label reverses out of it as the
+            edge passes — the letters are not recoloured, they are inverted by the block itself. Flat colour, one hard edge, reversed type: the
+            Swiss poster move, and the only thing grotesk is allowed to be loud with is that red.
+        </p>
+        <div class="stage">
+            <button class="btn btn--ground" type="button"><span>Verstuur</span></button>
+            <button class="btn btn--ground" type="button"><span>Annuleer</span></button>
+            <span class="ruler">↑ the box does not move · hold it down for the deeper red</span>
+        </div>
+        <p class="measure">
+            Box on hover: <b>unchanged</b> — the block is an absolutely positioned child scaling inside <b>overflow: hidden</b>. It carries the
+            press too, so fix-12 is answered here rather than added later.
+        </p>
+    </section>
+
+    <section>
+        <span class="tag tag--yes">B · the quieter one</span>
+        <h2>The grid shows</h2>
+        <p class="note">
+            Touching the control briefly reveals the grid it sits on — an 8px rule set at 14% behind the label — and a red bar draws itself along
+            the bottom edge. It says the same thing as A about grid and rigour, at about a quarter of the volume.
+        </p>
+        <div class="stage">
+            <button class="btn btn--grid" type="button"><span>Verstuur</span></button>
+            <button class="btn btn--grid" type="button"><span>Annuleer</span></button>
+            <span class="ruler">↑ the rules are the theme's own 8px step</span>
+        </div>
+        <p class="measure">Box on hover: <b>unchanged</b> — both layers are pseudo-elements at <b>inset: 0</b> and the bar is inside the boundary.</p>
+    </section>
+
+    <section>
+        <h2>The two, side by side</h2>
+        <table>
+            <tr>
+                <th>&nbsp;</th>
+                <th>A · the ground arrives</th>
+                <th>B · the grid shows</th>
+            </tr>
+            <tr>
+                <td><b>Reads as</b></td>
+                <td>a poster block landing</td>
+                <td>the drawing underneath, briefly</td>
+            </tr>
+            <tr>
+                <td><b>Volume</b></td>
+                <td>loud — full red across the control</td>
+                <td>quiet — a 14% wash and a 3px bar</td>
+            </tr>
+            <tr>
+                <td><b>Uses the accent</b></td>
+                <td>yes, as the whole ground</td>
+                <td>yes, as one bar</td>
+            </tr>
+            <tr>
+                <td><b>Press</b></td>
+                <td>the block deepens to the active red</td>
+                <td>would need its own answer</td>
+            </tr>
+            <tr>
+                <td><b>Reduced motion</b></td>
+                <td>arrives with no transition</td>
+                <td>arrives with no transition</td>
+            </tr>
+            <tr>
+                <td><b>Risk</b></td>
+                <td>mix-blend-mode against a themed ground needs its contrast measured</td>
+                <td>may read as noise at small sizes</td>
+            </tr>
+        </table>
+    </section>
+
+    <footer>Nothing on this page is in the package. Grotesk's register is untouched until you pick one.</footer>
+</div>
+
+</body></html>

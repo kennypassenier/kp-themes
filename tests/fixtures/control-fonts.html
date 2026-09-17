@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Every control, one of each kind — the font it resolves</title>
+        <!-- The four control kinds a browser stylesheet gives the system
+             font to (button, input, select, textarea), in the package's own
+             classes and bare, so tests/fonts.spec.mjs can force a desktop
+             default underneath and see which of them still shows it
+             [fix-28, scope-103]. Every register, and no stylesheet of the
+             page's own: everything measured here comes from the package
+             (rule 7e, KT3). -->
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+        <link rel="stylesheet" href="/css/light-register.css" />
+        <link rel="stylesheet" href="/css/dark-register.css" />
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="/css/synthwave-register.css" />
+        <link rel="stylesheet" href="/css/pastel-register.css" />
+        <link rel="stylesheet" href="/css/terminal-register.css" />
+        <link rel="stylesheet" href="/css/forest-register.css" />
+        <link rel="stylesheet" href="/css/high-contrast-register.css" />
+        <link rel="stylesheet" href="/css/sepia-register.css" />
+        <link rel="stylesheet" href="/css/blueprint-register.css" />
+        <link rel="stylesheet" href="/css/solstice-register.css" />
+        <link rel="stylesheet" href="/css/brutalism-register.css" />
+        <link rel="stylesheet" href="/css/deco-register.css" />
+        <link rel="stylesheet" href="/css/phantom-register.css" />
+        <link rel="stylesheet" href="/css/shade-light-register.css" />
+        <link rel="stylesheet" href="/css/shade-dark-register.css" />
+        <link rel="stylesheet" href="/css/retro-register.css" />
+        <link rel="stylesheet" href="/css/grotesk-register.css" />
+        <link rel="stylesheet" href="/css/lapis-register.css" />
+        <link rel="stylesheet" href="/css/nostromo-register.css" />
+        <link rel="stylesheet" href="/css/titanium-register.css" />
+    </head>
+    <body>
+        <section id="buttons">
+            <button type="button" class="kp-button">Save</button>
+            <button type="button" class="kp-button kp-button--primary">Publish</button>
+            <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+            <button type="button" class="kp-icon-button" aria-label="Close">×</button>
+        </section>
+
+        <section id="inputs">
+            <div class="kp-field">
+                <label class="kp-field__label" for="cf-text">Name</label>
+                <input class="kp-field__input" id="cf-text" type="text" value="Kenny" />
+            </div>
+            <div class="kp-field">
+                <label class="kp-field__label" for="cf-search">Search</label>
+                <input class="kp-field__input" id="cf-search" type="search" placeholder="Search…" />
+            </div>
+            <div class="kp-field kp-field--check">
+                <label><input class="kp-field__check" type="checkbox" checked /> Checked</label>
+            </div>
+            <label class="kp-switch">
+                <input class="kp-switch__input" type="checkbox" role="switch" />
+                <span class="kp-switch__state" aria-hidden="true"></span>
+                <span>Night alarms</span>
+            </label>
+        </section>
+
+        <section id="selects">
+            <div class="kp-field">
+                <label class="kp-field__label" for="cf-select">Severity</label>
+                <select class="kp-field__input" id="cf-select">
+                    <option>Low</option>
+                    <option>High</option>
+                </select>
+            </div>
+        </section>
+
+        <section id="textareas">
+            <div class="kp-field">
+                <label class="kp-field__label" for="cf-note">Note</label>
+                <textarea class="kp-field__input kp-field__input--multiline" id="cf-note" rows="3">A note.</textarea>
+            </div>
+        </section>
+
+        <!-- The control group. These wear no package class at all, so the
+             package does not claim them and the browser's own stylesheet
+             keeps them — which is exactly what proves the forced desktop
+             layer above reaches the page. A test that finds the desktop
+             font on none of these is not measuring anything. -->
+        <section id="unclaimed">
+            <button type="button">Bare button</button>
+            <input type="text" value="Bare input" />
+            <select aria-label="Bare select">
+                <option>One</option>
+                <option>Two</option>
+            </select>
+            <textarea aria-label="Bare textarea" rows="3">Bare textarea.</textarea>
+        </section>
+    </body>
+</html>

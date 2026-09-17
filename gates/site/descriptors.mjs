@@ -63,7 +63,9 @@ export const DESCRIPTORS = [
         group: 'Theming',
         classes: ['kp-theme-menu', 'kp-theme-group', 'kp-theme-option', 'kp-swatch'],
         exports: ['ThemeSwitcher'],
-        aliases: ['theme'],
+        // `register` claims what js/lazy-register.js writes and dispatches
+        // [scope-50]: the link attribute and its load and error events.
+        aliases: ['theme', 'register'],
         intro: 'The control that changes the page’s theme. Two shapes share one behaviour: a flat row of buttons, and an icon button whose dropdown groups the light themes above the dark ones. Both write the chosen name onto the document and remember it.',
         whenToUse:
             'Put one in the page’s header when the reader picks their own theme. Do not reach for it to preview a theme in one corner of a page — every element can wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.',
@@ -111,6 +113,10 @@ export const DESCRIPTORS = [
             { name: '.kp-theme-option__label / __check', what: 'The parts of one option in the React channel: the name, and the check that marks the current theme.' },
             { name: 'selected', what: 'The current theme is marked twice — a border and a check mark flat, weight and a check in a menu — because colour alone is not a carrier.' },
             { name: 'storage refused', what: 'When the browser will not store the choice the status line says so out loud instead of leaving a picker that looks broken on the next load.' },
+            {
+                name: 'registers loaded lazily',
+                what: 'On a page that links only the active theme’s register, a choice waits until the new register has arrived: the page keeps the previous theme meanwhile, the choice is still the one remembered, and a register that fails to load leaves the theme as it was.',
+            },
         ],
         accessibility: [
             'Built in — each option is a real button with a pressed state, so a screen reader says which theme is current without seeing the border.',
@@ -166,6 +172,10 @@ export const DESCRIPTORS = [
         variants: [
             { name: 'data-kp-surface="hero"', what: 'The opening surface: the one place a theme may be loud.' },
             { name: 'data-kp-surface="app"', what: 'The working surface: forms, tables, cards. A theme keeps it readable before anything else.' },
+            {
+                name: 'data-kp-surface-align="center"',
+                what: 'Sets a surface’s content on its middle: the text centres, a narrower child takes auto margins and a row centres its controls. Off unless a page asks; every surface keeps its content off its own inline edges either way, one lg step in.',
+            },
             { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
             { name: 'data-kp-reveal', what: 'headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every="load" says otherwise.' },
             { name: 'data-kp-reveal-trigger', what: 'A control that replays the reveals of the surface it sits in.' },
@@ -225,6 +235,14 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A label beside an icon',
+                why: 'The words go in their own `.kp-button__text` and the icon stays a hidden sibling. Retro underlines the first letter of the label when the button is pointed at, and CSS cannot tell a bare run of text from the icon next to it, so without the element that letter is never found. No other theme styles it: in the button’s flex row it lays out exactly as the bare text did. `<Button>` and the generated examples write it for you when the label mixes text with an element; by hand, add it yourself.',
+                markup: `
+<button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+<button type="button" class="kp-button kp-button--primary"><span class="kp-button__text">Export</span><span aria-hidden="true">↓</span></button>
+`,
+            },
+            {
                 title: 'A destructive button that confirms',
                 why: 'Since 4.0.0 the click opens a modal dialog carrying your phrase: Escape and Cancel do nothing, Confirm re-fires the click so your own handler runs exactly once, and focus comes back to the button. Add `data-kp-confirm-mode="inline"` for the arm-then-act of 3.x, where the label changes and a second click acts. A destructive button carrying neither a confirmation nor an undo is disarmed by the contract enforcer and reported.',
                 markup: `
@@ -254,6 +272,10 @@ export const DESCRIPTORS = [
                 what: 'The small step, for a control that sits inside a table row or a menu. Its height is floored so the compact density cannot take it under the 24px pointer target.',
             },
             { name: '.kp-button--lg', what: 'The large step, for the one action a landing page is about. There is no modifier for the middle step: that is `.kp-button` itself.' },
+            {
+                name: '.kp-button__text',
+                what: 'The words of a label that also holds an icon or another element. Public: use it whenever the label is more than bare text. A label of text alone needs none, and a label that marks its own access key with `data-kp-key` is left as written.',
+            },
             { name: '.kp-button__undo', what: 'The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.' },
             {
                 name: '.kp-confirm',
@@ -367,10 +389,65 @@ export const DESCRIPTORS = [
         accessibility: [
             'Built in — the label is a real label, the help and the error are pointed at by the control, and the invalid state is announced rather than only painted.',
             'Built in — the checkbox and the radio are drawn larger than the browser’s default, and their tick takes a colour the theme can correct; the label is clickable too, which is what actually makes the target big enough for WCAG 2.5.8.',
-            'Built in — where the browser lets a page take over the select’s own list, it wears the theme instead of the platform’s highlight colour.',
+            'Built in — a select’s open list is drawn by the package in the combobox’s look in every browser, Firefox included, while the native select stays the control a screen reader reads and a form submits. Write data-kp-select="native" (React: drawn={false}) on a select that should keep the browser’s own list; a multiple select always does.',
             'Yours — give every control an id and point the label at it, or wrap the control in the label.',
             'Yours — write the error as a sentence that says what to do. “Invalid” tells the reader only that you noticed.',
             'Yours — keep the help text short: it is read out before the reader has typed anything.',
+        ],
+    },
+    {
+        id: 'switch',
+        title: 'Switch',
+        group: 'Forms',
+        classes: ['kp-switch'],
+        exports: ['Switch'],
+        intro: 'A checkbox that says on and off instead of ticked: a native checkbox with role="switch", drawn as a track and a thumb, with the state in a word beside it. It submits with a form, reads its state from checked and flips with Space, with no script of its own.',
+        whenToUse:
+            'For a setting that takes effect as it is flipped — alarms on, a live view on. For a choice that only counts once a form is sent, a checkbox says that better; for more than two states, use a radio group or a select.',
+        examples: [
+            {
+                title: 'Off, on, disabled, and invalid',
+                why: 'The thumb’s position and the word both carry the state, so it never rests on colour alone. The state span starts empty: attachSwitches() fills it from the dictionary, so a consumer’s setStrings() reaches the words.',
+                markup: `
+<label class="kp-switch">
+<input class="kp-switch__input" type="checkbox" role="switch" />
+<span class="kp-switch__state" aria-hidden="true"></span>
+<span>Night alarms</span>
+</label>
+<label class="kp-switch">
+<input class="kp-switch__input" type="checkbox" role="switch" checked />
+<span class="kp-switch__state" aria-hidden="true"></span>
+<span>Weekly summary</span>
+</label>
+<label class="kp-switch">
+<input class="kp-switch__input" type="checkbox" role="switch" checked disabled />
+<span class="kp-switch__state" aria-hidden="true"></span>
+<span>Audit log (always on)</span>
+</label>
+<div class="kp-field kp-field--check kp-field--invalid">
+<label class="kp-switch">
+<input class="kp-switch__input" type="checkbox" role="switch" aria-invalid="true" aria-describedby="doc-switch-error" />
+<span class="kp-switch__state" aria-hidden="true"></span>
+<span>Line locked out</span>
+</label>
+<span class="kp-field__error" id="doc-switch-error">Lock the line out before you start the repair.</span>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-switch', what: 'The row: a label, so the track, the word and the text are one target.' },
+            { name: '.kp-switch__input', what: 'The track, with the thumb drawn on it; checked moves the thumb to the end and fills the track the theme’s way.' },
+            { name: '.kp-switch__state', what: 'The On or Off word beside the track, from the dictionary; aria-hidden, because the role already announces the state.' },
+            { name: 'disabled', what: 'The row fades and refuses the pointer; a disabled switch that is on still reads as on.' },
+            { name: 'aria-invalid', what: 'The outline an invalid checkbox takes, in the alarm colour; the message under it says what is wrong.' },
+        ],
+        accessibility: [
+            'Built in — role="switch" on a real checkbox: a screen reader says “switch, on”, Space flips it and Enter does not.',
+            'Built in — the state is carried three ways: the thumb’s position, the paint, and the word.',
+            'Built in — with reduced motion asked for, the thumb jumps instead of sliding.',
+            'Yours — label every switch with what it turns on, not with “on” or “enable”.',
+            'Yours — a switch acts at once; if flipping it needs a save button, use a checkbox.',
         ],
     },
     {
@@ -428,7 +505,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-combobox', 'kp-tag', 'kp-tag-list'],
         exports: ['Combobox'],
-        aliases: ['listbox', 'option', 'tags', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce'],
+        aliases: ['listbox', 'option', 'tags', 'empty-row', 'max-tags', 'backspace-removes', 'close-on-blur', 'disabled', 'duplicates', 'open-on-focus', 'stay-open', 'remove-glyph', 'loop', 'match', 'debounce', 'creatable', 'select', 'select-list', 'select-attached', 'chosen', 'overlay-side'],
         intro: 'A text input with a filtered list under it. The arrow keys move a highlight while the cursor stays in the input, Enter takes the highlighted option, and the count of what is left is announced. With tags on, a choice appends a removable tag and clears the field instead of replacing the value.',
         whenToUse:
             'When there are more options than a select can carry comfortably and the reader knows roughly what they are looking for. Not for a handful of fixed choices — a select is smaller, needs no script and works before the page has finished loading. Not for a free-text field with suggestions you may ignore either: this one is about choosing from a list.',
@@ -494,7 +571,7 @@ export const DESCRIPTORS = [
         group: 'Forms',
         classes: ['kp-datepicker'],
         exports: ['DatePicker'],
-        aliases: ['date', 'day', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale'],
+        aliases: ['date', 'day', 'month', 'year', 'view', 'min', 'max', 'week-starts-on', 'close-on-select', 'next-glyph', 'previous-glyph', 'disabled', 'disabled-days', 'locale', 'align', 'overlay-side'],
         intro: 'A text input that takes a typed date, with a calendar beside it for the reader who would rather look. The value is kept as an ISO date whatever the page’s locale prints, so a consumer never parses a localised string.',
         whenToUse:
             'For a date a person knows or can find in a month — a start date, a deadline. Not for a birth date far in the past, where three selects or a typed field beat paging a calendar back forty years; and not for a date the browser can own entirely, where the native date input is smaller and already localised.',
@@ -530,7 +607,8 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: '.kp-datepicker__panel', what: 'The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.' },
-            { name: '.kp-datepicker__head / __title', what: 'The month, its name, and the two controls that page it.' },
+            { name: '.kp-datepicker__head / __title', what: 'The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.' },
+            { name: 'month and year grids', what: 'Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.' },
             { name: '.kp-datepicker__grid / __weekday', what: 'Seven columns with the week starting where the locale says, unless the markup overrules it.' },
             { name: '.kp-datepicker__day', what: 'One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.' },
             { name: 'selected day', what: 'Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.' },
@@ -538,6 +616,7 @@ export const DESCRIPTORS = [
         ],
         accessibility: [
             'Built in — the grid is a real grid: arrows by day, Page keys by month, Home and End to the ends of the week, and one tab stop for the whole month.',
+            'Built in — the month and year grids take the same keys a size up, Escape steps back one grid, and the grid that opens is named and announced.',
             'Built in — typing is a complete route to a date, so nobody is forced through the calendar at all.',
             'Built in — the month and the chosen date are announced when they change, in the page’s own locale.',
             'Yours — label the input and name the button that opens the calendar.',
@@ -688,6 +767,7 @@ export const DESCRIPTORS = [
             { name: 'done step', what: 'Its number becomes a check in the success colour.' },
             { name: 'navigable labels', what: 'The step labels can be made clickable, for a wizard whose earlier steps stay open.' },
             { name: '.kp-wizard__actions', what: 'The back and next pair, at the end of the current step.' },
+            { name: '--kp-wizard-padding', what: 'The room between the frame a theme draws and what is inside it, 1rem by default.' },
             { name: 'held transition', what: 'A step change can be refused or delayed by a listener or an async check, which is what a step that needs a server answer was missing.' },
         ],
         accessibility: [
@@ -786,27 +866,59 @@ export const DESCRIPTORS = [
         group: 'Data',
         classes: ['kp-datatable'],
         exports: ['DataTable'],
-        aliases: ['sort', 'select', 'page', 'row', 'debounce', 'locale'],
-        intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document: it does not fetch, and it does not own the data.',
+        aliases: [
+            'sort',
+            'select',
+            'page',
+            'row',
+            'debounce',
+            'locale',
+            'cards',
+            'filter',
+            'filters',
+            'search',
+            'state',
+            'max',
+            'direction',
+            // The seven of Kenny's form of 2026-09-13.
+            'column',
+            'expand',
+            'expandable',
+            'expanded',
+            'fixed',
+            'edit',
+            'cell-class',
+            'server',
+            'total',
+            // scope-90: the state that draws the sticky header's reach.
+            'scrolled',
+        ],
+        intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead.',
         whenToUse:
-            'For a table a reader will interrogate — hundreds of rows, a search box, a sort. Not for thousands: there is no virtualisation, no in-cell editing and no export here, and a grid is a different product. Not for a handful of rows either, where a search box over six lines is furniture.',
+            'For a table a reader will interrogate — hundreds of rows, a search box, a sort on one column or several, a choice of columns, rows that open, values edited in place, arrow keys between cells. Not for thousands without a server behind it: there is no virtualisation, and export is the app’s, from the rows the table hands over. Not for a handful of rows either, where a search box over six lines is furniture.',
         examples: [
             {
                 title: 'Search, sort, page and select',
-                why: 'Everything is markup the server wrote, so the table is readable before any script runs. The status paragraph says how many rows are showing after each change, which is what makes the filtering audible.',
+                why: 'Everything is markup the server wrote, so the table is readable before any script runs. The status paragraph says which rows are showing after each change, which is what makes the filtering audible. A filter is declared on its header (`data-kp-filter="choice"`, `range` or `date`) and leaves a removable pill; `data-kp-sort-order` sorts a column by meaning; the "In" choice limits the search to one column; `data-kp-max-height` keeps the header in view; `data-kp-state="loading"` or `"failed"` shows those states, and `data-kp-cards` turns rows into cards with a sort control of their own.',
                 markup: `
-<div class="kp-datatable" data-kp-datatable data-kp-page-size="3">
+<div class="kp-datatable" data-kp-datatable data-kp-page-size="3" data-kp-cards>
 <div class="kp-datatable__bar">
 <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the table" placeholder="Search…" />
+<select class="kp-field__input kp-datatable__select" data-kp-datatable-scope></select>
+<select class="kp-field__input kp-datatable__select" data-kp-datatable-density></select>
+</div>
+<div class="kp-datatable__actions" data-kp-datatable-actions hidden>
+<span data-kp-datatable-selected-count></span>
+<button type="button" class="kp-button kp-button--ghost" data-kp-datatable-clear-selection>Clear selection</button>
 </div>
 <div class="kp-table-wrap">
 <table class="kp-table">
 <caption>Orders</caption>
 <thead><tr>
-<th scope="col"><input type="checkbox" data-kp-select-all aria-label="Select all visible rows" /></th>
-<th scope="col" data-kp-sort="text">Customer</th>
-<th scope="col" data-kp-sort="number">Amount</th>
-<th scope="col" data-kp-sort="date">Date</th>
+<th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every row on this page" /></th>
+<th scope="col" data-kp-sort="text" data-kp-filter="choice">Customer</th>
+<th scope="col" data-kp-sort="number" data-kp-filter="range">Amount</th>
+<th scope="col" data-kp-sort="date" data-kp-filter="date">Date</th>
 </tr></thead>
 <tbody>
 <tr data-kp-row-key="r0"><td><input type="checkbox" data-kp-select-row aria-label="Select Acme" /></td><td>Acme</td><td class="kp-numeric">100.00</td><td class="kp-timestamp">2026-03-01</td></tr>
@@ -827,10 +939,20 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: '.kp-datatable__bar', what: 'A row of controls above or below the table: the search box, the status line, the pager.' },
-            { name: '.kp-datatable__sort', what: 'The sort control inside a header cell. It takes the whole cell, so a click anywhere in the header sorts.' },
+            { name: '.kp-datatable__sort', what: 'The sort control inside a header cell. It wears the header’s own case and spacing, and a click anywhere in the header sorts.' },
+            { name: '.kp-datatable__filters / __pills', what: 'The filter panel the headers declare, and the removable pills of the filters that are set.' },
+            { name: '.kp-datatable__actions', what: 'The action bar a selection shows, with the count; the buttons in it are the app’s.' },
+            { name: '.kp-datatable__card-sort', what: 'The sort control of the card layout, where the headers that sort are hidden.' },
+            { name: '.kp-datatable__select / __label', what: 'A choice in a bar: the "In" choice, the density, the rows per page.' },
             { name: 'sorted ascending / descending', what: 'An arrow after the header text and the sort state on the header itself; the arrow is the second carrier, the state is what is announced.' },
             { name: '.kp-datatable__pager / __page', what: 'The page controls and the “page m of n” label, in same-width digits.' },
             { name: '.kp-datatable__page-size', what: 'The rows-per-page control, before the pager.' },
+            { name: '.kp-datatable__sort-order / __sort-summary', what: 'With `data-kp-sort-multi`: each sorted header’s place in the sort, and the sort said in words above the table.' },
+            { name: '.kp-datatable__columns / __column-option', what: 'With `data-kp-column-menu`: the menu of columns, on the popover layer, and one checkbox per column; the key column is locked.' },
+            { name: '.kp-datatable__expand / __detail', what: 'With `data-kp-expandable`: the button that opens a row, and the detail row under it that spans every column.' },
+            { name: 'fixed columns', what: 'With `data-kp-fixed-columns`: the key column stays at the left edge on an opaque ground, with a hairline, while the box scrolls sideways.' },
+            { name: '.kp-datatable__edit / __editor / __edit-log', what: 'With `data-kp-edit` on a header: a value as a button with a dashed underline, the package’s control that edits it in the cell, and the line that says what changed, with Undo.' },
+            { name: '.kp-datatable__grid-readout', what: 'With `data-kp-grid`: the table is an ARIA grid, and this line says which cell has the focus.' },
             { name: '.kp-datatable__status', what: 'The live region that says how many rows are showing after a search, a sort or a page.' },
             { name: '.kp-datatable__search', what: 'The search box. Typing is debounced so a long list is not re-sorted on every keystroke.' },
             { name: 'empty', what: 'When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.' },
@@ -1174,7 +1296,7 @@ export const DESCRIPTORS = [
         group: 'Feedback',
         classes: ['kp-alert'],
         exports: ['Alert'],
-        aliases: ['semantic'],
+        aliases: ['semantic', 'dismiss'],
         intro: 'A message on a coloured plate that also says, in words, what kind of message it is. Four flavours, no hover and no active state: an alert is a message, not a control.',
         whenToUse:
             'For something the reader has to know about the page or their last action, in place, where it happened. Not for a message about a single field — that belongs under the field, where the eye already is. Not for something that can be missed either: an alert appears in the page rather than announcing itself, so a passing confirmation is a toast.',
@@ -1406,6 +1528,63 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'alarm',
+        title: 'Alarm',
+        group: 'Feedback',
+        classes: ['kp-alarm'],
+        exports: ['Alarm', 'useAlarm'],
+        intro: 'A full-screen dramatic alert: a code line, one huge word, the reason under it and one way out, over a plate that takes the whole window. It opens as a modal dialog in the top layer, so the page behind it cannot be clicked or tabbed to until it is dealt with. Either only its button closes it, or it closes by itself after a number of seconds. Every theme draws it in its own colours and faces.',
+        whenToUse:
+            'For the rare event that must stop everything: access refused, a lockout, a connection to something critical lost. Not for an error beside a field, which is a field message; not for a result the reader may ignore, which is a toast; and not for a question with two answers, which is a dialog. An alarm that fires often teaches people to press through it.',
+        examples: [
+            {
+                title: 'A button that raises an alarm',
+                why: 'The trigger describes the alarm in its attributes and the module raises it on a press: the value of the first attribute is the headline, the others the code line, the reason and the mode. When it closes, the close event is dispatched on the button with the reason, and focus is back on it. The same alarm from a script is one call to showAlarm() with the same words, which resolves with the reason.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-alarm="Access denied" data-kp-alarm-code="Security protocol 7 · lockout" data-kp-alarm-detail="Three failed attempts on terminal 4. This console is locked for ten minutes.">Test the lockout</button>
+<button type="button" class="kp-button" data-kp-alarm="Connection lost" data-kp-alarm-code="Telemetry" data-kp-alarm-detail="The link to pump house 4 dropped. Readings shown are the last known values." data-kp-alarm-mode="auto" data-kp-alarm-seconds="6">Test the timed alarm</button>
+`,
+            },
+            {
+                title: 'The parts, held open in the page',
+                why: 'Printed in the flow of the page so the pieces can be seen at rest, the way a style guide shows it: the plate, the frame and the hazard bars, the code line, the headline, the reason and the one button. A held-open frame is inert, because its button is a picture.',
+                markup: `
+<div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+<div class="kp-alarm__scan" aria-hidden="true"></div>
+<div class="kp-alarm__bars" aria-hidden="true"></div>
+<div class="kp-alarm__panel">
+<p class="kp-alarm__code">Special order 937</p>
+<div class="kp-alarm__title" role="heading" aria-level="2"><span class="kp-alarm__glyphs" data-text="Request denied">Request denied</span></div>
+<p class="kp-alarm__detail">Crew override is not accepted at this level of clearance.</p>
+<div class="kp-alarm__actions">
+<button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+<span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+</div>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'ack', what: 'The default: only the button closes it, with a click, Enter or Space. Escape and a click on the plate do nothing, and so does time.' },
+            { name: 'ack with escape', what: 'The same, and Escape closes it too, with the reason escape.' },
+            { name: 'auto', what: 'Closes by itself after its seconds, with a bar that shrinks towards the start and the whole seconds under it. Escape closes it. Keep open stops the clock and turns it into ack.' },
+            { name: '.kp-alarm__code / __title / __detail', what: 'The small line above, the headline in the display face, and the reason in the mono face.' },
+            { name: '.kp-alarm__ack / __keep', what: 'The one way out, in the theme’s button shape and the alarm’s paint; and the quiet button that keeps a timed alarm open.' },
+            { name: 'data-kp-alarm-inline', what: 'A frame held open in the flow of a page instead of raised over it, for a style guide.' },
+            { name: 'data-kp-alarm-motion="still"', what: 'A frame that shows what a reader who asked for reduced motion sees, whatever the reader asked for.' },
+        ],
+        accessibility: [
+            'Built in — an alertdialog opened as a modal: the page behind is inert, focus stays inside, and it returns to the trigger when the alarm closes.',
+            'Built in — the headline is its accessible name and the reason its description; a sentence read once says how it goes away, instead of a number every second.',
+            'Built in — the acknowledged alarm focuses its button; the timed one focuses itself, so an Enter meant for the page presses nothing.',
+            'Built in — with reduced motion asked for, nothing moves: the words are there at once and the bar steps a whole second at a time.',
+            'Built in — the flicker, the decode and the glow stay under two flashes a second, measured from rendered frames; WCAG allows three.',
+            'Yours — keep the headline to a few words and put what happens next in the reason.',
+            'Yours — give a timed alarm enough seconds to read the reason twice, and repeat what matters somewhere that stays.',
+        ],
+    },
+    {
         id: 'progress',
         title: 'Progress',
         group: 'Feedback',
@@ -1554,7 +1733,8 @@ export const DESCRIPTORS = [
         group: 'Feedback',
         classes: ['kp-tooltip'],
         exports: ['Tooltip'],
-        intro: 'A short label on the popover surface, anchored to the thing it describes. The React component opens it on hover and on focus, with a delay at both ends, and closes it on Escape.',
+        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape'],
+        intro: 'A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote.',
         whenToUse:
             'For naming a control whose glyph is not obvious, in a few words. Never for anything the reader needs — a tooltip cannot be reached on a touch screen, cannot be selected, and is gone the moment the pointer moves. Instructions, errors and help text belong in the page.',
         examples: [
@@ -1607,16 +1787,66 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A mega menu',
+                why: 'Press Equipment: a panel of grouped links opens under the bar and spans its width, in up to four columns. It is a disclosure — a button with `aria-expanded` — rather than a dropdown that opens on hover, so a touch or keyboard reader opens it on purpose; Escape closes it and puts the focus back on the button, a click outside closes it, and only one panel is open at a time. The groups are plain lists under headings, not a menu, because these are places to go. In React, a link with `groups` renders the same.',
+                markup: `
+<div class="kp-nav-wrap">
+<nav class="kp-nav" aria-label="Main, with a mega menu">
+<a class="kp-nav__brand" href="#nav-bar">kp</a>
+<ul class="kp-nav__links">
+<li><a class="kp-nav__link" href="#nav-bar">Overview</a></li>
+<li>
+<button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+<div class="kp-nav__menu kp-nav__menu--wide">
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Pumps</h3><ul><li><a href="#example">Main line pumps</a></li><li><a href="#example">Booster sets</a></li></ul></div>
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Valves</h3><ul><li><a href="#example">Gate valves</a></li><li><a href="#example">Check valves</a></li></ul></div>
+<div class="kp-nav__group"><h3 class="kp-nav__menu-heading">Sensors</h3><ul><li><a href="#example">Flow meters</a></li></ul></div>
+</div>
+</li>
+</ul>
+</nav>
+</div>
+`,
+                react: `
+<NavBar
+    brand="kp"
+    label="Main, with a mega menu"
+    links={[
+        { href: '#nav-bar', label: 'Overview' },
+        {
+            href: '#equipment',
+            label: 'Equipment',
+            groups: [
+                { label: 'Pumps', links: [{ href: '#example', label: 'Main line pumps' }, { href: '#example', label: 'Booster sets' }] },
+                { label: 'Valves', links: [{ href: '#example', label: 'Gate valves' }, { href: '#example', label: 'Check valves' }] },
+                { label: 'Sensors', links: [{ href: '#example', label: 'Flow meters' }] },
+            ],
+        },
+    ]}
+    headingLevel={3}
+/>
+`,
+            },
         ],
         variants: [
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
             { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
+            { name: '.kp-nav-wrap--sticky', what: 'The shrinking header: the bar sticks to the top of the box that scrolls it, and once that box has scrolled further than the bar is tall (or `data-kp-nav-sticky-after` pixels, if more) js/auto.js sets `data-kp-nav-compact` and the bar lowers its block padding (the knobs table names how far), gliding only when the reader has not asked for less motion. The module hands the bar’s height to the scrolling box’s scroll padding, so anchors and focused elements land below the bar; a scroll offset the page sets itself still wins. In React it is the `sticky` prop, with `stickyAfter`.' },
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
+            { name: '.kp-nav__search', what: 'The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.' },
+            { name: 'data-kp-nav-menu-open', what: 'On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.' },
+            { name: 'data-kp-nav-menu-end', what: 'Written by the module on a dropdown whose item has no room for it towards the window’s end: the panel hangs from the item’s end edge instead, so it stays inside the window. Measured as it opens and when the window changes size; nothing to write by hand.' },
+            { name: '.kp-nav__menu--wide', what: 'The mega menu’s panel: a `.kp-nav__menu` that spans the bar in up to four columns of `.kp-nav__group`, each a `.kp-nav__menu-heading` over a plain list. Shown while its button says it is expanded; the minimum column width and the gap are knobs.' },
+            { name: 'data-kp-nav-disclosure', what: 'The button that opens a mega menu’s panel, beside it in the same item; give it `kp-nav__link kp-nav__disclosure` so it reads as one of the bar’s links with a caret that turns while open. The module writes `aria-expanded` and `aria-controls`.' },
         ],
         accessibility: [
             'Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.',
             'Built in — the bar wraps at narrow widths rather than pushing the page sideways.',
+            'Built in — a sticky bar hands its height to the scrolling box’s scroll padding, so a skip link, an anchor or a Tab never lands underneath it.',
+            'Built in — a dropdown near the window’s end opens towards the other side rather than past the edge.',
+            'Built in — a mega menu opens on a press, not on hover; Escape closes it and returns the focus to its button, and the focus leaving it or a click outside closes it too.',
             'Yours — give the nav element a name; a page with two of them is otherwise “navigation” twice.',
             'Yours — use links, and give the reader a skip link past the bar.',
             'Yours — keep the list short. A bar that wraps to three rows on a laptop is a menu.',
@@ -1627,8 +1857,8 @@ export const DESCRIPTORS = [
         title: 'Side navigation',
         group: 'Navigation',
         classes: ['kp-sidenav'],
-        exports: ['Sidenav', 'SidenavToggle'],
-        aliases: ['sidenav'],
+        exports: ['Sidenav', 'SidenavToggle', 'SidenavSlimToggle'],
+        aliases: ['sidenav', 'remember'],
         intro: 'A navigation that stands beside the content instead of above it. Three modes — beside the page, over it, or pushing it aside — a slim rail that keeps the icons and drops the words, categories that fold, and either edge.',
         whenToUse:
             'For an application with more places than a bar can hold, or a hierarchy two levels deep. Not for the five links every page can reach — that is the bar at the top. Not as a drawer for content: a panel that slides in carrying a form is a dialog, and it wants a dialog’s focus handling and a dialog’s dismissal.',
@@ -1677,6 +1907,60 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A rail that collapses from its own toggle',
+                why: 'Added at scope-48, with the application shell (examples/app-shell.html). data-kp-sidenav-slim allows the rail; a button with data-kp-sidenav-slim-toggle, pointed at the panel by aria-controls, collapses it to its icons and gives the words back — no script of your own. The module keeps aria-expanded on the button, and a button whose only content is an aria-hidden glyph gets its accessible name from the strings, changing with the state. The labels leave the eye and stay in the accessibility tree, so every link in the collapsed rail keeps its name. The button is not replaced, so the focus stays on it.',
+                markup: `
+<nav class="kp-sidenav" id="rail" aria-label="Invoices" data-kp-sidenav-slim>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">All invoices</span></a></li>
+<li><a class="kp-sidenav__link" href="#example"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Overdue</span></a></li>
+</ul>
+</div>
+<div class="kp-sidenav__footer">
+<button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail"><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span></button>
+</div>
+</nav>
+`,
+                react: `
+<Sidenav
+    id="rail"
+    label="Invoices"
+    slim
+    items={[
+        { label: 'All invoices', href: '#all', icon: '▤', current: true },
+        { label: 'Overdue', href: '#overdue', icon: '!' },
+    ]}
+    footer={
+        <SidenavSlimToggle controls="rail" className="kp-sidenav__link">
+            <span className="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+            <span className="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+        </SidenavSlimToggle>
+    }
+/>
+`,
+            },
+            {
+                title: 'A navigation that remembers what the reader folded',
+                why: 'Kenny, 2026-09-16: a group he closed and then clicked a link in must still be closed on the page the link led to. data-kp-remember on the panel turns that on, and the name is the element\u2019s — two navigations on one page with different names keep separate state, and two with the SAME name are a fault the module reports rather than a memory they share. A group with a data-kp-remember of its own keeps its state under that name; without one it is known by the words in its toggle. The same attribute is read by the accordion, the tree, the split pane and the data table; docs/USER_GUIDE.md has the whole table.',
+                markup: `
+<nav class="kp-sidenav" id="kept-nav" aria-label="Sections" data-kp-remember="main-nav">
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="components">
+<button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__label">Components</span></button>
+<div class="kp-sidenav__submenu">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Side navigation</span></a></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</nav>
+`,
+            },
+            {
                 title: 'Over the page, with a toggler',
                 why: 'data-kp-sidenav-mode="over" puts the panel above the content with a backdrop, a focus trap and Escape. The toggler names the panel it drives, and keeps a place above both so it never disappears under what it opened.',
                 markup: `
@@ -1696,11 +1980,14 @@ export const DESCRIPTORS = [
             { name: 'data-kp-sidenav-position', what: 'fixed or absolute. Absolute puts the panel inside a positioned box rather than against the window, which is what a page with two of them needs.' },
             { name: 'data-kp-sidenav-side', what: 'end puts the panel on the other edge, logically: in a right-to-left page that is the left, and it still slides out of the side it came from.' },
             { name: 'data-kp-sidenav-slim', what: 'Allows the rail. With data-kp-sidenav-slim-collapsed it starts collapsed; data-kp-sidenav-expand-on-hover gives the words back while the pointer is over it.' },
+            { name: 'data-kp-sidenav-slim-toggle', what: 'On a button, collapses the rail to its icons and expands it again. aria-controls names the panel; without it the button drives every rail on the page, the way data-kp-sidenav-toggle does. The module keeps aria-expanded on it, and names a button that has no words of its own.' },
             { name: 'data-kp-sidenav-slim-hide', what: 'On an element inside, hides it in the rail; data-kp-sidenav-slim-show is its other half, so a wordmark can become a monogram instead of only disappearing.' },
             { name: 'data-kp-sidenav-accordion', what: 'One category open at a time. Without it they are independent.' },
             { name: 'data-kp-sidenav-backdrop', what: 'false takes the backdrop away in over mode; data-kp-sidenav-backdrop-class puts your own class on it.' },
             { name: 'data-kp-sidenav-close-on-esc', what: 'false keeps Escape from closing it. data-kp-sidenav-focus-trap="false" lets the focus leave; data-kp-sidenav-lock-scroll holds the page still while it is open.' },
-            { name: 'data-kp-sidenav-remember', what: 'A key. Name one and the open state and the rail survive a reload; leave it off and this package writes nothing into your storage.' },
+            { name: 'data-kp-remember', what: 'A name. Name the panel and its folded groups, its open state and its rail survive a reload; name a .kp-sidenav__category as well and that group keeps its state under its own name. The same attribute is what the accordion, the tree, the split pane and the data table remember by — one mechanism, js/remember.js, and the key it composes is kp-remember:<component>:<name>:<slot>. Leave it off and this package writes nothing into your storage.' },
+            { name: 'data-kp-sidenav-remember', what: 'The older spelling of data-kp-remember, still read. New markup uses data-kp-remember.' },
+            { name: 'kp-remember-clash', what: 'On the element refused a memory because another element of the same component already answers to that name: `{ name, component, other }`. It keeps its markup default and writes nothing; the first one to attach owns the key.' },
             { name: '--kp-sidenav-inset-block', what: 'Where a covering panel starts and ends, one value or two. A page that keeps its own bar says `3rem 0` and the panel begins under it instead of sliding beneath it.' },
             { name: 'never sideways', what: 'The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.' },
             { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },
@@ -1710,6 +1997,7 @@ export const DESCRIPTORS = [
             'Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.',
             'Built in — the current page carries aria-current, so it is announced and not only drawn.',
             'Built in — the toggler says whether it is expanded and which panel it controls.',
+            'Built in — a collapsed rail keeps every label in the accessibility tree, and the slim toggle keeps the focus while the rail changes.',
             'Yours — give the nav element a name; a page with a bar and a side navigation has two of them.',
             'Yours — put a label in every link. A rail of bare icons reads as a column of nothing.',
         ],
@@ -1728,7 +2016,7 @@ export const DESCRIPTORS = [
                 title: 'A control that knows when it is needed',
                 why: 'It is invisible until the reader has scrolled past the threshold, and `visibility: hidden` keeps it out of the tab order while it is. Pressing it scrolls to the top and moves the focus to the top of the document, so the next Tab starts where the eye is.',
                 markup: `
-<button type="button" class="kp-btn kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
+<button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
 `,
             },
         ],
@@ -1738,6 +2026,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-to-top-shown', what: 'Written by the module while the control is on the screen. Read it, do not set it.' },
             { name: 'kp-to-top', what: 'The event, on the control, whenever it appears or goes away: `{ shown }`.' },
             { name: '--kp-to-top-offset', what: 'How far it sits from the corner, both ways at once. Default 1.5rem.' },
+            { name: '--kp-glyph-to-top', what: 'The arrow an empty control draws. The module puts an empty `.kp-to-top__glyph` in a button that has nothing of its own and takes it out again on detach; a button with its own words or icon gets none. Default ↑.' },
         ],
         accessibility: [
             'Built in — the focus goes back with the view, and it moves without scrolling, so the control cannot undo its own journey.',
@@ -2069,7 +2358,7 @@ export const DESCRIPTORS = [
         title: 'Command palette',
         group: 'Navigation',
         classes: ['kp-palette'],
-        exports: ['CommandPalette'],
+        exports: ['CommandPalette', 'PaletteTrigger'],
         aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run'],
         intro: 'A dialog with a filter box and a list of commands, opened by a key from anywhere on the page. The commands are markup a server wrote, not an array this module owns, so they are there before any script runs.',
         whenToUse:
@@ -2097,6 +2386,31 @@ export const DESCRIPTORS = [
 </dialog>
 `,
             },
+            {
+                title: 'Places to go, opened from the bar',
+                why: 'A hotkey alone is a secret, so the bar keeps a visible trigger in its `.kp-nav__search` slot: a `data-kp-palette-open` button the module marks as opening a dialog, whose empty key hint it fills with ⌘K or Ctrl K when the palette has a key. The commands are links: Enter and a click both follow them, `kp-palette-run` still fires first and can be cancelled by a router that navigates itself, and until the module attaches they are plain anchors that work on their own. The hotkey is off here, so the trigger prints no key.',
+                markup: `
+<div class="kp-nav-wrap">
+<nav class="kp-nav" aria-label="Main">
+<a class="kp-nav__brand" href="#command-palette">kp</a>
+<ul class="kp-nav__links">
+<li><a class="kp-nav__link" href="#command-palette" aria-current="page">Overview</a></li>
+</ul>
+<div class="kp-nav__search">
+<button type="button" class="kp-nav__search-trigger" data-kp-palette-open="doc-places">Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd></button>
+</div>
+</nav>
+</div>
+<dialog class="kp-palette" data-kp-palette data-kp-hotkey="none" id="doc-places" aria-label="Go to">
+<input class="kp-palette__input" type="text" role="combobox" aria-label="Go to" aria-expanded="true" aria-controls="doc-places-list" autocomplete="off" placeholder="Where to?" />
+<ul class="kp-palette__list" id="doc-places-list" role="listbox" aria-label="Go to">
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="overview" href="#command-palette">Overview</a></li>
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="nav-bar" href="nav-bar.html">Navigation bar</a></li>
+</ul>
+<p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+`,
+            },
         ],
         variants: [
             { name: '.kp-palette', what: 'The dialog: near the top rather than in the middle, so a list that grows downwards does not push its own input off centre.' },
@@ -2106,7 +2420,8 @@ export const DESCRIPTORS = [
             { name: '.kp-palette__description', what: 'A second line on a command, for one whose name is not enough.' },
             { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
-            { name: 'matching', what: 'The filter is subsequence matching by default — “nap” finds “new application” — and can be made a plain substring instead.' },
+            { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
+            { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
         ],
         accessibility: [
             'Built in — the dialog gives focus trapping, Escape and focus return, so the palette cannot strand the keyboard.',
@@ -2114,6 +2429,7 @@ export const DESCRIPTORS = [
             'Built in — the number of matches is announced after typing.',
             'Yours — offer every command somewhere else as well. A palette is a shortcut, not an interface.',
             'Yours — write the commands as markup, with a value each, and name the groups.',
+            'Built in — the trigger in the bar says it opens a dialog and which key does the same, and Escape gives focus back to it.',
             'Yours — pick a key that is not already the browser’s, and say what it is somewhere visible.',
         ],
     },

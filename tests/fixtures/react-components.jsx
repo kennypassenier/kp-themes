@@ -236,6 +236,10 @@ function Cases() {
                     <DatePicker label="Van" />
                 </div>
             </div>
+            <div data-test="react-date-limits" lang="nl">
+                {/* A minimum and a maximum, for the month and year grids [scope-89]. */}
+                <DatePicker label="Binnen grenzen" min="2026-03-15" max="2027-06-10" />
+            </div>
             <div data-test="react-upload">
                 <Upload maxBytes={1024} />
             </div>
@@ -297,6 +301,19 @@ function Cases() {
                         { value: 'urgent', label: 'Urgent' },
                         { value: 'bug', label: 'Bug' },
                         { value: 'idee', label: 'Idee' },
+                    ]}
+                />
+            </div>
+            {/* The old Backspace behaviour, now an opt-in [note 2 of 2026-09-13, KT6]. */}
+            <div data-test="react-tags-backspace">
+                <Combobox
+                    label="Labels, Backspace removes"
+                    tags
+                    backspaceRemoves
+                    defaultValues={['bug']}
+                    options={[
+                        { value: 'urgent', label: 'Urgent' },
+                        { value: 'bug', label: 'Bug' },
                     ]}
                 />
             </div>

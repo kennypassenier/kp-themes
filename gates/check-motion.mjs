@@ -66,6 +66,14 @@ const OUT_OF_SCOPE = {
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
     'kp-slide-in': 'a 6px translate on a badge, once; nothing changes luminance [TH70]',
     'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
+    // The indeterminate progress bar [gap-11].
+    'kp-progress-stripes':
+        'a background-position slide of diagonal stripes by one 1rem period every 1.2 seconds, on a bar 0.5rem tall; the stripes keep their colours, only their position moves',
+    // Cyberpunk's section divider [scope-96].
+    'kp-stream-144':
+        'a mask-position slide of a 144px dash tile by one tile every 8 seconds, on a 28px divider; the dashes keep their colours, only their position moves',
+    'kp-stream-216':
+        'a mask-position slide of a 216px packet tile by one tile every 8 seconds, on a 28px divider; the packets keep their colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
     'kp-charge':
         'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',
@@ -86,7 +94,7 @@ const OUT_OF_SCOPE = {
     'kp-cal-slide':
         'a clip-path sweep, once, over the headline overlay (mix-blend-mode: difference); strictly monotonic in one direction, so it has zero opposing luminance changes, which is the threshold DI5 measures',
     'kp-cal-rule': 'a horizontal scale on a 3px rule; no luminance change and nothing over 341x256 px',
-    'kp-cal-redact': 'a clip-path narrowing over one marked phrase in a dossier paragraph, once; under 341x256 px',
+    'kp-cal-redact': 'a background narrowing over one marked phrase in a dossier paragraph, once; under 341x256 px',
     // The mono register [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // once across a headline or a redaction bar (mask-position).
     'kp-wipe':
@@ -100,7 +108,7 @@ const OUT_OF_SCOPE = {
     'kp-elev-draw': 'a vertical scale on a hairline beside the headline, once; no luminance change and nothing over 341x256 px',
     // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
     // resolve, on the whole, unsplit line (`kp-sharpen-in` — not
-    // `kp-focus-in`/`focus`, which the dark and shade-dark registers
+    // `kp-focus`/`focus`, which the dark and shade-dark registers
     // already own for their own, different mechanics).
     'kp-sharpen-in':
         "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
@@ -126,6 +134,18 @@ const OUT_OF_SCOPE = {
     // The shared marquee [M1, 2026-09-08]: one transform across a doubled
     // row, at whatever speed the theme names. No luminance change of its
     // own, and it rests while it is off screen unless a theme says never.
+    // The alarm [scope-94]: the split copies of the headline, the letter
+    // cells' decode, the hazard stripes and the sweeping band. Every opacity
+    // step of the alarm is measured by the pass above; the rendered frames
+    // of the whole alarm are measured in tests/alarm.spec.mjs.
+    'kp-alarm-slice-in':
+        'a clip-path showing thin bands of two copies of the headline, four positions once; the copies keep their colours and a band is under 341x256 px',
+    'kp-alarm-slice': 'the same bands for 200 ms once every five seconds; a clip-path, under 341x256 px',
+    'kp-alarm-decode-letter':
+        'a letter cell turning from transparent to its ink once, stepped; one change per cell, ever, and a cell is far under 341x256 px',
+    'kp-alarm-march':
+        'a background-position slide of the hazard stripes by one period every 1.6 seconds, on a bar 0.9rem tall; the stripes keep their colours, only their position moves',
+    'kp-alarm-sweep': 'a band of a faint tint translating down the plate once per six seconds; a transform, and the tint is under the 10% change',
     'kp-marquee-pass':
         'a row of items translated -50% and back to its start, seamlessly; a transform only, no opacity or colour stop, and paused whenever the band is outside the viewport',
 };
@@ -331,17 +351,37 @@ export function tableProblems(source, timings) {
     return problems;
 }
 
+/**
+ * The opacity keyframes a stylesheet can reach: its own first, then every
+ * other stylesheet's [scope-98]. A register may name a keyframe the package
+ * declares — cyberpunk's alarm names kp-alarm-jitter, kp-alarm-caret and
+ * kp-alarm-decode-noise from css/components.css — and the cascade resolves
+ * that name across files. Until scope-98 this gate read keyframes only from
+ * the file that used them, so such a register was reported as animating
+ * "something this gate cannot measure" when the package's own stops were a
+ * file away.
+ *
+ * @param {string} source the stylesheet that names the animation
+ * @param {Map<string, {stop: number, opacity: number}[]>} shared every stylesheet's keyframes
+ */
+export function reachableKeyframes(source, shared) {
+    return new Map([...shared, ...parseOpacityKeyframes(source)]);
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
     let failed = 0;
     let checked = 0;
     /** @type {string[]} */
     const skipped = [];
+    /** @type {Map<string, {stop: number, opacity: number}[]>} */
+    const shared = new Map();
+    for (const rel of CSS) for (const [k, v] of parseOpacityKeyframes(readFileSync(new URL(rel, import.meta.url), 'utf8'))) shared.set(k, v);
 
     for (const rel of CSS) {
         const path = new URL(rel, import.meta.url);
         const source = readFileSync(path, 'utf8');
         const name = rel.replace('../', '');
-        const frames = parseOpacityKeyframes(source);
+        const frames = reachableKeyframes(source, shared);
 
         for (const anim of animations(source)) {
             const stops = frames.get(anim.name);
@@ -483,7 +523,7 @@ export function di5Report(timings) {
         '# DI5 — the flash rate of every effect [TH129, T20]',
         '',
         'Generated by `node gates/check-motion.mjs --report` from `TIMINGS` in',
-        '`js/effects.js`; `npm run gates` refuses a stale copy. The rate is the',
+        '`js/effects.js`; `npm run check:di5-report`, part of `npm run advice`, refuses a stale copy. The rate is the',
         'number of opposing luminance changes of 10% or more per second: a loop',
         'is extrapolated, a run that plays once is rated over the second it',
         'occupies. SC 2.3.1 allows three. Per S42 a rate over the threshold is',

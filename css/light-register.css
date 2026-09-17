@@ -245,14 +245,28 @@
         letter-spacing: -0.02em;
     }
 
+    /* The bar's links carry no indigo (Kenny, 2026-09-15,
+       navigation#bar-collapsed: "I don't like the blue in the navbar for
+       the links"). Before, every link read in --link, which this theme
+       derives from --primary, and took --primary again on hover, focus and
+       the current page — one indigo for four states. Now the resting link
+       is the slate muted ink, and pointing at it, focusing it or being on
+       its page brings it up to the full ink; the current page keeps the
+       base layer's weight and thick underline besides [DI4]. Since Kenny's
+       second note ("Ook daar weg", and on navigation#app-shell "blauw moet
+       uit navbar", 2026-09-15 [scope-93]) the indigo has left the call to
+       action and the side navigation too: no part of a navigation in this
+       theme computes to --primary or --link at rest, under the pointer or
+       as the current page. */
     [data-theme='light'] .kp-nav__link {
         border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
     }
 
     [data-theme='light'] .kp-nav__link:hover,
     [data-theme='light'] .kp-nav__link:focus-visible,
     [data-theme='light'] .kp-nav__link[aria-current] {
-        color: var(--primary);
+        color: var(--foreground);
         background: none;
     }
 
@@ -263,9 +277,17 @@
         font-size: var(--kp-text-xs, 0.75rem);
     }
 
+    /* The call to action, without the indigo [scope-93]: a pill drawn in
+       the full ink — a one-and-a-half-pixel ring painted inside the box, so
+       the bar's height and the link's baseline stay what they were — which
+       fills with the ink under the pointer or the focus. Before, an indigo
+       plate (--primary) that turned to the ink on hover. The ring is a
+       shadow rather than a border: a border would add to the box. */
     [data-theme='light'] .kp-nav__link--cta {
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: none;
+        color: var(--foreground);
+        box-shadow: inset 0 0 0 1.5px var(--foreground);
+        font-weight: 600;
         border-radius: var(--kp-radius-pill, 999px);
         padding-inline: var(--kp-space-lg, 1rem);
     }
@@ -276,11 +298,39 @@
         color: var(--background);
     }
 
+    /* The ring above replaced the package's focus shadow (_rules.css) in a
+       later layer; the focus ring is composed in front of it again. */
+    [data-theme='light'] .kp-nav__link--cta:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 1.5px var(--foreground);
+    }
+
     /* The dropdown [KT14]: the demo's own panel — white, a strong hairline,
        the dropdown shadow step, a plain hover wash. */
     [data-theme='light'] .kp-nav__menu {
         border-radius: var(--radius, 0.5rem);
         box-shadow: var(--kp-shadow-md);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    /* A dropdown's and a mega menu's links in the full ink, not the indigo
+       --link, for the same note as the bar's links; the hover wash is what
+       marks the one pointed at. */
+    [data-theme='light'] .kp-nav__menu a {
+        color: var(--foreground);
     }
 
     [data-theme='light'] .kp-nav__menu a:hover,
@@ -319,14 +369,19 @@
         border-radius: var(--radius, 0.5rem);
     }
 
+    /* The switch [gap-11]: the pill, on the field's ground as the inputs are. */
+    [data-theme='light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='light'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
     /* ── Card / dossier ──────────────────────────────────────────────────── */
 
     [data-theme='light'] .kp-card {
         box-shadow: var(--kp-shadow-sm);
-    }
-
-    [data-theme='light'] .kp-card__title {
-        font-size: 1.1rem;
     }
 
     /* ── Elevated panels: card and popover are both pure white (DI6), so
@@ -344,6 +399,49 @@
         box-shadow: var(--kp-shadow-md);
     }
 
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='light'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='light'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='light'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='light'] .kp-toast--destructive,
+    [data-theme='light'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='light']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='light'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
     [data-theme='light'] .kp-menu__item:hover {
         background: var(--muted);
     }
@@ -352,10 +450,6 @@
        backdrop stays the base layer's (not a token, by design) ────────── */
     [data-theme='light'] .kp-dialog {
         box-shadow: var(--kp-shadow-lg);
-    }
-
-    [data-theme='light'] .kp-dialog__title {
-        font-size: 1.1rem;
     }
 
     /* ── Badges, tags, status ────────────────────────────────────────────── */
@@ -398,10 +492,6 @@
         border-radius: var(--kp-radius-pill, 999px);
     }
 
-    [data-theme='light'] .kp-progress__value {
-        background: var(--primary);
-    }
-
     [data-theme='light'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
@@ -435,10 +525,28 @@
         border-radius: var(--kp-radius-pill, 999px);
     }
 
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='light'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
     /* ── Data: tables, timelines, trees ─────────────────────────────────── */
 
     [data-theme='light'] .kp-table th {
         background: var(--muted);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--muted);
         font-weight: 600;
     }
 
@@ -465,6 +573,18 @@
         font-size: 0.9em;
     }
 
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (88% lightness), so the shared 14% wash of it came out at
+       ΔE 0.75 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.6. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.7, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='light'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
+    }
+
     [data-theme='light'] .kp-timeline {
         border-inline-start: 2px solid var(--border);
     }
@@ -479,6 +599,15 @@
         font-size: 0.9em;
     }
 
+    /* The accordion [gap-12]: quiet at rest; open takes the primary ink. */
+    [data-theme='light'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
     [data-theme='light'] .kp-reorder {
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
@@ -491,9 +620,29 @@
         border-bottom: 2px solid var(--primary);
     }
 
+    /* The trails' size is the package's [scope-87]; their numerals are this
+       register's: tabular, so page numbers and file numbers line up. */
     [data-theme='light'] .kp-breadcrumb,
     [data-theme='light'] .kp-pagination {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The breadcrumb in the bar's scheme, not the indigo --link (Kenny,
+       2026-09-15, navigation#app-shell [scope-94]): a crumb rests in the
+       slate muted ink — a visited one too — and pointing at it or focusing
+       it brings it up to the full ink, as the bar's links do since
+       scope-92 and scope-93. The page you are on is in the full ink with
+       the weight and the absent underline it already had, so it is marked
+       by more than a colour [DI4]. */
+    [data-theme='light'] .kp-breadcrumb a,
+    [data-theme='light'] .kp-breadcrumb a:visited {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-breadcrumb a:hover,
+    [data-theme='light'] .kp-breadcrumb a:focus-visible,
+    [data-theme='light'] .kp-breadcrumb [aria-current] {
+        color: var(--foreground);
     }
 
     [data-theme='light'] .kp-pagination [aria-current] {
@@ -711,7 +860,9 @@
 
     /* The menu's caption [M3]: the same choice, for the line a consumer
        may put above a dropdown's items. */
-    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before {
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='light'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='light'] .kp-nav__menu--wide .kp-nav__menu-heading {
         text-transform: none;
         letter-spacing: 0;
         border-block-end: 0;
@@ -720,7 +871,7 @@
 
     /* ── The side navigation [feat-nav-3] ────────────────────────────
        Kenny asked for this one to stay simple, so it does: the row you
-       are on is named in the accent and carries a short rule at its
+       are on is named in the full ink and carries a short rule at its
        leading edge. Nothing else changes. */
     [data-theme='light'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
@@ -731,10 +882,15 @@
         border-inline-start: 2px solid transparent;
     }
 
+    /* The current row in the full ink with its leading rule in the same
+       ink, not the indigo (Kenny, 2026-09-15, navigation#app-shell: "blauw
+       moet uit navbar" [scope-93]); the base layer's weight stays, so the
+       row is marked by the rule and the weight, never by a colour alone
+       [DI4]. */
     [data-theme='light'] .kp-sidenav__link[aria-current='page'] {
-        color: var(--primary);
+        color: var(--foreground);
         background: none;
-        border-inline-start-color: var(--primary);
+        border-inline-start-color: var(--foreground);
     }
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
@@ -822,5 +978,72 @@
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the links'
+       muted ink on the theme's radius, taking the full ink when pointed at,
+       as the links do since Kenny's no-indigo note of 2026-09-15. The
+       link's typeface, case, spacing, shape and pointer answer are restated
+       here, because the trigger is a button beside the list rather than a
+       link in it. The underline a plain link carries is not: it says "this
+       is a link", and the trigger is not one. */
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-radius: var(--radius, 0.5rem);
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='light'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The alarm in daylight: the page stays white and the headline, the frame and the bars are its own red, with a pale red glow breathing at the edges instead of a dark plate. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='light'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.22);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+    }
+
+    [data-theme='light'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='light'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
     }
 }

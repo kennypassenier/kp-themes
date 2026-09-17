@@ -78,10 +78,10 @@ accent the demo's girih dot and divider dot are drawn in.)
 (900ms, once), the inscription (a `color`/`border-bottom-color`
 transition, 600ms, once, staggered per mark), the seal (a
 `background`/`color` transition, 220ms, once, staggered per mark), the
-rule draw (`kp-rule-in`, 420ms, once). `kp-burnish` carries no opacity
+rule draw (`kp-rule-in`, 480ms from `--kp-rule`, once). `kp-burnish` carries no opacity
 step (a `clip-path` wipe), so it is out of scope in
 `gates/check-motion.mjs` rather than opacity-rated; the reason is
-recorded there. Nothing loops, nothing blinks. The demo's own DI5 section
+recorded there. Nothing blinks; the one loop is the band's 54000ms pass (`--kp-marquee`), which moves without changing luminance. The demo's own DI5 section
 found zero `@keyframes`/`transition` across every measured reference and
 its own research file, and this register's answer keeps that spirit —
 one-shot arrivals only, never a loop.
@@ -111,7 +111,11 @@ its kin); nothing is a literal hex, not even in a comment.
   underline drawn in, once; a `<mark>` inside
   `.kp-card[data-kp-reveal='emphasis']` (the dossier) is the seal — a
   solid void plate (`--sidebar-background`) with no ink, cleared by the
-  trigger on a stagger.
+  trigger on a stagger. The plate is laid only where the script runs
+  (`[data-kp-effects]`); without it the phrases stand at rest, readable,
+  since nothing would ever clear them (scope-100). The dossier's stamp, a
+  vermilion plate rotated -8deg, floats at the card's top end on every
+  labelled card, inside the card's edge (scope-100, scope-98).
 - **reveal (headline)** — `gild`: the burnish, this theme's own routine
   (see "What the demo showed" below).
 - **reveal (rule)** — `draw`: a gold-line hairline (`--border-strong`)
@@ -135,9 +139,10 @@ its kin); nothing is a literal hex, not even in a comment.
   a slot machine.
 - **No Western geometry.** The tile is ten-fold; Deco's chevrons and
   the Swiss grid belong to their own themes.
-- **No looping motion.** Every reveal in this register runs once and
+- **No looping reveal.** Every reveal in this register runs once and
   rests; nothing blinks, sweeps or drifts the way terminal's phosphor or
-  forest's contour layer do.
+  forest's contour layer do. The band's slow pass (54000ms) is the only
+  loop, as in every theme's band.
 
 ## What the demo showed and the package now renders exactly (S49)
 

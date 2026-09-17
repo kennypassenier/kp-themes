@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html" aria-current="page">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -179,6 +181,16 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Small&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Medium&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--lg&quot;</span>&gt;Large&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A label beside an icon</figcaption>
+                        <p class="kp-text-muted">The words go in their own `.kp-button__text` and the icon stays a hidden sibling. Retro underlines the first letter of the label when the button is pointed at, and CSS cannot tell a bare run of text from the icon next to it, so without the element that letter is never found. No other theme styles it: in the button’s flex row it lays out exactly as the bare text did. `&lt;Button&gt;` and the generated examples write it for you when the label mixes text with an element; by hand, add it yourself.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
+<button type="button" class="kp-button kp-button--primary"><span class="kp-button__text">Export</span><span aria-hidden="true">↓</span></button>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;↻&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__text&quot;</span>&gt;Retry&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__text&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;↓&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A destructive button that confirms</figcaption>
@@ -279,14 +291,16 @@
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-button-height-lg</code></td><td><code>calc(var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem))</code></td></tr>
                             <tr><td><code>--kp-button-height-sm</code></td><td><code>max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)))</code></td></tr>
-                            <tr><td><code>--kp-button-padding-block-lg</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
-                            <tr><td><code>--kp-button-padding-block-sm</code></td><td><code>var(--kp-space-xs, 0.25rem)</code></td></tr>
+                            <tr><td><code>--kp-button-padding-block-lg</code></td><td><code>var(--kp-control-padding-block, max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px)))</code></td></tr>
+                            <tr><td><code>--kp-button-padding-block-sm</code></td><td><code>max(0px, min(var(--kp-space-xs, 0.25rem), (1.75rem - 1lh) / 2 - 3px))</code></td></tr>
                             <tr><td><code>--kp-button-padding-inline-lg</code></td><td><code>var(--kp-space-xl, 1.5rem)</code></td></tr>
                             <tr><td><code>--kp-button-padding-inline-sm</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
                             <tr><td><code>--kp-button-text-lg</code></td><td><code>calc(var(--kp-text-md, 1rem) * 1.125)</code></td></tr>
                             <tr><td><code>--kp-button-text-sm</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-confirm-max-width</code></td><td><code>min(26rem, calc(100vw - 2rem))</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-control-line-height</code></td><td><code>1.25</code></td></tr>
+                            <tr><td><code>--kp-control-padding-block</code></td><td><code>max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px))</code></td></tr>
                             <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
@@ -316,6 +330,7 @@
                             <tr><td><code>.kp-button--ghost</code></td><td>No ground and no boundary until it is hovered, for actions that sit inside dense rows.</td></tr>
                             <tr><td><code>.kp-button--sm</code></td><td>The small step, for a control that sits inside a table row or a menu. Its height is floored so the compact density cannot take it under the 24px pointer target.</td></tr>
                             <tr><td><code>.kp-button--lg</code></td><td>The large step, for the one action a landing page is about. There is no modifier for the middle step: that is `.kp-button` itself.</td></tr>
+                            <tr><td><code>.kp-button__text</code></td><td>The words of a label that also holds an icon or another element. Public: use it whenever the label is more than bare text. A label of text alone needs none, and a label that marks its own access key with `data-kp-key` is left as written.</td></tr>
                             <tr><td><code>.kp-button__undo</code></td><td>The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.</td></tr>
                             <tr><td><code>.kp-confirm</code></td><td>The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.</td></tr>
                             <tr><td><code>:hover / :active</code></td><td>Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.</td></tr>

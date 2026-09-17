@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — FUI layout concepts</title>
+        <script>
+            // The same head snippet examples/concept.html carries: the stored
+            // theme before first paint, and data-kp-effects so the registers'
+            // reveal start states apply. Only the three themes this demo
+            // links a register for are honoured; anything else falls back.
+            (function () {
+                var allowed = ['nostromo', 'cyberpunk', 'terminal'];
+                var t = null;
+                try {
+                    t = localStorage.getItem('theme');
+                } catch (e) {}
+                if (allowed.indexOf(t) === -1) t = 'nostromo';
+                document.documentElement.setAttribute('data-theme', t);
+                document.documentElement.setAttribute('data-kp-effects', '');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <style>
+            /* .microlabel is defined per register (kp.register), never in the
+               base. This fallback goes into kp.base so every register's own
+               rule outranks it — an unlayered rule here would beat them all. */
+            @layer kp.base {
+                .microlabel {
+                    margin: 0;
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: var(--muted-foreground);
+                }
+            }
+
+            /* The proposed shapes, in their own layer so nothing here outranks
+               a register by accident. Every paint is a token (DI9). Class names
+               are fui-* so they cannot collide with the kp-* promise. */
+            @layer fui {
+                .fui-demo {
+                    --kp-page-max: 88rem;
+                }
+
+                .fui-mock {
+                    display: grid;
+                    gap: var(--kp-space-lg);
+                }
+
+                .fui-look {
+                    margin: 0;
+                    padding: var(--kp-space-sm) var(--kp-space-md);
+                    border-inline-start: 3px solid var(--accent);
+                    background: hsl(from var(--accent) h s l / 0.06);
+                    font-size: var(--kp-text-sm);
+                }
+
+                .fui-look strong {
+                    font-family: var(--theme-font-mono);
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                }
+
+                .fui-panel-title {
+                    display: flex;
+                    align-items: baseline;
+                    justify-content: space-between;
+                    gap: var(--kp-space-sm);
+                    padding-block-end: var(--kp-space-xs);
+                    border-block-end: 1px solid var(--border-strong);
+                    margin-block-end: var(--kp-space-sm);
+                }
+
+                /* ── B · Dispatch console ─────────────────────────────────── */
+
+                .fui-console {
+                    display: grid;
+                    gap: var(--kp-space-md);
+                    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+                    grid-template-areas:
+                        'ticker ticker'
+                        'queue board'
+                        'queue log';
+                }
+
+                .fui-console__ticker {
+                    grid-area: ticker;
+                    min-width: 0;
+                }
+
+                .fui-console__queue {
+                    grid-area: queue;
+                    min-width: 0;
+                }
+
+                .fui-console__board {
+                    grid-area: board;
+                }
+
+                .fui-console__log {
+                    grid-area: log;
+                }
+
+                .fui-console .kp-marquee {
+                    display: flex;
+                    gap: var(--kp-space-xl);
+                    overflow: hidden;
+                    white-space: nowrap;
+                    padding: var(--kp-space-xs) var(--kp-space-md);
+                    border: 1px solid var(--border-strong);
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-sm);
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                }
+
+                .fui-pri {
+                    display: inline-block;
+                    min-width: 2.4em;
+                    padding: 0 0.3em;
+                    border: 1px solid var(--border-strong);
+                    border-radius: calc(var(--radius) / 2);
+                    font-family: var(--theme-font-mono);
+                    font-weight: 700;
+                    text-align: center;
+                    background: var(--muted);
+                    color: var(--foreground);
+                }
+
+                .fui-pri[data-pri='1'] {
+                    background: var(--destructive);
+                    color: var(--destructive-foreground);
+                }
+
+                .fui-pri[data-pri='2'] {
+                    background: var(--warning);
+                    color: var(--warning-foreground);
+                }
+
+                .fui-pri[data-pri='3'] {
+                    background: var(--info);
+                    color: var(--info-foreground);
+                }
+
+                .fui-units {
+                    display: grid;
+                    gap: var(--kp-space-sm);
+                    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+                }
+
+                .fui-unit {
+                    display: grid;
+                    gap: 0.2rem;
+                    padding: var(--kp-space-sm);
+                    border: 1px solid var(--border);
+                    border-radius: calc(var(--radius) / 2);
+                    background: var(--background);
+                }
+
+                .fui-unit__call {
+                    font-family: var(--theme-font-mono);
+                    font-weight: 700;
+                }
+
+                .fui-unit__age {
+                    font-size: var(--kp-text-sm);
+                    font-variant-numeric: tabular-nums;
+                    color: var(--muted-foreground);
+                }
+
+                .fui-log {
+                    margin: 0;
+                    padding: var(--kp-space-sm);
+                    max-height: 14rem;
+                    overflow: auto;
+                    list-style: none;
+                    border: 1px solid var(--border);
+                    border-radius: calc(var(--radius) / 2);
+                    background: var(--background);
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-sm);
+                }
+
+                .fui-log li {
+                    display: grid;
+                    grid-template-columns: 9ch 1fr;
+                    gap: var(--kp-space-sm);
+                    padding-block: 0.15rem;
+                    border-block-end: 1px dashed var(--border);
+                }
+
+                .fui-log time {
+                    color: var(--muted-foreground);
+                    font-variant-numeric: tabular-nums;
+                }
+
+                @media (max-width: 60rem) {
+                    /* minmax(0, 1fr), not 1fr: a bare 1fr has an auto minimum,
+                       and the nowrap ticker would widen the column to its own
+                       length instead of clipping (measured: 2311px at 600). */
+                    .fui-console {
+                        grid-template-columns: minmax(0, 1fr);
+                        grid-template-areas:
+                            'ticker'
+                            'queue'
+                            'board'
+                            'log';
+                    }
+                }
+
+                /* ── C + D · Case file with HUD brackets ──────────────────── */
+
+                .fui-dossier {
+                    display: grid;
+                    gap: var(--kp-space-lg);
+                    grid-template-columns: 13rem 1fr;
+                    align-items: start;
+                }
+
+                /* The bracket: four corner gradients, the technique the cyberpunk
+                   register already uses on [data-kp-surface] h2. Both
+                   pseudo-elements stay free for the theme. */
+                .fui-bracket {
+                    --b: 1.1rem;
+                    --w: 2px;
+                    background-image:
+                        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+                        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+                        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+                        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent));
+                    background-repeat: no-repeat;
+                    background-size:
+                        var(--b) var(--w),
+                        var(--w) var(--b),
+                        var(--b) var(--w),
+                        var(--w) var(--b),
+                        var(--b) var(--w),
+                        var(--w) var(--b),
+                        var(--b) var(--w),
+                        var(--w) var(--b);
+                    background-position:
+                        top left,
+                        top left,
+                        top right,
+                        top right,
+                        bottom left,
+                        bottom left,
+                        bottom right,
+                        bottom right;
+                }
+
+                .fui-hud {
+                    position: relative;
+                    display: grid;
+                    place-items: center;
+                    aspect-ratio: 3 / 4;
+                    padding: var(--kp-space-lg);
+                    background: linear-gradient(160deg, var(--muted), var(--secondary));
+                    color: var(--muted-foreground);
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    text-align: center;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                }
+
+                .fui-hud__corner {
+                    position: absolute;
+                    margin: 0;
+                    padding: 0.15rem 0.35rem;
+                    background: var(--background);
+                    color: var(--foreground);
+                    font-size: var(--kp-text-xs);
+                    font-variant-numeric: tabular-nums;
+                }
+
+                .fui-hud__corner[data-at='tl'] {
+                    top: 0.5rem;
+                    left: 0.5rem;
+                }
+
+                .fui-hud__corner[data-at='tr'] {
+                    top: 0.5rem;
+                    right: 0.5rem;
+                }
+
+                .fui-hud__corner[data-at='bl'] {
+                    bottom: 0.5rem;
+                    left: 0.5rem;
+                }
+
+                .fui-hud__corner[data-at='br'] {
+                    bottom: 0.5rem;
+                    right: 0.5rem;
+                }
+
+                .fui-hud__reticle {
+                    width: 3rem;
+                    height: 3rem;
+                    border: 1px solid var(--foreground);
+                    border-radius: 50%;
+                    background:
+                        linear-gradient(var(--foreground), var(--foreground)) center / 1px 60% no-repeat,
+                        linear-gradient(var(--foreground), var(--foreground)) center / 60% 1px no-repeat;
+                }
+
+                .fui-kv {
+                    display: grid;
+                    grid-template-columns: max-content 1fr;
+                    gap: 0.3rem var(--kp-space-md);
+                    margin: 0;
+                }
+
+                .fui-kv dt {
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    color: var(--muted-foreground);
+                    align-self: baseline;
+                }
+
+                .fui-kv dd {
+                    margin: 0;
+                }
+
+                .fui-board {
+                    position: relative;
+                    display: grid;
+                    gap: var(--kp-space-xl);
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    grid-template-rows: repeat(2, minmax(9rem, 1fr));
+                    padding: var(--kp-space-xl);
+                    border: 1px solid var(--border-strong);
+                    border-radius: var(--radius);
+                    background-color: var(--muted);
+                    background-image: radial-gradient(hsl(from var(--foreground) h s l / 0.06) 1px, transparent 1px);
+                    background-size: 12px 12px;
+                }
+
+                .fui-board__strings {
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
+
+                .fui-board__strings line {
+                    stroke: var(--destructive);
+                    stroke-width: 2;
+                    vector-effect: non-scaling-stroke;
+                }
+
+                .fui-pin {
+                    position: relative;
+                    /* The tilt knob: capped at 1.5deg so nothing reads as broken. */
+                    transform: rotate(clamp(-1.5deg, var(--tilt, 0deg), 1.5deg));
+                }
+
+                .fui-pin::before {
+                    content: '';
+                    position: absolute;
+                    top: -0.45rem;
+                    left: 50%;
+                    width: 0.8rem;
+                    height: 0.8rem;
+                    border: 2px solid var(--border-strong);
+                    border-radius: 50%;
+                    background: var(--destructive);
+                    transform: translateX(-50%);
+                    z-index: 1;
+                }
+
+                .fui-pin--photo {
+                    display: grid;
+                    place-items: end start;
+                    min-height: 8rem;
+                    padding: var(--kp-space-sm);
+                    background: linear-gradient(200deg, var(--secondary), var(--card));
+                    border: 1px solid var(--border);
+                }
+
+                @media (max-width: 48rem) {
+                    .fui-dossier {
+                        grid-template-columns: minmax(0, 1fr);
+                    }
+
+                    .fui-board {
+                        grid-template-columns: minmax(0, 1fr);
+                        grid-template-rows: auto;
+                    }
+
+                    .fui-board__strings {
+                        display: none;
+                    }
+                }
+
+                /* ── A + E · Elbow frame around a systems board ───────────── */
+
+                .fui-frame {
+                    --fui-rail: 6rem;
+                    --fui-bar: 1.25rem;
+                    --fui-elbow: 2.5rem;
+                    --fui-gap: 0.25rem;
+                    /* The proposed --frame trio, here mapped onto token PAIRS so
+                       every label keeps its own foreground (contrast by contract). */
+                    --fui-frame: var(--accent);
+                    --fui-frame-fg: var(--accent-foreground);
+                    --fui-frame-2: var(--primary);
+                    --fui-frame-2-fg: var(--primary-foreground);
+                    --fui-frame-3: var(--info);
+                    --fui-frame-3-fg: var(--info-foreground);
+                    display: grid;
+                    gap: var(--fui-gap);
+                    grid-template-columns: var(--fui-rail) minmax(0, 1fr);
+                    grid-template-rows: var(--fui-elbow) minmax(0, 1fr) var(--fui-elbow);
+                    padding: var(--kp-space-sm);
+                    border-radius: var(--radius);
+                    background: var(--background);
+                }
+
+                .fui-frame__top,
+                .fui-frame__bottom {
+                    grid-column: 1 / -1;
+                    display: grid;
+                    gap: var(--fui-gap);
+                    grid-template-columns: calc(var(--fui-rail) + var(--fui-elbow)) minmax(0, 1fr) auto;
+                }
+
+                .fui-frame__top {
+                    grid-row: 1;
+                    align-items: start;
+                }
+
+                .fui-frame__bottom {
+                    grid-row: 3;
+                    align-items: end;
+                }
+
+                /* The elbow: a block with one big outer radius and a cut-out of
+                   ground colour with a small inner radius. No image. */
+                .fui-elbow {
+                    position: relative;
+                    height: var(--fui-elbow);
+                    background: var(--fui-frame);
+                }
+
+                .fui-frame__top .fui-elbow {
+                    border-start-start-radius: var(--fui-elbow);
+                }
+
+                .fui-frame__top .fui-elbow::after {
+                    content: '';
+                    position: absolute;
+                    left: var(--fui-rail);
+                    top: var(--fui-bar);
+                    right: 0;
+                    bottom: 0;
+                    background: var(--background);
+                    border-start-start-radius: var(--fui-bar);
+                }
+
+                .fui-frame__bottom .fui-elbow {
+                    border-end-start-radius: var(--fui-elbow);
+                }
+
+                .fui-frame__bottom .fui-elbow::after {
+                    content: '';
+                    position: absolute;
+                    left: var(--fui-rail);
+                    top: 0;
+                    right: 0;
+                    bottom: var(--fui-bar);
+                    background: var(--background);
+                    border-end-start-radius: var(--fui-bar);
+                }
+
+                .fui-bar {
+                    margin: 0;
+                    height: var(--fui-bar);
+                    line-height: var(--fui-bar);
+                    padding-inline: 0.6rem;
+                    background: var(--fui-frame-2);
+                    color: var(--fui-frame-2-fg);
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    text-align: end;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .fui-bar--cap {
+                    border-start-end-radius: 999px;
+                    border-end-end-radius: 999px;
+                    padding-inline-end: 1rem;
+                    background: var(--fui-frame-3);
+                    color: var(--fui-frame-3-fg);
+                }
+
+                .fui-frame__rail {
+                    grid-row: 2;
+                    grid-column: 1;
+                    display: grid;
+                    gap: var(--fui-gap);
+                    grid-template-rows: repeat(4, auto) minmax(2rem, 1fr);
+                }
+
+                .fui-seg {
+                    display: grid;
+                    align-content: end;
+                    padding: 0.35rem 0.45rem;
+                    min-height: 2.75rem;
+                    border-start-end-radius: 4px;
+                    border-end-end-radius: 4px;
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    text-align: end;
+                    font-variant-numeric: tabular-nums;
+                    background: var(--fui-frame);
+                    color: var(--fui-frame-fg);
+                }
+
+                .fui-seg[data-tone='2'] {
+                    background: var(--fui-frame-2);
+                    color: var(--fui-frame-2-fg);
+                }
+
+                .fui-seg[data-tone='3'] {
+                    background: var(--fui-frame-3);
+                    color: var(--fui-frame-3-fg);
+                }
+
+                .fui-seg[data-tone='4'] {
+                    background: var(--secondary);
+                    color: var(--secondary-foreground);
+                }
+
+                .fui-seg small {
+                    display: block;
+                    font-size: 0.65rem;
+                    opacity: 0.85;
+                }
+
+                .fui-frame__content {
+                    grid-row: 2;
+                    grid-column: 2;
+                    display: grid;
+                    gap: var(--kp-space-md);
+                    padding: var(--kp-space-md) var(--kp-space-sm);
+                    min-width: 0;
+                }
+
+                .fui-systems {
+                    display: grid;
+                    gap: var(--kp-space-md);
+                    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+                }
+
+                .fui-readout {
+                    display: grid;
+                    gap: 0.25rem;
+                    padding: var(--kp-space-sm);
+                    border-inline-start: 3px solid var(--fui-frame-2);
+                    background: var(--card);
+                    color: var(--card-foreground);
+                }
+
+                .fui-readout[data-state='warn'] {
+                    border-inline-start-color: var(--warning);
+                }
+
+                .fui-readout__value {
+                    font-family: var(--theme-font-display);
+                    font-size: clamp(1.4rem, 2.4vw, 2rem);
+                    line-height: 1;
+                    font-variant-numeric: tabular-nums;
+                }
+
+                .fui-readout__value small {
+                    font-family: var(--theme-font-mono);
+                    font-size: var(--kp-text-xs);
+                    letter-spacing: 0.08em;
+                    color: var(--muted-foreground);
+                    margin-inline-start: 0.3em;
+                }
+
+                .fui-gauge {
+                    position: relative;
+                    height: 0.6rem;
+                    border: 1px solid var(--border-strong);
+                    border-radius: 2px;
+                    background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), var(--border) calc(10% - 1px) 10%);
+                }
+
+                .fui-gauge__fill {
+                    position: absolute;
+                    inset: 0;
+                    width: var(--v, 0%);
+                    background: var(--fui-frame-2);
+                }
+
+                .fui-readout[data-state='warn'] .fui-gauge__fill {
+                    background: var(--warning);
+                }
+
+                .fui-frame .kp-code-block {
+                    margin: 0;
+                    white-space: pre;
+                    overflow-x: auto;
+                }
+
+                .fui-frame__content .fui-status {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: var(--kp-space-md);
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                @media (max-width: 48rem) {
+                    .fui-frame {
+                        --fui-rail: 3.75rem;
+                        --fui-elbow: 2rem;
+                    }
+
+                    .fui-seg small {
+                        display: none;
+                    }
+                }
+            }
+        </style>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <div class="kp-nav-wrap">
+            <nav class="kp-nav" aria-label="Main navigation">
+                <span class="kp-nav__brand">
+                    kp-themes
+                    <small class="kp-nav__brand-tag">FUI research</small>
+                </span>
+                <ul class="kp-nav__links">
+                    <li>
+                        <a class="kp-nav__link" href="#console" data-kp-text="Mockups" aria-haspopup="true">Mockups</a>
+                        <ul class="kp-nav__menu">
+                            <li><a href="#console">Dispatch console</a></li>
+                            <li><a href="#dossier">Case file</a></li>
+                            <li><a href="#frame">Ship status</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="kp-nav__link" href="#about" data-kp-text="About">About</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <main id="main" class="kp-page fui-demo" tabindex="-1">
+            <section class="kp-section kp-stack" data-kp-surface="hero" id="about">
+                <p class="kp-side-note" aria-hidden="true">RESEARCH · 2026-09-13 · THREE SHAPES · THREE REGISTERS</p>
+                <p class="microlabel">research/futuristic</p>
+                <h1 data-kp-reveal="headline">Three page shapes from the screen</h1>
+                <p class="kp-prose">
+                    Rough but real mockups of the strongest layout concepts in <code>README.md</code>: a dispatch console with a ticker rail, a case
+                    file on an evidence board with HUD brackets, and a ship status page inside an LCARS-style elbow frame. Every paint is a package
+                    token; the new shapes are inline CSS in a <code>fui</code> layer. Switch the register to see the same shapes under three themes.
+                </p>
+                <div class="kp-row kp-row--start" data-kp-theme-picker aria-label="Choose a theme">
+                    <button type="button" data-kp-theme="nostromo">
+                        <span class="kp-swatch" data-theme="nostromo"></span>
+                        Nostromo
+                    </button>
+                    <button type="button" data-kp-theme="cyberpunk">
+                        <span class="kp-swatch" data-theme="cyberpunk"></span>
+                        Cyberpunk
+                    </button>
+                    <button type="button" data-kp-theme="terminal">
+                        <span class="kp-swatch" data-theme="terminal"></span>
+                        Terminal
+                    </button>
+                </div>
+            </section>
+
+            <div data-kp-divider></div>
+
+            <!-- ── Mockup 1 · Dispatch console (concept B, with F's log) ──────── -->
+            <section class="kp-section kp-stack fui-mock" data-kp-surface="app" id="console">
+                <p class="microlabel">Mockup 1 · concept B · dispatch console</p>
+                <h2 data-kp-reveal="rule">Harbour district dispatch — night watch</h2>
+                <p class="fui-look">
+                    <strong>Look at:</strong> the ticker rail at the top (the package's own <code>.kp-marquee</code> — cyberpunk runs it, nostromo and
+                    terminal hold it still); the priority plates, where the number is the carrier and the colour comes second; the unit board's health
+                    words beside their dots; the log's dashed rows in the mono face; and how the three regions stack in one column under 60rem. The
+                    only thing here that is not in the package today is the grid that holds the four regions and the two small tiles.
+                </p>
+
+                <div class="fui-console">
+                    <div class="fui-console__ticker">
+                        <div class="kp-marquee" data-kp-marquee aria-label="Watch status">
+                            <span>6 open incidents</span>
+                            <span>2 unassigned</span>
+                            <span>Channel 3 busy</span>
+                            <span>Shift change 06:00</span>
+                            <span>Weather: fog, visibility 400 m</span>
+                            <span>Bridge closure lifted 23:10</span>
+                        </div>
+                    </div>
+
+                    <div class="fui-console__queue">
+                        <div class="fui-panel-title">
+                            <p class="microlabel">Incident queue</p>
+                            <span class="kp-text-muted kp-mono">sorted by priority, then age</span>
+                        </div>
+                        <div class="kp-table-wrap" data-kp-region-label="Incident queue">
+                            <table class="kp-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Pri</th>
+                                        <th scope="col">Incident</th>
+                                        <th scope="col">Location</th>
+                                        <th scope="col">Assigned</th>
+                                        <th scope="col">Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="kp-mono">2471</td>
+                                        <td><span class="fui-pri" data-pri="1">P1</span></td>
+                                        <td>Structure fire, smoke showing</td>
+                                        <td>Kade Street 14</td>
+                                        <td>Engine 3 · Ladder 1</td>
+                                        <td class="kp-timestamp">00:04:12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-mono">2470</td>
+                                        <td><span class="fui-pri" data-pri="2">P2</span></td>
+                                        <td>Road traffic collision, two vehicles</td>
+                                        <td>Ring Road, exit 9</td>
+                                        <td>Unit 12</td>
+                                        <td class="kp-timestamp">00:11:40</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-mono">2466</td>
+                                        <td><span class="fui-pri" data-pri="2">P2</span></td>
+                                        <td>Medical, chest pain</td>
+                                        <td>Osprey Court 3</td>
+                                        <td>Ambulance 2</td>
+                                        <td class="kp-timestamp">00:22:55</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-mono">2468</td>
+                                        <td><span class="fui-pri" data-pri="3">P3</span></td>
+                                        <td>Alarm activation</td>
+                                        <td>Dockside warehouse B</td>
+                                        <td>Unit 7</td>
+                                        <td class="kp-timestamp">00:19:03</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-mono">2463</td>
+                                        <td><span class="fui-pri" data-pri="3">P3</span></td>
+                                        <td>Suspicious vehicle</td>
+                                        <td>Pier 4 car park</td>
+                                        <td><span class="kp-text-muted">unassigned</span></td>
+                                        <td class="kp-timestamp">00:47:22</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="kp-mono">2465</td>
+                                        <td><span class="fui-pri" data-pri="4">P4</span></td>
+                                        <td>Noise complaint</td>
+                                        <td>Anchor Lane 88</td>
+                                        <td><span class="kp-text-muted">unassigned</span></td>
+                                        <td class="kp-timestamp">00:31:10</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="fui-console__board">
+                        <div class="fui-panel-title">
+                            <p class="microlabel">Unit board</p>
+                            <span class="kp-text-muted kp-mono">9 on shift</span>
+                        </div>
+                        <div class="fui-units">
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">ENGINE 3</span>
+                                <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> En route</span>
+                                <span class="fui-unit__age">#2471 · 00:03:50</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">LADDER 1</span>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> On scene</span>
+                                <span class="fui-unit__age">#2471 · 00:01:08</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">UNIT 12</span>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> On scene</span>
+                                <span class="fui-unit__age">#2470 · 00:07:31</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">AMB 2</span>
+                                <span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Transporting</span>
+                                <span class="fui-unit__age">#2466 · 00:09:14</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">UNIT 7</span>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> On scene</span>
+                                <span class="fui-unit__age">#2468 · 00:12:46</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">UNIT 5</span>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Available</span>
+                                <span class="fui-unit__age">Pier 2 · idle 00:18:02</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">UNIT 9</span>
+                                <span class="kp-health" data-state="down"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Out of service</span
+                                >
+                                <span class="fui-unit__age">Workshop · since 21:40</span>
+                            </div>
+                            <div class="fui-unit">
+                                <span class="fui-unit__call">ENGINE 1</span>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Available</span>
+                                <span class="fui-unit__age">Station · idle 01:02:15</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fui-console__log">
+                        <div class="fui-panel-title">
+                            <p class="microlabel">Radio log · channel 3</p>
+                            <span class="kp-text-muted kp-mono">newest first</span>
+                        </div>
+                        <ol class="fui-log" aria-live="polite">
+                            <li><time>23:58:41</time><span>#2471 upgraded to P1 — second caller reports smoke from roof</span></li>
+                            <li><time>23:57:02</time><span>Ladder 1 arrived, Kade Street 14</span></li>
+                            <li><time>23:56:30</time><span>Engine 3 en route from station 2</span></li>
+                            <li><time>23:54:10</time><span>#2471 opened: structure fire, Kade Street 14</span></li>
+                            <li><time>23:51:44</time><span>Ambulance 2 transporting to Harbour General</span></li>
+                            <li><time>23:47:19</time><span>Unit 12 on scene, Ring Road exit 9 — lane 2 closed</span></li>
+                            <li><time>23:40:05</time><span>Unit 9 out of service: coolant leak, to workshop</span></li>
+                            <li><time>23:39:22</time><span>#2468 opened: alarm activation, Dockside warehouse B</span></li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <div data-kp-divider="alt"></div>
+
+            <!-- ── Mockup 2 · Case file (concept C) with HUD brackets (D) ──────── -->
+            <section class="kp-section kp-stack fui-mock" data-kp-surface="app" id="dossier">
+                <p class="microlabel">Mockup 2 · concepts C and D · case file, evidence board</p>
+                <h2 data-kp-reveal="rule">Case HD-2026-0913 — Dockside warehouse arson</h2>
+                <p class="fui-look">
+                    <strong>Look at:</strong> the bracketed scene photo — four corner gradients, the same technique the cyberpunk register uses on its
+                    <code>h2</code>, generalised to any box — with a readout in each corner and a reticle in the middle; the stamp on the summary
+                    card, which is the package's own <code>data-kp-label</code> hook, so nostromo pops it down, cyberpunk clears it and terminal
+                    inverts it; the pinboard below, where every card is tilted at most 1.5 degrees and the red strings are anchored to the centres of
+                    a fixed three-by-two grid, so they land exactly — and are hidden under 48rem, where the board becomes one column; and the chain of
+                    custody as a <code>.kp-timeline</code>.
+                </p>
+
+                <div class="fui-dossier">
+                    <figure class="fui-hud fui-bracket" aria-label="Scene photo 07, north wall">
+                        <p class="fui-hud__corner" data-at="tl">CAM 2</p>
+                        <p class="fui-hud__corner" data-at="tr">02:14:09</p>
+                        <p class="fui-hud__corner" data-at="bl">LOT E-17</p>
+                        <p class="fui-hud__corner" data-at="br">1:20</p>
+                        <div class="fui-hud__reticle" aria-hidden="true"></div>
+                        <figcaption>Scene photo 07 · north wall · burn pattern</figcaption>
+                    </figure>
+
+                    <div class="kp-stack">
+                        <div class="kp-card" data-kp-reveal="emphasis" data-kp-label="Sealed" data-kp-label-open="Unsealed">
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title">Summary</h3>
+                                <span class="kp-badge" data-kp-semantic data-status="screening">active</span>
+                            </div>
+                            <div class="kp-card__body">
+                                <p class="microlabel">FILE HD-2026-0913 · OPENED 2026-09-10 · CLEARANCE: DETAIL</p>
+                                <p>
+                                    Fire reported at 02:04 in warehouse B, Dockside. Accelerant residue on the north wall, entry forced at the loading
+                                    door. The night guard places a grey van at the gate at 01:52; a fuel purchase eleven minutes earlier at station 9
+                                    is on camera. The leaseholder was refused access to the site on 2026-09-11 and has no alibi for 01:30 to 02:40.
+                                </p>
+                            </div>
+                        </div>
+
+                        <dl class="fui-kv">
+                            <dt>Case number</dt>
+                            <dd class="kp-mono">HD-2026-0913</dd>
+                            <dt>Lead investigator</dt>
+                            <dd>D. Marsh, arson unit</dd>
+                            <dt>Status</dt>
+                            <dd>Active — awaiting lab report on lot E-17</dd>
+                            <dt>Evidence items</dt>
+                            <dd class="kp-numeric">12</dd>
+                            <dt>Next hearing</dt>
+                            <dd class="kp-timestamp">2026-10-02 09:30</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="fui-panel-title">
+                    <p class="microlabel">Board</p>
+                    <span class="kp-text-muted kp-mono">6 items · 4 connections</span>
+                </div>
+                <div class="fui-board">
+                    <svg class="fui-board__strings" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                        <!-- cell centres: columns 16.7 / 50 / 83.3, rows 25 / 75 -->
+                        <line x1="16.7" y1="25" x2="50" y2="25" />
+                        <line x1="50" y1="25" x2="83.3" y2="25" />
+                        <line x1="83.3" y1="25" x2="83.3" y2="75" />
+                        <line x1="16.7" y1="75" x2="50" y2="75" />
+                    </svg>
+
+                    <div class="kp-card fui-pin fui-pin--photo" style="--tilt: -1deg">
+                        <span class="microlabel">Photo 07 · north wall · burn pattern, low origin</span>
+                    </div>
+                    <div class="kp-card fui-pin" style="--tilt: 0.8deg">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title">Receipt</h3>
+                            <span class="kp-mono kp-text-muted">E-04</span>
+                        </div>
+                        <p class="kp-card__body">Fuel purchase, station 9, 01:41. Cash. Camera 3 shows a grey van at pump 2.</p>
+                    </div>
+                    <div class="kp-card fui-pin" style="--tilt: -0.6deg">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title">Vehicle</h3>
+                            <span class="kp-mono kp-text-muted">E-09</span>
+                        </div>
+                        <p class="kp-card__body">Grey panel van, partial plate KX-3··. Seen at the gate 01:52 and leaving 02:07.</p>
+                    </div>
+                    <div class="kp-card fui-pin" style="--tilt: 1.2deg">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title">Witness</h3>
+                            <span class="kp-mono kp-text-muted">W-01</span>
+                        </div>
+                        <p class="kp-card__body">Night guard. Heard the loading door at about 02:00; saw the van, not the driver.</p>
+                    </div>
+                    <div class="kp-card fui-pin" style="--tilt: -0.4deg">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title">Timeline</h3>
+                            <span class="kp-mono kp-text-muted">01:30–02:40</span>
+                        </div>
+                        <p class="kp-card__body">01:41 fuel · 01:52 van at gate · 02:00 door · 02:04 alarm · 02:07 van leaves · 02:14 photo 07.</p>
+                    </div>
+                    <div class="kp-card fui-pin" style="--tilt: 0.5deg">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title">Person of interest</h3>
+                            <span class="kp-mono kp-text-muted">P-02</span>
+                        </div>
+                        <p class="kp-card__body">Leaseholder. Refused site access 2026-09-11. No alibi for the window. Owns a grey van.</p>
+                    </div>
+                </div>
+
+                <div class="fui-panel-title">
+                    <p class="microlabel">Chain of custody · lot E-17</p>
+                </div>
+                <ol class="kp-timeline">
+                    <li class="kp-timeline__item">
+                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                        <span><time class="kp-timeline__when">2026-09-10 03:12</time>Bagged at scene by D. Marsh, sealed E-17</span>
+                    </li>
+                    <li class="kp-timeline__item">
+                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                        <span><time class="kp-timeline__when">2026-09-10 07:40</time>Logged at the property room, shelf 4</span>
+                    </li>
+                    <li class="kp-timeline__item">
+                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                        <span><time class="kp-timeline__when">2026-09-11 10:15</time>Sent to the regional lab for accelerant analysis</span>
+                    </li>
+                    <li class="kp-timeline__item">
+                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                        <span><time class="kp-timeline__when">2026-09-12 16:02</time>Preliminary report received: petrol, unleaded</span>
+                    </li>
+                </ol>
+            </section>
+
+            <div data-kp-divider></div>
+
+            <!-- ── Mockup 3 · Ship status in an elbow frame (A framing E, with F) ── -->
+            <section class="kp-section kp-stack fui-mock" data-kp-surface="app" id="frame">
+                <p class="microlabel">Mockup 3 · concepts A, E and F · elbow frame, systems board, command line</p>
+                <h2 data-kp-reveal="rule">USCSS Kestrel — systems board</h2>
+                <p class="fui-look">
+                    <strong>Look at:</strong> the elbow, drawn without an image as a block with a big outer radius and a cut-out of ground colour with
+                    a small inner one; the segmented rail with right-aligned mono numerals, where the last segment absorbs the remaining height; the
+                    top and bottom bars ending in a pill; LCARS's warm-structure versus cool-data split mapped onto the package's <code>accent</code>,
+                    <code>primary</code> and <code>info</code> pairs, so every label keeps its contract foreground; the readouts in the display face
+                    with tabular figures and a ticked gauge whose value is also written out; and the command line under the board, which is what the
+                    Expanse does to say "this screen is functional". Under 48rem the rail narrows and drops its sub-labels.
+                </p>
+
+                <div class="fui-frame">
+                    <div class="fui-frame__top">
+                        <div class="fui-elbow" aria-hidden="true"></div>
+                        <p class="fui-bar">SYS 04 · Watch 3 · all decks</p>
+                        <p class="fui-bar fui-bar--cap">2026.09.13 · 03:40 ship</p>
+                    </div>
+
+                    <nav class="fui-frame__rail" aria-label="Systems">
+                        <a class="fui-seg" data-tone="1" href="#frame">04-1701<small>Hull</small></a>
+                        <a class="fui-seg" data-tone="2" href="#frame">04-1702<small>Power</small></a>
+                        <a class="fui-seg" data-tone="3" href="#frame">04-1703<small>Life</small></a>
+                        <a class="fui-seg" data-tone="4" href="#frame">04-1704<small>Nav</small></a>
+                        <a class="fui-seg" data-tone="1" href="#frame">04-1705<small>Comms</small></a>
+                    </nav>
+
+                    <div class="fui-frame__content">
+                        <div class="fui-systems">
+                            <div class="fui-readout">
+                                <p class="microlabel">Reactor output</p>
+                                <p class="fui-readout__value">84<small>%</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 84%"></div></div>
+                                <span class="kp-text-muted kp-mono">reactor 2 throttled</span>
+                            </div>
+                            <div class="fui-readout">
+                                <p class="microlabel">Hull pressure</p>
+                                <p class="fui-readout__value">101.2<small>kPa</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 92%"></div></div>
+                                <span class="kp-text-muted kp-mono">steady 6 h</span>
+                            </div>
+                            <div class="fui-readout">
+                                <p class="microlabel">Oxygen</p>
+                                <p class="fui-readout__value">20.7<small>%</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 78%"></div></div>
+                                <span class="kp-text-muted kp-mono">CO₂ 0.04 %</span>
+                            </div>
+                            <div class="fui-readout" data-state="warn">
+                                <p class="microlabel">Coolant temperature</p>
+                                <p class="fui-readout__value">311<small>K</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 88%"></div></div>
+                                <span class="kp-health" data-state="warn"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Above limit, rising</span
+                                >
+                            </div>
+                            <div class="fui-readout">
+                                <p class="microlabel">Delta-v remaining</p>
+                                <p class="fui-readout__value">3 412<small>m/s</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 61%"></div></div>
+                                <span class="kp-text-muted kp-mono">next burn 00:42:10</span>
+                            </div>
+                            <div class="fui-readout" data-state="warn">
+                                <p class="microlabel">Relay lock</p>
+                                <p class="fui-readout__value">4<small>/ 6</small></p>
+                                <div class="fui-gauge" aria-hidden="true"><div class="fui-gauge__fill" style="--v: 66%"></div></div>
+                                <span class="kp-health" data-state="warn"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Attempting relay 5</span
+                                >
+                            </div>
+                        </div>
+
+                        <ul class="fui-status" aria-label="Subsystems">
+                            <li>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Hull nominal</span>
+                            </li>
+                            <li>
+                                <span class="kp-health" data-state="warn"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Power throttled</span
+                                >
+                            </li>
+                            <li>
+                                <span class="kp-health" data-state="ok"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Life support nominal</span
+                                >
+                            </li>
+                            <li>
+                                <span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Nav locked</span>
+                            </li>
+                            <li>
+                                <span class="kp-health" data-state="warn"
+                                    ><span class="kp-health__dot" aria-hidden="true"></span> Comms degraded</span
+                                >
+                            </li>
+                        </ul>
+
+                        <pre class="kp-code-block" aria-label="Command line">
+&gt; SYS STATUS --ALL
+HULL ........ NOMINAL
+POWER ....... 84% (REACTOR 2 THROTTLED, COOLANT 311 K)
+LIFE ........ NOMINAL      O2 20.7%  CO2 0.04%
+NAV ......... LOCKED       BURN IN 00:42:10
+COMMS ....... RELAY 4/6    ATTEMPTING 5
+&gt; _</pre>
+                    </div>
+
+                    <div class="fui-frame__bottom">
+                        <div class="fui-elbow" aria-hidden="true"></div>
+                        <p class="fui-bar">Log 04-1705 · last entry 03:38</p>
+                        <p class="fui-bar fui-bar--cap">Watch officer: Okonkwo</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="kp-footer">
+            <p class="microlabel">research/futuristic/demo.html</p>
+            <p>
+                References and the concept table are in <code>research/futuristic/README.md</code>. The shapes here are proposals, not package
+                classes: nothing prefixed <code>fui-</code> is under the semver promise.
+            </p>
+        </footer>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

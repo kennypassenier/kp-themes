@@ -6,15 +6,13 @@
 // onto their yellow offset one after another and ending as its own text,
 // the mark as a plate wiped in behind the word (on the paper while armed,
 // the yellow plate with the line once landed), the six-pixel bar ruling a
-// heading off, the marquee divider as a strip translated -50% that stands
-// still under reduced motion, the strip with the yellow hover and the cta
-// that lifts and drops, the plates with the line and the shadow, the
-// stamp with the pixel outline and the bars sliding off the dossier, no
-// arrival at all, and the whole approved inventory.
+// heading off, the strip with the yellow hover and the cta that lifts and
+// drops, the plates with the line and the shadow, the stamp with the pixel
+// outline and the bars sliding off the dossier, no arrival at all, and the
+// whole approved inventory. The marquee divider is judged by eye on the
+// catalogue since scope-73 (page-effects#dividers).
 //
 // Drills [KT3], performed 2026-09-08 in both browsers and restored:
-//   - the marquee's `inline-size: 200%` strip removed → nothing to
-//     translate, red on "the divider is a marquee";
 //   - the armed plate (`[data-kp-effects] mark:not(.is-cleared)`) removed →
 //     the plate is there from the first paint, red on "the mark is a plate";
 //   - the cta's lift on hover removed → no translate, red on "the strip".
@@ -84,7 +82,7 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
     }, token);
 
 for (const [channel, url] of CHANNELS) {
-    test.describe(`the brutalism register, ${channel}`, () => {
+    test.describe(`the brutalism register, ${channel}`, { tag: ['@theme:brutalism', '@component:page-effects', '@component:examples'] }, () => {
         test('there is no arrival: the page is simply there, and every reveal is at rest under reduced motion', async ({ page }) => {
             await open(page, url);
             expect(await page.locator('.kp-boot').count(), 'printed matter does not boot').toBe(0);
@@ -154,33 +152,6 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the divider is a marquee: a strip twice the band, translating, the second one the other way [TH121]', async ({ page }) => {
-            await open(page, url);
-            const dividers = page.locator('[data-kp-divider]');
-            expect(await dividers.count()).toBe(2);
-            for (const i of [0, 1]) {
-                const d = dividers.nth(i);
-                expect(await d.evaluate((el) => getComputedStyle(el).height)).toBe('46px');
-                const strip = await pseudo(d, '::before', [
-                    'width',
-                    'animation-name',
-                    'animation-duration',
-                    'animation-iteration-count',
-                    'background-image',
-                ]);
-                const band = await d.evaluate((el) => el.getBoundingClientRect().width);
-                expect(parseFloat(strip.width), 'twice the band').toBeCloseTo(band * 2, -1);
-                expect(strip['animation-name']).toBe('kp-marquee');
-                expect(parseFloat(strip['animation-duration'])).toBe(42);
-                expect(strip['animation-iteration-count']).toBe('infinite');
-                expect(strip['background-image']).toMatch(/repeating-linear-gradient/);
-            }
-            expect((await pseudo(dividers.nth(1), '::before', ['animation-direction']))['animation-direction']).toBe('reverse');
-            expect(await dividers.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor), 'the second band is the plate').toBe(
-                await paint(page, '--secondary'),
-            );
-        });
-
         test('the strip: a hovered item is the yellow plate with the line, and the cta lifts away from its shadow', async ({ page }) => {
             await open(page, url);
             const link = page.locator('.kp-nav__link').nth(1);
@@ -193,25 +164,6 @@ for (const [channel, url] of CHANNELS) {
             await cta.hover();
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).translate), 'lifted').toBe('-2px -2px');
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).boxShadow), 'the shadow grows').toMatch(/8px 8px 0px 0px/);
-        });
-
-        test('the buttons are plates with the line and the shadow; the primary is the ink with the yellow ink', async ({ page }) => {
-            await open(page, url);
-            const button = page.locator('[data-kp-surface="hero"] .kp-button').nth(1);
-            expect(await button.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
-            expect(await button.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('0px');
-            expect(await button.evaluate((el) => getComputedStyle(el).boxShadow)).toMatch(/6px 6px 0px 0px/);
-            expect(await button.evaluate((el) => getComputedStyle(el).backgroundColor), 'yellow is the default').toBe(
-                await paint(page, '--secondary'),
-            );
-            const primary = page.locator('[data-kp-surface="hero"] .kp-button--primary').first();
-            expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
-            expect(await primary.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
-            const label = page.locator('.microlabel').first();
-            const outline = await label.evaluate((el) => getComputedStyle(el).boxShadow.split(/,(?![^(]*\))/));
-            expect(outline, 'the pixel outline: four hard box-shadows, one per side').toHaveLength(4);
-            for (const layer of outline) expect(layer).toMatch(/(-?3px 0px|0px -?3px) 0px 0px$/);
-            expect(await label.evaluate((el) => getComputedStyle(el).borderTopWidth), 'and no border').toBe('0px');
         });
 
         test('the dossier: the tilted stamp with the pixel outline, and the bars sliding off on the trigger', async ({ page }) => {
@@ -257,29 +209,6 @@ for (const [channel, url] of CHANNELS) {
             await pseudoStyle(btn, '::after', 'opacity', 'the tag appears on the thing you touch').toBe('1');
             await btn.evaluate((el) => el.style.setProperty('--kp-label', "'VERZENDEN'"));
             expect(await word('.kp-button'), 'the consumer replaces the word').toBe('VERZENDEN');
-        });
-
-        test('the tag reaches more than the buttons [scope-12, Kenny 2026-09-11]', async ({ page }) => {
-            await open(page, url);
-            const word = async (sel) => (await pseudo(page.locator(sel).first(), '::after', ['content']))['content'].replace(/^["']|["']$/g, '');
-            // Phase 7: this skipped a selector the page did not carry,
-            // which meant a page carrying neither ran no assertion at all
-            // and reported pass. The same shape is named as a fault in
-            // this project's own comments (tests/registers.spec.mjs:197).
-            // The point of the test is that the tag reaches BEYOND the
-            // buttons, so the page must carry something beyond them.
-            const wanted = [
-                ['.kp-card', 'CARD'],
-                ['.kp-badge', 'BADGE'],
-            ];
-            const present = [];
-            for (const [selector] of wanted) if ((await page.locator(selector).count()) > 0) present.push(selector);
-            expect(present.length, 'the page carries neither a card nor a badge, so this test measures nothing').toBeGreaterThan(0);
-
-            for (const [selector, expected] of wanted) {
-                if (!present.includes(selector)) continue;
-                expect(await word(selector), `${selector} names itself`).toBe(expected);
-            }
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

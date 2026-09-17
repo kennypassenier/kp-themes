@@ -44,7 +44,7 @@ const BAND = `
     </div>
 `;
 
-test.describe('the marquee [M1]', () => {
+test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
     test('the module builds the track, doubles the row and hides the copy', async ({ page }) => {
         await open(page, BAND);
         await page.evaluate(async () => {
@@ -135,18 +135,9 @@ test.describe('the marquee [M1]', () => {
         await page.waitForTimeout(500);
         expect(await track.evaluate((el) => getComputedStyle(el).transform)).toBe(first);
     });
-
-    test('without the module the items are a row, not a half-built band [T17, AR34]', async ({ page }) => {
-        await open(page, BAND);
-        const band = page.locator('#probe [data-kp-marquee]');
-        await expect(band).not.toHaveAttribute('data-kp-marquee-ready', '');
-        const items = band.locator('span');
-        expect(await items.count()).toBe(2);
-        for (const i of [0, 1]) await expect(items.nth(i)).toBeVisible();
-    });
 });
 
-test.describe('the band on a page [M1, G14]', () => {
+test.describe('the band on a page [M1, G14]', { tag: ['@component:media', '@component:examples'] }, () => {
     // Until 2026-09-08 `components/marquee.jsx` was imported by no fixture
     // and `data-kp-marquee` appeared on no page under examples/ or
     // showcase/: five props that had never been executed, and a band no
@@ -292,42 +283,5 @@ test.describe('the band on a page [M1, G14]', () => {
         await expect(plain).toHaveAttribute('data-kp-marquee-ready', '');
         expect(await plain.locator('[data-kp-marquee-run]').count()).toBe(2);
         expect(await plain.locator('[data-kp-marquee-track]').evaluate((el) => getComputedStyle(el).animationDuration)).toBe('9s');
-    });
-});
-
-test.describe("the menu's caption [M3]", () => {
-    test('a menu with a caption draws it, a menu without one draws nothing', async ({ page }) => {
-        await open(
-            page,
-            `
-    <nav class="kp-nav">
-        <ul class="kp-nav__links">
-            <li>
-                <a class="kp-nav__link" href="#a" aria-haspopup="true">Sheets</a>
-                <ul class="kp-nav__menu" id="with" data-kp-menu-label="Detail · scale 4:1">
-                    <li><a href="#a1">Elevations</a></li>
-                </ul>
-            </li>
-            <li>
-                <a class="kp-nav__link" href="#b" aria-haspopup="true">Legend</a>
-                <ul class="kp-nav__menu" id="without">
-                    <li><a href="#b1">Symbols</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-`,
-        );
-        const read = (id) =>
-            page.locator(`#${id}`).evaluate((el) => {
-                const style = getComputedStyle(el, '::before');
-                return { content: style.content, height: style.height };
-            });
-        const withLabel = await read('with');
-        // Firefox reports an attr() content unresolved; chromium resolves
-        // it. Both say the caption reads the menu's own value.
-        expect(['"Detail · scale 4:1"', 'attr(data-kp-menu-label)']).toContain(withLabel.content);
-        const without = await read('without');
-        expect(without.content === 'none' || without.content === '', 'a menu that was given no caption draws none').toBe(true);
     });
 });

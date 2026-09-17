@@ -41,7 +41,7 @@ async function open(page) {
     await expect(page.locator('[data-kp-surface="app"]').first()).toBeVisible();
 }
 
-test.describe('a routine name nothing answers to [G6]', () => {
+test.describe('a routine name nothing answers to [G6]', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('is reported, and the headline rests as its own text', async ({ page }) => {
         await open(page);
         const result = await page.evaluate(async () => {
@@ -75,7 +75,7 @@ test.describe('a routine name nothing answers to [G6]', () => {
     });
 });
 
-test.describe('taking the module off a page [G7]', () => {
+test.describe('taking the module off a page [G7]', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('detaching mid-reveal leaves the words whole', async ({ page }) => {
         await open(page);
         const result = await page.evaluate(async () => {
@@ -129,7 +129,7 @@ test.describe('taking the module off a page [G7]', () => {
     });
 });
 
-test.describe('the preference switched on mid-session [G8]', () => {
+test.describe('the preference switched on mid-session [G8]', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('stops the observers the routines made, so nothing reveals afterwards', async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto(PAGE);
@@ -172,7 +172,7 @@ test.describe('the preference switched on mid-session [G8]', () => {
     });
 });
 
-test.describe('a browser missing what the module likes to have [G9]', () => {
+test.describe('a browser missing what the module likes to have [G9]', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('without sessionStorage the reveals still run and rest', async ({ page }) => {
         await page.addInitScript(() => {
             // A private window, or a browser told to block site data: the
@@ -219,7 +219,7 @@ test.describe('a browser missing what the module likes to have [G9]', () => {
     });
 });
 
-test.describe('a second attach on a page that already has one [G16]', () => {
+test.describe('a second attach on a page that already has one [G16]', { tag: ['@component:page-effects', '@component:examples'] }, () => {
     test('adds no second caret', async ({ page }) => {
         await open(page);
         const bound = await page.evaluate(async () => {

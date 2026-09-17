@@ -279,12 +279,67 @@
  * rather than to whatever the browser picked in 1996. */
     body {
         font-family: var(--theme-font-body, ui-sans-serif, system-ui, sans-serif);
+        /* One line height for running text, the package's in every theme
+     * [scope-80, option E of research/uniform-size/]. `normal` let each
+     * face's own ascent and descent decide how tall a line is: the same
+     * two-line alert was 60px in dark and 78px in nostromo. A number, so it
+     * scales with the font size of whatever inherits it. One-line boxes —
+     * controls and table rows, css/components.css — read the tighter
+     * --kp-control-line-height instead. */
+        line-height: var(--kp-line-height, 1.5);
     }
 
     h1,
     h2,
     h3 {
         font-family: var(--theme-font-display, var(--theme-font-body, ui-sans-serif, system-ui, sans-serif));
+    }
+
+    /* A heading's size is the package's in every theme [scope-87, option B
+     * of research/uniform-size/]: the browser's own steps, in em as the
+     * browser writes them, at titanium's heading line height — the median
+     * theme's [scope-82]. A register keeps the face, weight, case, letter
+     * spacing and ornaments; gates/box-metrics.test.mjs refuses a register
+     * that sets a heading's font size, line height, block padding or
+     * height. */
+    h1 {
+        font-size: var(--kp-h1-size, 2em);
+    }
+
+    h2 {
+        font-size: var(--kp-h2-size, 1.5em);
+    }
+
+    h3 {
+        font-size: var(--kp-h3-size, 1.17em);
+    }
+
+    h4 {
+        font-size: var(--kp-h4-size, 1em);
+    }
+
+    h5 {
+        font-size: var(--kp-h5-size, 0.83em);
+    }
+
+    h6 {
+        font-size: var(--kp-h6-size, 0.67em);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
+    /* A surface's headline: the display size every theme already declared,
+     * at titanium's display line height. */
+    [data-kp-surface] h1 {
+        font-size: var(--kp-text-display, clamp(2rem, 4vw, 3rem));
+        line-height: var(--kp-display-line-height, 1.08);
     }
 
     /* ── Theme flourishes ─────────────────────────────────────────────── */
@@ -492,6 +547,26 @@
     [data-kp-surface] {
         background-color: var(--background);
         color: var(--foreground);
+    }
+
+    /* `data-kp-surface-align="center"` sets a surface's content on its
+       middle — a landing hero, an empty state — and is off unless a page
+       asks for it [Kenny, 2026-09-15]. The text centres; a narrower child (a
+       prose measure) takes auto margins, which centre it in a block surface
+       and in a flex column alike; a row keeps its full width and centres its
+       controls instead — auto margins would shrink a wrapping row to its
+       widest control in firefox and stack the buttons. A row modifier that
+       says otherwise (`.kp-row--between`) sits in a later layer and wins. */
+    [data-kp-surface][data-kp-surface-align='center'] {
+        text-align: center;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] > :not(.kp-row) {
+        margin-inline: auto;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] .kp-row {
+        justify-content: center;
     }
 
     /* A divider between surfaces [S45, TH121]: the quiet answer is room —

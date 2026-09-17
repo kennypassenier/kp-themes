@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — navigation alternatives (research demo)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <style>
+            /* ==================================================================
+               DEMO CHROME — everything prefixed `demo-` is mock, written for
+               this page only, and is NOT part of the package. Every class
+               prefixed `kp-` is the package as it ships. The badge beside
+               each heading says which parts of that section are which.
+               These rules are unlayered on purpose, so they beat the
+               package's @layer kp.components where the demo pins a state.
+               ================================================================== */
+            .demo-page {
+                max-inline-size: 72rem;
+                margin-inline: auto;
+                padding: 1rem 1.5rem 4rem;
+            }
+            .demo-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+                margin-block-end: 1.5rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+            }
+            .demo-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--primary);
+                outline-offset: 2px;
+            }
+            .demo-section {
+                margin-block-start: 3rem;
+                padding-block-start: 1.5rem;
+                border-block-start: 1px solid var(--border);
+            }
+            .demo-section h2 {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .demo-tag {
+                display: inline-block;
+                padding: 0.1rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                font-family: var(--theme-font-mono, monospace);
+            }
+            .demo-tag--package {
+                color: var(--success, var(--primary));
+            }
+            .demo-tag--mock {
+                color: var(--warning, var(--muted-foreground));
+            }
+            .demo-tag--mixed {
+                color: var(--info, var(--muted-foreground));
+            }
+            .demo-look {
+                padding: 0.75rem 1rem;
+                margin-block: 1rem;
+                border-inline-start: 3px solid var(--primary);
+                background: hsl(from var(--foreground) h s l / 0.05);
+            }
+            .demo-look strong {
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                font-size: 0.8em;
+            }
+            .demo-frame {
+                /* Each frame is its own stacking context, so a register that
+                   lifts `.kp-nav-wrap` (dark-register.css lines 449-453:
+                   `position: relative; z-index: var(--kp-z-nav, 30)`) lifts
+                   it inside the frame only, and a live panel in an earlier
+                   frame can be put above a later one with a z-index on the
+                   frame. */
+                isolation: isolate;
+                margin-block: 1rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+                /* No overflow clipping: the dropdown and the mega panel are
+                   absolute below the bar and must be allowed to leave the
+                   frame, the way they leave a real bar. The phone frame is
+                   the exception and says so. */
+            }
+            /* A frame whose live dropdown or panel floats below the bar is
+               lifted above the frames that follow. */
+            .demo-frame--over {
+                position: relative;
+                z-index: 2;
+            }
+            .demo-frame__label {
+                display: block;
+                padding: 0.25rem 0.75rem;
+                font-size: 0.75rem;
+                font-family: var(--theme-font-mono, monospace);
+                color: var(--muted-foreground);
+                border-block-end: 1px dashed var(--border);
+            }
+            .demo-frame--narrow {
+                inline-size: 30rem;
+                max-inline-size: 100%;
+            }
+            .demo-frame--phone {
+                inline-size: 22.5rem;
+                max-inline-size: 100%;
+                block-size: 30rem;
+                position: relative;
+                overflow: hidden;
+            }
+            .demo-frame__body {
+                padding: 1rem;
+            }
+            .demo-frame__body p {
+                margin: 0 0 0.5rem;
+            }
+            .demo-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .demo-row > .demo-frame {
+                flex: 1 1 24rem;
+            }
+            .demo-status {
+                margin: 0.5rem 0 0;
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.8rem;
+                color: var(--muted-foreground);
+            }
+            .demo-ul {
+                margin: 0;
+                padding-inline-start: 1.2rem;
+            }
+
+            /* --- Pinned states: a copy of a component with its opened state
+                   forced, in flow, so a reviewer sees it without a mouse.
+                   The package's `.kp-nav__menu` is `display:none` + absolute;
+                   the pin makes it a static block. --- */
+            .demo-pinned .kp-nav__menu,
+            .demo-pinned .demo-mega__panel,
+            .demo-pinned .demo-bottom__sheet {
+                display: block !important;
+                opacity: 1 !important;
+                position: static !important;
+                transition: none !important;
+            }
+            .demo-pinned .kp-nav__links > li {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .demo-pinned .demo-mega__panel {
+                flex-basis: 100%;
+                border-block-start: 1px solid var(--border-strong);
+            }
+
+            /* --- 2. Mega menu (mock). The bar is the package; the wide
+                   panel and the disclosure button are the mock. --- */
+            .demo-mega {
+                position: relative;
+            }
+            .demo-mega .kp-nav__links > li.demo-mega__item {
+                position: static;
+            }
+            .demo-mega__trigger {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                padding: 0;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: inherit;
+                cursor: pointer;
+                text-decoration: underline;
+                text-underline-offset: 0.2em;
+            }
+            .demo-mega__trigger::after {
+                content: '';
+                inline-size: 0.45em;
+                block-size: 0.45em;
+                border-inline-end: 2px solid currentColor;
+                border-block-end: 2px solid currentColor;
+                transform: translateY(-25%) rotate(45deg);
+                transition: transform 150ms ease;
+            }
+            .demo-mega__trigger[aria-expanded='true']::after {
+                transform: translateY(25%) rotate(-135deg);
+            }
+            .demo-mega__panel {
+                display: none;
+                position: absolute;
+                inset-inline: 0;
+                top: 100%;
+                z-index: var(--kp-z-popover, 20);
+                padding: 1.25rem 1.5rem 1.5rem;
+                background: var(--popover);
+                color: var(--popover-foreground);
+                border: 1px solid var(--border-strong);
+                border-block-start: 0;
+                border-end-start-radius: var(--radius, 0.5rem);
+                border-end-end-radius: var(--radius, 0.5rem);
+            }
+            .demo-mega__trigger[aria-expanded='true'] + .demo-mega__panel {
+                display: block;
+            }
+            .demo-mega__grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+                gap: 1.5rem;
+            }
+            .demo-mega__grid h3 {
+                margin: 0 0 0.5rem;
+                font-size: var(--kp-text-xs, 0.75rem);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .demo-mega__grid ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .demo-mega__grid li {
+                padding-block: 0.2rem;
+            }
+            .demo-mega__grid small {
+                display: block;
+                color: var(--muted-foreground);
+            }
+            .demo-mega__promo {
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius, 0.5rem);
+                background: hsl(from var(--primary) h s l / 0.08);
+            }
+
+            /* --- 3. Sidebar / rail. The panel is the package; only the
+                   frame and the letter glyphs are mock. --- */
+            .demo-shell {
+                display: flex;
+                min-block-size: 20rem;
+            }
+            .demo-shell > .demo-frame__body {
+                flex: 1 1 auto;
+                min-inline-size: 0;
+            }
+            .demo-glyph {
+                display: inline-grid;
+                place-items: center;
+                inline-size: 1.25rem;
+                block-size: 1.25rem;
+                border: 1px solid currentColor;
+                border-radius: 0.25rem;
+                font-size: 0.65rem;
+                font-weight: 700;
+                font-family: var(--theme-font-mono, monospace);
+            }
+
+            /* --- 4. Command palette. The dialog is the package; the bar
+                   trigger with the key hint is the mock, and the pinned
+                   copy is shown open in flow. --- */
+            .demo-palette-trigger {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-inline-start: auto;
+            }
+            .demo-palette-trigger kbd {
+                font-size: 0.7em;
+            }
+            dialog.kp-palette.demo-static {
+                position: static;
+                margin: 1rem;
+                inline-size: min(36rem, calc(100% - 2rem));
+            }
+
+            /* --- 5. Section tab bar (mock rules for the link version). --- */
+            .demo-sections .kp-tabs__list a {
+                padding: 0.5rem 0.75rem;
+                border-block-end: 2px solid transparent;
+                color: var(--muted-foreground);
+                text-decoration: none;
+                margin-block-end: -1px;
+            }
+            .demo-sections .kp-tabs__list a[aria-current='page'] {
+                color: var(--foreground);
+                border-block-end-color: var(--primary);
+                font-weight: 600;
+            }
+
+            /* --- 6. Sticky / shrinking header (mock). --- */
+            .demo-scroller {
+                block-size: 22rem;
+                overflow: auto;
+                scroll-padding-top: 4rem;
+            }
+            .demo-scroller .kp-nav-wrap {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            .demo-scroller .kp-nav-wrap[data-demo-compact] {
+                --kp-nav-pad-block: 0.2rem;
+            }
+            /* Finding: the knob is not enough. dark-register.css:458,
+               terminal-register.css:306 and formal-register.css:187 each set
+               `padding-block` on `.kp-nav` directly, so a compact state that
+               only lowers `--kp-nav-pad-block` changes nothing under those
+               registers. The mock sets the padding itself; a package version
+               would have to route the registers through the knob. */
+            .demo-scroller .kp-nav-wrap[data-demo-compact] .kp-nav {
+                padding-block: 0.2rem;
+            }
+            .demo-scroller .kp-nav-wrap[data-demo-compact] .kp-nav__brand {
+                font-size: 0.9em;
+            }
+            .demo-scroller .kp-nav-wrap[data-demo-compact] .kp-nav {
+                box-shadow: 0 2px 8px hsl(from var(--foreground) h s l / 0.15);
+            }
+            @media (prefers-reduced-motion: no-preference) {
+                .demo-scroller .kp-nav {
+                    transition: padding 180ms ease;
+                }
+            }
+            .demo-scroller .demo-frame__body h3 {
+                scroll-margin-top: 4rem;
+            }
+
+            /* --- 7. Bottom navigation (mock). --- */
+            .demo-phone {
+                position: relative;
+                block-size: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .demo-phone__content {
+                flex: 1 1 auto;
+                overflow: auto;
+                padding: 1rem 1rem 4.5rem;
+            }
+            .demo-bottom {
+                position: absolute;
+                inset-inline: 0;
+                bottom: 0;
+                z-index: 5;
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 1fr;
+                background: var(--card);
+                color: var(--card-foreground);
+                border-block-start: 1px solid var(--border-strong);
+                padding-block-end: env(safe-area-inset-bottom, 0);
+            }
+            .demo-bottom a,
+            .demo-bottom button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.15rem;
+                min-block-size: 3.25rem;
+                padding: 0.4rem 0.25rem;
+                border: 0;
+                background: none;
+                color: var(--muted-foreground);
+                font: inherit;
+                font-size: 0.7rem;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .demo-bottom a[aria-current='page'],
+            .demo-bottom button[aria-expanded='true'] {
+                color: var(--primary);
+                font-weight: 600;
+            }
+            .demo-bottom__sheet {
+                display: none;
+                position: absolute;
+                inset-inline: 0;
+                bottom: 100%;
+                margin: 0;
+                padding: 0.25rem 0;
+                list-style: none;
+                background: var(--popover);
+                color: var(--popover-foreground);
+                border: 1px solid var(--border-strong);
+                border-start-start-radius: var(--radius, 0.5rem);
+                border-start-end-radius: var(--radius, 0.5rem);
+            }
+            .demo-bottom__more[aria-expanded='true'] + .demo-bottom__sheet {
+                display: block;
+            }
+            .demo-bottom__sheet a {
+                display: block;
+                padding: 0.5rem 1rem;
+            }
+
+            /* --- 9. Segmented control (mock). --- */
+            .demo-segmented {
+                display: inline-flex;
+                margin: 0;
+                padding: 0.2rem;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+                background: hsl(from var(--foreground) h s l / 0.04);
+            }
+            .demo-segmented legend {
+                position: absolute;
+                inline-size: 1px;
+                block-size: 1px;
+                overflow: hidden;
+                clip-path: inset(50%);
+            }
+            .demo-segmented label {
+                position: relative;
+                padding: 0.35rem 0.85rem;
+                border-radius: calc(var(--radius, 0.5rem) - 0.15rem);
+                cursor: pointer;
+            }
+            .demo-segmented input {
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                margin: 0;
+                cursor: pointer;
+            }
+            .demo-segmented label:has(input:checked) {
+                background: var(--primary);
+                color: var(--primary-foreground);
+                font-weight: 600;
+            }
+            .demo-segmented label:has(input:focus-visible) {
+                outline: 2px solid var(--focus-ring, var(--primary));
+                outline-offset: 2px;
+            }
+        </style>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to the content</a>
+        <main id="main" class="demo-page" tabindex="-1">
+            <h1>Navigation alternatives</h1>
+            <p class="kp-text-muted">
+                A research demo for kp-themes. The current <code>.kp-nav</code> comes first, then one section per alternative. Badges say what is the
+                package (<span class="demo-tag demo-tag--package">package</span>) and what is written for this page only (<span
+                    class="demo-tag demo-tag--mock"
+                    >mock</span
+                >). Every alternative shows its opened state, either live or as a pinned copy. Registers loaded: dark, terminal, formal.
+                <code>js/auto.js</code> sets <code>data-kp-effects</code> on the root itself (<code>attachEffects</code>,
+                <code>js/effects.js</code> line 528), so the registers' reveals run as they would on a consumer's page; the chrome is what you are
+                judging.
+            </p>
+
+            <!-- Theme switcher: mock. Sets data-theme on <html>; nothing is stored. -->
+            <div class="demo-switcher" role="group" aria-label="Theme">
+                <span class="demo-tag demo-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-demo-theme="dark" aria-pressed="true">dark</button>
+                <button type="button" class="kp-button kp-button--ghost" data-demo-theme="terminal" aria-pressed="false">terminal</button>
+                <button type="button" class="kp-button kp-button--ghost" data-demo-theme="formal" aria-pressed="false">formal</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="current">
+                <h2>0. The current <code>.kp-nav</code> <span class="demo-tag demo-tag--package">package</span></h2>
+                <p>
+                    Markup copied from <code>examples/app-shell.html</code>, plus the two things that file leaves out: a dropdown under
+                    <em>Reports</em> (<code>.kp-nav__menu</code> with a <code>data-kp-menu-label</code> caption) and the narrow-screen toggle
+                    (<code>data-kp-nav-toggle</code>, wired by <code>attachNavToggles</code> from <code>js/auto.js</code>).
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> hover or Tab onto <em>Reports</em> — the dropdown opens on hover and on focus-within, with no click and
+                    no <code>aria-expanded</code>. Frame B is 30rem wide, under the package's 40rem container step, so the bar has collapsed into its
+                    toggle; it starts open, and the dropdown is a nested in-flow list there. Frame C pins the dropdown open so its register styling
+                    can be judged without a mouse.
+                </div>
+
+                <div class="demo-frame demo-frame--over">
+                    <span class="demo-frame__label">A · wide, live</span>
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Main navigation">
+                            <span class="kp-nav__brand">Northwind <span class="kp-nav__brand-tag">NW//01</span></span>
+                            <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#overview" aria-current="page" data-kp-text="Overview">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#invoices" data-kp-text="Invoices">Invoices</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#reports" aria-haspopup="true" data-kp-text="Reports">Reports</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Reports · quarterly">
+                                        <li><a href="#reports-revenue">Revenue by region</a></li>
+                                        <li><a href="#reports-aging">Receivables ageing</a></li>
+                                        <li><a href="#reports-vat">VAT return</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="kp-nav__link" href="#settings" data-kp-text="Settings">Settings</a></li>
+                            </ul>
+                            <div class="kp-mx-auto">
+                                <button
+                                    type="button"
+                                    class="kp-button kp-button--ghost"
+                                    popovertarget="user-menu-a"
+                                    style="anchor-name: --user-menu-a"
+                                >
+                                    Ada Lovelace
+                                </button>
+                                <div popover="auto" id="user-menu-a" class="kp-popover" style="position-anchor: --user-menu-a">
+                                    <ul class="kp-menu">
+                                        <li><button type="button" class="kp-menu__item">Profile</button></li>
+                                        <li><button type="button" class="kp-menu__item">Sign out</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame demo-frame--narrow">
+                        <span class="demo-frame__label">B · 30rem container, collapsed, toggle open (live)</span>
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Main navigation (narrow)" data-kp-nav-open>
+                                <span class="kp-nav__brand">Northwind</span>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#overview" aria-current="page">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#invoices">Invoices</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#reports" aria-haspopup="true">Reports</a>
+                                        <ul class="kp-nav__menu" data-kp-menu-label="Reports · quarterly">
+                                            <li><a href="#reports-revenue">Revenue by region</a></li>
+                                            <li><a href="#reports-aging">Receivables ageing</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#settings">Settings</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">C · dropdown pinned open (static copy)</span>
+                        <div class="kp-nav-wrap demo-pinned">
+                            <nav class="kp-nav" aria-label="Main navigation (pinned)">
+                                <span class="kp-nav__brand">Northwind</span>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#overview" aria-current="page">Overview</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#reports" aria-haspopup="true">Reports</a>
+                                        <ul class="kp-nav__menu" data-kp-menu-label="Reports · quarterly">
+                                            <li><a href="#reports-revenue">Revenue by region</a></li>
+                                            <li><a href="#reports-aging">Receivables ageing</a></li>
+                                            <li><a href="#reports-vat">VAT return</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#settings">Settings</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="mega">
+                <h2>1. Mega menu <span class="demo-tag demo-tag--mixed">bar: package · panel: mock</span></h2>
+                <p>
+                    One top-level item opens a full-width panel with grouped second-level links. The bar, brand and link list are
+                    <code>.kp-nav</code> unchanged; the trigger is a <code>&lt;button aria-expanded aria-controls&gt;</code> (the APG
+                    disclosure-navigation pattern, not <code>role="menu"</code>) and the panel is a three-column grid on the
+                    <code>--popover</code> tokens. Opens on click, closes on Escape (focus returns to the button), on a click outside, and when
+                    another trigger opens.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> click <em>Products</em>, then Tab through the panel — every link is reachable and Escape returns you to
+                    the button. Open <em>Solutions</em> and see <em>Products</em> close. Hover does nothing on purpose. Frame B pins the panel open in
+                    flow. Judge whether the register's dropdown styling (<code>.kp-nav__menu</code>) should extend to a panel this wide — KT14 says a
+                    register answers the parts that only show on interaction.
+                </div>
+
+                <div class="demo-frame demo-frame--over">
+                    <span class="demo-frame__label">A · live</span>
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav demo-mega" aria-label="Main navigation (mega menu)">
+                            <span class="kp-nav__brand">Northwind</span>
+                            <ul class="kp-nav__links">
+                                <li class="demo-mega__item">
+                                    <button type="button" class="kp-nav__link demo-mega__trigger" aria-expanded="false" aria-controls="mega-products">
+                                        Products
+                                    </button>
+                                    <div class="demo-mega__panel" id="mega-products">
+                                        <div class="demo-mega__grid">
+                                            <div>
+                                                <h3>Invoicing</h3>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#invoices">Invoices <small>Draft, send and chase</small></a>
+                                                    </li>
+                                                    <li><a href="#credit-notes">Credit notes</a></li>
+                                                    <li><a href="#recurring">Recurring billing</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3>Money in</h3>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#payments">Payments <small>Bank feed and matching</small></a>
+                                                    </li>
+                                                    <li><a href="#reminders">Reminders</a></li>
+                                                    <li><a href="#disputes">Disputes</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3>Reporting</h3>
+                                                <ul>
+                                                    <li><a href="#reports-revenue">Revenue by region</a></li>
+                                                    <li><a href="#reports-aging">Receivables ageing</a></li>
+                                                    <li><a href="#reports-vat">VAT return</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="demo-mega__promo">
+                                                <h3>New this quarter</h3>
+                                                <p>Peppol e-invoicing is on for every Belgian customer. <a href="#peppol">Read the change</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="demo-mega__item">
+                                    <button
+                                        type="button"
+                                        class="kp-nav__link demo-mega__trigger"
+                                        aria-expanded="false"
+                                        aria-controls="mega-solutions"
+                                    >
+                                        Solutions
+                                    </button>
+                                    <div class="demo-mega__panel" id="mega-solutions">
+                                        <div class="demo-mega__grid">
+                                            <div>
+                                                <h3>By business</h3>
+                                                <ul>
+                                                    <li><a href="#freelancers">Freelancers</a></li>
+                                                    <li><a href="#agencies">Agencies</a></li>
+                                                    <li><a href="#wholesale">Wholesale</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3>By task</h3>
+                                                <ul>
+                                                    <li><a href="#year-end">Year-end close</a></li>
+                                                    <li><a href="#audit">Audit trail</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a class="kp-nav__link" href="#pricing">Pricing</a></li>
+                                <li><a class="kp-nav__link" href="#docs">Docs</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="demo-frame">
+                    <span class="demo-frame__label">B · panel pinned open (static copy)</span>
+                    <div class="kp-nav-wrap demo-pinned">
+                        <nav class="kp-nav demo-mega" aria-label="Main navigation (mega menu, pinned)">
+                            <span class="kp-nav__brand">Northwind</span>
+                            <ul class="kp-nav__links">
+                                <li class="demo-mega__item">
+                                    <span class="kp-nav__link demo-mega__trigger" aria-expanded="true">Products</span>
+                                </li>
+                                <li><a class="kp-nav__link" href="#pricing">Pricing</a></li>
+                                <li><a class="kp-nav__link" href="#docs">Docs</a></li>
+                            </ul>
+                            <!-- Static copy: the panel sits after the list, in flow, so it spans the bar. -->
+                            <div class="demo-mega__panel">
+                                <div class="demo-mega__grid">
+                                    <div>
+                                        <h3>Invoicing</h3>
+                                        <ul>
+                                            <li>
+                                                <a href="#invoices">Invoices <small>Draft, send and chase</small></a>
+                                            </li>
+                                            <li><a href="#credit-notes">Credit notes</a></li>
+                                            <li><a href="#recurring">Recurring billing</a></li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3>Money in</h3>
+                                        <ul>
+                                            <li>
+                                                <a href="#payments">Payments <small>Bank feed and matching</small></a>
+                                            </li>
+                                            <li><a href="#reminders">Reminders</a></li>
+                                            <li><a href="#disputes">Disputes</a></li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3>Reporting</h3>
+                                        <ul>
+                                            <li><a href="#reports-revenue">Revenue by region</a></li>
+                                            <li><a href="#reports-aging">Receivables ageing</a></li>
+                                            <li><a href="#reports-vat">VAT return</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="demo-mega__promo">
+                                        <h3>New this quarter</h3>
+                                        <p>Peppol e-invoicing is on for every Belgian customer. <a href="#peppol">Read the change</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="rail">
+                <h2>
+                    2. Collapsible sidebar / rail <span class="demo-tag demo-tag--package">package</span>
+                    <span class="demo-tag demo-tag--mock">frame + glyphs: mock</span>
+                </h2>
+                <p>
+                    <code>.kp-sidenav</code> as shipped, in <code>side</code> mode with <code>data-kp-sidenav-slim</code> and
+                    <code>data-kp-sidenav-accordion</code>; <code>attachSidenavs</code> wires the categories. The package has no declared attribute
+                    for a slim toggle — the button below calls <code>sidenavOf(nav).setSlim()</code> from <code>js/sidenav.js</code>, which is what a
+                    consumer would have to do today. The letter glyphs stand in for icons, because the package ships type and not icons.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> press <em>Collapse to rail</em> — labels go, glyphs stay, the width drops to 4.5rem. Frame B starts as a
+                    rail with <code>expand-on-hover</code>: hover it and the labels return without changing the state. Open the
+                    <em>Reports</em> category with the keyboard (Enter on the toggle; <code>aria-expanded</code>
+                    flips). Then Tab through the collapsed rail with a screen reader in mind: the label is
+                    <code>display:none</code>, so a rail link with only a glyph has no accessible name unless the consumer adds one. That is the one
+                    accessibility gap this page found.
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">A · sidebar, live, category open</span>
+                        <div class="demo-shell">
+                            <nav class="kp-sidenav" id="rail-a" data-kp-sidenav-slim data-kp-sidenav-accordion aria-label="Application">
+                                <div class="kp-sidenav__header">
+                                    <p class="kp-sidenav__title" data-kp-sidenav-slim-hide>Northwind</p>
+                                    <span class="demo-glyph" data-kp-sidenav-slim-show aria-hidden="true">NW</span>
+                                </div>
+                                <div class="kp-sidenav__scroll">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#overview" aria-current="page"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">O</span
+                                                ><span class="kp-sidenav__label">Overview</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#invoices"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">I</span
+                                                ><span class="kp-sidenav__label">Invoices</span><span class="kp-sidenav__badge">7</span></a
+                                            >
+                                        </li>
+                                        <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                            <button type="button" class="kp-sidenav__category-toggle">
+                                                <span class="kp-sidenav__icon demo-glyph" aria-hidden="true">R</span
+                                                ><span class="kp-sidenav__label">Reports</span>
+                                            </button>
+                                            <div class="kp-sidenav__submenu">
+                                                <ul class="kp-sidenav__list">
+                                                    <li>
+                                                        <a class="kp-sidenav__link" href="#reports-revenue"
+                                                            ><span class="kp-sidenav__label">Revenue by region</span></a
+                                                        >
+                                                    </li>
+                                                    <li>
+                                                        <a class="kp-sidenav__link" href="#reports-aging"
+                                                            ><span class="kp-sidenav__label">Receivables ageing</span></a
+                                                        >
+                                                    </li>
+                                                    <li>
+                                                        <a class="kp-sidenav__link" href="#reports-vat"
+                                                            ><span class="kp-sidenav__label">VAT return</span></a
+                                                        >
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="kp-sidenav__divider" role="separator"></li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#settings"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">S</span
+                                                ><span class="kp-sidenav__label">Settings</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Ada Lovelace</span></div>
+                            </nav>
+                            <div class="demo-frame__body">
+                                <button type="button" class="kp-button kp-button--ghost" data-demo-slim="rail-a" aria-pressed="false">
+                                    Collapse to rail
+                                </button>
+                                <p class="demo-status" data-demo-slim-status="rail-a">state: sidebar</p>
+                                <p>Content beside the panel. In <code>side</code> mode the panel is a flex item of the page's own layout.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">B · rail, expand on hover (live)</span>
+                        <div class="demo-shell">
+                            <nav
+                                class="kp-sidenav"
+                                id="rail-b"
+                                data-kp-sidenav-slim
+                                data-kp-sidenav-slim-collapsed
+                                data-kp-sidenav-expand-on-hover
+                                data-kp-sidenav-accordion
+                                aria-label="Application (rail)"
+                            >
+                                <div class="kp-sidenav__header">
+                                    <p class="kp-sidenav__title" data-kp-sidenav-slim-hide>Northwind</p>
+                                    <span class="demo-glyph" data-kp-sidenav-slim-show aria-hidden="true">NW</span>
+                                </div>
+                                <div class="kp-sidenav__scroll">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#overview" aria-current="page" aria-label="Overview"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">O</span
+                                                ><span class="kp-sidenav__label">Overview</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#invoices" aria-label="Invoices"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">I</span
+                                                ><span class="kp-sidenav__label">Invoices</span></a
+                                            >
+                                        </li>
+                                        <li class="kp-sidenav__category">
+                                            <button type="button" class="kp-sidenav__category-toggle" aria-label="Reports">
+                                                <span class="kp-sidenav__icon demo-glyph" aria-hidden="true">R</span
+                                                ><span class="kp-sidenav__label">Reports</span>
+                                            </button>
+                                            <div class="kp-sidenav__submenu">
+                                                <ul class="kp-sidenav__list">
+                                                    <li>
+                                                        <a class="kp-sidenav__link" href="#reports-revenue"
+                                                            ><span class="kp-sidenav__label">Revenue by region</span></a
+                                                        >
+                                                    </li>
+                                                    <li>
+                                                        <a class="kp-sidenav__link" href="#reports-aging"
+                                                            ><span class="kp-sidenav__label">Receivables ageing</span></a
+                                                        >
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#settings" aria-label="Settings"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">S</span
+                                                ><span class="kp-sidenav__label">Settings</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="demo-frame__body">
+                                <p>
+                                    This rail's links carry <code>aria-label</code> by hand, which is the workaround the package would have to make
+                                    unnecessary.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="palette">
+                <h2>
+                    3. Command palette as navigation <span class="demo-tag demo-tag--package">package</span>
+                    <span class="demo-tag demo-tag--mock">bar trigger + handler: mock</span>
+                </h2>
+                <p>
+                    <code>.kp-palette</code> as shipped: a <code>&lt;dialog data-kp-palette data-kp-hotkey="k"&gt;</code> that
+                    <code>attachPalettes</code> wires, a combobox over a listbox, grouped options with <code>data-kp-keys</code>. What is mock: the
+                    trigger in the bar (a ghost button with the key hint) and the twelve-line handler that turns <code>kp-palette-run</code> into a
+                    hash navigation — the package deliberately leaves the action to the consumer.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> press <kbd>Ctrl</kbd>+<kbd>K</kbd> (or <kbd>⌘</kbd>+<kbd>K</kbd>) anywhere on the page, or click the
+                    <em>Search</em> button in the bar. Type <em>age</em> and see <em>Receivables ageing</em> alone survive with the status line
+                    counting; arrow down and Enter, and the status under the bar shows where it went. Escape closes and focus returns to the trigger.
+                    Frame B is the same dialog open in flow, so the register's answer for a palette can be judged next to its nav.
+                </div>
+
+                <div class="demo-frame">
+                    <span class="demo-frame__label">A · live</span>
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Main navigation (with palette)">
+                            <span class="kp-nav__brand">Northwind</span>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#overview" aria-current="page">Overview</a></li>
+                                <li><a class="kp-nav__link" href="#invoices">Invoices</a></li>
+                                <li><a class="kp-nav__link" href="#reports">Reports</a></li>
+                            </ul>
+                            <button type="button" class="kp-button kp-button--ghost demo-palette-trigger" data-demo-palette-open="nav-palette">
+                                Search or jump to… <kbd>Ctrl K</kbd>
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="demo-frame__body">
+                        <p class="demo-status" data-demo-palette-status>last command: none yet</p>
+                    </div>
+                    <dialog class="kp-palette" data-kp-palette id="nav-palette" data-kp-hotkey="k" aria-label="Go to">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="true"
+                            aria-controls="nav-palette-list"
+                            aria-label="Where to?"
+                            placeholder="Where to?"
+                        />
+                        <ul class="kp-palette__list" id="nav-palette-list" role="listbox">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Pages</span>
+                                <ul role="group" aria-label="Pages">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#overview" data-kp-keys="g o">
+                                        Overview
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#invoices" data-kp-keys="g i">
+                                        Invoices
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#settings" data-kp-keys="g s">
+                                        Settings
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Reports</span>
+                                <ul role="group" aria-label="Reports">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#reports-revenue">Revenue by region</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#reports-aging">Receivables ageing</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="#reports-vat">VAT return</li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Actions</span>
+                                <ul role="group" aria-label="Actions">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="new-invoice" data-kp-keys="n">
+                                        New invoice
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+
+                <div class="demo-frame">
+                    <span class="demo-frame__label">B · palette pinned open (static copy, not attached)</span>
+                    <dialog open class="kp-palette demo-static" aria-label="Go to (static)">
+                        <input class="kp-palette__input" type="text" aria-label="Where to?" value="age" readonly />
+                        <ul class="kp-palette__list" role="listbox" aria-label="Results">
+                            <li role="presentation" class="kp-palette__group">
+                                <span class="kp-palette__group-label">Reports</span>
+                                <ul role="group" aria-label="Reports">
+                                    <li class="kp-palette__option is-active" role="option" aria-selected="true">
+                                        Receivables ageing <kbd class="kp-palette__keys">g a</kbd>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status">1 result</p>
+                    </dialog>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="tabbar">
+                <h2>4. Tab bar as section navigation <span class="demo-tag demo-tag--mixed">A: package · B: mock rules</span></h2>
+                <p>
+                    A flat row of peer sections under the title, the way GOV.UK's service navigation does it: links, not tabs, because each one loads
+                    a page. Frame A needs nothing new — it is a second <code>.kp-nav</code> with its own <code>aria-label</code>. Frame B borrows the
+                    <code>.kp-tabs__list</code> underline look for links, which the package does not style (its <code>.kp-tab</code> rule targets
+                    <code>aria-selected</code> buttons); those six rules are the mock.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> the current section is marked by weight and a rule as well as colour (DI4) in both frames. Frame C is
+                    30rem wide: the row wraps rather than clipping. Check that the register treats a second <code>.kp-nav</code> as a quieter row and
+                    not as a second brand bar — that is the question this pattern puts to each register.
+                </div>
+
+                <div class="demo-frame">
+                    <span class="demo-frame__label">A · second .kp-nav row (package only)</span>
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Main navigation">
+                            <span class="kp-nav__brand">Northwind</span>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#invoices" aria-current="page">Invoices</a></li>
+                                <li><a class="kp-nav__link" href="#reports">Reports</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="kp-nav-wrap" style="--kp-nav-pad-block: 0.25rem">
+                        <nav class="kp-nav" aria-label="Invoice sections">
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#invoices-open" aria-current="page">Open</a></li>
+                                <li><a class="kp-nav__link" href="#invoices-overdue">Overdue</a></li>
+                                <li><a class="kp-nav__link" href="#invoices-paid">Paid</a></li>
+                                <li><a class="kp-nav__link" href="#invoices-drafts">Drafts</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame demo-sections">
+                        <span class="demo-frame__label">B · .kp-tabs__list look on links (mock rules)</span>
+                        <div class="demo-frame__body">
+                            <h3 style="margin-top: 0">Invoices</h3>
+                            <nav aria-label="Invoice sections">
+                                <div class="kp-tabs__list">
+                                    <a href="#invoices-open" aria-current="page">Open</a>
+                                    <a href="#invoices-overdue">Overdue</a>
+                                    <a href="#invoices-paid">Paid</a>
+                                    <a href="#invoices-drafts">Drafts</a>
+                                </div>
+                            </nav>
+                            <p style="margin-top: 0.75rem">128 open invoices, 7 overdue.</p>
+                        </div>
+                    </div>
+                    <div class="demo-frame demo-frame--narrow demo-sections">
+                        <span class="demo-frame__label">C · 30rem, the row wraps</span>
+                        <div class="demo-frame__body">
+                            <nav aria-label="Invoice sections (narrow)">
+                                <div class="kp-tabs__list" style="flex-wrap: wrap">
+                                    <a href="#invoices-open" aria-current="page">Open</a>
+                                    <a href="#invoices-overdue">Overdue</a>
+                                    <a href="#invoices-paid">Paid</a>
+                                    <a href="#invoices-drafts">Drafts</a>
+                                    <a href="#invoices-credit">Credit notes</a>
+                                    <a href="#invoices-recurring">Recurring</a>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="sticky">
+                <h2>5. Sticky / shrinking header <span class="demo-tag demo-tag--mixed">bar: package · sticky + shrink: mock</span></h2>
+                <p>
+                    The <code>.kp-nav-wrap</code> that already exists gets <code>position: sticky</code>; a scroll listener sets
+                    <code>data-demo-compact</code> on the wrap once the frame has scrolled more than 8px, which lowers the package's own
+                    <code>--kp-nav-pad-block</code> knob. The transition sits under <code>prefers-reduced-motion</code>;
+                    <code>scroll-padding-top</code> keeps anchor targets from landing under the bar.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> scroll inside frame A — the bar stays, shrinks and gains a shadow; scroll back to the top and it grows
+                    again. Click the <em>Jump to VAT</em> link: the heading lands below the bar, not under it. Open the <em>Reports</em> dropdown
+                    while the bar is compact — it still opens below the bar. Frame B is the compact state pinned, for the registers.
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">A · live, scroll inside</span>
+                        <div class="demo-scroller" data-demo-scroller>
+                            <div class="kp-nav-wrap" data-demo-sticky>
+                                <nav class="kp-nav" aria-label="Main navigation (sticky)">
+                                    <span class="kp-nav__brand">Northwind</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#overview" aria-current="page">Overview</a></li>
+                                        <li>
+                                            <a class="kp-nav__link" href="#reports" aria-haspopup="true">Reports</a>
+                                            <ul class="kp-nav__menu">
+                                                <li><a href="#reports-revenue">Revenue by region</a></li>
+                                                <li><a href="#sticky-vat">VAT return</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#sticky-vat">Jump to VAT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="demo-frame__body">
+                                <h3 style="margin-top: 0">Overview</h3>
+                                <p>
+                                    Northwind invoices 412 customers across three regions. The open ledger stands at 128 invoices, of which 7 are
+                                    overdue by more than thirty days.
+                                </p>
+                                <p>
+                                    Revenue this quarter is up four percent on the same quarter last year, carried by wholesale; agencies are flat,
+                                    and freelancers are down after the March price change.
+                                </p>
+                                <h3>Receivables ageing</h3>
+                                <p>
+                                    Sixty-one percent of open receivables are under thirty days. Two customers account for half of everything past
+                                    ninety days; both are on payment plans agreed in August.
+                                </p>
+                                <p>
+                                    The reminder cadence changed on 1 September: a first reminder at seven days, a second at twenty-one, and a phone
+                                    call at forty-five.
+                                </p>
+                                <h3 id="sticky-vat">VAT return</h3>
+                                <p>
+                                    The Q3 return is due on 20 October. Peppol e-invoices are included automatically; paper invoices scanned before
+                                    the 15th are included, later ones roll into Q4.
+                                </p>
+                                <p>Two invoices are held for a missing VAT number and are excluded from the return until it is supplied.</p>
+                                <p>End of the scrollable frame.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">B · compact state pinned (static copy)</span>
+                        <div class="demo-scroller" style="block-size: auto">
+                            <div class="kp-nav-wrap" data-demo-compact>
+                                <nav class="kp-nav" aria-label="Main navigation (compact, pinned)">
+                                    <span class="kp-nav__brand">Northwind</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#overview" aria-current="page">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#reports">Reports</a></li>
+                                        <li><a class="kp-nav__link" href="#settings">Settings</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="demo-frame__body"><p>Compare the height and the shadow with the bar in section 0.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="bottom">
+                <h2>6. Bottom navigation on narrow screens <span class="demo-tag demo-tag--mixed">top bar: package · bottom bar: mock</span></h2>
+                <p>
+                    Three to five top-level destinations within thumb reach, per Material 3 and the Apple HIG. The phone frame keeps a plain
+                    <code>.kp-nav</code> as the brand bar at the top; the bottom bar is a <code>&lt;nav&gt;</code> of links with
+                    <code>aria-current</code>, plus a <em>More</em> disclosure for the destinations that did not fit. The content pads its bottom so
+                    the bar never covers the last line. In the package this would be a choice per page <em>against</em> the hamburger collapse the bar
+                    already does at 40rem, not an addition to it.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> the current destination is marked by colour and weight; each target is at least 44px tall. Tap or press
+                    Enter on <em>More</em> — a sheet rises from the bar; Escape closes it and returns focus. Frame B pins the sheet open. Scroll the
+                    content: the last paragraph clears the bar.
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame demo-frame--phone">
+                        <span class="demo-frame__label">A · 22.5rem phone, live</span>
+                        <div class="demo-phone">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Brand"><span class="kp-nav__brand">Northwind</span></nav>
+                            </div>
+                            <div class="demo-phone__content">
+                                <h3 style="margin-top: 0">Invoices</h3>
+                                <p>128 open, 7 overdue.</p>
+                                <p>INV-2041 · Acme Wholesale · €4,120 · due 2026-09-20</p>
+                                <p>INV-2040 · Bloom Agency · €980 · due 2026-09-18</p>
+                                <p>INV-2039 · K. De Smet · €310 · overdue 12 days</p>
+                                <p>INV-2038 · Acme Wholesale · €2,760 · paid</p>
+                                <p>INV-2037 · Vandenberg BV · €1,540 · paid</p>
+                                <p>INV-2036 · Bloom Agency · €980 · paid</p>
+                                <p>INV-2035 · Northsea Logistics · €6,200 · overdue 41 days</p>
+                                <p>This is the last line, and the bar does not cover it.</p>
+                            </div>
+                            <nav class="demo-bottom" aria-label="Main navigation (bottom)">
+                                <a href="#overview"><span class="demo-glyph" aria-hidden="true">O</span>Overview</a>
+                                <a href="#invoices" aria-current="page"><span class="demo-glyph" aria-hidden="true">I</span>Invoices</a>
+                                <a href="#reports"><span class="demo-glyph" aria-hidden="true">R</span>Reports</a>
+                                <button type="button" class="demo-bottom__more" aria-expanded="false" aria-controls="bottom-more-a">
+                                    <span class="demo-glyph" aria-hidden="true">…</span>More
+                                </button>
+                                <ul class="demo-bottom__sheet" id="bottom-more-a">
+                                    <li><a href="#customers">Customers</a></li>
+                                    <li><a href="#settings">Settings</a></li>
+                                    <li><a href="#profile">Ada Lovelace</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="demo-frame demo-frame--phone demo-pinned">
+                        <span class="demo-frame__label">B · sheet pinned open (static copy)</span>
+                        <div class="demo-phone">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Brand (pinned)"><span class="kp-nav__brand">Northwind</span></nav>
+                            </div>
+                            <div class="demo-phone__content">
+                                <h3 style="margin-top: 0">Invoices</h3>
+                                <p>128 open, 7 overdue.</p>
+                            </div>
+                            <nav class="demo-bottom" aria-label="Main navigation (bottom, pinned)" style="display: block">
+                                <ul class="demo-bottom__sheet">
+                                    <li><a href="#customers">Customers</a></li>
+                                    <li><a href="#settings">Settings</a></li>
+                                    <li><a href="#profile">Ada Lovelace</a></li>
+                                </ul>
+                                <div style="display: grid; grid-auto-flow: column; grid-auto-columns: 1fr">
+                                    <a href="#overview"><span class="demo-glyph" aria-hidden="true">O</span>Overview</a>
+                                    <a href="#invoices" aria-current="page"><span class="demo-glyph" aria-hidden="true">I</span>Invoices</a>
+                                    <a href="#reports"><span class="demo-glyph" aria-hidden="true">R</span>Reports</a>
+                                    <span
+                                        class="demo-bottom__more"
+                                        aria-expanded="true"
+                                        style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                            font-size: 0.7rem;
+                                            padding: 0.4rem;
+                                            color: var(--primary);
+                                            font-weight: 600;
+                                        "
+                                        ><span class="demo-glyph" aria-hidden="true">…</span>More</span
+                                    >
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="breadcrumb-rail">
+                <h2>
+                    7. Breadcrumb + rail <span class="demo-tag demo-tag--package">package</span>
+                    <span class="demo-tag demo-tag--mock">frame + glyphs: mock</span>
+                </h2>
+                <p>
+                    Nothing new: <code>.kp-breadcrumb</code> says where in the hierarchy the page is, the <code>.kp-sidenav</code> rail says which
+                    area. The breadcrumb sits before the content, where a skip link would skip it, as GOV.UK places it. The separator is the package's
+                    <code>--kp-glyph-breadcrumb</code> knob, which a register may change.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> the rail is collapsed in frame A and the trail carries the hierarchy: Invoices › Acme Wholesale ›
+                    INV-2041, last item <code>aria-current="page"</code>. Hover the rail: it expands on hover without changing state. Frame B is the
+                    same shell with the rail expanded. Judge whether two navigations on one screen read as one system in each register.
+                </div>
+
+                <div class="demo-row">
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">A · rail collapsed, expand on hover (live)</span>
+                        <div class="demo-shell">
+                            <nav
+                                class="kp-sidenav"
+                                data-kp-sidenav-slim
+                                data-kp-sidenav-slim-collapsed
+                                data-kp-sidenav-expand-on-hover
+                                aria-label="Application (rail)"
+                            >
+                                <div class="kp-sidenav__header">
+                                    <p class="kp-sidenav__title" data-kp-sidenav-slim-hide>Northwind</p>
+                                    <span class="demo-glyph" data-kp-sidenav-slim-show aria-hidden="true">NW</span>
+                                </div>
+                                <div class="kp-sidenav__scroll">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#overview" aria-label="Overview"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">O</span
+                                                ><span class="kp-sidenav__label">Overview</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#invoices" aria-current="page" aria-label="Invoices"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">I</span
+                                                ><span class="kp-sidenav__label">Invoices</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#customers" aria-label="Customers"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">C</span
+                                                ><span class="kp-sidenav__label">Customers</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#settings" aria-label="Settings"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">S</span
+                                                ><span class="kp-sidenav__label">Settings</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="demo-frame__body">
+                                <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                                    <ol>
+                                        <li><a href="#invoices">Invoices</a></li>
+                                        <li><a href="#customer-acme">Acme Wholesale</a></li>
+                                        <li><a href="#inv-2041" aria-current="page">INV-2041</a></li>
+                                    </ol>
+                                </nav>
+                                <h3>INV-2041</h3>
+                                <p>€4,120 · due 2026-09-20 · sent by Peppol on 2026-09-06.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">B · rail expanded (live)</span>
+                        <div class="demo-shell">
+                            <nav class="kp-sidenav" data-kp-sidenav-slim aria-label="Application (expanded)">
+                                <div class="kp-sidenav__header">
+                                    <p class="kp-sidenav__title" data-kp-sidenav-slim-hide>Northwind</p>
+                                    <span class="demo-glyph" data-kp-sidenav-slim-show aria-hidden="true">NW</span>
+                                </div>
+                                <div class="kp-sidenav__scroll">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#overview"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">O</span
+                                                ><span class="kp-sidenav__label">Overview</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#invoices" aria-current="page"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">I</span
+                                                ><span class="kp-sidenav__label">Invoices</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#customers"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">C</span
+                                                ><span class="kp-sidenav__label">Customers</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#settings"
+                                                ><span class="kp-sidenav__icon demo-glyph" aria-hidden="true">S</span
+                                                ><span class="kp-sidenav__label">Settings</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="demo-frame__body">
+                                <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                                    <ol>
+                                        <li><a href="#invoices">Invoices</a></li>
+                                        <li><a href="#customer-acme">Acme Wholesale</a></li>
+                                        <li><a href="#inv-2041" aria-current="page">INV-2041</a></li>
+                                    </ol>
+                                </nav>
+                                <h3>INV-2041</h3>
+                                <p>€4,120 · due 2026-09-20 · sent by Peppol on 2026-09-06.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="demo-section" id="siblings">
+                <h2>8. Two sibling questions <span class="demo-tag demo-tag--mixed">tabs: package · segmented control: mock</span></h2>
+                <p>
+                    <strong>Tabs vs. segmented control.</strong> Tabs are attached to panels on the same page (<code>role="tab"</code>, one
+                    <code>tabpanel</code> each; the package's <code>attachTabs</code> gives the arrow keys). A segmented control is a single-choice
+                    setting that changes how the <em>same</em> content renders — list or grid, day or week — and is honestly a radio group; the mock
+                    below is <code>fieldset</code> + three radios, which the package does not ship. <strong>Sidebar vs. rail</strong> is sections 2
+                    and 7: in this package they are one component in two states, <code>.kp-sidenav</code> with and without
+                    <code>data-kp-sidenav-slim-collapsed</code>.
+                </p>
+                <div class="demo-look">
+                    <strong>Look at:</strong> in the tabs, arrow keys move between tabs and the panel follows (automatic activation). In the segmented
+                    control, arrow keys move the choice the way a radio group does, and the focus ring is the theme's <code>--focus-ring</code>. Both
+                    should read as one family in each register; the segmented control's selected plate uses <code>--primary</code>, which is where a
+                    register would want a say.
+                </div>
+                <div class="demo-row">
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">A · tabs (package, live)</span>
+                        <div class="demo-frame__body">
+                            <div class="kp-tabs">
+                                <div class="kp-tabs__list" role="tablist" aria-label="Invoice detail">
+                                    <button type="button" class="kp-tab" role="tab" id="t-lines" aria-controls="p-lines" aria-selected="true">
+                                        Lines
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="kp-tab"
+                                        role="tab"
+                                        id="t-payments"
+                                        aria-controls="p-payments"
+                                        aria-selected="false"
+                                        tabindex="-1"
+                                    >
+                                        Payments
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="kp-tab"
+                                        role="tab"
+                                        id="t-history"
+                                        aria-controls="p-history"
+                                        aria-selected="false"
+                                        tabindex="-1"
+                                    >
+                                        History
+                                    </button>
+                                </div>
+                                <div class="kp-tabs__panel" role="tabpanel" id="p-lines" aria-labelledby="t-lines" tabindex="0">
+                                    3 lines · €4,120 excl. VAT
+                                </div>
+                                <div class="kp-tabs__panel" role="tabpanel" id="p-payments" aria-labelledby="t-payments" tabindex="0" hidden>
+                                    No payments yet.
+                                </div>
+                                <div class="kp-tabs__panel" role="tabpanel" id="p-history" aria-labelledby="t-history" tabindex="0" hidden>
+                                    Sent 2026-09-06 · viewed 2026-09-07
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-frame">
+                        <span class="demo-frame__label">B · segmented control (mock, live)</span>
+                        <div class="demo-frame__body">
+                            <fieldset class="demo-segmented">
+                                <legend>Show invoices as</legend>
+                                <label><input type="radio" name="view" value="list" checked />List</label>
+                                <label><input type="radio" name="view" value="grid" />Grid</label>
+                                <label><input type="radio" name="view" value="timeline" />Timeline</label>
+                            </fieldset>
+                            <p class="demo-status" data-demo-view-status>view: list</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- The package: attaches everything under document (nav toggles, sidenavs, palettes, tabs, dialogs …). -->
+        <script type="module" src="../../js/auto.js"></script>
+
+        <!-- Demo-only wiring. Everything below is mock: the theme switcher, the mega-menu disclosure, the slim-rail button,
+             the palette trigger and run handler, the sticky sentinel, the bottom "More" sheet, the segmented control status. -->
+        <script type="module">
+            import { sidenavOf } from '../../js/sidenav.js';
+            import { palette } from '../../js/palette.js';
+
+            // Theme switcher: attribute only, nothing stored.
+            for (const button of document.querySelectorAll('[data-demo-theme]')) {
+                button.addEventListener('click', () => {
+                    document.documentElement.setAttribute('data-theme', button.dataset.demoTheme);
+                    for (const other of document.querySelectorAll('[data-demo-theme]')) {
+                        other.setAttribute('aria-pressed', String(other === button));
+                    }
+                });
+            }
+
+            // Mega menu: disclosure buttons, one open at a time, Escape returns focus, outside click closes.
+            const triggers = [...document.querySelectorAll('button.demo-mega__trigger')];
+            const closeAll = (except) => {
+                for (const t of triggers) if (t !== except) t.setAttribute('aria-expanded', 'false');
+            };
+            for (const trigger of triggers) {
+                trigger.addEventListener('click', () => {
+                    const open = trigger.getAttribute('aria-expanded') === 'true';
+                    closeAll(trigger);
+                    trigger.setAttribute('aria-expanded', String(!open));
+                });
+            }
+            document.addEventListener('keydown', (event) => {
+                if (event.key !== 'Escape') return;
+                const open = triggers.find((t) => t.getAttribute('aria-expanded') === 'true');
+                if (!open) return;
+                open.setAttribute('aria-expanded', 'false');
+                open.focus();
+            });
+            document.addEventListener('click', (event) => {
+                if (event.target.closest('.demo-mega__item')) return;
+                closeAll();
+            });
+
+            // Slim rail: the package exposes setSlim() on the handle; there is no declared toggle attribute yet.
+            for (const button of document.querySelectorAll('[data-demo-slim]')) {
+                const nav = document.getElementById(button.dataset.demoSlim);
+                const status = document.querySelector(`[data-demo-slim-status="${button.dataset.demoSlim}"]`);
+                button.addEventListener('click', () => {
+                    const handle = sidenavOf(nav);
+                    if (!handle) return;
+                    handle.setSlim();
+                    const collapsed = nav.hasAttribute('data-kp-sidenav-slim-collapsed');
+                    button.setAttribute('aria-pressed', String(collapsed));
+                    button.textContent = collapsed ? 'Expand to sidebar' : 'Collapse to rail';
+                    if (status) status.textContent = `state: ${collapsed ? 'rail' : 'sidebar'}`;
+                });
+            }
+
+            // Palette: a visible trigger, and the run handler the package leaves to the consumer.
+            for (const button of document.querySelectorAll('[data-demo-palette-open]')) {
+                button.addEventListener('click', () => palette(document.getElementById(button.dataset.demoPaletteOpen))?.open());
+            }
+            const paletteStatus = document.querySelector('[data-demo-palette-status]');
+            document.getElementById('nav-palette')?.addEventListener('kp-palette-run', (event) => {
+                const { value } = event.detail;
+                if (value.startsWith('#')) {
+                    paletteStatus.textContent = `navigated to ${value}`;
+                    history.replaceState(null, '', value);
+                } else {
+                    paletteStatus.textContent = `ran action "${value}"`;
+                }
+            });
+
+            // Sticky header: the scroller's own scroll position decides the compact state, read once per
+            // frame. (An IntersectionObserver on a sentinel is the usual production answer; a scroll read is
+            // used here because it is deterministic under test and the frame is its own scroll container.)
+            for (const scroller of document.querySelectorAll('[data-demo-scroller]')) {
+                const wrap = scroller.querySelector('[data-demo-sticky]');
+                const read = () => wrap.toggleAttribute('data-demo-compact', scroller.scrollTop > 8);
+                scroller.addEventListener('scroll', read, { passive: true });
+                read();
+            }
+
+            // Bottom navigation: the "More" sheet is a disclosure.
+            for (const more of document.querySelectorAll('button.demo-bottom__more')) {
+                more.addEventListener('click', () => {
+                    more.setAttribute('aria-expanded', String(more.getAttribute('aria-expanded') !== 'true'));
+                });
+                more.closest('.demo-bottom').addEventListener('keydown', (event) => {
+                    if (event.key !== 'Escape' || more.getAttribute('aria-expanded') !== 'true') return;
+                    more.setAttribute('aria-expanded', 'false');
+                    more.focus();
+                });
+            }
+
+            // Segmented control: report the choice.
+            const viewStatus = document.querySelector('[data-demo-view-status]');
+            for (const radio of document.querySelectorAll('.demo-segmented input')) {
+                radio.addEventListener('change', () => (viewStatus.textContent = `view: ${radio.value}`));
+            }
+        </script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

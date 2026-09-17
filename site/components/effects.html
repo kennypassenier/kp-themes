@@ -68,6 +68,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
@@ -99,6 +100,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
@@ -209,7 +211,7 @@
                             <tr><td><code>data-kp-reveal-every</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-state</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-surface</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-surface</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-text</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
@@ -232,6 +234,8 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-mono</code></td><td><code>monospace</code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-surface-padding-inline</code></td><td><code>max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2))</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>
@@ -250,6 +254,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-kp-surface=&quot;hero&quot;</code></td><td>The opening surface: the one place a theme may be loud.</td></tr>
                             <tr><td><code>data-kp-surface=&quot;app&quot;</code></td><td>The working surface: forms, tables, cards. A theme keeps it readable before anything else.</td></tr>
+                            <tr><td><code>data-kp-surface-align=&quot;center&quot;</code></td><td>Sets a surface’s content on its middle: the text centres, a narrower child takes auto margins and a row centres its controls. Off unless a page asks; every surface keeps its content off its own inline edges either way, one lg step in.</td></tr>
                             <tr><td><code>data-kp-divider</code></td><td>The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.</td></tr>
                             <tr><td><code>data-kp-reveal</code></td><td>headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every=&quot;load&quot; says otherwise.</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>A control that replays the reveals of the surface it sits in.</td></tr>

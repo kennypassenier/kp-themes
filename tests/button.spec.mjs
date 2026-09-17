@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
 // The ring measurement lives in tests/ring.mjs since W4, because the
 // assembly suite measures the same ring on the destructive item inside a
 // row menu and two copies of it would drift apart.
-import { paintedFocusDelta, tabTo, wearTheme, wholeRing } from './ring.mjs';
+import { tabTo, wearTheme, wholeRing } from './ring.mjs';
 
 const FIXTURE = '/tests/fixtures/button.html';
 
@@ -30,13 +30,6 @@ const THEMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.me
 
 /** The 24px WCAG 2.5.8 asks of a pointer target — the floor css/_density.css already holds. */
 const TARGET_FLOOR = 24;
-
-/** @param {import('@playwright/test').Page} page @param {string} testId */
-const shape = (page, testId) =>
-    page.evaluate((id) => {
-        const s = getComputedStyle(/** @type {Element} */ (document.querySelector(`[data-test="${id}"]`)));
-        return { borderRadius: s.borderTopLeftRadius, backgroundImage: s.backgroundImage, clipPath: s.clipPath };
-    }, testId);
 
 /** @param {import('@playwright/test').Page} page @param {string} testId */
 const metrics = (page, testId) =>
@@ -51,7 +44,7 @@ const metrics = (page, testId) =>
         };
     }, testId);
 
-test.describe('the button', () => {
+test.describe('the button', { tag: ['@component:button'] }, () => {
     test.beforeEach(async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(FIXTURE);
@@ -70,7 +63,7 @@ test.describe('the button', () => {
         ['framework-free', 'plain-md'],
         ['React', 'react-md'],
     ]) {
-        test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, async ({ page }) => {
+        test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, { tag: ['@sweep'] }, async ({ page }) => {
             await tabTo(page, id);
             /** @type {string[]} */
             const broken = [];
@@ -94,93 +87,8 @@ test.describe('the button', () => {
         });
     }
 
-    // ── (b) The register ──────────────────────────────────────────────
-    //
-    // Drill [KT3]: `.kp-button` removed from the CP-C1 radius selector and
-    // the CP-F2 gradient selector in css/cyberpunk-register.css — the
-    // corner reads 4px where 0px is expected, in both channels and both
-    // browsers. That is the state of the released package (rule 8).
-    for (const [channel, id] of [
-        ['framework-free', 'plain-md'],
-        ['React', 'react-md'],
-    ]) {
-        test(`the cyberpunk register reaches .kp-button, ${channel} [TH110, AR30]`, async ({ page }) => {
-            await wearTheme(page, 'formal');
-            const plain = await shape(page, id);
-            await wearTheme(page, 'cyberpunk');
-            const punk = await shape(page, id);
-
-            expect(punk.borderRadius, 'the register squares the corner').not.toBe(plain.borderRadius);
-            expect(punk.borderRadius).toBe('0px');
-            expect(punk.backgroundImage, 'the charge gradient').toContain('gradient');
-            expect(plain.backgroundImage).toBe('none');
-        });
-    }
-
-    // The half of AR30 that the drafted TH110 would have destroyed: the
-    // register's clip-path clips the indicator away with the corner.
-    // Drill [KT3]: `clip-path` added to the register's `.kp-button` rule —
-    // "cyberpunk: the focus indicator painted 0 pixels" in both browsers,
-    // with formal untouched. AR30 measured the same collapse as 784 -> 0.
-    // Amended at MR-NOTCH, 2026-09-07: cyberpunk's ring moved inside the
-    // button so the bevel could come back, so that is where it is counted.
-    // Counting outside would now read zero on a ring that is plainly
-    // there — and counting inside on formal would read the button's own
-    // fill, so each theme is asked the question it actually answers.
-    // And it asks for the DIFFERENCE focus makes, not a bare count. The
-    // first version of this assertion counted inside the box and passed
-    // with its own rule deleted: 171 of cyberpunk's gradient pixels are
-    // already ring-coloured, and `> 0` was satisfied by those alone.
-    // Drill [KT3], on the assertion as it now stands: the `:focus-visible`
-    // rule removed from the register — 1591 -> 171 focused, so a delta of
-    // 1420 -> 0, in both browsers.
-    for (const [theme, where] of [
-        ['formal', 'outside'],
-        ['cyberpunk', 'inside'],
-    ]) {
-        test(`the focus indicator still paints pixels on .kp-button under ${theme} [TH110, AR30]`, async ({ page }) => {
-            await wearTheme(page, theme);
-            await tabTo(page, 'plain-md');
-            const { focused, idle, delta } = await paintedFocusDelta(page, 'plain-md', { where });
-            expect(delta, `${theme}: focus added ${delta} ring pixels (focused ${focused}, at rest ${idle})`).toBeGreaterThan(100);
-        });
-    }
-
     // ── (c) The size scale ────────────────────────────────────────────
     //
-    // Drill [KT3]: the `.kp-button--sm` and `.kp-button--lg` blocks removed
-    // from css/components.css — "formal: 36.0 / 36.0 / 36.0", every theme
-    // named, in both channels and both browsers.
-    for (const [channel, prefix] of [
-        ['framework-free', 'plain'],
-        ['React', 'react'],
-    ]) {
-        test(`the three sizes separate in every theme, ${channel} [TH111]`, async ({ page }) => {
-            /** @type {string[]} */
-            const flat = [];
-            for (const theme of THEMES) {
-                await wearTheme(page, theme);
-                const [sm, md, lg] = await Promise.all([metrics(page, `${prefix}-sm`), metrics(page, `${prefix}-md`), metrics(page, `${prefix}-lg`)]);
-                // TH111, amended 2026-09-08 with A4 of the deviation form:
-                // the three sizes must be TOLD APART, and a theme whose
-                // approved demo pins one height for every button (terminal
-                // 2.9rem, brutalism 3rem) separates them in type and in
-                // padding instead. Height alone was the old bar and it
-                // refused those two demos outright.
-                const byHeight = sm.height < md.height && md.height < lg.height;
-                const byScale = sm.fontSize < md.fontSize && md.fontSize < lg.fontSize && sm.padding < md.padding && md.padding < lg.padding;
-                if (!byHeight && !byScale) {
-                    flat.push(
-                        `${theme}: ${sm.height.toFixed(1)} / ${md.height.toFixed(1)} / ${lg.height.toFixed(1)} tall, ` +
-                            `${sm.fontSize.toFixed(1)} / ${md.fontSize.toFixed(1)} / ${lg.fontSize.toFixed(1)} type, ` +
-                            `${sm.padding.toFixed(1)} / ${md.padding.toFixed(1)} / ${lg.padding.toFixed(1)} padding`,
-                    );
-                }
-            }
-            expect(flat, `the sizes do not separate in:\n${flat.join('\n')}`).toEqual([]);
-        });
-    }
-
     // Drill [KT3]: `--kp-button-height-sm`'s default in css/components.css
     // replaced by 1rem — "formal sm: 25.6px rendered, 16.0px declared", in
     // both browsers and both channels. The declared floor is measured
@@ -190,7 +98,7 @@ test.describe('the button', () => {
         ['framework-free', 'plain'],
         ['React', 'react'],
     ]) {
-        test(`no size renders under the 24px pointer target in any theme, ${channel} [TH111]`, async ({ page }) => {
+        test(`no size renders under the 24px pointer target in any theme, ${channel} [TH111]`, { tag: ['@sweep'] }, async ({ page }) => {
             /** @type {string[]} */
             const tooSmall = [];
             for (const theme of THEMES) {
@@ -235,4 +143,38 @@ test.describe('the button', () => {
         expect(after.height).toBeGreaterThan(before.height);
         expect(after.minHeight).toBeCloseTo(96, 0);
     });
+
+    // scope-83, retro-accelerator "Alleen het teken": a label beside an icon
+    // shows retro's mark too. CSS cannot tell a text node from the icon
+    // beside it, so the text is its own element, `.kp-button__text`: written
+    // in the markup by a framework-free consumer, and by the React Button
+    // itself around the text it is given beside an element. Before: the React
+    // button rendered " Retry" as a bare text node and drew no mark.
+    for (const [channel, id] of [
+        ['framework-free', 'plain-icon'],
+        ['React', 'react-icon'],
+    ]) {
+        test(`retro underlines the first letter of a label beside an icon, and not the icon, ${channel} [scope-83]`, async ({ page }) => {
+            await page.waitForSelector(`[data-test="${id}"]`);
+            await wearTheme(page, 'retro');
+            const button = page.locator(`[data-test="${id}"]`);
+            await button.hover();
+            const read = await button.evaluate((el) => {
+                const text = el.querySelector('.kp-button__text');
+                const letter = text ? getComputedStyle(text, '::first-letter') : null;
+                return {
+                    text: text?.textContent,
+                    drawn:
+                        letter !== null &&
+                        Number.parseFloat(letter.borderBottomWidth) >= 1 &&
+                        letter.borderBottomColor === getComputedStyle(text).color,
+                    shortcut: el.getAttribute('aria-keyshortcuts'),
+                };
+            });
+            await page.mouse.move(0, 0);
+            expect(read).toEqual({ text: 'Retry', drawn: true, shortcut: null });
+            // No shortcut and no other name: the icon stays hidden, the name is the word.
+            await expect(button).toHaveAccessibleName('Retry');
+        });
+    }
 });

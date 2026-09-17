@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en" data-theme="cyberpunk" data-cat-theme="cyberpunk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>A new divider for cyberpunk, six options · kp-themes research</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only; NOT the package.
+               `cd-` classes are page chrome (tags, switcher) or the wrapper
+               that holds one option. Every divider rule below reads
+                 [data-theme='cyberpunk'] .cd-<option> [data-kp-divider]
+               and goes into css/cyberpunk-register.css (layer kp.register) by
+               dropping `.cd-<option>`, replacing the razor tear's rules
+               (lines 209-255 there) wholesale. The rules here are unlayered,
+               so they beat the tear; `.cd-opt` first clears the tear's two
+               pseudo-elements, which the register would not need.
+
+               Colour (DI9): nothing names a colour; every paint is a token or
+               a relative colour of one. Seams: a tiled mask never draws across
+               its tile edge, and a line that must be continuous is one
+               untiled gradient, so a tile boundary has nothing to split at
+               any devicePixelRatio. Motion lives only inside the
+               no-preference guard at the end, with literal durations.
+               ================================================================== */
+            .cd-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid var(--border-strong);
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+            }
+            .cd-tag--package {
+                color: var(--success-foreground);
+            }
+            .cd-tag--mock {
+                color: var(--warning-foreground);
+            }
+            .cd-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-block: 1rem;
+            }
+            .cd-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .cd-scope-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+                gap: 1rem;
+            }
+            .cd-scope-grid .kp-section {
+                padding-block: 0.75rem;
+            }
+
+            /* ── The two seams every option answers ──────────────────────── */
+            /* After a hero: yellow above, the void below. After an app
+               surface (the footer seam): the void above, the sidebar plate
+               below, as the tear does today. */
+            [data-theme='cyberpunk'] .cd-opt [data-kp-divider] {
+                --cd-above: var(--surface-hero-bg);
+                --cd-below: var(--background);
+                --cd-on-above: var(--surface-hero-fg);
+                display: block;
+                position: relative;
+                overflow: hidden;
+                background: var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-opt [data-kp-surface='app'] + [data-kp-divider] {
+                --cd-above: var(--background);
+                --cd-below: var(--sidebar-background);
+                --cd-on-above: var(--primary);
+            }
+            [data-theme='cyberpunk'] .cd-opt [data-kp-divider]::before,
+            [data-theme='cyberpunk'] .cd-opt [data-kp-divider]::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: none;
+                mask: none;
+                clip-path: none;
+            }
+
+            /* ── 1 · Hazard chevrons ─────────────────────────────────────── */
+            /* An 18px chevron tile (x 3..15 of 18, so no tile edge is drawn
+               on), spaced so no chevron is cut at either end, between two
+               untiled rules. The alt seam turns them round, in cyan. */
+            [data-theme='cyberpunk'] .cd-hazard [data-kp-divider] {
+                block-size: 30px;
+            }
+            [data-theme='cyberpunk'] .cd-hazard [data-kp-divider]::before {
+                inset: 6px 0;
+                background: var(--primary);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M3 0H9L15 9L9 18H3L9 9Z'/%3E%3C/svg%3E");
+                mask-size: 18px 18px;
+                mask-repeat: space no-repeat;
+                mask-position: center;
+            }
+            [data-theme='cyberpunk'] .cd-hazard [data-kp-divider]::after {
+                inset: 2px 0;
+                border-block: 1px solid hsl(from var(--primary) h s l / 0.45);
+            }
+            [data-theme='cyberpunk'] .cd-hazard [data-kp-divider='alt']::before {
+                background: var(--accent);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M15 0H9L3 9L9 18H15L9 9Z'/%3E%3C/svg%3E");
+            }
+            [data-theme='cyberpunk'] .cd-hazard [data-kp-divider='alt']::after {
+                border-color: hsl(from var(--accent) h s l / 0.45);
+            }
+
+            /* ── 2 · Circuit bus ─────────────────────────────────────────── */
+            /* One untiled 1.8px bus line; a 180px tile of four stubs of
+               three lengths with solder pads and two vias, drawn inside
+               x 13..169. A brighter pulse
+               runs along the bus under motion. */
+            [data-theme='cyberpunk'] .cd-circuit [data-kp-divider] {
+                block-size: 40px;
+            }
+            [data-theme='cyberpunk'] .cd-circuit [data-kp-divider]::before {
+                background:
+                    linear-gradient(90deg, transparent, hsl(from var(--accent) h s 85%), transparent) -96px 50% / 96px 3.6px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 0 50% / 100% 1.8px no-repeat;
+            }
+            [data-theme='cyberpunk'] .cd-circuit [data-kp-divider]::after {
+                background: var(--accent);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 40'%3E%3Cg fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M14 20L22 12H42'/%3E%3Ccircle cx='46' cy='12' r='3.6'/%3E%3Cpath d='M56 20L64 28H70'/%3E%3Ccircle cx='74' cy='28' r='3.6'/%3E%3Cpath d='M104 20L112 12H148'/%3E%3Ccircle cx='152' cy='12' r='3.6'/%3E%3Cpath d='M118 20L126 28H160'/%3E%3Ccircle cx='164' cy='28' r='3.6'/%3E%3C/g%3E%3Ccircle cx='30' cy='20' r='2.7'/%3E%3Ccircle cx='92' cy='20' r='2.7'/%3E%3C/svg%3E");
+                mask-size: 180px 40px;
+                mask-repeat: space no-repeat;
+                mask-position: center;
+            }
+            [data-theme='cyberpunk'] .cd-circuit [data-kp-divider='alt']::before {
+                background:
+                    linear-gradient(90deg, transparent, hsl(from var(--primary) h s 80%), transparent) -96px 50% / 96px 3.6px no-repeat,
+                    linear-gradient(var(--primary) 0 0) 0 50% / 100% 1.8px no-repeat;
+            }
+            [data-theme='cyberpunk'] .cd-circuit [data-kp-divider='alt']::after {
+                background: var(--primary);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 40'%3E%3Cg fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M14 20L22 28H42'/%3E%3Ccircle cx='46' cy='28' r='3.6'/%3E%3Cpath d='M56 20L64 12H70'/%3E%3Ccircle cx='74' cy='12' r='3.6'/%3E%3Cpath d='M104 20L112 28H148'/%3E%3Ccircle cx='152' cy='28' r='3.6'/%3E%3Cpath d='M118 20L126 12H160'/%3E%3Ccircle cx='164' cy='12' r='3.6'/%3E%3C/g%3E%3Ccircle cx='30' cy='20' r='2.7'/%3E%3Ccircle cx='92' cy='20' r='2.7'/%3E%3C/svg%3E");
+            }
+
+            /* ── 3 · Data stream ─────────────────────────────────────────── */
+            /* Three rows of dashes in two tiles of different widths (144px
+               muted yellow, 216px cyan packets), every dash inside its tile,
+               under an untiled scan hairline. Under motion the two layers
+               drift by exactly one tile per loop, at two speeds; the alt
+               seam flows the other way. */
+            [data-theme='cyberpunk'] .cd-stream [data-kp-divider] {
+                block-size: 28px;
+                background:
+                    linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 0 / 100% 0.9px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-stream [data-kp-divider]::before {
+                background: hsl(from var(--primary) h s l / 0.55);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 28'%3E%3Cg%3E%3Crect x='6' y='7' width='22' height='1.8'/%3E%3Crect x='36' y='7' width='8' height='1.8'/%3E%3Crect x='52' y='7' width='40' height='1.8'/%3E%3Crect x='100' y='7' width='14' height='1.8'/%3E%3Crect x='122' y='7' width='16' height='1.8'/%3E%3Crect x='4' y='13' width='10' height='1.8'/%3E%3Crect x='20' y='13' width='34' height='1.8'/%3E%3Crect x='62' y='13' width='6' height='1.8'/%3E%3Crect x='76' y='13' width='28' height='1.8'/%3E%3Crect x='112' y='13' width='26' height='1.8'/%3E%3Crect x='10' y='19' width='30' height='1.8'/%3E%3Crect x='48' y='19' width='12' height='1.8'/%3E%3Crect x='68' y='19' width='44' height='1.8'/%3E%3Crect x='120' y='19' width='18' height='1.8'/%3E%3C/g%3E%3C/svg%3E");
+                mask-size: 144px 28px;
+                mask-repeat: repeat-x;
+                mask-position: 0 0;
+            }
+            [data-theme='cyberpunk'] .cd-stream [data-kp-divider]::after {
+                background: var(--accent);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 216 28'%3E%3Crect x='58' y='7' width='6' height='1.8'/%3E%3Crect x='150' y='13' width='10' height='1.8'/%3E%3Crect x='24' y='19' width='4' height='1.8'/%3E%3Crect x='176' y='19' width='8' height='1.8'/%3E%3C/svg%3E");
+                mask-size: 216px 28px;
+                mask-repeat: repeat-x;
+                mask-position: 0 0;
+            }
+
+            /* ── 4 · Glitch slice ────────────────────────────────────────── */
+            /* The edge of the surface above, broken into displaced slices:
+               one 1920×32 shape stretched to the width (rectangles survive a
+               stretch), so there is no tile at all; a cyan hairline traces
+               the broken edge, as the tear's does its ridge. Cyan, red and
+               yellow ghost slices sit on the element in percentages, clear of
+               the edge. Under motion the ghosts jump once every five seconds
+               for a quarter of a second. */
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider] {
+                block-size: 32px;
+                background:
+                    linear-gradient(var(--accent) 0 0) 7% 19px / 12% 1.8px no-repeat,
+                    linear-gradient(var(--destructive) 0 0) 44% 26px / 5% 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 71% 19px / 7% 1.8px no-repeat,
+                    linear-gradient(var(--primary) 0 0) 90% 24px / 3% 3.6px no-repeat,
+                    linear-gradient(var(--cd-above) 0 0) 0 0 / 100% 4px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider]::before {
+                background: var(--cd-above);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 32' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1920V10H1790V16H1640V10H1210V14H1120V6H980V10H700V22H610V10H400V16H140V10H0Z'/%3E%3C/svg%3E");
+                mask-size: 100% 100%;
+                mask-repeat: no-repeat;
+            }
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider]::after {
+                background: var(--accent);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 32' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='black' stroke-width='1.8' vector-effect='non-scaling-stroke' d='M0 10H140V16H400V10H610V22H700V10H980V6H1120V14H1210V10H1640V16H1790V10H1920'/%3E%3C/svg%3E");
+                mask-size: 100% 100%;
+                mask-repeat: no-repeat;
+            }
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider='alt'] {
+                background:
+                    linear-gradient(var(--primary) 0 0) 16% 22px / 9% 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 38% 14px / 4% 1.8px no-repeat,
+                    linear-gradient(var(--destructive) 0 0) 63% 26px / 10% 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 84% 17px / 6% 3.6px no-repeat,
+                    linear-gradient(var(--cd-above) 0 0) 0 0 / 100% 4px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider='alt']::before {
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 32' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1920V8H1860V18H1700V8H1420V13H1300V8H900V4H820V8H560V20H430V8H90V12H0Z'/%3E%3C/svg%3E");
+            }
+            [data-theme='cyberpunk'] .cd-glitch [data-kp-divider='alt']::after {
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 32' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='black' stroke-width='1.8' vector-effect='non-scaling-stroke' d='M0 12H90V8H430V20H560V8H820V4H900V8H1300V13H1420V8H1700V18H1860V8H1920'/%3E%3C/svg%3E");
+            }
+
+            /* ── 5 · HUD bracket ─────────────────────────────────────────── */
+            /* The surface above ends in a thin lip with a cut-corner tab in
+               the middle, three status squares in it; a cyan hairline rides
+               under the tab's outline and corner brackets mark both ends.
+               clip-path in lengths, no tile. The lip is also painted on the
+               element itself, so where the clipped layer ends on a fraction
+               of a device pixel no void shows through. The alt seam mirrors
+               it: the plate below rises into the seam. */
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider] {
+                block-size: 36px;
+                background:
+                    linear-gradient(var(--accent) 0 0) left 0 bottom 4px / 22px 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) left 0 bottom 4px / 1.8px 12px no-repeat,
+                    linear-gradient(var(--accent) 0 0) right 0 bottom 4px / 22px 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) right 0 bottom 4px / 1.8px 12px no-repeat,
+                    linear-gradient(var(--cd-above) 0 0) 0 0 / 100% 3px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider]::before {
+                z-index: 1;
+                background:
+                    linear-gradient(var(--cd-on-above) 0 0) calc(50% - 16px) 9px / 7px 7px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 50% 9px / 7px 7px no-repeat,
+                    linear-gradient(var(--cd-on-above) 0 0) calc(50% + 16px) 9px / 7px 7px no-repeat,
+                    var(--cd-above);
+                clip-path: polygon(
+                    0 0,
+                    100% 0,
+                    100% 3px,
+                    calc(50% + 6rem) 3px,
+                    calc(50% + 6rem - 18px) 21px,
+                    calc(50% - 6rem + 18px) 21px,
+                    calc(50% - 6rem) 3px,
+                    0 3px
+                );
+            }
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider]::after {
+                background: var(--accent);
+                clip-path: polygon(
+                    0 2px,
+                    100% 2px,
+                    100% 4.8px,
+                    calc(50% + 6rem + 0.75px) 4.8px,
+                    calc(50% + 6rem - 17.25px) 22.8px,
+                    calc(50% - 6rem + 17.25px) 22.8px,
+                    calc(50% - 6rem - 0.75px) 4.8px,
+                    0 4.8px
+                );
+            }
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider='alt'] {
+                background:
+                    linear-gradient(var(--accent) 0 0) left 0 top 4px / 22px 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) left 0 top 4px / 1.8px 12px no-repeat,
+                    linear-gradient(var(--accent) 0 0) right 0 top 4px / 22px 1.8px no-repeat,
+                    linear-gradient(var(--accent) 0 0) right 0 top 4px / 1.8px 12px no-repeat,
+                    linear-gradient(var(--cd-below) 0 0) 0 100% / 100% 3px no-repeat,
+                    var(--cd-above);
+            }
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider='alt']::before {
+                background:
+                    linear-gradient(var(--primary) 0 0) calc(50% - 16px) calc(100% - 9px) / 7px 7px no-repeat,
+                    linear-gradient(var(--accent) 0 0) 50% calc(100% - 9px) / 7px 7px no-repeat,
+                    linear-gradient(var(--primary) 0 0) calc(50% + 16px) calc(100% - 9px) / 7px 7px no-repeat,
+                    var(--cd-below);
+                clip-path: polygon(
+                    0 100%,
+                    100% 100%,
+                    100% calc(100% - 3px),
+                    calc(50% + 6rem) calc(100% - 3px),
+                    calc(50% + 6rem - 18px) calc(100% - 21px),
+                    calc(50% - 6rem + 18px) calc(100% - 21px),
+                    calc(50% - 6rem) calc(100% - 3px),
+                    0 calc(100% - 3px)
+                );
+            }
+            [data-theme='cyberpunk'] .cd-hud [data-kp-divider='alt']::after {
+                clip-path: polygon(
+                    0 calc(100% - 2px),
+                    100% calc(100% - 2px),
+                    100% calc(100% - 4.8px),
+                    calc(50% + 6rem + 0.75px) calc(100% - 4.8px),
+                    calc(50% + 6rem - 17.25px) calc(100% - 22.8px),
+                    calc(50% - 6rem + 17.25px) calc(100% - 22.8px),
+                    calc(50% - 6rem - 0.75px) calc(100% - 4.8px),
+                    0 calc(100% - 4.8px)
+                );
+            }
+
+            /* ── 6 · Index ruler ─────────────────────────────────────────── */
+            /* A scale: an untiled hairline, a 45px tile of five ticks (the
+               middle one long, all at x 4..41), spaced so no tick is cut;
+               a cyan barcode block of fixed size at the right end. The alt
+               seam hangs the scale from the bottom with the code at the left. */
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider] {
+                block-size: 30px;
+                background:
+                    linear-gradient(hsl(from var(--primary) h s l / 0.6) 0 0) 0 0 / 100% 0.9px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider]::before {
+                background: hsl(from var(--primary) h s l / 0.6);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 45 30'%3E%3Crect x='4.05' y='0' width='0.9' height='6'/%3E%3Crect x='13.05' y='0' width='0.9' height='6'/%3E%3Crect x='22.05' y='0' width='0.9' height='13.5'/%3E%3Crect x='31.05' y='0' width='0.9' height='6'/%3E%3Crect x='40.05' y='0' width='0.9' height='6'/%3E%3C/svg%3E");
+                mask-size: 45px 30px;
+                mask-repeat: space no-repeat;
+                mask-position: 0 0;
+            }
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider]::after {
+                inset: auto 0 5px auto;
+                inline-size: 108px;
+                block-size: 12px;
+                background: var(--accent);
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 12'%3E%3Cpath d='M0 0h1.8v12H0zM3.6 0h.9v12h-.9zM6.3 0h2.7v12H6.3zM10.8 0h.9v12h-.9zM13.5 0h1.8v12h-1.8zM17.1 0h3.6v12h-3.6zM22.5 0h.9v12h-.9zM25.2 0h.9v12h-.9zM27.9 0h2.7v12h-2.7zM32.4 0h1.8v12h-1.8zM36 0h.9v12H36zM38.7 0h3.6v12h-3.6zM44.1 0h.9v12h-.9zM46.8 0h1.8v12h-1.8zM50.4 0h.9v12h-.9zM53.1 0h2.7v12h-2.7zM57.6 0h.9v12h-.9zM60.3 0h1.8v12h-1.8zM63.9 0h3.6v12h-3.6zM69.3 0h.9v12h-.9zM72 0h1.8v12H72zM75.6 0h.9v12h-.9zM78.3 0h2.7v12h-2.7zM82.8 0h.9v12h-.9zM85.5 0h1.8v12h-1.8zM89.1 0h.9v12h-.9zM91.8 0h3.6v12h-3.6zM97.2 0h.9v12h-.9zM99.9 0h1.8v12h-1.8zM103.5 0h.9v12h-.9zM106.2 0h1.8v12h-1.8z'/%3E%3C/svg%3E");
+                mask-size: 100% 100%;
+                mask-repeat: no-repeat;
+            }
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider='alt'] {
+                background:
+                    linear-gradient(hsl(from var(--primary) h s l / 0.6) 0 0) 0 100% / 100% 0.9px no-repeat,
+                    var(--cd-below);
+            }
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider='alt']::before {
+                transform: scaleY(-1);
+            }
+            [data-theme='cyberpunk'] .cd-ruler [data-kp-divider='alt']::after {
+                inset: 5px auto auto 0;
+            }
+
+            /* ── Motion, guarded [DI7] ───────────────────────────────────── */
+            /* Literal durations, as check-motion.mjs reads them. None flashes:
+               the pulse and the stream move, the glitch changes twice in five
+               seconds. */
+            @media (prefers-reduced-motion: no-preference) {
+                [data-theme='cyberpunk'] .cd-circuit [data-kp-divider]::before {
+                    animation: cd-pulse 4000ms linear infinite;
+                }
+                [data-theme='cyberpunk'] .cd-stream [data-kp-divider]::before {
+                    animation: cd-stream-144 8000ms linear infinite;
+                }
+                [data-theme='cyberpunk'] .cd-stream [data-kp-divider]::after {
+                    animation: cd-stream-216 8000ms linear infinite;
+                }
+                [data-theme='cyberpunk'] .cd-stream [data-kp-divider='alt']::before,
+                [data-theme='cyberpunk'] .cd-stream [data-kp-divider='alt']::after {
+                    animation-direction: reverse;
+                }
+                [data-theme='cyberpunk'] .cd-glitch [data-kp-divider] {
+                    animation: cd-glitch 5000ms steps(1, end) infinite;
+                }
+                [data-theme='cyberpunk'] .cd-glitch [data-kp-divider='alt'] {
+                    animation: cd-glitch-alt 5000ms steps(1, end) -2500ms infinite;
+                }
+            }
+            @keyframes cd-pulse {
+                from {
+                    background-position:
+                        -96px 50%,
+                        0 50%;
+                }
+                to {
+                    background-position:
+                        calc(100% + 96px) 50%,
+                        0 50%;
+                }
+            }
+            @keyframes cd-stream-144 {
+                from {
+                    mask-position: 0 0;
+                }
+                to {
+                    mask-position: 144px 0;
+                }
+            }
+            @keyframes cd-stream-216 {
+                from {
+                    mask-position: 0 0;
+                }
+                to {
+                    mask-position: 216px 0;
+                }
+            }
+            @keyframes cd-glitch {
+                0%,
+                95% {
+                    background-position:
+                        7% 19px,
+                        44% 26px,
+                        71% 19px,
+                        90% 24px,
+                        0 0;
+                }
+                96%,
+                100% {
+                    background-position:
+                        calc(7% - 10px) 19px,
+                        calc(44% + 8px) 26px,
+                        calc(71% - 10px) 19px,
+                        calc(90% + 6px) 24px,
+                        0 0;
+                }
+            }
+            @keyframes cd-glitch-alt {
+                0%,
+                95% {
+                    background-position:
+                        16% 22px,
+                        38% 14px,
+                        63% 26px,
+                        84% 17px,
+                        0 0;
+                }
+                96%,
+                100% {
+                    background-position:
+                        calc(16% + 10px) 22px,
+                        calc(38% - 8px) 14px,
+                        calc(63% + 10px) 26px,
+                        calc(84% - 6px) 17px,
+                        0 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main cat-main--wide">
+            <h1>A new divider for cyberpunk: six options</h1>
+            <p class="cat-intro">
+                Kenny, judging <code>catalogue/page-effects.html#dividers</code> in cyberpunk: a new section divider for this theme only, with a few
+                options that fit it. The first block is the razor tear as it ships. Each block after it is one option, drawn with the same markup as
+                the catalogue block: a hero surface, <code>data-kp-divider</code>, an app surface, <code>data-kp-divider="alt"</code>, the footer. The
+                surfaces, the footer and the tear are <span class="cd-tag cd-tag--package">package</span>. Every option is
+                <span class="cd-tag cd-tag--mock">mock</span>: rules in this page's <code>&lt;style&gt;</code>, written as
+                <code>[data-theme='cyberpunk'] .cd-&lt;option&gt; [data-kp-divider]</code> so they go into <code>css/cyberpunk-register.css</code> by
+                dropping the wrapper class. No knob, no attribute, nothing outside cyberpunk. Each option block is judged in cyberpunk whatever the
+                menu says; the last block follows the menu, to show the other themes are untouched. Loaded registers: cyberpunk, synthwave, nostromo.
+            </p>
+            <div class="cd-switcher" role="group" aria-label="Theme for this page">
+                <span class="cd-tag cd-tag--mock">mock</span>
+                <span>Theme:</span>
+                <button type="button" class="kp-button kp-button--ghost" data-cd-theme="cyberpunk" aria-pressed="true">cyberpunk</button>
+                <button type="button" class="kp-button kp-button--ghost" data-cd-theme="synthwave" aria-pressed="false">synthwave</button>
+                <button type="button" class="kp-button kp-button--ghost" data-cd-theme="nostromo" aria-pressed="false">nostromo</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="current" data-cat-theme="cyberpunk">
+                <h2>0 · Razor tear, as it ships <span class="cd-tag cd-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the reference the options replace. A 44px generated tear, stretched to the width: yellow falls into the void with
+                    a cyan hairline on the ridge, and the alt tear falls from the void onto the darker footer plate. This is
+                    <code>css/cyberpunk-register.css</code> untouched, no <code>cd-</code> class on the stage.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div>
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="hazard" data-cat-theme="cyberpunk">
+                <h2>1 · Hazard chevrons <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a loading-bay floor marking: a 30px band of signal-yellow chevrons pointing right, between two faint yellow rules,
+                    on the void. At both ends a whole chevron sits flush with the edge, none is cut, and the gaps between them are even. The footer
+                    seam turns them round in cyan. Static. Resize the window: the chevrons respace, they never split.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-hazard">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="circuit" data-cat-theme="cyberpunk">
+                <h2>2 · Circuit bus <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a printed-circuit edge: one cyan bus line across the full width, with short 45-degree stubs that end in ring pads,
+                    one above and one below per 90px, and a solid via on the bus. The bus has no break anywhere, also where two stub groups meet. The
+                    footer seam draws it in yellow with the stubs flipped. With motion on, a brighter pulse runs along the bus once every four
+                    seconds; with reduced motion it is absent.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-circuit">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="stream" data-cat-theme="cyberpunk">
+                <h2>3 · Data stream <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three rows of dashes under a scan hairline, muted yellow with a few bright cyan packets, like a readout scrolling
+                    past. The yellow pattern repeats every 144px and the cyan one every 216px, so the eye finds no short period. With motion on, the
+                    two layers drift right at two speeds and loop without a jump; the footer seam flows left. With reduced motion both stand still.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-stream">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="glitch" data-cat-theme="cyberpunk">
+                <h2>4 · Glitch slice <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the bottom edge of the surface above, broken into horizontal slices that sit a few pixels too high or too low,
+                    with a cyan hairline tracing the broken edge and thin cyan, red and yellow ghost slices below it: the headline's slice glitch,
+                    applied to a seam. It is the closest in spirit to the tear, but in straight cuts. One shape stretched to the width, so there is no
+                    repeat to see. With motion on, the ghost slices jump sideways by 6 to 10px for a quarter of a second every five seconds, the
+                    footer seam half a cycle later.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-glitch">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="hud" data-cat-theme="cyberpunk">
+                <h2>5 · HUD bracket <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the surface above ends in a 3px lip with a centred cut-corner tab hanging from it, the navbar's notch language,
+                    carrying three status squares (the middle one cyan). A cyan hairline follows the tab's outline just below it, and L-shaped corner
+                    brackets close both ends of the seam. The footer seam mirrors it: the plate below rises into the seam with the brackets on top.
+                    Static, no repeat.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-hud">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="ruler" data-cat-theme="cyberpunk">
+                <h2>6 · Index ruler <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> an instrument scale: a yellow hairline with short ticks every 9px and a long one every 45px, hanging from the top
+                    edge, and a cyan barcode block at the right end. The first and last tick sit at the same distance from their edges; no tick is
+                    cut. The footer seam hangs the scale from the bottom with the barcode on the left. Static. The quietest of the six.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-opt cd-ruler">
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <p class="microlabel">hero surface</p>
+                            <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+                        </section>
+                        <div data-kp-divider></div>
+                        <section class="kp-section kp-stack" data-kp-surface="app">
+                            <p class="microlabel">app surface</p>
+                            <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+                        </section>
+                        <div data-kp-divider="alt"></div>
+                        <footer class="kp-footer">
+                            <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <section class="cat-block" id="scope">
+                <h2>7 · Only cyberpunk <span class="cd-tag cd-tag--mock">mock</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> this block follows the theme menu (the others are pinned to cyberpunk). Six small seams, one per option wrapper.
+                    In cyberpunk each shows its option; switch to synthwave or nostromo and all six must show that theme's own divider (the horizon,
+                    the vent dots) with no chevron, trace, dash, slice, tab or tick left over, because every option rule starts with
+                    <code>[data-theme='cyberpunk']</code>.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cd-scope-grid">
+                        <div class="cd-opt cd-hazard">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">1 · hazard chevrons</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                        <div class="cd-opt cd-circuit">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">2 · circuit bus</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                        <div class="cd-opt cd-stream">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">3 · data stream</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                        <div class="cd-opt cd-glitch">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">4 · glitch slice</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                        <div class="cd-opt cd-hud">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">5 · HUD bracket</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                        <div class="cd-opt cd-ruler">
+                            <section class="kp-section" data-kp-surface="hero"><p class="microlabel">6 · index ruler</p></section>
+                            <div data-kp-divider></div>
+                            <section class="kp-section" data-kp-surface="app"><p class="microlabel">app surface</p></section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock theme switcher: sets data-theme on <html> through the
+            // package's own applyTheme, so the catalogue's menu follows it.
+            import { applyTheme } from '../../js/theme-core.js';
+            const buttons = [...document.querySelectorAll('[data-cd-theme]')];
+            const mark = () => {
+                const now = document.documentElement.getAttribute('data-theme');
+                for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.cdTheme === now));
+            };
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    applyTheme(button.dataset.cdTheme);
+                    mark();
+                });
+            }
+            new MutationObserver(mark).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        </script>
+    </body>
+</html>
