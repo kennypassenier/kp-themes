@@ -250,7 +250,7 @@ line per failure, so the raw test output stays out of the conversation.
 Their definitions live in `.claude/agents/` and carry the "use
 proactively" description the harness delegates on.
 
-## Tests: three gradations
+## Tests: four gradations
 
 1. **Building:** the tests tagged with what is being touched, firefox
    only — `npm run test:tags -- --level building`. The tag map
@@ -261,7 +261,13 @@ proactively" description the harness delegates on.
 2. **Commit:** building plus every `@sweep` test, firefox only, once —
    `npm run test:tags -- --level commit`. About two to three minutes;
    run by hand or by the `checker` agent, not by the commit hook.
-3. **Release (before Uitrol):** the whole suite, both engines —
+3. **Engines:** the commit selection in both engines —
+   `npm run test:tags -- --level engines`. Run at the close of a layer
+   and after any fix that touches paint, focus or the keyboard (`fix-51`,
+   2026-09-17): the release run of 6.1.0 found eighteen tests red that only
+   Chromium saw, because the first two levels are Firefox alone and nothing
+   asked the other engine before the release.
+4. **Release (before Uitrol):** the whole suite, both engines —
    `npm run test:browser` — Kenny's to authorise, asked in a form; Claude
    runs it with his go.
 

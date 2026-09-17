@@ -1356,6 +1356,25 @@ test('a register edit selects its theme, and the commit level adds every sweep [
     assert.equal(grepFor(comment, 'release'), null, 'the release level is not every test');
 });
 
+test('the engines level is the commit selection in both engines, on the narrow themes [fix-51]', async () => {
+    const { grepFor, select } = await import('./tags.mjs');
+    const { parse, playwrightArgs, envFor } = await import('./run-tags.mjs');
+    // The release run of 6.1.0 found eighteen tests red that only Chromium
+    // saw: building and commit pass --project=firefox, and nothing between
+    // them and the release asked the other engine.
+    const before = "[data-theme='dark'] .kp-button {\n    color: red;\n}\n";
+    const sel = select([{ file: 'css/dark-register.css', before, after: before.replace('red', 'blue'), diff: '@@ -2 +2 @@' }]);
+    assert.equal(parse(['--level', 'engines']).level, 'engines');
+    assert.equal(grepFor(sel, 'engines'), grepFor(sel, 'commit'), 'the engines level selects what the commit level selects');
+    const args = playwrightArgs('engines', grepFor(sel, 'engines'));
+    assert.ok(args && !args.some((a) => a.startsWith('--project')), 'the engines level is held to one engine');
+    assert.deepEqual(
+        playwrightArgs('commit', null)?.filter((a) => a.startsWith('--project')),
+        ['--project=firefox'],
+    );
+    assert.equal(envFor('engines').KP_SWEEP_THEMES, 'formal,dark,cyberpunk', 'the engines level widens the theme sweeps');
+});
+
 test('the tag gate refuses an untagged test, an unknown tag, a theme walk without @sweep and an unmapped file [scope-33]', async () => {
     const { audit } = await import('./check-tags.mjs');
     const { loadMap } = await import('./tags.mjs');

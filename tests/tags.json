@@ -3,6 +3,7 @@
     "levels": {
         "building": "the tags of the changed files only, firefox; a theme sweep runs on the three themes below",
         "commit": "building plus every @sweep test, firefox; a theme sweep runs on the three themes below",
+        "engines": "the commit selection in chromium and firefox, at the close of a layer and after a fix to paint, focus or the keyboard [fix-51]; a theme sweep runs on the three themes below",
         "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go; a theme sweep runs on all 22"
     },
     "sweepThemes": {

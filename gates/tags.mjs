@@ -495,13 +495,13 @@ const tagPattern = (/** @type {string} */ t) => `(?:^|\\s)${escape(t)}(?=\\s|$)`
  * matched by its name as the title path writes it.
  *
  * @param {{ all: boolean, terms: string[][], specs: string[] }} selection
- * @param {'building' | 'commit' | 'release'} level
+ * @param {'building' | 'commit' | 'engines' | 'release'} level
  * @returns {string | null | ''} null: every test; '': nothing to run
  */
 export function grepFor(selection, level) {
     if (level === 'release' || selection.all) return null;
     const terms = [...selection.terms];
-    if (level === 'commit') terms.push(['@sweep']);
+    if (level === 'commit' || level === 'engines') terms.push(['@sweep']);
     const parts = terms.map((and) => (and.length === 1 ? tagPattern(and[0]) : `^${and.map((t) => `(?=[\\s\\S]*${tagPattern(t)})`).join('')}`));
     for (const spec of selection.specs) parts.push(`(?:^|\\s)${escape(relative('tests', spec))}\\s`);
     return parts.length ? parts.join('|') : '';

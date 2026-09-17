@@ -32,6 +32,7 @@ never a silent deviation. This project follows
 | `npm run gates`                                                   | the blocking code checks, seconds               | every commit, by the hook in `.claude/hooks/gates.sh`                  |
 | `npm run test:tags -- --level building`                           | the tests tagged with what changed, firefox     | while building; `--dry-run` shows the selection and the count          |
 | `npm run test:tags -- --level commit`                             | building plus every `@sweep` test, firefox      | once before a report or a commit; manual, not in the hook              |
+| `npm run test:tags -- --level engines`                            | the commit selection, both engines              | at a layer's close and after a paint, focus or keyboard fix [fix-51]   |
 | `npm run test:browser`                                            | the whole suite, both engines                   | before a release, on Kenny's go given in a form; never on Claude's own |
 | `npm run advice`                                                  | the nine readings, printed, never refusing      | when Kenny wants the reading                                           |
 | `npm run verify`                                                  | gates, the whole suite, advice, in order        | before a release, on the same go                                       |

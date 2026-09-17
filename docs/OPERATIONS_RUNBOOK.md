@@ -75,7 +75,7 @@ with its amendments of 2026-09-10 and 2026-09-11. They are recorded in
 | Command                 | What it runs                                                                  | When, and whose                                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `npm run gates`         | 29 `check:` scripts, then the unit tests — 30 steps; six older checks run inside them [scope-76], the drift check among them [scope-78] | every commit, by the hook. Seconds                                     |
-| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit |
+| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit; `--level engines` at a layer's close and after a paint, focus or keyboard fix [fix-51] |
 | `npm run test:browser`  | `playwright test` — the whole suite, both engines                             | **Kenny's to authorise.** Before a release Claude asks in a form       |
 | `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants, variant grounds, the compliance table, the baseline, prettier | when Kenny wants the reading                                           |
 | `npm run verify`        | gates, then the whole suite, then the advice, with a banner per phase         | before a release, on his go                                            |

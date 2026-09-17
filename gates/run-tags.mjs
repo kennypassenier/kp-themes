@@ -1,19 +1,24 @@
 // `npm run test:tags` — run what a change selects, by tag [scope-33].
 //
-// Three levels (tests/tags.json, `levels`):
+// Four levels (tests/tags.json, `levels`):
 //
 //   building   the tags of the changed files, firefox
 //   commit     building plus every @sweep test, firefox
+//   engines    the commit selection in chromium AND firefox, at the close of
+//              a layer and after a fix to paint, focus or the keyboard
+//              [fix-51]: the release run of 6.1.0 found eighteen tests red
+//              that only chromium saw, because nothing before the release
+//              asked it
 //   release    every test, chromium and firefox — `npm run test:browser`,
 //              which stays Kenny's to authorise: this refuses to run it
 //              without `--go`, and `--go` is given only on his word
 //
-// Firefox for the first two because Kenny's own browser is a firefox
+// Firefox alone for the first two because Kenny's own browser is a firefox
 // derivative and firefox has been the odd engine here more often than
 // chromium (docs/RULES.md, correction fix-2).
 //
 // The level also decides how wide a theme sweep runs [scope-103]: at
-// building and commit this sets KP_SWEEP_THEMES, which
+// building, commit and engines this sets KP_SWEEP_THEMES, which
 // tests/helpers/sweep-themes.mjs reads, to formal, dark and cyberpunk; at
 // release it sets nothing, so every sweep runs on all 22. The variable is
 // set on the child, never on this process, so nothing else inherits it.
@@ -35,7 +40,7 @@ import { NARROW_THEMES } from '../tests/helpers/sweep-themes.mjs';
 /**
  * The environment a level runs its playwright in.
  *
- * @param {'building' | 'commit' | 'release'} level
+ * @param {'building' | 'commit' | 'engines' | 'release'} level
  * @returns {NodeJS.ProcessEnv}
  */
 export function envFor(level) {
@@ -63,18 +68,24 @@ export function parse(argv) {
             while (argv[i + 1] && !argv[i + 1].startsWith('--')) args.files.push(argv[++i]);
         } else throw new Error(`unknown argument ${a}`);
     }
-    if (!['building', 'commit', 'release'].includes(args.level)) throw new Error(`--level is building, commit or release, not ${args.level}`);
+    if (!['building', 'commit', 'engines', 'release'].includes(args.level))
+        throw new Error(`--level is building, commit, engines or release, not ${args.level}`);
     return args;
 }
 
 /**
  * The playwright arguments for a level; null when there is nothing to run.
  *
- * @param {'building' | 'commit' | 'release'} level @param {string | null | ''} grep
+ * @param {'building' | 'commit' | 'engines' | 'release'} level @param {string | null | ''} grep
  */
 export function playwrightArgs(level, grep) {
     if (grep === '') return null;
-    return ['playwright', 'test', ...(level === 'release' ? [] : ['--project=firefox']), ...(grep === null ? [] : ['--grep', grep])];
+    return [
+        'playwright',
+        'test',
+        ...(level === 'release' || level === 'engines' ? [] : ['--project=firefox']),
+        ...(grep === null ? [] : ['--grep', grep]),
+    ];
 }
 
 /** @param {string[]} args @param {NodeJS.ProcessEnv} [env] @returns {number | null} the count `--list` prints */
@@ -99,13 +110,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(/** @type {Error} */ (e).message);
         process.exit(2);
     }
-    const level = /** @type {'building' | 'commit' | 'release'} */ (args.level);
+    const level = /** @type {'building' | 'commit' | 'engines' | 'release'} */ (args.level);
     const selection = select(changes({ files: args.files, commit: args.commit }));
     for (const { file, why } of selection.reasons) console.log(`  ${file} → ${why}`);
     const grep = grepFor(selection, level);
     const pw = playwrightArgs(level, grep);
     console.log(
-        `level ${level}: ${pw === null ? 'nothing to run' : grep === null ? `every test${level === 'release' ? ', both engines' : ', firefox'}` : `--grep ${grep}`}`,
+        `level ${level}: ${pw === null ? 'nothing to run' : grep === null ? `every test${level === 'release' || level === 'engines' ? ', both engines' : ', firefox'}` : `--grep ${grep}${level === 'engines' ? ', both engines' : ''}`}`,
     );
     const env = envFor(level);
     if (level !== 'release') console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 22 at the release level) [scope-103]`);

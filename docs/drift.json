@@ -131,15 +131,15 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "abf8fa62d62e1bbf7b4d2bbf5377c6336d700e7f81d03deaded3db8d06ae0f7f",
-            "doc": "7b4af9f5e77849593565a5ffe3a5da625ee7c9358eecde7aa7defb57dd21ef84",
+            "hash": "9d2a65660510e15148260e122720a6eba77cf2613b7302ea3351292666f37e01",
+            "doc": "7b2a6ba870bf7fd9ff5112cbd5edd8adb24d253d747372d34952ec35e332bd79",
             "files": {
-                ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
+                ".claude/agents/checker.md": "cb7b158e50b0a3e09a7aca2d14fbf4ec6bf6e64943453a3393e28b6d298f9723",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
                 ".claude/agents/theme-builder.md": "9133a9851f51d927dc24b9b13182c3c0cbafd7046af161b5c274cab6aecbfe07",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "feeb5165bc5a0a3edfc117e5071ba60294228e8e57bcb500812f7fa7e6d4ebef",
-                "gates/run-tags.mjs": "b585a12d860edd87e5e461e46f4b25fa0386a070e6ca6f07b5da0298a0d57397",
+                "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verdicts.mjs": "ad2c337f456f7a1199738199c2c4fe0ea629858b5d8ec3ac358e8ba2b85cbda5"
             }
         },
@@ -198,16 +198,18 @@
                 "gates/integrate-lift.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "6e3197513d381e1c070d5c447e1719f3dae62a18573367f659e26f0f4a0cfaef",
-            "doc": "f4a3f556adce1d4f8676156b2e1d1c0dd9a70548c19b652bd0bf7c57a31ad50a",
+            "hash": "706e11c68fd5b3f8c19ee55ae83418d758f82ae3060bf37b3e0e69e574647d6e",
+            "doc": "f4c4c9b8c568b21da4c3b88ee0e7464c1fecc5b71d2e54468ad00810f88346a6",
             "files": {
-                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
-                ".githooks/check-ids.sh": "d075bb8ee6b91c880221f76751473c1b91ad65726693191e231a45c0af5c2009",
-                ".githooks/commit-msg": "354ddac65850847c211cacc9ca8bc4196922e288483c149098d5fd08323e6de4",
+                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".githooks/check-ids.sh": "ec5484904fcfc88ee1afaca5ef756aec775a9f5df7afa6e5855b9c5fc6f99654",
+                ".githooks/commit-msg": "825b67a8bde9a8dc77ca7b3526340d67eb819d149adec126856bde9374fa4b2f",
+                ".githooks/gate-cache.sh": "0f1ec3ec548dd501439aff59bf009172a0d42b3f7a68e2bb71475d0dad4c36e9",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
+                ".githooks/trace-inputs.cjs": "2088e1ca4612e5608dcaf2bd48dcf4ce4f862f70ddd0ea59f9574de52ee674ef",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
-                "gates/checksums.mjs": "c71c22b26253b4abb24d2a73bb6267ec39eeb78a40783d4a2d817355831512e4",
+                ".github/workflows/release.yml": "c5b68f79cd3a474472672cdeea17ac21e0f8ad158d308b8dc0dcd0002bc2b4fe",
+                "gates/checksums.mjs": "1ef11d65237213dc56da2a0fe86994e39ad1b7f7b8a302fc55fbc2053e38b93d",
                 "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"
@@ -239,11 +241,11 @@
                 "gates/check-tags.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "c92b69e3f664fffcc6a86e75ecda04fa33103c15cfd166d34899aea074435e59",
-            "doc": "e37327187f71b1940555b9e86f39f182b7fd3639124b82ffab5b2507ba85fe18",
+            "hash": "12548a2fd7e8930d599b40c6471a0e003e0802104e84b2c89816c1e1489ae205",
+            "doc": "275266157fdbcb3d6c20c8775d1910b9ce9c8ce6f8d5e4c583cf4b7f80ec9c2b",
             "files": {
                 "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
-                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
+                "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
             }
