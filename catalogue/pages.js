@@ -70,7 +70,16 @@ export const PAGES = [
         // Undecided [scope-120]: Kenny asked for one kp theme in place of the
         // third-party one his Jellyfin wears (2026-09-17).
         group: 'Research to look at',
-        pages: [{ href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' }],
+        pages: [
+            { href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' },
+            { href: 'research/jellyfin-dark/demo.html', label: 'Jellyfin in dark, the paste for 10.11.11' },
+        ],
+    },
+    {
+        // Undecided: Kenny asked for a VS Code theme made from the kp themes,
+        // with a demo in cyberpunk (2026-09-17).
+        group: 'Research to look at',
+        pages: [{ href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' }],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

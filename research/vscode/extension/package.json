@@ -1,0 +1,26 @@
+{
+    "name": "kp-themes-vscode",
+    "displayName": "KP Themes (research)",
+    "description": "The kp-themes cyberpunk theme as a VS Code colour theme, generated from themes/cyberpunk/tokens.json by research/vscode/generate.mjs.",
+    "version": "0.0.1",
+    "publisher": "kp-soft",
+    "license": "MIT",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kennypassenier/kp-themes.git"
+    },
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": ["Themes"],
+    "contributes": {
+        "themes": [
+            {
+                "label": "KP Cyberpunk",
+                "uiTheme": "vs-dark",
+                "path": "./themes/kp-cyberpunk-color-theme.json"
+            }
+        ]
+    }
+}
