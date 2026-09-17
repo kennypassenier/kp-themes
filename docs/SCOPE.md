@@ -2085,3 +2085,15 @@ heb je nodig? waarvoor nieuwe tokens bv? ik snap het probleem niet goed" — the
 remedy goes to a deep-dive form before anything is built. fix-57 "Klopt": the
 tracer is fixed in dev-procedure (HOOK_VERSION=5), synced to the 16 projects and
 their caches cleared. step-timing "Akkoord".
+
+**scope-124 · The code inks stand, and they ship in 7.0.0.**
+Kenny, 2026-09-17, the code-colours form. code-colours "Klopt": the 44 inks stay
+as computed — the theme's own chart hue and saturation, the lightness moved only
+where the colour did not read, which was ten of them. fix-59 "Klopt": the gates
+measure the way the browser paints, through one shared `paintedContrast()`.
+code-version "Alles in 7.0.0": the two tokens ride in 7.0.0 rather than a 7.1.0
+after it, because 7.0.0 is prepared but not released and one upgrade is less work
+for a consumer than two; `npm run verify` runs again when Kenny asks for the
+release. ratatui-buttons "Akkoord": a button is a filled plate with its label
+centred, the edge from the theme's radius, and the two crates are built on that
+shape when they come. step-timing "Akkoord".
