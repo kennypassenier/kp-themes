@@ -7,8 +7,9 @@ points at so his apps look like one family. Twenty-two themes
 the components on them, a layout layer, a utility API, and the fonts. Web
 today; GUI (Avalonia) and TUI (Ratatui) later.
 
-**State:** `v6.0.0` is published (2026-09-13) at
-<https://github.com/kennypassenier/kp-themes/releases/tag/v6.0.0>. Round
+**State:** `v6.1.0` is published (2026-09-17) at
+<https://github.com/kennypassenier/kp-themes/releases/tag/v6.1.0>, the latest
+release. Round
 eight, opened the same day, is about the working method itself, not a
 theme: its sixteen decisions are `scope-29` to `scope-44` in
 [docs/SCOPE.md](docs/SCOPE.md), and the cycle they define is
@@ -56,7 +57,7 @@ Kenny.
 | Current phase       | **Round eight, layer 3 (tests, tags, gates, drift, purge).** Every approved fix from the catalogue so far is on the branch: gap-11, gap-12, gap-13, the switch, the data table round, the nostromo notes (scope-54 to scope-60) and held-60 (`e387f11`). Changed blocks return to the review page on their own for Kenny to judge again                     |
 | Last completed gate | **Phase 0, 2026-09-13.** The scope form of round eight, all sixteen items answered                                                                                                                                                                                                                                                                          |
 | Next gate           | Kenny's catalogue review of the changed blocks (option E, navigation, fix-28 fonts), as the prompt the copy button produces; option B's blocks follow [scope-87]                                                                                                                                                                                            |
-| Next action         | waiting on Kenny: the form on fix-52 and publishing the v6.1.0 draft (nine assets, 212/212 checksums OK); `--level engines` built and run once, 548 passed [fix-51]                                                                                                                                                                                         |
+| Next action         | none waiting: v6.1.0 published on Kenny's word (2026-09-17, nine assets, 212/212 checksums OK); round eight continues with Kenny's next instruction                                                                                                                                                                                                         |
 | Open queue items    | Sixteen, none Claude's to close: `step-2`, `fix-9-M1`, `KT6-M1`, `HA4`, `gap-9`, `fix-16-M1`, `fix-17-M1`, `fix-18-M1`, `fix-19-M1`, `gap-10`, `gap-11`, `fix-20-M1`, `gap-12`, `gap-13`, `fix-21-M1`, `fix-23-M1`                                                                                                                                          |
 | Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                                                                             |
 | Step timing         | `step-timing: required` — every form carries a measured item `step-timing · …` from `~/Projects/dev-procedure/hooks/step-timing.py`; `hooks/form-lint.py` refuses a form without it [scope-69]; durations are written in minutes and seconds, and in hours past sixty minutes [scope-80]; it names what each agent worked on beside its duration [scope-83] |
