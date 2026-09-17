@@ -4012,3 +4012,23 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The commit level itself goes to both engines and the building level stays firefox, paying the time on every commit rather than at every layer.
 
 **9 · When we review the measure.** When a third engine is judged, or when the release run finds an engine fault the engines level did not.
+
+## fix-52 · The release workflow could not see the commits the register names (2026-09-17)
+
+**1 · What went wrong.** The first push of `v6.1.0` built no draft: the Release workflow stopped in its Gates step with `data--health · formal · firefox: commit c4536eeb… is not in this repository`, once for every verdict. Measured locally the same day: `node gates/check-verdicts.mjs` exits 1 in a `git clone --depth 1` of `main` and 0 in a full clone.
+
+**2 · Which gate let it through.** None could: `check:verdicts` gained its commit check at scope-68, after v6.0.0, and the only place that runs the gates on a shallow clone is the release workflow, which runs only on a tag. Every local run has the whole history.
+
+**3 · Where the same fault sits.** The property: a workflow step that reads git history on a default checkout. Searched with `grep -n "checkout" .github/workflows/*.yml` and each gate for `git cat-file`/`git log`/`merge-base`: `release.yml` runs the gates and needed it; `pages.yml` runs only `generate-site.mjs --check`, which reads no history.
+
+**4 · How we prevent recurrence.** `fetch-depth: 0` on the checkout in `release.yml`, with the reason beside it. The tag was deleted per procedure 5.1's abort path before any draft existed, and cut again on the fixed tree.
+
+**5 · What the remedy costs.** A full clone in the workflow, a few seconds at this repository's size.
+
+**6 · Who enforces it.** The workflow itself: a shallow checkout fails the gates again, loudly, before anything is published.
+
+**7 · How we measure it works, and when.** At the second push of `v6.1.0`: the workflow finishes green and the draft carries its nine assets.
+
+**8 · If the measurement fails.** The commit check in `check:verdicts` skips itself when `git rev-parse --is-shallow-repository` says true, and says so in its output.
+
+**9 · When we review the measure.** When the release workflow gains a step that does not need history and the cost of the full clone becomes noticeable.

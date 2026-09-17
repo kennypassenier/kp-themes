@@ -30,7 +30,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      # The whole history, not the default depth of one [fix-52]. The gates
+      # include check:verdicts, which refuses a verdict whose commit is not in
+      # the repository; a shallow clone holds one commit, so the first tag
+      # built after scope-68 (v6.1.0, 2026-09-17) failed on all 3062 entries.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
