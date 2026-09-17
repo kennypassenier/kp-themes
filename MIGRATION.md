@@ -32,6 +32,13 @@ pointer light, the measurement frame, the marquee, the arrival) are fetched
 the first time a page or a theme asks for them [scope-117]. Its handle carries
 `ready` the same way:
 
+A vendored copy of `js/effects.js` needs its hooks beside it: copy
+`js/effects/` and `js/as-of.js` with it, or the reveals, the caret and the
+arrival are fetched from a path that is not there and never arrive (the
+release's `SHA256SUMS` lists all eleven files). chassis-rs vendors
+`static/kp/js/effects.js` and lists it in `crates/chassis/src/shell/assets.rs`;
+those ten files join that list at its next kp-themes upgrade.
+
 ```js
 import { attachEffects } from '@kp-soft/themes/js/effects';
 

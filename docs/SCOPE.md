@@ -2006,3 +2006,19 @@ when a page or a theme asks for them, the second half of strategy (c) in
 `research/loading/`. version "7.0.0": `attachAll()` finishing after it returns
 is a break for a consumer who calls it and reads state in the same tick, and a
 break raises the major. fix-54 "Klopt"; step-timing "Akkoord".
+
+**scope-118 · The 290 pairs re-anchored; the consumers read before 7.0.0 is set.**
+Kenny, 2026-09-17, the effects-split form (commit `5439df80`). review-290 "Claude
+zet de 290 opnieuw vast": `node gates/verdicts.mjs settle` brought the 290
+component pairs to the moved code's hash (2772 already read it), and the 27
+portrait entries were read on their own pages (21 moved, for the same reason:
+they carry effects families). release "Eerst alleen de consumers doorzoeken":
+searched `~/Projects` for `attachAll(`, `attachEffects(`, `js/auto.js` and
+`js/effects.js` outside kp-themes. No consumer calls `attachAll()`. chassis-rs
+calls `attachEffects(document)` at load and again on the first caret theme, and
+reads nothing in the same tick, so it needs no `ready`; it vendors
+`static/kp/js/effects.js` and must vendor `js/effects/` and `js/as-of.js`
+beside it at its next upgrade (kyu and Almanac serve chassis-rs's copy).
+JobTracker imports React components and stylesheets from its pinned v5.0.0 and
+calls neither. The version stays 6.1.0 until the next form. fix-55 "Klopt";
+step-timing "Akkoord".
