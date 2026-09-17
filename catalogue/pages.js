@@ -67,6 +67,12 @@ export const PAGES = [
         pages: [],
     },
     {
+        // Undecided [scope-120]: Kenny asked for one kp theme in place of the
+        // third-party one his Jellyfin wears (2026-09-17).
+        group: 'Research to look at',
+        pages: [{ href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' }],
+    },
+    {
         // Every demo here has its decision taken. A new research demo goes in
         // a 'Research to look at' group of its own, above this one, and moves
         // down here once Kenny has decided on it [scope-81].

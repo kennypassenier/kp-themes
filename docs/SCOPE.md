@@ -2043,3 +2043,17 @@ jellyfin "Eerst onderzoek" and ratatui "Eerst een Ratatui-onderzoek": the
 researcher agent builds `research/jellyfin/` (a local container, nothing on the
 media stack) and `research/ratatui/` (a demo app with three themes and four
 widgets) before anything is decided. step-timing "Akkoord".
+
+**scope-121 · No 7.0.0 yet; Kenny runs the Ratatui demo; Jellyfin as one theme in place of the third-party one.**
+Kenny, 2026-09-17, the 7.0.0 release form. release "Nog geen release": 7.0.0
+stays on round-six, verified green on `2005f24e`. ratatui "Kenny bekijkt eerst
+de demo": `research/ratatui/` is in the repository and Kenny runs
+`cargo run` in `research/ratatui/demo` before anything is decided. jellyfin,
+his own answer: "is er geen andere manier? Momenteel is er toch al een 3d party
+jellyfin thema actief? hoe zouden we dat bv kunnen vervangen door één van onze
+thema's? … als het enkel 1 thema wordt dan kan ik daarmee leven". One theme is
+enough, switching is optional. Which third-party theme is active and which
+Jellyfin runs is recorded nowhere on this machine (searched `ansible/`,
+`homelab/`, `stacks/`), so reading them needs his permission for the media
+stack. fix-56 was not answered in that form and is asked again.
+step-timing "Akkoord".
