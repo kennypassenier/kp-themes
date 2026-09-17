@@ -2069,3 +2069,19 @@ dark's tokens, or a standalone file (`research/jellyfin-dark/`). jellyfin-theme
 he wants real data in charts, machine stats and logs streaming with colours for
 timestamps and severity (added to `research/ratatui/demo`); and a VS Code theme
 from the themes, a demo on cyberpunk (`research/vscode/`). step-timing "Akkoord".
+
+**scope-123 · The research form: the demos first, bolder Ratatui buttons, the tracer fixed.**
+Kenny, 2026-09-17, the research form. jellyfin-paste, his own answer: "eerst de
+demo, geef een klikbare link" — nothing is pasted into Jellyfin until he has seen
+the jellyfin-dark demo on the review site. ratatui-next, his own answer: the
+dashboard "ziet er al veel beter uit", but the buttons are "wat zwak" — he
+expected bolder, especially from a theme as stylistic as cyberpunk, and asks
+whether the geometry of the buttons themselves can carry it. vscode-next, his own
+answer: he installs KP Cyberpunk himself and wants the steps. vscode-choices
+"Klopt": types on `--chart-4`, function names in the plain text colour in 13
+themes, ANSI colours by nearest hue, and the three pairs under their floor all
+stand. fix-58 "Klopt". code-colour, his own answer: "wat verandert er exact of wat
+heb je nodig? waarvoor nieuwe tokens bv? ik snap het probleem niet goed" — the
+remedy goes to a deep-dive form before anything is built. fix-57 "Klopt": the
+tracer is fixed in dev-procedure (HOOK_VERSION=5), synced to the 16 projects and
+their caches cleared. step-timing "Akkoord".
