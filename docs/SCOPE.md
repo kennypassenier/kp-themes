@@ -2177,3 +2177,16 @@ publieke repository": kp-tui is pushed to GitHub as a public repository.
 next-step "De resterende componenten in kp-tui": the selection style, the
 stepper and the command palette come before the release. step-timing
 "Akkoord".
+
+**scope-131 · CI on the public crate, and one of homelab's screens rebuilt on it.**
+2026-09-18, the components form. components-done "Klopt": the three last
+widgets stand — `SelectList` on a Selection row measured across the 22
+registers, `Stepper`, and a `CommandPalette` that matches a subsequence.
+kp-tui-ci "Claude zet er een workflow op": fmt, clippy with warnings as
+errors and the workspace tests run on every push to `main`; the first run
+(35371069743) was green in 33 seconds. next-step "Een Homelab-scherm
+nabouwen als proef": `client/src/tui/view/stacks.rs` rebuilt as
+`--screen fleet`, 183 lines against homelab's 177 with 0 theme constants
+against 34 and 22 themes against one. It found three gaps — a state dot
+and a tag, a facts list, a themed table — 103 of those 183 lines, all
+three components the web package already has. step-timing "Akkoord".
