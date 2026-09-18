@@ -422,11 +422,7 @@
         },
         {
             "name": "Comments (highlight.mjs: comment)",
-            "scope": [
-                "comment",
-                "punctuation.definition.comment",
-                "string.quoted.docstring"
-            ],
+            "scope": ["comment", "punctuation.definition.comment", "string.quoted.docstring"],
             "settings": {
                 "foreground": "#A9AFD1",
                 "fontStyle": "italic"
@@ -455,13 +451,7 @@
         },
         {
             "name": "Tag, attribute and property names (highlight.mjs: keyword)",
-            "scope": [
-                "entity.name.tag",
-                "entity.other.attribute-name",
-                "support.type.property-name",
-                "entity.name.tag.yaml",
-                "keyword.other.unit"
-            ],
+            "scope": ["entity.name.tag", "entity.other.attribute-name", "support.type.property-name", "entity.name.tag.yaml", "keyword.other.unit"],
             "settings": {
                 "foreground": "#D5A52A"
             }
@@ -525,34 +515,21 @@
         },
         {
             "name": "Macros (a name the language gives meaning to)",
-            "scope": [
-                "entity.name.function.macro",
-                "support.function.macro",
-                "entity.name.function.preprocessor",
-                "keyword.control.directive"
-            ],
+            "scope": ["entity.name.function.macro", "support.function.macro", "entity.name.function.preprocessor", "keyword.control.directive"],
             "settings": {
                 "foreground": "#D5A52A"
             }
         },
         {
             "name": "Primitive type names read as types",
-            "scope": [
-                "entity.name.type.primitive",
-                "entity.name.type.numeric",
-                "support.type.primitive",
-                "support.type.builtin"
-            ],
+            "scope": ["entity.name.type.primitive", "entity.name.type.numeric", "support.type.primitive", "support.type.builtin"],
             "settings": {
                 "foreground": "#40BFAA"
             }
         },
         {
             "name": "Markdown headings",
-            "scope": [
-                "markup.heading",
-                "entity.name.section"
-            ],
+            "scope": ["markup.heading", "entity.name.section"],
             "settings": {
                 "foreground": "#D5A52A",
                 "fontStyle": "bold"
@@ -560,9 +537,7 @@
         },
         {
             "name": "Markdown emphasis",
-            "scope": [
-                "markup.italic"
-            ],
+            "scope": ["markup.italic"],
             "settings": {
                 "foreground": "#F2E9D4",
                 "fontStyle": "italic"
@@ -570,9 +545,7 @@
         },
         {
             "name": "Markdown strong",
-            "scope": [
-                "markup.bold"
-            ],
+            "scope": ["markup.bold"],
             "settings": {
                 "foreground": "#F2E9D4",
                 "fontStyle": "bold"
@@ -580,10 +553,7 @@
         },
         {
             "name": "Links",
-            "scope": [
-                "markup.underline.link",
-                "string.other.link"
-            ],
+            "scope": ["markup.underline.link", "string.other.link"],
             "settings": {
                 "foreground": "#D5A52A",
                 "fontStyle": "underline"
@@ -591,9 +561,7 @@
         },
         {
             "name": "Quotes",
-            "scope": [
-                "markup.quote"
-            ],
+            "scope": ["markup.quote"],
             "settings": {
                 "foreground": "#A9AFD1",
                 "fontStyle": "italic"
@@ -601,19 +569,14 @@
         },
         {
             "name": "Inserted",
-            "scope": [
-                "markup.inserted"
-            ],
+            "scope": ["markup.inserted"],
             "settings": {
                 "foreground": "#F2E9D4"
             }
         },
         {
             "name": "Invalid",
-            "scope": [
-                "invalid",
-                "invalid.illegal"
-            ],
+            "scope": ["invalid", "invalid.illegal"],
             "settings": {
                 "foreground": "#F7796E",
                 "fontStyle": "underline"
@@ -621,9 +584,7 @@
         },
         {
             "name": "Deprecated",
-            "scope": [
-                "invalid.deprecated"
-            ],
+            "scope": ["invalid.deprecated"],
             "settings": {
                 "foreground": "#A9AFD1",
                 "fontStyle": "strikethrough"

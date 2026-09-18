@@ -4192,3 +4192,51 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** Then the shell stops depending on a stylesheet for its shape: the flex on `body.cat-shell` moves into the script as an inline style, where nothing can fail to load.
 
 **9 · When we review the measure.** When the catalogue shell gains a second stylesheet, or when a demo starts bringing its own layout for the navigation.
+
+## fix-61 · A generator wrote a shape its own gate refused, one command later (2026-09-18)
+
+**1 · What went wrong.** Cutting 7.0.0, step 2 of Procedure 5.1 is
+`npm run generate:all`. Its last step is `prettier --write .`, which
+reformatted all 22 files in `vscode/`; `npm run gates` then refused the
+tree it had just produced — `vscode/kp-nostromo-color-theme.json does not
+match its source.` The JSON was identical in content (checked by parsing
+both and comparing objects: `true` for every theme); only the line breaks
+of short arrays differed. So the documented release procedure could not be
+followed to the letter without the gates failing.
+
+**2 · Which gate let it through.** None could. The gate is the one that
+refused — correctly. What was missing is that `generate:all` was never run
+twice in a row on a clean tree since `generate:vscode` joined it
+[scope-125]; the generator landed with its files committed straight from
+the generator, before prettier had seen them.
+
+**3 · Where else the same fault sits.** The fault is "a generator whose
+output prettier then rewrites". **Gezocht met:**
+`for g in $(ls gates/generate-*.mjs); do node $g >/dev/null 2>&1; done; npx prettier --write . >/dev/null; npm run gates`
+— every other generator survives that round trip; `generate-themes.mjs`
+says so in its own comment ("on its own line as prettier writes it"). The
+VS Code one was the only one that hand-shaped JSON without matching
+prettier.
+
+**4 · How we prevent recurrence.** The generator formats through prettier
+itself, with the repository's own config resolved from the file's path, so
+its output equals prettier's by construction rather than by hand.
+
+**5 · What the remedy costs.** One import and four lines in the generator;
+the 22 files are 858 lines shorter in total, with no value changed.
+
+**6 · Who enforces it.** Code: `npm run gates` already refuses a stale
+file, and now it refuses nothing after `generate:all`.
+
+**7 · How we measure it works, and when.** At this commit: `generate:all`
+then `gates` reads `pass 183, fail 0`, where the same pair failed on two
+files before the change. Again at the next release, which is the moment
+Procedure 5.1 is walked for real.
+
+**8 · If the measurement fails.** Then the prettier pass at the end of
+`generate:all` stops covering generated trees: `vscode/` and its siblings
+move into `.prettierignore`, and the generators own their own shape.
+
+**9 · When we review the measure.** At the next generator added to
+`generate:all` — the question to ask then is whether it formats through
+prettier or is ignored by it, and never neither.

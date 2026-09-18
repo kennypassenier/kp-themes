@@ -25,6 +25,7 @@
 //   node research/vscode/generate.mjs --all --report  a one-line contrast summary per theme
 
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import prettier from 'prettier';
 import process from 'node:process';
 import { TOKEN_TOKENS, highlight } from './site/highlight.mjs';
 import { contrast, distance, hslToRgb, parseHsl, rgbToHsl } from './colour.mjs';
@@ -988,7 +989,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         // The measured pairs ride in the file itself, so a reader can see
         // where a theme falls short without running the generator.
         theme.kpThemes.contrast = measure(theme).map((/** @type {{ratio: number}} */ row) => ({ ...row, ratio: Number(row.ratio.toFixed(2)) }));
-        files.push({ name: `kp-${name}-color-theme.json`, content: `${JSON.stringify(theme, null, 4)}\n`, rows: measure(theme), theme });
+        // Through prettier, with the repository's own settings: the last
+        // step of `npm run generate:all` is `prettier --write .`, so a
+        // generator that writes its own shape leaves a tree its own
+        // --check refuses one command later. Found cutting 7.0.0.
+        const content = await prettier.format(JSON.stringify(theme, null, 4), {
+            ...(await prettier.resolveConfig(new URL(`vscode/kp-${name}-color-theme.json`, ROOT).pathname)),
+            parser: 'json',
+        });
+        files.push({ name: `kp-${name}-color-theme.json`, content, rows: measure(theme), theme });
     }
 
     if (check) {
