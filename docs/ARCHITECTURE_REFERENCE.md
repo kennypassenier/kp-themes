@@ -39,12 +39,15 @@ js/components.js     contracts; sticky, menus   │ attaches nothing. Only
 js/overlays.js       dialogs, tabs, toasts,     │ js/auto.js has a side
                      whether an overlay scrolls │
 js/alarm.js          the full-screen alarm      │
-js/effects.js        the hooks, the marquee,    │ effect, by design
-                     the pointer bus and its    │
-                     light, the count           │
-
-                     the pointer and press      │
-                     buses, the count           │js/sidenav.js        the side navigation        │
+js/effects.js        the reveal core; fetches   │ effect, by design
+                     its hooks when asked       │
+js/effects/*.js      the hooks: headline, marks,│
+                     rule, count, caret, the    │
+                     pointer and press buses,   │
+                     measure, marquee, arrival  │
+js/as-of.js          a late module attaches to  │
+                     the page as it was asked   │
+js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │
 js/datatable.js      search, paging             │
@@ -167,6 +170,13 @@ about how a colour *looks* converts to OKLCh first. One numeric step of
 HSL lightness on terminal's saturated green and on formal's dark navy look
 nothing alike; one OKLCh step does.
 
+Two contrast functions live there, and the difference matters: `contrast()`
+measures the channels as computed, which is right for the picker, which is
+still moving a colour; `paintedContrast()` rounds each channel to the 8 bits
+the screen receives first, which is right for a gate judging a colour that
+has landed. The gates use the painted one, all of them, since two of them
+answered 4.51 and 4.47 about the same pair [fix-59].
+
 Pinned standards constants, with the reason in the code: 4.5:1 for text,
 3:1 for non-text and large text, three flashes per second, a 10%
 luminance change, the 341×256 px flash area, and WCAG's 0.03928 luminance
@@ -196,8 +206,10 @@ colour space, and lightness alone left their pressed state invisible.
 
 ## The gates, and the advice beside them
 
-Thirty checks, all in Node, the whole chain in seconds, all run by
-`.claude/hooks/gates.sh` before every commit. Since scope-76 older
+Thirty-three checks, all in Node, the whole chain in seconds, all run by
+`.claude/hooks/gates.sh` before every commit (the VS Code colour themes
+joined at scope-125 and the Rust palette at scope-128, beside the Home
+Assistant ones). Since scope-76 older
 checks run inside them rather than on their own line — tokens in `npm test`,
 the bundle in `generate-min --check`, the migration note in
 `check-docs-runnable`, the fonts stylesheet in `check-fonts`, the package in

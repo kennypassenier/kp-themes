@@ -113,7 +113,11 @@ export function copyableExports(pkg, { follow = true } = {}) {
         // [T19, AR39] — so every file under it joins the expected set.
         if (name.includes('*') || target.includes('*')) {
             const dir = target.replace(/^\.\//, '').replace(/\/\*$/, '');
-            if (!/^(css|js|dist|fonts)$/.test(dir)) continue;
+            // `ha/` joined at 7.0.0 [scope-120]: the Home Assistant themes are
+            // files a dashboard copies exactly like a stylesheet a page does.
+            // `vscode/` joined the same way [scope-125]: an editor theme is a
+            // file a user points an extension at.
+            if (!/^(css|js|dist|fonts|ha|vscode|tui)$/.test(dir)) continue;
             for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
             continue;
         }
@@ -176,6 +180,11 @@ export function references(source) {
     /** @type {string[]} */
     const out = [];
     for (const match of source.matchAll(/(?:from|import)\s*'(\.[^']+)'/g)) out.push(match[1]);
+    // A module fetched when asked for [scope-117]: `import('./effects/x.js')`
+    // in code, not the `import('./theme-registry.js')` of a JSDoc type, so
+    // the comments are blanked first.
+    const code = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+    for (const match of code.matchAll(/\bimport\(\s*'(\.[^']+)'\s*\)/g)) out.push(match[1]);
     for (const match of source.matchAll(/url\(\s*['"]?(\.[^'")]+)['"]?\s*\)/g)) out.push(match[1]);
     // A minified file names its source map the same way a stylesheet
     // names a font: the consumer who copies one copies the other, or the

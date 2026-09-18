@@ -130,6 +130,16 @@ export const FILES = [
     'js/datepicker.js',
     'js/diagnostics.js',
     'js/effects.js',
+    'js/effects/arrival.js',
+    'js/effects/caret.js',
+    'js/effects/count.js',
+    'js/effects/emphasis.js',
+    'js/effects/headline.js',
+    'js/effects/marquee.js',
+    'js/effects/measure.js',
+    'js/effects/pointer.js',
+    'js/effects/rule.js',
+    'js/as-of.js',
     'js/forms.js',
     'js/gridlayout.js',
     'js/lazy-register.js',
@@ -156,6 +166,12 @@ export const FILES = [
     // plan itself and the kanji list — derived rather than typed, because
     // fifty-five hand-kept paths would be the 3.1.1 fault at scale.
     ...fontFiles(),
+    // The Home Assistant themes [scope-120]: generated from the same tokens
+    // and shipped as ha-themes.tar, so a dashboard verifies them like a page
+    // verifies its stylesheet.
+    ...haFiles(),
+    ...vscodeFiles(),
+    'tui/palette.rs',
 ];
 
 /**
@@ -174,6 +190,18 @@ export function fontFiles() {
         }
     }
     return out;
+}
+
+/** Every generated VS Code colour theme, `vscode/kp-<theme>-color-theme.json`, in the registry's order. */
+export function vscodeFiles() {
+    const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    return order.map((/** @type {string} */ name) => `vscode/kp-${name}-color-theme.json`);
+}
+
+/** Every generated Home Assistant theme, `ha/kp-<theme>.yaml`, in the registry's order. */
+export function haFiles() {
+    const order = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8')));
+    return order.map((name) => `ha/kp-${name}.yaml`);
 }
 
 export function checksums() {

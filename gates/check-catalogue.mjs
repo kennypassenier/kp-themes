@@ -18,6 +18,8 @@
 //
 // Run: node gates/check-catalogue.mjs
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
 /** @param {string} path */
@@ -136,7 +138,11 @@ export function decidedOutsideArchive(shell, readmes) {
     const groupOf = new Map();
     for (const part of shell.split(/group:\s*'/).slice(1)) {
         const group = part.slice(0, part.indexOf("'"));
-        for (const m of part.matchAll(/href:\s*'research\/([^/']+)\//g)) groupOf.set(m[1], group);
+        // One page outside the archive puts the whole topic outside [fix-53]:
+        // a later page under "Archived research" must not overwrite it.
+        for (const m of part.matchAll(/href:\s*'research\/([^/']+)\//g)) {
+            if (groupOf.get(m[1]) === undefined || groupOf.get(m[1]) === 'Archived research') groupOf.set(m[1], group);
+        }
     }
     return Object.entries(readmes)
         .filter(([, text]) => /^\*\*Decided \(/m.test(text.split('\n').slice(0, 12).join('\n')))
@@ -405,12 +411,13 @@ function main() {
     // uBlock Origin with that list on (fix-23, Kenny 2026-09-13).
     const PUBLISHED = ['catalogue', 'research', 'examples', 'css', 'js', 'fonts'];
     const BLOCKED_WORDS = /fingerprint|analytics|tracking|tracker|beacon|telemetry|advert/i;
-    const blockable = PUBLISHED.flatMap((dir) =>
-        readdirSync(new URL(`${dir}/`, root), { recursive: true })
-            .map(String)
-            .filter((name) => BLOCKED_WORDS.test(name.split('/').pop() ?? ''))
-            .map((name) => `${dir}/${name}`),
-    ).sort();
+    // Published means tracked: a build directory in the working tree (the
+    // Ratatui demo's gitignored target/ holds `.fingerprint`) never reaches
+    // the review site, so it is read from git, not from the disk.
+    const tracked = execFileSync('git', ['-C', fileURLToPath(root), 'ls-files', '--', ...PUBLISHED], { encoding: 'utf8' })
+        .split('\n')
+        .filter(Boolean);
+    const blockable = tracked.filter((name) => BLOCKED_WORDS.test(name.split('/').pop() ?? '')).sort();
     if (blockable.length) {
         console.error(
             `${blockable.length} published file name(s) an ad or privacy blocklist refuses, so the page breaks for a reviewer running one [fix-23]:\n  ` +

@@ -123,11 +123,11 @@
 }
 
 .kp-code__keyword {
-    color: var(--chart-1);
+    color: var(--code-keyword);
 }
 
 .kp-code__string {
-    color: var(--chart-2);
+    color: var(--code-string);
 }
 
 .kp-code__comment {

@@ -36,6 +36,7 @@
 //   purpose.
 
 import { expect, test } from '@playwright/test';
+import { autoReady } from './helpers/auto-ready.mjs';
 import { EXAMPLES, INLINE_STYLE_EXCEPTIONS } from '../showcase/examples.mjs';
 
 /** @param {string} id */
@@ -130,6 +131,7 @@ test.describe('the ten example pages', { tag: ['@component:examples'] }, () => {
         test(`${example.id}: the two channels write the same classes and roles [AR20]`, async ({ page }) => {
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.goto(staticUrl(example.id));
+            await autoReady(page);
             const free = await shape(page, 'body');
             await page.goto(reactUrl(example.id));
             const react = await shape(page, '#react-mount');

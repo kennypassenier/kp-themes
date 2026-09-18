@@ -5,6 +5,95 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
+## Coming from 6.x to 7.0.0: `attachAll()` finishes after it returns
+
+One change a consumer may have to act on [scope-115]. `js/auto.js` now
+fetches a module only when the page carries its markup, so the modules
+arrive after `attachAll()` has returned rather than before it. Nothing
+changes for a page that loads `js/auto.js` and lets it run: the components
+come alive once their module is in, and `<html data-kp-auto-ready>` says
+when that is.
+
+Code that calls `attachAll()` itself and reads a component's state in the
+same tick awaits `ready` first:
+
+```js
+import { attachAll } from '@kp-soft/themes/js/auto';
+
+const detach = attachAll(section);
+await detach.ready; // every module the section needed has attached
+console.log(detach.modules); // e.g. ['datatable', 'tables']
+```
+
+Calling the individual attach functions (`attachDataTables(section)` and the
+rest) is unchanged and still synchronous — except `attachEffects()`, whose
+hooks (the headline's decipher, the marks, the rule, the count, the caret, the
+pointer light, the measurement frame, the marquee, the arrival) are fetched
+the first time a page or a theme asks for them [scope-117]. Its handle carries
+`ready` the same way:
+
+A vendored copy of `js/effects.js` needs its hooks beside it: copy
+`js/effects/` and `js/as-of.js` with it, or the reveals, the caret and the
+arrival are fetched from a path that is not there and never arrive (the
+release's `SHA256SUMS` lists all eleven files).
+
+**Task for chassis-rs, at its kp-themes 7.0.0 upgrade** [scope-119]. Nothing
+in chassis-rs calls `attachAll()`, and `chassis.js` reads nothing in the same
+tick as `attachEffects(document)`, so no code there changes. What changes is
+what the binary bakes:
+
+1. Copy ten more files from the release beside `static/kp/js/effects.js`,
+   keeping their paths: `static/kp/js/as-of.js` and
+   `static/kp/js/effects/{arrival,caret,count,emphasis,headline,marquee,measure,pointer,rule}.js`.
+2. Add one `ASSETS` entry per file in `crates/chassis/src/shell/assets.rs`,
+   `"kp/js/as-of.js"` and `"kp/js/effects/<hook>.js"`, `text/javascript;
+charset=utf-8`, `include_bytes!` as for `kp/js/effects.js`.
+3. Extend `vendored_javascript_imports_only_vendored_modules` there to read
+   `import('./…')` too. It reads lines that start with `import ` or `export `;
+   the hooks are loaded with `() => import('./effects/caret.js')` inside
+   `js/effects.js`, so today's test stays green with the ten files missing.
+   Drill it by leaving `kp/js/effects/caret.js` out of `ASSETS`.
+4. Measure in a browser on a kit page under the terminal theme: the focused
+   field's block caret appears, and the network log shows
+   `/static/kp/js/effects/caret.js` answered 200.
+
+kp-themes holds its half in `gates/check-closure.mjs`: the seventeen modules
+chassis-rs bakes at 7.0.0 import nothing outside themselves (fix-56).
+
+```js
+import { attachEffects } from '@kp-soft/themes/js/effects';
+
+const effects = attachEffects(section);
+await effects.ready; // every hook this attach asked for is in and has run
+section.querySelector('[data-kp-reveal-trigger]')?.click();
+```
+
+### The editor themes are new, and optional
+
+`vscode/kp-*-color-theme.json` ships with the package from 7.0.0
+[scope-125]. Nothing imports them and nothing breaks if you ignore them; a
+release attaches them as `vscode-themes.tar`, and `README.md` says how to
+point an extension at one.
+
+### Two new tokens: `--code-keyword` and `--code-string`
+
+Nothing breaks. Every theme gained two colours for code blocks, so a
+consumer that shows code — a log line, a snippet — takes them from the
+package instead of choosing a chart colour that was never meant to be read:
+
+```css
+.my-code .keyword {
+    color: var(--code-keyword);
+}
+.my-code .string {
+    color: var(--code-string);
+}
+```
+
+A vendored `css/themes.css` gets them with the file. In every theme both
+read at 4.5:1 or better on `--card` (`node gates/check-site.mjs` measures
+it), where the chart hues they replace read as low as 3.38:1 [fix-58].
+
 ## Coming from 5.x to 6.0.0
 
 Two breaks, both about theme names; everything else in 6.0.0 is additive

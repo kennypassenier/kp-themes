@@ -75,7 +75,7 @@ with its amendments of 2026-09-10 and 2026-09-11. They are recorded in
 | Command                 | What it runs                                                                  | When, and whose                                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `npm run gates`         | 29 `check:` scripts, then the unit tests — 30 steps; six older checks run inside them [scope-76], the drift check among them [scope-78] | every commit, by the hook. Seconds                                     |
-| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit |
+| `npm run test:tags`     | the tests tagged with what the change touches, Firefox only (`tests/tags.json`) | `--level building` while building; `--level commit` once before each report and each commit; `--level engines` at a layer's close and after a paint, focus or keyboard fix [fix-51] |
 | `npm run test:browser`  | `playwright test` — the whole suite, both engines                             | **Kenny's to authorise.** Before a release Claude asks in a form       |
 | `npm run advice`        | contrast, motion, the DI5 report, texture, the invariants, variant grounds, the compliance table, the baseline, prettier | when Kenny wants the reading                                           |
 | `npm run verify`        | gates, then the whole suite, then the advice, with a banner per phase         | before a release, on his go                                            |
@@ -497,8 +497,11 @@ Two facts decide the shape of this procedure, and both are in the code:
 
 - **Pushing a `v*` tag fires `.github/workflows/release.yml`.** That
   workflow runs `npm ci`, `npm run gates`, `npm run checksums`,
-  `tar -cf fonts.tar fonts`, `npm run consumer-tar`, and then
-  `gh release create` with `--draft` and nine assets. Do not rebuild
+  `tar -cf fonts.tar fonts`, `tar -cf ha-themes.tar -C ha .`,
+  `tar -cf vscode-themes.tar -C vscode .`, `cp tui/palette.rs kp-tui-palette.rs`,
+  `npm run consumer-tar`, and then `gh release create` with `--draft` and twelve
+  assets (nine until 7.0.0 added `ha-themes.tar` at scope-120,
+  `vscode-themes.tar` at scope-125 and `kp-tui-palette.rs` at scope-128). Do not rebuild
   any of that by hand: doing exactly that is the fault recorded as KT9
   in `docs/CORRECTIONS.md`, where a hand-built release published a
   `SHA256SUMS` covering three files instead of ten.
@@ -596,16 +599,16 @@ Two facts decide the shape of this procedure, and both are in the code:
     read `skipped`, so no release object was created at all. The next run
     on the same tag built it.
 
-10. Check the draft has all nine assets:
+10. Check the draft has all twelve assets:
 
     ```sh
     gh release view v5.2.0 --json tagName,isDraft,assets --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'
     ```
 
-    Correct, as v5.1.0 actually shipped:
+    Correct, from 7.0.0 on:
 
     ```
-    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css"],"draft":true,"tag":"v5.2.0"}
+    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","ha-themes.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css","vscode-themes.tar","kp-tui-palette.rs"],"draft":true,"tag":"v5.2.0"}
     ```
 
 11. Verify every published checksum against the tagged tree. This is
@@ -698,6 +701,10 @@ Run `npm run generate` and commit the result.
 or something one of those imports — and is not in the manifest. Add it to
 FILES in gates/checksums.mjs.
 ```
+
+"Something one of those imports" includes a module fetched with `import('./x.js')`
+since scope-117: the hooks in `js/effects/` are loaded that way, and a vendored
+copy without them loads a page whose reveals never arrive.
 
 For symptom→cause tables, the evidence trail behind each gate and what to
 do when the message is not self-explanatory, see

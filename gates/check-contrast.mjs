@@ -14,7 +14,7 @@
 //        (default: css/themes.css in this package)
 import { readFileSync } from 'node:fs';
 import process from 'node:process';
-import { distance, hsl } from './colour.mjs';
+import { distance, hsl, paintedContrast } from './colour.mjs';
 
 const target = process.argv[2] ? new URL(process.argv[2], `file://${process.cwd()}/`) : new URL('../css/themes.css', import.meta.url);
 const css = readFileSync(target, 'utf8');
@@ -71,6 +71,8 @@ const PAIRS = [
     ['background', 'link-visited'],
     ['card', 'link-visited'],
     ['muted', 'foreground'], // TH32: code, pre and kbd sit on the muted surface
+    ['card', 'code-keyword'], // fix-58: a code block's own two inks, read rather than only seen
+    ['card', 'code-string'],
     ...STATUS_NAMES.map((s) => [`status-${s}`, `status-${s}-foreground`]),
     // TH116: the hero surface is a second ground with its own ink, second
     // ink, muted ink, button, alert and card. Every text pair a component
@@ -213,29 +215,16 @@ function tokenHsl(block, token) {
     return { h, s: s / 100, l: l / 100 };
 }
 
-/** @param {{h: number, s: number, l: number}} hsl @returns {number[]} */
-function hslToRgb({ h, s, l }) {
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-    const m = l - c / 2;
-    const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-    // Rounded to 8 bits per channel, because that is what the browser
-    // paints: light's warning pair measured 4.50 here and 4.48 on the
-    // rendered page (tests/surfaces.spec.mjs, 2026-09-07) until this
-    // rounding matched the browser's [TH116].
-    return [r + m, g + m, b + m].map((v) => Math.round(v * 255) / 255);
-}
-
-/** @param {number[]} rgb */
-function luminance(rgb) {
-    const [r, g, b] = rgb.map(/** @param {number} v */ (v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-/** @param {{h: number, s: number, l: number}} a @param {{h: number, s: number, l: number}} b */
+/**
+ * The pair as the browser paints it [TH116, fix-59]. The rounding to 8 bits
+ * a channel used to live here; it is `paintedContrast` in gates/colour.mjs
+ * now, so the site gate and this one cannot answer differently about the
+ * same two colours.
+ * @param {{h: number, s: number, l: number}} a @param {{h: number, s: number, l: number}} b
+ */
 function ratio(a, b) {
-    const [l1, l2] = [luminance(hslToRgb(a)), luminance(hslToRgb(b))].sort((x, y) => y - x);
-    return (l1 + 0.05) / (l2 + 0.05);
+    const asText = (/** @type {{h: number, s: number, l: number}} */ c) => `hsl(${c.h}, ${c.s * 100}%, ${c.l * 100}%)`;
+    return paintedContrast(hsl(asText(a)), hsl(asText(b)));
 }
 
 /**

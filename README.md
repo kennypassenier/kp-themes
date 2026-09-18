@@ -16,7 +16,7 @@ step; and framework-free — CSS classes plus a `<script type="module">`
 that attaches behaviour to markup your own server wrote. They render the
 same class names and share the same state, so a page can mix them.
 
-Thirty-four gates run in seconds and refuse a commit that breaks them: token parity, layer
+Thirty-six gates run in seconds and refuse a commit that breaks them: token parity, layer
 discipline, the hook vocabulary, the register coverage, the shipped
 fonts, the strings dictionary, the types, whether every command, path and
 quoted message a document carries is real, and whether every generated
@@ -412,7 +412,13 @@ one module attaches the behaviour:
 **Since 3.0.0 the modules are pure**: importing `js/theme-picker.js` (or
 any other `js/*.js`) attaches nothing. `js/auto.js` is the one entry that
 does — it attaches everything on `DOMContentLoaded`, and it is what a page
-loads when it wants what 2.x did with sixteen script tags. A page that
+loads when it wants what 2.x did with sixteen script tags. After 6.1.0 it
+fetches only the modules the page carries markup for (`scope-115`): a login
+form downloads 294,139 bytes of JavaScript where it downloaded 722,686, and a
+page with every component still gets all of them. `attachAll()` is therefore
+asynchronous — the detach it returns carries `ready`, a promise that resolves
+once every needed module has attached, and `modules`, the names fetched — and
+`<html data-kp-auto-ready>` is set when the boot's attach is complete. A page that
 renders parts of itself later calls the individual functions on that
 subtree instead:
 
@@ -622,13 +628,73 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 `.fx-glitch` + `data-text`, `.fx-media`, `.fx-cellpop`, `.glow-primary`,
 `.glow-accent`, `.glow-card`, `.gradient-text`) work on any markup.
 
+## VS Code
+
+`vscode/kp-*-color-theme.json` is the same twenty-two themes as editor
+themes, generated from the same tokens by `gates/generate-vscode-themes.mjs`
+and checked in the gates chain [scope-125]. Each file sets 394 colour keys —
+the workbench, the sixteen terminal colours and the symbol icons — plus 17
+TextMate rules and 30 semantic ones, so a language server does not repaint
+the code. The code colours come from the same table as this documentation
+site's highlighter, so a snippet here and a file in the editor agree.
+
+Every release carries them as `vscode-themes.tar`. To use one:
+
+1. Unpack the asset somewhere, or take a file from `node_modules/@kp-soft/themes/vscode/`.
+2. In an extension of your own, list it under `contributes.themes` in
+   `package.json` and point `path` at the file. `research/vscode/extension/`
+   is a working example of exactly that, with KP Cyberpunk packaged as a
+   `.vsix`.
+3. Then _Preferences: Color Theme_ and pick it.
+
+What a colour theme cannot carry: the notches, the glow, the uppercase
+labels, the motion and the fonts. Every file records what it measured under
+`kpThemes.contrast`, including the pairs that sit under their floor — VS
+Code's own defaults miss the same two.
+
+## Ratatui, in Rust
+
+`tui/palette.rs` is the same twenty-two themes as Rust: a `Palette<C>` of 36
+colours, a `Role` per field so a sixteen-colour terminal can fall back, and
+`THEMES`, in the package's own order [scope-128]. It is data and nothing
+else — the anatomy a terminal needs beyond colour (border glyphs, case,
+prefixes, the cursor, the reveal) is judgement, and lives in `kp-tui`.
+
+A release attaches the file as `kp-tui-palette.rs`. A crate vendors it the
+way chassis-rs vendors the stylesheets:
+
+```sh
+curl -sSLO https://github.com/kennypassenier/kp-themes/releases/download/v7.0.0/kp-tui-palette.rs
+mv kp-tui-palette.rs src/palette.rs
+```
+
+`KP_THEMES_VERSION` in the file says which release it came from, so a
+vendored copy can say so too.
+
 ## Home Assistant
 
 `ha/kp-*.yaml` is the same twenty-two themes as Home Assistant themes,
-generated from the same token sources. Copy them into Home Assistant's
-`themes/` directory and reload; they appear under their Dutch names beside
-whatever you already have. The `kp-` prefix is there so a file called
-`dark.yaml` cannot land on top of one of yours.
+generated from the same token sources, and every release carries them as
+`ha-themes.tar`, listed in `SHA256SUMS` [scope-120]. To install:
+
+1. Make sure `configuration.yaml` loads a themes directory:
+
+    ```yaml
+    frontend:
+        themes: !include_dir_merge_named themes
+    ```
+
+2. Unpack the asset into that directory, beside the configuration:
+
+    ```sh
+    mkdir -p /config/themes && tar -xf ha-themes.tar -C /config/themes
+    ```
+
+3. Call the `frontend.reload_themes` action (Developer tools → Actions), then
+   pick a theme under your profile. They appear as "Blueprint", "Art Deco",
+   "Shade (dark)" and the rest, beside whatever you already have; the `kp-`
+   prefix on the file names is there so a file called `dark.yaml` cannot land
+   on top of one of yours.
 
 Where [card-mod](https://github.com/thomasloven/lovelace-card-mod) is
 installed they also carry the theme's own timing, so a dashboard in

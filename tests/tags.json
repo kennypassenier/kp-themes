@@ -3,6 +3,7 @@
     "levels": {
         "building": "the tags of the changed files only, firefox; a theme sweep runs on the three themes below",
         "commit": "building plus every @sweep test, firefox; a theme sweep runs on the three themes below",
+        "engines": "the commit selection in chromium and firefox, at the close of a layer and after a fix to paint, focus or the keyboard [fix-51]; a theme sweep runs on the three themes below",
         "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go; a theme sweep runs on all 22"
     },
     "sweepThemes": {
@@ -57,6 +58,8 @@
         { "path": ".githooks/**", "none": "the commit hook" },
         { "path": "reports/**", "none": "generated reports" },
         { "path": "ha/**", "none": "Home Assistant themes; no browser test loads them" },
+        { "path": "vscode/**", "none": "VS Code colour themes; no browser test loads them" },
+        { "path": "tui/**", "none": "the Rust palette kp-tui vendors; no browser test loads it" },
         { "path": "**/*.d.ts", "none": "type declarations; npm run gates checks them" },
         { "path": "LICENSE", "none": "licence text" },
         { "path": ".gitignore", "none": "repository housekeeping" },
@@ -141,6 +144,11 @@
             "tags": ["@component:button", "@component:overlays", "@component:feedback", "@component:navigation", "@component:page"]
         },
         { "path": "js/effects.js", "tags": ["@component:page-effects", "@component:media"] },
+        {
+            "path": "js/effects/*.js",
+            "tags": ["@component:page-effects", "@component:media"],
+            "why": "the hooks of js/effects.js, each in a module of its own [scope-117]"
+        },
         { "path": "js/theme-picker.js", "tags": ["@component:picker"] },
         { "path": "js/theme-core.js", "tags": ["@component:picker"] },
         { "path": "js/no-flash.js", "tags": ["@component:picker"] },
@@ -149,6 +157,7 @@
         { "path": "js/theme-registry.js", "tags": ["@sweep", "@component:picker"], "why": "generated from every theme's tokens" },
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
+        { "path": "js/as-of.js", "all": "every late module and every effects hook attaches through it [scope-117]" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },
 
         { "path": "components/alarm.jsx", "tags": ["@component:alarm"] },

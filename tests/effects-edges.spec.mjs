@@ -207,7 +207,9 @@ test.describe('a browser missing what the module likes to have [G9]', { tag: ['@
         await open(page);
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            // The rule's hook arrives after attach returns [scope-117]; the
+            // 7.0.0 verify read the paint before it had, once, in Chromium.
+            await attachEffects(document).ready;
         });
         // The paint, not the class: a rule that is never drawn is the
         // failure this covers, and it shows as a collapsed pseudo-element.
@@ -233,9 +235,12 @@ test.describe('a second attach on a page that already has one [G16]', { tag: ['@
                 return original(...args);
             };
             const { attachEffects } = await import('/js/effects.js');
+            // The caret's code arrives after attach returns [scope-117].
             const first = attachEffects(document);
+            await first.ready;
             const afterFirst = listeners;
             const second = attachEffects(document);
+            await second.ready;
             const afterSecond = listeners;
             first.detach();
             second.detach();

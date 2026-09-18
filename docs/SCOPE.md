@@ -1970,3 +1970,249 @@ go with it: nothing is carried over any more, because nothing about the reading
 depends on the moment it was taken. The whole register was read again at
 version 5 and every pair recorded as approved, on his instruction ("tag alles
 als approved en zie dat dit nooit meer terugkomt").
+
+**scope-115 · After v6.1.0: the JavaScript split, as loose modules.** Kenny,
+2026-09-17, the next-step form after the release (commit `2b49403f`).
+next-step "JavaScript-split met losse modules": the step `scope-50` named and
+`scope-92` held until the catalogue review, built as `research/loading`'s
+strategy (c), loose. `js/auto.js` asks the document which components it carries
+and imports only those modules; `dist/kp-themes.js` stays one file, because the
+consumer who imports named functions from the bundle needs all of it and hashed
+chunks would rewrite `SHA256SUMS` on every release. fix-53 "Klopt";
+step-timing "Akkoord".
+
+**scope-116 · A block's hash reads only the code that touches it.** Kenny,
+2026-09-17, the JavaScript-split form (commit `20024bb0`). review-hash, his own
+answer: "alles, dus ook js code mag alleen meetellen als het relevant is voor
+de component zelf. Enkel dingen die de component zelf raken mogen in de hash
+verwerkt worden. En er is geen enkele mogelijke piste waarbij ik alles terug ga
+reviewen." Under scope-114 one digest covered every file in `css/`, `js/` and
+`components/`, so the split — a change to the loader alone — moved all 3062
+pairs. Hash version 6 digests the code per thing a block can use: every CSS
+family (`kp-button`, `data-kp-reveal`) with the lines whose selectors name it,
+shared and per register; every component in `tests/tags.json` with its
+modules and the families those modules draw; a base of the lines that name no
+family and the dictionary; per theme its tokens. A block's hash reads its
+markup, its theme, the base, and the families and components its markup
+carries. `js/auto.js` is no input: tests/auto-lazy.spec.mjs holds that the
+loader changes no block. The register was brought to version 6 without a
+single pair going back to Kenny, because no block's code had changed.
+step-timing "Akkoord".
+
+**scope-117 · The effects split next, and the release is 7.0.0.** Kenny,
+2026-09-17, the hash-version-6 form (commit `e477efed`). next-step "Eerst de
+effects-split": `js/effects.js` is cut into a core and hooks that arrive only
+when a page or a theme asks for them, the second half of strategy (c) in
+`research/loading/`. version "7.0.0": `attachAll()` finishing after it returns
+is a break for a consumer who calls it and reads state in the same tick, and a
+break raises the major. fix-54 "Klopt"; step-timing "Akkoord".
+
+**scope-118 · The 290 pairs re-anchored; the consumers read before 7.0.0 is set.**
+Kenny, 2026-09-17, the effects-split form (commit `5439df80`). review-290 "Claude
+zet de 290 opnieuw vast": `node gates/verdicts.mjs settle` brought the 290
+component pairs to the moved code's hash (2772 already read it), and the 27
+portrait entries were read on their own pages (21 moved, for the same reason:
+they carry effects families). release "Eerst alleen de consumers doorzoeken":
+searched `~/Projects` for `attachAll(`, `attachEffects(`, `js/auto.js` and
+`js/effects.js` outside kp-themes. No consumer calls `attachAll()`. chassis-rs
+calls `attachEffects(document)` at load and again on the first caret theme, and
+reads nothing in the same tick, so it needs no `ready`; it vendors
+`static/kp/js/effects.js` and must vendor `js/effects/` and `js/as-of.js`
+beside it at its next upgrade (kyu and Almanac serve chassis-rs's copy).
+JobTracker imports React components and stylesheets from its pinned v5.0.0 and
+calls neither. The version stays 6.1.0 until the next form. fix-55 "Klopt";
+step-timing "Akkoord".
+
+**scope-119 · A task for chassis-rs first, then 7.0.0.** Kenny, 2026-09-17, the
+7.0.0 form (commit `db69a6fd`). release "Eerst een taak voor chassis-rs": no
+chassis-rs session was running, so the task lives where that session reads
+the release — MIGRATION.md, "Task for chassis-rs, at its kp-themes 7.0.0
+upgrade": ten files to bake, their `ASSETS` entries, its closure test taught
+`import()`, and a browser measurement. Writing it found fix-56: this
+repository's own record of what chassis-rs bakes still said six modules,
+while chassis-rs has baked `js/effects.js` since kp-themes 5.0.0. Then 7.0.0 is
+set up as chosen before. step-timing "Akkoord".
+
+**scope-120 · Home Assistant ships as a release asset; Jellyfin and Ratatui are researched first.**
+Kenny, 2026-09-17, the form after 7.0.0 was set up. ha-publish "Release-bestand
+ha-themes.tar in 7.0.0": the 22 `ha/kp-*.yaml` join `SHA256SUMS`, the release
+workflow attaches `ha-themes.tar` (ten assets), `consumer.tar` leaves them out,
+and the README gives three install steps. HACS was not taken: it needs a
+`themes/` directory at a repository's root, which here holds the tokens.
+jellyfin "Eerst onderzoek" and ratatui "Eerst een Ratatui-onderzoek": the
+researcher agent builds `research/jellyfin/` (a local container, nothing on the
+media stack) and `research/ratatui/` (a demo app with three themes and four
+widgets) before anything is decided. step-timing "Akkoord".
+
+**scope-121 · No 7.0.0 yet; Kenny runs the Ratatui demo; Jellyfin as one theme in place of the third-party one.**
+Kenny, 2026-09-17, the 7.0.0 release form. release "Nog geen release": 7.0.0
+stays on round-six, verified green on `2005f24e`. ratatui "Kenny bekijkt eerst
+de demo": `research/ratatui/` is in the repository and Kenny runs
+`cargo run` in `research/ratatui/demo` before anything is decided. jellyfin,
+his own answer: "is er geen andere manier? Momenteel is er toch al een 3d party
+jellyfin thema actief? hoe zouden we dat bv kunnen vervangen door één van onze
+thema's? … als het enkel 1 thema wordt dan kan ik daarmee leven". One theme is
+enough, switching is optional. Which third-party theme is active and which
+Jellyfin runs is recorded nowhere on this machine (searched `ansible/`,
+`homelab/`, `stacks/`), so reading them needs his permission for the media
+stack. fix-56 was not answered in that form and is asked again.
+step-timing "Akkoord".
+
+**scope-122 · Jellyfin in dark on Kenny's 10.11.11; a live Ratatui dashboard; a VS Code theme from cyberpunk.**
+Kenny, 2026-09-17, the Jellyfin form. jellyfin-read "Claude leest": two
+unauthenticated GETs on the media stack's Jellyfin read Jellyfin **10.11.11** and a Custom
+CSS of the intro-skipper import, the ElegantFin import, `--skip-hide-duration:
+8s` and the ActorPlus badge rules. 10.11 has none of Jellyfin 12's variables, so
+the dark file is researched against that version: ElegantFin re-pointed at
+dark's tokens, or a standalone file (`research/jellyfin-dark/`). jellyfin-theme
+"dark". fix-56 "Klopt". His remarks: the Ratatui demo is "wel maar wat mager" —
+he wants real data in charts, machine stats and logs streaming with colours for
+timestamps and severity (added to `research/ratatui/demo`); and a VS Code theme
+from the themes, a demo on cyberpunk (`research/vscode/`). step-timing "Akkoord".
+
+**scope-123 · The research form: the demos first, bolder Ratatui buttons, the tracer fixed.**
+Kenny, 2026-09-17, the research form. jellyfin-paste, his own answer: "eerst de
+demo, geef een klikbare link" — nothing is pasted into Jellyfin until he has seen
+the jellyfin-dark demo on the review site. ratatui-next, his own answer: the
+dashboard "ziet er al veel beter uit", but the buttons are "wat zwak" — he
+expected bolder, especially from a theme as stylistic as cyberpunk, and asks
+whether the geometry of the buttons themselves can carry it. vscode-next, his own
+answer: he installs KP Cyberpunk himself and wants the steps. vscode-choices
+"Klopt": types on `--chart-4`, function names in the plain text colour in 13
+themes, ANSI colours by nearest hue, and the three pairs under their floor all
+stand. fix-58 "Klopt". code-colour, his own answer: "wat verandert er exact of wat
+heb je nodig? waarvoor nieuwe tokens bv? ik snap het probleem niet goed" — the
+remedy goes to a deep-dive form before anything is built. fix-57 "Klopt": the
+tracer is fixed in dev-procedure (HOOK_VERSION=5), synced to the 16 projects and
+their caches cleared. step-timing "Akkoord".
+
+**scope-124 · The code inks stand, and they ship in 7.0.0.**
+Kenny, 2026-09-17, the code-colours form. code-colours "Klopt": the 44 inks stay
+as computed — the theme's own chart hue and saturation, the lightness moved only
+where the colour did not read, which was ten of them. fix-59 "Klopt": the gates
+measure the way the browser paints, through one shared `paintedContrast()`.
+code-version "Alles in 7.0.0": the two tokens ride in 7.0.0 rather than a 7.1.0
+after it, because 7.0.0 is prepared but not released and one upgrade is less work
+for a consumer than two; `npm run verify` runs again when Kenny asks for the
+release. ratatui-buttons "Akkoord": a button is a filled plate with its label
+centred, the edge from the theme's radius, and the two crates are built on that
+shape when they come. step-timing "Akkoord".
+
+**scope-125 · The VS Code themes ship with the package.**
+Kenny, 2026-09-17: "de crates en vscode en jellyfin … dan pas release 7.0.0".
+The generator moved from `research/vscode/generate.mjs` to
+`gates/generate-vscode-themes.mjs` and writes `vscode/kp-<theme>-color-theme.json`
+for all 22, beside `ha/`. It runs in the gates chain with `--check`, like the
+Home Assistant themes; the files are in the manifest, exported as `./vscode/*`,
+kept out of `consumer.tar` and attached to a release as `vscode-themes.tar`, the
+eleventh asset. The research demo and the packaged extension read the same
+generated files instead of a second copy.
+
+**scope-126 · One "Research to look at" group, not one per topic.**
+Kenny, 2026-09-17, on the navigation: three groups with that same heading stood
+side by side, one per research topic. "Zie gewoon dat het niet meer gebeurt en
+zet ze in (liefst dezelfde) Archived research." The three demos of that day moved
+to `Archived research`, the empty group stays as the single place a new demo
+joins, and `catalogue/pages.js` says so where the group is declared.
+
+**scope-127 · The Ratatui demo carries all twenty-two themes, and a fourth reveal.**
+Kenny, 2026-09-17, the crates form. anatomy-review "Claude bouwt het in, Kenny
+kijkt in de demo": the nineteen proposed rows are built in, and the judgement
+happens in the running demo rather than on 247 fields of paper. `ThemeId` became
+an index into `themes/order.json` and the build script generates every palette,
+so a new theme is one line there and one row in `anatomy.rs`. reveal-words
+"Words toevoegen": `Reveal::Words { ms, stagger_ms }` carries the
+`--kp-word-stagger` six registers declare — dark and titanium 28 ms, phantom 28,
+brutalism 60, shade-light 70, shade-dark 90 — which `Arrive` had thrown away.
+tab-divider "Het streepje": fourteen themes take `" │ "`, the five that draw
+their tabs as plates keep two spaces. crates-shape "Een eigen repository kp-tui":
+the two crates live in `~/Projects/kp-tui`, and kp-themes ships the generated
+palette the way it ships `ha/` and `vscode/`. fix-60 "Klopt". jellyfin-paste, his
+own answer: "jij hebt elegantfin geïnstalleerd, jij kan dit thema ook
+installeren" — which is a misreading Claude corrected: it made two unauthenticated
+GETs and never wrote anything; the ElegantFin import was already in the field.
+Writing Branding needs an admin credential, so the next form asks for an API key.
+step-timing "Akkoord", with a request for VS Code install instructions.
+
+**scope-128 · kp-themes generates the Rust palette; kp-tui vendors it.**
+Kenny, 2026-09-17, the install form. kp-tui-start "Het onderzoek is de scope":
+`~/Projects/kp-tui` started from `research/ratatui/README.md` and
+`ANATOMY_PROPOSAL.md` instead of a fresh Phase 0, because the research had
+answered a scope round's questions with measurements. This repository's half is
+`gates/generate-tui-palette.mjs`, which writes `tui/palette.rs`: 22 themes, 36
+colours each, a `Role` per field for a sixteen-colour terminal, and
+`KP_THEMES_VERSION`. It runs in the gates chain with `--check` like `ha/` and
+`vscode/`, is exported as `./tui/*`, stays out of `consumer.tar`, and is attached
+to a release as `kp-tui-palette.rs`, the twelfth asset. kp-tui copies that file
+rather than depending on this package: a Rust binary that needs a node_modules
+beside it breaks on the machine that has none. vscode-install "Kenny installeert
+de vsix". anatomy-demo "Toon mij dit": Claude sent the 22 themes as a rendered
+page. jellyfin-install was not answered and is asked again. step-timing "Akkoord".
+
+**scope-129 · dark is on the Jellyfin, and the widgets move in one go.**
+Kenny, 2026-09-17, the widgets form. jellyfin-install, his own answer: the key was
+issued long ago and Claude should look it up instead of asking again — "onthoud nu
+is fucking globaal die sleutels, ik neem de risico's op mij". It was in his central
+memory store since 2026-08-11 (`~/.config/jellyfin/api.token`, recorded in
+`home-network-services`), and that memory's own rule had said "do not go looking
+for one on disk", which is what produced the second ask. The rule is rewritten:
+look first, ask only when there is none. Claude then read the branding
+configuration, kept it as a backup beside the token, wrote the 21,096-byte paste,
+and read it back byte-identical (sha256 `1ae89030…`). Checked live in the browser:
+the grid, the near-white primary plate with dark ink, `border-radius: 0` with the
+8.18px chamfer, ElegantFin gone. widgets-first "Alles in een keer": the dashboard
+moves to kp-tui with the base widgets rather than after them. anatomy-demo
+"Akkoord": the 22 anatomy rows stand. step-timing "Akkoord".
+
+**scope-130 · The effects carry the theme, and two gaps come back to the web.**
+2026-09-17, the effects form. fx-rows "Klopt": the 22 anatomy rows stand —
+eleven registers carry a texture a cell grid can hold, one (cyberpunk)
+declares a sweep, seventeen say in a comment that nothing loops, and the
+texture is painted at 4.5 % where the register writes 6 % because a cell row
+is fourteen pixels where the CSS line is one. kp-themes-effects "Allebei
+opnemen": the two gaps the homelab inventory found in this package — a log
+line with severities, and a colour derived from a source's name — are queued
+as `gap-14` and `gap-15`, after 7.0.0. kp-tui-remote "Claude maakt een
+publieke repository": kp-tui is pushed to GitHub as a public repository.
+next-step "De resterende componenten in kp-tui": the selection style, the
+stepper and the command palette come before the release. step-timing
+"Akkoord".
+
+**scope-131 · CI on the public crate, and one of homelab's screens rebuilt on it.**
+2026-09-18, the components form. components-done "Klopt": the three last
+widgets stand — `SelectList` on a Selection row measured across the 22
+registers, `Stepper`, and a `CommandPalette` that matches a subsequence.
+kp-tui-ci "Claude zet er een workflow op": fmt, clippy with warnings as
+errors and the workspace tests run on every push to `main`; the first run
+(35371069743) was green in 33 seconds. next-step "Een Homelab-scherm
+nabouwen als proef": `client/src/tui/view/stacks.rs` rebuilt as
+`--screen fleet`, 183 lines against homelab's 177 with 0 theme constants
+against 34 and 22 themes against one. It found three gaps — a state dot
+and a tag, a facts list, a themed table — 103 of those 183 lines, all
+three components the web package already has. step-timing "Akkoord".
+
+**scope-132 · The three gaps closed, and the first step of the cool factor.**
+2026-09-18, the proof form. next-step "De drie gaten dichten": `Badge`,
+`Facts` and `DataTable` are built, each measured across the 22 registers —
+six plate a table header, sixteen leave it transparent, and synthwave's
+`--kp-stripe` is ramped cell by cell from `--primary` to `--accent`. The
+fleet screen is rebuilt on them: 169 lines against 183, none of them
+hand-chosen style where 103 were. step-timing "Akkoord". Kenny's remark
+opened a new thread: *"Ik mis nog wel een high-tech vibe … Het moet
+zeer bruikbaar zijn, maar er ook gewoon fucking cool uitzien."* Two answers
+shipped in the same step — `Spark`, a braille chart at twelve levels in
+three rows, and depth under an overlay (a scrim on the page behind it and a
+shadow beside it). The rest of the cool-factor list goes to Kenny in a form.
+
+**scope-133 · All five cool-factor moves, and the ink that can be read.**
+2026-09-18, the cool-factor form. gaps-closed "Klopt". cool-factor: all
+five ticked — `Stage` (the package's 240/520/480/300 beats), `Rail` (a
+ramp for the three registers that paint a gradient onto a rule), HUD
+corners (for the eight that cut corners five times or more), `roll` (a
+number eased to its reading), and braille on the dashboard's charts and
+eighths in the meter. release-timing "Na de cool-factor stappen".
+step-timing "Akkoord". Kenny's remark on the same form found a fault:
+synthwave's state words read at 1.19:1 — 43 of the 66 state/card pairs in
+the set were under 4.5:1, because a plate colour was being painted as an
+ink. Recorded as kp-tui `fix-1`, with `Theme::ink` and a test over 22
+themes as the measure.

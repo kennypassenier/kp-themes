@@ -434,7 +434,9 @@ test('AR28: the vendored modules import nothing outside themselves', () => {
         [...reached.keys()].filter((file) => !VENDORED.includes(file)),
         [],
     );
-    assert.equal(VENDORED.length, 6);
+    // Six until fix-56: chassis-rs bakes js/effects.js too, and since
+    // scope-117 the eleven files it takes to run.
+    assert.equal(VENDORED.length, 17);
 });
 
 test('AR28: the closure walk reads an import it must not miss', () => {
@@ -895,6 +897,9 @@ test('AR39: a stylesheet url() is a reference the manifest walk follows; a data:
         '../fonts/x/400.woff2',
     ]);
     assert.deepEqual(references("import { a } from './b.js';"), ['./b.js']);
+    // A module fetched when asked for is a file the consumer copies too
+    // [scope-117]: js/effects.js's hooks were invisible to this walk.
+    assert.deepEqual(references("const load = () => import('./effects/headline.js');"), ['./effects/headline.js']);
 });
 
 test('AR40: a keyframe without a TIMINGS row fails; a row whose opacity steps drift fails; a matching row passes', () => {
@@ -927,7 +932,7 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
 
 // ── The consumer tarball [CF1, 2026-09-09] ───────────────────────────────
 
-test('CF1: the tarball is the manifest minus the fonts and the source maps', async () => {
+test('CF1: the tarball is the manifest minus the fonts, the source maps, the Home Assistant themes and the VS Code themes', async () => {
     // The point of building it from SHA256SUMS is that its contents cannot
     // go stale. This holds the two exclusions and nothing else, so a file
     // can never fall out of the tarball by being forgotten — only by
@@ -941,7 +946,14 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     // here [fix-3].
     const { checksums } = await import('./checksums.mjs');
     const files = contents(checksums());
-    assert.equal(EXCLUDED.length, 2, 'the exclusions are fonts/ and *.map, and adding a third is a decision');
+    // The third exclusion was that decision: ha/ ships as ha-themes.tar
+    // [scope-120]; the fourth is vscode/, as vscode-themes.tar [scope-125].
+    // Neither is a stylesheet a page serves, and a web consumer unpacking
+    // the tarball has no use for either.
+    assert.equal(EXCLUDED.length, 5, 'the exclusions are fonts/, *.map, ha/, vscode/ and tui/, and adding a sixth is a decision');
+    assert.ok(!files.some((f) => f.startsWith('ha/')), 'the Home Assistant themes ship as their own asset');
+    assert.ok(!files.some((f) => f.startsWith('vscode/')), 'the VS Code themes ship as their own asset');
+    assert.ok(!files.some((f) => f.startsWith('tui/')), 'the Rust palette is vendored by kp-tui, not served by a page');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
     assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');
@@ -1354,6 +1366,25 @@ test('a register edit selects its theme, and the commit level adds every sweep [
     const comment = select([{ file: 'css/dark-register.css', before, after: `/* note */\n${before}`, diff: '@@ -0,0 +1 @@' }]);
     assert.equal(grepFor(comment, 'building'), '', 'a comment-only register edit selected tests');
     assert.equal(grepFor(comment, 'release'), null, 'the release level is not every test');
+});
+
+test('the engines level is the commit selection in both engines, on the narrow themes [fix-51]', async () => {
+    const { grepFor, select } = await import('./tags.mjs');
+    const { parse, playwrightArgs, envFor } = await import('./run-tags.mjs');
+    // The release run of 6.1.0 found eighteen tests red that only Chromium
+    // saw: building and commit pass --project=firefox, and nothing between
+    // them and the release asked the other engine.
+    const before = "[data-theme='dark'] .kp-button {\n    color: red;\n}\n";
+    const sel = select([{ file: 'css/dark-register.css', before, after: before.replace('red', 'blue'), diff: '@@ -2 +2 @@' }]);
+    assert.equal(parse(['--level', 'engines']).level, 'engines');
+    assert.equal(grepFor(sel, 'engines'), grepFor(sel, 'commit'), 'the engines level selects what the commit level selects');
+    const args = playwrightArgs('engines', grepFor(sel, 'engines'));
+    assert.ok(args && !args.some((a) => a.startsWith('--project')), 'the engines level is held to one engine');
+    assert.deepEqual(
+        playwrightArgs('commit', null)?.filter((a) => a.startsWith('--project')),
+        ['--project=firefox'],
+    );
+    assert.equal(envFor('engines').KP_SWEEP_THEMES, 'formal,dark,cyberpunk', 'the engines level widens the theme sweeps');
 });
 
 test('the tag gate refuses an untagged test, an unknown tag, a theme walk without @sweep and an unmapped file [scope-33]', async () => {

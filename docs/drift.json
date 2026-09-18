@@ -19,10 +19,10 @@
                 "css/tailwind-bridge.css",
                 "gates/generate-ha-themes.mjs"
             ],
-            "hash": "f332c636ce256f9113e86b7e6cb93732e1aca43e2a68bf9ba983c5c3f84e41d9",
-            "doc": "55533585e059817d6b97117d253942a64b155bbe266ac380256578f42b78afbb",
+            "hash": "c613bcf7fbd9671b1fdcc079d1468c48f01e435fe527ee46d4cee1700ef9d96b",
+            "doc": "5bf8fd2225438eca37fff036f543e11d1a964cc14df75d28cff4a096147d18f9",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -48,7 +48,7 @@
                 "fonts/families.json": "520ea80794f69ab310ed00d1d8e3a95f883edf871ff932938245edb2af6adf2a",
                 "gates/generate-ha-themes.mjs": "3dc26149391dec23ac8cb74c7215c11c7378832574ee196ae1c86f86dd076acf",
                 "index.d.ts": "8774fff3957cde93034e92915469cf0281fb154fe87d19d161fdd165c7aa27d2",
-                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/auto.d.ts": "447748a5b97cd771d2b6c10538e17e800ea8bae93f93ddff588125a7eabc8ac1",
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
                 "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "3bba3d2707f24e30bfc3b351970416b176248995fd76ab36274f8f67d9e86285",
-            "doc": "88e244a34e9651d2bdce063316dba7a3c470e0117ed1976630e6f321da3c01b3",
+            "hash": "3fba262e5ca03ce8c8468785d58c9d7e0b24fa8705c32b22ddacca7cd3a06d06",
+            "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "263231bab28b88315f2c7cb00669f38d5c6e946e608a607b02de5ae7cab05fd6"
+                "CHANGELOG.md": "d30b2a8a867fd0bae94e10ed63c47abec04c74f07f9a5d0630bf949ce73d0fbb"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,25 +81,26 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "4bf634680fccc38512733347299b6f119461e1adaa137c37b2e4f20727ae1f31",
-            "doc": "636bd2e81d7960cd59adcde002574c8d2f4961cd2018df62dd6e119056fb40c2",
+            "hash": "5ef7ab06357c05093560519c60629cd3d93e762021188fa35feb080f677e4abe",
+            "doc": "5b43da0e51d30223c330ea2e3d2e9b565d98c4e87952ab32735877c3da9e71e2",
             "files": {
-                ".claude/hooks/gates.sh": "36586275f47229d42245f2bf2e538ec53d3a9643936ff036ece5f18aa45503d8",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
-                "gates/colour.mjs": "a937662bbb79c5125bc5eb84639f5c67c9261e498d57e7135f98a2d04988bc95",
+                "gates/colour.mjs": "1de05f5f28b8f4c1970cf3df43db8b92482a2c82de04dc833fd5bac758010cfd",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
                 "gates/generate-themes.mjs": "d4b5afbf713553bd0f39c8e82331f08deb7b7294c71bb202dfdfc34149aea052",
-                "index.js": "296e4392ccba14246f0d3ee3e0f657017941652e75c43a20c1b3ffadb0a7ca54",
+                "index.js": "ebf74027f8bec52e827be1f750302ea1aa8ef39ee558e79b273a668eecf4af58",
                 "js/alarm.d.ts": "0de3c8b777f96a86283e4bd2e15cd18968763dfad6777f0acb39839f4db4d9c3",
-                "js/auto.d.ts": "49d2506604e138d3fb473436069e9eac16cad594d09fcc38950bc76cecc70ad8",
+                "js/as-of.d.ts": "16da7b81728364aef90468d203212c78447e9b1edceb4890fdf5071579df19d4",
+                "js/auto.d.ts": "447748a5b97cd771d2b6c10538e17e800ea8bae93f93ddff588125a7eabc8ac1",
                 "js/colorpicker.d.ts": "944c7378d3a9fb8fe742cbaea5653415006f34de3b4066a250a8635493efafa7",
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
-                "js/components.d.ts": "c76498f5bdf7d287db9eec468843d8c9ed2783e3b4a5de3f91cf45f91180bb49",
+                "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
                 "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
-                "js/effects.d.ts": "4b94bd284f0f784ae328397bb4951043ebebfc7a7df4c8ff2fd3eceb893bc1c1",
+                "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",
                 "js/forms.d.ts": "758f945ddb3ed12f6a8fc560b4abe99d6c300eb22311e387a9d498e7970678c3",
                 "js/gridlayout.d.ts": "fb845e8146a65516cd1bfec4d0123c5921f3f1875f84ad77132412c43be9b59e",
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
@@ -109,13 +110,14 @@
                 "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
                 "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",
                 "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
-                "js/sidenav.d.ts": "b00bf7a173b9dbbdc284e7d48838dc99fc1eeebb807031b662af48cc29d4f5dd",
-                "js/strings.d.ts": "622284a932002bb3780b20138984e09cb2c56b6e38b9ab818a111dbc93aad31b",
+                "js/remember.d.ts": "8947c7e0e9f475497e8c978450899d25df264d9a60d54b15b2b9160fad097b27",
+                "js/sidenav.d.ts": "2269640987551034fd72c14e1de39505596f6aa0050ef51029e9cfbc8cdbcc5e",
+                "js/strings.d.ts": "09576b169dd4c2d6885a245657c3aa0aadd791335f67aa8af5ee1506066149c9",
                 "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "3c2cea67a9507c7668000cbb7905fc8221004e2333487849be7058529374ddb7",
+                "js/theme-registry.d.ts": "9d380196939f273723ad92a616c59450e16d59a01f84103c9160af64140f253d",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
@@ -131,15 +133,15 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "abf8fa62d62e1bbf7b4d2bbf5377c6336d700e7f81d03deaded3db8d06ae0f7f",
-            "doc": "7b4af9f5e77849593565a5ffe3a5da625ee7c9358eecde7aa7defb57dd21ef84",
+            "hash": "583f99383f980f870c5db8aea693650c29becfd6195910c326a913e645148393",
+            "doc": "b38cfc12d4facaa61b5b5f844a67b2e61ab945c8466a31e57756a84889ae8164",
             "files": {
-                ".claude/agents/checker.md": "db7752d4de6907d2bf6a56c29fe863e64a4ed297b14429fd4bc4e178fe041013",
+                ".claude/agents/checker.md": "cb7b158e50b0a3e09a7aca2d14fbf4ec6bf6e64943453a3393e28b6d298f9723",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
                 ".claude/agents/theme-builder.md": "9133a9851f51d927dc24b9b13182c3c0cbafd7046af161b5c274cab6aecbfe07",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                "catalogue/block-hash.js": "feeb5165bc5a0a3edfc117e5071ba60294228e8e57bcb500812f7fa7e6d4ebef",
-                "gates/run-tags.mjs": "b585a12d860edd87e5e461e46f4b25fa0386a070e6ca6f07b5da0298a0d57397",
+                "catalogue/block-hash.js": "af33bce0257a7e2ec245339ef0297034cce389cdd4fae39dfab39a46d9ef841f",
+                "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verdicts.mjs": "ad2c337f456f7a1199738199c2c4fe0ea629858b5d8ec3ac358e8ba2b85cbda5"
             }
         },
@@ -154,10 +156,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "5ee748b92d3cf87d6afd82a1f356f9b51b1c1757c7c516757005fcdd43deed03",
-            "doc": "1d01209875b434eeb4f094df55819498296f0019118218042da40378f240af87",
+            "hash": "eef7f0dbdb57f2322a96827bfabdf653cdd4bdb1f2a8125a2fa246971b5b0f8c",
+            "doc": "dc7a3769afb4145668c0ee22b73ae414707f60fed52fef7723e4ad61a4d65e76",
             "files": {
-                ".claude/hooks/gates.sh": "c025e33498f48f14cc03e732e84e023b665a63285e6c32e6d292fd880792f535",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
@@ -198,16 +200,18 @@
                 "gates/integrate-lift.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "6e3197513d381e1c070d5c447e1719f3dae62a18573367f659e26f0f4a0cfaef",
-            "doc": "f4a3f556adce1d4f8676156b2e1d1c0dd9a70548c19b652bd0bf7c57a31ad50a",
+            "hash": "ad4fc291ebfab574c6dfe2badc825bc73ba76a19a020472d249b2aede85031d7",
+            "doc": "28a3149407028eac5ee557612490d31ee6cd32023555a76b2afb86e2d67161a2",
             "files": {
-                ".claude/hooks/gates.sh": "13432d950f07ba562f088e9769f2aa2077dc5d7c81cf6c1753c3dfc0a14a6557",
-                ".githooks/check-ids.sh": "d075bb8ee6b91c880221f76751473c1b91ad65726693191e231a45c0af5c2009",
-                ".githooks/commit-msg": "354ddac65850847c211cacc9ca8bc4196922e288483c149098d5fd08323e6de4",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
+                ".githooks/check-ids.sh": "ec5484904fcfc88ee1afaca5ef756aec775a9f5df7afa6e5855b9c5fc6f99654",
+                ".githooks/commit-msg": "825b67a8bde9a8dc77ca7b3526340d67eb819d149adec126856bde9374fa4b2f",
+                ".githooks/gate-cache.sh": "0f1ec3ec548dd501439aff59bf009172a0d42b3f7a68e2bb71475d0dad4c36e9",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
+                ".githooks/trace-inputs.cjs": "ef26bd4d00e2aa30add61d2ecc4eb873dccd80c59cd6174f84055ff62875c8aa",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
-                "gates/checksums.mjs": "c71c22b26253b4abb24d2a73bb6267ec39eeb78a40783d4a2d817355831512e4",
+                ".github/workflows/release.yml": "1510964db9eb885344f23219a83ad158de6a590e5b7ec3b1dffd3794e1c19399",
+                "gates/checksums.mjs": "2872be0f14ee26b4dd012ecc383e65d4970e6df638dc2adb69764c72a816aeed",
                 "gates/integrate-lift.mjs": "31cba4f76563c2bf77771cf0817c023c48d207a67844c1f886ca26175ab7b147",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "gates/wire-register.mjs": "468293abc0f1270b637f95235e83e7d92978f28f71e7eed92b32a33401e0c1f8"
@@ -239,11 +243,11 @@
                 "gates/check-tags.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "c92b69e3f664fffcc6a86e75ecda04fa33103c15cfd166d34899aea074435e59",
-            "doc": "e37327187f71b1940555b9e86f39f182b7fd3639124b82ffab5b2507ba85fe18",
+            "hash": "12548a2fd7e8930d599b40c6471a0e003e0802104e84b2c89816c1e1489ae205",
+            "doc": "ec8a5b6b00a78b5f3d190444ad4aff52bfa27a86bc5c15cab1dbee407962f5c4",
             "files": {
                 "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
-                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
+                "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
             }

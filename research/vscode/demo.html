@@ -1,0 +1,2076 @@
+<!doctype html>
+<html lang="en" data-theme="cyberpunk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a VS Code colour theme, generated (research demo)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <script type="module" src="../../js/auto.js"></script>
+        <style>
+            /* ==================================================================
+               DEMO CHROME — every class prefixed `demo-` is page furniture and
+               every class prefixed `vsc-` is the MOCK of a VS Code window.
+               Neither is part of the package. Every `kp-` class is the package
+               as it ships.
+
+               The mock names no colour. Every paint below is var(--vsc-<key>),
+               where <key> is a VS Code colour key with its dots turned into
+               dashes; the script at the bottom copies those values out of the
+               generated theme JSON. A key the JSON does not set stays unset
+               and is listed at the top of the page.
+               ================================================================== */
+            .demo-page {
+                --kp-page-max: 100rem;
+                --kp-sidebar-width: 17rem;
+                --kp-sidebar-break: 62%;
+            }
+            .demo-switcher button[aria-pressed='true'] {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .demo-look {
+                border-inline-start: 3px solid var(--border-strong);
+                padding-inline-start: var(--kp-space-md);
+            }
+            .demo-look strong:first-child {
+                display: block;
+                margin-block-end: var(--kp-space-xs);
+            }
+            .demo-tag {
+                font-size: var(--kp-text-xs);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .demo-split {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                gap: var(--kp-space-lg);
+            }
+            .demo-swatch {
+                display: inline-block;
+                inline-size: 0.9rem;
+                block-size: 0.9rem;
+                vertical-align: -0.1rem;
+                border: 1px solid var(--border-strong);
+                margin-inline-end: 0.4rem;
+            }
+            .demo-small {
+                font-size: var(--kp-text-sm);
+            }
+
+            /* ── The mock window ───────────────────────────────────────────── */
+            .vsc {
+                --vsc-ui: system-ui, 'Segoe UI', Ubuntu, 'Droid Sans', sans-serif;
+                --vsc-mono: 'Droid Sans Mono', 'DejaVu Sans Mono', monospace;
+                position: relative;
+                display: grid;
+                grid-template-rows: 30px 1fr 22px;
+                block-size: var(--vsc-height, 44rem);
+                overflow: hidden;
+                font-family: var(--vsc-ui);
+                font-size: 13px;
+                line-height: 1.4;
+                color: var(--vsc-foreground);
+                background: var(--vsc-editor-background);
+                border: 1px solid var(--border-strong);
+                text-align: start;
+            }
+            .demo-page[data-vsc-font='kp'] .vsc {
+                --vsc-mono: var(--theme-font-mono);
+            }
+            .vsc button {
+                font: inherit;
+                color: inherit;
+                background: none;
+                border: 0;
+                padding: 0;
+            }
+            .vsc-title {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                padding-inline: 8px;
+                background: var(--vsc-titleBar-activeBackground);
+                color: var(--vsc-titleBar-activeForeground);
+                border-block-end: 1px solid var(--vsc-titleBar-border);
+                font-size: 12px;
+            }
+            .vsc-title__menus {
+                display: flex;
+                gap: 2px;
+            }
+            .vsc-title__menus span {
+                padding: 2px 7px;
+            }
+            .vsc-title__menus span.is-open {
+                background: var(--vsc-menubar-selectionBackground);
+                color: var(--vsc-menubar-selectionForeground);
+            }
+            .vsc-title__inactive {
+                color: var(--vsc-titleBar-inactiveForeground);
+                justify-self: end;
+            }
+            .vsc-command-center {
+                min-inline-size: 26rem;
+                padding: 2px 10px;
+                text-align: center;
+                background: var(--vsc-commandCenter-background);
+                color: var(--vsc-commandCenter-foreground);
+                border: 1px solid var(--vsc-commandCenter-border);
+                border-radius: 6px;
+            }
+            .vsc-body {
+                display: grid;
+                grid-template-columns: 48px var(--vsc-side, 250px) 1fr;
+                min-block-size: 0;
+            }
+            .vsc-body--noside {
+                grid-template-columns: 48px 1fr;
+            }
+            .vsc-activity {
+                display: flex;
+                flex-direction: column;
+                background: var(--vsc-activityBar-background);
+                border-inline-end: 1px solid var(--vsc-activityBar-border);
+            }
+            .vsc-activity__item {
+                position: relative;
+                display: grid;
+                place-items: center;
+                block-size: 48px;
+                color: var(--vsc-activityBar-inactiveForeground);
+            }
+            .vsc-activity__item.is-active {
+                color: var(--vsc-activityBar-foreground);
+                background: var(--vsc-activityBar-activeBackground);
+                box-shadow: inset 2px 0 0 var(--vsc-activityBar-activeBorder);
+            }
+            .vsc-activity__item svg {
+                inline-size: 24px;
+                block-size: 24px;
+            }
+            .vsc-activity__badge {
+                position: absolute;
+                inset-block-end: 8px;
+                inset-inline-end: 7px;
+                min-inline-size: 16px;
+                padding-inline: 3px;
+                border-radius: 8px;
+                font-size: 9px;
+                font-weight: 600;
+                line-height: 16px;
+                text-align: center;
+                background: var(--vsc-activityBarBadge-background);
+                color: var(--vsc-activityBarBadge-foreground);
+            }
+            .vsc-side {
+                overflow: hidden;
+                background: var(--vsc-sideBar-background);
+                color: var(--vsc-sideBar-foreground);
+                border-inline-end: 1px solid var(--vsc-sideBar-border);
+            }
+            .vsc-side__title {
+                padding: 8px 20px;
+                font-size: 11px;
+                color: var(--vsc-sideBarTitle-foreground);
+            }
+            .vsc-side__section {
+                display: flex;
+                justify-content: space-between;
+                padding: 2px 8px;
+                font-size: 11px;
+                font-weight: 700;
+                background: var(--vsc-sideBarSectionHeader-background);
+                color: var(--vsc-sideBarSectionHeader-foreground);
+                border-block-start: 1px solid var(--vsc-sideBarSectionHeader-border);
+            }
+            .vsc-count {
+                min-inline-size: 18px;
+                padding-inline: 5px;
+                border-radius: 9px;
+                font-size: 11px;
+                font-weight: 400;
+                text-align: center;
+                background: var(--vsc-badge-background);
+                color: var(--vsc-badge-foreground);
+            }
+            .vsc-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                block-size: 22px;
+                padding-inline-start: calc(8px + var(--d, 0) * 12px);
+                padding-inline-end: 12px;
+                white-space: nowrap;
+                background-image: repeating-linear-gradient(
+                    to right,
+                    transparent 0 calc(15px),
+                    var(--vsc-tree-indentGuidesStroke) 15px 16px,
+                    transparent 16px 12px
+                );
+                background-size: calc(var(--d, 0) * 12px + 4px) 100%;
+                background-repeat: no-repeat;
+            }
+            .vsc-row.is-selected {
+                background-color: var(--vsc-list-activeSelectionBackground);
+                color: var(--vsc-list-activeSelectionForeground);
+                outline: 1px solid var(--vsc-list-focusOutline);
+                outline-offset: -1px;
+            }
+            .vsc-row.is-hover {
+                background-color: var(--vsc-list-hoverBackground);
+                color: var(--vsc-list-hoverForeground);
+            }
+            .vsc-row.is-inactive-selected {
+                background-color: var(--vsc-list-inactiveSelectionBackground);
+                color: var(--vsc-list-inactiveSelectionForeground);
+            }
+            .vsc-row__name {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .vsc-row__twisty {
+                inline-size: 10px;
+                color: var(--vsc-icon-foreground);
+            }
+            .vsc-row__letter {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .vsc-git-added {
+                color: var(--vsc-gitDecoration-addedResourceForeground);
+            }
+            .vsc-git-untracked {
+                color: var(--vsc-gitDecoration-untrackedResourceForeground);
+            }
+            .vsc-git-modified {
+                color: var(--vsc-gitDecoration-modifiedResourceForeground);
+            }
+            .vsc-git-deleted {
+                color: var(--vsc-gitDecoration-deletedResourceForeground);
+                text-decoration: line-through;
+            }
+            .vsc-git-ignored {
+                color: var(--vsc-gitDecoration-ignoredResourceForeground);
+            }
+            .vsc-git-conflict {
+                color: var(--vsc-gitDecoration-conflictingResourceForeground);
+            }
+            .vsc-row .vsc-hl {
+                color: var(--vsc-list-highlightForeground);
+                font-weight: 600;
+            }
+            .vsc-main {
+                display: grid;
+                grid-template-rows: 35px 22px 1fr var(--vsc-panel, 0px);
+                min-inline-size: 0;
+                min-block-size: 0;
+            }
+            .vsc-main--panel {
+                --vsc-panel: 282px;
+            }
+            .vsc-tabs {
+                display: flex;
+                background: var(--vsc-editorGroupHeader-tabsBackground);
+                border-block-end: 1px solid var(--vsc-editorGroupHeader-tabsBorder);
+            }
+            .vsc-tab {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-inline: 12px;
+                white-space: nowrap;
+                background: var(--vsc-tab-inactiveBackground);
+                color: var(--vsc-tab-inactiveForeground);
+                border-inline-end: 1px solid var(--vsc-tab-border);
+            }
+            .vsc-tab.is-active {
+                background: var(--vsc-tab-activeBackground);
+                color: var(--vsc-tab-activeForeground);
+                box-shadow: inset 0 1px 0 var(--vsc-tab-activeBorderTop);
+                margin-block-end: -1px;
+            }
+            .vsc-tab.is-hover {
+                background: var(--vsc-tab-hoverBackground);
+                color: var(--vsc-tab-hoverForeground);
+            }
+            .vsc-tab__dot {
+                inline-size: 8px;
+                block-size: 8px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+            .vsc-breadcrumbs {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                padding-inline: 14px;
+                font-size: 12px;
+                color: var(--vsc-breadcrumb-foreground);
+                background: var(--vsc-editor-background);
+            }
+            .vsc-breadcrumbs .is-focus {
+                color: var(--vsc-breadcrumb-focusForeground);
+            }
+            .vsc-editor {
+                position: relative;
+                overflow: hidden;
+                background: var(--vsc-editor-background);
+            }
+            .vsc-code,
+            .vsc-term,
+            .vsc pre {
+                /* The package styles a bare <pre>; the mock's are the editor's own. */
+                background: none;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .vsc-code {
+                margin: 0;
+                padding-block: 4px;
+                font-family: var(--vsc-mono);
+                font-size: 13px;
+                line-height: 19px;
+                white-space: pre;
+                color: var(--vsc-editor-foreground);
+            }
+            .vsc-line {
+                display: grid;
+                grid-template-columns: 50px 4px 14px 1fr;
+            }
+            .vsc-ln {
+                text-align: end;
+                color: var(--vsc-editorLineNumber-foreground);
+                background: var(--vsc-editorGutter-background);
+            }
+            .vsc-line.is-current .vsc-ln {
+                color: var(--vsc-editorLineNumber-activeForeground);
+            }
+            .vsc-line.is-current .vsc-text {
+                background: var(--vsc-editor-lineHighlightBackground);
+            }
+            .vsc-gm.added {
+                background: var(--vsc-editorGutter-addedBackground);
+            }
+            .vsc-gm.modified {
+                background: var(--vsc-editorGutter-modifiedBackground);
+            }
+            .vsc-gm.deleted {
+                background: linear-gradient(to bottom, transparent 70%, var(--vsc-editorGutter-deletedBackground) 70%);
+            }
+            .vsc-text .ig {
+                box-shadow: inset 1px 0 0 var(--vsc-editorIndentGuide-background1);
+            }
+            .vsc-text .ig-active {
+                box-shadow: inset 1px 0 0 var(--vsc-editorIndentGuide-activeBackground1);
+            }
+            .vsc-text .sel {
+                background: var(--vsc-editor-selectionBackground);
+            }
+            .vsc-text .find {
+                background: var(--vsc-editor-findMatchBackground);
+                outline: 1px solid var(--vsc-editor-findMatchBorder);
+            }
+            .vsc-text .findhi {
+                background: var(--vsc-editor-findMatchHighlightBackground);
+            }
+            .vsc-text .err {
+                text-decoration: wavy underline var(--vsc-editorError-foreground);
+                text-decoration-skip-ink: none;
+            }
+            .vsc-text .warn {
+                text-decoration: wavy underline var(--vsc-editorWarning-foreground);
+                text-decoration-skip-ink: none;
+            }
+            .vsc-text .bm {
+                background: var(--vsc-editorBracketMatch-background);
+                outline: 1px solid var(--vsc-editorBracketMatch-border);
+                outline-offset: -1px;
+            }
+            .vsc-cursor {
+                display: inline-block;
+                inline-size: 2px;
+                block-size: 19px;
+                margin-inline-end: -2px;
+                vertical-align: top;
+                background: var(--vsc-editorCursor-foreground);
+            }
+            .vsc-inlay {
+                padding-inline: 3px;
+                border-radius: 3px;
+                font-size: 12px;
+                background: var(--vsc-editorInlayHint-background);
+                color: var(--vsc-editorInlayHint-foreground);
+            }
+            .vsc-ruler {
+                position: absolute;
+                inset-block: 0;
+                inset-inline-end: 0;
+                inline-size: 14px;
+                border-inline-start: 1px solid var(--vsc-editorOverviewRuler-border);
+            }
+            .vsc-ruler i {
+                position: absolute;
+                inset-inline: 2px;
+                block-size: 3px;
+                top: var(--at);
+            }
+            .vsc-ruler .r-err {
+                background: var(--vsc-editorOverviewRuler-errorForeground);
+            }
+            .vsc-ruler .r-warn {
+                background: var(--vsc-editorOverviewRuler-warningForeground);
+            }
+            .vsc-ruler .r-mod {
+                background: var(--vsc-editorOverviewRuler-modifiedForeground);
+            }
+            .vsc-ruler .r-add {
+                background: var(--vsc-editorOverviewRuler-addedForeground);
+            }
+            .vsc-ruler .r-find {
+                background: var(--vsc-editorOverviewRuler-findMatchForeground);
+            }
+            .vsc-ruler .r-slider {
+                inset-inline: 0;
+                block-size: 38%;
+                background: var(--vsc-scrollbarSlider-background);
+            }
+            .vsc-panel {
+                display: grid;
+                grid-template-rows: 35px 1fr;
+                min-block-size: 0;
+                background: var(--vsc-panel-background);
+                border-block-start: 1px solid var(--vsc-panel-border);
+            }
+            .vsc-panel__tabs {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+                padding-inline: 12px;
+                font-size: 11px;
+                letter-spacing: 0.04em;
+                color: var(--vsc-panelTitle-inactiveForeground);
+            }
+            .vsc-panel__tabs .is-active {
+                color: var(--vsc-panelTitle-activeForeground);
+                box-shadow: 0 1px 0 var(--vsc-panelTitle-activeBorder);
+                padding-block: 4px;
+            }
+            .vsc-term {
+                margin: 0;
+                padding: 2px 20px;
+                overflow: hidden;
+                font-family: var(--vsc-mono);
+                font-size: 12.5px;
+                line-height: 17px;
+                white-space: pre;
+                background: var(--vsc-terminal-background);
+                color: var(--vsc-terminal-foreground);
+            }
+            .vsc-term .b {
+                font-weight: 700;
+            }
+            .vsc-term .k0 {
+                color: var(--vsc-terminal-ansiBlack);
+            }
+            .vsc-term .k1 {
+                color: var(--vsc-terminal-ansiRed);
+            }
+            .vsc-term .k2 {
+                color: var(--vsc-terminal-ansiGreen);
+            }
+            .vsc-term .k3 {
+                color: var(--vsc-terminal-ansiYellow);
+            }
+            .vsc-term .k4 {
+                color: var(--vsc-terminal-ansiBlue);
+            }
+            .vsc-term .k5 {
+                color: var(--vsc-terminal-ansiMagenta);
+            }
+            .vsc-term .k6 {
+                color: var(--vsc-terminal-ansiCyan);
+            }
+            .vsc-term .k7 {
+                color: var(--vsc-terminal-ansiWhite);
+            }
+            .vsc-term .k8 {
+                color: var(--vsc-terminal-ansiBrightBlack);
+            }
+            .vsc-term .k9 {
+                color: var(--vsc-terminal-ansiBrightRed);
+            }
+            .vsc-term .k10 {
+                color: var(--vsc-terminal-ansiBrightGreen);
+            }
+            .vsc-term .k11 {
+                color: var(--vsc-terminal-ansiBrightYellow);
+            }
+            .vsc-term .k12 {
+                color: var(--vsc-terminal-ansiBrightBlue);
+            }
+            .vsc-term .k13 {
+                color: var(--vsc-terminal-ansiBrightMagenta);
+            }
+            .vsc-term .k14 {
+                color: var(--vsc-terminal-ansiBrightCyan);
+            }
+            .vsc-term .k15 {
+                color: var(--vsc-terminal-ansiBrightWhite);
+            }
+            .vsc-term .s0 {
+                background: var(--vsc-terminal-ansiBlack);
+            }
+            .vsc-term .s1 {
+                background: var(--vsc-terminal-ansiRed);
+            }
+            .vsc-term .s2 {
+                background: var(--vsc-terminal-ansiGreen);
+            }
+            .vsc-term .s3 {
+                background: var(--vsc-terminal-ansiYellow);
+            }
+            .vsc-term .s4 {
+                background: var(--vsc-terminal-ansiBlue);
+            }
+            .vsc-term .s5 {
+                background: var(--vsc-terminal-ansiMagenta);
+            }
+            .vsc-term .s6 {
+                background: var(--vsc-terminal-ansiCyan);
+            }
+            .vsc-term .s7 {
+                background: var(--vsc-terminal-ansiWhite);
+            }
+            .vsc-term .s8 {
+                background: var(--vsc-terminal-ansiBrightBlack);
+            }
+            .vsc-term .s9 {
+                background: var(--vsc-terminal-ansiBrightRed);
+            }
+            .vsc-term .s10 {
+                background: var(--vsc-terminal-ansiBrightGreen);
+            }
+            .vsc-term .s11 {
+                background: var(--vsc-terminal-ansiBrightYellow);
+            }
+            .vsc-term .s12 {
+                background: var(--vsc-terminal-ansiBrightBlue);
+            }
+            .vsc-term .s13 {
+                background: var(--vsc-terminal-ansiBrightMagenta);
+            }
+            .vsc-term .s14 {
+                background: var(--vsc-terminal-ansiBrightCyan);
+            }
+            .vsc-term .s15 {
+                background: var(--vsc-terminal-ansiBrightWhite);
+            }
+            .vsc-term .tcur {
+                background: var(--vsc-terminalCursor-foreground);
+            }
+            .vsc-term .tsel {
+                background: var(--vsc-terminal-selectionBackground);
+            }
+            .vsc-status {
+                display: flex;
+                align-items: stretch;
+                font-size: 12px;
+                background: var(--vsc-statusBar-background);
+                color: var(--vsc-statusBar-foreground);
+                border-block-start: 1px solid var(--vsc-statusBar-border);
+            }
+            .vsc-status > span {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding-inline: 8px;
+                white-space: nowrap;
+            }
+            .vsc-status .push {
+                margin-inline-start: auto;
+            }
+            .vsc-status .remote {
+                background: var(--vsc-statusBarItem-remoteBackground);
+                color: var(--vsc-statusBarItem-remoteForeground);
+            }
+            .vsc-status .hover {
+                background: var(--vsc-statusBarItem-hoverBackground);
+                color: var(--vsc-statusBarItem-hoverForeground);
+            }
+            .vsc-status .error {
+                background: var(--vsc-statusBarItem-errorBackground);
+                color: var(--vsc-statusBarItem-errorForeground);
+            }
+            .vsc-status .warning {
+                background: var(--vsc-statusBarItem-warningBackground);
+                color: var(--vsc-statusBarItem-warningForeground);
+            }
+
+            /* Widgets that open */
+            .vsc-widget {
+                position: absolute;
+                z-index: 2;
+                font-size: 13px;
+                background: var(--vsc-editorWidget-background);
+                color: var(--vsc-editorWidget-foreground);
+                border: 1px solid var(--vsc-editorWidget-border);
+                box-shadow: 0 0 8px 2px var(--vsc-widget-shadow);
+            }
+            .vsc-suggest {
+                display: grid;
+                grid-template-columns: 300px 260px;
+                background: var(--vsc-editorSuggestWidget-background);
+                color: var(--vsc-editorSuggestWidget-foreground);
+                border-color: var(--vsc-editorSuggestWidget-border);
+                font-family: var(--vsc-mono);
+            }
+            .vsc-suggest ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .vsc-suggest li {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                padding: 1px 6px;
+                line-height: 22px;
+            }
+            .vsc-suggest li.is-focused {
+                background: var(--vsc-editorSuggestWidget-selectedBackground);
+                color: var(--vsc-editorSuggestWidget-selectedForeground);
+                outline: 1px solid var(--vsc-list-focusOutline);
+                outline-offset: -1px;
+            }
+            .vsc-suggest li b {
+                color: var(--vsc-editorSuggestWidget-highlightForeground);
+            }
+            .vsc-suggest li.is-focused b {
+                color: var(--vsc-editorSuggestWidget-focusHighlightForeground);
+            }
+            .vsc-suggest__detail {
+                padding: 6px 10px;
+                border-inline-start: 1px solid var(--vsc-editorSuggestWidget-border);
+                font-family: var(--vsc-ui);
+            }
+            .vsc-sym-method {
+                color: var(--vsc-symbolIcon-methodForeground);
+            }
+            .vsc-sym-field {
+                color: var(--vsc-symbolIcon-fieldForeground);
+            }
+            .vsc-sym-class {
+                color: var(--vsc-symbolIcon-classForeground);
+            }
+            .vsc-sym-constant {
+                color: var(--vsc-symbolIcon-constantForeground);
+            }
+            .vsc-hover {
+                max-inline-size: 460px;
+                background: var(--vsc-editorHoverWidget-background);
+                color: var(--vsc-editorHoverWidget-foreground);
+                border-color: var(--vsc-editorHoverWidget-border);
+            }
+            .vsc-hover > * {
+                margin: 0;
+                padding: 6px 10px;
+            }
+            .vsc-hover > * + * {
+                border-block-start: 1px solid var(--vsc-editorHoverWidget-border);
+            }
+            .vsc-hover pre {
+                font-family: var(--vsc-mono);
+                white-space: pre-wrap;
+            }
+            .vsc-hover .vsc-link {
+                color: var(--vsc-textLink-foreground);
+            }
+            .vsc-hover .problem {
+                color: var(--vsc-editorError-foreground);
+            }
+            .vsc-quick {
+                inset-block-start: 6px;
+                inset-inline-start: 50%;
+                inline-size: 560px;
+                translate: -50% 0;
+                padding: 6px 0;
+                border-radius: 12px;
+                background: var(--vsc-quickInput-background);
+                color: var(--vsc-quickInput-foreground);
+                border-color: var(--vsc-widget-border);
+            }
+            .vsc-quick__input {
+                margin: 0 6px 6px;
+                padding: 3px 6px;
+                background: var(--vsc-input-background);
+                color: var(--vsc-input-placeholderForeground);
+                border: 1px solid var(--vsc-focusBorder);
+            }
+            .vsc-quick__row {
+                display: flex;
+                justify-content: space-between;
+                padding: 0 11px;
+                line-height: 22px;
+            }
+            .vsc-quick__row.is-focused {
+                background: var(--vsc-quickInputList-focusBackground);
+                color: var(--vsc-quickInputList-focusForeground);
+                outline: 1px solid var(--vsc-list-focusOutline);
+                outline-offset: -1px;
+            }
+            .vsc-quick__group {
+                color: var(--vsc-pickerGroup-foreground);
+                font-size: 11px;
+            }
+            .vsc-quick__row.has-border {
+                border-block-start: 1px solid var(--vsc-pickerGroup-border);
+            }
+            .vsc-key {
+                padding: 0 4px;
+                margin-inline-start: 2px;
+                border-radius: 3px;
+                font-size: 11px;
+                background: var(--vsc-keybindingLabel-background);
+                color: var(--vsc-keybindingLabel-foreground);
+                border: 1px solid var(--vsc-keybindingLabel-border);
+                border-block-end-color: var(--vsc-keybindingLabel-bottomBorder);
+            }
+            .vsc-menu {
+                inline-size: 250px;
+                padding: 4px 0;
+                border-radius: 5px;
+                background: var(--vsc-menu-background);
+                color: var(--vsc-menu-foreground);
+                border-color: var(--vsc-menu-border);
+            }
+            .vsc-menu__item {
+                display: flex;
+                justify-content: space-between;
+                margin-inline: 4px;
+                padding: 0 12px;
+                line-height: 24px;
+                border-radius: 3px;
+            }
+            .vsc-menu__item.is-selected {
+                background: var(--vsc-menu-selectionBackground);
+                color: var(--vsc-menu-selectionForeground);
+            }
+            .vsc-menu__sep {
+                margin: 4px 10px;
+                border-block-start: 1px solid var(--vsc-menu-separatorBackground);
+            }
+            .vsc-menu__key {
+                opacity: 0.9;
+            }
+            .vsc-toast {
+                inset-block-end: 30px;
+                inset-inline-end: 10px;
+                inline-size: 420px;
+                padding: 10px 12px;
+                border-radius: 4px;
+                background: var(--vsc-notifications-background);
+                color: var(--vsc-notifications-foreground);
+                border-color: var(--vsc-notificationToast-border);
+            }
+            .vsc-toast__icon {
+                color: var(--vsc-notificationsInfoIcon-foreground);
+                font-weight: 700;
+                margin-inline-end: 6px;
+            }
+            .vsc-toast a {
+                color: var(--vsc-notificationLink-foreground);
+            }
+            .vsc-toast__actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-block-start: 10px;
+            }
+            .vsc-btn {
+                padding: 3px 12px;
+                border-radius: 4px;
+                background: var(--vsc-button-background);
+                color: var(--vsc-button-foreground);
+            }
+            .vsc-btn.is-hover {
+                background: var(--vsc-button-hoverBackground);
+            }
+            .vsc-btn--secondary {
+                background: var(--vsc-button-secondaryBackground);
+                color: var(--vsc-button-secondaryForeground);
+            }
+            .vsc-btn-split {
+                display: flex;
+                margin: 6px 12px;
+                background: var(--vsc-button-background);
+                color: var(--vsc-button-foreground);
+                border-radius: 2px;
+            }
+            .vsc-btn-split span:first-child {
+                flex: 1;
+                text-align: center;
+                padding: 3px;
+            }
+            .vsc-btn-split span:last-child {
+                padding: 3px 8px;
+                border-inline-start: 1px solid var(--vsc-button-separator);
+            }
+            .vsc-input {
+                margin: 0 12px;
+                padding: 4px 6px;
+                background: var(--vsc-input-background);
+                color: var(--vsc-input-placeholderForeground);
+                border: 1px solid var(--vsc-input-border);
+            }
+
+            /* Diff editor */
+            .vsc-diff {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                block-size: 100%;
+            }
+            .vsc-diff > div {
+                overflow: hidden;
+                border-inline-end: 1px solid var(--vsc-diffEditor-border);
+            }
+            .vsc-diff .vsc-line.rm .vsc-text {
+                background: var(--vsc-diffEditor-removedLineBackground);
+            }
+            .vsc-diff .vsc-line.ins .vsc-text {
+                background: var(--vsc-diffEditor-insertedLineBackground);
+            }
+            .vsc-diff .vsc-line.rm .vsc-gm {
+                background: var(--vsc-diffEditorGutter-removedLineBackground);
+            }
+            .vsc-diff .vsc-line.ins .vsc-gm {
+                background: var(--vsc-diffEditorGutter-insertedLineBackground);
+            }
+            .vsc-diff .vsc-line.fill .vsc-text {
+                background: repeating-linear-gradient(-45deg, var(--vsc-diffEditor-diagonalFill) 0 1px, transparent 1px 7px);
+            }
+            .vsc-text .rmtext {
+                background: var(--vsc-diffEditor-removedTextBackground);
+            }
+            .vsc-text .instext {
+                background: var(--vsc-diffEditor-insertedTextBackground);
+            }
+        </style>
+    </head>
+    <body>
+        <main class="kp-page demo-page" data-vsc-font="default">
+            <header class="kp-stack">
+                <p class="demo-tag">Research demo · research/vscode · 2026-09-17</p>
+                <h1>A VS Code colour theme, generated from kp-themes</h1>
+                <p class="kp-prose">
+                    Three VS Code windows below are <strong>mocks</strong>: HTML drawn to look like the editor, painted only with the colours in the
+                    generated theme file. The file is the one the extension in <code class="kp-mono">research/vscode/extension/</code> ships. Nothing
+                    on this page types a VS Code colour: the script reads the JSON and hands each key to the mock as a custom property.
+                </p>
+                <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                    <span
+                        ><span class="kp-alert__label">What is what: </span>the <code class="kp-mono">vsc-</code> windows are mock; the page around
+                        them (headings, alerts, buttons, tables, the code block in section 4, the components in section 5) is package classes as they
+                        ship. The highlighting in the mock is a small tokenizer written for this page, not VS Code's TextMate engine, and it uses the
+                        innermost scope only.</span
+                    >
+                </div>
+                <div class="kp-row demo-switcher" role="group" aria-label="Theme">
+                    <span class="demo-small kp-text-muted">Theme (sets data-theme on &lt;html&gt;; the mocks reload that theme's JSON):</span>
+                </div>
+                <div class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-demo-font aria-pressed="false">
+                        Mock editor font: VS Code default
+                    </button>
+                    <span class="demo-small kp-text-muted" data-demo-loaded>Loading the generated theme…</span>
+                </div>
+                <p class="demo-small kp-text-muted" data-demo-missing></p>
+            </header>
+
+            <!-- ── 1 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>1 · The window, in Rust <span class="demo-tag">mock</span></h2>
+                    <div class="vsc" style="--vsc-height: 66rem" data-vsc>
+                        <div class="vsc-title">
+                            <div class="vsc-title__menus">
+                                <span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>Go</span><span>Run</span
+                                ><span>Terminal</span><span>Help</span>
+                            </div>
+                            <div class="vsc-command-center">kp-tokens</div>
+                            <div class="vsc-title__inactive">main.rs — kp-tokens</div>
+                        </div>
+                        <div class="vsc-body">
+                            <nav class="vsc-activity" aria-label="Activity bar (mock)" data-vsc-activity="explorer"></nav>
+                            <div class="vsc-side">
+                                <div class="vsc-side__title">EXPLORER</div>
+                                <div class="vsc-side__section"><span>KP-TOKENS</span></div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty">⌄</span><span class="vsc-row__name">.github</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty">⌄</span><span class="vsc-row__name vsc-git-modified">src</span
+                                    ><span class="vsc-row__letter vsc-git-modified">●</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 1">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name vsc-git-added">contrast.rs</span
+                                    ><span class="vsc-row__letter vsc-git-added">A</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 1">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name vsc-git-deleted">legacy.rs</span
+                                    ><span class="vsc-row__letter vsc-git-deleted">D</span>
+                                </div>
+                                <div class="vsc-row is-selected" style="--d: 1">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name vsc-git-modified">main.rs</span
+                                    ><span class="vsc-row__letter vsc-git-modified">M, 1</span>
+                                </div>
+                                <div class="vsc-row is-hover" style="--d: 1">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name">parse.rs</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty">›</span><span class="vsc-row__name vsc-git-ignored">target</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name">Cargo.lock</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name vsc-git-conflict">Cargo.toml</span
+                                    ><span class="vsc-row__letter vsc-git-conflict">!</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name vsc-git-untracked">notes.md</span
+                                    ><span class="vsc-row__letter vsc-git-untracked">U</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__twisty"></span><span class="vsc-row__name">run.sh</span>
+                                </div>
+                                <div class="vsc-side__section"><span>OUTLINE</span><span class="vsc-count">6</span></div>
+                                <div class="vsc-row" style="--d: 0"><span class="vsc-sym-class">◆</span><span class="vsc-row__name">Token</span></div>
+                                <div class="vsc-row" style="--d: 1"><span class="vsc-sym-field">▪</span><span class="vsc-row__name">name</span></div>
+                                <div class="vsc-row is-inactive-selected" style="--d: 1">
+                                    <span class="vsc-sym-method">ƒ</span><span class="vsc-row__name">luminance</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-sym-method">ƒ</span><span class="vsc-row__name"><span class="vsc-hl">ma</span>in</span>
+                                </div>
+                                <div class="vsc-side__section"><span>TIMELINE</span></div>
+                            </div>
+                            <div class="vsc-main vsc-main--panel">
+                                <div class="vsc-tabs">
+                                    <span class="vsc-tab">Cargo.toml</span>
+                                    <span class="vsc-tab is-active">main.rs <span class="vsc-tab__dot" title="unsaved"></span></span>
+                                    <span class="vsc-tab is-hover">contrast.rs</span>
+                                    <span class="vsc-tab">parse.rs</span>
+                                </div>
+                                <div class="vsc-breadcrumbs">
+                                    <span>src</span><span>›</span><span>main.rs</span><span>›</span><span class="is-focus">main</span>
+                                </div>
+                                <div class="vsc-editor">
+                                    <pre class="vsc-code" data-vsc-code="rust" data-vsc-src="src-main-rs" data-vsc-decorations="rust-main"></pre>
+                                    <div class="vsc-ruler" aria-hidden="true">
+                                        <i class="r-slider" style="--at: 0"></i><i class="r-warn" style="--at: 9%"></i
+                                        ><i class="r-add" style="--at: 9%"></i><i class="r-err" style="--at: 70%"></i
+                                        ><i class="r-find" style="--at: 56%"></i><i class="r-mod" style="--at: 86%"></i>
+                                    </div>
+                                </div>
+                                <div class="vsc-panel">
+                                    <div class="vsc-panel__tabs">
+                                        <span>PROBLEMS <span class="vsc-count">2</span></span
+                                        ><span>OUTPUT</span><span>DEBUG CONSOLE</span><span class="is-active">TERMINAL</span><span>PORTS</span>
+                                    </div>
+                                    <pre
+                                        class="vsc-term"
+                                    ><span class="k2 b">kenny@forge</span> <span class="k4 b">~/Projects/kp-tokens</span> <span class="k5">(main *)</span> $ cargo build
+<span class="k2 b">   Compiling</span> kp-tokens v0.1.0 (/home/kenny/Projects/kp-tokens)
+<span class="k3 b">warning</span><span class="b">: unused import: `std::io::Write`</span>
+ <span class="k12 b">--&gt;</span> src/main.rs:3:5
+<span class="k1 b">error[E0425]</span><span class="b">: cannot find function `parse_line` in this scope</span>
+  <span class="k12 b">--&gt;</span> src/main.rs:26:30
+<span class="k1 b">error</span><span class="b">:</span> could not compile `kp-tokens` (bin "kp-tokens") due to 1 previous error; 1 warning emitted
+<span class="k2 b">kenny@forge</span> <span class="k4 b">~/Projects/kp-tokens</span> <span class="k5">(main *)</span> $ git status --short &amp;&amp; ls
+<span class="k2">A </span> src/contrast.rs     <span class="k1"> D</span> src/legacy.rs     <span class="k1"> M</span> src/main.rs     <span class="k1">??</span> notes.md
+Cargo.lock  Cargo.toml  notes.md  <span class="k2 b">run.sh</span>  <span class="k4 b">src</span>  <span class="k6 b">latest</span> -&gt; <span class="k4 b">target</span>  <span class="tsel">selected text</span>
+<span class="k8">ansi  </span><span class="s0">  0 </span><span class="s1">  1 </span><span class="s2">  2 </span><span class="s3">  3 </span><span class="s4">  4 </span><span class="s5">  5 </span><span class="s6">  6 </span><span class="s7">  7 </span>  <span class="k0">black</span> <span class="k1">red</span> <span class="k2">green</span> <span class="k3">yellow</span> <span class="k4">blue</span> <span class="k5">magenta</span> <span class="k6">cyan</span> <span class="k7">white</span>
+<span class="k8">bright</span><span class="s8">  8 </span><span class="s9">  9 </span><span class="s10"> 10 </span><span class="s11"> 11 </span><span class="s12"> 12 </span><span class="s13"> 13 </span><span class="s14"> 14 </span><span class="s15"> 15 </span>  <span class="k8">black</span> <span class="k9">red</span> <span class="k10">green</span> <span class="k11">yellow</span> <span class="k12">blue</span> <span class="k13">magenta</span> <span class="k14">cyan</span> <span class="k15">white</span>
+<span class="k2 b">kenny@forge</span> <span class="k4 b">~/Projects/kp-tokens</span> <span class="k5">(main *)</span> $ <span class="tcur"> </span></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="vsc-status">
+                            <span class="remote">⟷ SSH: forge</span><span>⎇ main*</span><span>⟳ 0↓ 1↑</span><span class="hover">⊗ 1 ⚠ 1</span>
+                            <span class="push">Ln 26, Col 40</span><span>Spaces: 4</span><span>UTF-8</span><span>LF</span><span>{ } Rust</span
+                            ><span class="error">rust-analyzer</span>
+                        </footer>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the status bar is cyberpunk's hero surface (yellow ground, ink) and its remote item on the left is
+                        the hero's inverted button (ink ground, yellow text); the error item on the right is the hero's danger plate. The explorer's
+                        selected row (<em>main.rs</em>) is <code>.kp-tree</code>'s own selection wash, the primary at 14%, with a ring outline; the
+                        row below it is the hover state. Git colours: A green, M amber, D red and struck through, U green, the ignored
+                        <em>target</em> muted, the conflicted <em>Cargo.toml</em> violet.
+                    </p>
+                    <p>
+                        In the editor: keywords yellow and strings and numbers cyan (the site highlighter's two chart colours), comments in the muted
+                        ink, types and lifetimes violet, bracket pairs coloured by depth. Line 26 is the current line (the muted plate) with the
+                        cursor, a bracket-match box and a red squiggle; line 3 has an amber squiggle; <em>contrast</em> on line 30 is selected; every
+                        <em>tokens</em> is a find result. The gutter shows an added line 3, a deletion above line 22 and modified lines 30 to 31.
+                    </p>
+                    <p>
+                        In the terminal: the two rows of numbered blocks are the sixteen ANSI colours. Blue and magenta are the same violet in
+                        cyberpunk: the theme has no blue, so both take the nearest hue it has, <code>--chart-4</code>.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 2 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>2 · TypeScript, with the suggest list and a hover open <span class="demo-tag">mock</span></h2>
+                    <div class="vsc" style="--vsc-height: 51rem" data-vsc>
+                        <div class="vsc-title">
+                            <div class="vsc-title__menus">
+                                <span>File</span><span class="is-open">Edit</span><span>Selection</span><span>View</span><span>Go</span>
+                            </div>
+                            <div class="vsc-command-center">kp-soft</div>
+                            <div></div>
+                        </div>
+                        <div class="vsc-body vsc-body--noside">
+                            <nav class="vsc-activity" aria-label="Activity bar (mock)" data-vsc-activity="none"></nav>
+                            <div class="vsc-main">
+                                <div class="vsc-tabs">
+                                    <span class="vsc-tab is-active">theme-store.ts <span class="vsc-tab__dot" title="unsaved"></span></span>
+                                    <span class="vsc-tab">contrast.ts</span>
+                                    <span class="vsc-tab">package.json</span>
+                                </div>
+                                <div class="vsc-breadcrumbs">
+                                    <span>src</span><span>›</span><span>theme-store.ts</span><span>›</span><span class="is-focus">ratio</span>
+                                </div>
+                                <div class="vsc-editor">
+                                    <pre class="vsc-code" data-vsc-code="ts" data-vsc-src="src-theme-store-ts" data-vsc-decorations="ts-store"></pre>
+                                    <div class="vsc-widget vsc-hover" style="inset-block-start: 196px; inset-inline-start: 250px">
+                                        <pre data-vsc-code="ts" data-vsc-src="src-hover-signature"></pre>
+                                        <p>WCAG contrast ratio between two colours, from 1 to 21.</p>
+                                        <p>
+                                            <span class="problem">Argument of type 'string' is not assignable to parameter of type 'Rgb'.</span>
+                                            ts(2345)
+                                        </p>
+                                        <p><span class="vsc-link">View Problem (Alt+F8)</span> · <span class="vsc-link">Quick Fix… (Ctrl+.)</span></p>
+                                    </div>
+                                    <div class="vsc-widget vsc-suggest" style="inset-block-start: 555px; inset-inline-start: 430px">
+                                        <ul>
+                                            <li class="is-focused">
+                                                <span class="vsc-sym-method">ƒ</span><span><b>to</b>Fixed</span>
+                                            </li>
+                                            <li>
+                                                <span class="vsc-sym-method">ƒ</span><span><b>to</b>Exponential</span>
+                                            </li>
+                                            <li>
+                                                <span class="vsc-sym-method">ƒ</span><span><b>to</b>LocaleString</span>
+                                            </li>
+                                            <li>
+                                                <span class="vsc-sym-method">ƒ</span><span><b>to</b>Precision</span>
+                                            </li>
+                                            <li>
+                                                <span class="vsc-sym-method">ƒ</span><span><b>to</b>String</span>
+                                            </li>
+                                        </ul>
+                                        <div class="vsc-suggest__detail">
+                                            <pre
+                                                class="vsc-code"
+                                                style="white-space: pre-wrap"
+                                                data-vsc-code="ts"
+                                                data-vsc-src="src-suggest-detail"
+                                            ></pre>
+                                            <p>Returns a string representing a number in fixed-point notation.</p>
+                                        </div>
+                                    </div>
+                                    <div class="vsc-ruler" aria-hidden="true">
+                                        <i class="r-slider" style="--at: 40%"></i><i class="r-err" style="--at: 43%"></i
+                                        ><i class="r-mod" style="--at: 90%"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="vsc-status">
+                            <span class="remote">⟷ SSH: forge</span><span>⎇ main*</span><span>⊗ 1 ⚠ 0</span><span class="push">Ln 29, Col 56</span
+                            ><span>Spaces: 4</span><span>{ } TypeScript</span><span class="warning">⚠ Prettier</span>
+                        </footer>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the suggest list (open, bottom) on the popover plate, its focused row in the same 14% wash as the
+                        explorer, and the matched letters <em>to</em> in yellow. The detail pane beside it colours its signature with the same code
+                        roles as the editor. The hover (open, middle) has a signature, a problem line in the error red and two links in the link
+                        token.
+                    </p>
+                    <p>
+                        TypeScript shows the roles VS Code needs that the site's highlighter does not: types (<em>Reading</em>, <em>Promise</em>,
+                        <em>string</em>) take chart-4, and function names stay in the foreground. The inlay hint on line 28 is the muted plate. The
+                        <em>Edit</em> menu title is in its opened state, on the secondary hover.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 3 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>3 · Source control, a diff, and what opens over it <span class="demo-tag">mock</span></h2>
+                    <div class="vsc" style="--vsc-height: 40rem" data-vsc>
+                        <div class="vsc-title">
+                            <div class="vsc-title__menus"><span>File</span><span>Edit</span><span>View</span></div>
+                            <div class="vsc-command-center">kp-tokens</div>
+                            <div></div>
+                        </div>
+                        <div class="vsc-body">
+                            <nav class="vsc-activity" aria-label="Activity bar (mock)" data-vsc-activity="scm"></nav>
+                            <div class="vsc-side">
+                                <div class="vsc-side__title">SOURCE CONTROL</div>
+                                <div class="vsc-input">Message (Ctrl+Enter to commit on 'main')</div>
+                                <div class="vsc-btn-split"><span>✓ Commit</span><span>⌄</span></div>
+                                <div class="vsc-side__section"><span>Staged Changes</span><span class="vsc-count">1</span></div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__name vsc-git-added">contrast.rs <span class="kp-text-muted">src</span></span
+                                    ><span class="vsc-row__letter vsc-git-added">A</span>
+                                </div>
+                                <div class="vsc-side__section"><span>Changes</span><span class="vsc-count">3</span></div>
+                                <div class="vsc-row is-selected" style="--d: 0">
+                                    <span class="vsc-row__name vsc-git-modified">main.rs</span><span class="vsc-row__letter vsc-git-modified">M</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__name vsc-git-deleted">legacy.rs</span><span class="vsc-row__letter vsc-git-deleted">D</span>
+                                </div>
+                                <div class="vsc-row" style="--d: 0">
+                                    <span class="vsc-row__name vsc-git-untracked">notes.md</span
+                                    ><span class="vsc-row__letter vsc-git-untracked">U</span>
+                                </div>
+                                <div class="vsc-widget vsc-menu" style="inset-block-start: 222px; inset-inline-start: 150px">
+                                    <div class="vsc-menu__item"><span>Open Changes</span></div>
+                                    <div class="vsc-menu__item"><span>Open File</span></div>
+                                    <div class="vsc-menu__sep"></div>
+                                    <div class="vsc-menu__item"><span>Discard Changes</span></div>
+                                    <div class="vsc-menu__item is-selected">
+                                        <span>Stage Changes</span><span class="vsc-menu__key">Ctrl+K Ctrl+Alt+S</span>
+                                    </div>
+                                    <div class="vsc-menu__sep"></div>
+                                    <div class="vsc-menu__item"><span>Add to .gitignore</span></div>
+                                    <div class="vsc-menu__item"><span>Reveal in Explorer View</span></div>
+                                </div>
+                            </div>
+                            <div class="vsc-main">
+                                <div class="vsc-tabs"><span class="vsc-tab is-active">main.rs (Working Tree)</span></div>
+                                <div class="vsc-breadcrumbs"><span>src</span><span>›</span><span class="is-focus">main.rs</span></div>
+                                <div class="vsc-editor">
+                                    <div class="vsc-diff">
+                                        <div>
+                                            <pre
+                                                class="vsc-code"
+                                                data-vsc-code="rust"
+                                                data-vsc-src="src-diff-before"
+                                                data-vsc-decorations="diff-before"
+                                            ></pre>
+                                        </div>
+                                        <div>
+                                            <pre
+                                                class="vsc-code"
+                                                data-vsc-code="rust"
+                                                data-vsc-src="src-diff-after"
+                                                data-vsc-decorations="diff-after"
+                                            ></pre>
+                                        </div>
+                                    </div>
+                                    <div class="vsc-widget vsc-quick">
+                                        <div class="vsc-quick__input">Select Color Theme (Up/Down Keys to Preview)</div>
+                                        <div class="vsc-quick__row"><span>Light Modern</span><span class="vsc-quick__group">light themes</span></div>
+                                        <div class="vsc-quick__row has-border">
+                                            <span>Dark Modern</span><span class="vsc-quick__group">dark themes</span>
+                                        </div>
+                                        <div class="vsc-quick__row is-focused">
+                                            <span>KP Cyberpunk</span
+                                            ><span
+                                                ><span class="vsc-key">Ctrl</span><span class="vsc-key">K</span> <span class="vsc-key">Ctrl</span
+                                                ><span class="vsc-key">T</span></span
+                                            >
+                                        </div>
+                                        <div class="vsc-quick__row"><span>Monokai</span></div>
+                                        <div class="vsc-quick__row has-border"><span>Browse Additional Color Themes…</span></div>
+                                    </div>
+                                    <div class="vsc-widget vsc-toast">
+                                        <div>
+                                            <span class="vsc-toast__icon">i</span>Installed the extension 'KP Themes (research)' from a folder.
+                                            <a href="#load">How it was loaded</a>
+                                        </div>
+                                        <div class="vsc-toast__actions">
+                                            <span class="vsc-btn vsc-btn--secondary">Not now</span
+                                            ><span class="vsc-btn is-hover">Set Color Theme</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="vsc-status">
+                            <span class="remote">⟷ SSH: forge</span><span>⎇ main*</span><span class="push">Ln 14, Col 9</span><span>{ } Rust</span>
+                        </footer>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the diff. Its line washes are <code>.kp-diff</code>'s own (success at 14%, destructive at 12%); on
+                        the void the green is barely there, so the changed words carry a stronger wash of the success and destructive inks. The
+                        hatched band on the left is the diagonal fill where a line exists on one side only.
+                    </p>
+                    <p>
+                        Three things are open: the colour-theme picker (top, with KP Cyberpunk focused and its group label in cyan), a context menu on
+                        <em>main.rs</em> with <em>Stage Changes</em> under the menu hover (the foreground at 8%, which is
+                        <code>.kp-menu__item:hover</code>), and a notification whose primary button is in its hover state (the derived
+                        <code>--primary-hover</code>).
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 4 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>4 · One snippet, two renderers</h2>
+                    <div class="demo-split">
+                        <figure class="kp-stack">
+                            <figcaption class="demo-tag">package: .kp-code-block, spans from gates/site/highlight.mjs</figcaption>
+                            <pre class="kp-code-block"><code data-demo-site-snippet></code></pre>
+                        </figure>
+                        <figure class="kp-stack">
+                            <figcaption class="demo-tag">mock: the same text through the theme's tokenColors</figcaption>
+                            <div class="vsc" style="--vsc-height: auto; display: block" data-vsc>
+                                <pre class="vsc-code" data-vsc-code="ts" data-vsc-src="src-agreement"></pre>
+                            </div>
+                        </figure>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> keywords, strings, numbers and the comment in the same colours on both sides. The left side is the
+                        documentation site's highlighter, run by the generator and stored in the JSON; its three CSS rules are built on this page from
+                        the mapping it exports. The right side differs in one place: VS Code colours bracket pairs by depth, which the site does not.
+                        <code>null</code> is a keyword to both, and the function names (<em>pickTheme</em>, <em>measure</em>) stay in the foreground
+                        on both. The grounds differ on purpose: the site draws code on <code>--card</code>, the editor on <code>--background</code>.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 5 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>5 · What the register does that VS Code cannot</h2>
+                    <div class="demo-split">
+                        <div class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">Package, with the cyberpunk register</h3></div>
+                            <div class="kp-card__body kp-stack">
+                                <div class="kp-row">
+                                    <button type="button" class="kp-button kp-button--primary">Set colour theme</button>
+                                    <button type="button" class="kp-button">Not now</button>
+                                    <span class="kp-badge">3 changes</span>
+                                </div>
+                                <div class="kp-tabs">
+                                    <div class="kp-tabs__list" role="tablist" aria-label="Files">
+                                        <button
+                                            type="button"
+                                            class="kp-tab"
+                                            role="tab"
+                                            id="demo-tab-0"
+                                            aria-controls="demo-panel-0"
+                                            aria-selected="true"
+                                        >
+                                            main.rs
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="kp-tab"
+                                            role="tab"
+                                            id="demo-tab-1"
+                                            aria-controls="demo-panel-1"
+                                            aria-selected="false"
+                                        >
+                                            parse.rs
+                                        </button>
+                                    </div>
+                                    <div class="kp-tabs__panel" role="tabpanel" id="demo-panel-0" aria-labelledby="demo-tab-0">
+                                        Two errors, one warning.
+                                    </div>
+                                    <div class="kp-tabs__panel" role="tabpanel" id="demo-panel-1" aria-labelledby="demo-tab-1" hidden>Clean.</div>
+                                </div>
+                                <p class="glow-primary">Signal acquired</p>
+                            </div>
+                        </div>
+                        <div class="kp-stack">
+                            <div class="vsc" style="--vsc-height: auto; display: block; padding: 12px" data-vsc>
+                                <div class="kp-row" style="gap: 8px">
+                                    <span class="vsc-btn">Set Color Theme</span><span class="vsc-btn vsc-btn--secondary">Not now</span
+                                    ><span class="vsc-count">3</span>
+                                </div>
+                                <div class="vsc-tabs" style="block-size: 35px; margin-block-start: 12px">
+                                    <span class="vsc-tab is-active">main.rs</span><span class="vsc-tab">parse.rs</span>
+                                </div>
+                                <p style="margin: 12px 0 0; color: var(--vsc-editor-foreground)">Signal acquired</p>
+                            </div>
+                            <p class="demo-tag">mock: the same four things as VS Code draws them from the theme</p>
+                        </div>
+                    </div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                The register against the theme file
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">The register does</th>
+                                    <th scope="col">In VS Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Notched corners and clip paths on buttons, badges, dialogs, toasts (<code>clip-path</code> on 42 lines of the
+                                        register, counted)
+                                    </td>
+                                    <td>
+                                        No. VS Code 1.137 draws its own radii (buttons 4px, the quick pick 12px, from its
+                                        <code>cornerRadius.*</code> sizes); no colour-theme property sets them.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Glow: <code>text-shadow</code> and <code>box-shadow</code> halos (<code>.glow-primary</code>,
+                                        <code>.glow-card</code>)
+                                    </td>
+                                    <td>
+                                        No. Only <code>widget.shadow</code> and <code>scrollbar.shadow</code> take a colour; there is no text shadow.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Fonts: Rajdhani body, Big Shoulders Display headings, KP Tech Mono for code and labels</td>
+                                    <td>
+                                        Not from a theme. The user sets <code>editor.fontFamily</code> and
+                                        <code>terminal.integrated.fontFamily</code>; the workbench UI font is not a setting at all. VS Code reads
+                                        system fonts only, and the package ships the mono as woff2, so it would have to be installed first.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Uppercase, letter-spaced mono tabs and labels; the “— ” menu prefix</td>
+                                    <td>No. Text transform and content are not themable.</td>
+                                </tr>
+                                <tr>
+                                    <td>Motion: decipher, slice burst, the data-stream divider; scanline texture</td>
+                                    <td>No. A colour theme has no motion and no images.</td>
+                                </tr>
+                                <tr>
+                                    <td>Colour: yellow acts, red alarms, cyan labels, violet glitches; smoke on the void</td>
+                                    <td>Yes, all of it, and the hero surface as the status bar.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the left card is real package markup, so on cyberpunk its button is notched, its tabs are mono
+                        capitals and the last line glows. The right side is the most VS Code will do with the same colours: flat plates, sentence-case
+                        tabs, no halo. Switch to <em>dark</em> or <em>light</em> to see their registers on the left too; the other nineteen themes
+                        have no register linked on this page.
+                    </p>
+                    <p>
+                        How close it gets: every colour decision survives, none of the shape, type or motion does. The theme reads as cyberpunk from
+                        across the room and as an ordinary editor up close.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 6 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>6 · Measured contrast</h2>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption data-demo-contrast-caption>
+                                WCAG ratios, measured by generate.mjs on the hex values VS Code receives, alpha composited on its ground
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Pair</th>
+                                    <th scope="col" class="kp-numeric">Ratio</th>
+                                    <th scope="col" class="kp-numeric">Floor</th>
+                                    <th scope="col">Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody data-demo-contrast></tbody>
+                        </table>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the rows marked under. On cyberpunk three are: the comment ink on a selection (the yellow wash lifts
+                        the ground), the selection against the ground, and the current-line plate against the ground. The last two are non-text, and
+                        VS Code's own defaults miss them too (current-line border 1.12:1 and selection 1.94:1 on Dark Modern): a line highlight that
+                        reached 3:1 would compete with the selection. Switch themes to read the other 21; the string colour (chart-2) is under 4.5:1
+                        in seven of them, which the documentation site's highlighter already paints.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 7 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>7 · Which kp token feeds which VS Code key</h2>
+                    <div class="demo-split">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption>
+                                    Code roles
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Token</th>
+                                        <th scope="col">Hex</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-demo-roles></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption data-demo-keys-caption>
+                                    Workbench keys (a selection; every key's source is in kpThemes.sources)
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">VS Code key</th>
+                                        <th scope="col">From</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-demo-keys></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> the <em>From</em> column. A plain name is a token; <code>/0.14</code> is that token at an alpha;
+                        <code>~10</code> moves its lightness ten points towards the foreground (the bright ANSI colours only);
+                        <em>primary-hover</em> and <em>secondary-active</em> are the derived states from css/themes.css. A note in brackets says where
+                        a readable pick or a hue match had to decide.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- ── 8 ───────────────────────────────────────────────────────── -->
+            <section class="kp-section kp-sidebar" id="load">
+                <div class="kp-sidebar__main kp-stack">
+                    <h2>8 · Loading it into VS Code</h2>
+                    <div class="kp-card">
+                        <div class="kp-card__body kp-stack kp-prose">
+                            <p>Nothing on this page installs anything. Two ways, both reversible from the Extensions view:</p>
+                            <ol>
+                                <li>
+                                    <strong>From the folder:</strong> Command Palette → <em>Developer: Install Extension from Location…</em> → pick
+                                    <code class="kp-mono">research/vscode/extension</code>. Then <em>Preferences: Color Theme</em> →
+                                    <em>KP Cyberpunk</em>.
+                                </li>
+                                <li>
+                                    <strong>From the package:</strong> Extensions view → <em>…</em> menu → <em>Install from VSIX…</em> →
+                                    <code class="kp-mono">research/vscode/extension/kp-themes-vscode-0.0.1.vsix</code>.
+                                </li>
+                            </ol>
+                            <p>To regenerate after a token changes: <code class="kp-mono">node research/vscode/generate.mjs --all --report</code>.</p>
+                        </div>
+                    </div>
+                </div>
+                <aside class="kp-sidebar__aside demo-look">
+                    <p>
+                        <strong>Look at:</strong> nothing visual here; this is the instruction the README repeats. Kenny's settings are untouched by
+                        the research.
+                    </p>
+                </aside>
+            </section>
+        </main>
+
+        <!-- The code the mocks show. Plain text; the script tokenizes it. -->
+        <script type="text/plain" id="src-main-rs">
+            use std::collections::BTreeMap;
+            use std::fs;
+            use std::io::Write;
+
+            /// One colour token, as the theme file declares it.
+            #[derive(Debug, Clone, PartialEq)]
+            pub struct Token<'a> {
+                pub name: &'a str,
+                pub hue: u16,
+                pub saturation: u8,
+                pub lightness: u8,
+            }
+
+            impl<'a> Token<'a> {
+                // WCAG relative luminance, from the HSL the token file holds.
+                pub fn luminance(&self) -> f64 {
+                    let (r, g, b) = hsl_to_rgb(self.hue, self.saturation, self.lightness);
+                    0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+                }
+            }
+
+            fn main() -> Result<(), Box<dyn std::error::Error>> {
+                let source = fs::read_to_string("themes/cyberpunk/tokens.json")?;
+                let mut tokens: BTreeMap<&str, Token> = BTreeMap::new();
+                for line in source.lines().filter(|l| l.contains("hsl(")) {
+                    if let Some(token) = parse_line(line) {
+                        tokens.insert(token.name, token);
+                    }
+                }
+                let ratio = contrast(&tokens["foreground"], &tokens["background"]);
+                println!("foreground on background: {ratio:.2}:1\n");
+                Ok(())
+            }
+        </script>
+        <script type="text/plain" id="src-theme-store-ts">
+            import { contrast, hsl } from './contrast.js';
+
+            export type ThemeName = 'cyberpunk' | 'synthwave' | 'terminal';
+
+            interface Reading {
+                readonly pair: [string, string];
+                ratio: number;
+            }
+
+            /** Measures a pair once: a released theme never changes in place. */
+            export class ContrastCache {
+                private readonly readings = new Map<string, Reading>();
+
+                constructor(private theme: ThemeName) {}
+
+                async measure(fg: string, bg: string): Promise<Reading> {
+                    const key = `${this.theme}:${fg}/${bg}`;
+                    const cached = this.readings.get(key);
+                    if (cached !== undefined) return cached;
+                    const ratio = contrast(fg, hsl(bg));
+                    const reading: Reading = { pair: [fg, bg], ratio };
+                    this.readings.set(key, reading);
+                    return reading;
+                }
+            }
+
+            const cache = new ContrastCache('cyberpunk');
+            const { ratio } = await cache.measure('hsl(50, 12%, 82%)', 'hsl(270, 9%, 4%)');
+            console.log(ratio >= 4.5 ? 'passes' : 'fails', ratio.to);
+        </script>
+        <script type="text/plain" id="src-agreement"></script>
+        <script type="text/plain" id="src-hover-signature">
+            function contrast(a: Rgb, b: Rgb): number
+        </script>
+        <script type="text/plain" id="src-suggest-detail">
+            (method) Number.toFixed(fractionDigits?: number): string
+        </script>
+        <script type="text/plain" id="src-diff-before">
+            use std::collections::BTreeMap;
+            use std::fs;
+
+            /// One colour token, as the theme file declares it.
+            #[derive(Debug, Clone, PartialEq)]
+            pub struct Token<'a> {
+                pub name: &'a str,
+            }
+
+            fn main() -> Result<(), Box<dyn std::error::Error>> {
+                let source = fs::read_to_string("tokens.json")?;
+                let tokens = parse(&source);
+
+
+
+                let ratio = contrast(&tokens["foreground"], &tokens["background"]);
+                println!("{ratio}");
+                Ok(())
+            }
+        </script>
+        <script type="text/plain" id="src-diff-after">
+            use std::collections::BTreeMap;
+            use std::fs;
+
+            /// One colour token, as the theme file declares it.
+            #[derive(Debug, Clone, PartialEq)]
+            pub struct Token<'a> {
+                pub name: &'a str,
+            }
+
+            fn main() -> Result<(), Box<dyn std::error::Error>> {
+                let source = fs::read_to_string("themes/cyberpunk/tokens.json")?;
+                let mut tokens: BTreeMap<&str, Token> = BTreeMap::new();
+                for line in source.lines().filter(|l| l.contains("hsl(")) {
+                    tokens.extend(parse_line(line));
+                }
+                let ratio = contrast(&tokens["foreground"], &tokens["background"]);
+                println!("foreground on background: {ratio:.2}:1\n");
+                Ok(())
+            }
+        </script>
+
+        <script type="module">
+            import { THEMES } from '../../js/theme-registry.js';
+
+            /* ── Decorations: what is selected, found, wrong, open ─────────
+               Lines and columns are 1-based lines and 0-based columns. */
+            const DECORATIONS = {
+                'rust-main': {
+                    current: 26,
+                    cursor: [26, 39],
+                    ranges: [
+                        [3, 4, 18, 'warn'],
+                        [26, 29, 39, 'err'],
+                        [26, 39, 40, 'bm'],
+                        [26, 44, 45, 'bm'],
+                        [30, 16, 24, 'sel'],
+                    ],
+                    find: 'tokens',
+                    findLine: 24,
+                    gutter: { 3: 'added', 21: 'deleted', 30: 'modified', 31: 'modified' },
+                    activeGuide: { from: 26, to: 28, level: 1 },
+                },
+                'ts-store': {
+                    current: 29,
+                    cursor: [29, 55],
+                    ranges: [[20, 'fg,', 'err']],
+                    inlay: [[28, 13, ': number']],
+                    gutter: { 20: 'modified', 29: 'added' },
+                    activeGuide: { from: 17, to: 23, level: 1 },
+                },
+                'diff-before': {
+                    lines: { 11: 'rm', 12: 'rm', 13: 'fill', 14: 'fill', 15: 'fill', 17: 'rm' },
+                    ranges: [
+                        [11, '"tokens.json"', 'rmtext'],
+                        [12, 'tokens = parse(&source)', 'rmtext'],
+                        [17, '"{ratio}"', 'rmtext'],
+                    ],
+                },
+                'diff-after': {
+                    lines: { 11: 'ins', 12: 'ins', 13: 'ins', 14: 'ins', 15: 'ins', 17: 'ins' },
+                    ranges: [
+                        [11, '"themes/cyberpunk/tokens.json"', 'instext'],
+                        [12, 'mut tokens: BTreeMap<&str, Token> = BTreeMap::new()', 'instext'],
+                        [17, '"foreground on background: {ratio:.2}:1', 'instext'],
+                    ],
+                },
+            };
+
+            /* ── Tokenizers: innermost TextMate-like scope per token ───────
+               Small on purpose. The scope names are the ones the Rust and
+               TypeScript grammars that ship with VS Code use for the same
+               constructs; the matching against tokenColors is below. */
+            const RUST_CONTROL = new Set(['if', 'else', 'match', 'for', 'in', 'while', 'loop', 'return', 'break', 'continue', 'await']);
+            const RUST_STORAGE = new Set(['let', 'struct', 'enum', 'impl', 'trait', 'type', 'mod', 'const', 'static', 'fn', 'dyn']);
+            const RUST_MODIFIER = new Set(['pub', 'mut', 'ref', 'move', 'async', 'unsafe']);
+            const RUST_PRIMS = new Set(['u8', 'u16', 'u32', 'u64', 'i32', 'i64', 'f32', 'f64', 'usize', 'str', 'bool', 'char']);
+
+            function rust(code) {
+                const out = [];
+                let i = 0;
+                let prevWord = '';
+                const push = (text, scope) => out.push({ text, scope });
+                while (i < code.length) {
+                    const rest = code.slice(i);
+                    let m;
+                    if ((m = /^\/\/\/[^\n]*/.exec(rest))) push(m[0], 'comment.line.documentation.rust');
+                    else if ((m = /^\/\/[^\n]*/.exec(rest))) push(m[0], 'comment.line.double-slash.rust');
+                    else if ((m = /^#\[[^\]\n]*\]/.exec(rest))) push(m[0], 'meta.attribute.rust');
+                    else if ((m = /^"(?:\\.|[^"\\])*"/.exec(rest))) {
+                        for (const part of m[0].split(/(\\.)/))
+                            if (part) push(part, part.startsWith('\\') ? 'constant.character.escape.rust' : 'string.quoted.double.rust');
+                    } else if ((m = /^'[a-z_]\w*(?!')/.exec(rest))) push(m[0], 'entity.name.type.lifetime.rust');
+                    else if ((m = /^\d[\d_]*(?:\.\d+)?/.exec(rest))) push(m[0], 'constant.numeric.decimal.rust');
+                    else if ((m = /^[A-Za-z_]\w*!/.exec(rest))) push(m[0], 'entity.name.function.macro.rust');
+                    else if ((m = /^[A-Za-z_]\w*/.exec(rest))) {
+                        const w = m[0];
+                        const after = code.slice(i + w.length);
+                        let scope = 'variable.other.rust';
+                        if (RUST_CONTROL.has(w)) scope = 'keyword.control.rust';
+                        else if (RUST_STORAGE.has(w)) scope = 'storage.type.rust';
+                        else if (RUST_MODIFIER.has(w)) scope = 'storage.modifier.rust';
+                        else if (w === 'use') scope = 'keyword.other.rust';
+                        else if (w === 'self' || w === 'Self') scope = 'variable.language.self.rust';
+                        else if (w === 'true' || w === 'false') scope = 'constant.language.bool.rust';
+                        else if (RUST_PRIMS.has(w)) scope = 'entity.name.type.primitive.rust';
+                        else if (/^[A-Z]/.test(w)) scope = 'entity.name.type.rust';
+                        else if (prevWord === 'fn' || /^\s*\(/.test(after)) scope = 'entity.name.function.rust';
+                        else if (/^::/.test(after)) scope = 'entity.name.namespace.rust';
+                        push(w, scope);
+                        prevWord = w;
+                        i += w.length;
+                        continue;
+                    } else if ((m = /^(?:->|=>|::|&&|\|\||[+\-*/=<>!&|?:%])/.exec(rest))) push(m[0], 'keyword.operator.rust');
+                    else if ((m = /^[()[\]{}]/.exec(rest))) push(m[0], 'punctuation.brackets.rust');
+                    else if ((m = /^[,;.]/.exec(rest))) push(m[0], 'punctuation.separator.rust');
+                    else if ((m = /^\s+/.exec(rest))) push(m[0], 'source.rust');
+                    else {
+                        push(code[i], 'source.rust');
+                        m = [code[i]];
+                    }
+                    i += m ? m[0].length : 1;
+                    if (m && !/^\s+$/.test(m[0])) prevWord = '';
+                }
+                return out;
+            }
+
+            const TS_CONTROL = new Set([
+                'import',
+                'export',
+                'from',
+                'return',
+                'if',
+                'else',
+                'for',
+                'of',
+                'await',
+                'async',
+                'while',
+                'throw',
+                'try',
+                'catch',
+            ]);
+            const TS_STORAGE = new Set(['const', 'let', 'var', 'function', 'class', 'interface', 'type', 'extends', 'implements', 'constructor']);
+            const TS_MODIFIER = new Set(['private', 'public', 'protected', 'readonly', 'static']);
+            const TS_PRIMS = new Set(['string', 'number', 'boolean', 'void', 'unknown', 'never']);
+
+            function ts(code) {
+                const out = [];
+                let i = 0;
+                let prev = '';
+                const push = (text, scope) => out.push({ text, scope });
+                while (i < code.length) {
+                    const rest = code.slice(i);
+                    let m;
+                    if ((m = /^\/\*\*[\s\S]*?\*\//.exec(rest))) push(m[0], 'comment.block.documentation.ts');
+                    else if ((m = /^\/\/[^\n]*/.exec(rest))) push(m[0], 'comment.line.double-slash.ts');
+                    else if ((m = /^`(?:\\.|[^`\\])*`/.exec(rest))) {
+                        for (const part of m[0].split(/(\$\{[^}]*\})/)) {
+                            if (!part) continue;
+                            if (part.startsWith('${')) {
+                                push('${', 'punctuation.definition.template-expression.begin.ts');
+                                out.push(...ts(part.slice(2, -1)));
+                                push('}', 'punctuation.definition.template-expression.end.ts');
+                            } else push(part, 'string.template.ts');
+                        }
+                    } else if ((m = /^(['"])(?:\\.|(?!\1)[^\n])*\1/.exec(rest))) push(m[0], 'string.quoted.single.ts');
+                    else if ((m = /^\d[\d_]*(?:\.\d+)?/.exec(rest))) push(m[0], 'constant.numeric.decimal.ts');
+                    else if ((m = /^[A-Za-z_$][\w$]*/.exec(rest))) {
+                        const w = m[0];
+                        const after = code.slice(i + w.length);
+                        let scope = 'variable.other.readwrite.ts';
+                        if (TS_CONTROL.has(w)) scope = 'keyword.control.ts';
+                        else if (TS_STORAGE.has(w)) scope = 'storage.type.ts';
+                        else if (TS_MODIFIER.has(w)) scope = 'storage.modifier.ts';
+                        else if (w === 'new') scope = 'keyword.operator.new.ts';
+                        else if (w === 'this') scope = 'variable.language.this.ts';
+                        else if (['true', 'false', 'null', 'undefined'].includes(w)) scope = 'constant.language.ts';
+                        else if (TS_PRIMS.has(w)) scope = 'support.type.primitive.ts';
+                        else if (w === 'console') scope = 'support.class.console.ts';
+                        else if (/^[A-Z]/.test(w)) scope = 'entity.name.type.ts';
+                        else if (prev === 'function' || /^\s*\(/.test(after) || /^\s*<[^>]*>\s*\(/.test(after)) scope = 'entity.name.function.ts';
+                        else if (prev === '.') scope = 'variable.other.property.ts';
+                        else if (prev === 'const' || prev === 'let') scope = 'variable.other.constant.ts';
+                        push(w, scope);
+                        prev = w;
+                        i += w.length;
+                        continue;
+                    } else if ((m = /^(?:=>)/.exec(rest))) push(m[0], 'storage.type.function.arrow.ts');
+                    else if ((m = /^(?:===|!==|>=|<=|\?\.|&&|\|\||[+\-*/=<>!&|?:%])/.exec(rest))) push(m[0], 'keyword.operator.ts');
+                    else if ((m = /^[()[\]{}]/.exec(rest))) push(m[0], 'meta.brace.ts');
+                    else if ((m = /^[,;.]/.exec(rest))) push(m[0], m[0] === '.' ? 'punctuation.accessor.ts' : 'punctuation.separator.ts');
+                    else if ((m = /^\s+/.exec(rest))) push(m[0], 'source.ts');
+                    else {
+                        push(code[i], 'source.ts');
+                        m = null;
+                    }
+                    const len = m ? m[0].length : 1;
+                    if (!/^\s+$/.test(code.slice(i, i + len))) prev = code.slice(i, i + len);
+                    i += len;
+                }
+                return out;
+            }
+
+            /* ── Scope matching against the theme's tokenColors ────────────
+               VS Code ranks a match by how many dot-separated segments of the
+               selector matched, and a later rule wins a tie. Descendant
+               selectors ("a b") are matched on their last part only. */
+            function styleFor(scope, rules) {
+                let best = null;
+                let depth = -1;
+                rules.forEach((rule, index) => {
+                    const selectors = Array.isArray(rule.scope) ? rule.scope : String(rule.scope).split(',');
+                    for (const raw of selectors) {
+                        const sel = raw.trim().split(/\s+/).pop();
+                        if (scope === sel || scope.startsWith(sel + '.')) {
+                            const d = sel.split('.').length;
+                            if (d >= depth) {
+                                best = rule.settings;
+                                depth = d;
+                            }
+                        }
+                    }
+                    void index;
+                });
+                return best ?? {};
+            }
+
+            const escapeHtml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            function renderCode(pre, theme) {
+                const source = document.getElementById(pre.dataset.vscSrc).textContent;
+                const tokens = (pre.dataset.vscCode === 'rust' ? rust : ts)(source);
+                const deco = DECORATIONS[pre.dataset.vscDecorations] ?? {};
+                const rules = theme.tokenColors;
+                // Characters per line, each with its token style.
+                const lines = [[]];
+                let depth = 0;
+                for (const token of tokens) {
+                    const style = styleFor(token.scope, rules);
+                    for (const ch of token.text) {
+                        if (ch === '\n') {
+                            lines.push([]);
+                            continue;
+                        }
+                        const c = { ch, style, classes: [] };
+                        const isBracket = /^(punctuation\.brackets|meta\.brace)/.test(token.scope);
+                        if (isBracket && '([{'.includes(ch)) c.bracket = depth++ % 3;
+                        else if (isBracket && ')]}'.includes(ch)) c.bracket = --depth % 3;
+                        lines[lines.length - 1].push(c);
+                    }
+                }
+                // Ranges: [line, from, to, class], or [line, 'text', class]
+                // for the first occurrence of that text on the line.
+                const texts = source.split('\n');
+                const ranges = (deco.ranges ?? []).map((r) => {
+                    if (typeof r[1] !== 'string') return r;
+                    const at = texts[r[0] - 1].indexOf(r[1]);
+                    if (at === -1) throw new Error(`decoration text not found on line ${r[0]}: ${r[1]}`);
+                    return [r[0], at, at + r[1].length, r[2]];
+                });
+                if (deco.find) {
+                    texts.forEach((text, n) => {
+                        for (let at = text.indexOf(deco.find); at !== -1; at = text.indexOf(deco.find, at + 1)) {
+                            ranges.push([n + 1, at, at + deco.find.length, n + 1 === deco.findLine ? 'find' : 'findhi']);
+                        }
+                    });
+                }
+                for (const [line, from, to, cls] of ranges) for (let col = from; col < to; col++) lines[line - 1]?.[col]?.classes.push(cls);
+                // Indent guides.
+                lines.forEach((chars, n) => {
+                    let lead = 0;
+                    while (chars[lead]?.ch === ' ') lead++;
+                    for (let level = 0; level * 4 < lead; level++) {
+                        const g = deco.activeGuide;
+                        const active = g && n + 1 >= g.from && n + 1 <= g.to && level === g.level;
+                        chars[level * 4].classes.push(active ? 'ig-active' : 'ig');
+                    }
+                });
+                const bare = !pre.closest('.vsc-editor') || pre.closest('.vsc-widget');
+                let shown = 0;
+                pre.innerHTML = lines
+                    .map((chars, n) => {
+                        const no = n + 1;
+                        let html = '';
+                        let open = null;
+                        const flush = () => {
+                            if (!open) return;
+                            const s = open.style;
+                            const css = [];
+                            if (open.bracket !== undefined) css.push(`color: var(--vsc-editorBracketHighlight-foreground${open.bracket + 1})`);
+                            else if (s.foreground) css.push(`color: ${s.foreground}`);
+                            const fs = s.fontStyle ?? '';
+                            if (fs.includes('italic')) css.push('font-style: italic');
+                            if (fs.includes('bold')) css.push('font-weight: 700');
+                            if (fs.includes('underline')) css.push('text-decoration: underline');
+                            html += `<span class="${open.classes.join(' ')}" style="${css.join('; ')}">${escapeHtml(open.text)}</span>`;
+                            open = null;
+                        };
+                        chars.forEach((c, col) => {
+                            const inlay = deco.inlay?.find(([l, at]) => l === no && at === col);
+                            const cursorHere = deco.cursor && deco.cursor[0] === no && deco.cursor[1] === col;
+                            const key = `${c.style.foreground}|${c.style.fontStyle}|${c.bracket}|${c.classes.join(' ')}`;
+                            if (inlay || cursorHere || !open || open.key !== key) flush();
+                            if (cursorHere) html += '<span class="vsc-cursor"></span>';
+                            if (inlay) html += `<span class="vsc-inlay">${escapeHtml(inlay[2])}</span>`;
+                            if (!open) open = { key, text: '', style: c.style, bracket: c.bracket, classes: c.classes };
+                            open.text += c.ch;
+                        });
+                        flush();
+                        if (deco.cursor && deco.cursor[0] === no && deco.cursor[1] >= chars.length) html += '<span class="vsc-cursor"></span>';
+                        if (bare) return `<div>${html || ' '}</div>`;
+                        const kind = deco.lines?.[no] ?? '';
+                        const gutter = deco.gutter?.[no] ?? '';
+                        // A fill line exists on the other side of a diff only, so it has no number.
+                        if (kind !== 'fill') shown++;
+                        return `<div class="vsc-line ${no === deco.current ? 'is-current' : ''} ${kind}"><span class="vsc-ln">${kind === 'fill' ? '' : shown}</span><span class="vsc-gm ${gutter}"></span><span></span><span class="vsc-text">${html || ' '}</span></div>`;
+                    })
+                    .join('');
+            }
+
+            /* ── Activity bar icons: simple line drawings made for this page ── */
+            const ICONS = {
+                explorer: '<path d="M6 3h8l4 4v14H6z M14 3v4h4" />',
+                search: '<circle cx="10" cy="10" r="6" /><path d="M14.5 14.5 21 21" />',
+                scm: '<circle cx="7" cy="5" r="2" /><circle cx="7" cy="19" r="2" /><circle cx="17" cy="9" r="2" /><path d="M7 7v10 M17 11c0 4-10 2-10 6" />',
+                run: '<path d="M7 4l12 8-12 8z" />',
+                extensions: '<path d="M4 4h7v7H4z M13 13h7v7h-7z M4 13h7v7H4z M14 3h6v6h-6z" />',
+            };
+            for (const bar of document.querySelectorAll('[data-vsc-activity]')) {
+                bar.innerHTML = Object.entries(ICONS)
+                    .map(
+                        ([name, path]) =>
+                            `<span class="vsc-activity__item ${name === bar.dataset.vscActivity ? 'is-active' : ''}" title="${name}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">${path}</svg>${
+                                name === 'scm' ? '<span class="vsc-activity__badge">4</span>' : ''
+                            }</span>`,
+                    )
+                    .join('');
+            }
+
+            /* ── Loading a theme file and painting the page with it ────────── */
+            const page = document.querySelector('.demo-page');
+            const loaded = document.querySelector('[data-demo-loaded]');
+            const missing = document.querySelector('[data-demo-missing]');
+
+            const KEYS = [
+                'editor.background',
+                'editor.foreground',
+                'editor.selectionBackground',
+                'editor.lineHighlightBackground',
+                'editorCursor.foreground',
+                'editorLineNumber.activeForeground',
+                'activityBar.foreground',
+                'sideBar.background',
+                'list.activeSelectionBackground',
+                'list.hoverBackground',
+                'tab.activeBorderTop',
+                'tab.inactiveForeground',
+                'statusBar.background',
+                'statusBar.foreground',
+                'statusBarItem.remoteBackground',
+                'statusBarItem.hoverBackground',
+                'button.background',
+                'button.hoverBackground',
+                'toolbar.activeBackground',
+                'input.border',
+                'badge.background',
+                'menu.selectionBackground',
+                'editorSuggestWidget.background',
+                'editorError.foreground',
+                'editorWarning.foreground',
+                'editorGutter.modifiedBackground',
+                'diffEditor.insertedLineBackground',
+                'diffEditor.removedTextBackground',
+                'gitDecoration.modifiedResourceForeground',
+                'gitDecoration.deletedResourceForeground',
+                'terminal.ansiRed',
+                'terminal.ansiBlue',
+                'terminal.ansiMagenta',
+                'terminal.ansiCyan',
+                'terminal.ansiBrightYellow',
+            ];
+
+            async function load(name) {
+                const url = `../../vscode/kp-${name}-color-theme.json`;
+                let theme;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`${response.status}`);
+                    theme = await response.json();
+                } catch (error) {
+                    loaded.textContent = `Could not read ${url} (${error.message}). A browser will not fetch a file:// URL: open this page over HTTP, for example from the review site or any static server started in the repository root.`;
+                    return;
+                }
+                const colors = theme.colors;
+                for (const root of document.querySelectorAll('[data-vsc]')) {
+                    for (const [key, value] of Object.entries(colors)) root.style.setProperty(`--vsc-${key.replaceAll('.', '-')}`, value);
+                }
+                for (const pre of document.querySelectorAll('[data-vsc-code]')) renderCode(pre, theme);
+                loaded.textContent = `Painted from ${url}: “${theme.name}”, ${Object.keys(colors).length} colours, ${theme.tokenColors.length} token rules.`;
+
+                // Which var(--vsc-…) the mock reads that this theme does not set.
+                const css = [...document.querySelectorAll('style')].map((s) => s.textContent).join('\n');
+                const used = new Set([...css.matchAll(/var\(--vsc-([\w-]+)\)/g)].map((m) => m[1]));
+                const set = new Set(Object.keys(colors).map((k) => k.replaceAll('.', '-')));
+                const unset = [...used].filter((k) => !set.has(k) && !['ui', 'mono'].includes(k));
+                missing.textContent = unset.length
+                    ? `The mock reads ${used.size} keys; ${unset.length} are not in this file and stay unpainted: ${unset.join(', ')}.`
+                    : `The mock reads ${used.size} keys, and the file sets every one of them.`;
+
+                // Section 4: the site's highlighter, from the mapping it exports.
+                const h = theme.kpThemes.highlighter;
+                document.querySelector('[data-demo-site-snippet]').innerHTML = h.html;
+                const sheet = new CSSStyleSheet();
+                sheet.replaceSync(
+                    Object.entries(h.tokens)
+                        .map(([kind, token]) => `.kp-code__${kind} { color: var(${token}); }`)
+                        .join('\n'),
+                );
+                document.adoptedStyleSheets = [sheet];
+                document.getElementById('src-agreement').textContent = h.sample;
+                renderCode(document.querySelector('[data-vsc-src="src-agreement"]'), theme);
+
+                // Section 6: the measurements the generator wrote.
+                document.querySelector('[data-demo-contrast]').innerHTML = theme.kpThemes.contrast
+                    .map((row) => {
+                        const ok = row.ratio >= row.floor;
+                        return `<tr><td>${escapeHtml(row.what)}</td><td class="kp-numeric">${row.ratio.toFixed(2)}:1</td><td class="kp-numeric">${row.floor}</td><td><span class="kp-badge ${ok ? 'kp-badge--success' : 'kp-badge--destructive'}">${ok ? 'meets' : 'under'}</span></td></tr>`;
+                    })
+                    .join('');
+
+                // Section 7: roles and a selection of keys, with their sources.
+                const swatch = (hex) => `<span class="demo-swatch" data-demo-hex="${hex}"></span>`;
+                document.querySelector('[data-demo-roles]').innerHTML = Object.entries(theme.kpThemes.roles)
+                    .map(
+                        ([role, r]) =>
+                            `<tr><td>${role}</td><td>${r.token}${r.fellBack ? ' <span class="kp-badge kp-badge--warning">fallback</span>' : ''}</td><td class="kp-mono">${swatch(r.hex)}${r.hex}</td></tr>`,
+                    )
+                    .join('');
+                document.querySelector('[data-demo-keys]').innerHTML = KEYS.map(
+                    (key) =>
+                        `<tr><td class="kp-mono">${swatch(colors[key])}${key}</td><td>${escapeHtml(theme.kpThemes.sources[key] ?? '(not set)')}</td></tr>`,
+                ).join('');
+                for (const el of document.querySelectorAll('[data-demo-hex]')) el.style.background = el.dataset.demoHex;
+            }
+
+            /* ── Theme switcher and the font toggle ────────────────────────── */
+            const switcher = document.querySelector('.demo-switcher');
+            for (const t of THEMES) {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'kp-button kp-button--sm';
+                b.textContent = t.label;
+                b.dataset.demoTheme = t.name;
+                b.addEventListener('click', () => document.documentElement.setAttribute('data-theme', t.name));
+                switcher.append(b);
+            }
+            const sync = () => {
+                const name = document.documentElement.dataset.theme;
+                for (const b of switcher.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.demoTheme === name));
+                load(name);
+            };
+            new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            sync();
+
+            const fontButton = document.querySelector('[data-demo-font]');
+            fontButton.addEventListener('click', () => {
+                const kp = page.dataset.vscFont !== 'kp';
+                page.dataset.vscFont = kp ? 'kp' : 'default';
+                fontButton.setAttribute('aria-pressed', String(kp));
+                fontButton.textContent = kp ? 'Mock editor font: KP Tech Mono (a user setting)' : 'Mock editor font: VS Code default';
+            });
+        </script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

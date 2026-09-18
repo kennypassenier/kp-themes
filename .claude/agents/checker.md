@@ -12,7 +12,9 @@ What to run, in this order, from the repository root:
 1. `npm run gates` — the code gates, seconds. Report its last line.
 2. The browser tests for what changed, firefox only, by tag:
    `npm run test:tags -- --level building` (or `--level commit` when the
-   prompt says a commit follows), with `--files <paths>` when the prompt
+   prompt says a commit follows, or `--level engines` — the same selection
+   in chromium too — when it says a layer closes or the fix touched paint,
+   focus or the keyboard [fix-51]), with `--files <paths>` when the prompt
    names them. It reads `tests/tags.json` and prints the selection per
    file before it runs; `--dry-run` prints it and the count without
    running. Where the prompt names tags instead, run

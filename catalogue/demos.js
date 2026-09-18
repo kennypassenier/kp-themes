@@ -188,9 +188,16 @@ function stampEffect(host) {
     }
     holdArrival();
     if (mode === 'live') forgetReveals();
-    effectHandles.set(host, attachEffects(copy, { manageRoot: false }));
-    if (mode === 'open') for (const trigger of copy.querySelectorAll('[data-kp-reveal-trigger]')) trigger.click();
-    if (mode === 'armed' || mode === 'open') copy.inert = true;
+    const handle = attachEffects(copy, { manageRoot: false });
+    effectHandles.set(host, handle);
+    if (mode === 'armed') copy.inert = true;
+    // The emphasis hook arrives after attach returns [scope-117]; a trigger
+    // pressed before it is in opens nothing.
+    if (mode === 'open')
+        Promise.resolve(handle.ready).then(() => {
+            for (const trigger of copy.querySelectorAll('[data-kp-reveal-trigger]')) /** @type {HTMLElement} */ (trigger).click();
+            copy.inert = true;
+        });
 }
 
 /** A frame whose page is addressed from this folder, wherever the block is shown. */

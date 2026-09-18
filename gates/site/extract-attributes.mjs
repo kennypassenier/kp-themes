@@ -102,9 +102,14 @@ function scanModule(source, module, into) {
 export function extractAttributes() {
     /** @type {Map<string, Attribute>} */
     const found = new Map();
-    const modules = readdirSync(DIR)
-        .filter((f) => f.endsWith('.js'))
-        .sort();
+    // js/effects/ holds the hooks of js/effects.js since scope-117; what they
+    // read and write is still the effects module's markup.
+    const modules = [
+        ...readdirSync(DIR).filter((f) => f.endsWith('.js')),
+        ...readdirSync(`${DIR}effects/`)
+            .filter((f) => f.endsWith('.js'))
+            .map((f) => `effects/${f}`),
+    ].sort();
 
     for (const file of modules) scanModule(readFileSync(DIR + file, 'utf8'), `js/${file}`, found);
 

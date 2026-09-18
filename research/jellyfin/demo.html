@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="en" data-theme="cyberpunk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Theming Jellyfin with kp-themes · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <style>
+            /* ==================================================================
+               MOCK STYLES for this research page only. Every class prefixed
+               `jfr-` is written for this page and is not part of the package.
+               Every class prefixed `kp-` is the package as it ships, used
+               untouched. The `jfr-app` blocks imitate the Jellyfin 12 web
+               client: they read the same --jf-palette-* variable names that
+               jellyfin-web 12.1 reads, and the "kp" copy fills them from the
+               live package tokens so the theme switcher repaints it.
+               In Jellyfin itself this bridge cannot be var(--primary): the
+               …Channel variables need literal R G B triplets, so the real
+               file (section 7) is generated with values.
+               ================================================================== */
+            .jfr-switcher {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius, 0.5rem);
+            }
+            .jfr-switcher [aria-pressed='true'] {
+                outline: 2px solid var(--primary);
+                outline-offset: 2px;
+            }
+            .jfr-tag {
+                display: inline-block;
+                margin-inline-start: 0.5rem;
+                padding: 0.05rem 0.5rem;
+                border: 1px solid currentColor;
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                vertical-align: middle;
+                font-family: var(--theme-font-mono, monospace);
+            }
+            .jfr-look {
+                border-inline-start: 3px solid var(--primary);
+                padding: 0.5rem 0.75rem;
+                background: var(--muted);
+                color: var(--foreground);
+                margin: 0;
+            }
+            .jfr-look strong {
+                font-weight: 700;
+            }
+            .jfr-pair {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                gap: 1rem;
+            }
+            .jfr-caption {
+                font-family: var(--theme-font-mono, monospace);
+                font-size: 0.75rem;
+                color: var(--muted-foreground);
+                margin: 0 0 0.35rem;
+            }
+            .jfr-swatch {
+                display: inline-block;
+                inline-size: 1.4rem;
+                block-size: 1.4rem;
+                border: 1px solid var(--border-strong);
+                vertical-align: middle;
+            }
+
+            /* ── The mock Jellyfin client ─────────────────────────────────── */
+
+            /* Jellyfin 12.1 defaults, from src/themes/_base/_palette.scss and
+               theme.ts (dark scheme). Literal on purpose: this pane does not
+               follow the switcher. */
+            .jfr-app--default {
+                --jf-palette-background-default: #101010;
+                --jf-palette-background-paper: #202020;
+                --jf-palette-primary-main: #00a4dc;
+                --jf-palette-primary-contrastText: rgba(0, 0, 0, 0.87);
+                --jf-palette-text-primary: #fff;
+                --jf-palette-text-secondary: rgba(255, 255, 255, 0.7);
+                --jf-palette-divider: rgba(255, 255, 255, 0.12);
+                --jf-palette-AppBar-defaultBg: #202020;
+                --jf-palette-FilledInput-bg: rgba(255, 255, 255, 0.09);
+                --jf-card-borderRadius: 0.2em;
+                --jfr-body: 'Noto Sans', system-ui, sans-serif;
+                --jfr-display: 'Noto Sans', system-ui, sans-serif;
+                color-scheme: dark;
+            }
+            /* The kp copy: the same names, filled from the package tokens. */
+            .jfr-app--kp {
+                --jf-palette-background-default: var(--background);
+                --jf-palette-background-paper: var(--card);
+                --jf-palette-primary-main: var(--primary);
+                --jf-palette-primary-contrastText: var(--primary-foreground);
+                --jf-palette-text-primary: var(--foreground);
+                --jf-palette-text-secondary: var(--muted-foreground);
+                --jf-palette-divider: var(--border);
+                --jf-palette-AppBar-defaultBg: var(--card);
+                --jf-palette-FilledInput-bg: var(--muted);
+                --jf-card-borderRadius: var(--radius);
+                --jfr-body: var(--theme-font-body);
+                --jfr-display: var(--theme-font-display);
+            }
+            [data-theme='cyberpunk'] .jfr-app--kp,
+            [data-theme='dark'] .jfr-app--kp {
+                --jf-palette-AppBar-defaultBg: var(--sidebar-background);
+            }
+            .jfr-app {
+                position: relative;
+                overflow: hidden;
+                background: var(--jf-palette-background-default);
+                color: var(--jf-palette-text-secondary);
+                font-family: var(--jfr-body);
+                border: 1px solid var(--border-strong);
+                min-block-size: 25rem;
+            }
+            .jfr-header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.6rem 1rem;
+                background: var(--jf-palette-AppBar-defaultBg);
+                color: var(--jf-palette-text-primary);
+            }
+            .jfr-header__title {
+                font-family: var(--jfr-display);
+                font-size: 1.05rem;
+                margin: 0;
+                flex: 1;
+            }
+            .jfr-icon {
+                inline-size: 1.9rem;
+                block-size: 1.9rem;
+                display: inline-grid;
+                place-items: center;
+                border: 0;
+                background: transparent;
+                color: inherit;
+                font: inherit;
+                cursor: pointer;
+                border-radius: 50%;
+            }
+            .jfr-avatar {
+                background: var(--jf-palette-primary-main);
+                color: var(--jf-palette-primary-contrastText);
+            }
+            .jfr-body {
+                padding: 1rem 1.5rem 1.5rem;
+                max-inline-size: 34rem;
+                margin-inline: auto;
+            }
+            .jfr-section-title {
+                font-family: var(--jfr-display);
+                color: var(--jf-palette-text-secondary);
+                font-size: 1.25rem;
+                margin: 0.5rem 0 0.5rem;
+            }
+            .jfr-list {
+                list-style: none;
+                margin: 0 0 1rem;
+                padding: 0;
+            }
+            .jfr-list li {
+                padding: 0.6rem 0.4rem;
+                border-block-end: 1px solid var(--jf-palette-divider);
+                color: var(--jf-palette-text-primary);
+            }
+            .jfr-label {
+                display: block;
+                font-size: 0.85rem;
+                margin-block-end: 0.25rem;
+            }
+            .jfr-input {
+                inline-size: 100%;
+                box-sizing: border-box;
+                padding: 0.5rem 0.6rem;
+                font: inherit;
+                color: var(--jf-palette-text-primary);
+                background: var(--jf-palette-FilledInput-bg);
+                border: 0.16em solid var(--jf-palette-FilledInput-bg);
+                border-radius: var(--jf-card-borderRadius);
+            }
+            .jfr-input:focus {
+                outline: none;
+                border-color: var(--jf-palette-primary-main);
+            }
+            .jfr-submit {
+                margin-block-start: 1rem;
+                inline-size: 100%;
+                padding: 0.7rem 1rem;
+                font: inherit;
+                font-weight: 600;
+                border: 0;
+                cursor: pointer;
+                background: var(--jf-palette-primary-main);
+                color: var(--jf-palette-primary-contrastText);
+                border-radius: var(--jf-card-borderRadius);
+            }
+            .jfr-card {
+                margin-block-start: 1rem;
+                padding: 0.75rem;
+                background: var(--jf-palette-background-paper);
+                color: var(--jf-palette-text-primary);
+                border-radius: var(--jf-card-borderRadius);
+            }
+            .jfr-card p {
+                margin: 0.25rem 0 0;
+                color: var(--jf-palette-text-secondary);
+                font-size: 0.85rem;
+            }
+            /* The register touches the generated file adds, mirrored here. */
+            [data-theme='cyberpunk'] .jfr-app--kp .jfr-header {
+                box-shadow: inset 0 -2px 0 var(--primary);
+            }
+            [data-theme='cyberpunk'] .jfr-app--kp :is(.jfr-section-title, .jfr-header__title) {
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                font-weight: 800;
+            }
+            [data-theme='cyberpunk'] .jfr-app--kp .jfr-submit {
+                clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+            [data-theme='formal'] .jfr-app--kp .jfr-header {
+                box-shadow: inset 0 -1px 0 var(--border-strong);
+            }
+            [data-theme='formal'] .jfr-app--kp .jfr-section-title {
+                font-weight: 600;
+                letter-spacing: -0.01em;
+            }
+            /* Opened states: the account menu (MUI Menu in the modern app)
+               and the drawer (legacy app). */
+            .jfr-menu {
+                position: absolute;
+                inset-block-start: 3rem;
+                inset-inline-end: 0.75rem;
+                min-inline-size: 11rem;
+                margin: 0;
+                padding: 0.4rem 0;
+                list-style: none;
+                background: var(--jf-palette-background-paper);
+                color: var(--jf-palette-text-primary);
+                border-radius: var(--jf-card-borderRadius);
+                box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+                z-index: 2;
+            }
+            .jfr-menu[hidden] {
+                display: none;
+            }
+            .jfr-menu li {
+                padding: 0.4rem 1rem;
+            }
+            .jfr-menu hr {
+                border: 0;
+                border-block-start: 1px solid var(--jf-palette-divider);
+                margin: 0.3rem 0;
+            }
+            .jfr-drawer {
+                position: absolute;
+                inset-block: 0;
+                inset-inline-start: 0;
+                inline-size: 13rem;
+                padding: 0.75rem 0;
+                background: var(--jf-palette-background-paper);
+                color: var(--jf-palette-text-primary);
+                box-shadow: 4px 0 18px rgb(0 0 0 / 0.35);
+                z-index: 3;
+            }
+            .jfr-drawer[hidden] {
+                display: none;
+            }
+            .jfr-drawer h4 {
+                margin: 0.6rem 1rem 0.2rem;
+                font-family: var(--jfr-display);
+                font-size: 0.8rem;
+                color: var(--jf-palette-text-secondary);
+            }
+            .jfr-drawer a {
+                display: block;
+                padding: 0.45rem 1.25rem;
+                color: inherit;
+                text-decoration: none;
+            }
+            .jfr-scrim {
+                position: absolute;
+                inset: 0;
+                background: rgb(0 0 0 / 0.45);
+                z-index: 2;
+            }
+            .jfr-scrim[hidden] {
+                display: none;
+            }
+            .jfr-pre {
+                max-block-size: 28rem;
+                overflow: auto;
+                font-size: 0.75rem;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="kp-page kp-page--full">
+            <div class="kp-stack">
+                <header class="kp-stack">
+                    <h1>Theming the Jellyfin web client with kp-themes</h1>
+                    <p class="kp-text-muted">
+                        Research demo for <code>research/jellyfin/README.md</code>. Measured against jellyfin-web v10.10.7, v10.11.11 and v12.1, and
+                        tested live on a throwaway Jellyfin 12.1 container (loopback only, no library). The container was stopped and removed
+                        afterwards.
+                    </p>
+                    <!-- Theme switcher: mock chrome. Sets data-theme on <html>; nothing is stored. -->
+                    <div class="jfr-switcher" role="group" aria-label="Theme">
+                        <span>Theme:</span>
+                        <button type="button" class="kp-button" data-jfr-theme="formal" aria-pressed="false">Formal</button>
+                        <button type="button" class="kp-button" data-jfr-theme="cyberpunk" aria-pressed="true">Cyberpunk</button>
+                        <button type="button" class="kp-button" data-jfr-theme="dark" aria-pressed="false">Dark</button>
+                        <span class="jfr-tag" style="color: var(--muted-foreground)">mock switcher</span>
+                    </div>
+                </header>
+
+                <!-- 1 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s1">
+                    <h2 id="s1">1. The verdict <span class="jfr-tag" style="color: var(--success-foreground)">package</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> whether the four measured numbers are enough to decide, and whether the warning names the right
+                        limits. Every card and the alert are package classes (<code>kp-autogrid</code>, <code>kp-card</code>,
+                        <code>kp-alert--warning</code>) with no page styling.
+                    </p>
+                    <div class="kp-alert kp-alert--warning" role="note">
+                        <span class="kp-alert__body"
+                            >Doable on Jellyfin 12.x at medium cost. Custom CSS never reaches the admin dashboard, Android TV or Swiftfin, and
+                            Jellyfin 10.11 has no variable layer to build on.</span
+                        >
+                    </div>
+                    <div class="kp-autogrid">
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">59 variables</h3></div>
+                            <div class="kp-card__body">
+                                <p><code>--jf-*</code> declarations per theme in the prototype, out of 237 at runtime in 12.1.</p>
+                            </div>
+                        </article>
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">21 classes</h3></div>
+                            <div class="kp-card__body">
+                                <p>Jellyfin or MUI class names the prototype targets. All 21 exist in 10.10.7, 10.11.11 and 12.1.</p>
+                            </div>
+                        </article>
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">17 / 9</h3></div>
+                            <div class="kp-card__body">
+                                <p>
+                                    Stylesheet class names removed from 10.11.11 to 12.1. 9 of them are gone from all source. From 10.10.7 to
+                                    10.11.11: 3 and 2.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">13,682 bytes</h3></div>
+                            <div class="kp-card__body">
+                                <p>The generated two-theme file (formal and cyberpunk, with fonts from the pinned jsDelivr tag).</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- 2 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s2">
+                    <h2 id="s2">2. Where Jellyfin accepts CSS <span class="jfr-tag" style="color: var(--success-foreground)">package</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> the Storage column. The per-user field is saved per browser, not per account, and the dashboard row
+                        is a hard "no". The table is <code>kp-table</code> as it ships.
+                    </p>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Field</th>
+                                    <th scope="col">Where</th>
+                                    <th scope="col">Storage</th>
+                                    <th scope="col">Applies to</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Custom CSS code</td>
+                                    <td>Dashboard &gt; Branding</td>
+                                    <td>Server (<code>BrandingOptions.CustomCss</code>)</td>
+                                    <td><span class="kp-badge kp-badge--success">every user</span> legacy and modern layouts, login</td>
+                                </tr>
+                                <tr>
+                                    <td>Custom CSS code (user)</td>
+                                    <td>Settings &gt; Display</td>
+                                    <td><code>localStorage</code>, key <code>&lt;userId&gt;-customCss</code></td>
+                                    <td><span class="kp-badge kp-badge--warning">this browser</span> loaded after the server CSS</td>
+                                </tr>
+                                <tr>
+                                    <td>Disable server-provided custom CSS</td>
+                                    <td>Settings &gt; Display</td>
+                                    <td><code>localStorage</code></td>
+                                    <td><span class="kp-badge kp-badge--warning">this browser</span> drops the server CSS, keeps the user CSS</td>
+                                </tr>
+                                <tr>
+                                    <td>Admin dashboard</td>
+                                    <td><code>#/dashboard</code></td>
+                                    <td>n/a</td>
+                                    <td>
+                                        <span class="kp-badge kp-badge--destructive">never</span> its layout renders no <code>CustomCss</code>; 0
+                                        custom-CSS style elements live
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 3 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s3">
+                    <h2 id="s3">3. The client, before and after <span class="jfr-tag" style="color: var(--warning-foreground)">mock</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> the right-hand pane under Formal and under Cyberpunk. Does a settings page painted only through the
+                        Jellyfin palette variables, plus a few register touches (serif display and hairline for formal; capitals, notched button and
+                        the yellow rule for cyberpunk), read as the family? The left pane uses Jellyfin 12.1's own default values and does not follow
+                        the switcher. Both panes are mock markup; the variable names are Jellyfin's. The live test on 12.1 matched this in the legacy
+                        layout, but in the modern layout the MUI app-bar title and the selects kept Noto Sans.
+                    </p>
+                    <div class="jfr-pair">
+                        <div>
+                            <p class="jfr-caption">Jellyfin 12.1 default (dark)</p>
+                            <div class="jfr-app jfr-app--default">
+                                <div class="jfr-header">
+                                    <span aria-hidden="true">☰</span>
+                                    <p class="jfr-header__title">Settings</p>
+                                    <span class="jfr-icon jfr-avatar" aria-hidden="true">R</span>
+                                </div>
+                                <div class="jfr-body">
+                                    <h3 class="jfr-section-title">Reviewer</h3>
+                                    <ul class="jfr-list">
+                                        <li>Profile</li>
+                                        <li>Display</li>
+                                        <li>Playback</li>
+                                        <li>Subtitles</li>
+                                    </ul>
+                                    <label class="jfr-label" for="jfr-q1">Search</label>
+                                    <input class="jfr-input" id="jfr-q1" value="Night of the Hunter" />
+                                    <button type="button" class="jfr-submit">Save</button>
+                                    <div class="jfr-card">
+                                        <strong>Chrome</strong>
+                                        <p>Jellyfin Web 12.1.0 · last activity a minute ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="jfr-caption">The kp mapping (follows the switcher)</p>
+                            <div class="jfr-app jfr-app--kp">
+                                <div class="jfr-header">
+                                    <span aria-hidden="true">☰</span>
+                                    <p class="jfr-header__title">Settings</p>
+                                    <span class="jfr-icon jfr-avatar" aria-hidden="true">R</span>
+                                </div>
+                                <div class="jfr-body">
+                                    <h3 class="jfr-section-title">Reviewer</h3>
+                                    <ul class="jfr-list">
+                                        <li>Profile</li>
+                                        <li>Display</li>
+                                        <li>Playback</li>
+                                        <li>Subtitles</li>
+                                    </ul>
+                                    <label class="jfr-label" for="jfr-q2">Search</label>
+                                    <input class="jfr-input" id="jfr-q2" value="Night of the Hunter" />
+                                    <button type="button" class="jfr-submit">Save</button>
+                                    <div class="jfr-card">
+                                        <strong>Chrome</strong>
+                                        <p>Jellyfin Web 12.1.0 · last activity a minute ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s4">
+                    <h2 id="s4">4. What opens: account menu and drawer <span class="jfr-tag" style="color: var(--warning-foreground)">mock</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> the surfaces that float. The account menu (modern app, an MUI Menu) and the drawer (legacy app) both
+                        take <code>--jf-palette-background-paper</code>, which maps to <code>--card</code>, so they follow the theme without a class
+                        selector. The left frame has a working trigger (the avatar and ☰); the right frame shows both pinned open. Both are mock; the
+                        live 12.1 test showed the same with the real menu and drawer.
+                    </p>
+                    <div class="jfr-pair">
+                        <div>
+                            <p class="jfr-caption">Closed, with working triggers</p>
+                            <div class="jfr-app jfr-app--kp" data-jfr-live>
+                                <div class="jfr-header">
+                                    <button
+                                        type="button"
+                                        class="jfr-icon"
+                                        aria-expanded="false"
+                                        aria-controls="jfr-drawer-live"
+                                        data-jfr-toggle="drawer"
+                                    >
+                                        ☰
+                                    </button>
+                                    <p class="jfr-header__title">Home</p>
+                                    <button
+                                        type="button"
+                                        class="jfr-icon jfr-avatar"
+                                        aria-expanded="false"
+                                        aria-controls="jfr-menu-live"
+                                        data-jfr-toggle="menu"
+                                    >
+                                        R
+                                    </button>
+                                </div>
+                                <div class="jfr-scrim" hidden data-jfr-scrim></div>
+                                <nav class="jfr-drawer" id="jfr-drawer-live" hidden aria-label="Drawer">
+                                    <a href="#s4">Home</a>
+                                    <h4>Administration</h4>
+                                    <a href="#s4">Dashboard</a>
+                                    <a href="#s4">Metadata Manager</a>
+                                    <h4>User</h4>
+                                    <a href="#s4">Settings</a>
+                                    <a href="#s4">Sign Out</a>
+                                </nav>
+                                <ul class="jfr-menu" id="jfr-menu-live" hidden>
+                                    <li>Profile</li>
+                                    <li>Settings</li>
+                                    <li><hr /></li>
+                                    <li>Dashboard</li>
+                                    <li>Quick Connect</li>
+                                    <li>Sign Out</li>
+                                </ul>
+                                <div class="jfr-body">
+                                    <h3 class="jfr-section-title">Nothing here</h3>
+                                    <p>No libraries have been created yet.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="jfr-caption">Both pinned open</p>
+                            <div class="jfr-app jfr-app--kp">
+                                <div class="jfr-header">
+                                    <span class="jfr-icon" aria-hidden="true">☰</span>
+                                    <p class="jfr-header__title">Home</p>
+                                    <span class="jfr-icon jfr-avatar" aria-hidden="true">R</span>
+                                </div>
+                                <div class="jfr-scrim"></div>
+                                <nav class="jfr-drawer" aria-label="Drawer, pinned open">
+                                    <a href="#s4">Home</a>
+                                    <h4>Administration</h4>
+                                    <a href="#s4">Dashboard</a>
+                                    <a href="#s4">Metadata Manager</a>
+                                    <h4>User</h4>
+                                    <a href="#s4">Settings</a>
+                                    <a href="#s4">Sign Out</a>
+                                </nav>
+                                <ul class="jfr-menu" style="z-index: 4">
+                                    <li>Profile</li>
+                                    <li>Settings</li>
+                                    <li><hr /></li>
+                                    <li>Dashboard</li>
+                                    <li>Quick Connect</li>
+                                    <li>Sign Out</li>
+                                </ul>
+                                <div class="jfr-body">
+                                    <h3 class="jfr-section-title">Nothing here</h3>
+                                    <p>No libraries have been created yet.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s5">
+                    <h2 id="s5">5. Token to Jellyfin variable <span class="jfr-tag" style="color: var(--info-foreground)">mixed</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> the choices in the right-hand column. <code>secondary</code> (Jellyfin's focus colour) takes
+                        <code>ring</code>, not <code>accent</code>. The app bar takes <code>card</code> on a light theme and
+                        <code>sidebar-background</code> on a dark one. Swatches read the live token and follow the switcher. The table is
+                        <code>kp-table</code>; the swatch box is mock.
+                    </p>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Jellyfin variable</th>
+                                    <th scope="col">kp token</th>
+                                    <th scope="col">Now</th>
+                                    <th scope="col">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--jf-palette-background-default</code> (+Channel)</td>
+                                    <td><code>background</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--background)"></span></td>
+                                    <td>Page ground; legacy <code>html</code> and <code>.backgroundContainer</code> read it in 12.x</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-background-paper</code> (+Channel)</td>
+                                    <td><code>card</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--card)"></span></td>
+                                    <td>Menus, drawer, dialogs; <code>.paperList</code> needs a selector</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-primary-main</code> (+Channel, dark, light)</td>
+                                    <td><code>primary</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--primary)"></span></td>
+                                    <td>dark/light: lightness −8 / +8 at build time</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-primary-contrastText</code></td>
+                                    <td><code>primary-foreground</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--primary-foreground)"></span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-secondary-main</code></td>
+                                    <td><code>ring</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--ring)"></span></td>
+                                    <td>Jellyfin uses secondary for focus and interactive states</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-text-primary</code> / <code>-secondary</code></td>
+                                    <td><code>foreground</code> / <code>muted-foreground</code></td>
+                                    <td>
+                                        <span class="jfr-swatch" style="background: var(--foreground)"></span>
+                                        <span class="jfr-swatch" style="background: var(--muted-foreground)"></span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-divider</code></td>
+                                    <td><code>border</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--border)"></span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-error-main</code></td>
+                                    <td><code>destructive</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--destructive)"></span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-AppBar-defaultBg</code></td>
+                                    <td><code>card</code> or <code>sidebar-background</code></td>
+                                    <td>
+                                        <span class="jfr-swatch" style="background: var(--card)"></span>
+                                        <span class="jfr-swatch" style="background: var(--sidebar-background)"></span>
+                                    </td>
+                                    <td>By <code>color-scheme</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-palette-FilledInput-bg</code></td>
+                                    <td><code>muted</code></td>
+                                    <td><span class="jfr-swatch" style="background: var(--muted)"></span></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-font-body1</code> … <code>subtitle2</code> / <code>h1</code> … <code>h6</code></td>
+                                    <td><code>theme-font-body</code> / <code>theme-font-display</code></td>
+                                    <td></td>
+                                    <td>Shorthand values; Emotion still writes a literal Noto Sans in some MUI parts</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--jf-card-borderRadius</code></td>
+                                    <td><code>radius</code></td>
+                                    <td></td>
+                                    <td>0 for cyberpunk, 0.375rem for formal</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 6 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s6">
+                    <h2 id="s6">6. Churn, clients, switching <span class="jfr-tag" style="color: var(--success-foreground)">package</span></h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> three things. First, how small the class-name churn is next to the layout change of 12.0. Second,
+                        the two red rows among the clients. Third, the trade-off between the three ways to switch themes. All package classes, no page
+                        styling.
+                    </p>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                Selector churn, measured from source tarballs
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Measure</th>
+                                    <th scope="col">10.10.7 → 10.11.11</th>
+                                    <th scope="col">10.11.11 → 12.1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Stylesheet class names removed (gone from all source)</td>
+                                    <td>3 (2)</td>
+                                    <td>17 (9)</td>
+                                </tr>
+                                <tr>
+                                    <td>Stylesheet class names added</td>
+                                    <td>5</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>ElegantFin: of its 393 Jellyfin classes, disappeared</td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>JellySkin: of its 131 Jellyfin classes, disappeared</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>Prototype: of its 21 classes, disappeared</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><code>var(--jf-palette…)</code> reads in style files</td>
+                                    <td>0 → 0</td>
+                                    <td>0 → 105</td>
+                                </tr>
+                                <tr>
+                                    <td>Default layout</td>
+                                    <td>desktop → desktop</td>
+                                    <td>desktop → <strong>modern</strong> (PR #7393)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption>
+                                Which clients receive custom CSS
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Client</th>
+                                    <th scope="col">Built on</th>
+                                    <th scope="col">Custom CSS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Browser (web client)</td>
+                                    <td>jellyfin-web</td>
+                                    <td><span class="kp-badge kp-badge--success">yes</span> tested live</td>
+                                </tr>
+                                <tr>
+                                    <td>Jellyfin Desktop (formerly Jellyfin Media Player)</td>
+                                    <td>jellyfin-web in Qt WebEngine; Qt 6 since 2.0</td>
+                                    <td>
+                                        <span class="kp-badge kp-badge--success">yes</span> not tested here; ElegantFin reported glitches on the old
+                                        Qt 5 engine
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Android phone app</td>
+                                    <td>jellyfin-web in a WebView</td>
+                                    <td><span class="kp-badge kp-badge--success">yes</span> per ElegantFin, not tested here</td>
+                                </tr>
+                                <tr>
+                                    <td>LG webOS, Samsung Tizen</td>
+                                    <td>jellyfin-web</td>
+                                    <td>
+                                        <span class="kp-badge kp-badge--warning">yes, TV layout</span> uses <code>.layout-tv</code>; icon-font issues
+                                        reported
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Android TV</td>
+                                    <td>Kotlin, native</td>
+                                    <td><span class="kp-badge kp-badge--destructive">no</span> maintainer answered "No" to theme mirroring</td>
+                                </tr>
+                                <tr>
+                                    <td>Swiftfin (iOS, tvOS)</td>
+                                    <td>SwiftUI, native</td>
+                                    <td><span class="kp-badge kp-badge--destructive">no</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="kp-autogrid">
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">A · Built-in theme ids</h3></div>
+                            <div class="kp-card__body">
+                                <p>
+                                    One file, keyed on <code>html[data-theme="light"]</code>, <code>"dark"</code> and so on. The user picks a theme in
+                                    Settings &gt; Display and it repaints without a reload. No server files. At most six themes, and they appear under
+                                    Jellyfin's names ("Light" wears formal).
+                                </p>
+                            </div>
+                        </article>
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">B · Extra ids via config.json</h3></div>
+                            <div class="kp-card__body">
+                                <p>
+                                    Add <code>{"id": "kp-nostromo"}</code> to <code>web/config.json</code> and a
+                                    <code>themes/kp-nostromo/theme.css</code>. Tested live: the new entry was listed, and MUI fell back to its default
+                                    palette. No limit on themes, but it edits server files, so it needs a volume mount to survive an image upgrade.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">C · One file per theme</h3></div>
+                            <div class="kp-card__body">
+                                <p>
+                                    <code>@import</code> one theme in the server field, or in the per-user field with the server CSS disabled. Simple,
+                                    but the per-user choice is saved per browser, and switching means editing CSS.
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- 7 ─────────────────────────────────────────────────────────── -->
+                <section class="kp-section kp-stack" aria-labelledby="s7">
+                    <h2 id="s7">
+                        7. The prototype file and how it would ship <span class="jfr-tag" style="color: var(--info-foreground)">mixed</span>
+                    </h2>
+                    <p class="jfr-look">
+                        <strong>Look at:</strong> the two layers inside each theme: the <code>--jf-*</code> values (literal, with
+                        <code>…Channel</code> triplets), then the short class-selector part. Also look at the <code>@import</code> line. It is pinned
+                        to a tag the way the package's releases are, and that path does not exist yet. The two blocks are <code>kp-code-block</code>;
+                        the file inside was produced by a scratch generator and pasted into Dashboard &gt; Branding on the 12.1 test server.
+                    </p>
+                    <pre class="kp-code-block">
+/* Dashboard &gt; Branding &gt; Custom CSS code (proposed; this path is not in a release) */
+@import url("https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.2.0/dist/jellyfin/kp-jellyfin.css");</pre>
+                    <pre class="kp-code-block jfr-pre">
+/* kp-themes -&gt; Jellyfin 12.x prototype (research/jellyfin). Generated from themes/formal and themes/cyberpunk tokens.json.
+   Pick the theme in User settings &gt; Display &gt; Theme: "Light" wears kp formal, "Dark" wears kp cyberpunk. */
+
+@font-face { font-family: 'Instrument Sans'; font-weight: 400 700; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.1.0/fonts/instrumentsans/instrumentsans-variable.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-weight: 100 900; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.1.0/fonts/fraunces/fraunces-variable.woff2') format('woff2'); }
+@font-face { font-family: 'Rajdhani'; font-weight: 400; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.1.0/fonts/rajdhani/rajdhani-regular.woff2') format('woff2'); }
+@font-face { font-family: 'Rajdhani'; font-weight: 600; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.1.0/fonts/rajdhani/rajdhani-semibold.woff2') format('woff2'); }
+@font-face { font-family: 'Big Shoulders Display'; font-weight: 100 900; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/kennypassenier/kp-themes@v6.1.0/fonts/bigshouldersdisplay/bigshouldersdisplay-variable.woff2') format('woff2'); }
+
+/* kp formal -&gt; Jellyfin "light": the palette variables (stable-ish hook, 12.x) */
+html[data-theme="light"] {
+    color-scheme: light;
+    --jf-palette-primary-main: hsl(218, 45%, 24%);
+    --jf-palette-primary-mainChannel: 34 54 89;
+    --jf-palette-primary-dark: hsl(218, 45%, 16%);
+    --jf-palette-primary-darkChannel: 22 36 59;
+    --jf-palette-primary-light: hsl(218, 45%, 32%);
+    --jf-palette-primary-lightChannel: 45 72 118;
+    --jf-palette-primary-contrastText: hsl(40, 30%, 97%);
+    --jf-palette-primary-contrastTextChannel: 250 248 245;
+    --jf-palette-secondary-main: hsl(218, 45%, 40%);
+    --jf-palette-secondary-mainChannel: 56 90 148;
+    --jf-palette-secondary-dark: hsl(218, 45%, 32%);
+    --jf-palette-secondary-light: hsl(218, 45%, 48%);
+    --jf-palette-secondary-contrastText: hsl(40, 30%, 97%);
+    --jf-palette-secondary-contrastTextChannel: 250 248 245;
+    --jf-palette-error-main: hsl(0, 60%, 40%);
+    --jf-palette-error-mainChannel: 163 41 41;
+    --jf-palette-error-contrastText: hsl(40, 30%, 97%);
+    --jf-palette-background-default: hsl(40, 25%, 97%);
+    --jf-palette-background-defaultChannel: 249 248 245;
+    --jf-palette-background-defaultImage: none;
+    --jf-palette-background-paper: hsl(40, 30%, 99%);
+    --jf-palette-background-paperChannel: 253 253 252;
+    --jf-palette-text-primary: hsl(220, 30%, 13%);
+    --jf-palette-text-primaryChannel: 23 30 43;
+    --jf-palette-text-secondary: hsl(220, 12%, 36%);
+    --jf-palette-text-secondaryChannel: 81 88 103;
+    --jf-palette-divider: hsl(40, 15%, 85%);
+    --jf-palette-dividerChannel: 222 219 211;
+    --jf-palette-action-active: hsl(220, 30%, 13%);
+    --jf-palette-action-activeChannel: 23 30 43;
+    --jf-palette-action-hover: rgb(23 30 43 / 0.08);
+    --jf-palette-action-selected: rgb(34 54 89 / 0.16);
+    --jf-palette-action-selectedChannel: 34 54 89;
+    --jf-palette-action-focus: rgb(56 90 148 / 0.24);
+    --jf-palette-AppBar-defaultBg: hsl(40, 30%, 99%);
+    --jf-palette-AppBar-darkBg: hsl(40, 30%, 99%);
+    --jf-palette-AppBar-darkColor: hsl(220, 30%, 13%);
+    --jf-palette-AppBar-transparentBg: rgb(249 248 245 / 0.6);
+    --jf-palette-AppBar-gradient: none;
+    --jf-palette-FilledInput-bg: hsl(40, 15%, 91%);
+    --jf-palette-FilledInput-hoverBg: hsl(40, 18%, 90%);
+    --jf-palette-Button-inheritContainedBg: hsl(40, 18%, 90%);
+    --jf-palette-Button-inheritContainedHoverBg: hsl(40, 15%, 91%);
+    --jf-palette-SnackbarContent-bg: hsl(40, 30%, 99%);
+    --jf-palette-SnackbarContent-color: hsl(220, 30%, 13%);
+    --jf-card-borderRadius: 0.375rem;
+    --kp-jf-body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --kp-jf-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --kp-jf-radius: 0.375rem;
+    --jf-font-body1: 400 1rem/1.5 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-body2: 400 0.875rem/1.43 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-button: 500 0.875rem/1.75 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-caption: 400 0.75rem/1.66 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-overline: 400 0.75rem/2.66 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-subtitle1: 400 1rem/1.75 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-subtitle2: 500 0.875rem/1.57 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --jf-font-h1: 300 1.8rem/1.167 'Fraunces', Georgia, 'Times New Roman', serif;
+    --jf-font-h2: 300 1.5rem/1.2 'Fraunces', Georgia, 'Times New Roman', serif;
+    --jf-font-h3: 400 1.17rem/1.167 'Fraunces', Georgia, 'Times New Roman', serif;
+    --jf-font-h4: 400 2.125rem/1.235 'Fraunces', Georgia, 'Times New Roman', serif;
+    --jf-font-h5: 400 1.5rem/1.334 'Fraunces', Georgia, 'Times New Roman', serif;
+    --jf-font-h6: 500 1.25rem/1.6 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+/* kp formal: legacy class selectors (brittle hook: internal class names) */
+html[data-theme="light"] body,
+html[data-theme="light"] .backgroundContainer { background-color: var(--jf-palette-background-default); }
+html[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] .skinHeader,
+html[data-theme="light"] .emby-button,
+html[data-theme="light"] .emby-input,
+html[data-theme="light"] .emby-select,
+html[data-theme="light"] .emby-textarea { font-family: var(--kp-jf-body); }
+html[data-theme="light"] .paperList,
+html[data-theme="light"] .visualCardBox,
+html[data-theme="light"] .collapseContent { background-color: var(--jf-palette-background-paper); }
+html[data-theme="light"] .paper-icon-button-light:hover:not(:disabled) { background-color: rgb(var(--jf-palette-primary-mainChannel) / 0.14); }
+html[data-theme="light"] .emby-input,
+html[data-theme="light"] .emby-textarea,
+html[data-theme="light"] .emby-select-withcolor { border-radius: var(--kp-jf-radius); }
+html[data-theme="light"] .button-submit,
+html[data-theme="light"] .raised,
+html[data-theme="light"] .MuiButton-root { border-radius: var(--kp-jf-radius); }
+html[data-theme="light"] .sectionTitle,
+html[data-theme="light"] .pageTitle,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { font-family: var(--kp-jf-display); }
+html[data-theme="light"] * { scrollbar-color: hsl(220, 14%, 56%) hsl(40, 25%, 97%); }
+/* kp formal register touches: the serif display, the hairline under the bar */
+html[data-theme="light"] .sectionTitle,
+html[data-theme="light"] .pageTitle,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3,
+html[data-theme="light"] .MuiTypography-h1, html[data-theme="light"] .MuiTypography-h2, html[data-theme="light"] .MuiTypography-h3 { font-weight: 600; letter-spacing: -0.01em; }
+html[data-theme="light"] .skinHeader,
+html[data-theme="light"] .MuiAppBar-root { box-shadow: inset 0 -1px 0 hsl(220, 14%, 56%); color: hsl(220, 30%, 13%); }
+
+/* kp cyberpunk -&gt; Jellyfin "dark": the palette variables (stable-ish hook, 12.x) */
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --jf-palette-primary-main: hsl(56, 98%, 51%);
+    --jf-palette-primary-mainChannel: 253 236 8;
+    --jf-palette-primary-dark: hsl(56, 98%, 43%);
+    --jf-palette-primary-darkChannel: 217 203 2;
+    --jf-palette-primary-light: hsl(56, 98%, 59%);
+    --jf-palette-primary-lightChannel: 253 239 48;
+    --jf-palette-primary-contrastText: hsl(53, 36%, 5%);
+    --jf-palette-primary-contrastTextChannel: 17 16 8;
+    --jf-palette-secondary-main: hsl(56, 98%, 51%);
+    --jf-palette-secondary-mainChannel: 253 236 8;
+    --jf-palette-secondary-dark: hsl(56, 98%, 43%);
+    --jf-palette-secondary-light: hsl(56, 98%, 59%);
+    --jf-palette-secondary-contrastText: hsl(53, 36%, 5%);
+    --jf-palette-secondary-contrastTextChannel: 17 16 8;
+    --jf-palette-error-main: hsl(353, 84%, 58%);
+    --jf-palette-error-mainChannel: 238 58 79;
+    --jf-palette-error-contrastText: hsl(353, 60%, 7%);
+    --jf-palette-background-default: hsl(270, 9%, 4%);
+    --jf-palette-background-defaultChannel: 10 9 11;
+    --jf-palette-background-defaultImage: none;
+    --jf-palette-background-paper: hsl(255, 10%, 8%);
+    --jf-palette-background-paperChannel: 19 18 22;
+    --jf-palette-text-primary: hsl(50, 12%, 82%);
+    --jf-palette-text-primaryChannel: 215 213 204;
+    --jf-palette-text-secondary: hsl(50, 8%, 55%);
+    --jf-palette-text-secondaryChannel: 149 146 131;
+    --jf-palette-divider: hsl(56, 60%, 16%);
+    --jf-palette-dividerChannel: 65 62 16;
+    --jf-palette-action-active: hsl(50, 12%, 82%);
+    --jf-palette-action-activeChannel: 215 213 204;
+    --jf-palette-action-hover: rgb(215 213 204 / 0.08);
+    --jf-palette-action-selected: rgb(253 236 8 / 0.16);
+    --jf-palette-action-selectedChannel: 253 236 8;
+    --jf-palette-action-focus: rgb(253 236 8 / 0.24);
+    --jf-palette-AppBar-defaultBg: hsl(270, 9%, 3%);
+    --jf-palette-AppBar-darkBg: hsl(270, 9%, 3%);
+    --jf-palette-AppBar-darkColor: hsl(50, 12%, 82%);
+    --jf-palette-AppBar-transparentBg: rgb(10 9 11 / 0.6);
+    --jf-palette-AppBar-gradient: none;
+    --jf-palette-FilledInput-bg: hsl(255, 8%, 12%);
+    --jf-palette-FilledInput-hoverBg: hsl(255, 10%, 14%);
+    --jf-palette-Button-inheritContainedBg: hsl(255, 10%, 14%);
+    --jf-palette-Button-inheritContainedHoverBg: hsl(255, 8%, 12%);
+    --jf-palette-SnackbarContent-bg: hsl(255, 10%, 10%);
+    --jf-palette-SnackbarContent-color: hsl(50, 12%, 82%);
+    --jf-card-borderRadius: 0px;
+    --kp-jf-body: 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --kp-jf-display: 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --kp-jf-radius: 0px;
+    --jf-font-body1: 400 1rem/1.5 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-body2: 400 0.875rem/1.43 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-button: 500 0.875rem/1.75 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-caption: 400 0.75rem/1.66 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-overline: 400 0.75rem/2.66 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-subtitle1: 400 1rem/1.75 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-subtitle2: 500 0.875rem/1.57 'Rajdhani', 'Bahnschrift', 'Segoe UI', system-ui, sans-serif;
+    --jf-font-h1: 300 1.8rem/1.167 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --jf-font-h2: 300 1.5rem/1.2 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --jf-font-h3: 400 1.17rem/1.167 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --jf-font-h4: 400 2.125rem/1.235 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --jf-font-h5: 400 1.5rem/1.334 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+    --jf-font-h6: 500 1.25rem/1.6 'Big Shoulders Display', 'Impact', 'Arial Narrow', sans-serif;
+}
+
+/* kp cyberpunk: legacy class selectors (brittle hook: internal class names) */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .backgroundContainer { background-color: var(--jf-palette-background-default); }
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] .skinHeader,
+html[data-theme="dark"] .emby-button,
+html[data-theme="dark"] .emby-input,
+html[data-theme="dark"] .emby-select,
+html[data-theme="dark"] .emby-textarea { font-family: var(--kp-jf-body); }
+html[data-theme="dark"] .paperList,
+html[data-theme="dark"] .visualCardBox,
+html[data-theme="dark"] .collapseContent { background-color: var(--jf-palette-background-paper); }
+html[data-theme="dark"] .paper-icon-button-light:hover:not(:disabled) { background-color: rgb(var(--jf-palette-primary-mainChannel) / 0.14); }
+html[data-theme="dark"] .emby-input,
+html[data-theme="dark"] .emby-textarea,
+html[data-theme="dark"] .emby-select-withcolor { border-radius: var(--kp-jf-radius); }
+html[data-theme="dark"] .button-submit,
+html[data-theme="dark"] .raised,
+html[data-theme="dark"] .MuiButton-root { border-radius: var(--kp-jf-radius); }
+html[data-theme="dark"] .sectionTitle,
+html[data-theme="dark"] .pageTitle,
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3 { font-family: var(--kp-jf-display); }
+html[data-theme="dark"] * { scrollbar-color: hsl(56, 40%, 42%) hsl(270, 9%, 4%); }
+/* kp cyberpunk register touches: capitals, the notch, the signal rule under the bar */
+html[data-theme="dark"] .sectionTitle,
+html[data-theme="dark"] .pageTitle,
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3,
+html[data-theme="dark"] .MuiTypography-h1, html[data-theme="dark"] .MuiTypography-h2, html[data-theme="dark"] .MuiTypography-h3 { text-transform: uppercase; letter-spacing: 0.04em; font-weight: 800; }
+html[data-theme="dark"] .button-submit,
+html[data-theme="dark"] .MuiButton-containedPrimary { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+html[data-theme="dark"] .skinHeader,
+html[data-theme="dark"] .MuiAppBar-root { box-shadow: inset 0 -2px 0 var(--jf-palette-primary-main); }
+html[data-theme="dark"] .emby-input:focus,
+html[data-theme="dark"] .emby-select-withcolor:focus { border-color: hsl(184, 100%, 50%); }</pre>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module">
+            // Mock: the theme switcher and the two toggles in section 4. Nothing is stored.
+            const root = document.documentElement;
+            const buttons = document.querySelectorAll('[data-jfr-theme]');
+            for (const button of buttons) {
+                button.addEventListener('click', () => {
+                    root.setAttribute('data-theme', button.dataset.jfrTheme);
+                    for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
+                });
+            }
+            const live = document.querySelector('[data-jfr-live]');
+            const scrim = live.querySelector('[data-jfr-scrim]');
+            const closeAll = () => {
+                for (const t of live.querySelectorAll('[data-jfr-toggle]')) {
+                    t.setAttribute('aria-expanded', 'false');
+                    document.getElementById(t.getAttribute('aria-controls')).hidden = true;
+                }
+                scrim.hidden = true;
+            };
+            for (const toggle of live.querySelectorAll('[data-jfr-toggle]')) {
+                toggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const open = toggle.getAttribute('aria-expanded') !== 'true';
+                    closeAll();
+                    if (!open) return;
+                    toggle.setAttribute('aria-expanded', 'true');
+                    document.getElementById(toggle.getAttribute('aria-controls')).hidden = false;
+                    if (toggle.dataset.jfrToggle === 'drawer') scrim.hidden = false;
+                });
+            }
+            scrim.addEventListener('click', closeAll);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') closeAll();
+            });
+        </script>
+    </body>
+</html>

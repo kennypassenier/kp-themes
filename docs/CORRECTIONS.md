@@ -4032,3 +4032,211 @@ One more property came out of the same reading, from a sweep over the nine theme
 **8 · If the measurement fails.** The commit check in `check:verdicts` skips itself when `git rev-parse --is-shallow-repository` says true, and says so in its output.
 
 **9 · When we review the measure.** When the release workflow gains a step that does not need history and the cost of the full clone becomes noticeable.
+
+## fix-53 · The fix-37 gate let a decided topic back out of the archive (2026-09-17)
+
+**1 · What went wrong.** fix-37-M1 was measured: one theme portrait (`research/theme-portraits/formal.html`) was moved back under "Research to look at" in `catalogue/pages.js`, and `node gates/check-catalogue.mjs` exited 0.
+
+**2 · Which gate let it through.** fix-37's own unit test, which only ever listed a topic with one page. `decidedOutsideArchive` recorded the group of every page of a topic in turn, so the two portraits still under "Archived research" overwrote the one outside it.
+
+**3 · Where the same fault sits.** The property: a map keyed by topic or page that is written once per match, so the last match wins. Searched with `grep -n "\.set(" gates/check-catalogue.mjs`: `blocksOutsideTheReview` keys by the page's own href, which occurs once; `decidedOutsideArchive` was the only map keyed by something several entries share.
+
+**4 · How we prevent recurrence.** One page outside the archive now puts the whole topic outside; the unit test carries a topic split across both groups.
+
+**5 · What the remedy costs.** Two lines.
+
+**6 · Who enforces it.** Code: `gates/check-catalogue.test.mjs`, red on the split topic before the change ("pass 5, fail 1"), green after; `check:catalogue` in the gates.
+
+**7 · How we measure it works, and when.** Measured at the fix: the same move of the formal portrait now exits 1 with `research/theme-portraits (listed under "Research to look at")`; restored, exit 0.
+
+**8 · If the measurement fails.** The gate lists pages rather than topics, one line per page outside the archive.
+
+**9 · When we review the measure.** When research topics stop being grouped in `catalogue/pages.js`.
+
+## fix-54 · One digest per folder made every change a change to every block (2026-09-17)
+
+**1 · What went wrong.** The JavaScript split changed `js/auto.js` alone, and `node gates/verdicts.mjs snapshot` read "3062 pair(s) measured, 3062 of them no longer the block the verdict was given on": scope-114 digested all of `css/` (without the registers), `js/` and `components/` as one number, so any change anywhere read as a change to every block.
+
+**2 · Which gate let it through.** None could: scope-114 was measured against the change it was built for — zoom, window, typed values, a version bump — and never against an ordinary code change that touches one component.
+
+**3 · Where the same fault sits.** The property: an input to the block hash that is wider than what the block uses. Searched by reading `inputLines` in `catalogue/block-hash.js` and every digest in `gates/generate-code-version.mjs`: the shared digest (all of css/, js/, components/) and the register digest (a whole register per theme) were both that shape; the markup line and the theme were not.
+
+**4 · How we prevent recurrence.** Hash version 6 [scope-116]: digests per CSS family (shared and per register), per component (its modules and the families they draw of their own), a base of lines naming no family, and per theme its tokens; a block reads only the families and components its markup carries. `js/auto.js` is no input.
+
+**5 · What the remedy costs.** `catalogue/code-version.json` grows from 1 kB to 137 kB, fetched once per review page; the generator reads every stylesheet line by line, about a second.
+
+**6 · Who enforces it.** Code: `gates/code-version.test.mjs` (a line lands with its family, a comment and a version move nothing, the loader is no input) and `check:generated` refusing a stale `code-version.json`; the measurement below is discipline.
+
+**7 · How we measure it works, and when.** Measured at the fix with temporary changes, each restored: the loader 0 of 3062 pairs, the data table's module 264, a `.kp-button` rule in `css/components.css` 1236, the same rule in dark's register 89. Measured again at the next change that reaches Kenny's review: the pairs that come back are the blocks that carry what changed.
+
+**8 · If the measurement fails.** The digests go one step finer — per rule rather than per family — for whichever family brought back a block that does not carry it.
+
+**9 · When we review the measure.** When a block is judged that a family change did not bring back although it visibly changed; that is the one fault this recipe could have.
+
+## fix-55 · The manifest walk could not see a module fetched with import() (2026-09-17)
+
+**1 · What went wrong.** After the effects split, `node gates/check-manifest.mjs` passed while the nine hooks in `js/effects/` were in no manifest: the walk read `from '…'` and `import '…'` only, so `import('./effects/headline.js')` was invisible, and `consumer.tar` — what Almanac and kyu vendor — would have shipped a page whose reveals never arrive.
+
+**2 · Which gate let it through.** `check:manifest`'s own `references()`, written when every module was imported statically; nothing in the package used `import()` before scope-115.
+
+**3 · Where the same fault sits.** The property: a reader of module references that knows only the static forms. Searched with `grep -rn "from|import" gates/*.mjs` for reference readers: `gates/check-manifest.mjs` (fixed), `gates/generate-bundle.mjs` (esbuild follows `import()` itself), `gates/site/extract-attributes.mjs` (read only `js/*.js`, so the hooks' attributes fell off the documentation site — fixed in the same change).
+
+**4 · How we prevent recurrence.** `references()` reads `import('./…')` in code, with comments blanked so a JSDoc `import('./x.js')` type is not a file; the ten new files are in `FILES`.
+
+**5 · What the remedy costs.** One pattern and ten manifest lines.
+
+**6 · Who enforces it.** Code: the AR39 unit test in `gates/gates.test.mjs`, red first on `import('./effects/headline.js')` (pass 2, fail 1), and `check:manifest` in the gates.
+
+**7 · How we measure it works, and when.** At the fix: the walk finds 41 imported files, all checksummed. Again at the next release: `consumer.tar` carries `js/effects/`.
+
+**8 · If the measurement fails.** The manifest lists `js/` as a directory export, every file under it copied.
+
+**9 · When we review the measure.** When a module is loaded some other way than `import`.
+
+## fix-56 · The closure gate's record of what chassis-rs bakes was three versions stale (2026-09-17)
+
+**1 · What went wrong.** `gates/check-closure.mjs` lists the modules chassis-rs bakes into its binary and proves they import nothing else; it listed six, while chassis-rs has baked `js/effects.js` since its K15 at kp-themes 5.0.0 (`crates/chassis/src/shell/assets.rs:69`). With the effects split the gate passed although chassis-rs's copy would 404 on ten files. Measured: `js/effects.js` added to the list alone → "10 import(s) outside the vendored closure", exit 1.
+
+**2 · Which gate let it through.** None: the list is a record of another project's build, kept by hand, and the gate's own comment says it changes "only when they start" — nobody told it they had.
+
+**3 · Where the same fault sits.** The property: a list in this repository of what a consumer takes. Searched with `grep -rn "chassis-rs\|vendor" gates/*.mjs`: `check-closure.mjs` (stale, fixed); `checksums.mjs` lists every copyable file, derived from the exports, so it cannot fall behind; chassis-rs's own closure test reads static imports only (step 3 of its task in MIGRATION.md).
+
+**4 · How we prevent recurrence.** The list names all seventeen files chassis-rs bakes at 7.0.0, and MIGRATION.md's task for chassis-rs names this gate, so an upgrade that bakes a new file is written down on both sides.
+
+**5 · What the remedy costs.** Eleven lines in a list, and one sentence per future chassis-rs upgrade.
+
+**6 · Who enforces it.** Code: `check:closure` and the AR28 unit test (`VENDORED.length` 17). Keeping the list current is discipline, on the chassis-rs upgrade.
+
+**7 · How we measure it works, and when.** At chassis-rs's 7.0.0 upgrade: its `ASSETS` carry exactly the seventeen modules this list names, and its page loads the caret with no 404.
+
+**8 · If the measurement fails.** The gate reads chassis-rs's `assets.rs` list from a pinned copy committed here at each upgrade, instead of a hand-kept list.
+
+**9 · When we review the measure.** At the next file chassis-rs starts or stops baking.
+
+## fix-57 · The gate cache skipped checks whose data had changed (2026-09-17)
+
+**1 · What went wrong.** Commit `8b7981b5` wrote the media stack's address into `docs/SCOPE.md`; `check:docs-private` refuses exactly that, and the commit hook printed "0 van 34 checks gedraaid" and let it through. An uncached `npm run gates` refused it an hour later. Measured: the gate cache's recorded input set for `docs-private` is one file, the check's own script; 14 of the 33 traced checks record two files or fewer.
+
+**2 · Which gate let it through.** The gate cache itself (rule 49, `.githooks/trace-inputs.cjs`, canonical in `~/Projects/dev-procedure/hooks/`): it patches `require('fs')`, but an ES module's `import { readFileSync } from 'node:fs'` keeps the unpatched binding unless `syncBuiltinESMExports()` is called, and a `new URL(…)` path was dropped because only strings and `.path` objects were read. So a check recorded the modules it loaded and none of the data it read.
+
+**3 · Where the same fault sits.** The property: a copy of `trace-inputs.cjs` at HOOK_VERSION=4. Searched with `ls -d ~/Projects/*/.githooks/trace-inputs.cjs`: sixteen projects carry it, byte-identical to the canonical file. Every node gate there that imports `fs` as an ES module or reads through a URL skips on data changes; Rust gates run uncached and are not affected.
+
+**4 · How we prevent recurrence.** In the canonical tracer: convert a `URL` with `fileURLToPath`, and call `require('module').syncBuiltinESMExports()` after patching; then sync to the sixteen projects and clear each `.git/gate-cache`. Measured with the fixed copy: `docs-private` 1 → 66 inputs, `manifest` 2 → 250, `catalogue` 1 → 192, `layers` 2 → 32. Until then Claude runs `npm run gates` uncached before every commit here.
+
+**5 · What the remedy costs.** Two lines in one shared file and a sync; the next commit in each project runs every check once.
+
+**6 · Who enforces it.** Code: a unit test in dev-procedure that traces an ES module reading a file through `new URL(…)` and asserts the file is in the set, red on HOOK_VERSION=4.
+
+**7 · How we measure it works, and when.** At the first commit after the sync in kp-themes: a change to `docs/SCOPE.md` alone runs `docs-private`, and no traced check records fewer inputs than the files it reads. Measured 2026-09-17 on HOOK_VERSION=5: `docs-private` 1 → 68 inputs, `manifest` 2 → 250, `catalogue` 1 → 194, `layers` 2 → 32, and a `docs/SCOPE.md`-only change runs 3 checks where it ran none. Read the summary of the FIRST run: a commit runs the chain twice — the Claude Code hook (`check-commit.sh`) calls `gates.sh` and captures its output, then git's own `pre-commit` calls it again — so the line printed at a commit says "0 van 34" even when the first run did the work.
+
+**8 · If the measurement fails.** The cache is switched off (`GATE_FULL=1` in the hook) until the tracer is proven, trading the 4.6 s per commit rule 49 saved for checks that actually run.
+
+**9 · When we review the measure.** At the next change to how a gate reads files (a worker thread, a child process, a new fs API).
+
+## fix-58 · The documentation site's code blocks colour text with chart tokens (2026-09-17)
+
+**1 · What went wrong.** The VS Code research agent noticed it while choosing syntax colours, and Claude measured it: the site's highlighter paints `.kp-code__keyword` with `--chart-1` and `.kp-code__string` with `--chart-2` on `--card`, and in nine of the 22 themes one of the two sits under 4.5:1. String / keyword: formal 3.50 / 8.06, light 3.50 / 6.65, pastel 3.40 / 4.20, forest 3.96 / 5.38, brutalism 5.39 / 3.16, shade-light 3.77 / 5.39, lapis 3.38 / 4.97, nostromo 10.58 / 4.25, titanium 4.14 / 4.92.
+
+**2 · Which gate let it through.** None measures it. `gates/check-contrast.mjs` holds the chart tokens to 3:1 as non-text pairs (SC 1.4.11, a line in a graph), and nothing records that `site/site.css` uses them as text, which needs 4.5:1. The pairing entered with `a2072786` (2026-09-06).
+
+**3 · Where the same fault sits.** The property: a token measured for one role and used in another. Searched with `grep -rn "var(--chart-" css site catalogue`: the site's two code classes are the text uses; the chart components use them as marks. Pastel has no chart token at 4.5:1 on its card at all (the best is chart-1 at 4.20), so choosing a different chart token does not close it.
+
+**4 · How we prevent recurrence.** Kenny chose two new theme tokens (2026-09-17, scope-123): every theme declares `--code-keyword` and `--code-string`, its chart hue and saturation with the lightness moved until the colour reads at 4.5:1 on `--card`. Ten of the 44 moved, by 2 to 10 points; the other 34 are the chart colour unchanged. `site/site.css` and `gates/site/highlight.mjs` colour code with those tokens, and a consumer showing code can take them from the package instead of picking a chart colour.
+
+**5 · What the remedy costs.** 22 `tokens.json` files, the generated `css/themes.css`, the bundle and the minified build, plus the version: the tokens ride in 7.0.0, which is prepared but not released. The VS Code research theme picks them up through the same table.
+
+**6 · Who enforces it.** Code: `check:site` measures every colour the site stylesheet gives to text against the ground it sits on, and refuses one under 4.5:1.
+
+**7 · How we measure it works, and when.** At the commit that lands the remedy: the check is red with the current `site.css`, green after, and the nine themes each read ≥ 4.5:1 for both classes. Measured 2026-09-17: pointing `.kp-code__string` back at `--chart-2` makes `check:site` name seven themes from 3.38:1 to 4.14:1 and exit 1; with the tokens it reports "its 3 code inks read at 4.5:1 or better in all 22 themes".
+
+**8 · If the measurement fails.** The two classes fall back to `--foreground` with weight alone telling keyword from string, until a colour that clears it is found.
+
+**9 · When we review the measure.** When a theme's `--card` or chart tokens change, or a new theme is added.
+
+## fix-59 · Two contrast measurements of the same pair, and they disagreed (2026-09-17)
+
+**1 · What went wrong.** The new `check:site` ink rule reported titanium's code string at 4.51:1 and passed it; `npm run advice` reported the same pair at 4.47:1 and failed it, in the same tree. The gate had been written with `contrast()` from `js/contrast.js`, which works on unrounded channels; `gates/check-contrast.mjs` rounds each channel to 8 bits first, because that is what the browser paints — a difference of up to 0.04, which is the width of the pass this token sat in.
+
+**2 · Which gate let it through.** None could: both were the gate. The fault is that two functions answered the same question, and nothing laid them side by side — the same shape as KT7, where three lists of checks promised the same thing.
+
+**3 · Where the same fault sits.** The property: a second implementation of a measurement the repository already has. Searched with `grep -rn "0.2126\|luminance(" gates js | grep -v node_modules`: two, `js/contrast.js` (shipped, unrounded, and correct for the picker, which composites live colours) and the private `hslToRgb`/`luminance`/`ratio` in `check-contrast.mjs` (rounded, TH116, measured against a rendered page). No third. `themes/*/anatomy.md` quote ratios but compute none.
+
+**4 · How we prevent recurrence.** `gates/colour.mjs` exports `paintedContrast()` — `contrast()` with each channel rounded to 8 bits — and both gates call it. `check-contrast.mjs` lost its private copy of the arithmetic. titanium's `--code-string` moved one more point of lightness, to `hsl(268, 76%, 69%)`, 4.69:1 painted.
+
+**5 · What the remedy costs.** One exported function and twelve lines deleted. The picker keeps the unrounded `contrast()`, which is right for a colour it is still moving.
+
+**6 · Who enforces it.** Code: `gates/check-site-ink.test.mjs` asserts the painted measure is what the ink rule uses, with titanium's pair as the case — 4.51 unrounded, 4.47 painted — so a gate that quietly switches back to `contrast()` turns it red.
+
+**7 · How we measure it works, and when.** At this commit: `node gates/check-site.mjs` and `npm run advice` agree on every pair they share, and both say 4.5:1 or better for all 44 code inks.
+
+**8 · If the measurement fails.** The ink rule takes its floor at 4.6:1, so a rounding difference of 0.04 cannot decide a pass.
+
+**9 · When we review the measure.** When a gate starts measuring a colour the browser does not paint directly — a gradient, a blend, or an alpha — where rounding per channel is no longer the whole story.
+
+## fix-60 · The review navigation stacked on top of a research demo instead of beside it (2026-09-17)
+
+**1 · What went wrong.** Kenny, on the two new demos: "de sidebar is apart en pas daarna (eronder) begint de demo pagina, wat raar is, de content moet gewoon naast de sidenav staan". Measured in Firefox at 1400 px: the navigation's right edge at 240 and the page column's left edge at 8, both at the top — so the demo began below a full-height navigation. He had seen it before on other demos and not raised it.
+
+**2 · Which gate let it through.** `check:catalogue` asks whether a review page loads `catalogue/catalogue.js`, which these pages did; nothing asked whether the shell's own stylesheet was there. `body.cat-shell { display: flex }` lives in `catalogue/catalogue.css`, and the script that adds the class never checked that the file was loaded.
+
+**3 · Where the same fault sits.** The property: a page that runs the shell's script without its stylesheet. Searched with `for f in $(grep -rl "catalogue/catalogue.js" research catalogue examples --include=*.html); do grep -q catalogue.css "$f" || echo "$f"; done`: seven, all research demos — control-height, datatable, grotesk-hover, jellyfin, jellyfin-dark, uniform-size, vscode. The catalogue's own pages and the examples link it through their generator.
+
+**4 · How we prevent recurrence.** `catalogue.js` mounts its own stylesheet: `mountStyles()` adds the link when the document does not already have it. A page can forget a link; a script that brings its own cannot. No page was edited, so the next demo written by hand is right too.
+
+**5 · What the remedy costs.** Eleven lines in one script, and one extra request on pages that already had the link (none: the check is by href).
+
+**6 · Who enforces it.** Code: a browser test in `tests/catalogue-review.spec.mjs` measures, on two demos that link no catalogue stylesheet, that the page column starts at the navigation's right edge and at the top of the viewport.
+
+**7 · How we measure it works, and when.** At this commit: the test is red with `mountStyles()` commented out — "the page starts left of the navigation's edge", column x = 8 against a 240 px navigation — and green with it.
+
+**8 · If the measurement fails.** Then the shell stops depending on a stylesheet for its shape: the flex on `body.cat-shell` moves into the script as an inline style, where nothing can fail to load.
+
+**9 · When we review the measure.** When the catalogue shell gains a second stylesheet, or when a demo starts bringing its own layout for the navigation.
+
+## fix-61 · A generator wrote a shape its own gate refused, one command later (2026-09-18)
+
+**1 · What went wrong.** Cutting 7.0.0, step 2 of Procedure 5.1 is
+`npm run generate:all`. Its last step is `prettier --write .`, which
+reformatted all 22 files in `vscode/`; `npm run gates` then refused the
+tree it had just produced — `vscode/kp-nostromo-color-theme.json does not
+match its source.` The JSON was identical in content (checked by parsing
+both and comparing objects: `true` for every theme); only the line breaks
+of short arrays differed. So the documented release procedure could not be
+followed to the letter without the gates failing.
+
+**2 · Which gate let it through.** None could. The gate is the one that
+refused — correctly. What was missing is that `generate:all` was never run
+twice in a row on a clean tree since `generate:vscode` joined it
+[scope-125]; the generator landed with its files committed straight from
+the generator, before prettier had seen them.
+
+**3 · Where else the same fault sits.** The fault is "a generator whose
+output prettier then rewrites". **Gezocht met:**
+`for g in $(ls gates/generate-*.mjs); do node $g >/dev/null 2>&1; done; npx prettier --write . >/dev/null; npm run gates`
+— every other generator survives that round trip; `generate-themes.mjs`
+says so in its own comment ("on its own line as prettier writes it"). The
+VS Code one was the only one that hand-shaped JSON without matching
+prettier.
+
+**4 · How we prevent recurrence.** The generator formats through prettier
+itself, with the repository's own config resolved from the file's path, so
+its output equals prettier's by construction rather than by hand.
+
+**5 · What the remedy costs.** One import and four lines in the generator;
+the 22 files are 858 lines shorter in total, with no value changed.
+
+**6 · Who enforces it.** Code: `npm run gates` already refuses a stale
+file, and now it refuses nothing after `generate:all`.
+
+**7 · How we measure it works, and when.** At this commit: `generate:all`
+then `gates` reads `pass 183, fail 0`, where the same pair failed on two
+files before the change. Again at the next release, which is the moment
+Procedure 5.1 is walked for real.
+
+**8 · If the measurement fails.** Then the prettier pass at the end of
+`generate:all` stops covering generated trees: `vscode/` and its siblings
+move into `.prettierignore`, and the generators own their own shape.
+
+**9 · When we review the measure.** At the next generator added to
+`generate:all` — the question to ask then is whether it formats through
+prettier or is ignored by it, and never neither.

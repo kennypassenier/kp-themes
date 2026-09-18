@@ -49,7 +49,7 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
         await open(page, BAND);
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
         const band = page.locator('#probe [data-kp-marquee]');
         await expect(band).toHaveAttribute('data-kp-marquee-ready', '');
@@ -65,7 +65,7 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
         await open(page, BAND);
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
         const track = page.locator('#probe [data-kp-marquee-track]');
         // The paint, not the attribute [KT13]: two reads of the computed
@@ -99,7 +99,7 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
         await page.evaluate(async () => {
             document.documentElement.style.setProperty('--kp-marquee-pause', 'never');
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
         await page.waitForTimeout(300);
@@ -116,7 +116,7 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
             const band = document.querySelector('#probe [data-kp-marquee]');
             if (band instanceof HTMLElement) band.style.setProperty('--kp-marquee', '9000ms');
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
         const duration = await page.locator('#probe [data-kp-marquee-track]').evaluate((el) => getComputedStyle(el).animationDuration);
         expect(duration).toBe('9s');
@@ -127,7 +127,7 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
         await open(page, BAND);
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
         const track = page.locator('#probe [data-kp-marquee-track]');
         expect(await track.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
@@ -228,7 +228,7 @@ test.describe('the band on a page [M1, G14]', { tag: ['@component:media', '@comp
         await page.goto('/tests/fixtures/components.html');
         await page.evaluate(async () => {
             const { attachEffects } = await import('/js/effects.js');
-            attachEffects(document);
+            await attachEffects(document).ready;
         });
 
         // `as` and `label` together, read off the accessibility tree rather

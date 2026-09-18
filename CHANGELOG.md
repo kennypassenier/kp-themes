@@ -1,5 +1,70 @@
 # Changelog
 
+## 7.0.0 — 2026-09-17
+
+A major for one break: `attachAll()` and `attachEffects()` finish after they
+return, because a page now downloads only the JavaScript its markup uses. A
+login page loads 241,556 bytes of it where 6.1.0 loaded 722,686 (Chromium,
+`examples/login.html`). No consumer in `~/Projects` calls `attachAll()`;
+chassis-rs bakes ten more files at its upgrade (MIGRATION.md has its task).
+
+**Breaking.**
+
+- **`attachAll()` and `attachEffects()` are asynchronous** (`scope-115`,
+  `scope-117`): both handles carry `ready`. Code that reads a component's
+  state in the same tick awaits it first; `<html data-kp-auto-ready>` marks
+  the boot's attach. The individual attach functions stay synchronous.
+- **A vendored `js/effects.js` needs `js/effects/` and `js/as-of.js` beside
+  it** (`scope-117`, fix-55, fix-56): `SHA256SUMS` lists them.
+
+**Added.**
+
+- **The 22 themes as VS Code colour themes** (`scope-125`): `vscode/kp-<theme>-color-theme.json`,
+  generated from the same tokens by `gates/generate-vscode-themes.mjs` and
+  checked in the gates chain like the Home Assistant themes. 394 colour keys,
+  17 syntax rules and 30 semantic ones per theme; each file carries its own
+  measured contrast pairs under `kpThemes.contrast`. A release attaches them as
+  `vscode-themes.tar`, the eleventh asset, and the package exports `./vscode/*`.
+  They are not in `consumer.tar`: an editor theme is not a stylesheet a page
+  serves.
+
+- **`--code-keyword` and `--code-string`, in all 22 themes** (`scope-123`,
+  fix-58): the two inks a code block colours its keywords and its strings
+  with. They were the chart hues, which are chosen and measured as LINES at
+  3:1, and nine themes came out under the 4.5:1 text asks — strings in
+  formal, light, pastel, forest, shade-light, lapis and titanium, keywords
+  in pastel, brutalism and nostromo. Each new token is its theme's chart hue
+  and saturation with the lightness moved until it reads: ten of the 44
+  moved, by 2 to 10 points, and the other 34 are the chart colour unchanged.
+  `check:site` now measures every colour `site/site.css` gives to text
+  against the surface under it and refuses anything below 4.5:1.
+
+**Changed.**
+
+- **`js/auto.js` fetches only what the page carries** (`scope-115`): the
+  document is asked first, one selector per module, and a module is
+  imported only when its markup is there. Measured in Chromium on
+  `examples/login.html`: 10 files and 294,139 bytes of JavaScript where it
+  was 28 files and 722,686. Remember, overlays, the theme picker and effects
+  are still loaded on every page, because what they do does not depend on
+  markup a load-time check can see. `attachAll()` now returns its detach with
+  `ready` and `modules`; code that read a component's state in the same tick
+  as `attachAll()` awaits `ready` first. `dist/kp-themes.js` stays one file.
+- **`js/effects.js` fetches its hooks when asked** (`scope-117`): the nine
+  hooks moved into `js/effects/`, each fetched the first time an element or
+  a theme knob needs it; the module that every page loads went from 108,896
+  to 53,877 bytes. `attachEffects()` returns `ready` on its handle.
+- **The catalogue asks only about what a change touches** (`scope-116`,
+  fix-54): a block's review hash reads the CSS families and component
+  modules its markup carries, not every file in `css/`, `js/` and
+  `components/`. Measured: a change to the data table's module brings back
+  264 of 3062 block/theme pairs, the loader none.
+- **The Home Assistant themes ship with the release** (`scope-120`): the
+  22 `ha/kp-*.yaml` as `ha-themes.tar`, listed in `SHA256SUMS`, with the
+  install steps in the README.
+- **`npm run test:tags -- --level engines`** (fix-51): the commit level's
+  selection in both engines, run at a layer's close.
+
 ## 6.1.0 — 2026-09-17
 
 A minor: one new thing a consumer can use, twenty-two themes corrected

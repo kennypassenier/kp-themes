@@ -28,6 +28,22 @@ const srgbToLinear = (u) => (u <= 0.04045 ? u / 12.92 : ((u + 0.055) / 1.055) **
 /** @param {number} u */
 const linearToSrgb = (u) => (u <= 0.0031308 ? u * 12.92 : 1.055 * u ** (1 / 2.4) - 0.055);
 
+/**
+ * Contrast as the BROWSER paints it: each channel rounded to 8 bits before
+ * the luminance, because that is what lands on the screen. `contrast()`
+ * from js/contrast.js works on unrounded channels and reads up to 0.04
+ * higher — enough to call a pair readable that is not (titanium's code
+ * string measured 4.51 unrounded and 4.47 painted, 2026-09-17, fix-59).
+ * check-contrast.mjs has rounded since TH116, where light's warning pair
+ * measured 4.50 in the gate and 4.48 on the rendered page; this is that
+ * same function, in one place instead of two.
+ * @param {Rgb} a @param {Rgb} b
+ */
+export function paintedContrast(a, b) {
+    const paint = (/** @type {Rgb} */ rgb) => /** @type {Rgb} */ (rgb.map((v) => Math.round(v * 255) / 255));
+    return contrast(paint(a), paint(b));
+}
+
 /** @param {Rgb} rgb @returns {{L: number, C: number, h: number}} OKLCh */
 export function rgbToOklch(rgb) {
     const [r, g, b] = rgb.map(srgbToLinear);

@@ -87,7 +87,13 @@ theme its window plays, whatever the page wears [scope-86].
    turn.
 
 A block that changes after its verdict hashes differently and comes back to
-be judged; that is the point. A change to the hash recipe itself
+be judged; that is the point. What counts as a change is only the code that
+touches the block [scope-116]: its markup, its theme's tokens, the CSS lines of
+every family its markup carries (shared and in its theme's register), and the
+modules of the components those families belong to. A change to the data
+table's module brings back the blocks with a data table in them — measured
+2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
+1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0. A change to the hash recipe itself
 (`catalogue/block-hash.js`) is not a change to any block, so it must not
 bring anything back:
 
@@ -250,7 +256,7 @@ line per failure, so the raw test output stays out of the conversation.
 Their definitions live in `.claude/agents/` and carry the "use
 proactively" description the harness delegates on.
 
-## Tests: three gradations
+## Tests: four gradations
 
 1. **Building:** the tests tagged with what is being touched, firefox
    only — `npm run test:tags -- --level building`. The tag map
@@ -261,7 +267,13 @@ proactively" description the harness delegates on.
 2. **Commit:** building plus every `@sweep` test, firefox only, once —
    `npm run test:tags -- --level commit`. About two to three minutes;
    run by hand or by the `checker` agent, not by the commit hook.
-3. **Release (before Uitrol):** the whole suite, both engines —
+3. **Engines:** the commit selection in both engines —
+   `npm run test:tags -- --level engines`. Run at the close of a layer
+   and after any fix that touches paint, focus or the keyboard (`fix-51`,
+   2026-09-17): the release run of 6.1.0 found eighteen tests red that only
+   Chromium saw, because the first two levels are Firefox alone and nothing
+   asked the other engine before the release.
+4. **Release (before Uitrol):** the whole suite, both engines —
    `npm run test:browser` — Kenny's to authorise, asked in a form; Claude
    runs it with his go.
 
