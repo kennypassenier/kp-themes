@@ -2190,3 +2190,16 @@ nabouwen als proef": `client/src/tui/view/stacks.rs` rebuilt as
 against 34 and 22 themes against one. It found three gaps — a state dot
 and a tag, a facts list, a themed table — 103 of those 183 lines, all
 three components the web package already has. step-timing "Akkoord".
+
+**scope-132 · The three gaps closed, and the first step of the cool factor.**
+2026-09-18, the proof form. next-step "De drie gaten dichten": `Badge`,
+`Facts` and `DataTable` are built, each measured across the 22 registers —
+six plate a table header, sixteen leave it transparent, and synthwave's
+`--kp-stripe` is ramped cell by cell from `--primary` to `--accent`. The
+fleet screen is rebuilt on them: 169 lines against 183, none of them
+hand-chosen style where 103 were. step-timing "Akkoord". Kenny's remark
+opened a new thread: *"Ik mis nog wel een high-tech vibe … Het moet
+zeer bruikbaar zijn, maar er ook gewoon fucking cool uitzien."* Two answers
+shipped in the same step — `Spark`, a braille chart at twelve levels in
+three rows, and depth under an overlay (a scrim on the page behind it and a
+shadow beside it). The rest of the cool-factor list goes to Kenny in a form.
