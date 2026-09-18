@@ -2163,3 +2163,17 @@ the grid, the near-white primary plate with dark ink, `border-radius: 0` with th
 8.18px chamfer, ElegantFin gone. widgets-first "Alles in een keer": the dashboard
 moves to kp-tui with the base widgets rather than after them. anatomy-demo
 "Akkoord": the 22 anatomy rows stand. step-timing "Akkoord".
+
+**scope-130 · The effects carry the theme, and two gaps come back to the web.**
+2026-09-17, the effects form. fx-rows "Klopt": the 22 anatomy rows stand —
+eleven registers carry a texture a cell grid can hold, one (cyberpunk)
+declares a sweep, seventeen say in a comment that nothing loops, and the
+texture is painted at 4.5 % where the register writes 6 % because a cell row
+is fourteen pixels where the CSS line is one. kp-themes-effects "Allebei
+opnemen": the two gaps the homelab inventory found in this package — a log
+line with severities, and a colour derived from a source's name — are queued
+as `gap-14` and `gap-15`, after 7.0.0. kp-tui-remote "Claude maakt een
+publieke repository": kp-tui is pushed to GitHub as a public repository.
+next-step "De resterende componenten in kp-tui": the selection style, the
+stepper and the command palette come before the release. step-timing
+"Akkoord".
