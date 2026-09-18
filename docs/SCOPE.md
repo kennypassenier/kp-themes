@@ -2203,3 +2203,16 @@ zeer bruikbaar zijn, maar er ook gewoon fucking cool uitzien."* Two answers
 shipped in the same step — `Spark`, a braille chart at twelve levels in
 three rows, and depth under an overlay (a scrim on the page behind it and a
 shadow beside it). The rest of the cool-factor list goes to Kenny in a form.
+
+**scope-133 · All five cool-factor moves, and the ink that can be read.**
+2026-09-18, the cool-factor form. gaps-closed "Klopt". cool-factor: all
+five ticked — `Stage` (the package's 240/520/480/300 beats), `Rail` (a
+ramp for the three registers that paint a gradient onto a rule), HUD
+corners (for the eight that cut corners five times or more), `roll` (a
+number eased to its reading), and braille on the dashboard's charts and
+eighths in the meter. release-timing "Na de cool-factor stappen".
+step-timing "Akkoord". Kenny's remark on the same form found a fault:
+synthwave's state words read at 1.19:1 — 43 of the 66 state/card pairs in
+the set were under 4.5:1, because a plate colour was being painted as an
+ink. Recorded as kp-tui `fix-1`, with `Theme::ink` and a test over 22
+themes as the measure.
