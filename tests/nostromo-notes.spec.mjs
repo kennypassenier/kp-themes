@@ -100,9 +100,7 @@ test(
             // The reading beside the lone bar, not the three in the group
             // under it: a block gains demos, and a locator that says "the
             // one" stops being true the day it does [fix-64b].
-            const p = await page
-                .locator('#progress .cat-stage > p .kp-progress__value')
-                .evaluate((el) => /** @type {any} */ (window).kpPaint(el));
+            const p = await page.locator('#progress .cat-stage > p .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
             const ratio = contrast(p.ink, p.ground);
             // shade-light's muted ink is 3.99:1 on its ground by choice, recorded as
             // advice that never refuses (Kenny, 2026-09-09; gates/compliance.mjs).
