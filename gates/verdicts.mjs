@@ -729,7 +729,11 @@ async function carry(args) {
     const register = readRegister(file);
     const known = await knownBlocks();
     const { THEMES } = await import('../js/theme-registry.js');
-    const open = unapprovedPairs(register, known, THEMES.map((t) => t.name));
+    const open = unapprovedPairs(
+        register,
+        known,
+        THEMES.map((t) => t.name),
+    );
     if (open.length) {
         console.error(
             `${open.length} pair(s) are not approved, so the recipe may not move yet [fix-62]:\n  ` +
@@ -780,7 +784,9 @@ async function carry(args) {
         `${REGISTER}: ${carried} approval(s) carried onto hash version ${hashVersion()}, ${unchanged} already on it — ` +
             `${((performance.now() - started) / 1000).toFixed(1)} s.`,
     );
-    console.log(`Whether the test browser reads the same hashes [fix-28]: node gates/verdicts.mjs compare --against-browser --commit ${commit.slice(0, 12)}`);
+    console.log(
+        `Whether the test browser reads the same hashes [fix-28]: node gates/verdicts.mjs compare --against-browser --commit ${commit.slice(0, 12)}`,
+    );
 }
 
 /* ----------------------------------------------------------------- compare */

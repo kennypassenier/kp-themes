@@ -192,7 +192,8 @@ export function registerFaults(register, { hashVersion, known, themes, commitExi
         // approved, and then the approvals are carried across, not asked for
         // again. Naming what is still open is the difference between a gate
         // that blocks and a gate that says what to do.
-        const open = known instanceof Map ? unapprovedPairs(register, /** @type {Map<string, { component: boolean, theme?: string }>} */ (known), themes) : [];
+        const open =
+            known instanceof Map ? unapprovedPairs(register, /** @type {Map<string, { component: boolean, theme?: string }>} */ (known), themes) : [];
         faults.push(
             `the register's hashes are version ${register.hashVersion}, catalogue/block-hash.js reads version ${hashVersion}` +
                 (open.length

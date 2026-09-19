@@ -93,7 +93,15 @@ every family its markup carries (shared and in its theme's register), and the
 modules of the components those families belong to. A change to the data
 table's module brings back the blocks with a data table in them — measured
 2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
-1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0. A change to the hash recipe itself
+1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0.
+
+The families are resolved **per component**, not per family: a block that
+names any family of a component carries the digests of every family of that
+component. So the blast radius of a rule is its component's, not its own —
+measured 2026-09-20, when two new rules naming `.kp-progress` brought back
+660 pairs over thirty blocks, of which `table--plain` and the five colour
+picker blocks hold no bar at all; they hold a badge, and a badge is
+feedback, and so is a progress bar. A change to the hash recipe itself
 (`catalogue/block-hash.js`) is not a change to any block, so it must not
 bring anything back:
 

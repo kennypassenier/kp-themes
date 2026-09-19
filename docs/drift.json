@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "3fba262e5ca03ce8c8468785d58c9d7e0b24fa8705c32b22ddacca7cd3a06d06",
+            "hash": "e1dda8205ca124695a1a4de96d903393a43b4ab33451571e4a5dd8641afab3e3",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "d30b2a8a867fd0bae94e10ed63c47abec04c74f07f9a5d0630bf949ce73d0fbb"
+                "CHANGELOG.md": "b215e54c215caa6bb15a1d386102270af1bb12a16517c446b0b4cab1abd6907d"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "5ef7ab06357c05093560519c60629cd3d93e762021188fa35feb080f677e4abe",
+            "hash": "c431f97fba717bfe089f2848af1de6bb0fd66acd51be309b964ef1300324e149",
             "doc": "5b43da0e51d30223c330ea2e3d2e9b565d98c4e87952ab32735877c3da9e71e2",
             "files": {
                 ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
@@ -117,7 +117,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "9d380196939f273723ad92a616c59450e16d59a01f84103c9160af64140f253d",
+                "js/theme-registry.d.ts": "46090193f1ed57b4e96306edc79653d21eff69b71759a2a68dbd46c7281fc929",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
@@ -133,8 +133,8 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "62e64b3c9ae5cd384a4c88ffb11c2f8daa05c87e78b45fbb663a6138e1b75dc5",
-            "doc": "988c16a31a0f923ddeaa3b863ec2d0bc7b7aff68572e72805edfa20c57829b22",
+            "hash": "bc15cd0369c7d23e4da4a20e855ba1d8378cbc8a2664696bb0363779157e6c1e",
+            "doc": "157aa4f2c9487b65546deeabf3056f6c990019c3f1035465c2461ddc401d51ff",
             "files": {
                 ".claude/agents/checker.md": "cb7b158e50b0a3e09a7aca2d14fbf4ec6bf6e64943453a3393e28b6d298f9723",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
@@ -142,7 +142,7 @@
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "af33bce0257a7e2ec245339ef0297034cce389cdd4fae39dfab39a46d9ef841f",
                 "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
-                "gates/verdicts.mjs": "326d289dd4114cf6048c0f2c5ae4ded6c63c262562fa5bf02cfb5ebb2b0d139c"
+                "gates/verdicts.mjs": "be86036e420cfcc2b64fe4addc0440da3ff083738e1e9b02b848a59dfff93970"
             }
         },
         "docs/DEBUGGING_GUIDE.md": {
