@@ -72,6 +72,7 @@ export const HELPERS = {
     'tag-list': 'a flex row of tags; the tags carry the identity',
     'theme-group': 'a group in the theme menu; the options carry the identity',
     'col-low': 'a layout modifier for a low column; no surface of its own',
+    'progress-group': 'three columns for a set of bars; the bars carry the identity, the group only says where they begin [fix-64]',
 };
 
 /**

@@ -400,3 +400,34 @@ refusing. From a clean catalogue the approvals are carried, not asked for
 twice — `node gates/verdicts.mjs carry` measures every pair again on the
 new recipe and keeps each verdict, because Kenny approving the same 3089
 blocks a second time tells nobody anything new.
+
+## Elements begin at fixed points [fix-64]
+
+Kenny, 2026-09-20, on a set of progress bars where the bar behind
+"memory" began two cells later than the bar behind "cpu": *"Die balken
+moeten op hetzelfde startpunt beginnen … Dus aparte kolommen basically.
+Elementen beginnen op vaste punten, niet afhankelijk van de lengte van
+andere elementen, of beginnen allemaal op hetzelfde punt als ze verschoven
+worden, dat punt wordt dan bepaald door het langste woord of teken in het
+eerste element. Dat wil ik ook in andere componenten. Het moet altijd
+netjes ogen."*
+
+The rule has two halves, and the second is the one that is easy to miss:
+where a group of rows shares a shape, the column is **as wide as the
+longest label in that group and no wider**. Not a round number somebody
+picked, and not each row's own length.
+
+Where it is code here: `.kp-progress-group` gives a set of labelled bars
+one label column, one track column and one reading column, so the tracks
+of the group begin and end together. `.kp-shortcuts__row dt` already did
+this with a fixed `6rem`, and `.kp-spec dl` with `grid-template-columns:
+auto …`, which is the rule written the right way round — the `auto` is the
+longest term in that list.
+
+Measured by `tests/nostromo-notes.spec.mjs`, "bars in one group all start
+and end in the same column": without the rule the three tracks read
+`lefts 320/580/1042` in formal; with it, one left and one right in all 22
+themes.
+
+The same rule is code in kp-tui as `label_column` [kp-tui fix-64], which
+is where Kenny found the fault.

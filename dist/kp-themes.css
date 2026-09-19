@@ -7235,6 +7235,47 @@
         gap: var(--kp-space-sm);
     }
 
+    /* A group of bars reads as a group [fix-64]. Kenny, 2026-09-20:
+ * "Elementen beginnen op vaste punten, niet afhankelijk van de lengte van
+ * andere elementen … of beginnen allemaal op hetzelfde punt als ze
+ * verschoven worden, dat punt wordt dan bepaald door het langste woord."
+ *
+ * One label column, one track column, one reading column, and every row
+ * gives its three parts to them: a bar behind "Memory" starts where the
+ * bar behind "CPU" starts, and the column is as wide as the longest label
+ * in the group and no wider. `display: contents` on the row is what puts
+ * its parts in the grid — the row itself paints nothing, so it has
+ * nothing to lose by not being a box.
+ *
+ * A single bar keeps `.kp-progress__wrap` on its own, where there is no
+ * group to line up with. */
+    .kp-progress-group {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-progress-group-gap, var(--kp-space-xs)) var(--kp-space-sm);
+    }
+
+    .kp-progress-group .kp-progress__wrap {
+        display: contents;
+    }
+
+    .kp-progress-group .kp-progress {
+        /* In a group the track takes the column it was given, rather than
+     * the width a lone bar defaults to. */
+        max-inline-size: none;
+    }
+
+    .kp-progress__label {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-progress-group .kp-progress__value {
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+    }
+
     .kp-progress__value {
         font-size: var(--kp-text-sm, 0.8125rem);
         color: var(--muted-foreground);
@@ -9258,7 +9299,7 @@
     /* A channel is a label and a slider that lay out as siblings of the
  * others: the wrapper contributes nothing to the box tree. */
     .kp-colorpicker__channel {
-        display: contents;
+        display: inline-flex;
     }
 
     .kp-colorpicker {
