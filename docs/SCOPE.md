@@ -2216,3 +2216,14 @@ synthwave's state words read at 1.19:1 — 43 of the 66 state/card pairs in
 the set were under 4.5:1, because a plate colour was being painted as an
 ink. Recorded as kp-tui `fix-1`, with `Theme::ink` and a test over 22
 themes as the measure.
+
+**scope-134 · 7.0.0 is out, and the draft's publish button is delegable.**
+2026-09-19, the release form. release-report: Kenny answered "publiceer het
+zelf, jij kan dat ook", so v7.0.0 was published from the draft at 17:07 UTC
+and is the Latest release — twelve assets, 267 of 267 checksums matching
+the tagged tree. Procedure 5.1 step 12 is rewritten to match: the decision
+stays his, the typing moves, and without his answer Claude still stops at
+the draft. fix-61 "Klopt". next-step "Het palet vastpinnen op 7.0.0": the
+kp-tui vendor copy is now the release asset byte for byte, with
+`vendor/PIN` carrying the version and the sha256 the release published and
+the gates comparing them at every commit. step-timing "Akkoord".

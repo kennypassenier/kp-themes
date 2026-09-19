@@ -624,7 +624,18 @@ Two facts decide the shape of this procedure, and both are in the code:
     Correct: `0` lines that are not `OK`. Run against `v5.1.0` on
     2026-09-12 this reported 231 files listed and 231 `OK`, 0 failures.
 
-12. Stop. Publishing the draft is Kenny's action.
+12. Publishing the draft is Kenny's decision, and since 2026-09-19 it is
+    not necessarily his typing. His words on the 7.0.0 report:
+    *"publiceer het zelf, jij kan dat ook"*. So: ask in the release form
+    whether Claude publishes it, and publish only on that answer —
+
+    ```sh
+    gh release edit v5.2.0 --draft=false
+    gh release list --limit 1
+    ```
+
+    Correct: the tag's line carries `Latest`. Without that answer, stop
+    here and hand him the link.
 
 **Abort, at any step before 8:** nothing outside the repository has
 happened. Reset the version in `package.json`, `npm run generate:all`,
