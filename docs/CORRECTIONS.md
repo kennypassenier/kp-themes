@@ -4240,3 +4240,74 @@ move into `.prettierignore`, and the generators own their own shape.
 **9 · When we review the measure.** At the next generator added to
 `generate:all` — the question to ask then is whether it formats through
 prettier or is ignored by it, and never neither.
+
+## fix-62 · The fingerprint recipe changed version without the register being re-measured (2026-09-19)
+
+**1 · What went wrong.** Kenny opened the review site and every theme
+showed about 140 items changed — 3089 of 3089 block/theme pairs — while
+nothing he could see had moved. `catalogue/judgements.js` calls a pair
+`changed` when the hash it reads differs from the hash the verdict was
+given on, so the whole catalogue asked to be judged again at once.
+The themes had not changed: the recipe had. `e477efed` (2026-09-17,
+scope-116 and fix-54) raised `catalogue/block-hash.js` `HASH_VERSION` from
+5 to 6, and version 6 hashes a different set of lines — the CSS of the
+families a block's markup actually names and the modules of their
+components, instead of the whole shared stylesheet and the whole register.
+Every hash moved because every hash is now made of something else.
+Measured: `node gates/verdicts.mjs compare --against-browser --all` read
+`0 equal, 3089 differ, 0 gone` before the re-record.
+
+**2 · Which gate let it through.** `gates/check-verdicts.mjs` compares the
+register's `hashVersion` field against `HASH_VERSION` and passed, because
+the field had been set to 6. It never compares a stored hash against a
+reading, so a register stamped with a version it was not measured under is
+green to it. `gates/advice-approvals.mjs` did say `3062 of 3062 approved`,
+because it reads `catalogue/hashes-now.json` — a snapshot still at
+hashVersion 5 with zero pairs in it, taken at `d1aec8cc`. Both surfaces
+agreed that nothing was open while the page told Kenny the opposite.
+
+**3 · Where else the same fault sits.** The fault is "a version stamp moved
+by hand where the tool that moves it cannot run". **Gezocht met:**
+`node gates/verdicts.mjs rehash` — it fails on the entries it has to carry:
+`page.evaluate: can't access property "data-kp-alarm", selectors is
+undefined`. The cause is structural, not a bug in rehash: rehash replays
+each entry at the commit it was recorded on, and version 6's `inputLines`
+reads `code.selectors` from `catalogue/code-version.json`, which at
+`20024bb0` (2772 of the entries) holds only `{ shared, themes }` and at
+`d1aec8cc` (27 of them) does not exist. A recipe that reads a file the old
+tree does not carry cannot be replayed backwards at all.
+
+**4 · How we prevent recurrence.** The register's `hashVersion` is moved
+only by `rehash` or `migrate`, which measure; where neither can run — a
+recipe reading something the old trees do not have — the version is not
+stamped, the pairs go back to Kenny, and he judges the new hashes. That is
+what happened here: Kenny approved all 3089 pairs on the review site on
+2026-09-19 and they are recorded at `d42f1c2e` at his own zoom, ratio
+2.222.
+
+**5 · What the remedy costs.** One review round of Kenny's — the one he
+just did — and, in code, a check that reads rather than trusts. Nothing in
+the themes changes.
+
+**6 · Who enforces it.** Discipline today; `compare --against-browser` is
+the command that reads, and it is not yet a gate — it takes 232.7 s for
+3089 pairs, too slow for a commit hook, so it belongs at the release
+moment where `npm run verify` already sits.
+
+**7 · How we measure it works, and when.** At this commit:
+`node gates/verdicts.mjs compare --against-browser` reads `3089 equal, 0
+differ, 0 gone — 232.7 s`, where the same command read `0 equal, 3089
+differ` before Kenny's approval was recorded; `node gates/verdicts.mjs
+snapshot` reads `3062 pair(s) measured, 0 of them no longer the block the
+verdict was given on`. Again at the next change to `HASH_VERSION`, which is
+the moment the fault can come back.
+
+**8 · If the measurement fails.** Then a version bump is not the unit to
+guard, and the guard moves down: `check-verdicts.mjs` grows a sampled
+reading — a fixed handful of pairs measured on every run — so a register
+that no longer describes the page cannot be green.
+
+**9 · When we review the measure.** At the next `HASH_VERSION` bump. The
+question to ask then is whether `rehash` can actually replay the oldest
+commit the register is anchored at, and the way to answer it is to run
+rehash before the bump lands, not after.
