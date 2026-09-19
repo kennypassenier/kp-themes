@@ -4332,3 +4332,58 @@ questions to ask then: whether `rehash` can actually replay the oldest
 commit the register is anchored at — run it before the bump lands, not
 after — and whether waiting for a clean catalogue held a recipe improvement
 back longer than the improvement was worth.
+
+## fix-63 · The option that costs Kenny nothing asked him for something (2026-09-19)
+
+**1 · What went wrong.** A report item's `Toon mij dit` pill — the one
+that means "show me the thing so I can judge it" — carried the consequence
+line *"Claude schiet het deel dat Kenny noemt opnieuw of groter, vóór er
+iets anders gebeurt"*. Kenny, on the form: *"waarom is dit de optie van
+toon mij dit? dit lijkt niet gewoon iets tonen te zijn? toon mij dit moet
+het gebouwde kunnen tonen aan mij zodat ik het goed of af kan keuren."*
+The one option that should cost him a click had been turned into another
+question.
+
+**2 · Which gate let it through.** `hooks/form-lint.py` checks the
+consequence box for bare pronouns, coinages, old IDs and unmeasured
+durations — everything about how a line is written, nothing about whether
+it does what its own option promises. The protocol's D82 rule says a
+consequence line must say exactly what choosing it sets in motion, and
+that line did; what it set in motion was the wrong thing.
+
+**3 · Where else the same fault sits.** The fault is "a showing option
+whose consequence waits for Kenny before anything is shown". **Gezocht
+met:** `grep -o 'Toon mij dit</b> — [^<]*' scratchpad/*.html` over the 26
+forms of this session — 30 such lines, of which four ask back: two say
+"het deel dat Kenny noemt", one "de thema's die Kenny noemt", and one
+hands the work over entirely with *"Claude geeft Kenny de opdracht om het
+scherm zelf te draaien"*. The other 26 read "Claude toont …" and are
+fine.
+
+**4 · How we prevent recurrence.** The line names what Claude shows and
+names nobody else; where the thing cannot be shown in a message, the form
+ships the artefact with it and the line says which. Written into
+`FORM_PROTOCOL.md` §7 beside the other consequence rules.
+
+**5 · What the remedy costs.** Nothing at the keyboard: it is the same
+sentence, written from the showing side. What it costs is the escape
+hatch of promising to show something without having prepared it — which
+is what produced the bad four.
+
+**6 · Who enforces it.** Code: `hooks/form-lint.py` reads the consequence
+lines of every `Toon mij dit` pill and refuses one naming Kenny or telling
+him to do it himself.
+
+**7 · How we measure it works, and when.** At this commit the check was
+made to fire: the three forms carrying the fault read
+`toon-mij-dit vraagt terug: 1` each, and the two beside them `0`. Again at
+the next report form — the next one built must pass without an edit.
+
+**8 · If the measurement fails.** If a line slips through that is
+grammatically clean and still asks back, the check moves from the wording
+to the shape: a report item must carry a link or a file beside it, and the
+showing option points at that.
+
+**9 · When we review the measure.** At the next retrospective. The
+question to ask then is whether the 26 good lines were good because of the
+rule or in spite of it.
