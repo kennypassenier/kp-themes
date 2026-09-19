@@ -373,3 +373,22 @@ for the catalogue: every block, in every theme it is shown in, carries an
 approval. A rejection or a block never judged holds the version where it
 is, and the work in between is fixing what Kenny's eye found, not writing
 the round up.
+
+## Kenny's answer of 2026-09-19 (fix-62) — approved first, then the recipe may move
+
+Kenny, on the correction form after the whole catalogue came back as
+changed at once: *"Vanaf nu kan de hash enkel nog veranderd worden als
+alle componenten goedgekeurd zijn, als de hash dan veranderd keur je zelf
+alles goed"*. The sibling of the release rule above, for the fingerprint
+instead of the version.
+
+A block's hash is what tells the review page whether a verdict still
+covers what a reader sees, so changing the recipe that computes it moves
+every pair at once. That may only happen from a clean catalogue: while
+anything is rejected or unjudged, `HASH_VERSION` in
+`catalogue/block-hash.js` stays where it is, and `gates/check-verdicts.mjs`
+names what is open rather than only refusing. From a clean catalogue the
+approvals are carried, not asked for twice — `node gates/verdicts.mjs
+carry` measures every pair again on the new recipe and keeps each verdict,
+because Kenny approving the same 3089 blocks a second time tells nobody
+anything new.

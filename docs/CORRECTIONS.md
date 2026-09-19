@@ -4277,37 +4277,52 @@ reads `code.selectors` from `catalogue/code-version.json`, which at
 `d1aec8cc` (27 of them) does not exist. A recipe that reads a file the old
 tree does not carry cannot be replayed backwards at all.
 
-**4 · How we prevent recurrence.** The register's `hashVersion` is moved
-only by `rehash` or `migrate`, which measure; where neither can run — a
-recipe reading something the old trees do not have — the version is not
-stamped, the pairs go back to Kenny, and he judges the new hashes. That is
-what happened here: Kenny approved all 3089 pairs on the review site on
-2026-09-19 and they are recorded at `d42f1c2e` at his own zoom, ratio
-2.222.
+**4 · How we prevent recurrence.** Kenny's own rule, given on the
+correction form on 2026-09-19: *"vanaf nu kan de hash enkel nog veranderd
+worden als alle componenten goedgekeurd zijn, als de hash dan verandert
+keur je zelf alles goed."* Two halves, and both are code now. A version
+bump is refused while any pair is rejected or unjudged, and the gate names
+what is still open rather than only saying no. Once every pair is
+approved, `node gates/verdicts.mjs carry` measures them all again on the
+working tree with the new recipe and keeps each verdict — Claude carries
+the approval across the bump instead of sending 3089 pairs back for a
+second signature. `rehash` stays for the bumps it can replay.
 
-**5 · What the remedy costs.** One review round of Kenny's — the one he
-just did — and, in code, a check that reads rather than trusts. Nothing in
-the themes changes.
+**5 · What the remedy costs.** The one review round Kenny just did, and
+from here on a version bump waits for the catalogue to be clean. That is a
+real cost — a recipe improvement can sit behind a single rejected block —
+and it is the point: the alternative is the whole catalogue coming back at
+once, which is what happened. Nothing in the themes changes.
 
-**6 · Who enforces it.** Discipline today; `compare --against-browser` is
-the command that reads, and it is not yet a gate — it takes 232.7 s for
-3089 pairs, too slow for a commit hook, so it belongs at the release
-moment where `npm run verify` already sits.
+**6 · Who enforces it.** Code, on both halves. `gates/check-verdicts.mjs`
+refuses a version skew and, through `unapprovedPairs`, lists the pairs that
+are not approved — so a bump cannot be argued past while something is open;
+`node gates/verdicts.mjs carry` refuses on the same list before it measures
+anything. The predicate is written once and both read it, so the gate and
+`gates/advice-approvals.mjs` cannot drift apart. What stays discipline is
+`compare --against-browser`: it takes 232.7 s for 3089 pairs, too slow for a
+commit hook, so it belongs where `npm run verify` already sits.
 
-**7 · How we measure it works, and when.** At this commit:
+**7 · How we measure it works, and when.** At this commit, three readings.
 `node gates/verdicts.mjs compare --against-browser` reads `3089 equal, 0
 differ, 0 gone — 232.7 s`, where the same command read `0 equal, 3089
-differ` before Kenny's approval was recorded; `node gates/verdicts.mjs
+differ` before Kenny's approval was recorded. `node gates/verdicts.mjs
 snapshot` reads `3062 pair(s) measured, 0 of them no longer the block the
-verdict was given on`. Again at the next change to `HASH_VERSION`, which is
-the moment the fault can come back.
+verdict was given on`. And the new gate was made to fire: against a copy of
+the register with one verdict flipped to `rejected` and one pair deleted,
+`node gates/verdicts.mjs carry --register <copy>` exits 1 with
+`2 pair(s) are not approved, so the recipe may not move yet [fix-62]` and
+names both. Again at the next change to `HASH_VERSION`, which is the moment
+the fault can come back.
 
-**8 · If the measurement fails.** Then a version bump is not the unit to
-guard, and the guard moves down: `check-verdicts.mjs` grows a sampled
-reading — a fixed handful of pairs measured on every run — so a register
-that no longer describes the page cannot be green.
+**8 · If the measurement fails.** If a bump ever slips through with the
+catalogue open, the unit to guard was wrong and the guard moves down:
+`check-verdicts.mjs` grows a sampled reading — a fixed handful of pairs
+measured on every run — so a register that no longer describes the page
+cannot be green.
 
-**9 · When we review the measure.** At the next `HASH_VERSION` bump. The
-question to ask then is whether `rehash` can actually replay the oldest
-commit the register is anchored at, and the way to answer it is to run
-rehash before the bump lands, not after.
+**9 · When we review the measure.** At the next `HASH_VERSION` bump. Two
+questions to ask then: whether `rehash` can actually replay the oldest
+commit the register is anchored at — run it before the bump lands, not
+after — and whether waiting for a clean catalogue held a recipe improvement
+back longer than the improvement was worth.

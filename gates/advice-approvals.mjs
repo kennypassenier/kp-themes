@@ -28,7 +28,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
-import { knownBlocks } from './check-verdicts.mjs';
+import { approvedEntries, knownBlocks, pairsOf } from './check-verdicts.mjs';
 import { SNAPSHOT } from './verdicts.mjs';
 
 /** The directories a block's look is made of: markup, registers, scripts, tokens. */
@@ -66,11 +66,10 @@ export function openPairs(known, themes, register, snapshot, comparable = () => 
     /** @type {{ key: string, theme: string, state: 'rejected' | 'never judged' | 'changed since judged' }[]} */
     const open = [];
     let approved = 0;
-    for (const [key, block] of known) {
-        if (!block.component) continue;
-        for (const theme of block.theme ? [block.theme] : themes) {
+    for (const { key, theme } of pairsOf(known, themes)) {
+        {
             const engines = /** @type {Record<string, any>} */ (verdicts[key]?.[theme] ?? {});
-            const approvals = Object.entries(engines).filter(([, entry]) => entry?.verdict === 'approved');
+            const approvals = approvedEntries(engines);
             if (approvals.length) {
                 // An approval still standing: one engine where nothing was
                 // measured, or where the reading is the hash it was given on.
@@ -89,23 +88,6 @@ export function openPairs(known, themes, register, snapshot, comparable = () => 
         }
     }
     return { open, approved, pairs: approved + open.length };
-}
-
-/**
- * The theme a block is written for, when it is written for one: the
- * `data-cat-theme` on its own section [scope-111].
- * @param {string} html the page's source
- * @returns {Map<string, string>} block id → theme
- */
-export function fixedThemes(html) {
-    const fixed = new Map();
-    for (const match of html.matchAll(/<section\b([^>]*)>/g)) {
-        const attributes = match[1];
-        const id = /(?:^|\s)id\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
-        const theme = /(?:^|\s)data-cat-theme\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
-        if (id && theme) fixed.set(id, theme);
-    }
-    return fixed;
 }
 
 /**
@@ -166,12 +148,6 @@ function movedSince(commit, at) {
 
 async function main() {
     const known = await knownBlocks();
-    for (const [key, block] of known) {
-        if (!block.component) continue;
-        const html = readFileSync(new URL(block.page, root), 'utf8');
-        const theme = fixedThemes(html).get(block.block);
-        if (theme) Object.assign(block, { theme });
-    }
     const themes = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('themes/order.json', root), 'utf8')));
     const register = JSON.parse(readFileSync(new URL('catalogue/verdicts.json', root), 'utf8'));
     const file = new URL(SNAPSHOT, root);

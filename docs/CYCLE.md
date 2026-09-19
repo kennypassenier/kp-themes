@@ -97,15 +97,29 @@ table's module brings back the blocks with a data table in them — measured
 (`catalogue/block-hash.js`) is not a change to any block, so it must not
 bring anything back:
 
-1. The change raises `HASH_VERSION` in `catalogue/block-hash.js`.
-2. `npm run gates` then refuses (`gates/check-verdicts.mjs`): the register's
-   `hashVersion` differs — "run node gates/verdicts.mjs rehash".
-3. `node gates/verdicts.mjs rehash` measures every entry again at the commit
-   it was recorded on (a temporary git worktree, served on a free port with
-   the new `block-hash.js` injected), in its own engine (Playwright's Firefox
-   or Chromium), at 1920 px and at the entry's own pixel ratio, and writes
-   the new hashes and version. The verdicts, commits, dates and ratios stay
-   as they were.
+1. **Every pair is approved first.** Kenny, 2026-09-19 [fix-62]: "vanaf nu
+   kan de hash enkel nog veranderd worden als alle componenten goedgekeurd
+   zijn, als de hash dan verandert keur je zelf alles goed". So the recipe
+   does not move while anything is rejected or unjudged, and
+   `gates/check-verdicts.mjs` names what is still open instead of only
+   refusing.
+2. The change raises `HASH_VERSION` in `catalogue/block-hash.js`.
+3. `npm run gates` then refuses: the register's `hashVersion` differs.
+4. One of two tools brings it level, and which one depends on whether the
+   new recipe can be replayed on the old checkouts:
+   - `node gates/verdicts.mjs rehash` measures every entry again at the
+     commit it was recorded on (a temporary git worktree, served on a free
+     port with the new `block-hash.js` injected), in its own engine
+     (Playwright's Firefox or Chromium), at 1920 px and at the entry's own
+     pixel ratio. The verdicts, commits, dates and ratios stay as they were.
+   - `node gates/verdicts.mjs carry` measures them on the **working tree**
+     instead, keeping each verdict and writing the new hash, commit and
+     date. That is the one for a recipe reading something the old checkouts
+     do not have — version 6 reads `catalogue/code-version.json`'s
+     `selectors` map, which the commits the register was anchored at carry
+     in the version-5 shape or not at all, and `rehash` dies there with
+     `selectors is undefined`. `carry` refuses while any pair is
+     unapproved, so step 1 cannot be skipped.
 
 The entries recorded before verdicts kept a ratio (the light-theme review of
 2026-09-15, at d499b6b2) get theirs once, from readings of the blocks at
