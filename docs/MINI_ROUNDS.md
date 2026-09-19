@@ -208,3 +208,5 @@ register's colours are.
 
 | fix-64-M2 | Do elements in a group begin at one point on the web too? Measured at the commit of the rule (2026-09-20): the three bars of `.kp-progress-group` read `lefts 320/580/1042, rights 482/968/1204` in formal without it and one left and one right with it, in all 22 themes. Again at the next component that puts a label beside a value — the question is whether it reached for the group or built a row of its own. | open |
 
+| fix-64b-M1 | Was the tagged run made before a demo was added to an existing block? Measured at the commit of the fix (2026-09-20): the locator names its bar, the fixed test is green in both engines, and verify is green end to end before v7.1.0 is tagged. Again at the next demo added to an existing catalogue block. | open |
+

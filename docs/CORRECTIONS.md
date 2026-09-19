@@ -4387,3 +4387,57 @@ showing option points at that.
 **9 · When we review the measure.** At the next retrospective. The
 question to ask then is whether the 26 good lines were good because of the
 rule or in spite of it.
+
+## fix-64b · A new demo broke an old test, and only the release run said so (2026-09-20)
+
+**1 · What went wrong.** The progress block of the catalogue gained a
+group of three labelled bars for `.kp-progress-group` [fix-64]. Three more
+`.kp-progress__value` spans landed in `#progress`, and
+`tests/nostromo-notes.spec.mjs:89` reads exactly one of them:
+`page.locator('#progress .kp-progress__value')` now resolves to four
+elements and Playwright refuses it in strict mode. The failure surfaced at
+test 1122 of 3980, inside `npm run verify` for 7.1.0 — the release run.
+
+**2 · Which gate let it through.** None was asked. After writing the new
+test I ran it alone (`npx playwright test tests/nostromo-notes.spec.mjs
+-g "same column"`) and `npm run gates`, which does not open a browser. The
+project has the command that would have caught it in one line —
+`npm run test:tags -- --level commit`, which selects every test tagged with
+what changed — and it was not run, because the change felt like a CSS
+addition rather than a change to a demo other tests read.
+
+**3 · Where else the same fault sits.** **Gezocht met:**
+`grep -rn "locator('#[a-z-]*\s\.kp-" tests/*.mjs` — 31 locators anchored on
+a catalogue block id. Every one of them is a single-element read of a block
+that a later demo could double. The new group is the first demo added to an
+existing block since those tests were written.
+
+**4 · How we prevent recurrence.** Two things, and the first is the
+cheap one: a demo added to an existing catalogue block is a change to that
+component, so `npm run test:tags -- --level commit` runs before the commit
+that adds it — the tagged selection is what that command is for. The
+second: the locator itself names which bar it means, rather than trusting
+that there is only one.
+
+**5 · What the remedy costs.** The tagged run for `@component:feedback` is
+seconds, against the ninety-odd minutes the whole suite takes. The locator
+is one selector longer.
+
+**6 · Who enforces it.** The release procedure already does, at the step
+where it was caught: Procedure 5.1 step 5 runs the whole suite before a
+tag exists, so a break like this cannot reach a release. What changes is
+that it should not have to.
+
+**7 · How we measure it works, and when.** At this commit the fixed test
+is green in both engines, and the re-run of `npm run verify` is green
+from end to end before `v7.1.0` is tagged. Again at the next demo added to
+an existing block: the question is whether the tagged run was made before
+the commit. Queued as `fix-64b-M1`.
+
+**8 · If the measurement fails.** If a demo is added again without the
+tagged run, the check moves into the commit hook: a commit touching
+`catalogue/*.html` refuses without a `test:tags` run recorded for the
+components that page carries.
+
+**9 · When we review the measure.** At the retrospective of the next
+round.
