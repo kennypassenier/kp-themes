@@ -4280,9 +4280,15 @@ tree does not carry cannot be replayed backwards at all.
 **4 · How we prevent recurrence.** Kenny's own rule, given on the
 correction form on 2026-09-19: *"vanaf nu kan de hash enkel nog veranderd
 worden als alle componenten goedgekeurd zijn, als de hash dan verandert
-keur je zelf alles goed."* Two halves, and both are code now. A version
-bump is refused while any pair is rejected or unjudged, and the gate names
-what is still open rather than only saying no. Once every pair is
+keur je zelf alles goed."* Asked whether that reached as far as a block
+whose own hash moves, he drew the line himself: *"Als de manier waarop de
+hash berekend wordt. Niet de hash van de items zelf. Uiteraard komen items
+terug als die hash veranderd, dat is de hele opzet van hashes."* So the
+rule guards the algorithm and nothing else.
+
+Two halves, and both are code now. A version bump is refused while any
+pair is rejected or unjudged, and the gate names what is still open rather
+than only saying no. Once every pair is
 approved, `node gates/verdicts.mjs carry` measures them all again on the
 working tree with the new recipe and keeps each verdict — Claude carries
 the approval across the bump instead of sending 3089 pairs back for a

@@ -382,13 +382,21 @@ alle componenten goedgekeurd zijn, als de hash dan veranderd keur je zelf
 alles goed"*. The sibling of the release rule above, for the fingerprint
 instead of the version.
 
-A block's hash is what tells the review page whether a verdict still
-covers what a reader sees, so changing the recipe that computes it moves
-every pair at once. That may only happen from a clean catalogue: while
-anything is rejected or unjudged, `HASH_VERSION` in
-`catalogue/block-hash.js` stays where it is, and `gates/check-verdicts.mjs`
-names what is open rather than only refusing. From a clean catalogue the
-approvals are carried, not asked for twice — `node gates/verdicts.mjs
-carry` measures every pair again on the new recipe and keeps each verdict,
-because Kenny approving the same 3089 blocks a second time tells nobody
-anything new.
+The rule is about the **algorithm**, not about a block's own hash. Kenny,
+asked to be sure: *"Als de manier waarop de hash berekend wordt. Niet de
+hash van de items zelf. Uiteraard komen items terug als die hash
+veranderd, dat is de hele opzet van hashes."*
+
+So: a block whose own hash moves because something about that block really
+changed comes back to Kenny, always — that is what the hashes are for, and
+it is the release rule above. What is guarded here is the other thing:
+changing the way every hash is computed, which moves all of them at once
+and says nothing about any of them.
+
+That may only happen from a clean catalogue. While anything is rejected or
+unjudged, `HASH_VERSION` in `catalogue/block-hash.js` stays where it is,
+and `gates/check-verdicts.mjs` names what is open rather than only
+refusing. From a clean catalogue the approvals are carried, not asked for
+twice — `node gates/verdicts.mjs carry` measures every pair again on the
+new recipe and keeps each verdict, because Kenny approving the same 3089
+blocks a second time tells nobody anything new.

@@ -226,7 +226,7 @@
                 "playwright.config.mjs"
             ],
             "hash": "86db9544ab81a155ec77b4a3c3631679530ea31249aedd39c279196c86624525",
-            "doc": "2140e145604ab5a19b6aa0c2df5dcbe1bf6db8ba1ea138dd815d0e3f6b4be339",
+            "doc": "618c6d1d2f3c570188fa6c7ba66f608cf2eedd4ed238162eb2d8dc28b632f830",
             "files": {
                 ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
