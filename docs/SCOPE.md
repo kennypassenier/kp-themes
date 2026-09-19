@@ -2227,3 +2227,18 @@ the draft. fix-61 "Klopt". next-step "Het palet vastpinnen op 7.0.0": the
 kp-tui vendor copy is now the release asset byte for byte, with
 `vendor/PIN` carrying the version and the sha256 the release published and
 the gates comparing them at every commit. step-timing "Akkoord".
+
+**scope-135 · Round eight closes with its retrospective.**
+2026-09-19, the Phase 10 form, all six items answered. Three lessons
+adopted into `~/Projects/dev-procedure` (commit `f138bba`): **rule 50**,
+a generated file is formatted by the tree's formatter or kept out of its
+reach — three instances in two days, one of which stopped this release at
+step 2 of its own procedure; **rule 43a**, a borrowed value is measured in
+the medium that will paint it, from Kenny's own finding that `--success`
+is a plate colour and read 1.19:1 as text; and **rule 47** extended, so a
+project's runbook says which half it reserves in the same words the rules
+do. kp-tui is registered under "Planned / in development" rather than as a
+component: its contract freezes at 1.0, by decision rather than by
+accident. Rules 18 and 44, silent for ninety days, both stay. The numbers
+that opened the retrospective: 17 releases at a 7-day lead time, the
+shortest of the fifteen projects, with a 23 % fix share.
