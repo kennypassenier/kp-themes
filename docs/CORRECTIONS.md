@@ -4441,3 +4441,56 @@ components that page carries.
 
 **9 · When we review the measure.** At the retrospective of the next
 round.
+
+## fix-69 · Told him to look at a site that did not have it yet (2026-09-20)
+
+**1 · What went wrong.** Three times in one evening Claude wrote that
+something was on the review site — the log component, and the two research
+demos Kenny had asked to *see* rather than be told about. It was on `main`.
+The review site is built from `round-six`:
+`.github/workflows/pages.yml` checks out `ref: round-six` into `review/`
+and copies `catalogue`, `research`, `examples`, `css`, `js` and `fonts`
+from it. After the 7.1.0 merge every commit went to `main` alone, so
+`round-six` stood still at `4bfa9dee` and the published site with it.
+Kenny opened the page and found nothing: *"waarom staat dat niet op deze
+site … Gebruik de site is deftig!"*
+
+**2 · Which gate let it through.** None exists. `npm run gates` reads the
+working tree, the browser suite reads a local server, and both were green
+on work the published site could not show. CLAUDE.md carries the rule —
+*"Claude pushes `round-six` whenever it asks Kenny to look [scope-67]"* —
+and a rule that is only a sentence is a rule that is remembered or not.
+
+**3 · Where else the same fault sits.** **Gezocht met:**
+`git log --oneline round-six..main` after the merge — eight commits, of
+which four touched `catalogue/`, `research/` or `css/`, which is to say
+four times the published site was behind what a form claimed. The same
+shape would hit any project whose review copy is a second branch.
+
+**4 · How we prevent recurrence.** The check moves from memory to the
+stop hook: a turn whose reply names the review site, a catalogue block or
+a research demo does not end while `git rev-list round-six..main` is
+non-empty. Until that is code, the habit is stated where it is used: the
+review site is `round-six`, and a push to `main` is not a push to the
+review site.
+
+**5 · What the remedy costs.** One `git push origin round-six` per turn
+that asks Kenny to look, and about ninety seconds of waiting for the Pages
+run to finish before the reply claims anything.
+
+**6 · Who enforces it.** Kenny did, this time. Until the hook is written,
+the rule sits in `docs/RULES.md` beside the other two that shape a turn.
+
+**7 · How we measure that it works, and when.** At this commit:
+`round-six` is fast-forwarded to `main`, the Pages run for it reads
+`success`, and the published `catalogue/data.html` carries `kp-log` — the
+first two measured, the third by fetching the page. Again at the next form
+that points Kenny at the site: the claim and the published bytes are
+checked to agree before the form is written. Queued as `fix-69-M1`.
+
+**8 · If the measurement fails.** If it slips again, the branch goes: the
+review site builds from `main` and the round is marked some other way,
+because a second branch that must be remembered is a fault waiting for the
+next tired evening.
+
+**9 · When we review the measure.** At the retrospective of this round.

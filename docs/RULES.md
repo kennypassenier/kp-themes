@@ -431,3 +431,19 @@ themes.
 
 The same rule is code in kp-tui as `label_column` [kp-tui fix-64], which
 is where Kenny found the fault.
+
+
+## The review site is `round-six`, not `main` [fix-69]
+
+`.github/workflows/pages.yml` builds the documentation site from `main` and
+the **review site from `round-six`**: it checks that branch out into
+`review/` and copies `catalogue`, `research`, `examples`, `css`, `js` and
+`fonts` from it. So a push to `main` publishes documentation and changes
+nothing Kenny reviews.
+
+A turn that asks him to look — at a catalogue block, at a research demo, at
+anything under <https://kennypassenier.github.io/kp-themes/review/> —
+pushes `round-six` and waits for its Pages run before the claim is written.
+Measured 2026-09-20, the evening this rule was learned again: four commits
+sat on `main` while three forms told him to open a page that did not have
+them.

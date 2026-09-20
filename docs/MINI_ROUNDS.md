@@ -212,3 +212,5 @@ register's colours are.
 
 | gap-14-M1 | Does a log line read in every theme, and does a name keep its colour? Measured at the build (2026-09-20): the four columns hold in all 22 themes, every level word equals its own `data-kp-severity`, and the eight names hash to the same chart colour here as in kp-tui. Again at Kenny's review of `data--log` on the review site, where the question is whether twenty-two registers dressing one component from their own `.kp-spec` rule reads as twenty-two themes or as one. | open |
 
+| fix-69-M1 | Does the published review site carry what the form says it does? Measured at the fix (2026-09-20): round-six fast-forwarded to main, its Pages run success, and the published catalogue/data.html carries `kp-log`. Again at the next form that points Kenny at the site. | open |
+
