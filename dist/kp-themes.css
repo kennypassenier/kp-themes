@@ -7282,9 +7282,22 @@
     /* The severity as a word, in a column of its own, before any colour is
  * asked to carry it: a log read in a screenshot, in a terminal that lost
  * its colours or by someone who does not see the difference between the
- * warning and the danger hue must still say which line failed [fix-1]. */
+ * warning and the danger hue must still say which line failed [fix-1].
+ *
+ * Where the colour comes from [fix-70]: a status token comes in a pair —
+ * a plate and the ink that reads on it — and which half of the pair is
+ * the ink is each theme's own answer. high-contrast paints --warning a
+ * strong brown and --warning-foreground white; light paints --warning a
+ * pale wash and --warning-foreground a dark ochre. Taking one half as ink
+ * on the log's own ground is therefore white on white in some themes and
+ * read in others: measured 2026-09-20, ten words across four themes sat
+ * between 1.00 and 1.27 to one, and the error ink sat between 3.34 and
+ * 4.42 in seven more. So a line that needs attention carries the pair
+ * itself — the plate behind the word and its own ink on it, which the
+ * contrast gate already holds at 4.5 in all 22 themes — and a routine
+ * line keeps the quiet word it always had. */
     .kp-log__level {
-        color: var(--muted-foreground);
+        color: var(--kp-log-level-ink, var(--muted-foreground));
         text-transform: uppercase;
         letter-spacing: 0.04em;
         white-space: nowrap;
@@ -7300,25 +7313,23 @@
         color: var(--muted-foreground);
     }
 
-    .kp-log__line[data-kp-severity='notice'] .kp-log__level,
-    .kp-log__line[data-kp-severity='info'] .kp-log__level {
-        color: var(--info-foreground);
+    .kp-log__line[data-kp-severity='warning'] .kp-log__level,
+    .kp-log__line[data-kp-severity='error'] .kp-log__level,
+    .kp-log__line[data-kp-severity='critical'] .kp-log__level {
+        padding-inline: 0.4em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+        font-weight: 700;
     }
 
-    .kp-log__line[data-kp-severity='warning'] .kp-log__level,
-    .kp-log__line[data-kp-severity='warning'] .kp-log__message {
-        color: var(--warning-foreground, var(--warning));
+    .kp-log__line[data-kp-severity='warning'] .kp-log__level {
+        background: var(--warning);
+        color: var(--warning-foreground);
     }
 
     .kp-log__line[data-kp-severity='error'] .kp-log__level,
     .kp-log__line[data-kp-severity='critical'] .kp-log__level {
-        color: var(--destructive);
-        font-weight: 700;
-    }
-
-    .kp-log__line[data-kp-severity='error'] .kp-log__message,
-    .kp-log__line[data-kp-severity='critical'] .kp-log__message {
-        color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 
     /* A line the reader is pointed at: the register's own selected plate
@@ -11359,7 +11370,7 @@
     }
 
     [data-theme='cyberpunk'] .kp-log__level {
-        color: var(--accent);
+        --kp-log-level-ink: var(--accent);
         letter-spacing: 0.1em;
     }
 
@@ -14077,7 +14088,7 @@
     }
 
     [data-theme='retro'] .kp-log__level {
-        color: var(--kp-teal-ink);
+        --kp-log-level-ink: var(--kp-teal-ink);
     }
 
     [data-theme='retro'] .kp-spec__swatch {
@@ -16109,7 +16120,7 @@
     }
 
     [data-theme='synthwave'] .kp-log__level {
-        color: var(--accent);
+        --kp-log-level-ink: var(--accent);
         letter-spacing: 0.1em;
     }
 
@@ -18046,7 +18057,7 @@
     }
 
     [data-theme='phantom'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.12em;
         text-transform: uppercase;
     }
@@ -19825,7 +19836,7 @@
     }
 
     [data-theme='terminal'] .kp-log__level {
-        color: var(--accent);
+        --kp-log-level-ink: var(--accent);
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -23300,7 +23311,7 @@
     }
 
     [data-theme='titanium'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-size: 0.72rem;
@@ -26943,7 +26954,7 @@
     }
 
     [data-theme='forest'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         text-transform: uppercase;
         font-size: 0.7rem;
         letter-spacing: 0.08em;
@@ -29046,7 +29057,7 @@
         font-size: 0.7rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='deco'] .kp-spec__swatch {
@@ -30184,7 +30195,7 @@
         font-family: var(--theme-font-mono);
         font-size: var(--kp-text-xs, 0.75rem);
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='light'] .kp-spec__swatch {
@@ -31587,7 +31598,7 @@
         font-family: var(--kp-mono);
         font-size: 0.72rem;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='grotesk'] .kp-spec dd {
@@ -33786,7 +33797,7 @@
         font-size: 0.62rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='nostromo'] .kp-spec dd {
@@ -36388,7 +36399,7 @@
     }
 
     [data-theme='dark'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-size: 0.72rem;
@@ -38369,7 +38380,7 @@
     [data-theme='sepia'] .kp-log__level {
         text-transform: lowercase;
         letter-spacing: 0.04em;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='sepia'] .kp-spec__swatch {
@@ -43033,7 +43044,7 @@
     }
 
     [data-theme='lapis'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -44261,7 +44272,7 @@
     }
 
     [data-theme='shade-dark'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='shade-dark'] .kp-spec__swatch {

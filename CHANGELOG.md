@@ -4,6 +4,17 @@
 
 **Changed.**
 
+- **A log's loud severities carry a plate, and its stamp stops at the
+  second** (fix-70): `--info-foreground` and `--warning-foreground` are the
+  ink _on_ a plate, not an ink for a card, and which half of a status pair
+  is dark is each theme's own answer — measured 2026-09-20, nineteen words
+  in nine themes sat under 4.5:1 and ten of those at 1.00 to 1.38, which is
+  white on white. A warning, an error and a critical now take the pair
+  itself, plate and ink, which the contrast gate already holds at 4.5:1 in
+  all twenty-two themes; a routine line keeps its quiet word, whose colour
+  became the knob `--kp-log-level-ink`. The time column reads `09:41:02` —
+  Kenny, 2026-09-20: "na seconden moet er niks komen, geen duizendsten".
+
 - **The side navigation travels from the far edge again** (gap-9): the
   `transition: none` that sat on `[data-kp-sidenav-side='end']` since
   2026-09-11 is gone, so that side slides on the register's own duration
@@ -19,9 +30,9 @@
   the message in four columns that do not move — the list is the grid and
   every line hands its parts to it, so each message begins in the same place
   whatever the source before it is called [fix-64]. The level is a word in a
-  column of its own before it is a colour [fix-1], the loud severities take
-  the destructive and warning inks, and `data-kp-current` marks the line a
-  reader is pointed at with the muted ground and nothing else. All
+  column of its own before it is a colour [fix-1], the loud severities carry
+  their own plate behind that word [fix-70], and `data-kp-current` marks the
+  line a reader is pointed at with the muted ground and nothing else. All
   twenty-two registers dress it with what they already decided for
   `.kp-spec`, so no theme had to invent a second taste.
 

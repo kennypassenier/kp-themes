@@ -1477,7 +1477,7 @@
     }
 
     [data-theme='synthwave'] .kp-log__level {
-        color: var(--accent);
+        --kp-log-level-ink: var(--accent);
         letter-spacing: 0.1em;
     }
 

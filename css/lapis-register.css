@@ -995,7 +995,7 @@
     }
 
     [data-theme='lapis'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }

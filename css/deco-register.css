@@ -1126,7 +1126,7 @@
         font-size: 0.7rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='deco'] .kp-spec__swatch {

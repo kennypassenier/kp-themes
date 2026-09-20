@@ -1496,7 +1496,7 @@
     }
 
     [data-theme='dark'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-size: 0.72rem;

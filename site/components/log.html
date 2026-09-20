@@ -161,13 +161,13 @@
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="kp-log">
     <p class="kp-log__line" data-kp-severity="info">
-        <time class="kp-log__time">09:41:02.118</time>
+        <time class="kp-log__time">09:41:02</time>
         <span class="kp-log__source" data-kp-source="media">media</span>
         <span class="kp-log__level">info</span>
         <span class="kp-log__message">jellyfin: transcode worker ready</span>
     </p>
     <p class="kp-log__line" data-kp-severity="error">
-        <time class="kp-log__time">09:41:05.630</time>
+        <time class="kp-log__time">09:41:06</time>
         <span class="kp-log__source" data-kp-source="backup">backup</span>
         <span class="kp-log__level">error</span>
         <span class="kp-log__message">restic: snapshot failed, the lock is 41 minutes old</span>
@@ -176,13 +176,13 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log&quot;</span>&gt;
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
-        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:02.118&lt;/<span class="kp-code__keyword">time</span>&gt;
+        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:02&lt;/<span class="kp-code__keyword">time</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;media&quot;</span>&gt;media&lt;/<span class="kp-code__keyword">span</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;info&lt;/<span class="kp-code__keyword">span</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;jellyfin: transcode worker ready&lt;/<span class="kp-code__keyword">span</span>&gt;
     &lt;/<span class="kp-code__keyword">p</span>&gt;
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;
-        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:05.630&lt;/<span class="kp-code__keyword">time</span>&gt;
+        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:06&lt;/<span class="kp-code__keyword">time</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;backup&quot;</span>&gt;backup&lt;/<span class="kp-code__keyword">span</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;error&lt;/<span class="kp-code__keyword">span</span>&gt;
         &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;restic: snapshot failed, the lock is 41 minutes old&lt;/<span class="kp-code__keyword">span</span>&gt;
@@ -222,6 +222,7 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-log-gap</code></td><td><code>0.125rem</code></td></tr>
+                            <tr><td><code>--kp-log-level-ink</code></td><td><code>var(--muted-foreground)</code></td></tr>
                             <tr><td><code>--kp-log-line-height</code></td><td><code>1.6</code></td></tr>
                             <tr><td><code>--kp-log-padding</code></td><td><code>var(--kp-space-sm)</code></td></tr>
                             <tr><td><code>--kp-source-colour</code></td><td><code>var(--foreground)</code></td></tr>

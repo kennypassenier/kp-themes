@@ -1990,7 +1990,7 @@
     }
 
     [data-theme='retro'] .kp-log__level {
-        color: var(--kp-teal-ink);
+        --kp-log-level-ink: var(--kp-teal-ink);
     }
 
     [data-theme='retro'] .kp-spec__swatch {

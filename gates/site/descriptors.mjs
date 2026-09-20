@@ -1764,13 +1764,13 @@ export const DESCRIPTORS = [
                 markup: `
 <div class="kp-log">
 <p class="kp-log__line" data-kp-severity="info">
-<time class="kp-log__time">09:41:02.118</time>
+<time class="kp-log__time">09:41:02</time>
 <span class="kp-log__source" data-kp-source="media">media</span>
 <span class="kp-log__level">info</span>
 <span class="kp-log__message">jellyfin: transcode worker ready</span>
 </p>
 <p class="kp-log__line" data-kp-severity="error">
-<time class="kp-log__time">09:41:05.630</time>
+<time class="kp-log__time">09:41:06</time>
 <span class="kp-log__source" data-kp-source="backup">backup</span>
 <span class="kp-log__level">error</span>
 <span class="kp-log__message">restic: snapshot failed, the lock is 41 minutes old</span>

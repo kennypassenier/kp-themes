@@ -1146,7 +1146,7 @@
         font-family: var(--kp-mono);
         font-size: 0.72rem;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='grotesk'] .kp-spec dd {

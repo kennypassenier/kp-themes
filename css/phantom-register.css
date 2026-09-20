@@ -1493,7 +1493,7 @@
     }
 
     [data-theme='phantom'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
         letter-spacing: 0.12em;
         text-transform: uppercase;
     }

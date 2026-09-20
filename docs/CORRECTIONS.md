@@ -4442,6 +4442,67 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-70 · A plate's ink was used as an ink on the log's own ground (2026-09-20)
+
+**1 · What went wrong.** The log block coloured its severity word with
+`--info-foreground` and its warning line with `--warning-foreground`, on
+the log's own ground. Those tokens are the ink *on* the info and warning
+plates, not an ink for a card: which half of a status pair is dark and
+which is light is each theme's own answer. Kenny reviewed the catalogue
+and rejected the block in three themes — high-contrast: *"die derde lijn
+is wit op wit en onleesbaar ook het stuk 'info' en 'warning' op de eerste
+drie lijnen zijn onleesbaar"*, shade (light): *"lijn drie is onleesbaar en
+de eerste drie lijnen van kolom 3"*, nostromo: *"derde lijn in het wit is
+amper te lezen op die achtergrond"*.
+
+**2 · Which gate let it through.** None. `gates/check-contrast.mjs`
+measures token pairs — `['warning', 'warning-foreground']` among them —
+and a pair it is never handed is never measured; `card` against
+`warning-foreground` is not in `PAIRS`, because until this block nothing
+put that token on a card. The browser suite had three log tests (the
+columns, the word, the source hue) and none of them read a colour.
+
+**3 · Where else the same fault sits.** **Gemeten met:** a sweep added to
+`tests/log.spec.mjs` that reads the computed ink and the painted ground of
+every level word and every message in all 22 themes. Nineteen words in
+nine themes sat under 4.5:1 — ten of them between 1.00 and 1.38, which is
+white on white, and nine more between 3.34 and 4.42, where `--destructive`
+was used as an error ink on grounds it does not clear (blueprint 3.60,
+solstice 3.34, deco 3.74, lapis 3.92, shade-dark 4.11, cyberpunk 4.32,
+phantom 4.42). Kenny saw four of the nineteen; the other fifteen were
+waiting.
+
+**4 · How we prevent recurrence.** The rule kp-tui wrote down two days
+earlier, on 2026-09-18, in `Theme::ink`: *"A plate colour is not an ink."*
+On the web a stylesheet cannot choose the readable half of a pair, so the
+line that needs attention carries the pair itself — the plate behind the
+word and its own ink on it, which `check-contrast.mjs` already holds at
+4.5:1 in all 22 themes — and a routine line keeps its quiet word. The
+quiet word's colour became the knob `--kp-log-level-ink`, because fifteen
+registers had set `color` on `.kp-log__level` itself and a later layer's
+`color` would have taken the plate's ink with it.
+
+**5 · What the remedy costs.** One knob, one declaration changed in
+fifteen registers, and a sweep that takes 3.6 s in firefox.
+
+**6 · Who enforces it.** `tests/log.spec.mjs`, in the commit selection and
+in every sweep: a log word under 4.5:1 on its own ground fails the run
+with the theme, the severity, the ratio and both colours.
+
+**7 · How we measure that it works, and when.** At this commit: 22 themes,
+0 words under 4.5:1 (was 19). Again when the next component puts a status
+token on a surface that is not that token's plate — the question to ask
+there is which half of the pair is the ink, and the answer is measured,
+not assumed. Queued as `fix-70-M1`.
+
+**8 · If the measurement fails.** If a theme cannot carry a readable
+severity on a plate either, the web takes kp-tui's answer whole: generated
+`--warning-ink`, `--info-ink` and `--destructive-ink` tokens, computed
+from the palette by the algorithm `Theme::ink_rgb` already runs, so one
+rule serves both runtimes.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-69 · Told him to look at a site that did not have it yet (2026-09-20)
 
 **1 · What went wrong.** Three times in one evening Claude wrote that

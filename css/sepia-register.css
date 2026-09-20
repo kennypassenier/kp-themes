@@ -380,7 +380,7 @@
     [data-theme='sepia'] .kp-log__level {
         text-transform: lowercase;
         letter-spacing: 0.04em;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='sepia'] .kp-spec__swatch {

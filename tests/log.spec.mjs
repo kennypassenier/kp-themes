@@ -9,6 +9,7 @@ import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { sourceIndex } from '../js/log.js';
+import { paintedContrast } from '../gates/colour.mjs';
 
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
@@ -16,6 +17,14 @@ const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.
 const wear = async (page, theme) => {
     await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
     await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+};
+
+/** @param {import('@playwright/test').Page} page @param {string} url */
+/** `rgb(r, g, b)`, as a browser gives it back, as the 0..1 channels the contrast helpers take. @param {string} paint */
+const channels = (paint) => {
+    const parts = paint.match(/[\d.]+/g);
+    if (!parts || parts.length < 3) throw new Error(`not an rgb() colour: ${paint}`);
+    return /** @type {[number, number, number]} */ (parts.slice(0, 3).map((v) => Number(v) / 255));
 };
 
 /** @param {import('@playwright/test').Page} page @param {string} url */
@@ -110,5 +119,40 @@ test(
             return read;
         }, chart);
         expect(written.painted).toBe(asColour);
+    },
+);
+
+test(
+    'every word of a log reads on the ground it sits on, in every theme [gap-14, fix-70]',
+    { tag: ['@component:data', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        await open(page, '/catalogue/data.html');
+        const faint = [];
+        for (const theme of THEME_NAMES) {
+            await wear(page, theme);
+            const inks = await page
+                .locator('#log .kp-log')
+                .first()
+                .evaluate((list) => {
+                    const opaque = (/** @type {Element | null} */ el) => {
+                        for (let node = el; node; node = node.parentElement) {
+                            const paint = globalThis.getComputedStyle(node).backgroundColor;
+                            if (paint && !/^(transparent|rgba\(0, 0, 0, 0\))$/.test(paint)) return paint;
+                        }
+                        return 'rgb(255, 255, 255)';
+                    };
+                    return [...list.querySelectorAll('.kp-log__level, .kp-log__message')].map((el) => ({
+                        part: el.className,
+                        severity: el.closest('[data-kp-severity]')?.getAttribute('data-kp-severity') ?? '?',
+                        ink: globalThis.getComputedStyle(el).color,
+                        ground: opaque(el),
+                    }));
+                });
+            for (const { part, severity, ink, ground } of inks) {
+                const ratio = paintedContrast(channels(ink), channels(ground));
+                if (ratio < 4.5) faint.push(`${theme}: ${severity} ${part} at ${ratio.toFixed(2)} (${ink} on ${ground})`);
+            }
+        }
+        expect(faint, 'a log word below 4.5:1 on its own ground').toEqual([]);
     },
 );

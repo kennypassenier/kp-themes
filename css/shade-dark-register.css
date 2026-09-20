@@ -893,7 +893,7 @@
     }
 
     [data-theme='shade-dark'] .kp-log__level {
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='shade-dark'] .kp-spec__swatch {

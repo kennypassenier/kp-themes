@@ -810,7 +810,7 @@
         font-family: var(--theme-font-mono);
         font-size: var(--kp-text-xs, 0.75rem);
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        --kp-log-level-ink: var(--muted-foreground);
     }
 
     [data-theme='light'] .kp-spec__swatch {
