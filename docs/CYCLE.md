@@ -95,9 +95,18 @@ table's module brings back the blocks with a data table in them — measured
 2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
 1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0.
 
+The **modules** a block carries are the ones the loader would attach to it
+[scope-136]: `js/auto.js` decides that per root by selector — `.kp-sidenav`
+brings `js/sidenav.js`, `[data-kp-source]` brings `js/log.js` — and the hash
+reads the same table, against the markup as written. So a change to
+`js/sidenav.js` asks the five blocks that hold a side navigation, not the
+eighteen that hold some navigation. What is left in a component's own digest
+is what the loader does not attach by selector: the helpers, the effects and
+the React components.
+
 The **components** a block carries are resolved per family: a block that
-names any family of a component carries that component's module digest. So
-the blast radius of a *module* is its component's — measured 2026-09-20,
+names any family of a component carries that component's remaining module
+digest. So the blast radius of those is its component's — measured 2026-09-20,
 when two new rules naming `.kp-progress` brought back 660 pairs over thirty
 blocks, of which `table--plain` and the five colour picker blocks hold no
 bar at all; they hold a badge, and a badge is feedback, and so is a progress

@@ -126,3 +126,40 @@ test.describe('a block is hashed over the code its own markup names [fix-71]', {
         expect(families).toContain('kp-sidenav');
     });
 });
+
+// A module the loader attaches by selector belongs to the blocks that ask
+// for it [scope-136]. Under version 7 the digest of every navigation module sat
+// in one line, so a change to js/sidenav.js still brought back all eighteen
+// navigation blocks — the same over-asking as fix-71, one level down.
+test.describe('a block carries the modules its own markup asks for [scope-136]', { tag: ['@component:catalogue'] }, () => {
+    test.beforeEach(async ({ context }) => {
+        await useEmptyRegister(context);
+    });
+
+    const linesOf = (page, id) =>
+        page.evaluate(async (blockId) => {
+            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
+            const root = /** @type {HTMLElement} */ (document.getElementById(blockId));
+            return inputLines(root, root.outerHTML, await readCodeVersion());
+        }, id);
+
+    test('the side navigation block asks for js/sidenav.js and the breadcrumb does not', async ({ page }) => {
+        await page.goto('/catalogue/navigation.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const sidenav = await linesOf(page, 'sidenav-side');
+        const breadcrumb = await linesOf(page, 'breadcrumb');
+        expect(sidenav.some((line) => line.startsWith('js/sidenav.js:'))).toBe(true);
+        expect(breadcrumb.some((line) => line.startsWith('js/sidenav.js:'))).toBe(false);
+    });
+
+    test('the log block asks for js/log.js, and a table for js/datatable.js only where the table is one', async ({ page }) => {
+        await page.goto('/catalogue/data.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const log = await linesOf(page, 'log');
+        expect(log.some((line) => line.startsWith('js/log.js:'))).toBe(true);
+        await page.goto('/catalogue/table.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const plain = await linesOf(page, 'plain');
+        expect(plain.some((line) => line.startsWith('js/datatable.js:'))).toBe(false);
+    });
+});

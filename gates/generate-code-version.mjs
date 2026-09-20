@@ -17,11 +17,17 @@
 //               selector names it — `shared` for the package's stylesheets,
 //               one per theme for that theme's register. A block pays for the
 //               families its own markup carries.
+//   modules     per module the loader attaches by selector (js/auto.js's
+//               NEEDS), a digest of that one file and the selector it acts
+//               through. A block pays for a module when its own markup
+//               matches that selector, which is exactly when the page loads
+//               it [scope-136].
 //   components  per component in tests/tags.json, a digest of the modules
-//               (js/, components/) the map assigns to it, and the families
-//               those modules write that the markup does not show (the boot
-//               screen effects.js draws). A block pays for the components its
-//               families belong to.
+//               (js/, components/) the map assigns to it that the loader does
+//               NOT attach by selector — helpers, the effects, the React
+//               components — and the families those modules write that the
+//               markup does not show (the boot screen effects.js draws). A
+//               block pays for the components its families belong to.
 //   base        the CSS lines that name no family (`:root`, bare elements,
 //               keyframes) and the dictionary every component speaks from.
 //   themes      per theme, its tokens and the register lines that name no
@@ -38,6 +44,13 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import * as prettier from 'prettier';
+
+// The loader's own table: every module it attaches, and the selector it acts
+// through [scope-136]. Read here rather than restated, so the hash and the page
+// cannot drift apart; `js/auto.js` imports cleanly outside a browser.
+const { NEEDS } = await import('../js/auto.js');
+/** `js/<name>.js` for each need, with the selector that brings it in. */
+const ATTACHED_BY_SELECTOR = new Map(NEEDS.map((need) => [`js/${need.name}.js`, need.when]));
 import { loadMap, ruleFor, selectorChains, vocabularyOf, withoutComments } from './tags.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -185,6 +198,8 @@ export function codeVersion() {
 
     /** @type {Record<string, { modules: string[], families: Set<string> }>} */
     const components = {};
+    /** @type {Record<string, { digest: string, when: string }>} */
+    const bySelector = {};
     for (const file of [
         ...files('js/', (n) => n.endsWith('.js')),
         ...files('js/effects/', (n) => n.endsWith('.js')),
@@ -203,9 +218,14 @@ export function codeVersion() {
             .map((/** @type {string} */ t) => t.slice('@component:'.length));
         // A module that no component claims is everyone's.
         if (named.length === 0) base.push(`${file}\0`, source);
+        // A module the loader attaches by selector is its own input: the
+        // block that matches the selector is the block that loads it, and no
+        // other block of the component pays for it [scope-136].
+        const when = ATTACHED_BY_SELECTOR.get(file);
+        if (when !== undefined) bySelector[file] = { digest: digest([`${file}\0`, source]), when };
         for (const name of named) {
             components[name] ??= { modules: [], families: new Set() };
-            components[name].modules.push(`${file}\0`, source);
+            if (when === undefined) components[name].modules.push(`${file}\0`, source);
             for (const f of familiesIn(source)) components[name].families.add(f);
         }
     }
@@ -213,9 +233,14 @@ export function codeVersion() {
     return {
         $comment:
             'What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. ' +
-            'catalogue/block-hash.js reads the families and components a block carries, so a change asks only about the blocks it touches. ' +
+            'catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. ' +
             'Written by gates/generate-code-version.mjs.',
         base: digest(base),
+        modules: Object.fromEntries(
+            Object.keys(bySelector)
+                .sort()
+                .map((file) => [file, bySelector[file]]),
+        ),
         themes: Object.fromEntries(themes.map((t) => [t, digest(themeBase[t])])),
         families: Object.fromEntries(
             [...families.keys()].sort().map((name) => {
@@ -234,7 +259,7 @@ export function codeVersion() {
                 .map((name) => [
                     name,
                     {
-                        modules: digest(components[name].modules),
+                        modules: components[name].modules.length ? digest(components[name].modules) : '-',
                         // Only what the module draws of its own: a family another
                         // component owns (the confirm dialog's `kp-button`) is that
                         // component's, and a block carrying it pays for it there.

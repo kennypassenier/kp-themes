@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 7;
+export const HASH_VERSION = 8;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
 export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = 6;
+export const PREVIOUS_VERSION = 7;
 
 export const PROPS = [
     'color',
@@ -504,6 +504,7 @@ export function readCodeVersion() {
  * @property {Record<string, string>} themes
  * @property {Record<string, { shared: string, themes: Record<string, string> }>} families
  * @property {Record<string, { modules: string, families: string[] }>} components
+ * @property {Record<string, { digest: string, when: string }>} [modules]
  * @property {Record<string, string[]>} selectors
  * @property {Record<string, string[]>} markers
  */
@@ -569,6 +570,17 @@ export function inputLines(block, source, code) {
     const theme = themeOf(block);
     const markup = componentMarkup(source);
     if (!code) return [markup, `theme: ${theme}`, 'code: unknown'];
+    // A module the loader attaches by selector belongs to the blocks whose
+    // own markup asks for it [scope-136]: `js/auto.js` decides that per root
+    // with exactly this selector, so the hash reads it the same way. Matched
+    // against the markup as written, never against the page as it stands, so
+    // a script that adds a class while the reviewer watches cannot move a
+    // hash.
+    const asWritten = document.createElement('template');
+    asWritten.innerHTML = markup;
+    const root = asWritten.content.firstElementChild;
+    const asks = (/** @type {string} */ when) =>
+        Boolean(root && (root.matches(when) || root.querySelector(when))) || asWritten.content.querySelector(when) !== null;
     const families = new Set(familiesIn(markup));
     const components = new Set();
     for (const family of families) for (const component of componentsOf(family, code.selectors)) components.add(component);
@@ -582,6 +594,10 @@ export function inputLines(block, source, code) {
             .sort()
             .map((family) => `${family}: ${code.families[family]?.shared ?? '-'} ${code.families[family]?.themes?.[theme] ?? '-'}`),
         ...[...components].sort().map((component) => `${component}: ${code.components[component]?.modules ?? '-'}`),
+        ...Object.entries(code.modules ?? {})
+            .filter(([, module]) => asks(module.when))
+            .sort(([a], [b]) => (a < b ? -1 : 1))
+            .map(([file, module]) => `${file}: ${module.digest}`),
     ];
 }
 

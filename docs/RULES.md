@@ -515,3 +515,12 @@ it.
 `tests/catalogue-hash-inputs.spec.mjs` holds the rule: the breadcrumb block
 carries `kp-breadcrumb` and navigation's modules and no other family, and a
 block that does hold a side navigation carries `kp-sidenav`.
+
+**And the modules the same way [scope-136].** A module the loader attaches by
+selector belongs to the blocks whose own markup asks for it. `js/auto.js`
+holds the table — `.kp-sidenav` brings `js/sidenav.js`, `[data-kp-source]`
+brings `js/log.js` — and the recipe reads that table rather than restating
+it, matched against the markup as written. So a change to `js/sidenav.js`
+asks the five blocks that hold a side navigation, not the eighteen that hold
+some navigation. What the loader does not attach by selector stays in the
+component's own digest.

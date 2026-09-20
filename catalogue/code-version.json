@@ -1,6 +1,27 @@
 {
-    "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families and components a block carries, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
+    "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
     "base": "33d7df6ccc490672",
+    "modules": {
+        "js/alarm.js": { "digest": "53a12164ee67a403", "when": "[data-kp-alarm]" },
+        "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
+        "js/combobox.js": { "digest": "a5e90396130383c9", "when": "[data-kp-combobox], select" },
+        "js/components.js": {
+            "digest": "1bae74bd1f61fd19",
+            "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
+        },
+        "js/datatable.js": { "digest": "4eebefcff84209c0", "when": "[data-kp-datatable]" },
+        "js/datepicker.js": { "digest": "4f5ec0d8a5274638", "when": "[data-kp-datepicker]" },
+        "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
+        "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
+        "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
+        "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
+        "js/patterns.js": { "digest": "2b6eeed7f66b345b", "when": "[data-kp-copy], [data-kp-undo-action]" },
+        "js/sidenav.js": { "digest": "020968565fbde59b", "when": ".kp-sidenav" },
+        "js/structure.js": { "digest": "0cb73c5934c62ba1", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
+        "js/tables.js": { "digest": "66d205c2f610c15a", "when": ".kp-table-wrap" },
+        "js/upload.js": { "digest": "14fecd7f0a76fbee", "when": "[data-kp-upload]" },
+        "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
+    },
     "themes": {
         "formal": "8662d0fe70273343",
         "light": "f49f0ef228bc080d",
@@ -2474,12 +2495,12 @@
         "kp-word-in": { "shared": "-", "themes": { "shade-light": "24a8f27dd32baec3" } }
     },
     "components": {
-        "alarm": { "modules": "c40e3d7b40148792", "families": ["data-kp-alarm-mode", "kp-alarm", "kp-sr-only"] },
-        "button": { "modules": "1ffb1f2b6515379f", "families": ["data-kp-key", "kp-button", "kp-confirm"] },
-        "colorpicker": { "modules": "5ddc375760bb4df8", "families": ["kp-colorpicker"] },
-        "combobox": { "modules": "a87c4f3011986f7e", "families": ["data-kp-disabled", "kp-combobox", "kp-tag", "kp-tag-list"] },
+        "alarm": { "modules": "170c73dbc8a1257e", "families": ["data-kp-alarm-mode", "kp-alarm", "kp-sr-only"] },
+        "button": { "modules": "00865923595a2f59", "families": ["data-kp-key", "kp-button", "kp-confirm"] },
+        "colorpicker": { "modules": "f874c2844728bbe0", "families": ["kp-colorpicker"] },
+        "combobox": { "modules": "58fda77c0d684111", "families": ["data-kp-disabled", "kp-combobox", "kp-tag", "kp-tag-list"] },
         "data": {
-            "modules": "acb8b231ca665556",
+            "modules": "c520238612113ce3",
             "families": [
                 "data-kp-copied",
                 "data-kp-copy-failed",
@@ -2492,7 +2513,7 @@
             ]
         },
         "datatable": {
-            "modules": "24c94f681cb2f1a2",
+            "modules": "0f8cc6a16c8a4ae7",
             "families": [
                 "data-kp-align",
                 "data-kp-cards",
@@ -2512,9 +2533,9 @@
                 "kp-sr-only"
             ]
         },
-        "datepicker": { "modules": "d30cee135eb79144", "families": ["data-kp-align", "kp-datepicker", "kp-sr-only"] },
+        "datepicker": { "modules": "0e5f17f0b6631365", "families": ["data-kp-align", "kp-datepicker", "kp-sr-only"] },
         "feedback": {
-            "modules": "980cbb3de4dbd803",
+            "modules": "2738d9d74126d24a",
             "families": [
                 "data-kp-orientation",
                 "data-kp-popover-overflowing",
@@ -2529,12 +2550,12 @@
             ]
         },
         "field": {
-            "modules": "37c3a8e95ee59cdc",
+            "modules": "00e535d81b7ff097",
             "families": ["data-kp-disabled", "data-kp-layout", "kp-field", "kp-fieldset", "kp-form", "kp-sr-only"]
         },
         "layout": { "modules": "99f3efe7728382f6", "families": ["data-kp-contrast-ok", "kp-sr-only"] },
         "media": {
-            "modules": "77aeaac75eed7934",
+            "modules": "12569cc886f5cf27",
             "families": [
                 "data-kp-divider",
                 "data-kp-effects",
@@ -2626,7 +2647,7 @@
             ]
         },
         "navigation": {
-            "modules": "692da94d72db06a6",
+            "modules": "d05620d18f6e10b5",
             "families": [
                 "data-kp-contrast-ok",
                 "data-kp-menu-label",
@@ -2662,10 +2683,10 @@
             ]
         },
         "overlays": {
-            "modules": "be4722cdad540a40",
+            "modules": "fc13fb912b42c9e7",
             "families": ["data-kp-orientation", "data-kp-popover-overflowing", "kp-confirm", "kp-dialog", "kp-menu", "kp-popover", "kp-tooltip"]
         },
-        "page": { "modules": "9420b1574fdfb686", "families": ["data-kp-disabled", "kp-palette", "kp-shortcuts", "kp-skip-link"] },
+        "page": { "modules": "46a12ba18c23f285", "families": ["data-kp-disabled", "kp-palette", "kp-shortcuts", "kp-skip-link"] },
         "page-effects": {
             "modules": "38f94cd9a138b43e",
             "families": [
@@ -2761,7 +2782,7 @@
             ]
         },
         "structure": {
-            "modules": "c73892215d184243",
+            "modules": "890468a04858ddbf",
             "families": [
                 "data-kp-disabled",
                 "data-kp-dragging",
@@ -2777,13 +2798,13 @@
                 "kp-wizard"
             ]
         },
-        "switch": { "modules": "79c1d4ce8eea4d5c", "families": ["kp-switch"] },
+        "switch": { "modules": "81c44e2bcae0d2e0", "families": ["kp-switch"] },
         "table": {
-            "modules": "b7a54ce6b4c7921b",
+            "modules": "f08436a805933535",
             "families": ["data-kp-cards", "data-kp-contrast-ok", "kp-card", "kp-cell-truncate", "kp-sr-only", "kp-table", "kp-table-wrap"]
         },
         "upload": {
-            "modules": "e876368085ffad78",
+            "modules": "41beb48099cf8444",
             "families": [
                 "data-kp-disabled",
                 "data-kp-dragging",

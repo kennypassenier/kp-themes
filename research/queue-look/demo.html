@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="nl" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>De kijkronde · vijf metingen die op Kenny wachten</title>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <style>
+            body {
+                margin: 0;
+                padding: 2rem;
+                background: var(--background);
+                color: var(--foreground);
+                font-family: var(--font-sans);
+            }
+            .sheet {
+                max-inline-size: 60rem;
+                margin-inline: auto;
+            }
+            .look {
+                margin-block-start: 1.5rem;
+                padding: 1.25rem 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--card);
+                color: var(--card-foreground);
+            }
+            .look h2 {
+                margin: 0 0 0.25rem;
+                font-size: 1.05rem;
+            }
+            .look p {
+                margin: 0.5rem 0;
+                line-height: 1.6;
+            }
+            .look dl {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr);
+                gap: 0.35rem 1rem;
+                margin: 0.75rem 0 0;
+            }
+            .look dt {
+                color: var(--muted-foreground);
+                white-space: nowrap;
+            }
+            .look dd {
+                margin: 0;
+            }
+            .where {
+                font-family: var(--font-mono, ui-monospace, monospace);
+                font-size: 0.85rem;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="sheet">
+            <h1>De kijkronde</h1>
+            <p>
+                Vijf metingen uit <code class="where">docs/MINI_ROUNDS.md</code> noemen als moment "de volgende keer dat Kenny ernaar kijkt".
+                Hieronder staat per meting waar je moet zijn, wat je moet zien, en wat een goed antwoord is. Het zijn geen goedkeuringen: er hoeft
+                niets afgetekend te worden, alleen gekeken. Samen ongeveer vijf minuten.
+            </p>
+            <p>
+                Open ze bij voorkeur in FireDragon, de browser waarin je de review-site ook gebruikt — twee van de vijf gaan juist over wat een andere
+                browser dan de testbrowser laat zien.
+            </p>
+
+            <section class="look">
+                <h2>1 · De tabel met een vastgezette kop</h2>
+                <p>
+                    <a class="where" href="../../catalogue/table.html#datatable-sticky">catalogue/table.html#datatable-sticky</a>
+                </p>
+                <p>
+                    Rol met het muiswiel door de rijen, in drie thema's naar keuze. De kop van de tabel blijft staan; de vraag is of er tijdens het
+                    rollen rijtekst dwars door die kop heen zichtbaar wordt.
+                </p>
+                <dl>
+                    <dt>Goed antwoord</dt>
+                    <dd>de kop blijft ondoorzichtig, er schuift geen tekst overheen, in alle drie de thema's.</dd>
+                    <dt>Sluit</dt>
+                    <dd>de rij over rijtekst boven een vastgezette kop.</dd>
+                </dl>
+            </section>
+
+            <section class="look">
+                <h2>2 · De bevestigingsdialoog in dark</h2>
+                <p>
+                    <a class="where" href="../../catalogue/overlays.html#confirm">catalogue/overlays.html#confirm</a>
+                </p>
+                <p>
+                    Zet het thema op dark en open de bevestiging. Dark snijdt een hoek van de dialoog af; de vraag is of die schuine hoek echt
+                    gesneden blijft, zonder een strookje halo dat de hoek weer vierkant maakt.
+                </p>
+                <dl>
+                    <dt>Goed antwoord</dt>
+                    <dd>de afgeschuinde hoek is gesneden, en er ligt geen randje of gloed overheen die de hoek dichtmaakt.</dd>
+                    <dt>Sluit</dt>
+                    <dd>een kwart van de rij over de gesneden hoek: de applicatieschil, het dossier en de lange dialoog zijn al gezien.</dd>
+                </dl>
+            </section>
+
+            <section class="look">
+                <h2>3 · Het meerregelige veld in dark en titanium</h2>
+                <p>
+                    <a class="where" href="../../catalogue/field.html#multiline">catalogue/field.html#multiline</a>
+                </p>
+                <p>
+                    Kijk naar de keuzelijst in dit blok, eerst in dark en dan in titanium. De vraag is of er één pijltje aan de rechterkant staat, en
+                    niet twee: het eigen pijltje van de browser naast dat van het thema.
+                </p>
+                <dl>
+                    <dt>Goed antwoord</dt>
+                    <dd>één pijltje, in beide thema's.</dd>
+                    <dt>Sluit</dt>
+                    <dd>de rij over de dubbele pijl op een keuzelijst.</dd>
+                </dl>
+            </section>
+
+            <section class="look">
+                <h2>4 · De rondepagina</h2>
+                <p>
+                    <a class="where" href="../../catalogue/round.html">catalogue/round.html</a>
+                </p>
+                <p>
+                    Deze pagina leest het register en zegt of de ronde voorbij is. De vraag is of ze dat zegt zonder dat je het hoeft te vragen. Met
+                    het register zoals het nu in de repository staat, hoort er te staan dat je erdoor bent.
+                </p>
+                <dl>
+                    <dt>Goed antwoord</dt>
+                    <dd>de pagina zegt uit zichzelf dat de ronde voorbij is.</dd>
+                    <dt>Sluit</dt>
+                    <dd>de rij over de rondepagina die de vraag moet beantwoorden waarvoor ze gebouwd is.</dd>
+                </dl>
+            </section>
+
+            <section class="look">
+                <h2>5 · De catalogus opent met niets te beoordelen</h2>
+                <p>
+                    <a class="where" href="../../catalogue/index.html">catalogue/index.html</a>
+                </p>
+                <p>
+                    Open de catalogus op je eigen zoom. De vraag is of er geen enkel blok openstaat: geen "Changed since judged", geen blok dat nog om
+                    een oordeel vraagt, in geen enkel thema.
+                </p>
+                <dl>
+                    <dt>Goed antwoord</dt>
+                    <dd>nul open blokken, op jouw zoom en op 100%.</dd>
+                    <dt>Sluit</dt>
+                    <dd>twee rijen: de ene over een ronde die blijft staan, de andere over de site die opent met niets te doen.</dd>
+                </dl>
+            </section>
+
+            <p style="margin-block-start: 1.5rem">
+                Antwoorden hoeven niet uitgebreid: per punt één zin volstaat, en waar iets niet klopt, wat je ziet. Claude schrijft de uitkomst dan in
+                de wachtrij en sluit wat gesloten kan.
+            </p>
+        </main>
+        <!-- The review navigation every research demo carries [fix-60]. -->
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
