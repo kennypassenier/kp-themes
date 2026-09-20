@@ -139,8 +139,20 @@ if ($Skip -notcontains 'terminal') {
     $generated = Get-Content (Join-Path $ThemeDir 'terminal.json') -Raw | ConvertFrom-Json
     $face = $TerminalFont
     if (-not $face) {
-        foreach ($f in 'JetBrainsMono Nerd Font Mono', 'JetBrainsMono NFM', 'JetBrainsMono Nerd Font', 'JetBrainsMono NF', 'JetBrains Mono', 'Cascadia Code NF', 'Cascadia Code') {
-            if (Test-Font $f) { $face = $f; break }
+        # The registry lists a font by its file name ("JetBrainsMono NFM Regular"), but
+        # Windows Terminal looks it up by its family name ("JetBrainsMono Nerd Font Mono").
+        # Each pair is: what to look for in the registry, what to write in settings.json.
+        $fonts = @(
+            @('JetBrainsMono Nerd Font Mono', 'JetBrainsMono Nerd Font Mono'),
+            @('JetBrainsMono NFM', 'JetBrainsMono Nerd Font Mono'),
+            @('JetBrainsMono Nerd Font', 'JetBrainsMono Nerd Font'),
+            @('JetBrainsMono NF', 'JetBrainsMono Nerd Font'),
+            @('JetBrains Mono', 'JetBrains Mono'),
+            @('CaskaydiaCove', 'CaskaydiaCove Nerd Font Mono'),
+            @('Cascadia Code', 'Cascadia Code')
+        )
+        foreach ($f in $fonts) {
+            if (Test-Font $f[0]) { $face = $f[1]; break }
         }
     }
 
