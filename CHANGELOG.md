@@ -1,5 +1,41 @@
 # Changelog
 
+## 7.1.0 — 2026-09-20
+
+A minor for one rule, found in the terminal and brought back to the web.
+Kenny, on a set of progress bars whose tracks each began where the word in
+front of them happened to end: _"Elementen beginnen op vaste punten, niet
+afhankelijk van de lengte van andere elementen … Dat wil ik ook in andere
+componenten. Het moet altijd netjes ogen."_
+
+**Added.**
+
+- **`.kp-progress-group`** (fix-64): a set of labelled bars in three
+  columns — label, track, reading — with the row handing its parts to them
+  through `display: contents`. Every track in the group begins and ends in
+  the same place, and the label column is as wide as the longest label in
+  that group and no wider. A lone bar keeps `.kp-progress__wrap` and needs
+  none of it. `.kp-progress__label` styles the word in front of a bar, and
+  `--kp-progress-group-gap` is the row gap.
+
+    Measured: without the rule the three demo bars read
+    `lefts 320/580/1042` in formal; with it, one left edge and one right edge
+    in all 22 themes (`tests/nostromo-notes.spec.mjs`, "bars in one group all
+    start and end in the same column").
+
+**Notes.**
+
+- No theme changed. The rule is a layout in `css/components.css`, so every
+  register's own colours, radii and borders are untouched; the twenty-two
+  `tokens.json` files are byte for byte those of 7.0.0.
+- The catalogue's progress block carries the group now, so its thirty
+  neighbouring blocks were judged again on the review site — 660 pairs,
+  all approved on 2026-09-19 at device pixel ratio 2.222. The hash resolves
+  the code that touches a block per component rather than per family, which
+  is why a table with a badge in it came back for a rule about bars.
+- The rule is code in kp-tui too, as `label_column` [kp-tui fix-64], which
+  is where Kenny found the fault.
+
 ## 7.0.0 — 2026-09-17
 
 A major for one break: `attachAll()` and `attachEffects()` finish after they

@@ -7,9 +7,10 @@ points at so his apps look like one family. Twenty-two themes
 the components on them, a layout layer, a utility API, and the fonts. Web
 today; GUI (Avalonia) and TUI (Ratatui) later.
 
-**State:** `v6.1.0` is published (2026-09-17) at
-<https://github.com/kennypassenier/kp-themes/releases/tag/v6.1.0>, the latest
-release. Round
+**State:** `v7.0.0` is published (2026-09-19) at
+<https://github.com/kennypassenier/kp-themes/releases/tag/v7.0.0>, the latest
+release — twelve assets, 267 of 267 checksums verified against the tagged
+tree. Round
 eight, opened the same day, is about the working method itself, not a
 theme: its sixteen decisions are `scope-29` to `scope-44` in
 [docs/SCOPE.md](docs/SCOPE.md), and the cycle they define is
@@ -17,8 +18,8 @@ theme: its sixteen decisions are `scope-29` to `scope-44` in
 
 **Consumers:** JobTracker (npm, pinned at v0.1.1), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21), and
-`~/Projects/kp-tui` from 2026-09-17, which vendors `tui/palette.rs`
-[scope-128].
+`~/Projects/kp-tui` from 2026-09-17, pinned to the 7.0.0 asset of
+`tui/palette.rs` by checksum [scope-128, scope-134].
 
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
@@ -54,17 +55,17 @@ Kenny.
 
 ## Procedure status
 
-| Field               | Value                                                                                                                                                                                                                                                                                                                                                       |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current phase       | **Round eight, layer 3 (tests, tags, gates, drift, purge).** Every approved fix from the catalogue so far is on the branch: gap-11, gap-12, gap-13, the switch, the data table round, the nostromo notes (scope-54 to scope-60) and held-60 (`e387f11`). Changed blocks return to the review page on their own for Kenny to judge again                     |
-| Last completed gate | **Phase 0, 2026-09-13.** The scope form of round eight, all sixteen items answered                                                                                                                                                                                                                                                                          |
-| Next gate           | the correction form for kp-tui fix-1 (a plate colour painted as an ink), and the release report for 7.0.0 [scope-133]                                                                                                                                                                                                                                       |
-| Next action         | waiting on Kenny: the correction form (kp-tui c38feaf, all five cool-factor moves); 7.0.0 goes out next                                                                                                                                                                                                                                                     |
-| Open queue items    | Twenty-five, in docs/MINI_ROUNDS.md: `step-2`, `gap-9`, `gap-10`, `gap-14`, `gap-15`, `fix-9-M1`, `HA4`, `KT6-M1`, `fix-16-M1` to `fix-18-M1`, `fix-32-M1`, `fix-36-M1`, `fix-38-M1` to `fix-42-M1`, `fix-45-M1` to `fix-51-M1`; none is Claude's to close before its named moment                                                                          |
-| Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                                                                             |
-| Step timing         | `step-timing: required` — every form carries a measured item `step-timing · …` from `~/Projects/dev-procedure/hooks/step-timing.py`; `hooks/form-lint.py` refuses a form without it [scope-69]; durations are written in minutes and seconds, and in hours past sixty minutes [scope-80]; it names what each agent worked on beside its duration [scope-83] |
-| Forms at wait       | `forms-at-wait: required` — a turn whose Next action waits on Kenny must have shown a form since his last message; a turn in which only an agent works writes "waiting on agent: …" [fix-26]                                                                                                                                                                |
-| AFK mode            | off                                                                                                                                                                                                                                                                                                                                                         |
+| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Current phase       | **Cutting 7.1.0.** Procedure 5.1 is at step 5: the version, the generated artefacts and the CHANGELOG are committed on `round-six` (81ab5be5) and `npm run verify` is running. Round eight itself closed on 2026-09-19                                                                                                                                                                     |
+| Last completed gate | **Phase 10, 2026-09-19.** The retrospective of round eight, all six items answered [scope-135]                                                                                                                                                                                                                                                                                             |
+| Next gate           | the release form: whether Claude publishes the 7.1.0 draft himself [Procedure 5.1 step 12]                                                                                                                                                                                                                                                                                                 |
+| Next action         | waiting on `npm run verify`, the second run, started 23:47 UTC with the fix-64b locator fixed and running in the background. When it is green: merge to `main`, tag `v7.1.0`, check the twelve assets and every checksum against the tagged tree, publish the draft (Kenny's answer on the release form: "Claude publiceert"), then pin kp-tui to the 7.1.0 palette asset and tag `v0.1.0` |
+| Open queue items    | Twenty-eight, in docs/MINI_ROUNDS.md: `step-2`, `gap-9`, `gap-10`, `gap-14`, `gap-15`, `fix-9-M1`, `HA4`, `KT6-M1`, `fix-16-M1` to `fix-18-M1`, `fix-32-M1`, `fix-36-M1`, `fix-38-M1` to `fix-42-M1`, `fix-45-M1` to `fix-51-M1`, `fix-62-M1`, `fix-63-M1`, `fix-64-M2`; none is Claude's to close before its named moment                                                                 |
+| Status line         | `status-line: required` — every reply opens with the four fields; `~/.claude/hooks/may-i-stop.py` refuses a reply without them, in this project only [scope-43]                                                                                                                                                                                                                            |
+| Step timing         | `step-timing: required` — every form carries a measured item `step-timing · …` from `~/Projects/dev-procedure/hooks/step-timing.py`; `hooks/form-lint.py` refuses a form without it [scope-69]; durations are written in minutes and seconds, and in hours past sixty minutes [scope-80]; it names what each agent worked on beside its duration [scope-83]                                |
+| Forms at wait       | `forms-at-wait: required` — a turn whose Next action waits on Kenny must have shown a form since his last message; a turn in which only an agent works writes "waiting on agent: …" [fix-26]                                                                                                                                                                                               |
+| AFK mode            | off                                                                                                                                                                                                                                                                                                                                                                                        |
 
 ## Project documents
 

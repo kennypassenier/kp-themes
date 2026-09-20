@@ -5,10 +5,22 @@
 //
 // Kenny, 2026-09-13, on the register: his verdicts are kept for good, and
 // "dit mag nooit veranderen door een change". A change to the hash recipe
-// (catalogue/block-hash.js, HASH_VERSION) would silently turn every recorded
-// verdict into "changed since judged"; so the gate refuses until the register
-// is rehashed — every entry measured again at the commit it was given on,
-// with the new recipe (node gates/verdicts.mjs rehash).
+// (catalogue/block-hash.js, HASH_VERSION) turns every recorded verdict into
+// "changed since judged", because version 6 hashes a different set of lines
+// than version 5 did; so the gate refuses while the two disagree.
+//
+// What gets it green is Kenny's rule of 2026-09-19 [fix-62], after all 3089
+// pairs came back as changed at once and he had to judge the whole catalogue
+// again: "vanaf nu kan de hash enkel nog veranderd worden als alle
+// componenten goedgekeurd zijn, als de hash dan verandert keur je zelf alles
+// goed". So a version bump is refused while any pair is unapproved, and once
+// every pair is approved, `node gates/verdicts.mjs carry` measures them all
+// again on the new recipe and keeps each verdict — Claude carries Kenny's
+// approval across the bump instead of asking for it twice.
+//
+// `rehash` stays for the bumps it can replay: it measures each entry at the
+// commit it was given on, which only works while the new recipe reads
+// nothing the old checkouts lack.
 //
 // No browser: the block keys come from the pages' markup as written.
 //
@@ -65,10 +77,27 @@ export function blockIds(html) {
 }
 
 /**
+ * The theme a block is written for, when it is written for one: the
+ * `data-cat-theme` on its own section [scope-111].
+ * @param {string} html the page's source
+ * @returns {Map<string, string>} block id → theme
+ */
+export function fixedThemes(html) {
+    const fixed = new Map();
+    for (const match of html.matchAll(/<section\b([^>]*)>/g)) {
+        const attributes = match[1];
+        const id = /(?:^|\s)id\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
+        const theme = /(?:^|\s)data-cat-theme\s*=\s*"([^"]*)"/.exec(attributes)?.[1];
+        if (id && theme) fixed.set(id, theme);
+    }
+    return fixed;
+}
+
+/**
  * Every block key a verdict can be given on, at a checkout: `slug--block` for
  * a component page, `research/x/demo.html#block` for a research demo.
  * @param {URL | string} [at] the checkout's root
- * @returns {Promise<Map<string, { page: string, label: string, block: string, component: boolean }>>}
+ * @returns {Promise<Map<string, { page: string, label: string, block: string, component: boolean, theme?: string }>>}
  */
 export async function knownBlocks(at = root) {
     const base = typeof at === 'string' ? new URL(`file://${at.replace(/\/?$/, '/')}`) : at;
@@ -80,12 +109,70 @@ export async function knownBlocks(at = root) {
         const file = new URL(page.href, base);
         if (!existsSync(file)) continue;
         const slug = (page.href.split('/').pop() ?? '').replace(/\.html$/, '');
-        for (const block of blockIds(readFileSync(file, 'utf8'))) {
+        const html = readFileSync(file, 'utf8');
+        const fixed = fixedThemes(html);
+        for (const block of blockIds(html)) {
             const key = page.component ? `${slug}--${block}` : `${page.href}#${block}`;
-            known.set(key, { page: page.href, label: page.label, block, component: Boolean(page.component) });
+            // A theme intro exists in one theme only [scope-111]; it is read
+            // here so that no caller has to remember to add it, which is what
+            // the first draft of the fix-62 gate forgot and reported 84 theme
+            // intros as never judged.
+            const theme = fixed.get(block);
+            known.set(key, { page: page.href, label: page.label, block, component: Boolean(page.component), ...(theme ? { theme } : {}) });
         }
     }
     return known;
+}
+
+/**
+ * Every block/theme pair a verdict can be given on: the component blocks,
+ * each in every theme, except a block written for one theme (a theme intro)
+ * which exists only there.
+ * @param {Map<string, { component: boolean, theme?: string }>} known
+ * @param {string[]} themes
+ * @returns {{ key: string, theme: string }[]}
+ */
+export function pairsOf(known, themes) {
+    /** @type {{ key: string, theme: string }[]} */
+    const pairs = [];
+    for (const [key, block] of known) {
+        if (!block.component) continue;
+        for (const theme of block.theme ? [block.theme] : themes) pairs.push({ key, theme });
+    }
+    return pairs;
+}
+
+/**
+ * The engines in which a pair is approved. One approval is enough: a block
+ * Kenny approved in Firefox is approved, whatever a second engine reads.
+ * @param {Record<string, any>} engines the register's entries for one pair
+ * @returns {[string, any][]}
+ */
+export function approvedEntries(engines) {
+    return Object.entries(engines ?? {}).filter(([, entry]) => entry?.verdict === 'approved');
+}
+
+/**
+ * The pairs that carry no approval in the register itself — rejected, or
+ * never judged. It says nothing about whether a block has changed since:
+ * that needs a browser and lives in gates/advice-approvals.mjs. This is the
+ * half a gate can read, and the half Kenny's rule is about [fix-62].
+ * @param {any} register the parsed catalogue/verdicts.json
+ * @param {Map<string, { component: boolean, theme?: string }>} known
+ * @param {string[]} themes
+ * @returns {{ key: string, theme: string, state: 'rejected' | 'never judged' }[]}
+ */
+export function unapprovedPairs(register, known, themes) {
+    const verdicts = register?.verdicts ?? {};
+    /** @type {{ key: string, theme: string, state: 'rejected' | 'never judged' }[]} */
+    const out = [];
+    for (const { key, theme } of pairsOf(known, themes)) {
+        const engines = verdicts[key]?.[theme] ?? {};
+        if (approvedEntries(engines).length) continue;
+        const says = Object.values(engines).map((entry) => entry?.verdict);
+        out.push({ key, theme, state: says.includes('rejected') ? 'rejected' : 'never judged' });
+    }
+    return out;
 }
 
 /**
@@ -101,8 +188,21 @@ export function registerFaults(register, { hashVersion, known, themes, commitExi
     if (extra.length) faults.push(`unknown top-level field(s): ${extra.join(', ')}`);
     if (!Number.isInteger(register.hashVersion)) faults.push('hashVersion is missing or not an integer');
     else if (register.hashVersion !== hashVersion) {
+        // Kenny's rule [fix-62]: the recipe may only move while every pair is
+        // approved, and then the approvals are carried across, not asked for
+        // again. Naming what is still open is the difference between a gate
+        // that blocks and a gate that says what to do.
+        const open =
+            known instanceof Map ? unapprovedPairs(register, /** @type {Map<string, { component: boolean, theme?: string }>} */ (known), themes) : [];
         faults.push(
-            `the register's hashes are version ${register.hashVersion}, catalogue/block-hash.js reads version ${hashVersion}: run node gates/verdicts.mjs rehash`,
+            `the register's hashes are version ${register.hashVersion}, catalogue/block-hash.js reads version ${hashVersion}` +
+                (open.length
+                    ? `: ${open.length} pair(s) are not approved, so the recipe may not move yet [fix-62] — ` +
+                      `${open
+                          .slice(0, 5)
+                          .map((pair) => `${pair.key} · ${pair.theme} (${pair.state})`)
+                          .join('; ')}${open.length > 5 ? `; and ${open.length - 5} more` : ''}`
+                    : ': every pair is approved, so run node gates/verdicts.mjs carry to carry those approvals onto the new recipe'),
         );
     }
     const verdicts = register.verdicts;

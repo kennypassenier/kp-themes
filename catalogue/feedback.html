@@ -253,7 +253,10 @@
                     mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion
                     preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar
                     sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. The filled
-                    part of each bar follows the shape of its track: square in a square track, rounded in a rounded one.
+                    part of each bar follows the shape of its track: square in a square track, rounded in a rounded one. Under them stands a group of
+                    three labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of
+                    them is called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is
+                    the fault this group exists to prevent [fix-64].
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>
@@ -265,6 +268,22 @@
                     </p>
                     <p><progress class="kp-progress" value="100" max="100" aria-label="Export finished"></progress></p>
                     <p style="margin-block-end: 0"><progress class="kp-progress" aria-label="Waiting for the export service"></progress></p>
+                    <div class="kp-progress-group" style="margin-block-start: 1rem">
+                        <span class="kp-progress__wrap"
+                            ><span class="kp-progress__label">CPU</span><progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress
+                            ><span class="kp-progress__value">22%</span></span
+                        >
+                        <span class="kp-progress__wrap"
+                            ><span class="kp-progress__label">Memory</span
+                            ><progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress
+                            ><span class="kp-progress__value">64%</span></span
+                        >
+                        <span class="kp-progress__wrap"
+                            ><span class="kp-progress__label">Disk</span
+                            ><progress class="kp-progress" value="61" max="100" aria-label="Disk"></progress
+                            ><span class="kp-progress__value">61%</span></span
+                        >
+                    </div>
                 </div>
             </section>
 

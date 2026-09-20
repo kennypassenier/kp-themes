@@ -155,6 +155,36 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Three bars that begin in the same column</figcaption>
+                        <p class="kp-text-muted">A set of bars is read against each other, so the tracks have to start and end together — a bar behind “Memory” may not begin later than the one behind “CPU” because the word is longer. The group gives the labels one column, as wide as the longest of them [fix-64].</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-progress-group">
+    <span class="kp-progress__wrap">
+        <span class="kp-progress__label">CPU</span>
+        <progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress>
+        <span class="kp-progress__value">22%</span>
+    </span>
+    <span class="kp-progress__wrap">
+        <span class="kp-progress__label">Memory</span>
+        <progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress>
+        <span class="kp-progress__value">64%</span>
+    </span>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;CPU&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;22&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;22%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;64&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;64%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A bar, and a bar with its number</figcaption>
                         <p class="kp-text-muted">The value belongs on the element, where the browser reports it, rather than in a width. The percentage beside it is for the reader who wants the number.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -203,10 +233,12 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-control-accent</code></td><td><code>var(--primary)</code></td></tr>
+                            <tr><td><code>--kp-progress-group-gap</code></td><td><code>var(--kp-space-xs)</code></td></tr>
                             <tr><td><code>--kp-progress-max-width</code></td><td><code>20rem</code></td></tr>
                             <tr><td><code>--kp-progress-stripe</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                     </tbody></table></div>
                 </section>
@@ -226,6 +258,8 @@
                             <tr><td><code>.kp-progress</code></td><td>The bar: the quiet ground as a track, the accent as a fill, a boundary and a rounded end in all three engines.</td></tr>
                             <tr><td><code>.kp-progress__wrap</code></td><td>The bar with something beside it, on one baseline.</td></tr>
                             <tr><td><code>.kp-progress__value</code></td><td>The number, quiet and small, after the bar.</td></tr>
+                            <tr><td><code>.kp-progress-group</code></td><td>A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].</td></tr>
+                            <tr><td><code>.kp-progress__label</code></td><td>The word in front of a bar inside a group.</td></tr>
                             <tr><td><code>indeterminate</code></td><td>A progress element with no value is the browser’s own indeterminate bar; for waiting with no end in sight the spinner says it better.</td></tr>
                     </tbody></table></div>
                 </section>

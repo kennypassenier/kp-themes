@@ -4240,3 +4240,204 @@ move into `.prettierignore`, and the generators own their own shape.
 **9 · When we review the measure.** At the next generator added to
 `generate:all` — the question to ask then is whether it formats through
 prettier or is ignored by it, and never neither.
+
+## fix-62 · The fingerprint recipe changed version without the register being re-measured (2026-09-19)
+
+**1 · What went wrong.** Kenny opened the review site and every theme
+showed about 140 items changed — 3089 of 3089 block/theme pairs — while
+nothing he could see had moved. `catalogue/judgements.js` calls a pair
+`changed` when the hash it reads differs from the hash the verdict was
+given on, so the whole catalogue asked to be judged again at once.
+The themes had not changed: the recipe had. `e477efed` (2026-09-17,
+scope-116 and fix-54) raised `catalogue/block-hash.js` `HASH_VERSION` from
+5 to 6, and version 6 hashes a different set of lines — the CSS of the
+families a block's markup actually names and the modules of their
+components, instead of the whole shared stylesheet and the whole register.
+Every hash moved because every hash is now made of something else.
+Measured: `node gates/verdicts.mjs compare --against-browser --all` read
+`0 equal, 3089 differ, 0 gone` before the re-record.
+
+**2 · Which gate let it through.** `gates/check-verdicts.mjs` compares the
+register's `hashVersion` field against `HASH_VERSION` and passed, because
+the field had been set to 6. It never compares a stored hash against a
+reading, so a register stamped with a version it was not measured under is
+green to it. `gates/advice-approvals.mjs` did say `3062 of 3062 approved`,
+because it reads `catalogue/hashes-now.json` — a snapshot still at
+hashVersion 5 with zero pairs in it, taken at `d1aec8cc`. Both surfaces
+agreed that nothing was open while the page told Kenny the opposite.
+
+**3 · Where else the same fault sits.** The fault is "a version stamp moved
+by hand where the tool that moves it cannot run". **Gezocht met:**
+`node gates/verdicts.mjs rehash` — it fails on the entries it has to carry:
+`page.evaluate: can't access property "data-kp-alarm", selectors is
+undefined`. The cause is structural, not a bug in rehash: rehash replays
+each entry at the commit it was recorded on, and version 6's `inputLines`
+reads `code.selectors` from `catalogue/code-version.json`, which at
+`20024bb0` (2772 of the entries) holds only `{ shared, themes }` and at
+`d1aec8cc` (27 of them) does not exist. A recipe that reads a file the old
+tree does not carry cannot be replayed backwards at all.
+
+**4 · How we prevent recurrence.** Kenny's own rule, given on the
+correction form on 2026-09-19: *"vanaf nu kan de hash enkel nog veranderd
+worden als alle componenten goedgekeurd zijn, als de hash dan verandert
+keur je zelf alles goed."* Asked whether that reached as far as a block
+whose own hash moves, he drew the line himself: *"Als de manier waarop de
+hash berekend wordt. Niet de hash van de items zelf. Uiteraard komen items
+terug als die hash veranderd, dat is de hele opzet van hashes."* So the
+rule guards the algorithm and nothing else.
+
+Two halves, and both are code now. A version bump is refused while any
+pair is rejected or unjudged, and the gate names what is still open rather
+than only saying no. Once every pair is
+approved, `node gates/verdicts.mjs carry` measures them all again on the
+working tree with the new recipe and keeps each verdict — Claude carries
+the approval across the bump instead of sending 3089 pairs back for a
+second signature. `rehash` stays for the bumps it can replay.
+
+**5 · What the remedy costs.** The one review round Kenny just did, and
+from here on a version bump waits for the catalogue to be clean. That is a
+real cost — a recipe improvement can sit behind a single rejected block —
+and it is the point: the alternative is the whole catalogue coming back at
+once, which is what happened. Nothing in the themes changes.
+
+**6 · Who enforces it.** Code, on both halves. `gates/check-verdicts.mjs`
+refuses a version skew and, through `unapprovedPairs`, lists the pairs that
+are not approved — so a bump cannot be argued past while something is open;
+`node gates/verdicts.mjs carry` refuses on the same list before it measures
+anything. The predicate is written once and both read it, so the gate and
+`gates/advice-approvals.mjs` cannot drift apart. What stays discipline is
+`compare --against-browser`: it takes 232.7 s for 3089 pairs, too slow for a
+commit hook, so it belongs where `npm run verify` already sits.
+
+**7 · How we measure it works, and when.** At this commit, three readings.
+`node gates/verdicts.mjs compare --against-browser` reads `3089 equal, 0
+differ, 0 gone — 232.7 s`, where the same command read `0 equal, 3089
+differ` before Kenny's approval was recorded. `node gates/verdicts.mjs
+snapshot` reads `3062 pair(s) measured, 0 of them no longer the block the
+verdict was given on`. And the new gate was made to fire: against a copy of
+the register with one verdict flipped to `rejected` and one pair deleted,
+`node gates/verdicts.mjs carry --register <copy>` exits 1 with
+`2 pair(s) are not approved, so the recipe may not move yet [fix-62]` and
+names both. Again at the next change to `HASH_VERSION`, which is the moment
+the fault can come back.
+
+**8 · If the measurement fails.** If a bump ever slips through with the
+catalogue open, the unit to guard was wrong and the guard moves down:
+`check-verdicts.mjs` grows a sampled reading — a fixed handful of pairs
+measured on every run — so a register that no longer describes the page
+cannot be green.
+
+**9 · When we review the measure.** At the next `HASH_VERSION` bump. Two
+questions to ask then: whether `rehash` can actually replay the oldest
+commit the register is anchored at — run it before the bump lands, not
+after — and whether waiting for a clean catalogue held a recipe improvement
+back longer than the improvement was worth.
+
+## fix-63 · The option that costs Kenny nothing asked him for something (2026-09-19)
+
+**1 · What went wrong.** A report item's `Toon mij dit` pill — the one
+that means "show me the thing so I can judge it" — carried the consequence
+line *"Claude schiet het deel dat Kenny noemt opnieuw of groter, vóór er
+iets anders gebeurt"*. Kenny, on the form: *"waarom is dit de optie van
+toon mij dit? dit lijkt niet gewoon iets tonen te zijn? toon mij dit moet
+het gebouwde kunnen tonen aan mij zodat ik het goed of af kan keuren."*
+The one option that should cost him a click had been turned into another
+question.
+
+**2 · Which gate let it through.** `hooks/form-lint.py` checks the
+consequence box for bare pronouns, coinages, old IDs and unmeasured
+durations — everything about how a line is written, nothing about whether
+it does what its own option promises. The protocol's D82 rule says a
+consequence line must say exactly what choosing it sets in motion, and
+that line did; what it set in motion was the wrong thing.
+
+**3 · Where else the same fault sits.** The fault is "a showing option
+whose consequence waits for Kenny before anything is shown". **Gezocht
+met:** `grep -o 'Toon mij dit</b> — [^<]*' scratchpad/*.html` over the 26
+forms of this session — 30 such lines, of which four ask back: two say
+"het deel dat Kenny noemt", one "de thema's die Kenny noemt", and one
+hands the work over entirely with *"Claude geeft Kenny de opdracht om het
+scherm zelf te draaien"*. The other 26 read "Claude toont …" and are
+fine.
+
+**4 · How we prevent recurrence.** The line names what Claude shows and
+names nobody else; where the thing cannot be shown in a message, the form
+ships the artefact with it and the line says which. Written into
+`FORM_PROTOCOL.md` §7 beside the other consequence rules.
+
+**5 · What the remedy costs.** Nothing at the keyboard: it is the same
+sentence, written from the showing side. What it costs is the escape
+hatch of promising to show something without having prepared it — which
+is what produced the bad four.
+
+**6 · Who enforces it.** Code: `hooks/form-lint.py` reads the consequence
+lines of every `Toon mij dit` pill and refuses one naming Kenny or telling
+him to do it himself.
+
+**7 · How we measure it works, and when.** At this commit the check was
+made to fire: the three forms carrying the fault read
+`toon-mij-dit vraagt terug: 1` each, and the two beside them `0`. Again at
+the next report form — the next one built must pass without an edit.
+
+**8 · If the measurement fails.** If a line slips through that is
+grammatically clean and still asks back, the check moves from the wording
+to the shape: a report item must carry a link or a file beside it, and the
+showing option points at that.
+
+**9 · When we review the measure.** At the next retrospective. The
+question to ask then is whether the 26 good lines were good because of the
+rule or in spite of it.
+
+## fix-64b · A new demo broke an old test, and only the release run said so (2026-09-20)
+
+**1 · What went wrong.** The progress block of the catalogue gained a
+group of three labelled bars for `.kp-progress-group` [fix-64]. Three more
+`.kp-progress__value` spans landed in `#progress`, and
+`tests/nostromo-notes.spec.mjs:89` reads exactly one of them:
+`page.locator('#progress .kp-progress__value')` now resolves to four
+elements and Playwright refuses it in strict mode. The failure surfaced at
+test 1122 of 3980, inside `npm run verify` for 7.1.0 — the release run.
+
+**2 · Which gate let it through.** None was asked. After writing the new
+test I ran it alone (`npx playwright test tests/nostromo-notes.spec.mjs
+-g "same column"`) and `npm run gates`, which does not open a browser. The
+project has the command that would have caught it in one line —
+`npm run test:tags -- --level commit`, which selects every test tagged with
+what changed — and it was not run, because the change felt like a CSS
+addition rather than a change to a demo other tests read.
+
+**3 · Where else the same fault sits.** **Gezocht met:**
+`grep -rn "locator('#[a-z-]*\s\.kp-" tests/*.mjs` — 31 locators anchored on
+a catalogue block id. Every one of them is a single-element read of a block
+that a later demo could double. The new group is the first demo added to an
+existing block since those tests were written.
+
+**4 · How we prevent recurrence.** Two things, and the first is the
+cheap one: a demo added to an existing catalogue block is a change to that
+component, so `npm run test:tags -- --level commit` runs before the commit
+that adds it — the tagged selection is what that command is for. The
+second: the locator itself names which bar it means, rather than trusting
+that there is only one.
+
+**5 · What the remedy costs.** The tagged run for `@component:feedback` is
+seconds, against the ninety-odd minutes the whole suite takes. The locator
+is one selector longer.
+
+**6 · Who enforces it.** The release procedure already does, at the step
+where it was caught: Procedure 5.1 step 5 runs the whole suite before a
+tag exists, so a break like this cannot reach a release. What changes is
+that it should not have to.
+
+**7 · How we measure it works, and when.** At this commit the fixed test
+is green in both engines, and the re-run of `npm run verify` is green
+from end to end before `v7.1.0` is tagged. Again at the next demo added to
+an existing block: the question is whether the tagged run was made before
+the commit. Queued as `fix-64b-M1`.
+
+**8 · If the measurement fails.** If a demo is added again without the
+tagged run, the check moves into the commit hook: a commit touching
+`catalogue/*.html` refuses without a `test:tags` run recorded for the
+components that page carries.
+
+**9 · When we review the measure.** At the retrospective of the next
+round.

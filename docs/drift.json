@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "3fba262e5ca03ce8c8468785d58c9d7e0b24fa8705c32b22ddacca7cd3a06d06",
+            "hash": "e1dda8205ca124695a1a4de96d903393a43b4ab33451571e4a5dd8641afab3e3",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "d30b2a8a867fd0bae94e10ed63c47abec04c74f07f9a5d0630bf949ce73d0fbb"
+                "CHANGELOG.md": "b215e54c215caa6bb15a1d386102270af1bb12a16517c446b0b4cab1abd6907d"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "5ef7ab06357c05093560519c60629cd3d93e762021188fa35feb080f677e4abe",
+            "hash": "c431f97fba717bfe089f2848af1de6bb0fd66acd51be309b964ef1300324e149",
             "doc": "5b43da0e51d30223c330ea2e3d2e9b565d98c4e87952ab32735877c3da9e71e2",
             "files": {
                 ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
@@ -117,7 +117,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "9d380196939f273723ad92a616c59450e16d59a01f84103c9160af64140f253d",
+                "js/theme-registry.d.ts": "46090193f1ed57b4e96306edc79653d21eff69b71759a2a68dbd46c7281fc929",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
@@ -133,8 +133,8 @@
                 "gates/run-tags.mjs",
                 ".github/workflows/pages.yml"
             ],
-            "hash": "583f99383f980f870c5db8aea693650c29becfd6195910c326a913e645148393",
-            "doc": "b38cfc12d4facaa61b5b5f844a67b2e61ab945c8466a31e57756a84889ae8164",
+            "hash": "bc15cd0369c7d23e4da4a20e855ba1d8378cbc8a2664696bb0363779157e6c1e",
+            "doc": "157aa4f2c9487b65546deeabf3056f6c990019c3f1035465c2461ddc401d51ff",
             "files": {
                 ".claude/agents/checker.md": "cb7b158e50b0a3e09a7aca2d14fbf4ec6bf6e64943453a3393e28b6d298f9723",
                 ".claude/agents/researcher.md": "2ffcfb85dacc85429c49b4aa6351c88beb3da21c931f9f7476986da133baf3e9",
@@ -142,7 +142,7 @@
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
                 "catalogue/block-hash.js": "af33bce0257a7e2ec245339ef0297034cce389cdd4fae39dfab39a46d9ef841f",
                 "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
-                "gates/verdicts.mjs": "ad2c337f456f7a1199738199c2c4fe0ea629858b5d8ec3ac358e8ba2b85cbda5"
+                "gates/verdicts.mjs": "be86036e420cfcc2b64fe4addc0440da3ff083738e1e9b02b848a59dfff93970"
             }
         },
         "docs/DEBUGGING_GUIDE.md": {
@@ -225,13 +225,13 @@
                 ".github/workflows/*.yml",
                 "playwright.config.mjs"
             ],
-            "hash": "22a8396785836b1331e4a9a3f3297ae124b3fe001db08cf07b9a7903f368c7f8",
-            "doc": "10db7b3adde0918261b569f58c60991a64ff094a073a5c08537154758da00d6d",
+            "hash": "86db9544ab81a155ec77b4a3c3631679530ea31249aedd39c279196c86624525",
+            "doc": "618c6d1d2f3c570188fa6c7ba66f608cf2eedd4ed238162eb2d8dc28b632f830",
             "files": {
-                ".claude/hooks/gates.sh": "b1bcf3cdab97eae4ae3ebe7e29a8aeb21741c964d3d71e11604e00aba1618f58",
+                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 ".github/workflows/pages.yml": "99d39f6c54dd3986c4c85ee001e9bc5d236f4c4339dd4430010b0bcb9d62f059",
-                ".github/workflows/release.yml": "06ba91ce6d670949ba806d9372b0b04e6cf53959138be9ecb906ea67b5c25806",
-                "gates/run-tags.mjs": "509d9390cb9a39fcbdf92ec17c3915601d5a92ffe8d69a547d37843ccb8def19",
+                ".github/workflows/release.yml": "1510964db9eb885344f23219a83ad158de6a590e5b7ec3b1dffd3794e1c19399",
+                "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
             }
         },

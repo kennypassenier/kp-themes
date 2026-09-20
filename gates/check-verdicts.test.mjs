@@ -4,7 +4,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { blockIds, knownBlocks, registerFaults } from './check-verdicts.mjs';
+import { blockIds, knownBlocks, registerFaults, unapprovedPairs } from './check-verdicts.mjs';
 import {
     againstReadings,
     annotateRatios,
@@ -31,11 +31,69 @@ const context = (overrides = {}) => ({
 });
 const entry = (extra = {}) => ({ verdict: 'approved', hash: HASH, commit: '2a32791', given: '2026-09-13', ...extra });
 
+// A Map, the way knownBlocks returns one, so the gate can tell a component
+// block from a research demo and a theme intro from a block in every theme.
+/** @type {(overrides?: Record<string, { page: string, label: string, block: string, component: boolean, theme?: string }>) => Map<string, { page: string, label: string, block: string, component: boolean, theme?: string }>} */
+const blocks = (overrides = {}) =>
+    new Map([
+        ['button--variants', { page: 'catalogue/buttons.html', label: 'Buttons', block: 'variants', component: true }],
+        ['research/navbar/demo.html#current', { page: 'research/navbar/demo.html', label: 'Navbar', block: 'current', component: false }],
+        ...Object.entries(overrides),
+    ]);
+
 test('a register at another hash version is refused, with the command that brings it level', () => {
-    const faults = registerFaults({ hashVersion: 1, verdicts: {} }, context());
+    // Every pair approved: the recipe may move, and the approvals are carried.
+    const level = { hashVersion: 1, verdicts: { 'button--variants': { formal: { firefox: entry() }, nostromo: { firefox: entry() } } } };
+    const faults = registerFaults(level, context({ known: blocks() }));
     assert.equal(faults.length, 1);
-    assert.match(faults[0], /version 1, catalogue\/block-hash\.js reads version 2: run node gates\/verdicts\.mjs rehash/);
-    assert.deepEqual(registerFaults({ hashVersion: 2, verdicts: {} }, context()), []);
+    assert.match(faults[0], /version 1, catalogue\/block-hash\.js reads version 2: every pair is approved, so run node gates\/verdicts\.mjs carry/);
+    assert.deepEqual(registerFaults({ ...level, hashVersion: 2 }, context({ known: blocks() })), []);
+});
+
+test('the recipe may not move while a pair is unapproved [fix-62]', () => {
+    // Kenny, 2026-09-19: "vanaf nu kan de hash enkel nog veranderd worden als
+    // alle componenten goedgekeurd zijn". One rejected pair and one never
+    // judged, and the gate says which.
+    const register = {
+        hashVersion: 1,
+        verdicts: { 'button--variants': { formal: { firefox: entry({ verdict: 'rejected' }) } } },
+    };
+    const faults = registerFaults(register, context({ known: blocks() }));
+    assert.equal(faults.length, 1);
+    assert.match(faults[0], /2 pair\(s\) are not approved, so the recipe may not move yet \[fix-62\]/);
+    assert.match(faults[0], /button--variants · formal \(rejected\)/);
+    assert.match(faults[0], /button--variants · nostromo \(never judged\)/);
+});
+
+test('a theme intro is one pair, not one per theme [scope-111]', () => {
+    // The first draft of the fix-62 gate counted a block written for one
+    // theme in all of them, and reported 84 theme intros as never judged.
+    const known = blocks({
+        'intros--intro-nostromo': {
+            page: 'catalogue/intros.html',
+            label: 'Theme intros',
+            block: 'intro-nostromo',
+            component: true,
+            theme: 'nostromo',
+        },
+    });
+    const register = {
+        hashVersion: 1,
+        verdicts: {
+            'button--variants': { formal: { firefox: entry() }, nostromo: { firefox: entry() } },
+            'intros--intro-nostromo': { nostromo: { firefox: entry() } },
+        },
+    };
+    assert.match(registerFaults(register, context({ known }))[0], /every pair is approved/);
+    assert.deepEqual(unapprovedPairs(register, known, ['formal', 'nostromo']), []);
+});
+
+test('knownBlocks reads the theme a block is written for', async () => {
+    const known = await knownBlocks();
+    const intro = [...known].find(([key]) => key.startsWith('intros--intro-'));
+    assert.ok(intro, 'the catalogue has theme intros');
+    assert.equal(intro[1].theme, intro[0].replace('intros--intro-', ''));
+    assert.equal(known.get('button--variants')?.theme, undefined);
 });
 
 test('a key no review page shows, a theme that does not exist and a malformed entry are refused', () => {

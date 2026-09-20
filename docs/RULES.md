@@ -373,3 +373,61 @@ for the catalogue: every block, in every theme it is shown in, carries an
 approval. A rejection or a block never judged holds the version where it
 is, and the work in between is fixing what Kenny's eye found, not writing
 the round up.
+
+## Kenny's answer of 2026-09-19 (fix-62) — approved first, then the recipe may move
+
+Kenny, on the correction form after the whole catalogue came back as
+changed at once: *"Vanaf nu kan de hash enkel nog veranderd worden als
+alle componenten goedgekeurd zijn, als de hash dan veranderd keur je zelf
+alles goed"*. The sibling of the release rule above, for the fingerprint
+instead of the version.
+
+The rule is about the **algorithm**, not about a block's own hash. Kenny,
+asked to be sure: *"Als de manier waarop de hash berekend wordt. Niet de
+hash van de items zelf. Uiteraard komen items terug als die hash
+veranderd, dat is de hele opzet van hashes."*
+
+So: a block whose own hash moves because something about that block really
+changed comes back to Kenny, always — that is what the hashes are for, and
+it is the release rule above. What is guarded here is the other thing:
+changing the way every hash is computed, which moves all of them at once
+and says nothing about any of them.
+
+That may only happen from a clean catalogue. While anything is rejected or
+unjudged, `HASH_VERSION` in `catalogue/block-hash.js` stays where it is,
+and `gates/check-verdicts.mjs` names what is open rather than only
+refusing. From a clean catalogue the approvals are carried, not asked for
+twice — `node gates/verdicts.mjs carry` measures every pair again on the
+new recipe and keeps each verdict, because Kenny approving the same 3089
+blocks a second time tells nobody anything new.
+
+## Elements begin at fixed points [fix-64]
+
+Kenny, 2026-09-20, on a set of progress bars where the bar behind
+"memory" began two cells later than the bar behind "cpu": *"Die balken
+moeten op hetzelfde startpunt beginnen … Dus aparte kolommen basically.
+Elementen beginnen op vaste punten, niet afhankelijk van de lengte van
+andere elementen, of beginnen allemaal op hetzelfde punt als ze verschoven
+worden, dat punt wordt dan bepaald door het langste woord of teken in het
+eerste element. Dat wil ik ook in andere componenten. Het moet altijd
+netjes ogen."*
+
+The rule has two halves, and the second is the one that is easy to miss:
+where a group of rows shares a shape, the column is **as wide as the
+longest label in that group and no wider**. Not a round number somebody
+picked, and not each row's own length.
+
+Where it is code here: `.kp-progress-group` gives a set of labelled bars
+one label column, one track column and one reading column, so the tracks
+of the group begin and end together. `.kp-shortcuts__row dt` already did
+this with a fixed `6rem`, and `.kp-spec dl` with `grid-template-columns:
+auto …`, which is the rule written the right way round — the `auto` is the
+longest term in that list.
+
+Measured by `tests/nostromo-notes.spec.mjs`, "bars in one group all start
+and end in the same column": without the rule the three tracks read
+`lefts 320/580/1042` in formal; with it, one left and one right in all 22
+themes.
+
+The same rule is code in kp-tui as `label_column` [kp-tui fix-64], which
+is where Kenny found the fault.

@@ -676,7 +676,7 @@
         "kp-code-block": { "shared": "fbc6e4782f88a622", "themes": {} },
         "kp-col-low": { "shared": "1006cb3eff9a9f32", "themes": {} },
         "kp-colorpicker": {
-            "shared": "f0df3f8f294d6a98",
+            "shared": "1407cba6d1148d21",
             "themes": {
                 "blueprint": "3aebfe837d5fdd63",
                 "brutalism": "cff646e177b84b57",
@@ -1665,7 +1665,7 @@
             }
         },
         "kp-progress": {
-            "shared": "fae81f5e8a763579",
+            "shared": "01631079dbed7dd2",
             "themes": {
                 "blueprint": "e02a56c1d11690fd",
                 "brutalism": "5ad108ac12fddcf8",
@@ -1691,6 +1691,7 @@
                 "titanium": "02c924b89c633e97"
             }
         },
+        "kp-progress-group": { "shared": "3620a049a5860456", "themes": {} },
         "kp-progress-stripes": { "shared": "3953324cfa5e15df", "themes": {} },
         "kp-prose": { "shared": "2f8af78cf1a0cae5", "themes": {} },
         "kp-pulse": { "shared": "8ad0aa937cac5cc9", "themes": {} },

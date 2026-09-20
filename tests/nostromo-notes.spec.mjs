@@ -97,7 +97,10 @@ test(
         const faint = [];
         for (const theme of THEME_NAMES) {
             await wear(page, theme);
-            const p = await page.locator('#progress .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
+            // The reading beside the lone bar, not the three in the group
+            // under it: a block gains demos, and a locator that says "the
+            // one" stops being true the day it does [fix-64b].
+            const p = await page.locator('#progress .cat-stage > p .kp-progress__value').evaluate((el) => /** @type {any} */ (window).kpPaint(el));
             const ratio = contrast(p.ink, p.ground);
             // shade-light's muted ink is 3.99:1 on its ground by choice, recorded as
             // advice that never refuses (Kenny, 2026-09-09; gates/compliance.mjs).
@@ -127,5 +130,35 @@ test(
             }
         }
         expect(faint).toEqual([]);
+    },
+);
+
+test(
+    'bars in one group all start and end in the same column, in every theme [fix-64]',
+    { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
+    async ({ page }) => {
+        // Kenny, 2026-09-20, on the kp-tui pictures: "Die balken moeten op
+        // hetzelfde startpunt beginnen, nu is de balk achter 'memory' veel
+        // later omdat memory langer is dan cpu. Dus aparte kolommen
+        // basically." The same rule, on the web: .kp-progress-group gives
+        // the labels one column, so the tracks share theirs.
+        await open(page, '/catalogue/feedback.html');
+        const ragged = [];
+        for (const theme of THEME_NAMES) {
+            await wear(page, theme);
+            const boxes = await page.locator('.kp-progress-group .kp-progress').evaluateAll((els) =>
+                els.map((el) => {
+                    const r = el.getBoundingClientRect();
+                    return { left: Math.round(r.left), right: Math.round(r.right) };
+                }),
+            );
+            expect(boxes.length, 'three labelled bars stand in the group').toBe(3);
+            const lefts = new Set(boxes.map((b) => b.left));
+            const rights = new Set(boxes.map((b) => b.right));
+            if (lefts.size !== 1 || rights.size !== 1) {
+                ragged.push(`${theme}: lefts ${[...lefts].join('/')}, rights ${[...rights].join('/')}`);
+            }
+        }
+        expect(ragged).toEqual([]);
     },
 );

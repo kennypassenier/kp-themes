@@ -1588,12 +1588,30 @@ export const DESCRIPTORS = [
         id: 'progress',
         title: 'Progress',
         group: 'Feedback',
-        classes: ['kp-progress'],
+        classes: ['kp-progress', 'kp-progress-group'],
         exports: ['Progress'],
         intro: 'A determinate bar for work whose end is known, painted in the theme’s own colours rather than the browser’s grey — the one control the package did not paint was the one that looked wrong in every theme.',
         whenToUse:
             'When you can say how far along something is: an upload, an import, a step count. Not for waiting on a server that will answer when it answers — that is the spinner. Not as a rating or a gauge: a progress element means work in flight.',
         examples: [
+            {
+                title: 'Three bars that begin in the same column',
+                why: 'A set of bars is read against each other, so the tracks have to start and end together — a bar behind “Memory” may not begin later than the one behind “CPU” because the word is longer. The group gives the labels one column, as wide as the longest of them [fix-64].',
+                markup: `
+<div class="kp-progress-group">
+<span class="kp-progress__wrap">
+<span class="kp-progress__label">CPU</span>
+<progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress>
+<span class="kp-progress__value">22%</span>
+</span>
+<span class="kp-progress__wrap">
+<span class="kp-progress__label">Memory</span>
+<progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress>
+<span class="kp-progress__value">64%</span>
+</span>
+</div>
+`,
+            },
             {
                 title: 'A bar, and a bar with its number',
                 why: 'The value belongs on the element, where the browser reports it, rather than in a width. The percentage beside it is for the reader who wants the number.',
@@ -1610,6 +1628,8 @@ export const DESCRIPTORS = [
             { name: '.kp-progress', what: 'The bar: the quiet ground as a track, the accent as a fill, a boundary and a rounded end in all three engines.' },
             { name: '.kp-progress__wrap', what: 'The bar with something beside it, on one baseline.' },
             { name: '.kp-progress__value', what: 'The number, quiet and small, after the bar.' },
+            { name: '.kp-progress-group', what: 'A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].' },
+            { name: '.kp-progress__label', what: 'The word in front of a bar inside a group.' },
             { name: 'indeterminate', what: 'A progress element with no value is the browser’s own indeterminate bar; for waiting with no end in sight the spinner says it better.' },
         ],
         accessibility: [
