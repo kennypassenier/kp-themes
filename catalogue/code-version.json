@@ -344,7 +344,7 @@
         "data-kp-sidenav-mode": { "shared": "2d3b6d353d02d38b", "themes": { "brutalism": "2e3af0afc4740f20" } },
         "data-kp-sidenav-open": { "shared": "313167fae2beffc6", "themes": {} },
         "data-kp-sidenav-position": { "shared": "f41a97ea8f1d92a9", "themes": {} },
-        "data-kp-sidenav-side": { "shared": "8efc8019be044534", "themes": {} },
+        "data-kp-sidenav-side": { "shared": "5e7b2c7c48569eb1", "themes": {} },
         "data-kp-sidenav-slim": { "shared": "e826bc52d3d80b5f", "themes": {} },
         "data-kp-sidenav-slim-collapsed": { "shared": "4a798b74b3ea6149", "themes": {} },
         "data-kp-sidenav-slim-hide": { "shared": "144a03ffb577b210", "themes": {} },
@@ -1866,7 +1866,7 @@
         },
         "kp-sidebar": { "shared": "096b92ea7b884c58", "themes": {} },
         "kp-sidenav": {
-            "shared": "8f75a8f22cf2bf8b",
+            "shared": "9590ef25fe244ed3",
             "themes": {
                 "blueprint": "4f70622023bec017",
                 "brutalism": "e78dd56ef77dea2e",

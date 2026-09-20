@@ -2221,14 +2221,16 @@
             transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
 
-        /* Except from the far edge, where the slide stayed visibly rough
-           through two attempts at it [Kenny, 2026-09-11: "die is nog altijd
-           fucked up. Maar voorlopig laten we het er gewoon uit"]. The panel
-           still comes and goes from that side; it simply arrives rather than
-           travelling. Recorded as gap-9. */
-        .kp-sidenav[data-kp-sidenav-side='end'] {
-            transition: none;
-        }
+        /* The far edge travels again [gap-9]. It was excepted here for
+           nine days — `transition: none`, because the slide read as rough
+           through two attempts and Kenny, 2026-09-11: "die is nog altijd
+           fucked up. Maar voorlopig laten we het er gewoon uit". The eye
+           was wrong: measured 2026-09-20, frame by frame, the panel moves
+           in 10 to 15 frames at one every 17 to 18 ms, for as long as each
+           register declares — formal 166 ms of 180, dark 216 of 220,
+           pastel 232 of 220 because its ease overshoots. Nothing is
+           dropped, and terminal's two steps are its own `steps(2, end)`
+           [research/gap-9-far-edge/README.md]. */
 
         /* Width is a layout property and animating it costs a reflow per
            frame. Only a panel that actually has a rail pays for it. */

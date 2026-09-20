@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+**Changed.**
+
+- **The side navigation travels from the far edge again** (gap-9): the
+  `transition: none` that sat on `[data-kp-sidenav-side='end']` since
+  2026-09-11 is gone, so that side slides on the register's own duration
+  and easing like every other. It was excepted because the slide read as
+  rough through two attempts; measured frame by frame on 2026-09-20 it
+  drops nothing — 10 to 15 frames at one every 17 to 18 ms in six
+  registers, and terminal's two steps are its own `steps(2, end)`
+  [research/gap-9-far-edge/README.md].
+
 **Added.**
 
 - **`.kp-log`, a log line** (gap-14): the time, the source, the level and

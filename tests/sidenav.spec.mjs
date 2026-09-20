@@ -227,4 +227,20 @@ test.describe('the side navigation', { tag: ['@component:navigation'] }, () => {
         });
         expect(tops.panel - tops.box, 'end: two rem below the top of its box').toBeCloseTo(32, 0);
     });
+
+    test("end: it travels, on the register's own timing [gap-9]", async ({ page }) => {
+        // It used to arrive instead: `transition: none` on that side alone,
+        // because the slide read as rough through two attempts. Measured
+        // 2026-09-20 with the transition restored — 10 to 15 frames at one
+        // every 17-18 ms, nothing dropped, in six registers
+        // [research/gap-9-far-edge/README.md] — so the exception went.
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await page.goto(FIXTURE);
+        const moving = await part(page, 'end').evaluate((el) => {
+            const cs = getComputedStyle(el);
+            return { property: cs.transitionProperty, duration: cs.transitionDuration };
+        });
+        expect(moving.property, 'end: the panel transitions its own translate').toContain('translate');
+        expect(moving.duration, 'end: over a duration the register gives it').not.toBe('0s');
+    });
 });

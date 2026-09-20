@@ -32,10 +32,12 @@
             .stage .kp-sidenav {
                 position: absolute;
             }
-            /* The proposal, and nothing else on this page differs: the far
-               edge gets the same transition the near edge already has. */
-            .as-proposed .kp-sidenav[data-kp-sidenav-side='end'] {
-                transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+            /* The component now does what the right-hand panel used to
+               show, so it is the LEFT one that carries an override: this
+               page keeps the old behaviour on it so the two can still be
+               compared. */
+            .as-is .kp-sidenav[data-kp-sidenav-side='end'] {
+                transition: none;
             }
             h2 {
                 margin: 0 0 0.25rem;
@@ -51,8 +53,9 @@
     <body>
         <h1>gap-9 — het paneel aan de verre kant</h1>
         <p class="note">
-            Druk op de knoppen. Links is hoe het vandaag is, rechts hoe het zou worden. Wissel van thema om te zien of het in één register beter of
-            slechter loopt.
+            <b>Ingevoerd op 2026-09-20.</b> Wat hier rechts stond is nu wat de component doet: de verre kant schuift, op het tempo van het register.
+            Links staat nog wat er negen dagen lang gebeurde — dat paneel heeft zijn overgang op deze pagina uitgezet, zodat het verschil te zien
+            blijft. Wissel van thema om te zien hoe elk register het doet.
         </p>
         <p>
             <label
@@ -71,8 +74,8 @@
 
         <div class="pair">
             <section>
-                <h2>Nu: <code>transition: none</code></h2>
-                <p class="note">Het paneel is er, of het is er niet. Er zit niets tussenin.</p>
+                <h2>Zoals het was: <code>transition: none</code></h2>
+                <p class="note">Het paneel is er, of het is er niet. Er zit niets tussenin. Negen dagen lang was dit wat de component deed.</p>
                 <div class="stage as-is">
                     <button type="button" class="kp-button kp-button--primary" data-toggle="now" style="margin: 1rem">Open van rechts</button>
                     <aside class="kp-sidenav" data-kp-sidenav-side="end" data-kp-sidenav-mode="over" data-kp-sidenav-open="false" id="now">
@@ -86,8 +89,8 @@
             </section>
 
             <section class="as-proposed">
-                <h2>Zoals het zou worden: de gewone overgang</h2>
-                <p class="note">Dezelfde duur en dezelfde curve als de kant die wél schuift — die van het thema zelf.</p>
+                <h2>Zoals het nu is: de gewone overgang</h2>
+                <p class="note">Dezelfde duur en dezelfde curve als de kant die altijd al schoof — die van het thema zelf.</p>
                 <div class="stage">
                     <button type="button" class="kp-button kp-button--primary" data-toggle="soon" style="margin: 1rem">Open van rechts</button>
                     <aside class="kp-sidenav" data-kp-sidenav-side="end" data-kp-sidenav-mode="over" data-kp-sidenav-open="false" id="soon">

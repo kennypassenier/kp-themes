@@ -83,3 +83,15 @@ plausible enough to report.
 **Still not measured:** what it looks like beside the near edge on Kenny's
 own screen. The frames say the movement is whole; whether the two edges
 read as one gesture is his eye's to say.
+
+## Decided, 2026-09-20
+
+Kenny, on the measurement: **"Zo invoeren"**. The exception is out of
+`css/components.css`; the far edge transitions its own `translate` on the
+register's duration and easing, like every other side.
+`tests/sidenav.spec.mjs` holds it: the panel's computed
+`transition-property` names `translate` and its duration is not `0s`. Red
+against the code that carried the exception, green after it went.
+
+This page keeps both behaviours side by side — the left panel now carries
+the override — so the thing that was removed is still there to look at.
