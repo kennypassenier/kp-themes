@@ -516,6 +516,18 @@ it.
 carries `kp-breadcrumb` and navigation's modules and no other family, and a
 block that does hold a side navigation carries `kp-sidenav`.
 
+**And the rules themselves, not their families [scope-137].** Since version 9
+the unit is the rule, not the family: every CSS rule is a bucket keyed by the
+theme a register scopes it to, the condition around it, and the compound its
+selector ends on, and a block carries the bucket when its own markup answers
+that compound. Kenny, 2026-09-20: *"als er css veranderd mag enkel de hash
+veranderen van componenten die invloed kennen van die css, hetzelfde voor
+javascript."* Measured over the catalogue: 5077 buckets, and the median one
+is carried by 3 of 3168 block/theme readings. A keyframe rides with the rules
+that run it, a font face with the themes whose tokens name it, and what is
+genuinely the page's — `:root`, `html`, `body`, `*`, `@property`, print —
+stays in the base.
+
 **And the modules the same way [scope-136].** A module the loader attaches by
 selector belongs to the blocks whose own markup asks for it. `js/auto.js`
 holds the table — `.kp-sidenav` brings `js/sidenav.js`, `[data-kp-source]`

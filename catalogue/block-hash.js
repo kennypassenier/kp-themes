@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 8;
+export const HASH_VERSION = 9;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
 export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = 7;
+export const PREVIOUS_VERSION = 8;
 
 export const PROPS = [
     'color',
@@ -502,7 +502,7 @@ export function readCodeVersion() {
  * @typedef {object} CodeVersion
  * @property {string} base
  * @property {Record<string, string>} themes
- * @property {Record<string, { shared: string, themes: Record<string, string> }>} families
+ * @property {Record<string, string>} [rules]
  * @property {Record<string, { modules: string, families: string[] }>} components
  * @property {Record<string, { digest: string, when: string }>} [modules]
  * @property {Record<string, string[]>} selectors
@@ -579,8 +579,15 @@ export function inputLines(block, source, code) {
     const asWritten = document.createElement('template');
     asWritten.innerHTML = markup;
     const root = asWritten.content.firstElementChild;
-    const asks = (/** @type {string} */ when) =>
-        Boolean(root && (root.matches(when) || root.querySelector(when))) || asWritten.content.querySelector(when) !== null;
+    const asks = (/** @type {string} */ when) => {
+        try {
+            return Boolean(root && (root.matches(when) || root.querySelector(when))) || asWritten.content.querySelector(when) !== null;
+        } catch {
+            // Not a selector a fragment can be asked about (`::part`, a
+            // vendor pseudo): nothing here answers it.
+            return false;
+        }
+    };
     const families = new Set(familiesIn(markup));
     const components = new Set();
     for (const family of families) for (const component of componentsOf(family, code.selectors)) components.add(component);
@@ -590,9 +597,16 @@ export function inputLines(block, source, code) {
         markup,
         `theme: ${theme}`,
         `base: ${code.base} ${code.themes[theme] ?? '-'}`,
-        ...[...families]
-            .sort()
-            .map((family) => `${family}: ${code.families[family]?.shared ?? '-'} ${code.families[family]?.themes?.[theme] ?? '-'}`),
+        // Every rule whose selector this block answers [scope-137]. The key
+        // carries the theme a register scopes it to, the condition around it
+        // and the compound it ends on; a rule of another theme is not this
+        // block's, and a rule nothing here matches is not either.
+        ...Object.entries(code.rules ?? {})
+            .filter(([key]) => {
+                const [named, , right] = key.split('||');
+                return (!named || named === theme) && asks(right);
+            })
+            .map(([key, digest]) => `${key}: ${digest}`),
         ...[...components].sort().map((component) => `${component}: ${code.components[component]?.modules ?? '-'}`),
         ...Object.entries(code.modules ?? {})
             .filter(([, module]) => asks(module.when))

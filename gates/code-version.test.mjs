@@ -58,13 +58,22 @@ test('a CSS line lands with the family its innermost rule names, and a comment l
     assert.deepEqual(again.families.get('kp-button'), families.get('kp-button'));
 });
 
-test('the digests are there: a base, one per theme, one per family and per component, and no loader [scope-116]', () => {
+test('the digests are there: a base, one per theme, one per rule and per module, and no loader [scope-116, scope-137]', () => {
     const version = codeVersion();
     assert.match(version.base, /^[0-9a-f]{16}$/);
     assert.equal(Object.keys(version.themes).length, 22);
     assert.equal(new Set(Object.values(version.themes)).size, 22, 'two themes do not share a digest');
-    assert.match(version.families['kp-button'].shared, /^[0-9a-f]{16}$/);
-    assert.equal(Object.keys(version.families['kp-button'].themes).length, 22, 'every register restyles the button');
+    // One bucket per rule, keyed theme || condition || the compound the
+    // selector ends on [scope-137]. The button has one in the shared sheets
+    // and one in every register.
+    assert.match(version.rules['||||.kp-button'], /^[0-9a-f]{16}$/);
+    assert.equal(
+        Object.keys(version.rules).filter((key) => key.endsWith('||||.kp-button')).length,
+        23,
+        'the shared sheets and all 22 registers style the button',
+    );
+    assert.match(version.modules['js/datatable.js'].digest, /^[0-9a-f]{16}$/);
+    assert.equal(version.modules['js/datatable.js'].when, '[data-kp-datatable]');
     assert.match(version.components.datatable.modules, /^[0-9a-f]{16}$/);
     assert.ok(NOT_A_BLOCK_INPUT.has('js/auto.js'));
     // effects.js draws the boot screen, so the family is listed with the

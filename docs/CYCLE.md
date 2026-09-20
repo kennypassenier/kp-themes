@@ -95,6 +95,17 @@ table's module brings back the blocks with a data table in them — measured
 2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
 1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0.
 
+What counts as "the code that touches the block" is read per rule
+[scope-137]: every CSS rule is a bucket, keyed by the theme a register scopes
+it to, the condition around it and the compound its selector ends on
+(`.kp-card .kp-button:hover` is `.kp-button`), and a block carries the bucket
+when its own markup answers that compound. Measured 2026-09-20: 5077 buckets
+over the package's stylesheets, and the median one is carried by 3 of 3168
+block/theme readings — `.kp-sidenav` reaches 220 pairs, `.kp-log` 44,
+`.kp-button` 2552. A keyframe rides with the rules that run it, a font face
+with the themes whose tokens name it, and `:root`, `html`, `body`, `*`,
+`@property` and print stay in the base, where they belong.
+
 The **modules** a block carries are the ones the loader would attach to it
 [scope-136]: `js/auto.js` decides that per root by selector — `.kp-sidenav`
 brings `js/sidenav.js`, `[data-kp-source]` brings `js/log.js` — and the hash

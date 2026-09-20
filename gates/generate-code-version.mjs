@@ -163,18 +163,199 @@ const files = (/** @type {string} */ dir, /** @type {(name: string) => boolean} 
 
 const read = (/** @type {string} */ path) => readFileSync(new URL(path, root), 'utf8');
 
+/**
+ * The page-wide selectors: a rule whose innermost compound is one of these
+ * shapes the whole document, so every block pays for it [scope-137].
+ */
+const PAGE_WIDE = new Set([':root', ':host', 'html', 'body', '*', '::selection', '::backdrop']);
+
+/** State and pseudo-elements, which say WHEN a rule paints, not WHAT it paints. */
+const STATE =
+    /::?(?:hover|focus|focus-visible|focus-within|active|visited|target|disabled|checked|enabled|indeterminate|placeholder-shown|read-only|open|first-line|first-letter|before|after|marker|selection|backdrop|placeholder|file-selector-button|-moz-[a-z-]+|-webkit-[a-z-]+)\b(?:\([^)]*\))?/g;
+
+/**
+ * The compound a selector ends on, stripped of state: `.kp-card .kp-button:hover`
+ * is `.kp-button`, `[data-theme='dark'] .kp-log dt` is `dt` [scope-137].
+ *
+ * The rightmost compound rather than the whole selector, because a block is
+ * read as a fragment: a rule written `.kp-card .kp-button` applies to a button
+ * in a block whose card sits on the page around it, and a hash that missed
+ * that would let a real change through. It over-reaches instead, which costs
+ * a judgement that was not needed and never skips one that was.
+ * @param {string} selector @returns {string}
+ */
+export function rightmostCompound(selector) {
+    const parts = selector
+        .replace(STATE, '')
+        .split(/[\s>+~]+/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+    // `.kp-menu > *` is the menu's rule, not everyone's, and neither is
+    // `.kp-log__line > :first-child`: a universal or a bare pseudo-class on
+    // the right says "the children of", so the anchor is the compound before
+    // it. Without that, a bucket called `:first-child` lands in nearly every
+    // block and the hash is wide again for no reason.
+    for (let n = parts.length - 1; n >= 0; n--) if (parts[n] !== '*' && !parts[n].startsWith(':')) return parts[n];
+    return parts[parts.length - 1] ?? '';
+}
+
+/** Split a selector list on its top-level commas: `:where(ul, ol), .x` is two. @param {string} list */
+export function selectorList(list) {
+    /** @type {string[]} */
+    const out = [];
+    let depth = 0;
+    let current = '';
+    for (const ch of list) {
+        if (ch === '(' || ch === '[') depth += 1;
+        else if (ch === ')' || ch === ']') depth -= 1;
+        if (ch === ',' && depth === 0) {
+            out.push(current);
+            current = '';
+        } else current += ch;
+    }
+    if (current.trim()) out.push(current);
+    return out.map((one) => one.trim()).filter(Boolean);
+}
+
+/**
+ * Per line of a stylesheet, the preludes open around it [scope-137]. A line
+ * that is still building something — a selector list spread over three lines,
+ * a `box-shadow` whose value runs over four — is settled when the next `{`
+ * or `;` says which it was: the first makes it part of the rule it opens, the
+ * second leaves it in the rule it already sits in.
+ * @param {string} css
+ * @returns {string[][]} the preludes for each line, outermost first
+ */
+function lineContexts(css) {
+    const text = withoutComments(css).replace(/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/g, (q) => q.replace(/[{};]/g, ' '));
+    /** @type {string[][]} */
+    const context = [];
+    /** @type {number[]} */
+    let waiting = [];
+    /** @type {string[]} */
+    const stack = [];
+    let prelude = '';
+    let line = 0;
+    const settle = (/** @type {string[]} */ where) => {
+        for (const idx of waiting) context[idx] = [...where];
+        waiting = [];
+    };
+    for (const ch of text) {
+        if (ch === '\n') {
+            if (prelude.trim()) waiting.push(line);
+            else context[line] = [...stack];
+            prelude += ' ';
+            line += 1;
+        } else if (ch === '{') {
+            stack.push(prelude.trim());
+            prelude = '';
+            settle(stack);
+        } else if (ch === '}') {
+            settle(stack);
+            stack.pop();
+            prelude = '';
+        } else if (ch === ';') {
+            settle(stack);
+            prelude = '';
+        } else prelude += ch;
+    }
+    settle(stack);
+    for (let i = 0; i <= line; i++) context[i] ??= [];
+    return context;
+}
+
+/**
+ * One stylesheet's lines, bucketed by the rule they belong to [scope-137]:
+ * the condition around it, and the compound its selector ends on. Keyframes
+ * and font faces come back on their own, because what runs them decides who
+ * pays for them, and a brace on its own line is nobody's.
+ * @param {string} css
+ * @returns {{ rules: Map<string, string[]>, keyframes: Map<string, string[]>, faces: { family: string, lines: string[] }[], page: string[], themed: Map<string, string[]> }}
+ */
+export function ruleBucketsOf(css) {
+    const text = withoutTheVersion(css);
+    const context = lineContexts(text);
+    const lines = withoutComments(text).split('\n');
+    /** @type {Map<string, string[]>} */
+    const rules = new Map();
+    /** @type {Map<string, string[]>} */
+    const keyframes = new Map();
+    /** @type {Map<number, { family: string, lines: string[] }>} */
+    const openFaces = new Map();
+    /** @type {string[]} */
+    const page = [];
+    /** @type {Map<string, string[]>} */
+    const themed = new Map();
+    let face = 0;
+    lines.forEach((raw, i) => {
+        const line = raw.trim();
+        if (!line || line === '}' || line === '{') return;
+        const preludes = context[i] ?? [];
+        const atRules = preludes.filter((p) => p.startsWith('@'));
+        const frames = atRules.find((p) => p.startsWith('@keyframes'));
+        if (frames) {
+            if (line.startsWith('@keyframes')) return;
+            const name = frames.split(/\s+/)[1] ?? '?';
+            keyframes.set(name, [...(keyframes.get(name) ?? []), line]);
+            return;
+        }
+        if (atRules.some((p) => p.startsWith('@font-face'))) {
+            if (line.startsWith('@font-face')) {
+                face += 1;
+                return;
+            }
+            const open = openFaces.get(face) ?? { family: '', lines: [] };
+            open.lines.push(line);
+            const named = /font-family:\s*['"]?([^;'"]+)/.exec(line)?.[1]?.trim();
+            if (named) open.family = named;
+            openFaces.set(face, open);
+            return;
+        }
+        // An at-rule's own line carries the condition, which is part of every
+        // key under it; storing it as well would move those keys twice.
+        if (line.startsWith('@')) return;
+        const condition = atRules.filter((p) => !p.startsWith('@layer')).join(' § ');
+        const theme = /data-theme\s*=\s*['"]?([a-z-]+)/.exec(preludes.join(' '))?.[1];
+        const selectors = preludes.filter((p) => !p.startsWith('@'));
+        /** @type {string[]} */
+        let rights = [];
+        for (let n = selectors.length - 1; n >= 0 && rights.length === 0; n--) {
+            rights = [
+                ...new Set(
+                    selectorList(selectors[n])
+                        .map((one) => rightmostCompound(one).replace(/^&/, ''))
+                        .filter((one) => one && one !== '&'),
+                ),
+            ];
+        }
+        // A rule on the theme's own root carries that theme's tokens, which
+        // every block of it reads through var(); it belongs to the theme.
+        const root = rights.some((one) => PAGE_WIDE.has(one) || /^\[data-theme/.test(one));
+        if (rights.length === 0 || root || condition.includes('print')) {
+            if (theme) themed.set(theme, [...(themed.get(theme) ?? []), line]);
+            else page.push(line);
+            return;
+        }
+        for (const right of rights) {
+            const key = `${theme ?? ''}||${condition}||${right}`;
+            rules.set(key, [...(rules.get(key) ?? []), line]);
+        }
+    });
+    return { rules, keyframes, faces: [...openFaces.values()], page, themed };
+}
+
 /** The digests catalogue/block-hash.js reads, version 6 [scope-116]. */
 export function codeVersion() {
     const map = loadMap();
     const vocabulary = vocabularyOf(map);
     const themes = /** @type {string[]} */ (JSON.parse(read('themes/order.json')));
 
-    /** @type {Map<string, { shared: string[], themes: Record<string, string[]> }>} */
-    const families = new Map();
-    const family = (/** @type {string} */ name) => {
-        if (!families.has(name)) families.set(name, { shared: [], themes: {} });
-        return /** @type {{ shared: string[], themes: Record<string, string[]> }} */ (families.get(name));
-    };
+    /** @type {Map<string, string[]>} */
+    const ruleLines = new Map();
+    /** @type {Map<string, string[]>} */
+    const keyframeLines = new Map();
+    /** @type {{ family: string, lines: string[] }[]} */
+    const allFaces = [];
     /** @type {string[]} */
     const base = [];
     /** @type {Record<string, string[]>} */
@@ -183,17 +364,51 @@ export function codeVersion() {
     for (const file of files('css/', (name) => name.endsWith('.css'))) {
         if (ruleFor(file, map, vocabulary)?.rule.none) continue;
         const theme = /^css\/(.+)-register\.css$/.exec(file)?.[1];
-        const buckets = bucketsOf(read(file));
-        for (const [name, lines] of buckets.families) {
-            if (theme) family(name).themes[theme] = [...(family(name).themes[theme] ?? []), `${file}\0`, ...lines];
-            else family(name).shared.push(`${file}\0`, ...lines);
+        const buckets = ruleBucketsOf(read(file));
+        for (const [key, lines] of buckets.rules) {
+            const [named, condition, right] = key.split('||');
+            // A register's rules are its theme's even where the selector
+            // carries no `[data-theme]`: the file is only served with it.
+            const full = `${named || theme || ''}||${condition}||${right}`;
+            ruleLines.set(full, [...(ruleLines.get(full) ?? []), `${file}\0`, ...lines]);
         }
-        if (theme && themeBase[theme]) themeBase[theme].push(`${file}\0`, ...buckets.unnamed);
-        else if (!theme) base.push(`${file}\0`, ...buckets.unnamed);
+        for (const [name, lines] of buckets.keyframes) keyframeLines.set(name, [...(keyframeLines.get(name) ?? []), `${file}\0`, ...lines]);
+        allFaces.push(...buckets.faces);
+        if (theme && themeBase[theme]) themeBase[theme].push(`${file}\0`, ...buckets.page);
+        else if (!theme) base.push(`${file}\0`, ...buckets.page);
         for (const [named, lines] of buckets.themed) {
             if (themeBase[named]) themeBase[named].push(`${file}\0`, ...lines);
             else base.push(`${file}\0`, ...lines);
         }
+    }
+
+    // A keyframe belongs to the rules that run it [scope-137]: the frames
+    // move with whoever animates them, and one nobody runs is everyone's.
+    const runs = (/** @type {string} */ text, /** @type {string} */ name) => new RegExp(`(^|[\\s,:])${name}([\\s,;)]|$)`).test(text);
+    const unrun = new Set(keyframeLines.keys());
+    for (const [key, lines] of ruleLines) {
+        const text = lines.join('\n');
+        for (const [name, frames] of keyframeLines) {
+            if (!runs(text, name)) continue;
+            unrun.delete(name);
+            ruleLines.set(key, [...lines, `@keyframes ${name}\0`, ...frames]);
+        }
+    }
+    for (const name of unrun) base.push(`@keyframes ${name}\0`, ...(keyframeLines.get(name) ?? []));
+
+    // A face belongs to the themes that ask for it by name [scope-137]:
+    // measured 2026-09-20, 47 of 62 are named by exactly one theme.
+    for (const face of allFaces) {
+        const wanted = themes.filter((t) => {
+            const tokens = JSON.parse(read(`themes/${t}/tokens.json`));
+            return tokens.entries.some(
+                (/** @type {{ token?: string, value?: string }} */ entry) =>
+                    entry.token?.startsWith('theme-font-') &&
+                    new RegExp(`(^|[,'"\\s])${face.family.replace(/[.*+?^$()|[\]\\]/g, '\\$&')}([,'"\\s]|$)`).test(entry.value ?? ''),
+            );
+        });
+        if (wanted.length === 0) base.push(`@font-face ${face.family}\0`, ...face.lines);
+        else for (const t of wanted) themeBase[t].push(`@font-face ${face.family}\0`, ...face.lines);
     }
 
     /** @type {Record<string, { modules: string[], families: Set<string> }>} */
@@ -242,17 +457,7 @@ export function codeVersion() {
                 .map((file) => [file, bySelector[file]]),
         ),
         themes: Object.fromEntries(themes.map((t) => [t, digest(themeBase[t])])),
-        families: Object.fromEntries(
-            [...families.keys()].sort().map((name) => {
-                const entry = family(name);
-                const perTheme = Object.fromEntries(
-                    Object.keys(entry.themes)
-                        .sort()
-                        .map((t) => [t, digest(entry.themes[t])]),
-                );
-                return [name, { shared: entry.shared.length ? digest(entry.shared) : '-', themes: perTheme }];
-            }),
-        ),
+        rules: Object.fromEntries([...ruleLines.keys()].sort().map((key) => [key, digest(/** @type {string[]} */ (ruleLines.get(key)))])),
         components: Object.fromEntries(
             Object.keys(components)
                 .sort()
@@ -264,7 +469,6 @@ export function codeVersion() {
                         // component owns (the confirm dialog's `kp-button`) is that
                         // component's, and a block carrying it pays for it there.
                         families: [...components[name].families]
-                            .filter((f) => families.has(f))
                             .filter((f) => {
                                 const owners = componentsOf(f, map.selectors);
                                 return owners.length === 0 || owners.includes(name);
@@ -290,8 +494,10 @@ async function main() {
             console.error(`${CODE_VERSION} is not what the code says [scope-116]; run node gates/generate-code-version.mjs`);
             process.exit(1);
         }
-        const { families, components } = codeVersion();
-        console.log(`code version: ${Object.keys(families).length} families, ${Object.keys(components).length} components, current.`);
+        const { rules, modules, components } = codeVersion();
+        console.log(
+            `code version: ${Object.keys(rules).length} rule buckets, ${Object.keys(modules).length} modules by selector, ${Object.keys(components).length} components, current.`,
+        );
         return;
     }
     writeFileSync(fileURLToPath(file), wanted);

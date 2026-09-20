@@ -2262,3 +2262,28 @@ React components) stays in the component's own digest. `HASH_VERSION` is
 judged again. Measured at the change: 144 blocks, of which 18 carry the
 navigation component and 5 name a side navigation.
 
+**scope-137 · A block is hashed over the rules it answers, not the families it names.**
+2026-09-20, the base-digest form, Kenny's own answer: *"ik wil per component
+dat op die review website staat een aparte hash. Als er html veranderd voor
+die component veranderd de hash. Als er css veranderd voor component
+veranderd die hash, als er javascript invloed heeft op die component
+veranderd die hash. Wat ik niet wil: als er css veranderd mag enkel de hash
+veranderen van componenten die invloed kennen van die css, hetzelfde voor
+javascript."* The family bucket was an approximation of that sentence; this
+is the sentence itself. Every CSS rule is now its own bucket, keyed by the
+theme a register scopes it to, the condition around it, and the compound its
+selector ends on — `.kp-card .kp-button:hover` is `.kp-button`,
+`.kp-menu > :first-child` is `.kp-menu`. A block carries a bucket when its
+own markup, as written, answers that compound. The rightmost compound rather
+than the whole selector, because a block is read as a fragment and its page
+wrapper is not there: that over-reaches where a rule names an ancestor
+outside the block, and never misses. A keyframe rides with the rules that
+run it, a font face with the themes whose tokens name it (47 of 62 belong to
+one theme), and what is genuinely the page's — `:root`, `html`, `body`, `*`,
+`@property`, print — stays in the base. Measured over the catalogue: 5077
+buckets, and the median bucket is carried by **3** of 3168 block/theme
+readings where the base digest was carried by all of them; `.kp-sidenav`
+reaches 220 pairs, `.kp-log` 44, `.kp-button` 2552 because buttons really
+are everywhere. `HASH_VERSION` is 9 and `carry` brought all 3111 approvals
+onto it in 239.4 s; nothing was judged again.
+

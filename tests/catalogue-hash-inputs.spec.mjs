@@ -85,45 +85,60 @@ test.describe('the hash follows the inputs [scope-114]', { tag: ['@component:cat
     });
 });
 
-// The reach of one block's hash [fix-71].
+// The reach of one block's hash [fix-71, scope-137].
 //
 // Version 6 gave a block every family its component's modules NAME, so a
 // breadcrumb — one family of its own, thirty-one in navigation's modules —
-// was hashed over the side navigation's CSS. One removed `transition: none`
-// there brought back all eighteen navigation blocks in 22 themes, of which
-// five hold a side navigation. Kenny, 2026-09-20: "die anderen zijn toch niet
-// allemaal veranderd? Dan is er iets mis met de hashing."
-test.describe('a block is hashed over the code its own markup names [fix-71]', { tag: ['@component:catalogue'] }, () => {
+// was hashed over the side navigation's CSS. Version 7 cut that back to the
+// families the markup names; version 9 goes one step finer and reads the
+// rules themselves, keyed by the compound their selector ends on. Kenny,
+// 2026-09-20: "Als er css veranderd mag enkel de hash veranderen van
+// componenten die invloed kennen van die css."
+test.describe('a block is hashed over the rules its own markup answers [scope-137]', { tag: ['@component:catalogue'] }, () => {
     test.beforeEach(async ({ context }) => {
         await useEmptyRegister(context);
     });
 
-    test('a breadcrumb carries its own family and navigation’s modules, and no other family', async ({ page }) => {
+    const keysOf = (page, id) =>
+        page.evaluate(async (blockId) => {
+            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
+            const root = /** @type {HTMLElement} */ (document.getElementById(blockId));
+            return inputLines(root, root.outerHTML, await readCodeVersion())
+                .filter((line) => line.includes('||'))
+                .map((line) => line.slice(0, line.lastIndexOf(': ')));
+        }, id);
+
+    test('a breadcrumb answers the breadcrumb’s rules and none of the side navigation’s', async ({ page }) => {
         await page.goto('/catalogue/navigation.html');
         await waitForJudging(page, { timeout: 60_000 });
-        const lines = await page.evaluate(async () => {
-            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
-            const root = /** @type {HTMLElement} */ (document.getElementById('breadcrumb'));
-            return inputLines(root, root.outerHTML, await readCodeVersion());
-        });
-        const families = lines.filter((line) => /^(kp-|data-kp-)/.test(line)).map((line) => line.split(':')[0]);
-        expect(families, 'only the families the markup names').toEqual(['kp-breadcrumb']);
+        const keys = await keysOf(page, 'breadcrumb');
+        expect(keys.some((key) => key.endsWith('||.kp-breadcrumb'))).toBe(true);
+        expect(keys.some((key) => key.endsWith('||.kp-sidenav'))).toBe(false);
+        // And it carries the elements it really holds, so a rule on them asks.
+        for (const compound of ['||a', '||li', '||ol'])
+            expect(
+                keys.some((key) => key.endsWith(compound)),
+                compound,
+            ).toBe(true);
+    });
+
+    test('only the theme on screen is read: another theme’s register is not this block’s', async ({ page }) => {
+        await page.goto('/catalogue/navigation.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const keys = await keysOf(page, 'breadcrumb');
+        const themed = keys.filter((key) => !key.startsWith('||'));
+        expect(themed.length, 'the register styles it').toBeGreaterThan(0);
         expect(
-            lines.some((line) => line.startsWith('navigation:')),
-            'the component it belongs to still brings its modules',
+            themed.every((key) => key.startsWith('formal||')),
+            `only formal: ${themed.join(', ')}`,
         ).toBe(true);
     });
 
-    test('a block that holds a side navigation does carry it', async ({ page }) => {
+    test('a block that holds a side navigation does answer its rules', async ({ page }) => {
         await page.goto('/catalogue/navigation.html');
         await waitForJudging(page, { timeout: 60_000 });
-        const families = await page.evaluate(async () => {
-            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
-            const root = /** @type {HTMLElement} */ (document.getElementById('sidenav-side'));
-            const lines = inputLines(root, root.outerHTML, await readCodeVersion());
-            return lines.filter((line) => /^(kp-|data-kp-)/.test(line)).map((line) => line.split(':')[0]);
-        });
-        expect(families).toContain('kp-sidenav');
+        const keys = await keysOf(page, 'sidenav-side');
+        expect(keys.some((key) => key.endsWith('||.kp-sidenav'))).toBe(true);
     });
 });
 
