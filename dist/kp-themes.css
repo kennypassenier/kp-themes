@@ -6742,33 +6742,28 @@
     }
 
     .kp-sidenav__submenu .kp-sidenav__link {
-        position: relative;
         padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
     }
 
     /* A submenu item says so before its name (Kenny, 2026-09-20: "zodat het
        extra duidelijk is wat nu juist een hoofdmenuitem en een submenuitem
-       is"). The package gives the place and nothing else: the mark sits
-       inside the indent the item already carries, absolutely placed, so no
-       label moves for it and every label in a submenu still begins at one
-       point [fix-64]. Which mark is the register's answer — a glyph through
-       the knob, or a shape it draws itself the way nostromo draws the dot on
-       its buttons. Empty by default, so a consumer's own theme shows none
-       rather than a box.
+       is"). The mark stands in the name's own line, right before its first
+       letter, so it is before the word in every theme whatever inline
+       padding a register gave the row — pastel's submenu row starts its text
+       12.8px in where formal's starts 33.6px, and a mark measured from the
+       row's edge fell on top of the word in one and before it in the other.
+       In the line rather than over it, because the name clips what overflows
+       it for the ellipsis, and an absolutely placed mark was clipped away
+       with it. Every submenu name in a theme takes the same mark, so they
+       still begin at one point [fix-64].
 
-       On the label's own ::before rather than the link's: five registers
-       already draw something with `.kp-sidenav__link::before` and one with
-       ::after — phantom's sliding plate among them — and a mark that took
-       one of those away would cost a theme a decision it had already made. */
+       Which mark is the register's answer — a glyph through the knob, or a
+       shape it draws itself the way nostromo lights the dot its rows already
+       carry. Empty by default, so a consumer's own theme shows none. */
     .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
         content: var(--kp-sidenav-submenu-mark, '');
-        position: absolute;
-        inset-inline-start: var(--kp-sidenav-submenu-mark-inset, 1.1rem);
-        inset-block-start: 50%;
-        translate: 0 -50%;
+        margin-inline-end: var(--kp-sidenav-submenu-mark-gap, 0.45em);
         color: var(--kp-sidenav-submenu-mark-ink, var(--muted-foreground));
-        line-height: 1;
-        pointer-events: none;
     }
 
     /* The backdrop is a dimming, not a tint: the same value the dialog
@@ -34789,6 +34784,11 @@
 
     [data-theme='nostromo'] .kp-sidenav__link,
     [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        /* The row is what the dot below is measured from [fix-73]. Without
+           this the dot fell back to the panel and stayed in the middle of it
+           while the list scrolled — Kenny, 2026-09-20: "hier staat een raar
+           bolletje vast als ik scroll in de balk zelf". */
+        position: relative;
         font-family: var(--theme-font-mono);
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -34996,20 +34996,18 @@
         text-shadow: none;
     }
 
-    /* A submenu item's mark [Kenny, 2026-09-20]: the same dot this register
-       puts on a button, drawn rather than typed, so the two read as one
-       family. */
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
-        --kp-sidenav-submenu-mark: '';
-        inline-size: 0.4rem;
-        block-size: 0.4rem;
-        border-radius: 50%;
-        background: currentcolor;
-        opacity: 0.45;
+    /* A submenu item's mark [Kenny, 2026-09-20]: not a second dot but the
+       one this register already puts on every sidenav row, lit. It is the
+       dot the buttons carry, it sits inside the row so it scrolls with it,
+       and a submenu item wears it at rest where a top-level row only shows
+       it on hover. */
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link::before {
+        opacity: 0.55;
+        translate: 0 0;
     }
 
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover .kp-sidenav__label::before,
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page'] .kp-sidenav__label::before {
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover::before,
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
     }
 }

@@ -4442,6 +4442,67 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-73 · A theme's own dot stood still while its list scrolled (2026-09-20)
+
+**1 · What went wrong.** Kenny, reviewing nostromo's five side-navigation
+blocks: *"hier staat een raar bolletje vast als ik scroll in de balk
+zelf"*, and the same note under each of the other four. Nostromo draws a
+dot on a sidenav row — `[data-theme='nostromo'] .kp-sidenav__link::before`,
+absolutely placed 0.7rem from the row's start — but never gave the row
+`position: relative`. So the dot resolved against the nearest positioned
+ancestor, the panel, and sat at the panel's own middle: one dot, floating,
+staying put while the list scrolled under it.
+
+**2 · Which gate let it through.** None. `gates/check-register-coverage.mjs`
+asks whether every register answers each hook; nothing asks whether an
+absolutely placed thing has the containing block its author meant. The
+register specs read colours and sizes, not containing blocks, and the dot
+is invisible at rest (`opacity: 0`), so it only shows on the current row —
+which in the demo is a top-level row, where nobody had scrolled far enough
+to notice.
+
+**3 · Where else the same fault sits.** The fault as a property: *an
+absolutely placed pseudo-element whose intended parent is not positioned*.
+**Gezocht met:** `node -e` over the 22 registers as they stood before the
+fix, reading every rule that places a pseudo-element absolutely — 114 of
+them, on 104 distinct owners — and asking for each owner whether any rule
+in the package or in that register positions it. The script answered 0,
+and it is wrong: it does not reproduce the one instance Kenny found, so
+the search is a partial answer and is written down as one. What it misses
+is a selector the owner is styled under in a grouped rule, which is
+exactly nostromo's shape. The 104 owners were then read by eye against
+the same question; nostromo's row is the only one where the package does
+not position the owner either. Until that script can find its own known
+case, this field is not a clean bill of health for the other 103.
+
+**4 · How we prevent recurrence.** The row is positioned in nostromo's
+register, beside the rule that needed it, with the reason in a comment.
+No wider gate: the search that would have to power one cannot yet find
+its own known case, and a register may place something against the panel
+on purpose, which a gate could not tell apart. What is guarded instead is
+the symptom in this component — `tests/sidenav.spec.mjs` now reads what a
+submenu row paints in all 22 themes, so a mark that vanishes or never
+appears fails there.
+
+**5 · What the remedy costs.** One line.
+
+**6 · Who enforces it.** Discipline, with the search above to run when a
+register next draws something absolutely. The sweep in
+`tests/sidenav.spec.mjs` now also reads what a submenu row paints, so a dot
+that disappears entirely would fail there.
+
+**7 · How we measure that it works, and when.** At this commit: nostromo's
+current row carries its dot on the row, and the panel carries none.
+Measured by screenshot, and by the sweep reading a painted mark in all 22
+themes. Again at Kenny's next review of nostromo's five side-navigation
+blocks, which is where it was found. Queued as fix-73-M1.
+
+**8 · If the measurement fails.** Then the containing block goes into the
+package instead: `.kp-sidenav__link { position: relative }` for every
+theme, so no register can forget it.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-71 · The register asked him to judge what had not changed (2026-09-20)
 
 **1 · What went wrong.** The second review of the evening put 418 pairs in

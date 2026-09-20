@@ -9,11 +9,17 @@
   voor de subitemnaam willen zetten zodat het extra duidelijk is wat nu juist
   een hoofdmenuitem en een submenuitem is."_ The package gives the place, in
   the indent a submenu item already carries, so no label moves for it
-  [fix-64]; each register gives the mark through `--kp-sidenav-submenu-mark`
+  [fix-64] — in the name's own line, right before its first letter, because a
+  register may give a submenu row its own inline padding and a mark measured
+  from the row's edge fell on the word in eleven themes; each register gives
+  the mark through `--kp-sidenav-submenu-mark`
   — formal a middot, cyberpunk its double slash, blueprint the grid mark,
   high-contrast a filled square, terminal a prompt, and nostromo the same dot
   it draws on its buttons, drawn rather than typed. On the label's own
-  `::before`, because five registers already draw with the link's.
+  `::before`, because five registers already draw with the link's. Nostromo
+  lights the dot its rows already carry instead of drawing a second one, and
+  its rows are positioned now, so that dot stops standing in the middle of
+  the panel while the list scrolls [fix-73].
 
 **Changed.**
 

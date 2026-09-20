@@ -1207,6 +1207,11 @@
 
     [data-theme='nostromo'] .kp-sidenav__link,
     [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        /* The row is what the dot below is measured from [fix-73]. Without
+           this the dot fell back to the panel and stayed in the middle of it
+           while the list scrolled — Kenny, 2026-09-20: "hier staat een raar
+           bolletje vast als ik scroll in de balk zelf". */
+        position: relative;
         font-family: var(--theme-font-mono);
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -1414,20 +1419,18 @@
         text-shadow: none;
     }
 
-    /* A submenu item's mark [Kenny, 2026-09-20]: the same dot this register
-       puts on a button, drawn rather than typed, so the two read as one
-       family. */
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
-        --kp-sidenav-submenu-mark: '';
-        inline-size: 0.4rem;
-        block-size: 0.4rem;
-        border-radius: 50%;
-        background: currentcolor;
-        opacity: 0.45;
+    /* A submenu item's mark [Kenny, 2026-09-20]: not a second dot but the
+       one this register already puts on every sidenav row, lit. It is the
+       dot the buttons carry, it sits inside the row so it scrolls with it,
+       and a submenu item wears it at rest where a top-level row only shows
+       it on hover. */
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link::before {
+        opacity: 0.55;
+        translate: 0 0;
     }
 
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover .kp-sidenav__label::before,
-    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page'] .kp-sidenav__label::before {
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover::before,
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
     }
 }

@@ -1,1 +1,102 @@
-{}
+{
+    "navigation--app-shell": {
+        "nostromo": {
+            "rejected": "hier staat een raar bolletje vast als ik scroll in de balk zelf",
+            "change": "That dot is this register own: its sidenav rows carry one, absolutely placed, but the row was never positioned, so the dot fell back to the panel and stood in the middle of it while the list scrolled. The row is positioned now, and a submenu row wears that same dot at rest instead of a second one [fix-73].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        }
+    },
+    "navigation--sidenav-over": {
+        "nostromo": {
+            "rejected": "hier staat een raar bolletje vast als ik scroll in de balk zelf",
+            "change": "That dot is this register own: its sidenav rows carry one, absolutely placed, but the row was never positioned, so the dot fell back to the panel and stood in the middle of it while the list scrolled. The row is positioned now, and a submenu row wears that same dot at rest instead of a second one [fix-73].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        }
+    },
+    "navigation--sidenav-side": {
+        "blueprint": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "brutalism": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "cyberpunk": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "grotesk": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "nostromo": {
+            "rejected": "hier staat een raar bolletje vast als ik scroll in de balk zelf",
+            "change": "That dot is this register own: its sidenav rows carry one, absolutely placed, but the row was never positioned, so the dot fell back to the panel and stood in the middle of it while the list scrolled. The row is positioned now, and a submenu row wears that same dot at rest instead of a second one [fix-73].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "pastel": {
+            "rejected": "Het symbool staat precies in de tekst ipv ervoor",
+            "change": "The mark was placed from the row edge at a fixed inset of 1.1rem, and pastel starts a submenu row text 12.8px in, so the mark landed on the word. It now stands in the name own line, right before its first letter [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "phantom": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "retro": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "sepia": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "synthwave": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        },
+        "terminal": {
+            "rejected": "staat hier ook in de tekst",
+            "change": "The mark was placed from the row edge at a fixed inset, and this register gives a submenu row its own inline padding, so the mark landed on the word. It now stands in the name own line, right before its first letter, in every theme whatever the padding [feat-nav-3].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        }
+    },
+    "navigation--sidenav-slim": {
+        "nostromo": {
+            "rejected": "hier staat een raar bolletje vast als ik scroll in de balk zelf",
+            "change": "That dot is this register own: its sidenav rows carry one, absolutely placed, but the row was never positioned, so the dot fell back to the panel and stood in the middle of it while the list scrolled. The row is positioned now, and a submenu row wears that same dot at rest instead of a second one [fix-73].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        }
+    },
+    "navigation--sidenav-slim-toggle": {
+        "nostromo": {
+            "rejected": "hier staat een raar bolletje vast als ik scroll in de balk zelf",
+            "change": "That dot is this register own: its sidenav rows carry one, absolutely placed, but the row was never positioned, so the dot fell back to the panel and stood in the middle of it while the list scrolled. The row is positioned now, and a submenu row wears that same dot at rest instead of a second one [fix-73].",
+            "commit": "84efc7a4",
+            "given": "2026-09-20"
+        }
+    }
+}

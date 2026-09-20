@@ -270,13 +270,23 @@ test(
                 .evaluate((menu) => {
                     const links = [...menu.querySelectorAll('.kp-sidenav__link')];
                     const marks = links.map((link) => {
-                        const before = globalThis.getComputedStyle(link.querySelector('.kp-sidenav__label'), '::before');
-                        return { content: before.content, width: Number.parseFloat(before.inlineSize) || 0 };
+                        // Either the name carries a glyph before it, or the
+                        // row lights a shape of its own — nostromo wears the
+                        // dot its rows already have [Kenny, 2026-09-20].
+                        const named = globalThis.getComputedStyle(link.querySelector('.kp-sidenav__label'), '::before');
+                        const drawn = globalThis.getComputedStyle(link, '::before');
+                        return {
+                            content: named.content,
+                            width: Number.parseFloat(named.inlineSize) || 0,
+                            drawn: (Number.parseFloat(drawn.inlineSize) || 0) * Number(drawn.opacity || 0),
+                        };
                     });
                     const labels = links.map((link) => Math.round(link.querySelector('.kp-sidenav__label').getBoundingClientRect().left));
                     return { marks, labels };
                 });
-            const shows = read.marks.every((mark) => (mark.content && !['none', '""', "''"].includes(mark.content)) || mark.width > 0);
+            const shows = read.marks.every(
+                (mark) => (mark.content && !['none', '""', "''"].includes(mark.content)) || mark.width > 0 || mark.drawn > 0,
+            );
             if (!shows) without.push(`${theme}: ${JSON.stringify(read.marks[0])}`);
             if (new Set(read.labels).size !== 1) ragged.push(`${theme}: labels at ${[...new Set(read.labels)].join('/')}`);
         }
