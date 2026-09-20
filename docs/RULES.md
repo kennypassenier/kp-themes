@@ -447,3 +447,36 @@ pushes `round-six` and waits for its Pages run before the claim is written.
 Measured 2026-09-20, the evening this rule was learned again: four commits
 sat on `main` while three forms told him to open a page that did not have
 them.
+
+
+## A status token is a pair, and half a pair is not an ink [fix-70]
+
+Every theme declares `--warning` with `--warning-foreground`, `--info` with
+`--info-foreground`, and so on. The pair means one thing: the first is a
+plate, the second is the ink that reads **on that plate**. Which of the two
+is the dark one is each theme's own answer — high-contrast paints
+`--warning` a strong brown and `--warning-foreground` white; light paints
+`--warning` a pale wash and `--warning-foreground` a dark ochre.
+
+So neither half is an ink for a card. Measured on 2026-09-20, with the log
+block colouring its level word from `--info-foreground`: nineteen words in
+nine themes sat under 4.5:1, ten of them between 1.00 and 1.38, which is
+white on white. Kenny found four of them by eye and rejected the block in
+three themes.
+
+Where a component wants to say "this line is a warning" on a surface that
+is not the warning plate, it carries **the pair itself** — the plate behind
+the word, its own ink on it — because that is the one contrast
+`gates/check-contrast.mjs` already holds at 4.5:1 in all 22 themes. A
+quieter answer (`--muted-foreground`, `--card-foreground`) is fine too. A
+lone half of a status pair is not.
+
+kp-tui reached the same rule two days earlier and can do more with it: a
+terminal computes, so `Theme::ink` picks the half of the pair that reads on
+the surface it is handed and lifts it toward the theme's own ink until it
+clears the floor. A stylesheet cannot choose, which is why the web takes
+the plate.
+
+Kenny's answer of 2026-09-20, on the choice between the two: **Plaat
+houden** — the plate stays, and generated ink tokens are the fallback if a
+theme ever cannot carry a readable severity on a plate either.

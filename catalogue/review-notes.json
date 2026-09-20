@@ -1,1 +1,22 @@
-{}
+{
+    "data--log": {
+        "high-contrast": {
+            "rejected": "die d\"erdelijn is wit op wit en onleesaar ook het stuk \"info\" en \"warning\" op de eerste drie lijnen zijn onleesbaar",
+            "change": "The level word and the warning message took --info-foreground and --warning-foreground, which are the ink ON those plates and white in this theme: measured 1.00 to 1 on the card. A warning, an error and a critical now carry the plate itself with its own ink, which the contrast gate holds at 4.5 to 1; a routine line keeps the quiet word [fix-70].",
+            "commit": "c0dafa30",
+            "given": "2026-09-20"
+        },
+        "nostromo": {
+            "rejected": "derde lijn in het wit is amper te lezen op die achtergrond",
+            "change": "The warning message took --warning-foreground, hsl(38, 30%, 90%), on a card of hsl(38, 30%, 83%): 1.17 to 1. The warning now carries its plate with its own ink and the message is card ink; the stamp also stops at the second [fix-70].",
+            "commit": "c0dafa30",
+            "given": "2026-09-20"
+        },
+        "shade-light": {
+            "rejected": "zelfde als het andere afgekeurde item, lijn drie is onleesbaar en de eerste drie lijnen van kolom 3. En sidenote: uur:minuten:seconden is goed, maar na seconden moet er niks komen, geen duizendsten. Dat is onwenselijk en vertroebeld het beeld. Dus doe dat stuk er overal af.",
+            "change": "The level word measured 1.01 to 1 and the warning message 1.04 to 1 on the log ground; both took a plate ink. The loud severities now carry their own plate, and every stamp in the package and in kp-tui stops at the second [fix-70].",
+            "commit": "c0dafa30",
+            "given": "2026-09-20"
+        }
+    }
+}
