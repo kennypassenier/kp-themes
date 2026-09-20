@@ -160,6 +160,22 @@ The swatch wears the theme it previews (`data-theme` works on any element,
 not only on `<html>`), so it shows that theme's live colours instead of a
 copy that drifts.
 
+**How deep a theme nests** [gap-10, measured 2026-09-20,
+`research/gap-10-nested-themes/demo.html`]. One level works completely: a
+pane carrying `data-theme="cyberpunk"` inside a `formal` page gets
+cyberpunk's tokens *and* cyberpunk's register — its clip-path, its face,
+its tracking. A second theme **inside** that one gets its own tokens and
+keeps the outer theme's register: measured, a `formal` pane inside a
+`nostromo` pane reads formal's `border-radius: 6px` and formal's blue,
+with nostromo's `letter-spacing: 1.56px` and `ui-monospace` still on it.
+Every register rule is written as `[data-theme='x'] .kp-component`, which
+matches descendants, and an inner theme has the same specificity, so file
+order decides rather than depth.
+
+So: theme a page, and theme a pane inside it. Do not nest a third. The
+fix is `@scope ([data-theme='x']) to ([data-theme])` in all twenty-two
+registers, which is a round of its own rather than a patch.
+
 ### As an icon with a dropdown
 
 The same behaviour in the shape the consuming projects preferred: a

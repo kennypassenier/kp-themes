@@ -48,7 +48,38 @@ One rule, and nothing else on the page:
   the pair is right; if they read as two, the backdrop is the thing to fix
   rather than the panel.
 
-**Not measured here:** frame timing. The two earlier attempts were judged by
-eye, and so is this one. If it still reads rough, the next step is a frame
-record of both panels in the same run, which is the only way to say whether
-the panel drops frames or the eye is comparing it with the near edge.
+## Measured, 2026-09-20
+
+Kenny asked for the frames before deciding, because the eye had been wrong
+about this twice. Firefox, the demo page, the panel's own `translate` read
+once per animation frame from the click until it stopped, after letting the
+closing transition finish first:
+
+| theme                   | declared | frames that moved | over   | worst gap |
+| ----------------------- | -------- | ----------------- | ------ | --------- |
+| formal                  | 180 ms   | 11                | 166 ms | 17 ms     |
+| dark                    | 220 ms   | 14                | 216 ms | 17 ms     |
+| cyberpunk               | 180 ms   | 12                | 182 ms | 18 ms     |
+| pastel                  | 220 ms   | 15                | 232 ms | 18 ms     |
+| nostromo                | 160 ms   | 10                | 150 ms | 18 ms     |
+| terminal                | 90 ms    | 2                 | 51 ms  | 51 ms     |
+| all six, as it is today | —        | 0                 | 0 ms   | —         |
+
+So: **no dropped frames.** Five of the six run at one frame every 17 to
+18 ms, which is 60 Hz with nothing missed, and the movement lasts as long
+as the register says it should.
+
+The sixth is not a fault either. terminal declares
+`--fx-ease: steps(2, end)` over 90 ms, so two steps is exactly what it
+asked for — the 51 ms gap is the step, not a dropped frame. pastel's
+`cubic-bezier(0.34, 1.56, 0.64, 1)` overshoots by design, which is why its
+movement runs 232 ms against a declared 220.
+
+The first harness read 50 ms and 4 frames for dark and had to be thrown
+away: it opened the panel while the closing transition was still running
+and measured the remainder. Written down because the number looked
+plausible enough to report.
+
+**Still not measured:** what it looks like beside the near edge on Kenny's
+own screen. The frames say the movement is whole; whether the two edges
+read as one gesture is his eye's to say.
