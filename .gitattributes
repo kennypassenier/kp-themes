@@ -1,2 +1,7 @@
 # Shipped fonts are binary [T19].
 *.woff2 binary
+
+# Windows export: shell scripts run in Linux, the rest is read by Windows tools.
+windows/**/*.sh text eol=lf
+windows/**/*.ps1 text eol=crlf
+windows/**/*.reg text eol=crlf

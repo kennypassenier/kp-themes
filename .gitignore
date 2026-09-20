@@ -26,3 +26,6 @@ research/loading/out/
 
 # Portrait screenshots are working aids, not kept [scope-99]
 research/theme-portraits/*.png
+
+# Wallpapers are rendered from windows/<theme>/wallpaper.svg (npm run render:wallpapers).
+windows/*/wallpaper.png
