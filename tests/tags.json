@@ -116,6 +116,7 @@
         { "path": "fonts/**", "tags": ["@component:fonts"] },
 
         { "path": "js/datatable.js", "tags": ["@component:datatable"] },
+        { "path": "js/log.js", "tags": ["@component:data"] },
         { "path": "js/tables.js", "tags": ["@component:table", "@component:datatable"] },
         { "path": "js/datepicker.js", "tags": ["@component:datepicker", "@component:datatable"] },
         { "path": "js/locale.js", "tags": ["@component:datepicker", "@component:datatable", "@component:upload"] },
@@ -216,6 +217,7 @@
         "kp-empty": ["@component:data"],
         "kp-copyable": ["@component:data"],
         "kp-health": ["@component:data"],
+        "kp-log": ["@component:data"],
         "kp-diff": ["@component:data"],
         "kp-spec": ["@component:data", "@component:examples"],
         "kp-side": ["@component:examples"],

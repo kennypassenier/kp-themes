@@ -91,6 +91,7 @@
                 "titanium": "3f4fbe92201bcdff"
             }
         },
+        "data-kp-current": { "shared": "4b9e5abcd056bc16", "themes": {} },
         "data-kp-datatable-failed": { "shared": "-", "themes": { "sepia": "7275ebbb3d0a2585", "synthwave": "075567a6f428f637" } },
         "data-kp-datatable-retry": { "shared": "-", "themes": { "sepia": "7275ebbb3d0a2585", "synthwave": "075567a6f428f637" } },
         "data-kp-direction": { "shared": "-", "themes": { "cyberpunk": "285461c46295a0d4" } },
@@ -337,6 +338,7 @@
         },
         "data-kp-scrolled": { "shared": "fa4114b68c327304", "themes": { "retro": "955593ecf2accd2c" } },
         "data-kp-select-list": { "shared": "567fed79e128310c", "themes": {} },
+        "data-kp-severity": { "shared": "3ad93396b2bf7a7b", "themes": {} },
         "data-kp-sidenav-expand-on-hover": { "shared": "7d03074c81588a7b", "themes": {} },
         "data-kp-sidenav-expanded": { "shared": "3622e44932b92fee", "themes": {} },
         "data-kp-sidenav-mode": { "shared": "2d3b6d353d02d38b", "themes": { "brutalism": "2e3af0afc4740f20" } },
@@ -1299,6 +1301,33 @@
         "kp-lh-normal": { "shared": "3b222e5a54b69317", "themes": {} },
         "kp-lh-tight": { "shared": "da4d9b1017663379", "themes": {} },
         "kp-load-out": { "shared": "-", "themes": { "phantom": "9e37a11499499504" } },
+        "kp-log": {
+            "shared": "f34494dcb0588b49",
+            "themes": {
+                "blueprint": "17cca041b4a4e8bd",
+                "brutalism": "d1002c6e0ece8351",
+                "cyberpunk": "7b94912d65029cc4",
+                "dark": "b79597cf61823ff2",
+                "deco": "080b4f62851cd9ed",
+                "forest": "522e5d8d1f710178",
+                "formal": "bd7748b40e0e1a43",
+                "grotesk": "ae386a0225c5698c",
+                "high-contrast": "dba03a7d4b6882d5",
+                "lapis": "32a76ad4565241dd",
+                "light": "637c30fd5de7ff48",
+                "nostromo": "37837916d8605ae7",
+                "pastel": "6b14ab08b403502a",
+                "phantom": "e2c418b3ebff803a",
+                "retro": "d79fcbcf3fb56e6d",
+                "sepia": "039c69e17f333dba",
+                "shade-dark": "24106ece1ea7e13b",
+                "shade-light": "caeebd410b1087d0",
+                "solstice": "edef3e63adf74102",
+                "synthwave": "1a2113bf1222869d",
+                "terminal": "bf0b5feae09fe68e",
+                "titanium": "463f0ca80c9de058"
+            }
+        },
         "kp-m-0": { "shared": "551c2e90e3ce6377", "themes": {} },
         "kp-m-2xl": { "shared": "98ef5a1265fa98b2", "themes": {} },
         "kp-m-lg": { "shared": "2e2d93eaad7392c0", "themes": {} },
@@ -2450,7 +2479,7 @@
         "colorpicker": { "modules": "5ddc375760bb4df8", "families": ["kp-colorpicker"] },
         "combobox": { "modules": "a87c4f3011986f7e", "families": ["data-kp-disabled", "kp-combobox", "kp-tag", "kp-tag-list"] },
         "data": {
-            "modules": "916a101f957c31ce",
+            "modules": "acb8b231ca665556",
             "families": [
                 "data-kp-copied",
                 "data-kp-copy-failed",
@@ -2781,6 +2810,7 @@
         "kp-empty": ["@component:data"],
         "kp-copyable": ["@component:data"],
         "kp-health": ["@component:data"],
+        "kp-log": ["@component:data"],
         "kp-diff": ["@component:data"],
         "kp-spec": ["@component:data", "@component:examples"],
         "kp-side": ["@component:examples"],

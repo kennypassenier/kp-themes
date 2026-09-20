@@ -1098,6 +1098,16 @@
         border-radius: 2px;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='blueprint'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
     [data-theme='blueprint'] .kp-split {
         gap: 0;
     }

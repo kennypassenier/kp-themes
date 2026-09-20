@@ -7227,6 +7227,105 @@
         color: var(--muted-foreground);
     }
 
+    /* --- Log [gap-14, gap-15] -------------------------------------------- */
+
+    /* A log line is the shape homelab writes three times by hand and kp-tui
+ * carries as `LogPane`; the web had the colours for it and not the
+ * component. What it needs is not a new palette but three promises: the
+ * columns do not move, the severity is a word before it is a colour, and
+ * a name keeps its own hue.
+ *
+ * Columns first [fix-64]: the list is the grid and every line hands its
+ * parts to it with `display: contents`, so the message of every line
+ * begins in the same place whatever the source before it is called. Three
+ * columns that size to their own content and a fourth that takes the rest
+ * — the same shape as .kp-progress-group, for the same reason. */
+    .kp-log {
+        display: grid;
+        grid-template-columns: auto auto auto minmax(0, 1fr);
+        gap: var(--kp-log-gap, 0.125rem) var(--kp-space-sm);
+        margin: 0;
+        padding: var(--kp-log-padding, var(--kp-space-sm));
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: var(--kp-log-line-height, 1.6);
+        overflow-x: auto;
+    }
+
+    .kp-log__line {
+        display: contents;
+    }
+
+    .kp-log__time {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The source in its own hue [gap-15]. Which hue is not this
+ * stylesheet's to decide: js/log.js hashes the name into the register's
+ * own five chart colours, the same FNV-1a kp-tui hashes with, and writes
+ * --kp-source-colour here. Without that script the name is simply ink,
+ * which is a page that reads rather than a page that breaks. */
+    .kp-log__source {
+        color: var(--kp-source-colour, var(--foreground));
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* The severity as a word, in a column of its own, before any colour is
+ * asked to carry it: a log read in a screenshot, in a terminal that lost
+ * its colours or by someone who does not see the difference between the
+ * warning and the danger hue must still say which line failed [fix-1]. */
+    .kp-log__level {
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    .kp-log__message {
+        color: var(--card-foreground);
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-log__line[data-kp-severity='debug'] .kp-log__message {
+        color: var(--muted-foreground);
+    }
+
+    .kp-log__line[data-kp-severity='notice'] .kp-log__level,
+    .kp-log__line[data-kp-severity='info'] .kp-log__level {
+        color: var(--info-foreground);
+    }
+
+    .kp-log__line[data-kp-severity='warning'] .kp-log__level,
+    .kp-log__line[data-kp-severity='warning'] .kp-log__message {
+        color: var(--warning-foreground, var(--warning));
+    }
+
+    .kp-log__line[data-kp-severity='error'] .kp-log__level,
+    .kp-log__line[data-kp-severity='critical'] .kp-log__level {
+        color: var(--destructive);
+        font-weight: 700;
+    }
+
+    .kp-log__line[data-kp-severity='error'] .kp-log__message,
+    .kp-log__line[data-kp-severity='critical'] .kp-log__message {
+        color: var(--destructive);
+    }
+
+    /* A line the reader is pointed at: the register's own selected plate
+ * would be a second decision, so this is the package's muted ground and
+ * nothing else. */
+    .kp-log__line[data-kp-current] > * {
+        background: var(--muted);
+    }
+
     /* --- Progress, spinner, skeleton ------------------------------------- */
 
     .kp-progress__wrap {
@@ -11244,6 +11343,24 @@
         letter-spacing: 0.1em;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='cyberpunk'] .kp-log {
+        background: var(--surface-hero-fg);
+        color: var(--surface-hero-primary-foreground);
+        border: 0;
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-log__level {
+        color: var(--accent);
+        letter-spacing: 0.1em;
+    }
+
     [data-theme='cyberpunk'] .kp-spec dd {
         color: var(--surface-hero-primary-foreground);
     }
@@ -13944,6 +14061,23 @@
         color: var(--kp-teal-ink);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='retro'] .kp-log {
+        background: var(--background);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-raised);
+        font-family: var(--kp-dos);
+    }
+
+    [data-theme='retro'] .kp-log__level {
+        color: var(--kp-teal-ink);
+    }
+
     [data-theme='retro'] .kp-spec__swatch {
         border: 1px solid var(--border-strong);
         border-radius: 0;
@@ -15960,6 +16094,23 @@
         letter-spacing: 0.1em;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='synthwave'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--kp-hairline);
+        font-family: var(--kp-mono);
+        box-shadow: 0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-log__level {
+        color: var(--accent);
+        letter-spacing: 0.1em;
+    }
+
     [data-theme='synthwave'] .kp-spec__swatch {
         border: 1px solid hsl(from var(--kp-core) h s l / 0.25);
     }
@@ -17881,6 +18032,23 @@
         text-transform: uppercase;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='phantom'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        clip-path: var(--kp-paperclip);
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='phantom'] .kp-log__level {
+        color: var(--muted-foreground);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
     [data-theme='phantom'] .kp-spec__swatch {
         border: 1px solid var(--input);
     }
@@ -19642,6 +19810,24 @@
         text-transform: uppercase;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='terminal'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] .kp-log__level {
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
     [data-theme='terminal'] .kp-spec__swatch {
         inline-size: 1ch;
         block-size: 1em;
@@ -21348,6 +21534,25 @@
     }
 
     [data-theme='brutalism'] .kp-spec dt {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='brutalism'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='brutalism'] .kp-log__level {
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -23081,6 +23286,24 @@
         font-size: 0.72rem;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='titanium'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+    }
+
+    [data-theme='titanium'] .kp-log__level {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
     [data-theme='titanium'] .kp-spec__swatch {
         border: 1px solid var(--border);
     }
@@ -24507,6 +24730,21 @@
         font-weight: 600;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='pastel'] .kp-log {
+        border: 1px solid var(--border);
+        border-radius: 1.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-log__level {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
     [data-theme='pastel'] .kp-spec dd {
         font-family: var(--theme-font-mono);
         font-size: 0.66rem;
@@ -25922,6 +26160,16 @@
         background: var(--card);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='shade-light'] .kp-log {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
     [data-theme='shade-light'] .kp-spec__title {
         font-family: var(--theme-font-mono);
         font-size: 0.7rem;
@@ -26677,6 +26925,22 @@
     }
 
     [data-theme='forest'] .kp-spec dt {
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='forest'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-log__level {
         color: var(--muted-foreground);
         text-transform: uppercase;
         font-size: 0.7rem;
@@ -28765,6 +29029,24 @@
         color: var(--muted-foreground);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='deco'] .kp-log {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-log__level {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
     [data-theme='deco'] .kp-spec__swatch {
         border: 1px solid var(--border-strong);
         border-radius: 0;
@@ -29880,6 +30162,23 @@
     }
 
     [data-theme='light'] .kp-spec dt {
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='light'] .kp-log {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    [data-theme='light'] .kp-log__level {
         font-family: var(--theme-font-mono);
         font-size: var(--kp-text-xs, 0.75rem);
         text-transform: uppercase;
@@ -31267,6 +31566,22 @@
     }
 
     [data-theme='grotesk'] .kp-spec dt {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='grotesk'] .kp-log {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-log__level {
         font-family: var(--kp-mono);
         font-size: 0.72rem;
         text-transform: uppercase;
@@ -32762,6 +33077,16 @@
         border-radius: 2px;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='blueprint'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
     [data-theme='blueprint'] .kp-split {
         gap: 0;
     }
@@ -33436,6 +33761,25 @@
     }
 
     [data-theme='nostromo'] .kp-spec dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='nostromo'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-log__level {
         font-family: var(--theme-font-mono);
         font-size: 0.62rem;
         letter-spacing: 0.16em;
@@ -36030,6 +36374,24 @@
         font-size: 0.72rem;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='dark'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+    }
+
+    [data-theme='dark'] .kp-log__level {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
     [data-theme='dark'] .kp-spec__swatch {
         border: 1px solid var(--border);
     }
@@ -37007,6 +37369,17 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='formal'] .kp-log {
+        /* formal dresses `.kp-spec` with a rule and nothing else, which is
+     * the whole of its taste here: the package's own card, one hairline,
+     * no second edge. The log takes the same [gap-14]. */
+        border-block-start: 1px solid var(--border);
+    }
+
     [data-theme='formal'] .kp-spec__swatch {
         border: 1px solid var(--border);
         border-radius: 4px;
@@ -37976,6 +38349,22 @@
 
     [data-theme='sepia'] .kp-spec dt {
         font-variant: small-caps;
+        text-transform: lowercase;
+        letter-spacing: 0.04em;
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='sepia'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='sepia'] .kp-log__level {
         text-transform: lowercase;
         letter-spacing: 0.04em;
         color: var(--muted-foreground);
@@ -40058,6 +40447,14 @@
         border-radius: var(--radius);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='solstice'] .kp-log {
+        border-radius: var(--radius);
+    }
+
     [data-theme='solstice'] .kp-spec__swatch {
         border-radius: 5px;
     }
@@ -40651,6 +41048,20 @@
     }
 
     [data-theme='high-contrast'] .kp-spec dt {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-xs);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='high-contrast'] .kp-log {
+        border: 2px solid var(--border-strong);
+    }
+
+    [data-theme='high-contrast'] .kp-log__level {
         text-transform: uppercase;
         letter-spacing: 0.06em;
         font-size: var(--kp-text-xs);
@@ -42606,6 +43017,25 @@
         text-transform: uppercase;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='lapis'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-ring-on-card);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='lapis'] .kp-log__level {
+        color: var(--muted-foreground);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
     [data-theme='lapis'] .kp-spec__swatch {
         border: 1px solid var(--border-strong);
         border-radius: 4px;
@@ -43815,6 +44245,20 @@
     }
 
     [data-theme='shade-dark'] .kp-spec dt {
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='shade-dark'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='shade-dark'] .kp-log__level {
         color: var(--muted-foreground);
     }
 

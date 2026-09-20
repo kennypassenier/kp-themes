@@ -225,7 +225,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-64 added one, --kp-progress-group-gap: the row gap between the
     // bars of a progress group, whose column gap is the package's own
     // --kp-space-sm and needs no knob: 228 + 1.
-    assert.equal(result.expected, 229, 'AR21 counted 229 --kp-* properties in css/components.css');
+    //
+    // gap-14 added four with the log: --kp-log-gap, --kp-log-padding,
+    // --kp-log-line-height and --kp-text-sm read on the list itself: 229 + 4.
+    assert.equal(result.expected, 233, 'AR21 counted 233 --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -259,9 +262,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // reading the window rather than its own box.
     // Every one of them is read through var(), all five rounds' included.
     // Option B's eighteen (scope-87), scope-88's two, fix-32's one and the surface's one are read through var() too.
-    // So are the alarm's twenty-three (scope-94), fix-41's one, and
-    // fix-64's --kp-progress-group-gap.
-    assert.equal(result.readCount, 229);
+    // So are the alarm's twenty-three (scope-94), fix-41's one,
+    // fix-64's --kp-progress-group-gap and the log's four.
+    assert.equal(result.readCount, 233);
     assert.deepEqual(result.unread, []);
 });
 

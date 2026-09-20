@@ -317,6 +317,20 @@
         font-size: var(--kp-text-xs);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='high-contrast'] .kp-log {
+        border: 2px solid var(--border-strong);
+    }
+
+    [data-theme='high-contrast'] .kp-log__level {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-xs);
+    }
+
     [data-theme='high-contrast'] .kp-spec dd {
         font-family: var(--theme-font-mono);
         font-size: var(--kp-text-xs);

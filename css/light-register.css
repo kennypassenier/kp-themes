@@ -796,6 +796,23 @@
         color: var(--muted-foreground);
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='light'] .kp-log {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    [data-theme='light'] .kp-log__level {
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
     [data-theme='light'] .kp-spec__swatch {
         border: 1px solid var(--border-strong);
         border-radius: 0.4rem;

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="nl" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>gap-10 · een thema in een thema</title>
+        <!-- The catalogue's own bundle: the tokens, the components and all
+             twenty-two registers, in the cascade order the package fixes. -->
+        <link rel="stylesheet" href="../../catalogue/deps.css" />
+        <style>
+            body {
+                margin: 0;
+                padding: 2rem;
+                background: var(--background);
+                color: var(--foreground);
+                font-family: var(--font-sans);
+                max-inline-size: 60rem;
+            }
+            .pane {
+                padding: 1.25rem;
+                border: 1px dashed var(--border-strong);
+                border-radius: var(--radius);
+                background: var(--card);
+                color: var(--card-foreground);
+                margin-block-start: 1rem;
+            }
+            .pane h3 {
+                margin: 0 0 0.75rem;
+                font-size: 0.9rem;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                color: var(--muted-foreground);
+            }
+            .row {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            p.note {
+                color: var(--muted-foreground);
+                font-size: 0.9rem;
+            }
+            code {
+                font-family: var(--font-mono);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>gap-10 — een thema binnenin een ander thema</h1>
+        <p class="note">
+            De pagina staat op <code>formal</code>. Eén niveau diep werkt alles: het kader met <code>data-theme="cyberpunk"</code> krijgt cyberpunk's
+            tokens én cyberpunk's register — gemeten met de browser, 2026-09-20: die knop leest
+            <code>clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), …)</code> en <code>Rajdhani</code>, allebei van cyberpunk.
+        </p>
+        <p class="note">
+            Het gaat mis zodra er een derde niveau onder zit. Een register-regel is geschreven als
+            <code>[data-theme='nostromo'] .kp-button</code>, en zo'n selector kijkt naar het element dat het thema draagt <b>en naar alles eronder</b>
+            — ook naar een kader dat zelf een ander thema draagt. Dat kader kan het niet tegenhouden, want de twee regels hebben dezelfde
+            specificiteit en dan wint de volgorde in het bestand, niet de nesting.
+        </p>
+
+        <div class="pane">
+            <h3>Buiten — formal</h3>
+            <div class="row">
+                <button type="button" class="kp-button kp-button--primary">Deploy</button>
+                <button type="button" class="kp-button">Annuleren</button>
+                <span class="kp-badge kp-badge--success">klaar</span>
+            </div>
+        </div>
+
+        <div class="pane" data-theme="cyberpunk">
+            <h3>Binnenin — <code>data-theme="cyberpunk"</code></h3>
+            <div class="row">
+                <button type="button" class="kp-button kp-button--primary">Deploy</button>
+                <button type="button" class="kp-button">Annuleren</button>
+                <span class="kp-badge kp-badge--success">klaar</span>
+            </div>
+            <p class="note" style="margin-block-end: 0">
+                Kleuren: cyberpunk. Vorm, hoeken, letterspatiëring, de schuine hoek die cyberpunk van zijn knoppen maakt: niet aanwezig, want die
+                staan in het register en dat is met een afstammelingsselector geschreven.
+            </p>
+        </div>
+
+        <div class="pane" data-theme="nostromo">
+            <h3>Binnenin — <code>data-theme="nostromo"</code>, met een kader in formal erin</h3>
+            <div class="row">
+                <button type="button" class="kp-button kp-button--primary">Deploy</button>
+            </div>
+            <div class="pane" data-theme="formal">
+                <h3>En hierin weer formal</h3>
+                <div class="row">
+                    <button type="button" class="kp-button kp-button--primary">Deploy</button>
+                </div>
+                <p class="note" style="margin-block-end: 0">
+                    Hier is de fout te zien, en gemeten: deze knop leest <code>border-radius: 6px</code> en formal's eigen blauw — dat zijn de tokens,
+                    die nesten wél — maar tegelijk <code>letter-spacing: 1.56px</code> en <code>ui-monospace</code>, en dat zijn de register-regels
+                    van nostromo. Twee thema's tegelijk op één knop, per eigenschap beslist.
+                </p>
+            </div>
+        </div>
+
+        <h2>Wat de oplossing zou zijn</h2>
+        <p class="note">
+            Elke register-regel zou moeten zeggen "dit thema, en niets dat onderweg een ander thema aantrok". Dat is precies wat
+            <code>@scope</code> doet: <code>@scope ([data-theme='nostromo']) to ([data-theme])</code> laat de regels binnen het thema gelden en stopt
+            ze bij het eerstvolgende element dat zelf een thema draagt. Het alternatief zonder scope is per regel
+            <code>:not([data-theme] *)</code> erbij, wat dezelfde bedoeling in elke selector herhaalt. Hoe dan ook raakt het alle 22
+            register-bestanden en elke regel erin — bij elkaar zo'n vierduizend selectors, dus dit is een mini-ronde met een eigen meting en geen
+            reparatie tussendoor.
+        </p>
+        <!-- The review navigation every research demo carries [fix-60]. -->
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

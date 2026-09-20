@@ -1113,6 +1113,21 @@
         font-weight: 600;
     }
 
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='pastel'] .kp-log {
+        border: 1px solid var(--border);
+        border-radius: 1.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-log__level {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
     [data-theme='pastel'] .kp-spec dd {
         font-family: var(--theme-font-mono);
         font-size: 0.66rem;

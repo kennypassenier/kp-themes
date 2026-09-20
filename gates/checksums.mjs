@@ -142,6 +142,7 @@ export const FILES = [
     'js/as-of.js',
     'js/forms.js',
     'js/gridlayout.js',
+    'js/log.js',
     'js/lazy-register.js',
     'js/listbox.js',
     'js/locale.js',

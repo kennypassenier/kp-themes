@@ -117,6 +117,7 @@ export const NEEDS = [
     { name: 'wizard', when: '[data-kp-wizard]', load: () => import('./wizard.js'), attach: (m, root) => [m.attachWizards(root)] },
     { name: 'colorpicker', when: '[data-kp-colorpicker]', load: () => import('./colorpicker.js'), attach: (m, root) => [m.attachColorPickers(root)] },
     { name: 'gridlayout', when: '[data-kp-grid]', load: () => import('./gridlayout.js'), attach: (m, root) => [m.attachGrids(root)] },
+    { name: 'log', when: '[data-kp-source]', load: () => import('./log.js'), attach: (m, root) => [m.attachLogs(root)] },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */

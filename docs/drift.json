@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "e1dda8205ca124695a1a4de96d903393a43b4ab33451571e4a5dd8641afab3e3",
+            "hash": "8a20cbedb32864e8904d53c44cbe181282db306cf5ea070d7427abea0bb6af7e",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "b215e54c215caa6bb15a1d386102270af1bb12a16517c446b0b4cab1abd6907d"
+                "CHANGELOG.md": "b60807742d9ae4ade70185ce490bb649fdfdeccb9c0b905c3745bfe82bb23879"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,8 +81,8 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "c431f97fba717bfe089f2848af1de6bb0fd66acd51be309b964ef1300324e149",
-            "doc": "5b43da0e51d30223c330ea2e3d2e9b565d98c4e87952ab32735877c3da9e71e2",
+            "hash": "85cd6f4056a2f0465d1c50ad95508fb612a9b45f2e0237e58fb251ab678af773",
+            "doc": "a46f733d0798a2c4378502517dbdca8d8719fc9156578872308d87afae340e7d",
             "files": {
                 ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
@@ -106,6 +106,7 @@
                 "js/lazy-register.d.ts": "461c4b2e0ffc329e99b7acb3ad65dbcb7b87c456f84456a4cd81cc5b1c0a2ea4",
                 "js/listbox.d.ts": "f78f182a9fd64ed6993560276e65c58230a65a466dfa728e652b7071196631f6",
                 "js/locale.d.ts": "2f415dfe306bf67f0bc4d67a62e748e2ab85eb74abad0811345451d4b4a46c6a",
+                "js/log.d.ts": "855438ac6654d4b9330d0a99bb542ceda607b97e58cd07fa86df25e7c36b1bd4",
                 "js/no-flash.d.ts": "498958ba47676c66b3a5143bfa74c59e300b7c9df2a00a3081f055da68935b43",
                 "js/overlays.d.ts": "ac3ab84c163fdb0aabf0b4659032683e98481e9884ff547a402e8e0032a03ca9",
                 "js/palette.d.ts": "61dd5596cf43182aaddc87c583bb11486d4fc2e16e2c245114857affb098c37f",

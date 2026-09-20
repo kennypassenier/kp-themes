@@ -56,6 +56,59 @@
                 </div>
             </section>
 
+            <section class="cat-block" id="log">
+                <h2>Log</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> four columns that do not move — time, source, level, message — so every message begins in the same place whatever
+                    the source before it is called; cover the first three with a finger and the left edge of the text must be straight. The level is a
+                    word before it is a colour: read the list with the colours ignored and it must still say which line failed. Each source name keeps
+                    its own hue out of the theme's five chart colours, and the same name takes the same hue in every theme and in the terminal —
+                    <code>media</code> is the third chart colour in both. The error line takes the destructive ink for its level and its message, the
+                    warning line the warning ink, and a debug line is quieter than the rest. The pointed-at line wears the muted ground and no second
+                    colour. In the narrow pane a long message wraps under itself, inside its own column, and the three columns in front of it stay
+                    put.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-log">
+                        <p class="kp-log__line" data-kp-severity="info">
+                            <time class="kp-log__time">09:41:02.118</time><span class="kp-log__source" data-kp-source="media">media</span
+                            ><span class="kp-log__level">info</span><span class="kp-log__message">jellyfin: transcode worker ready</span>
+                        </p>
+                        <p class="kp-log__line" data-kp-severity="info">
+                            <time class="kp-log__time">09:41:02.664</time><span class="kp-log__source" data-kp-source="web">web</span
+                            ><span class="kp-log__level">info</span><span class="kp-log__message">caddy: certificate renewed, 89 days left</span>
+                        </p>
+                        <p class="kp-log__line" data-kp-severity="warning">
+                            <time class="kp-log__time">09:41:03.201</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                            ><span class="kp-log__level">warning</span
+                            ><span class="kp-log__message">restic: repository locked by another process</span>
+                        </p>
+                        <p class="kp-log__line" data-kp-severity="error" data-kp-current>
+                            <time class="kp-log__time">09:41:05.630</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                            ><span class="kp-log__level">error</span
+                            ><span class="kp-log__message">restic: snapshot failed, the lock is 41 minutes old</span>
+                        </p>
+                        <p class="kp-log__line" data-kp-severity="debug">
+                            <time class="kp-log__time">09:41:05.977</time><span class="kp-log__source" data-kp-source="monitoring">monitoring</span
+                            ><span class="kp-log__level">debug</span
+                            ><span class="kp-log__message">prometheus: scrape of node-exporter took 412 ms</span>
+                        </p>
+                    </div>
+                    <div class="cat-resize" style="inline-size: 20rem; margin-block-start: 1rem">
+                        <div class="kp-log">
+                            <p class="kp-log__line" data-kp-severity="error">
+                                <time class="kp-log__time">09:41:05.630</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                                ><span class="kp-log__level">error</span
+                                ><span class="kp-log__message"
+                                    >restic: snapshot failed, the lock is 41 minutes old and no other process holds it; run unlock before the next
+                                    attempt</span
+                                >
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="cat-block" id="spec">
                 <h2>Spec sheet</h2>
                 <div class="cat-look">

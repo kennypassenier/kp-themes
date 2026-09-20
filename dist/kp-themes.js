@@ -10718,6 +10718,43 @@ var init_gridlayout = __esm({
   }
 });
 
+// js/log.js
+var log_exports = {};
+__export(log_exports, {
+  SOURCE_PROPERTY: () => SOURCE_PROPERTY,
+  attachLogs: () => attachLogs,
+  sourceColour: () => sourceColour,
+  sourceIndex: () => sourceIndex
+});
+function sourceIndex(name) {
+  let hash = 2166136261;
+  for (const byte of new TextEncoder().encode(name)) {
+    hash ^= byte;
+    hash = Math.imul(hash, 16777619) >>> 0;
+  }
+  return hash % 5 + 1;
+}
+function attachLogs(root = document) {
+  const present = presentUnder(root);
+  return asOf(root, present, () => {
+    const marked = [...root.querySelectorAll("[data-kp-source]")];
+    for (const el2 of marked) {
+      const name = el2.getAttribute("data-kp-source") || el2.textContent?.trim() || "";
+      if (name) el2.style.setProperty(SOURCE_PROPERTY, sourceColour(name));
+    }
+    return marked;
+  });
+}
+var SOURCE_PROPERTY, sourceColour;
+var init_log = __esm({
+  "js/log.js"() {
+    "use strict";
+    init_as_of();
+    SOURCE_PROPERTY = "--kp-source-colour";
+    sourceColour = (name) => `var(--chart-${sourceIndex(name)})`;
+  }
+});
+
 // kp-themes-entry.js
 init_alarm();
 
@@ -11182,7 +11219,8 @@ var NEEDS = [
   { name: "upload", when: "[data-kp-upload]", load: () => Promise.resolve().then(() => (init_upload(), upload_exports)), attach: (m, root) => [m.attachUploads(root)] },
   { name: "wizard", when: "[data-kp-wizard]", load: () => Promise.resolve().then(() => (init_wizard(), wizard_exports)), attach: (m, root) => [m.attachWizards(root)] },
   { name: "colorpicker", when: "[data-kp-colorpicker]", load: () => Promise.resolve().then(() => (init_colorpicker(), colorpicker_exports)), attach: (m, root) => [m.attachColorPickers(root)] },
-  { name: "gridlayout", when: "[data-kp-grid]", load: () => Promise.resolve().then(() => (init_gridlayout(), gridlayout_exports)), attach: (m, root) => [m.attachGrids(root)] }
+  { name: "gridlayout", when: "[data-kp-grid]", load: () => Promise.resolve().then(() => (init_gridlayout(), gridlayout_exports)), attach: (m, root) => [m.attachGrids(root)] },
+  { name: "log", when: "[data-kp-source]", load: () => Promise.resolve().then(() => (init_log(), log_exports)), attach: (m, root) => [m.attachLogs(root)] }
 ];
 var READY_ATTRIBUTE = "data-kp-auto-ready";
 var carries = (root, selector) => root instanceof Element && root.matches(selector) || root.querySelector(selector) !== null;

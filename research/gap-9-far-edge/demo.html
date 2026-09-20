@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="nl" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>gap-9 · de verre rand, nu en zoals het zou worden</title>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <style>
+            body {
+                margin: 0;
+                padding: 2rem;
+                background: var(--background);
+                color: var(--foreground);
+                font-family: var(--font-sans);
+            }
+            .pair {
+                display: grid;
+                gap: 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                margin-block-start: 1.5rem;
+            }
+            .stage {
+                position: relative;
+                block-size: 18rem;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--card);
+            }
+            .stage .kp-sidenav {
+                position: absolute;
+            }
+            /* The proposal, and nothing else on this page differs: the far
+               edge gets the same transition the near edge already has. */
+            .as-proposed .kp-sidenav[data-kp-sidenav-side='end'] {
+                transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+            }
+            h2 {
+                margin: 0 0 0.25rem;
+                font-size: 1rem;
+            }
+            p.note {
+                margin: 0 0 0.75rem;
+                color: var(--muted-foreground);
+                font-size: 0.875rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>gap-9 — het paneel aan de verre kant</h1>
+        <p class="note">
+            Druk op de knoppen. Links is hoe het vandaag is, rechts hoe het zou worden. Wissel van thema om te zien of het in één register beter of
+            slechter loopt.
+        </p>
+        <p>
+            <label
+                >Thema
+                <select id="theme" class="kp-field__input" style="max-inline-size: 14rem">
+                    <option value="formal">formal</option>
+                    <option value="dark">dark</option>
+                    <option value="cyberpunk">cyberpunk</option>
+                    <option value="pastel">pastel</option>
+                    <option value="nostromo">nostromo</option>
+                    <option value="brutalism">brutalism</option>
+                    <option value="terminal">terminal</option>
+                </select>
+            </label>
+        </p>
+
+        <div class="pair">
+            <section>
+                <h2>Nu: <code>transition: none</code></h2>
+                <p class="note">Het paneel is er, of het is er niet. Er zit niets tussenin.</p>
+                <div class="stage as-is">
+                    <button type="button" class="kp-button kp-button--primary" data-toggle="now" style="margin: 1rem">Open van rechts</button>
+                    <aside class="kp-sidenav" data-kp-sidenav-side="end" data-kp-sidenav-mode="over" data-kp-sidenav-open="false" id="now">
+                        <nav class="kp-sidenav__nav">
+                            <a class="kp-sidenav__link" href="#">Overzicht</a>
+                            <a class="kp-sidenav__link" href="#">Stacks</a>
+                            <a class="kp-sidenav__link" href="#">Logboek</a>
+                        </nav>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="as-proposed">
+                <h2>Zoals het zou worden: de gewone overgang</h2>
+                <p class="note">Dezelfde duur en dezelfde curve als de kant die wél schuift — die van het thema zelf.</p>
+                <div class="stage">
+                    <button type="button" class="kp-button kp-button--primary" data-toggle="soon" style="margin: 1rem">Open van rechts</button>
+                    <aside class="kp-sidenav" data-kp-sidenav-side="end" data-kp-sidenav-mode="over" data-kp-sidenav-open="false" id="soon">
+                        <nav class="kp-sidenav__nav">
+                            <a class="kp-sidenav__link" href="#">Overzicht</a>
+                            <a class="kp-sidenav__link" href="#">Stacks</a>
+                            <a class="kp-sidenav__link" href="#">Logboek</a>
+                        </nav>
+                    </aside>
+                </div>
+            </section>
+        </div>
+
+        <script type="module">
+            for (const button of document.querySelectorAll('[data-toggle]')) {
+                button.addEventListener('click', () => {
+                    const panel = document.getElementById(button.dataset.toggle);
+                    const open = panel.getAttribute('data-kp-sidenav-open') === 'true';
+                    panel.setAttribute('data-kp-sidenav-open', String(!open));
+                    button.textContent = open ? 'Open van rechts' : 'Sluit';
+                });
+            }
+            document.getElementById('theme').addEventListener('change', (event) => {
+                document.documentElement.setAttribute('data-theme', event.target.value);
+            });
+        </script>
+        <!-- The review navigation every research demo carries [fix-60]. -->
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

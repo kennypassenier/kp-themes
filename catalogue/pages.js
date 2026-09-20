@@ -82,6 +82,8 @@ export const PAGES = [
             { href: 'research/jellyfin-dark/demo.html', label: 'Jellyfin in dark, the paste for 10.11.11' },
             { href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' },
             { href: 'research/navbar/demo.html', label: 'Navigation alternatives' },
+            { href: 'research/gap-9-far-edge/demo.html', label: 'The panel at the far edge, now and as proposed' },
+            { href: 'research/gap-10-nested-themes/demo.html', label: 'A theme inside a theme' },
             { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },
             { href: 'research/loading/demo.html', label: 'Loading per theme' },
             { href: 'research/datatable/demo.html', label: 'Data tables' },

@@ -1,5 +1,34 @@
 # Changelog
 
+## Unreleased
+
+**Added.**
+
+- **`.kp-log`, a log line** (gap-14): the time, the source, the level and
+  the message in four columns that do not move — the list is the grid and
+  every line hands its parts to it, so each message begins in the same place
+  whatever the source before it is called [fix-64]. The level is a word in a
+  column of its own before it is a colour [fix-1], the loud severities take
+  the destructive and warning inks, and `data-kp-current` marks the line a
+  reader is pointed at with the muted ground and nothing else. All
+  twenty-two registers dress it with what they already decided for
+  `.kp-spec`, so no theme had to invent a second taste.
+
+    This is the shape homelab writes three times by hand and kp-tui carries as
+    `LogPane`. The web had the colours for it and not the component.
+
+- **`js/log.js`: a name's own colour** (gap-15): `sourceIndex` hashes a
+  source name with FNV-1a — the same offset basis and prime kp-tui uses — and
+  `attachLogs` writes `--kp-source-colour: var(--chart-N)` on every
+  `[data-kp-source]`. So `media` is the third chart colour in a terminal and
+  the third on a page, in all twenty-two themes, and nothing picks a hue by
+  hand. Measured against the crate on 2026-09-20: media 3, web 1, backup 5,
+  monitoring 4, dns 5, host 1, caddy 2, restic 5; `tests/log.spec.mjs`
+  carries that table so the two implementations cannot drift apart quietly.
+
+    The module is lazy like every other: `js/auto.js` fetches it only for a
+    page carrying `[data-kp-source]`. Without it a source name is simply ink.
+
 ## 7.1.0 — 2026-09-20
 
 A minor for one rule, found in the terminal and brought back to the web.

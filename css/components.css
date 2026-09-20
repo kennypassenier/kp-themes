@@ -2932,6 +2932,105 @@
         color: var(--muted-foreground);
     }
 
+    /* --- Log [gap-14, gap-15] -------------------------------------------- */
+
+    /* A log line is the shape homelab writes three times by hand and kp-tui
+ * carries as `LogPane`; the web had the colours for it and not the
+ * component. What it needs is not a new palette but three promises: the
+ * columns do not move, the severity is a word before it is a colour, and
+ * a name keeps its own hue.
+ *
+ * Columns first [fix-64]: the list is the grid and every line hands its
+ * parts to it with `display: contents`, so the message of every line
+ * begins in the same place whatever the source before it is called. Three
+ * columns that size to their own content and a fourth that takes the rest
+ * — the same shape as .kp-progress-group, for the same reason. */
+    .kp-log {
+        display: grid;
+        grid-template-columns: auto auto auto minmax(0, 1fr);
+        gap: var(--kp-log-gap, 0.125rem) var(--kp-space-sm);
+        margin: 0;
+        padding: var(--kp-log-padding, var(--kp-space-sm));
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: var(--kp-log-line-height, 1.6);
+        overflow-x: auto;
+    }
+
+    .kp-log__line {
+        display: contents;
+    }
+
+    .kp-log__time {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The source in its own hue [gap-15]. Which hue is not this
+ * stylesheet's to decide: js/log.js hashes the name into the register's
+ * own five chart colours, the same FNV-1a kp-tui hashes with, and writes
+ * --kp-source-colour here. Without that script the name is simply ink,
+ * which is a page that reads rather than a page that breaks. */
+    .kp-log__source {
+        color: var(--kp-source-colour, var(--foreground));
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* The severity as a word, in a column of its own, before any colour is
+ * asked to carry it: a log read in a screenshot, in a terminal that lost
+ * its colours or by someone who does not see the difference between the
+ * warning and the danger hue must still say which line failed [fix-1]. */
+    .kp-log__level {
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    .kp-log__message {
+        color: var(--card-foreground);
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-log__line[data-kp-severity='debug'] .kp-log__message {
+        color: var(--muted-foreground);
+    }
+
+    .kp-log__line[data-kp-severity='notice'] .kp-log__level,
+    .kp-log__line[data-kp-severity='info'] .kp-log__level {
+        color: var(--info-foreground);
+    }
+
+    .kp-log__line[data-kp-severity='warning'] .kp-log__level,
+    .kp-log__line[data-kp-severity='warning'] .kp-log__message {
+        color: var(--warning-foreground, var(--warning));
+    }
+
+    .kp-log__line[data-kp-severity='error'] .kp-log__level,
+    .kp-log__line[data-kp-severity='critical'] .kp-log__level {
+        color: var(--destructive);
+        font-weight: 700;
+    }
+
+    .kp-log__line[data-kp-severity='error'] .kp-log__message,
+    .kp-log__line[data-kp-severity='critical'] .kp-log__message {
+        color: var(--destructive);
+    }
+
+    /* A line the reader is pointed at: the register's own selected plate
+ * would be a second decision, so this is the package's muted ground and
+ * nothing else. */
+    .kp-log__line[data-kp-current] > * {
+        background: var(--muted);
+    }
+
     /* --- Progress, spinner, skeleton ------------------------------------- */
 
     .kp-progress__wrap {
