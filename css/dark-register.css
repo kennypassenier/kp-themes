@@ -1871,4 +1871,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dash as light, its sibling. */
+    [data-theme='dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '–';
+    }
 }

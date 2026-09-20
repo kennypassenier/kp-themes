@@ -2447,7 +2447,33 @@
     }
 
     .kp-sidenav__submenu .kp-sidenav__link {
+        position: relative;
         padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* A submenu item says so before its name (Kenny, 2026-09-20: "zodat het
+       extra duidelijk is wat nu juist een hoofdmenuitem en een submenuitem
+       is"). The package gives the place and nothing else: the mark sits
+       inside the indent the item already carries, absolutely placed, so no
+       label moves for it and every label in a submenu still begins at one
+       point [fix-64]. Which mark is the register's answer — a glyph through
+       the knob, or a shape it draws itself the way nostromo draws the dot on
+       its buttons. Empty by default, so a consumer's own theme shows none
+       rather than a box.
+
+       On the label's own ::before rather than the link's: five registers
+       already draw something with `.kp-sidenav__link::before` and one with
+       ::after — phantom's sliding plate among them — and a mark that took
+       one of those away would cost a theme a decision it had already made. */
+    .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        content: var(--kp-sidenav-submenu-mark, '');
+        position: absolute;
+        inset-inline-start: var(--kp-sidenav-submenu-mark-inset, 1.1rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--kp-sidenav-submenu-mark-ink, var(--muted-foreground));
+        line-height: 1;
+        pointer-events: none;
     }
 
     /* The backdrop is a dimming, not a tint: the same value the dialog

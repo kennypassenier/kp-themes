@@ -33,6 +33,7 @@
 // of its own — the two happened to be equal, so the assertion was true for
 // the wrong reason. Rule 7e, twice, caught by the drill it exists for.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
@@ -244,3 +245,43 @@ test.describe('the side navigation', { tag: ['@component:navigation'] }, () => {
         expect(moving.duration, 'end: over a duration the register gives it').not.toBe('0s');
     });
 });
+
+// A submenu item says so before its name, in every theme [Kenny,
+// 2026-09-20]: "bij subitems op de sidenav zou ik graag nog, per thema, een
+// specifiek symbool voor de subitemnaam willen zetten zodat het extra
+// duidelijk is wat nu juist een hoofdmenuitem en een submenuitem is."
+//
+// Red first: with the register lines removed the mark is empty in all 22
+// themes and this reads 22 themes without one.
+test(
+    'a submenu item carries a mark of its own, and no label moves for it [fix-64]',
+    { tag: ['@component:navigation', '@sweep'] },
+    async ({ page }) => {
+        await page.goto('/catalogue/navigation.html');
+        const names = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
+        const without = [];
+        const ragged = [];
+        for (const theme of names) {
+            await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
+            await expect.poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe(theme);
+            const read = await page
+                .locator('#sidenav-side .kp-sidenav__submenu')
+                .first()
+                .evaluate((menu) => {
+                    const links = [...menu.querySelectorAll('.kp-sidenav__link')];
+                    const marks = links.map((link) => {
+                        const before = globalThis.getComputedStyle(link.querySelector('.kp-sidenav__label'), '::before');
+                        return { content: before.content, width: Number.parseFloat(before.inlineSize) || 0 };
+                    });
+                    const labels = links.map((link) => Math.round(link.querySelector('.kp-sidenav__label').getBoundingClientRect().left));
+                    return { marks, labels };
+                });
+            const shows = read.marks.every((mark) => (mark.content && !['none', '""', "''"].includes(mark.content)) || mark.width > 0);
+            if (!shows) without.push(`${theme}: ${JSON.stringify(read.marks[0])}`);
+            if (new Set(read.labels).size !== 1) ragged.push(`${theme}: labels at ${[...new Set(read.labels)].join('/')}`);
+        }
+        expect(names.length, 'the themes were read').toBe(22);
+        expect(without, 'a theme whose submenu items carry no mark').toEqual([]);
+        expect(ragged, 'a theme where the mark moved a label').toEqual([]);
+    },
+);

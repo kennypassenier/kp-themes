@@ -1515,4 +1515,9 @@
             }
         }
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a soft bullet, the roundest mark in the set. */
+    [data-theme='pastel'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '•';
+    }
 }

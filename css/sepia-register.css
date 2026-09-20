@@ -1597,4 +1597,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the lozenge of its own ornaments. */
+    [data-theme='sepia'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◆';
+    }
 }

@@ -6742,7 +6742,33 @@
     }
 
     .kp-sidenav__submenu .kp-sidenav__link {
+        position: relative;
         padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* A submenu item says so before its name (Kenny, 2026-09-20: "zodat het
+       extra duidelijk is wat nu juist een hoofdmenuitem en een submenuitem
+       is"). The package gives the place and nothing else: the mark sits
+       inside the indent the item already carries, absolutely placed, so no
+       label moves for it and every label in a submenu still begins at one
+       point [fix-64]. Which mark is the register's answer — a glyph through
+       the knob, or a shape it draws itself the way nostromo draws the dot on
+       its buttons. Empty by default, so a consumer's own theme shows none
+       rather than a box.
+
+       On the label's own ::before rather than the link's: five registers
+       already draw something with `.kp-sidenav__link::before` and one with
+       ::after — phantom's sliding plate among them — and a mark that took
+       one of those away would cost a theme a decision it had already made. */
+    .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        content: var(--kp-sidenav-submenu-mark, '');
+        position: absolute;
+        inset-inline-start: var(--kp-sidenav-submenu-mark-inset, 1.1rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--kp-sidenav-submenu-mark-ink, var(--muted-foreground));
+        line-height: 1;
+        pointer-events: none;
     }
 
     /* The backdrop is a dimming, not a tint: the same value the dialog
@@ -12094,6 +12120,11 @@
             animation: kp-alarm-sweep 6000ms linear infinite;
         }
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the double slash this register already speaks in. */
+    [data-theme='cyberpunk'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '//';
+    }
 }
 
 @layer kp.register {
@@ -14639,6 +14670,11 @@
         letter-spacing: 0.04em;
         text-align: start;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the little play triangle it already uses. */
+    [data-theme='retro'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▸';
+    }
 }
 
 @layer kp.register {
@@ -16559,6 +16595,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the neon dot it marks its own rows with. */
+    [data-theme='synthwave'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '●';
     }
 }
 
@@ -18519,6 +18560,11 @@
     [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::after {
         background: var(--kp-alarm-soft);
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the block it marks its own alarms with. */
+    [data-theme='phantom'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▮';
+    }
 }
 
 @layer kp.register {
@@ -20269,6 +20315,11 @@
 
     [data-theme='terminal'] .kp-alarm .kp-alarm__ack {
         --kp-button-caret-colour: currentColor;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a prompt, one level in. */
+    [data-theme='terminal'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '>';
     }
 }
 
@@ -22022,6 +22073,11 @@
     [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack {
         min-inline-size: 11rem;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a blunt filled square, undecorated. */
+    [data-theme='brutalism'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▪';
+    }
 }
 
 @layer kp.register {
@@ -23626,6 +23682,11 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a machined hyphen, the shortest line it could take. */
+    [data-theme='titanium'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '‐';
+    }
 }
 
 /* The redaction plate's alpha, registered so it can be transitioned: an
@@ -25145,6 +25206,11 @@
             }
         }
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a soft bullet, the roundest mark in the set. */
+    [data-theme='pastel'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '•';
+    }
 }
 
 @layer kp.register {
@@ -26639,6 +26705,11 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a middot, as quiet as this register gets. */
+    [data-theme='shade-light'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '·';
+    }
 }
 
 @layer kp.register {
@@ -27926,6 +27997,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the open ring it already uses, like a seed. */
+    [data-theme='forest'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◦';
     }
 }
 
@@ -29381,6 +29457,11 @@
     [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack::before {
         content: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an open lozenge, the geometry this register is built on. */
+    [data-theme='deco'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◇';
+    }
 }
 
 @layer kp.register {
@@ -30447,6 +30528,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an en dash, the quietest rule a light page can draw. */
+    [data-theme='light'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '–';
     }
 }
 
@@ -31988,6 +32074,11 @@
         justify-items: start;
         text-align: start;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an em dash: typography, not ornament. */
+    [data-theme='grotesk'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '—';
+    }
 }
 
 @layer kp.register {
@@ -33482,6 +33573,11 @@
             linear-gradient(to bottom, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
             radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the grid mark a drawing is measured against. */
+    [data-theme='blueprint'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '⌗';
+    }
 }
 
 @layer kp.register {
@@ -34898,6 +34994,23 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dot this register
+       puts on a button, drawn rather than typed, so the two read as one
+       family. */
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        --kp-sidenav-submenu-mark: '';
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.45;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover .kp-sidenav__label::before,
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page'] .kp-sidenav__label::before {
+        opacity: 1;
     }
 }
 
@@ -36774,6 +36887,11 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dash as light, its sibling. */
+    [data-theme='dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '–';
+    }
 }
 
 @layer kp.register {
@@ -37995,6 +38113,11 @@
                 opacity: 0;
             }
         }
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a plain middot: the sober list marker a printed document would use. */
+    [data-theme='formal'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '·';
     }
 }
 
@@ -39597,6 +39720,11 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the lozenge of its own ornaments. */
+    [data-theme='sepia'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◆';
+    }
 }
 
 @layer kp.register {
@@ -40744,6 +40872,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a dotted circle, a low sun. */
+    [data-theme='solstice'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◌';
     }
 }
 
@@ -42044,6 +42177,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a solid square: the one mark that cannot be missed. */
+    [data-theme='high-contrast'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '■';
     }
 }
 
@@ -43375,6 +43513,11 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an open square, cut like the stone. */
+    [data-theme='lapis'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▫';
+    }
 }
 
 @layer kp.register {
@@ -44687,6 +44830,11 @@
         background: transparent;
         color: inherit;
         text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same middot as its light half. */
+    [data-theme='shade-dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '·';
     }
 }
 

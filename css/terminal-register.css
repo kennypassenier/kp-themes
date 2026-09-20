@@ -1747,4 +1747,9 @@
     [data-theme='terminal'] .kp-alarm .kp-alarm__ack {
         --kp-button-caret-colour: currentColor;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a prompt, one level in. */
+    [data-theme='terminal'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '>';
+    }
 }

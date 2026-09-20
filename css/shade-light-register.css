@@ -1490,4 +1490,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a middot, as quiet as this register gets. */
+    [data-theme='shade-light'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '·';
+    }
 }

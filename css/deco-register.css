@@ -1450,4 +1450,9 @@
     [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack::before {
         content: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an open lozenge, the geometry this register is built on. */
+    [data-theme='deco'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◇';
+    }
 }

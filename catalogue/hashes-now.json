@@ -1,7 +1,7 @@
 {
     "$comment": "The block hash of every judged component pair as the working tree stands, so the approval count can call a pair open when the block changed since the verdict [scope-112]. Written by `node gates/verdicts.mjs snapshot`, read by gates/advice-approvals.mjs. Never a gate.",
     "hashVersion": 9,
-    "commit": "d25f2983f3540bf4ece33cb28f1e4d8d90e461b6",
+    "commit": "454640d9a289b6ab2e398d955986090cbb96dd36",
     "taken": "2026-09-20",
     "readings": {
         "alarm--ack": {
@@ -8347,133 +8347,133 @@
         "navigation--app-shell": {
             "blueprint": {
                 "firefox": {
-                    "hash": "3508905b89a2c88a3a5aa2d51474ec45633fed2b946d548cbdd70b3f51fe4166",
+                    "hash": "08cfe545762e5af9aeae9e4a1bd61bd0cdeed7757d2fb466def63fbfb734d5f4",
                     "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
-                    "hash": "d8d5f263c9dc84413ffc881da042a9e2b8e4ad9d41bc6fe8501186a9128f7716",
+                    "hash": "5d61a730a8632ceb55f2b1f27897c2ce932b8d04ce0df8d480c73ae265db476e",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
-                    "hash": "e090645856509d2b12b87cfa88ce7b8f2fead88520922e3184c3c748257a6f81",
+                    "hash": "622321ea5bc14b8a8b36703fd62810fa9855eb8da099dba62fef475b396119a1",
                     "ratio": 2.222
                 }
             },
             "dark": {
                 "firefox": {
-                    "hash": "e45a64d5c29bfa9dea05450019ccaa208fcc1015e9c11e16036390c7f52e2c7b",
+                    "hash": "6d5b919e4e181f1e218fcdcc27f9ef9143f2cd89d757b12b35638aae3987423e",
                     "ratio": 2.222
                 }
             },
             "deco": {
                 "firefox": {
-                    "hash": "8d72683dfe10e77dba72e876e52b3ca0aacf12f4ab2b9196f23bd5942a71a21c",
+                    "hash": "31ba5f6abc22cfa704c9e819f845bdc760d980855f373475a83434d17b0949af",
                     "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
-                    "hash": "36a4e6e9743c48a003ca079f2f38bbf606e1ede5d7b71a3383d9c8934d356ab5",
+                    "hash": "1d715476cb9a8eb4d3c8fea33521dd25756fd7883095d0bdeb405cbc52196e10",
                     "ratio": 2.222
                 }
             },
             "formal": {
                 "firefox": {
-                    "hash": "f6c23876bec608176aabdb67a4d5b34881c9b949ef16b8f8d9ec61abe5bc9d0a",
+                    "hash": "c4c9ce47cbeec0e16fb6cbdc45596aa76e19a4a7bb86affa6f1e3834c8c54b5f",
                     "ratio": 2.222
                 }
             },
             "grotesk": {
                 "firefox": {
-                    "hash": "c427290c6e5e542faf20a7fe57b4bdc249894ac2ec8cd2ae5c14dc60f55e297f",
+                    "hash": "5d9708715b5b36edcf047d5efd355d5f0e5627500434b9791dab018e8aed043d",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
-                    "hash": "4e658283153242e23b896465f5eeecd9d31d06a0d1a4e0ab74922fb701f893a3",
+                    "hash": "86cc5454d067b9cebb397670cb723a8ff8b43eabc2c0558df73025aa2c1e065d",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
-                    "hash": "94e03ad460c8b25992bd34dbff90d885edf64c1e85e1d3c2a8e24553b151776f",
+                    "hash": "e1c4c1a2730326251f97a3613e0e41f0ac6b12563cae5e90464b91b812ff3df0",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
-                    "hash": "fc07b25ecbdc6c6dad62f902d980e82ae11650a6e0a3e5264fadbada1de98afb",
+                    "hash": "013387fa2e564fa0f31fb25065ac928711563c37131c0f2bc06c460af27fe6ec",
                     "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
-                    "hash": "c84379bcf3f95c1bd8c1ccafe0ad096b0fb8180e8ebc6f9fa32a2038539c47cc",
+                    "hash": "4574dc2ab3e02fa2aa0a0dc6a08bd7ae32c06822dc1bd6864da662e4cc00899a",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
-                    "hash": "d64ef0577e97ff154ca2241add2856ea6ce67b81a1e37510755e1d8309b84bb8",
+                    "hash": "09e769917ac0f3c3402fa4111526f76f551908d1375a4f2b65870b2926bd745f",
                     "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
-                    "hash": "9abe6f32f5f0e0fa716f47d230eb647cc40a9ea8df877312bd3ff8547ca17e55",
+                    "hash": "7086d895e4ea87dbcec797968cf131f99f74e928307e414191924931512b3e3c",
                     "ratio": 2.222
                 }
             },
             "retro": {
                 "firefox": {
-                    "hash": "d2ca80e1efc23a84916882be4b245e84fef32403a768f5271d407aab5ee4d278",
+                    "hash": "864358fc4ba84c0340053732c1a96f02399062f85a54cd1d6bdfe61c2c11bb8f",
                     "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
-                    "hash": "aefab0576a8a5424165c941841af9d20bdc45ac6b7c6c69fa08667deec4a2137",
+                    "hash": "3739986ec520a842e8afa2c02e880fe6e204a6bcbabbe1b4c921dad760537027",
                     "ratio": 2.222
                 }
             },
             "shade-dark": {
                 "firefox": {
-                    "hash": "f67c517fcafbced26f5b3b0160e2ec0a3967cf0be32e6be19563fe1a163333d2",
+                    "hash": "aff6bb569e60765cef0cfa3020ff675aa87b0e39393a0ba10fdb7633945b98d3",
                     "ratio": 2.222
                 }
             },
             "shade-light": {
                 "firefox": {
-                    "hash": "943f39001738bb678fea2ee5a33622122fb78ffb273fcd126e0da6dfbea4478c",
+                    "hash": "0c55a0a316bcdc92dcf178412c5501acd0a5b5eeb7bda1d402099fe83bbd3ca7",
                     "ratio": 2.222
                 }
             },
             "solstice": {
                 "firefox": {
-                    "hash": "4ce65811ee757226bb54abe3969adbd9334024ee0a6f796f66a6066eddfcc98f",
+                    "hash": "4ca5608922910bfbf680e19e6d7538644da3451163fbee5a94c76a75ed146811",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
-                    "hash": "4a3dec9e10cb3f7e7c51534a3c593d5e085b36aa0671e5d91e49d91b1bd9e87a",
+                    "hash": "9e1df540d9e6aad2762dc081f05b93e321b29094a96a519c62ee158930301d39",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
-                    "hash": "79e4257e8e8e7bb85b415990335c83bf4c4f52686c10d98d1e6c1c68aa4e8863",
+                    "hash": "b007bfa0df077d2e535b759b69a2678e021ed431f6117a6df4742e4cb02e13c0",
                     "ratio": 2.222
                 }
             },
             "titanium": {
                 "firefox": {
-                    "hash": "0f81ef6e97fbf838fd5464d07ba8a3db7313f6f94f7c111177d16ceb24844fdf",
+                    "hash": "a228e10628760039813e08db2d9e21ea17181503f2e5414a7bf5a15d907bd6c6",
                     "ratio": 2.222
                 }
             }
@@ -9687,133 +9687,133 @@
         "navigation--sidenav-over": {
             "blueprint": {
                 "firefox": {
-                    "hash": "6439983f7949cdf4734ea2d24e30a75aecfff94c0ba268bed8487479670da5b1",
+                    "hash": "1ca7b8896724492569827fbc02584a8285bd3cc644e673697203f55888b5fcc4",
                     "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
-                    "hash": "7f35a38698f5220b981330b3b523d1db449192ca3b6448398eb1e627e24463a4",
+                    "hash": "504380a072d46d1d7d77f236e05201743d56320651f05d836112e7e410a399ec",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
-                    "hash": "94214ca21f8e17a43ee1392991f6508cb7fd2c1ae58482e54d95431f73883546",
+                    "hash": "e2cee7ea06a9f1acff8fc52d9d4bb4add78cec017cd57f3a608536491c0f6fc0",
                     "ratio": 2.222
                 }
             },
             "dark": {
                 "firefox": {
-                    "hash": "51749d9670ec1df1f56bbee81c9306aa1253d79aa59f4ccad07e06edd36b1ccd",
+                    "hash": "8ea7ebd80ba9af8a0fefb6803931ce56efcb6a91c34e833b05005a635ad3468a",
                     "ratio": 2.222
                 }
             },
             "deco": {
                 "firefox": {
-                    "hash": "d932236148d83d10593093501aaaa20aeed7b98ae129309eacc68cd4a4e90acb",
+                    "hash": "cf7312e5ad83dbaf0429be7d82a91fa70dd1c6ecab598c2f034d551f56b5facc",
                     "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
-                    "hash": "56a069e325024e180e2659e16b28f001256b0e229a74cf71357566fc903c77da",
+                    "hash": "1814321530156224ad6e677d247f2e5eb3f5ab8df99d59e00d9bced1e76d2be6",
                     "ratio": 2.222
                 }
             },
             "formal": {
                 "firefox": {
-                    "hash": "c8d8a44b983b07dae93d6c69ee3aa9ef160307ce221a6a6588088d527eef8211",
+                    "hash": "4f802321c30bea6fe82b0781e4a89663b60c7301e01f4ada85fd8a60b812dde8",
                     "ratio": 2.222
                 }
             },
             "grotesk": {
                 "firefox": {
-                    "hash": "e18d52eb6158f1aeeff71af7a57849669f673ba7b1e841d8c609f262bc52c2cd",
+                    "hash": "0b8c1f5ec13b7d0b763de24dc6a42a6cc296ef15907a335aac23639764435af0",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
-                    "hash": "b4009bcab1bfd545e06dbddddcabcbe53447038a3864cac7c6882fcf4d95a081",
+                    "hash": "7ef730973664b6478ada20d943f6d913f025a1a92319e4e0d0464ab8ff9bfd39",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
-                    "hash": "540dd0e7c5dd6c15a9d450b0b11bb589957fc8bd90425dd0bf1b9e37516802ef",
+                    "hash": "215a297e3c69533b48cd95bb12b660e2c9a0611201f3bc4d3d848d5b0e237f6c",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
-                    "hash": "7060e430fd6658e9d9accc02cb8cec5d37873e449536135c771112eb595914cc",
+                    "hash": "e2025030f15e13602f67eebf0667ad0b71cbabb827cee3ffdb99e99da7e57b1f",
                     "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
-                    "hash": "7291b86639117386ced694ef39856a4ffd67fe3e07086874109351316409adba",
+                    "hash": "6f4d57369601e2c69502b824c1aa8daa83499416ecf62c807c559f36f74771b8",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
-                    "hash": "93594f52e600e4dc8493040f332e84e5be7cee30086931a120230457dc37224d",
+                    "hash": "8c2f8f54fb48729a76dabcc7e6498d8610c9a210308edd6cf0eabbcc268d7f77",
                     "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
-                    "hash": "154d4139a01d1c4794d080cda8c34eed5a3b971cdf8743a0df156dc9270f7cf6",
+                    "hash": "cecb2f306ef070bcc9186f289ea178e275db766724a67071d54ca15c70547a9b",
                     "ratio": 2.222
                 }
             },
             "retro": {
                 "firefox": {
-                    "hash": "baa848348c8d57dfde06e1fe2fcea151bd3b697971810f63f7668a22aed1f805",
+                    "hash": "459381ae9c62081202cfa7b7b88e0c7b906fbaa2adcd54339f1c3147daf371c2",
                     "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
-                    "hash": "2fdc7f180792c6dd469a1fc9b824a531a6b609205c9f9e23c85efdbd1559a5d1",
+                    "hash": "ff00cf86a2d3a9806d319aabe19eeb9dd0d014fb2c0b0eaaee748985a335dfcb",
                     "ratio": 2.222
                 }
             },
             "shade-dark": {
                 "firefox": {
-                    "hash": "3b0a427709841d5866f7c808f1b30ba728308256829ad2e3b2c353df5a7754e6",
+                    "hash": "d95ae41a35635526c88862017fa5ea90457c6af4284c60d986c45d79d305bf01",
                     "ratio": 2.222
                 }
             },
             "shade-light": {
                 "firefox": {
-                    "hash": "8373de9c7a934ec02abc6068abc2eea5905f8e01befdc04e9aa15445f34c64cd",
+                    "hash": "539f2c246da3db05b6488e705e9caf8b29bba1c7d914d520d1a8cce78f389aae",
                     "ratio": 2.222
                 }
             },
             "solstice": {
                 "firefox": {
-                    "hash": "48eaa57b262181183530b0672e94455dd2ab1e2d3765faa82ed1a4124b8b7a06",
+                    "hash": "e2049fc6ead0db417cde11fb421797af2a4530626b05fb898b81626da24c820e",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
-                    "hash": "e5bc1e0b99fc3f73f066fa82fa660d57c565445bafb2aaeb48855a8ecd2bbbec",
+                    "hash": "348c4d818be9775d89336d25cfc16707fdbb244d5ae34239725042e009d47cce",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
-                    "hash": "9ec7eef76c8d887d05bb3e3b61275495d5634d8d14df6ec438df669e4183bc4d",
+                    "hash": "b95d6b7da16c72c63684840cb215ad02ec530d320527369ae1eaeedc0f6365aa",
                     "ratio": 2.222
                 }
             },
             "titanium": {
                 "firefox": {
-                    "hash": "3b352c7da4a62e1e3aa54ad05c91af91cefd77b9cc262f7986139f8ae81d3063",
+                    "hash": "326e6f4feb700a477c9ca583bb607a84208cf05b9cf7f17312abc8311ec94fcf",
                     "ratio": 2.222
                 }
             }
@@ -9821,133 +9821,133 @@
         "navigation--sidenav-side": {
             "blueprint": {
                 "firefox": {
-                    "hash": "c5e3369f9329636c4b999f58d81f5103a7084c92374f2a74236914b8ff8418a7",
+                    "hash": "bb126a448bb09ad77568403c5aa2282dcea077cc5752587c69c0bd0d4d916b13",
                     "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
-                    "hash": "0efd835ccceba62b9081acb33bf98cdd7cb7054e64a5ad5ecd2bea6b8eae82d0",
+                    "hash": "f949f38f220bb7f15a939b4174066200bae3077f2eb550d03a8a86c267fb382a",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
-                    "hash": "32b85a737153473bdf6575a996438a359ed85f909d94a294e16ded9718b0c6aa",
+                    "hash": "eef2c64e5bcfe40ef201fb7917e3a1abd0591fbb609fac1889c08db1c2c9fead",
                     "ratio": 2.222
                 }
             },
             "dark": {
                 "firefox": {
-                    "hash": "59583110bb50fa6c793720063f404523ec72c12ce09e9377ddab7eb5e19495a6",
+                    "hash": "04c7a394ad2b198609f9eb0752ac2cb7496f5c2b1b41be31aa3afa329412f4bb",
                     "ratio": 2.222
                 }
             },
             "deco": {
                 "firefox": {
-                    "hash": "80a8c4d12b5e80cf5c6427ed22613798e167a75f52eace15222ffe8c01e72246",
+                    "hash": "d9e823f2f0c35d909290538b55adcc8d08808aed2cbc3c982196de1e53492bac",
                     "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
-                    "hash": "11c3276a2b9679ac7abb3089c62c0de9793a51ebd9d368e478abbcf793a5e78c",
+                    "hash": "bb34bd9e94b5810716133609211a680c38bbd3b97ffcd79ceb6c3d3c589a3fd0",
                     "ratio": 2.222
                 }
             },
             "formal": {
                 "firefox": {
-                    "hash": "f5a472accc375112c203893e0cd4c465ce2347264bf2d50070f4e6635b8a8550",
+                    "hash": "0005071f3bc9cd4a70b6097dc3fb536c456bbd645dcd98aa0d65648361b91d1a",
                     "ratio": 2.222
                 }
             },
             "grotesk": {
                 "firefox": {
-                    "hash": "b365d9a2fcbab558ac84e68836d9c804d88c1dd4110c2ee950dd53501c30068e",
+                    "hash": "21efb9a1e5f8afa508f7fe2e8c1768d26a9c5c460f026474046d4026a7a9f0fa",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
-                    "hash": "03ea2a274821957d228633ef5f8e155863acd7076feced671cf97a6c5104a1c1",
+                    "hash": "43ff08c45a08d81cb670fae42a10397571379a2632b9ec38d2cbac035202cebe",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
-                    "hash": "6ccbe9828a2a5d9c3429fe9b7504dbc6f9662a5c018d5ab8fc863dbd0982cac0",
+                    "hash": "5e3ec1f8777bcf884625f573a0ec57c64b04040e9c63dd4a153ab07f4793df27",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
-                    "hash": "e84299d2f9854cdc15b5722e6607cb6b274d897e3b2f76c3edf8a4d1a069d1cd",
+                    "hash": "7d04b9e48716ffd306985fe5a742a16c4e5abc747b061cadccbc73ddf2028d0a",
                     "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
-                    "hash": "7d12ebb0cb395be7be4d56ed30463a79d688509272ad70f92833f466e505ae46",
+                    "hash": "1e20d03eb7c79cd30001c044755a90f480d385a6043867c3f93e404c94749ce9",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
-                    "hash": "91f6b67351b8e56112b237e48de7fe934fd1792ab5f17de31203109a64ef5c6c",
+                    "hash": "f92e2001bd9cc9b3270937e96f8e086cea681635f8e3c891cdf0bfd05294fa9a",
                     "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
-                    "hash": "b58fb352ba7bf7525cb90e4d3fb697796c5f163bde074a34e49826c0ce6a96f7",
+                    "hash": "c8241e5a2ddb8d32d7c4b3a967c45b67e746a3a1384ad0a3ab2e624b71ad89e5",
                     "ratio": 2.222
                 }
             },
             "retro": {
                 "firefox": {
-                    "hash": "ed55f37bfc34d8e5542aea990f3b251126325e3a85cc91999d61320cda92503d",
+                    "hash": "8a9e9a4e7b268de8308f6d5d5421b185871bff53048b196252872a048c9775ce",
                     "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
-                    "hash": "082596608162d2beed90f607708a02695be3a2fefa7031ee0fb19f17fd6dff80",
+                    "hash": "4130b35a2777cb5a7be837951ef2740012987a6637f5d3c40aec0808756b4762",
                     "ratio": 2.222
                 }
             },
             "shade-dark": {
                 "firefox": {
-                    "hash": "c89395f1096edc3213e18412ad279b452f922fc2d00c1847b09156634a33cb93",
+                    "hash": "d07a630212f7b3d3abc387fe67cb0eb4bfa53c79bd78f243e0aa6d3e851895ae",
                     "ratio": 2.222
                 }
             },
             "shade-light": {
                 "firefox": {
-                    "hash": "ccdba723eb64a0108794969e0c999e96abe06ee828bc119dfaec365b1d5de5c7",
+                    "hash": "4d2a6296baa84727d544fdaf38ab709db11c96daac280a937ed5cd79b68393f4",
                     "ratio": 2.222
                 }
             },
             "solstice": {
                 "firefox": {
-                    "hash": "abb5b5f78f473d9a675ce3d0b4661c158c27e8d00571bb56e49bcafca8fad0c8",
+                    "hash": "60c316cfb6f56a9da15d41d54d56cbf286a35094f7e3e33a43c86bcbe1c89af3",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
-                    "hash": "7af68d7159a8bf55836c8a090b50923d996c86b696ebd3dc497c5e00323e4dfd",
+                    "hash": "7c2282055ac86e0ef583d99b528c3a73f46833890e4ccf3c23132c3d1ae5500f",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
-                    "hash": "eec5d66a207bbeb0cb57ffa0965d9a0c73f947714e36241182dcf496eebf64f2",
+                    "hash": "e8c203b947446fb690a8c59c3542ce53870d4ed896d8e5155401f445a4d44a92",
                     "ratio": 2.222
                 }
             },
             "titanium": {
                 "firefox": {
-                    "hash": "7f47d32f1c1bb6a8755acdccff2ada98d2c0c1f3c37928e501dce113c69a40a7",
+                    "hash": "6817e36297e55340f90deca19f70162b2ec13cb06ab047f40d7616ae5c341f59",
                     "ratio": 2.222
                 }
             }
@@ -9955,133 +9955,133 @@
         "navigation--sidenav-slim": {
             "blueprint": {
                 "firefox": {
-                    "hash": "643731f7318f32ea8bc1d8740b930da9130ad275b01d0706f4ca44035b2cd05a",
+                    "hash": "42bd353933aa28c095dc07c024fd5a4235daddbff62241376dab308cafc738fe",
                     "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
-                    "hash": "4592563461c9581259123d8027bca4213112c24811beadab03fc49269d1add1d",
+                    "hash": "b69d30a30fd3d5744705e51fdd332151ca2d9f3dd484491e5639011e858f0b35",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
-                    "hash": "63678c035fb82d8c2c3761fa8c4024d4855f351292681bfb36155ee876023d79",
+                    "hash": "8107fc13e18182b357f74c82a8a05d49a5379bbb1321fdb427f62f0b3cbddc9c",
                     "ratio": 2.222
                 }
             },
             "dark": {
                 "firefox": {
-                    "hash": "c543180d2a0a5a4e051d67009b0c436d5c901f8b392f7a79e56c642d18e807c8",
+                    "hash": "ca643a67cccefd178eb25fcf9ebcbd7bc038132878045da1d24be8650a9befb3",
                     "ratio": 2.222
                 }
             },
             "deco": {
                 "firefox": {
-                    "hash": "e8476a3ef3091a5ecaef669b34fc0a02ecc4798120944b7f5bd14ccd6d1369e2",
+                    "hash": "421a866162cf2680e04b1c0b03bf79f3f4f512676b113c193f1bc982e879904e",
                     "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
-                    "hash": "e90eb133b3b9b6997a54eb10061ff2d9aaeea903468bca989003836a03d8c97b",
+                    "hash": "cac5c78dbf49003927f17ecd772632e66b574ba36097820b31acb9efa9af9a70",
                     "ratio": 2.222
                 }
             },
             "formal": {
                 "firefox": {
-                    "hash": "76a7202ed12478eaa9cfcc2b14d9ceeb4c2bd3315839683c01d0a1837e6e6692",
+                    "hash": "9dde21ebbea18dc3b23002e061ec6f0790f5d9e5d8f1c745e469092b2803a55d",
                     "ratio": 2.222
                 }
             },
             "grotesk": {
                 "firefox": {
-                    "hash": "99b34f6ad91efead24151708b66212aa6e52e6bfed1533f4785b34ab35b93d77",
+                    "hash": "3b75b0a749b91ca340d5f5e37a90e2838127125364f3a0aa08b6a43db26d9656",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
-                    "hash": "b4481f408146848c8731519421f504dc3ed7354249225228c2fc8dfdd341008a",
+                    "hash": "825d17bbd1a3ff86800b67ee0537f3ec87ca4eebc75ee0e99c7afb67bb7d14c1",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
-                    "hash": "4c8cd59a36653a958d20572077776814907b003e76894dc8b1fb4ac5e5faba9c",
+                    "hash": "06d49ad1e84a7b9b28da0ec05d558a5b4ff4959cb6e82f6b9b71d0a52f1d99d8",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
-                    "hash": "f45a1456981ed904df142f7f23f79a2f95b38a33c4636fd8435e1c387a006d83",
+                    "hash": "7450c3847fd51b41a2ae9a47bbacab6f4a7bed90aba13e98b9a093615e58d69d",
                     "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
-                    "hash": "a1ad272bc5f44412144de5419d10050d647235b9c0f67b62aa613a53793714c9",
+                    "hash": "5e83237c601f3ae120c285b9d971b9c0c52b07561207d100ce5cc133ea715463",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
-                    "hash": "36bd1d23f6bf5e5c39d472b929d12e1447713a0a35b08d31a552d110094f40cc",
+                    "hash": "c1fb5cb6ceb5a49cbd8012fc690af036af588da67446f43bcff1c9394af47a5d",
                     "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
-                    "hash": "6473d3a8d474f60bc2da81592c23815ecd946fb3b9db478bf222edc30b45e3ae",
+                    "hash": "f3ee9a84d114973d7515f71d64b1a10f98752e57d3437acd73a3c0bc5d02f4d6",
                     "ratio": 2.222
                 }
             },
             "retro": {
                 "firefox": {
-                    "hash": "2c144381fda522ee58b77fe39f08672b5cb58ae7528608e70978a76ab3f49532",
+                    "hash": "34d9a55c1731c46b3dba84b098234cef07810804e0bb1ed3dfc33e698c41cb2b",
                     "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
-                    "hash": "384cbf64c9a1a999dc0034b57ba4d51168664387f03090ee0097b630c8bc0189",
+                    "hash": "9c4db638ee12325cfd47f89c7b9d61f7ff106ca93b02755acc60e6b104baa9f4",
                     "ratio": 2.222
                 }
             },
             "shade-dark": {
                 "firefox": {
-                    "hash": "9cd539beec927c3a0b6b0cec6d77f93c480ce03e42cfb7feec4e80d82719bc7f",
+                    "hash": "46400ee09260a06b64aff95f137f2ba4c36e0e71dfd8e4d2e60efd6bfe8e251a",
                     "ratio": 2.222
                 }
             },
             "shade-light": {
                 "firefox": {
-                    "hash": "694a435523e018e95aff82c2e444fb258a31199f027f778a1e78d44364c5a98d",
+                    "hash": "0fe1ee5e038c2cee94ca56fbd89be2c55465fcda6f0c174d15b3705b4dab0fa9",
                     "ratio": 2.222
                 }
             },
             "solstice": {
                 "firefox": {
-                    "hash": "c3316fb8d8f1878e6752b35e27c2a17106e4ef8c6a135b62f3a9796dcd49d2c1",
+                    "hash": "4fb0a5f12ab116d507ebf243860a12b6ea9a2f3186f3bc1729c195a419d67443",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
-                    "hash": "314e8bbf05f0f231ab343434d36ee7b7d775e91eb13b0a22497f326c183ed2de",
+                    "hash": "f9e19deb20cbbe037c03ee9bb2155bc93b8a1932abc38a382ea226669ef5283d",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
-                    "hash": "b38a3cc2b7fd944b5506ea63e5261bc92360a7991a81b995e73bb7209d22fa80",
+                    "hash": "3c4dc755a43967ce04be882e6b068ba5c6f75fd4e344b652b34620d413a0d44a",
                     "ratio": 2.222
                 }
             },
             "titanium": {
                 "firefox": {
-                    "hash": "900f78601ae2ab78cbc2e50b320ca16cd37cb76070bde0a526ad25da376bfaa6",
+                    "hash": "b56fc400d6363f0e629d3beaa16164e39083e6a658485b8c7887e018ec17ab56",
                     "ratio": 2.222
                 }
             }
@@ -10089,133 +10089,133 @@
         "navigation--sidenav-slim-toggle": {
             "blueprint": {
                 "firefox": {
-                    "hash": "77e026a78ebe64f241f9e2e8386049aab31fa7894a6ee91f812840b75fe090e0",
+                    "hash": "40bf6c16b733bfb7ea0ccca5bf82e72e632bd17d359fbc481ebf903f8297fb21",
                     "ratio": 2.222
                 }
             },
             "brutalism": {
                 "firefox": {
-                    "hash": "4b2733545a417ab6dd25c229c4a0e302bb4af060dc0e1bc3bf31138d3fae2e21",
+                    "hash": "0d4724f70b50b70b0a167f1b99a2aa45253641a2df229de9c65aa8846fc910d0",
                     "ratio": 2.222
                 }
             },
             "cyberpunk": {
                 "firefox": {
-                    "hash": "f0177155dd2e79e40aa591420473736be992ecea9f1075f74840195e19502335",
+                    "hash": "0207d7eeaa99352c56f1b95eed0aeaa8483062e3b8ce7164e7ff5b108b528def",
                     "ratio": 2.222
                 }
             },
             "dark": {
                 "firefox": {
-                    "hash": "e8ab6db26c416b5ab422dcd5a62b7a12112befc3ef5eba187947b382a0a1a157",
+                    "hash": "6d3692e9bc1f98e0f0fdb3d2244a598793a7bfb7e74119fd618622cdebc40140",
                     "ratio": 2.222
                 }
             },
             "deco": {
                 "firefox": {
-                    "hash": "8a08ace10f78af6510ef59fcfa0a9a17e7598b8ec22eb80c93ccf85273b5d50f",
+                    "hash": "50a735a8a547d2d4051f32790356e510cda3ef8d5614be325bbcd2902ad92e2a",
                     "ratio": 2.222
                 }
             },
             "forest": {
                 "firefox": {
-                    "hash": "47b7c18552edee4c9a8b4aea786761cc8a0a99a53bf71637e829d9c9176a46ad",
+                    "hash": "a5029971b196c683f37aa2665d9dbedeaa5a55f8db1dbd80fd89543cd1037501",
                     "ratio": 2.222
                 }
             },
             "formal": {
                 "firefox": {
-                    "hash": "500b89bc94d3bea2b1808659deb55e5baeaa3f268aa71c2ed19863932ca95e0e",
+                    "hash": "1e7e46c2b5996702ea37b888a38a9dc05391b8b304645484bf705518a7bb4ff5",
                     "ratio": 2.222
                 }
             },
             "grotesk": {
                 "firefox": {
-                    "hash": "1fc67b74f3c792512057d7916de543594864887e0470ff36da5913110b25d29b",
+                    "hash": "243224d46b48decbe9b25efdfb49dd9d41759d1ecc01bc5723391e5aeae17fb1",
                     "ratio": 2.222
                 }
             },
             "high-contrast": {
                 "firefox": {
-                    "hash": "9a959794a7de859ac3a733940969b6ab037bad179eb172cc3d0c572b7b01e25c",
+                    "hash": "779ba2f76ac72c76a393ecce95d3ef8f5e7628f44ab9ce68bf8d6784d6a82a60",
                     "ratio": 2.222
                 }
             },
             "lapis": {
                 "firefox": {
-                    "hash": "9a2ab2c031cd2b2398bf2a5947873893c9bf61853eba9b6873f1863a33889ed2",
+                    "hash": "55d51d6b494b7c9bea7e1cf629b4221494d841f972837d4fe72873ce332f46e9",
                     "ratio": 2.222
                 }
             },
             "light": {
                 "firefox": {
-                    "hash": "351f09b41317ae8a54c1c01aab0156d98585c4da14a4aa34913808a02c1cd958",
+                    "hash": "9c7bd2e70a2aa7c3dd95f6af56b2c2f6ebfd0e136104c44870fba1d609cd6c9d",
                     "ratio": 2.222
                 }
             },
             "nostromo": {
                 "firefox": {
-                    "hash": "e08a6d081f3d0e96748c0b8ef099b803f0d0981efceaa66c76d33726dbbfc8e5",
+                    "hash": "b153bd0adfe5ec9f7f7fdde3d6cefd356b4bdffc1725f330ae587f0de2083571",
                     "ratio": 2.222
                 }
             },
             "pastel": {
                 "firefox": {
-                    "hash": "a6a6efda57d1541d5beb81c7297d36f2b2ff1fbcfda7b3d62468cd089c18353d",
+                    "hash": "87687b24de6dc1f5e3e8d690a5459235bb8f3aed7fc3bfa899b5ce1d5257cf3a",
                     "ratio": 2.222
                 }
             },
             "phantom": {
                 "firefox": {
-                    "hash": "b2a01773f4cc6b557a8e5c2a4440ec9ff85ee5eff14e08d9c352392d1dc4359c",
+                    "hash": "ff926cb9f018ce9c8ee60e08c0628f4ee1a3da1014602511dd9f9693af770915",
                     "ratio": 2.222
                 }
             },
             "retro": {
                 "firefox": {
-                    "hash": "aba2c486842ef86571b5b1a9ab1e3bae3fd0a44102c79b11e9cb7aa74291e014",
+                    "hash": "8ade935d58a84f5aa77213224a19e2fc7c2f7ecb6fa69aeca4b3d160c8975227",
                     "ratio": 2.222
                 }
             },
             "sepia": {
                 "firefox": {
-                    "hash": "d4dfa427510d250a08b9ffa521734115ffa70e12a9523612868304c1d288d20c",
+                    "hash": "8a63a719fae962fd7bf5569233e9db69015006fb99e058c4f3837c3d59ccd5fd",
                     "ratio": 2.222
                 }
             },
             "shade-dark": {
                 "firefox": {
-                    "hash": "f769b848b1e8e390c3b5b1e267b4c81d321da49c8276ab9d5f0fd01d449ac59b",
+                    "hash": "e2b49180de4f934a7dec21854f5f86a83141c8bc553ac13f122e89a461a50a64",
                     "ratio": 2.222
                 }
             },
             "shade-light": {
                 "firefox": {
-                    "hash": "412957c06367a286cfa4b9ed07f33839bd207eb675aa84c7bda82f394bd75e38",
+                    "hash": "248074b8e4859a8d29fdc4b4f84125fe9ed90380fa6fd139fb98b1667a3caf62",
                     "ratio": 2.222
                 }
             },
             "solstice": {
                 "firefox": {
-                    "hash": "bf710dae1f2c130d6cb461399fe4c86300d0d558b675d5951bec3ee00567bcf5",
+                    "hash": "c079353ef0d46d5c6653405eaeb67542c4ee1000cce6eb72dfe76f4040df984a",
                     "ratio": 2.222
                 }
             },
             "synthwave": {
                 "firefox": {
-                    "hash": "64910560f9efa39b3096b2efb5480180ab89423764048c24300e9049174b1e94",
+                    "hash": "35ebb43dcf205fa69f7186677e308138081acef0d0760c11d5e55b2e9f0f4882",
                     "ratio": 2.222
                 }
             },
             "terminal": {
                 "firefox": {
-                    "hash": "32054f0aa15d7b10420fab68ba34eaf6628c56a5fa5f0ceb419fc37a4d92dfda",
+                    "hash": "1c94626623f9735d764621efa2b4eb6ca3ce6fdae8739bcab2b2dbeee89b52c3",
                     "ratio": 2.222
                 }
             },
             "titanium": {
                 "firefox": {
-                    "hash": "cc76d26ea0971c9df7efcc4fa6212f2f5da630c98f85592bf923fd71110cb2d3",
+                    "hash": "44ce56aa6ff5aba2bc346322c5afdee4211e51321ae3886c0f7cfc65d2b2bf36",
                     "ratio": 2.222
                 }
             }

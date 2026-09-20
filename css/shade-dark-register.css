@@ -1309,4 +1309,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same middot as its light half. */
+    [data-theme='shade-dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '·';
+    }
 }

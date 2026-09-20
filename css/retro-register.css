@@ -2541,4 +2541,9 @@
         letter-spacing: 0.04em;
         text-align: start;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the little play triangle it already uses. */
+    [data-theme='retro'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▸';
+    }
 }

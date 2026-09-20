@@ -1917,4 +1917,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the neon dot it marks its own rows with. */
+    [data-theme='synthwave'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '●';
+    }
 }

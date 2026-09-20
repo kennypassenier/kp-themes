@@ -1536,4 +1536,9 @@
         justify-items: start;
         text-align: start;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an em dash: typography, not ornament. */
+    [data-theme='grotesk'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '—';
+    }
 }

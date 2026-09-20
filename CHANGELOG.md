@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Added.**
+
+- **A submenu item carries a mark of its own** — Kenny, 2026-09-20: _"bij
+  subitems op de sidenav zou ik graag nog, per thema, een specifiek symbool
+  voor de subitemnaam willen zetten zodat het extra duidelijk is wat nu juist
+  een hoofdmenuitem en een submenuitem is."_ The package gives the place, in
+  the indent a submenu item already carries, so no label moves for it
+  [fix-64]; each register gives the mark through `--kp-sidenav-submenu-mark`
+  — formal a middot, cyberpunk its double slash, blueprint the grid mark,
+  high-contrast a filled square, terminal a prompt, and nostromo the same dot
+  it draws on its buttons, drawn rather than typed. On the label's own
+  `::before`, because five registers already draw with the link's.
+
 **Changed.**
 
 - **A log's loud severities carry a plate, and its stamp stops at the

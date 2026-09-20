@@ -1296,4 +1296,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a solid square: the one mark that cannot be missed. */
+    [data-theme='high-contrast'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '■';
+    }
 }

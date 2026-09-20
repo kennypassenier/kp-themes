@@ -1490,4 +1490,9 @@
             linear-gradient(to bottom, var(--kp-alarm-scan) 1px, transparent 1px) 0 0 / 2rem 2rem,
             radial-gradient(ellipse at center, transparent 50%, var(--kp-alarm-vignette));
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the grid mark a drawing is measured against. */
+    [data-theme='blueprint'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '⌗';
+    }
 }

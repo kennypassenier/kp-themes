@@ -1748,4 +1748,9 @@
     [data-theme='brutalism'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack {
         min-inline-size: 11rem;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a blunt filled square, undecorated. */
+    [data-theme='brutalism'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▪';
+    }
 }

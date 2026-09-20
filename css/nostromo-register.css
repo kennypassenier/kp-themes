@@ -1413,4 +1413,21 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dot this register
+       puts on a button, drawn rather than typed, so the two read as one
+       family. */
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        --kp-sidenav-submenu-mark: '';
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.45;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover .kp-sidenav__label::before,
+    [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page'] .kp-sidenav__label::before {
+        opacity: 1;
+    }
 }

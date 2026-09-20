@@ -1326,4 +1326,9 @@
         color: inherit;
         text-shadow: none;
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an open square, cut like the stone. */
+    [data-theme='lapis'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▫';
+    }
 }

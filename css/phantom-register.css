@@ -1955,4 +1955,9 @@
     [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::after {
         background: var(--kp-alarm-soft);
     }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the block it marks its own alarms with. */
+    [data-theme='phantom'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▮';
+    }
 }
