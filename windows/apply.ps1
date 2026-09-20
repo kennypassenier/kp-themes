@@ -78,6 +78,18 @@ function Copy-Themed([string]$source, [string]$dest) {
     }
 }
 
+# PowerShell 5 turns anything a native program writes to stderr into an error,
+# and with ErrorActionPreference = Stop that ends the script, even when the
+# program succeeded (reg.exe reports "completed successfully" on stderr).
+# Run native programs through this and judge them by their exit code.
+function Invoke-Native([string]$exe, [string[]]$arguments) {
+    $old = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try { $output = & $exe @arguments 2>&1 | ForEach-Object { "$_" } }
+    finally { $ErrorActionPreference = $old }
+    return [pscustomobject]@{ Code = $LASTEXITCODE; Output = @($output) }
+}
+
 # Strict mode refuses .PSObject.Properties.Name on an object with no properties.
 function Has($object, [string]$name) { return ($null -ne $object) -and ($null -ne $object.PSObject.Properties[$name]) }
 
@@ -201,13 +213,16 @@ if ($Skip -notcontains 'terminal') {
 
 # --- FireDragon -----------------------------------------------------------------
 if ($Skip -notcontains 'firedragon') {
-    $bases = @((Join-Path $env:APPDATA 'FireDragon'), (Join-Path $env:APPDATA 'firedragon'), (Join-Path $env:APPDATA 'garuda\firedragon')) |
-        Where-Object { Test-Path $_ } | Select-Object -Unique
+    # Windows paths ignore case, so FireDragon and firedragon can be one folder: compare them resolved.
+    $bases = @((Join-Path $env:APPDATA 'FireDragon'), (Join-Path $env:APPDATA 'garuda\firedragon')) |
+        Where-Object { Test-Path $_ } | ForEach-Object { (Resolve-Path $_).Path } | Sort-Object -Unique
     $profiles = @()
     foreach ($base in $bases) {
         $profiles += Get-ChildItem $base -Recurse -Depth 3 -Filter 'prefs.js' -ErrorAction SilentlyContinue | ForEach-Object { $_.Directory.FullName }
     }
-    $profiles = $profiles | Select-Object -Unique
+    # Sort-Object -Unique ignores case, Select-Object -Unique does not. The updater's
+    # BackgroundTask profiles never show a window, so they are left alone.
+    $profiles = @($profiles | Sort-Object -Unique | Where-Object { (Split-Path $_ -Leaf) -notmatch 'BackgroundTask' })
     if (-not $profiles) { Say 'firedragon' 'no FireDragon profile found (start it once first), skipped' 'DarkGray' }
     $userJs = Get-Content (Join-Path $Root 'firedragon-user.js') -Raw
     foreach ($p in $profiles) {
@@ -259,7 +274,10 @@ if ($Skip -notcontains 'vscode') {
 
 # --- Accent colour and dark mode ----------------------------------------------
 if ($Skip -notcontains 'accent') {
-    if (-not $DryRun) { & reg.exe import (Join-Path $ThemeDir 'accent.reg') 2>&1 | Out-Null }
+    if (-not $DryRun) {
+        $r = Invoke-Native 'reg.exe' @('import', (Join-Path $ThemeDir 'accent.reg'))
+        if ($r.Code -ne 0) { throw "reg.exe import failed ($($r.Code)): $($r.Output -join ' ')" }
+    }
     $restart = if ($RestartExplorer) { 'restarting Explorer' } else { 'sign out, or run with -RestartExplorer, to see it everywhere' }
     Say 'accent' "accent colour and $(if ($Meta.dark) { 'dark' } else { 'light' }) mode set; $restart"
     if ($RestartExplorer -and -not $DryRun) { Stop-Process -Name explorer -Force }
@@ -292,7 +310,7 @@ if ($Skip -notcontains 'wsl') {
     $distros = @()
     if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
         # wsl.exe prints UTF-16; PowerShell reads it with a NUL after every letter.
-        $distros = @(& wsl.exe --list --quiet 2>$null | ForEach-Object { ($_ -replace "`0", '').Trim() } | Where-Object { $_ })
+        $distros = @((Invoke-Native 'wsl.exe' @('--list', '--quiet')).Output | ForEach-Object { ($_ -replace "`0", '').Trim() } | Where-Object { $_ })
     }
     if ($distros -contains $WslDistro) {
         $star = (Join-Path $ThemeDir 'starship.toml') -replace '\\', '/'
@@ -300,7 +318,10 @@ if ($Skip -notcontains 'wsl') {
         # PowerShell 5 mangles quotes in native arguments, so the script travels as base64.
         $sh = "set -e`nmkdir -p ~/.config/fish/conf.d`ncp `"`$(wslpath -u '$star')`" ~/.config/starship.toml`ncp `"`$(wslpath -u '$fish')`" ~/.config/fish/conf.d/kp-colors.fish`n"
         $b64 = [Convert]::ToBase64String($Utf8NoBom.GetBytes($sh))
-        if (-not $DryRun) { & wsl.exe -d $WslDistro -e sh -c "echo $b64 | base64 -d | sh" }
+        if (-not $DryRun) {
+            $r = Invoke-Native 'wsl.exe' @('-d', $WslDistro, '-e', 'sh', '-c', "echo $b64 | base64 -d | sh")
+            if ($r.Code -ne 0) { throw "copying into $WslDistro failed ($($r.Code)): $($r.Output -join ' ')" }
+        }
         Say 'wsl' "starship.toml and fish colours copied into $WslDistro"
     } else { Say 'wsl' "no WSL distro '$WslDistro' (see windows/wsl/README.md), skipped" 'DarkGray' }
 }

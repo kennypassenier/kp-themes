@@ -20,7 +20,9 @@ param(
     [string]$Theme = 'synthwave'
 )
 
-$ErrorActionPreference = 'Stop'
+# Continue, not Stop: wsl.exe writes progress to stderr, which PowerShell 5 would
+# turn into a terminating error. Each step below checks $LASTEXITCODE instead.
+$ErrorActionPreference = 'Continue'
 $Here = $PSScriptRoot
 
 function Say([string]$text, [string]$colour = 'Gray') { Write-Host "  $text" -ForegroundColor $colour }
