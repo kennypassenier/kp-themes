@@ -1,7 +1,7 @@
 {
     "$comment": "The block hash of every judged component pair as the working tree stands, so the approval count can call a pair open when the block changed since the verdict [scope-112]. Written by `node gates/verdicts.mjs snapshot`, read by gates/advice-approvals.mjs. Never a gate.",
     "hashVersion": 6,
-    "commit": "34f12d3c5cba1f2a46232e89c4ad0ffce1d1b731",
+    "commit": "e64d54414a8ed41b8471b2c5f2aa2a9c32a4eb02",
     "taken": "2026-09-20",
     "readings": {
         "alarm--ack": {
