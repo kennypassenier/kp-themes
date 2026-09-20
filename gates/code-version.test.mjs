@@ -67,6 +67,8 @@ test('the digests are there: a base, one per theme, one per family and per compo
     assert.equal(Object.keys(version.families['kp-button'].themes).length, 22, 'every register restyles the button');
     assert.match(version.components.datatable.modules, /^[0-9a-f]{16}$/);
     assert.ok(NOT_A_BLOCK_INPUT.has('js/auto.js'));
-    // effects.js draws the boot screen; the family comes with the component.
+    // effects.js draws the boot screen, so the family is listed with the
+    // component — read by whoever asks what a module touches, and NOT by the
+    // hash any more [fix-71].
     assert.ok(version.components['page-effects'].families.includes('kp-boot'));
 });

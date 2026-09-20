@@ -4442,6 +4442,67 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-71 · The register asked him to judge what had not changed (2026-09-20)
+
+**1 · What went wrong.** The second review of the evening put 418 pairs in
+front of Kenny. 132 of them had changed: the log block in 22 themes, and the
+five navigation blocks that hold a side navigation. The other 286 were
+thirteen navigation blocks whose markup names no side-navigation family at
+all — a breadcrumb, a pagination, a set of tabs. He caught it himself:
+*"er is bijna enkel op de show log pagina iets veranderd, maar toch moet ik
+per thema meer dan 10 componenten goedkeuren? die anderen zijn toch niet
+allemaal veranderd? Dan is er iets mis met de hashing. … ik ben het wel beu
+om 22 keer x aantal elementen opnieuw goed te keuren waar in feite niks aan
+veranderd."*
+
+**2 · Which gate let it through.** None measures the reach of the hash.
+`gates/check-verdicts.mjs` holds the register to its own recipe — the
+version, the keys, the themes — and says nothing about whether the recipe
+asks about the right blocks. The step that caused it was added in the same
+breath as the split that made the hash precise (scope-116), and its cost was
+never counted.
+
+**3 · Where else the same fault sits.** The fault as a property: *a digest in
+a block's hash that the block's own markup does not name*.
+**Gezocht met:** `node -e` over all 144 catalogue blocks, running the
+recipe's own `familiesIn` on each block's markup and then applying the
+expansion, comparing the two sets — 795 families named, 3502 hashed, a
+factor of 4.41; the worst, `media--ratios`, names one and was hashed over
+88. That expansion was the only such step: the marker map and the component
+module digests are both keyed on what the markup names, and the base and
+theme lines are one each.
+
+**4 · How we prevent recurrence.** Version 7 of the recipe counts the
+families the markup itself names and nothing more, and
+`tests/catalogue-hash-inputs.spec.mjs` holds it there: the breadcrumb block
+carries `kp-breadcrumb` and navigation's modules and no other family. Run
+against version 6 first, that test reported thirty families too many.
+
+**5 · What the remedy costs.** One line removed, `HASH_VERSION` at 7, and
+one `verdicts.mjs carry` run of 232.6 s that carried 3001 approvals onto the
+new recipe. Kenny re-approved nothing. The cost that stays is the open case
+in field 8.
+
+**6 · Who enforces it.** Code: the two tests above, in the commit selection
+and in every sweep, plus `gates/check-verdicts.mjs`, which refuses a
+register whose version differs from the recipe's.
+
+**7 · How we measure that it works, and when.** At this commit: 144 blocks,
+795 families hashed where the same count read 3502, and
+`node gates/verdicts.mjs snapshot` reads 3084 pairs with 0 no longer the
+block their verdict was given on. Again at the next change that touches one
+family of a component with many — the question to ask is how many pairs it
+brings back, and whether every one of them holds that family. Queued as
+fix-71-M1.
+
+**8 · If the measurement fails.** If a change to a family that only reaches
+the screen through a script ever slips past unjudged, the answer is the one
+Kenny set aside today: a list per component of the families its modules
+really draw, kept beside the module and checked by a test, instead of every
+family the source happens to mention.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-70 · A plate's ink was used as an ink on the log's own ground (2026-09-20)
 
 **1 · What went wrong.** The log block coloured its severity word with

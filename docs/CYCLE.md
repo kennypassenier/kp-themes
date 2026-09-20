@@ -95,13 +95,26 @@ table's module brings back the blocks with a data table in them — measured
 2026-09-17: 264 of 3062 pairs; a `.kp-button` rule in `css/components.css`,
 1236; the same rule in dark's register, 89; the loader `js/auto.js`, 0.
 
-The families are resolved **per component**, not per family: a block that
-names any family of a component carries the digests of every family of that
-component. So the blast radius of a rule is its component's, not its own —
-measured 2026-09-20, when two new rules naming `.kp-progress` brought back
-660 pairs over thirty blocks, of which `table--plain` and the five colour
-picker blocks hold no bar at all; they hold a badge, and a badge is
-feedback, and so is a progress bar. A change to the hash recipe itself
+The **components** a block carries are resolved per family: a block that
+names any family of a component carries that component's module digest. So
+the blast radius of a *module* is its component's — measured 2026-09-20,
+when two new rules naming `.kp-progress` brought back 660 pairs over thirty
+blocks, of which `table--plain` and the five colour picker blocks hold no
+bar at all; they hold a badge, and a badge is feedback, and so is a progress
+bar.
+
+The **families** are not widened that way any more [fix-71]. Version 6 also
+gave a block every family its component's modules name, and that turned the
+question "what changed for this block" into "what changed anywhere near this
+component": measured 2026-09-20 over 144 blocks, 795 families the markup
+names became 3502, a factor of 4.41, and one removed `transition: none` in
+the side navigation brought back all eighteen navigation blocks where five
+hold a side navigation. Version 7 counts the families the markup itself
+names. What that leaves open — the CSS of a family that only reaches the
+screen through a script — is stated in docs/RULES.md; the module digest
+still asks when the script itself moves.
+
+A change to the hash recipe itself
 (`catalogue/block-hash.js`) is not a change to any block, so it must not
 bring anything back:
 

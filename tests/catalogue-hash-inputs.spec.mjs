@@ -84,3 +84,45 @@ test.describe('the hash follows the inputs [scope-114]', { tag: ['@component:cat
         expect(await hashOf(page, 'text')).not.toBe(formal);
     });
 });
+
+// The reach of one block's hash [fix-71].
+//
+// Version 6 gave a block every family its component's modules NAME, so a
+// breadcrumb — one family of its own, thirty-one in navigation's modules —
+// was hashed over the side navigation's CSS. One removed `transition: none`
+// there brought back all eighteen navigation blocks in 22 themes, of which
+// five hold a side navigation. Kenny, 2026-09-20: "die anderen zijn toch niet
+// allemaal veranderd? Dan is er iets mis met de hashing."
+test.describe('a block is hashed over the code its own markup names [fix-71]', { tag: ['@component:catalogue'] }, () => {
+    test.beforeEach(async ({ context }) => {
+        await useEmptyRegister(context);
+    });
+
+    test('a breadcrumb carries its own family and navigation’s modules, and no other family', async ({ page }) => {
+        await page.goto('/catalogue/navigation.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const lines = await page.evaluate(async () => {
+            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
+            const root = /** @type {HTMLElement} */ (document.getElementById('breadcrumb'));
+            return inputLines(root, root.outerHTML, await readCodeVersion());
+        });
+        const families = lines.filter((line) => /^(kp-|data-kp-)/.test(line)).map((line) => line.split(':')[0]);
+        expect(families, 'only the families the markup names').toEqual(['kp-breadcrumb']);
+        expect(
+            lines.some((line) => line.startsWith('navigation:')),
+            'the component it belongs to still brings its modules',
+        ).toBe(true);
+    });
+
+    test('a block that holds a side navigation does carry it', async ({ page }) => {
+        await page.goto('/catalogue/navigation.html');
+        await waitForJudging(page, { timeout: 60_000 });
+        const families = await page.evaluate(async () => {
+            const { inputLines, readCodeVersion } = await import('/catalogue/block-hash.js');
+            const root = /** @type {HTMLElement} */ (document.getElementById('sidenav-side'));
+            const lines = inputLines(root, root.outerHTML, await readCodeVersion());
+            return lines.filter((line) => /^(kp-|data-kp-)/.test(line)).map((line) => line.split(':')[0]);
+        });
+        expect(families).toContain('kp-sidenav');
+    });
+});

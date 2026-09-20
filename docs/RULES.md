@@ -480,3 +480,38 @@ the plate.
 Kenny's answer of 2026-09-20, on the choice between the two: **Plaat
 houden** — the plate stays, and generated ink tokens are the fallback if a
 theme ever cannot carry a readable severity on a plate either.
+
+
+## A block is hashed over the code its own markup names [fix-71]
+
+`catalogue/block-hash.js` decides, for every block on the review site,
+whether it must be judged again. It reads the block's markup, its theme, and
+the digests of the code that shapes it: the CSS of each family the markup
+names — shared and in that theme's register — and the modules of the
+components those families belong to.
+
+Version 6 added one more step: per component, every family its **modules
+name** came with it. Measured 2026-09-20 over 144 blocks, that turned 795
+families the markup names into 3502, a factor of 4.41 — `media--ratios`
+names one family and was hashed over 88. Kenny paid the bill the same
+evening: one removed `transition: none` in the side navigation brought back
+all eighteen navigation blocks in 22 themes, of which five hold a side
+navigation, and he asked the question that ended it — *"er is bijna enkel op
+de show log pagina iets veranderd, maar toch moet ik per thema meer dan 10
+componenten goedkeuren? die anderen zijn toch niet allemaal veranderd?"*
+
+**The rule.** A family enters a block's hash because the block's own markup
+names it. Nothing else widens that set.
+
+**What this leaves open, on purpose.** The CSS of a family that only ever
+reaches the screen through a script — a class the module writes into markup
+the source does not show — no longer brings its blocks back. The module
+digest still does: a component's modules are their own line in the hash, so
+a change to the script asks every block of that component. Kenny's answer of
+2026-09-20 on closing the rest with a hand-kept list per component: **De
+module-digest volstaat** — a list nobody maintains is a hole with a label on
+it.
+
+`tests/catalogue-hash-inputs.spec.mjs` holds the rule: the breadcrumb block
+carries `kp-breadcrumb` and navigation's modules and no other family, and a
+block that does hold a side navigation carries `kp-sidenav`.

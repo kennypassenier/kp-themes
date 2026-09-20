@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 6;
+export const HASH_VERSION = 7;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
 export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = 5;
+export const PREVIOUS_VERSION = 6;
 
 export const PROPS = [
     'color',
@@ -538,13 +538,28 @@ export function componentsOf(family, selectors) {
 }
 
 /**
- * The lines a block is hashed over, version 6 [scope-116]: its markup as
+ * The lines a block is hashed over, version 7 [fix-71]: its markup as
  * written, the theme it is judged in, and only the code that touches it —
  * the CSS of each family its markup carries, shared and in this theme's
  * register, and the modules of each component those families belong to.
  * Kenny, 2026-09-17: "Enkel dingen die de component zelf raken mogen in de
  * hash verwerkt worden." A change to the data table's module asks about the
  * blocks with a data table in them, and about nothing else.
+ *
+ * Version 6 also added, per component, every family its modules NAME, so
+ * that markup a script draws — the boot screen effects.js lays over an
+ * intro — was covered. Measured 2026-09-20 over 144 blocks: that stretched
+ * 795 families the markup names to 3502, a factor of 4.41, and
+ * `media--ratios` was hashed over 88 families where its markup names one.
+ * Kenny paid for it on 2026-09-20 with 418 pairs to judge again where 132
+ * had changed, and asked the question that ends it: "die anderen zijn toch
+ * niet allemaal veranderd? Dan is er iets mis met de hashing." So version 7
+ * counts the families the markup itself names and nothing more. What the
+ * bolt-on guarded is guarded elsewhere: the digest of a component's modules
+ * is its own line in the hash, so a script that changes still asks every
+ * block of that component. What is left open — the CSS of a family that
+ * only ever reaches the screen through a script — is written down in
+ * docs/RULES.md rather than paid for on every review.
  * @param {Element} block
  * @param {string} source
  * @param {CodeVersion | null} code
@@ -559,9 +574,6 @@ export function inputLines(block, source, code) {
     for (const family of families) for (const component of componentsOf(family, code.selectors)) components.add(component);
     for (const [marker, named] of Object.entries(code.markers ?? {}))
         if (markup.includes(marker)) for (const component of named) components.add(component);
-    // What a component's modules write that the markup does not show — the
-    // boot screen effects.js draws over an intro — is the component's too.
-    for (const component of components) for (const family of code.components[component]?.families ?? []) families.add(family);
     return [
         markup,
         `theme: ${theme}`,
