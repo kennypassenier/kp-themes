@@ -1,8 +1,8 @@
 {
     "$comment": "The block hash of every judged component pair as the working tree stands, so the approval count can call a pair open when the block changed since the verdict [scope-112]. Written by `node gates/verdicts.mjs snapshot`, read by gates/advice-approvals.mjs. Never a gate.",
     "hashVersion": 9,
-    "commit": "84efc7a49f33af0aaf5025b74e5b8e2d9ba63f64",
-    "taken": "2026-09-20",
+    "commit": "113307db97d02ba860fb26c29575d640b849a5cb",
+    "taken": "2026-09-21",
     "readings": {
         "alarm--ack": {
             "blueprint": {
@@ -8347,7 +8347,7 @@
         "navigation--app-shell": {
             "blueprint": {
                 "firefox": {
-                    "hash": "dad57f88a2679d33ff19d5cf0e240c6f32cbc80db8ce1a5687fbac11fe60c3aa",
+                    "hash": "3a3dc4fde7eb246cd97a9e9fe5ced7f38a826aafc4637ccd04991534a0f33642",
                     "ratio": 2.222
                 }
             },
@@ -8437,7 +8437,7 @@
             },
             "sepia": {
                 "firefox": {
-                    "hash": "62d699eec00b514b948edafbcc5f41a5349a18317b349b54fa8d1522c05e70ed",
+                    "hash": "f1be1b5dfa5164690dc57f410be1ddbc3b4c04bb9c86997dabe60fff9239061a",
                     "ratio": 2.222
                 }
             },
@@ -8467,7 +8467,7 @@
             },
             "terminal": {
                 "firefox": {
-                    "hash": "3ecb56cba593194c7e1b3f55b2fe2ef377b7ff00ae04e12c210e1dae82346fb2",
+                    "hash": "de2a0d5a112e76c1bf4b098ac8dac7d7e632c0652454ecd5a6f242b1f1966812",
                     "ratio": 2.222
                 }
             },
@@ -9687,7 +9687,7 @@
         "navigation--sidenav-over": {
             "blueprint": {
                 "firefox": {
-                    "hash": "205dd6ca76ae962a15b4ccfcc6ab7c75c42b9e3ab2094e8c7e90c9ca91292301",
+                    "hash": "e1efba8869e24d0e78afbdb4172403294e6272592f2c04a3f797a4ec3d31b86b",
                     "ratio": 2.222
                 }
             },
@@ -9777,7 +9777,7 @@
             },
             "sepia": {
                 "firefox": {
-                    "hash": "a5d7e04c6dd9b6e65d97f6880337ef00ef64663f59634fa78cff226ce297227b",
+                    "hash": "00e507018117964bd5d707ee9a4311f569c29d6b14c5466a6961e521cdf506a0",
                     "ratio": 2.222
                 }
             },
@@ -9807,7 +9807,7 @@
             },
             "terminal": {
                 "firefox": {
-                    "hash": "27ac06c5d15e1e25beec4c776d8c285cbb293afc1f9bec94401f4ceba701dc69",
+                    "hash": "1c933bcf38d39acd6323721c10c6e743ccb59b5fef4a6b37e2d66b84eb5bac7b",
                     "ratio": 2.222
                 }
             },
@@ -9821,7 +9821,7 @@
         "navigation--sidenav-side": {
             "blueprint": {
                 "firefox": {
-                    "hash": "ba00460374066d4297fc83f1afa84d3950830fb5672585dabfdd4493e2193705",
+                    "hash": "69c165b73d31882b12f4d8f416cf36d2ceff77e7b8ab53d0f1697ed0ec6c35cc",
                     "ratio": 2.222
                 }
             },
@@ -9911,7 +9911,7 @@
             },
             "sepia": {
                 "firefox": {
-                    "hash": "2877b1f95bc0f9d97ceb1aa79fdc170e6c0bc6eb5f1d1ebf709e3cff5399233a",
+                    "hash": "a03634f17a1f6788227e53c506a32dd80d5c179b57a4e5546969baeadbf63a2f",
                     "ratio": 2.222
                 }
             },
@@ -9941,7 +9941,7 @@
             },
             "terminal": {
                 "firefox": {
-                    "hash": "64d6297b1b2793686de945e763c5aed02bcf55ecbbfbe251c7ce8edc040d6a36",
+                    "hash": "79b62c90db460d7ddee78c612c019b5b08f30eb2a0963288ec608ccd2e287666",
                     "ratio": 2.222
                 }
             },
@@ -9955,7 +9955,7 @@
         "navigation--sidenav-slim": {
             "blueprint": {
                 "firefox": {
-                    "hash": "53d5397c246bd8ea618d10cbea17c47a574a9b741eb03b00aa7ecb0ed60e30d8",
+                    "hash": "368538a5a4bafd37fea1ef8607b9ee68c6b225cc0efca8c6759ae8b9de36d4e9",
                     "ratio": 2.222
                 }
             },
@@ -10045,7 +10045,7 @@
             },
             "sepia": {
                 "firefox": {
-                    "hash": "aa0c3f42c3f7f05cbeba3e356c98b026fe8411ac57fe0669629c2d9f7b08552a",
+                    "hash": "81e7ccb00dac87c44a5a891b466f5c205c8261b4b9dcac1e04cc1d65656024fa",
                     "ratio": 2.222
                 }
             },
@@ -10075,7 +10075,7 @@
             },
             "terminal": {
                 "firefox": {
-                    "hash": "e7862a659e0ec3bb4a9c4d28ba46ba2fabfa5cb01e6edb4c843d12498be0329b",
+                    "hash": "6624fb8bf9475791d451577780e452a4b48665a6d6d7037703ed59e724526a69",
                     "ratio": 2.222
                 }
             },
@@ -10089,7 +10089,7 @@
         "navigation--sidenav-slim-toggle": {
             "blueprint": {
                 "firefox": {
-                    "hash": "1722ce437989b4ff285941a294abbbba781f765e27ec11099b7afbd5a7f4e495",
+                    "hash": "b247110e3338116bba11054cbdfc51bb57aa9c243abe54c036b0b879250198c5",
                     "ratio": 2.222
                 }
             },
@@ -10179,7 +10179,7 @@
             },
             "sepia": {
                 "firefox": {
-                    "hash": "12e01f6e8e69cc76c0440181a37f61070938d19b00ee4edb4d29e597a06d19f0",
+                    "hash": "0e0a674a2f421c1c3cb8ea948e660a7c2380d1ab39cd33fb78907d4e0ef3d0cd",
                     "ratio": 2.222
                 }
             },
@@ -10209,7 +10209,7 @@
             },
             "terminal": {
                 "firefox": {
-                    "hash": "f560aa5629fc85202ff6c16166993afd3d53d5d4aee21d927173331003b5f808",
+                    "hash": "b662e0af594694f912e7611918e70f39d9d612eeb445829213426e68c384367a",
                     "ratio": 2.222
                 }
             },

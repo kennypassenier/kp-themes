@@ -251,6 +251,7 @@
     ],
     "scripts": {
         "check:contrast": "node gates/check-contrast.mjs",
+        "check:anchors": "node gates/check-anchors.mjs",
         "format": "prettier --write .",
         "check:format": "prettier --check .",
         "check:signature": "node gates/advice-signature.mjs",
@@ -311,7 +312,7 @@
         "test:tags": "node gates/run-tags.mjs",
         "check:tags": "node gates/check-tags.mjs",
         "test:firefox": "playwright test --project=firefox",
-        "advice": "npm run check:contrast ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:signature ; npm run check:approvals ; npm run check:format",
+        "advice": "npm run check:contrast ; npm run check:anchors ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:signature ; npm run check:approvals ; npm run check:format",
         "verify": "node gates/verify.mjs",
         "check:approvals": "node gates/advice-approvals.mjs",
         "check:docs-private": "node gates/check-docs-private.mjs",

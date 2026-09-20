@@ -4463,26 +4463,45 @@ to notice.
 
 **3 · Where else the same fault sits.** The fault as a property: *an
 absolutely placed pseudo-element whose intended parent is not positioned*.
-**Gezocht met:** `node -e` over the 22 registers as they stood before the
-fix, reading every rule that places a pseudo-element absolutely — 114 of
-them, on 104 distinct owners — and asking for each owner whether any rule
-in the package or in that register positions it. The script answered 0,
-and it is wrong: it does not reproduce the one instance Kenny found, so
-the search is a partial answer and is written down as one. What it misses
-is a selector the owner is styled under in a grouped rule, which is
-exactly nostromo's shape. The 104 owners were then read by eye against
-the same question; nostromo's row is the only one where the package does
-not position the owner either. Until that script can find its own known
-case, this field is not a clean bill of health for the other 103.
+**Gezocht met:** `node gates/check-anchors.mjs`, which reads every rule
+that places a pseudo-element absolutely — 142 of them, on 43 owners — and
+asks, per scope, whether the shared sheets or that same register position
+the owner. Per scope and never pooled, which is what the first attempt got
+wrong: grotesk and phantom both position `.kp-sidenav__link`, and neither
+of them anchors nostromo's row, so a pooled search answered 0 and found
+nothing at all.
+
+Run against the tree as it stood before this fix, it finds its own case
+and three more of the same shape: `.kp-sidenav__link::before` in
+blueprint, nostromo, sepia and terminal, each a mark meant for the row,
+each hanging off whatever ancestor happened to be positioned — and
+measured in the browser, the row and the panel are `static` in all four.
+The three besides nostromo are fixed here with him, one line each.
+
+Three findings are left standing, because each is a different component
+and wants its own look rather than a blind line: retro's pressed plate
+behind an icon button (`.kp-icon-button:active:not(:disabled)::before`),
+pastel's headline overprint (`[data-kp-reveal='headline']::before`, which
+asks for `inset: 0` of something), and sepia's alternate divider
+(`[data-kp-divider='alt']::after`). None of the three owners is
+positioned by the package either.
+
+The search still reads two selectors badly — `:is(a, b)` and
+`:not(:disabled)` lose their shape when the compound is taken — so it
+over-reports there; that is the same weakness the hash's own
+`rightmostCompound` has [scope-137], and it is written down rather than
+patched twice.
 
 **4 · How we prevent recurrence.** The row is positioned in nostromo's
-register, beside the rule that needed it, with the reason in a comment.
-No wider gate: the search that would have to power one cannot yet find
-its own known case, and a register may place something against the panel
-on purpose, which a gate could not tell apart. What is guarded instead is
-the symptom in this component — `tests/sidenav.spec.mjs` now reads what a
-submenu row paints in all 22 themes, so a mark that vanishes or never
-appears fails there.
+register, beside the rule that needed it, with the reason in a comment,
+and in blueprint, sepia and terminal with it. The search is
+`gates/check-anchors.mjs`, run by hand rather than wired into
+`npm run gates`: a register may place something against the panel on
+purpose, and the two selectors above are read badly, so a gate would
+refuse work for the wrong reason. What is guarded in code is the symptom
+in this component — `tests/sidenav.spec.mjs` reads what a submenu row
+paints in all 22 themes, so a mark that vanishes or never appears fails
+there.
 
 **5 · What the remedy costs.** One line.
 

@@ -1268,6 +1268,14 @@
         font-family: var(--theme-font-mono);
     }
 
+    /* The row is what the mark below is measured from [fix-73]. Without this
+       it fell back to whatever ancestor happened to be positioned, which is
+       not the row — the same fault Kenny found in nostromo, and the search
+       in gates/check-anchors.mjs found here. */
+    [data-theme='blueprint'] .kp-sidenav__link {
+        position: relative;
+    }
+
     [data-theme='blueprint'] .kp-sidenav__link::before {
         content: '';
         position: absolute;

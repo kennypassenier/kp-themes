@@ -20095,6 +20095,14 @@
         border-radius: 0;
     }
 
+    /* The row is what the mark below is measured from [fix-73]. Without this
+       it fell back to whatever ancestor happened to be positioned, which is
+       not the row — the same fault Kenny found in nostromo, and the search
+       in gates/check-anchors.mjs found here. */
+    [data-theme='terminal'] .kp-sidenav__link {
+        position: relative;
+    }
+
     [data-theme='terminal'] .kp-sidenav__link::before {
         content: '>';
         position: absolute;
@@ -33346,6 +33354,14 @@
         font-family: var(--theme-font-mono);
     }
 
+    /* The row is what the mark below is measured from [fix-73]. Without this
+       it fell back to whatever ancestor happened to be positioned, which is
+       not the row — the same fault Kenny found in nostromo, and the search
+       in gates/check-anchors.mjs found here. */
+    [data-theme='blueprint'] .kp-sidenav__link {
+        position: relative;
+    }
+
     [data-theme='blueprint'] .kp-sidenav__link::before {
         content: '';
         position: absolute;
@@ -39437,6 +39453,14 @@
     [data-theme='sepia'] .kp-sidenav__category-toggle {
         padding-inline-start: 1.3rem;
         border-radius: 0;
+    }
+
+    /* The row is what the mark below is measured from [fix-73]. Without this
+       it fell back to whatever ancestor happened to be positioned, which is
+       not the row — the same fault Kenny found in nostromo, and the search
+       in gates/check-anchors.mjs found here. */
+    [data-theme='sepia'] .kp-sidenav__link {
+        position: relative;
     }
 
     [data-theme='sepia'] .kp-sidenav__link::before {
