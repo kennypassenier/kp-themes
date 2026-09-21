@@ -689,7 +689,9 @@ RuledPrograms: []
 function mica(d) {
     const bar = d.dark ? 'Dark' : 'Light';
     // A theme with no radius asks Windows for square window corners too.
-    const corner = d.shape.radius === 0 ? 'DoNotRound' : d.shape.radius <= 4 ? 'RoundSmall' : 'Round';
+    // Names from Mica For Everyone 2's CornerPreference enum (Default, Square,
+    // Rounded, RoundedSmall); it reads them as strings and refuses the file otherwise.
+    const corner = d.shape.radius === 0 ? 'Square' : d.shape.radius <= 4 ? 'RoundedSmall' : 'Rounded';
     return {
         rules: [
             { type: 'global', titleBarColor: bar, backdropPreference: 'Acrylic', cornerPreference: corner, extendFrameIntoClientArea: false },
