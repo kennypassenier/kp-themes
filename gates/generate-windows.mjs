@@ -455,6 +455,20 @@ function windhawkStart(d) {
     ]);
 }
 
+/** @param {Desk | null} d */
+function windhawkNotificationCentre(d) {
+    const p = palette(d);
+    const blur = (/** @type {string} */ colour, /** @type {number} */ opacity) =>
+        `<WindhawkBlur BlurAmount="30" TintColor="${colour}" TintOpacity="${opacity}" />`;
+    // The guide documents these three grids by name; it documents no colours
+    // for them, so the styles here are colour only and a rename costs a tint.
+    return yaml('Windows 11 Notification Center Styler — https://windhawk.net/mods/windows-11-notification-center-styler', [
+        { target: 'Grid#NotificationCenterGrid', styles: [`Background:=${blur(p.ground, 0.8)}`] },
+        { target: 'Grid#CalendarCenterGrid', styles: [`Background:=${blur(p.ground, 0.8)}`] },
+        { target: 'Grid#ControlCenterRegion', styles: [`Background:=${blur(p.ground, 0.8)}`] },
+    ]);
+}
+
 /**
  * Translucent Windows is not a styler: it takes one settings document rather
  * than a list of targets, and it is what gives ordinary windows, menus and
@@ -796,6 +810,7 @@ export function files(d) {
         'windhawk/file-explorer-styler.yaml': windhawkExplorer(d),
         'windhawk/taskbar-styler.yaml': windhawkTaskbar(d),
         'windhawk/start-menu-styler.yaml': windhawkStart(d),
+        'windhawk/notification-center-styler.yaml': windhawkNotificationCentre(d),
         'windhawk/translucent-windows.yaml': windhawkTranslucent(d),
         'wallpaper-lock.svg': wallpaper(d, true),
         'starship.toml': starship(d),
@@ -815,6 +830,7 @@ export function render() {
     out.set('windhawk-accent/file-explorer-styler.yaml', windhawkExplorer(null));
     out.set('windhawk-accent/taskbar-styler.yaml', windhawkTaskbar(null));
     out.set('windhawk-accent/start-menu-styler.yaml', windhawkStart(null));
+    out.set('windhawk-accent/notification-center-styler.yaml', windhawkNotificationCentre(null));
     out.set('windhawk-accent/translucent-windows.yaml', windhawkTranslucent(null));
     out.set(
         'themes.json',
