@@ -27,10 +27,9 @@ research/loading/out/
 # Portrait screenshots are working aids, not kept [scope-99]
 research/theme-portraits/*.png
 
-# Wallpapers are rendered from windows/<theme>/wallpaper.svg (npm run render:wallpapers).
-windows/*/wallpaper.png
-windows/*/wallpaper-lock.png
-
-# TrueType copies of fonts/, rebuilt by python3 gates/windows-fonts.py.
-windows/fonts/
-windows/*/start.png
+# Pictures rendered from desktop/'s SVGs (npm run render:wallpapers).
+desktop/shared/*/wallpaper.png
+desktop/shared/*/wallpaper-lock.png
+desktop/windows/themes/*/start.png
+# TrueType copies of fonts/, rebuilt by python3 gates/desktop-fonts.py.
+desktop/shared/fonts/
