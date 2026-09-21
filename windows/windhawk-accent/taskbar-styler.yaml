@@ -8,6 +8,12 @@ controlStyles:
   - target: Taskbar.TaskListButton
     styles:
       - "CornerRadius=6"
+  - target: Taskbar.ExperienceToggleButton
+    styles:
+      - "CornerRadius=6"
+  - target: Taskbar.SearchBoxButton
+    styles:
+      - "CornerRadius=6"
   - target: Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement
     styles:
       - "Background:=<SolidColorBrush Color=\"{ThemeResource SystemAccentColorDark1}\" Opacity=\"0.85\" />"
@@ -18,6 +24,7 @@ controlStyles:
   - target: Border#OverflowFlyoutBackgroundBorder
     styles:
       - "Background:=<SolidColorBrush Color=\"{ThemeResource SystemAccentColorDark2}\" Opacity=\"0.95\" />"
+      - "CornerRadius=6"
   - target: Windows.UI.Xaml.Controls.Border#BackgroundDimmingLayer
     styles:
       - "Background:=<SolidColorBrush Color=\"{ThemeResource SystemAccentColorDark3}\" Opacity=\"0.8\" />"

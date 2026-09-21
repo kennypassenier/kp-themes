@@ -596,23 +596,123 @@ function windhawkExplorer(d) {
 /** @param {Desk | null} d */
 function windhawkTaskbar(d) {
     const p = palette(d);
-    return yaml('Windows 11 Taskbar Styler — https://windhawk.net/mods/windows-11-taskbar-styler', [
+    const radius = d === null ? 6 : d.shape.radius;
+    /** @type {{target: string, styles: string[]}[]} */
+    const rules = [
         {
             target: 'Taskbar.TaskbarFrame > Grid#RootGrid > Taskbar.TaskbarBackground > Grid > Rectangle#BackgroundFill',
             styles: [`Fill:=<WindhawkBlur BlurAmount="30" TintColor="${p.deep}" TintOpacity="0.72" />`],
         },
-        { target: 'Taskbar.TaskListButton', styles: [`CornerRadius=${d === null ? 6 : d.shape.radius}`] },
+        { target: 'Taskbar.TaskListButton', styles: [`CornerRadius=${radius}`] },
+        { target: 'Taskbar.ExperienceToggleButton', styles: [`CornerRadius=${radius}`] },
+        { target: 'Taskbar.SearchBoxButton', styles: [`CornerRadius=${radius}`] },
         {
             target: 'Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement',
-            styles: [`Background:=${p.solid(p.hover, 0.85)}`, `CornerRadius=${d === null ? 6 : d.shape.radius}`],
+            styles: [`Background:=${p.solid(p.hover, 0.85)}`, `CornerRadius=${radius}`],
         },
         {
             target: 'Taskbar.TaskbarBackground#HoverFlyoutBackgroundControl > Grid > Rectangle#BackgroundFill',
             styles: [`Fill:=${p.solid(p.raised, 0.95)}`],
         },
-        { target: 'Border#OverflowFlyoutBackgroundBorder', styles: [`Background:=${p.solid(p.raised, 0.95)}`] },
+        { target: 'Border#OverflowFlyoutBackgroundBorder', styles: [`Background:=${p.solid(p.raised, 0.95)}`, `CornerRadius=${radius}`] },
         { target: 'Windows.UI.Xaml.Controls.Border#BackgroundDimmingLayer', styles: [`Background:=${p.solid(p.ground, 0.8)}`] },
+    ];
+    if (d === null) return yaml('Windows 11 Taskbar Styler — https://windhawk.net/mods/windows-11-taskbar-styler', rules);
+
+    // The theme's own taskbar: the pieces the web register draws, in the
+    // parts of the taskbar the styling guide names. A button is a plate on the
+    // void with a hairline frame in the signal; the running app is marked in
+    // the signal; the clock is set in the display face with the mono date
+    // under it and an accent edge beside it; the start button is the theme's
+    // primary plate, drawn by windows/<theme>/start.svg.
+    const { c, shape } = d;
+    const base = rules.filter((r) => !r.target.startsWith('Grid#IconPanel'));
+    return yaml(`Windows 11 Taskbar Styler — KP ${d.label} — https://windhawk.net/mods/windows-11-taskbar-styler`, [
+        ...base,
+        { target: 'Rectangle#BackgroundStroke', styles: [`Fill:=${p.solid(p.signal, 1)}`, 'Height=2'] },
+        {
+            target: 'Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement',
+            styles: [
+                `Background:=${p.solid(hex(c.surface), 0.9)}`,
+                `BorderBrush:=${p.solid(p.signal, 0.22)}`,
+                'BorderThickness=1',
+                `CornerRadius=${radius}`,
+            ],
+        },
+        {
+            target: 'Grid#IconPanel@RunningIndicatorStates > Rectangle#RunningIndicator, Taskbar.TaskListLabeledButtonPanel@RunningIndicatorStates > Rectangle#RunningIndicator',
+            styles: [
+                `Fill:=${p.solid(hex(c.muted), 1)}`,
+                'Height=2',
+                `RadiusX=${Math.min(radius, 1)}`,
+                `RadiusY=${Math.min(radius, 1)}`,
+                `Fill@ActiveRunningIndicator:=${p.solid(p.signal, 1)}`,
+                'Width@ActiveRunningIndicator=24',
+                `Fill@RequestingAttentionRunningIndicator:=${p.solid(hex(c.danger), 1)}`,
+            ],
+        },
+        { target: 'TextBlock#LabelControl', styles: [`FontFamily=${shape.body}`, 'FontWeight=SemiBold'] },
+        {
+            target: 'SystemTray.DateTimeIconContent > Grid#ContainerGrid',
+            styles: [`BorderBrush:=${p.solid(hex(c.accent), 1)}`, 'BorderThickness=3,0,0,0', 'Padding=8,0,6,0'],
+        },
+        {
+            target: 'SystemTray.DateTimeIconContent > Grid#ContainerGrid > StackPanel > TextBlock#TimeInnerTextBlock',
+            styles: [`FontFamily=${shape.display}`, 'FontSize=15', 'FontWeight=ExtraBold', `Foreground:=${p.solid(p.ink, 1)}`],
+        },
+        {
+            target: 'SystemTray.DateTimeIconContent > Grid#ContainerGrid > StackPanel > TextBlock#DateInnerTextBlock',
+            styles: [`FontFamily=${shape.mono}`, 'FontSize=11', `Foreground:=${p.solid(hex(c.muted), 1)}`],
+        },
+        { target: 'SystemTray.OmniButton > Grid > Border', styles: [`CornerRadius=${radius}`] },
+        {
+            target: 'WindowsInternal.ComposableShell.Experiences.Switcher.AltTab > Grid#ModalRootGrid > Border#BackgroundElement',
+            styles: ['Background=Transparent'],
+        },
+        {
+            target: 'WindowsInternal.ComposableShell.Experiences.Switcher.AltTab > Grid#ModalRootGrid > Border#BackgroundElement > WindowsInternal.ComposableShell.Experiences.Switcher.SwitchItemList',
+            styles: [`Background:=${p.solid(p.raised, 0.95)}`, `CornerRadius=${radius}`],
+        },
+        {
+            target: 'Taskbar.ExperienceToggleButton#LaunchListButton[AutomationProperties.AutomationId=StartButton] > Taskbar.TaskListButtonPanel > Grid > Border#BackgroundElement, Taskbar.ExperienceToggleButton#LaunchListButton[AutomationProperties.AutomationId=StartButton] > Taskbar.TaskListButtonPanel > Border#BackgroundElement',
+            styles: [`Background:=<ImageBrush Stretch="Uniform" ImageSource="${START_DIR}/${d.name}.png" />`],
+        },
+        {
+            target: 'Taskbar.ExperienceToggleButton#LaunchListButton[AutomationProperties.AutomationId=StartButton] > Taskbar.TaskListButtonPanel > Grid > Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer#Icon, Taskbar.ExperienceToggleButton#LaunchListButton[AutomationProperties.AutomationId=StartButton] > Taskbar.TaskListButtonPanel > Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer#Icon',
+            styles: ['Visibility=Collapsed'],
+        },
     ]);
+}
+
+/** Where apply.ps1 puts the rendered start buttons; the taskbar reads them from there. */
+const START_DIR = 'C:/Users/Public/Pictures/kp-themes/start';
+
+/**
+ * The start button as the theme's primary plate: the signal, the ink on it,
+ * and the theme's corner, a notch when it has one and a radius when not. The
+ * mark is three ink bars stepping up, a drawn glyph rather than a logo.
+ * @param {Desk} d
+ */
+function startButton(d) {
+    const { c, shape } = d;
+    const S = 64;
+    const n = shape.notch > 0 && shape.radius === 0 ? 14 : 0;
+    const r = Math.min(shape.radius * 2, 16);
+    const plate =
+        n > 0
+            ? `<polygon points="4,4 60,4 60,${60 - n} ${60 - n},60 4,60" fill="${hex(c.signal)}"/>`
+            : `<rect x="4" y="4" width="56" height="56" rx="${r}" fill="${hex(c.signal)}"/>`;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATED by kp-themes ${VERSION} (gates/generate-windows.mjs) — KP ${d.label}. Do not edit. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
+  ${plate}
+  <g fill="${hex(c.signalInk)}">
+    <rect x="16" y="36" width="8" height="12"/>
+    <rect x="28" y="28" width="8" height="20"/>
+    <rect x="40" y="18" width="8" height="30"/>
+  </g>
+</svg>
+`;
 }
 
 /** @param {Desk | null} d */
@@ -993,6 +1093,7 @@ export function files(d) {
         'windhawk/notification-center-styler.yaml': windhawkNotificationCentre(d),
         'windhawk/translucent-windows.yaml': windhawkTranslucent(d),
         'wallpaper-lock.svg': wallpaper(d, true),
+        'start.svg': startButton(d),
         'starship.toml': starship(d),
         'kp-colors.fish': fish(d),
         'wallpaper.svg': wallpaper(d),
