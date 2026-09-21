@@ -1102,6 +1102,90 @@ vimcmd_symbol = "[❮](bold accent)"
 `;
 }
 
+/**
+ * The Windows prompt: an Oh My Posh config in the shape the desktop already
+ * had (╭─ os user@host path git time, then ╰─λ), with the theme's palette.
+ * apply.ps1 copies it to ~/.config/kp-themes/prompt.omp.json, the one path
+ * the PowerShell profile reads, so the prompt changes with every switch.
+ * Version 2 of the schema, which every Oh My Posh since 14 reads.
+ * @param {Desk} d
+ */
+function ohMyPosh(d) {
+    const { c } = d;
+    // Text on the terminal's ground: a role colour that does not reach 3:1
+    // there (dark's accent is a plate, not an ink) falls back to the ink.
+    const lum = (/** @type {Rgb} */ rgb) => {
+        const [r, g, b] = rgb.map((v) => {
+            const x = v / 255;
+            return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const ratio = (/** @type {Rgb} */ a, /** @type {Rgb} */ b) => {
+        const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+        return (x + 0.05) / (y + 0.05);
+    };
+    const ink = (/** @type {Rgb} */ rgb, /** @type {Rgb} */ fallback = c.ink) => hex(ratio(rgb, c.ground) >= 3 ? rgb : fallback);
+    const config = {
+        $schema: 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json',
+        version: 2,
+        final_space: true,
+        palette: {
+            signal: ink(c.signal),
+            accent: ink(c.accent, c.signal),
+            violet: ink(c.violet),
+            ok: ink(c.ok),
+            warn: ink(c.warn),
+            danger: ink(c.danger),
+            ink: hex(c.ink),
+            muted: ink(c.muted),
+        },
+        blocks: [
+            {
+                type: 'prompt',
+                alignment: 'left',
+                segments: [
+                    { type: 'text', style: 'plain', foreground: 'p:signal', template: '\u256d\u2500' },
+                    { type: 'os', style: 'plain', foreground: 'p:signal', template: ' {{ .Icon }} ' },
+                    { type: 'session', style: 'plain', foreground: 'p:accent', template: '{{ .UserName }}<p:muted>@</>{{ .HostName }} ' },
+                    {
+                        type: 'path',
+                        style: 'plain',
+                        foreground: 'p:warn',
+                        template: ' {{ .Path }} ',
+                        properties: { style: 'agnoster_short', max_depth: 4, folder_separator_icon: ' \ue0b1 ' },
+                    },
+                    { type: 'git', style: 'plain', foreground: 'p:violet', template: '{{ .HEAD }}{{ if .Working.Changed }} *{{ end }} ' },
+                    {
+                        type: 'executiontime',
+                        style: 'plain',
+                        foreground: 'p:muted',
+                        template: ' {{ .FormattedMs }} ',
+                        properties: { threshold: 500, style: 'austin' },
+                    },
+                ],
+            },
+            {
+                type: 'prompt',
+                alignment: 'left',
+                newline: true,
+                segments: [
+                    { type: 'text', style: 'plain', foreground: 'p:signal', template: '\u2570\u2500' },
+                    {
+                        type: 'status',
+                        style: 'plain',
+                        foreground: 'p:ok',
+                        foreground_templates: ['{{ if gt .Code 0 }}p:danger{{ end }}'],
+                        template: '\u03bb',
+                        properties: { always_enabled: true },
+                    },
+                ],
+            },
+        ],
+    };
+    return `${JSON.stringify(config, null, 4)}\n`;
+}
+
 /** @param {Desk} d */
 function fish(d) {
     const { c } = d;
@@ -1220,6 +1304,7 @@ export function files(d) {
         'wallpaper-lock.svg': wallpaper(d, true),
         'start.svg': startButton(d),
         'starship.toml': starship(d),
+        'prompt.omp.json': ohMyPosh(d),
         'kp-colors.fish': fish(d),
         'wallpaper.svg': wallpaper(d),
     };

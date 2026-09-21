@@ -28,11 +28,11 @@ param(
     [Parameter(Position = 0)]
     [string]$Theme = '',
     [switch]$List,
-    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Skip = @(),
     # Run only these steps; everything else is skipped. Used by the elevated
     # re-run of the lockscreen step.
-    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Only = @(),
     # theme: this theme's own Windhawk styles, colours and shape, written into
     # the registry. accent: one set that only follows the accent colour.
@@ -328,6 +328,44 @@ if (Step 'terminal') {
         $note = if ($face) { "font $face" } else { 'no Nerd Font found: winget install DEVCOM.JetBrainsMonoNerdFont' }
         $archNote = if ($arch) { "; default profile: $($arch.name)" } else { '' }
         Say 'terminal' "scheme and window theme '$name', $note$archNote"
+    }
+}
+
+# --- The PowerShell prompt (Oh My Posh) ------------------------------------------
+# The theme's config goes to one fixed path, and both PowerShell profiles (7 and
+# Windows PowerShell 5) start Oh My Posh with that path. $PROFILE loads after
+# every other profile, so this prompt wins over one started elsewhere.
+if (Step 'prompt') {
+    $omp = Join-Path $ThemeDir 'prompt.omp.json'
+    if (-not (Get-Command oh-my-posh -ErrorAction SilentlyContinue)) {
+        Say 'prompt' 'Oh My Posh is not installed, skipped' 'DarkGray'
+    } elseif (-not (Test-Path $omp)) {
+        Say 'prompt' 'no prompt.omp.json for this theme, skipped' 'DarkGray'
+    } elseif ($DryRun) {
+        Say 'prompt' 'would write the prompt config and the profile line'
+    } else {
+        $state = Join-Path $HOME '.config\kp-themes'
+        New-Item -ItemType Directory -Path $state -Force | Out-Null
+        Copy-Item $omp (Join-Path $state 'prompt.omp.json') -Force
+        # Documents may be redirected (OneDrive); ask Windows where it is.
+        $docs = [Environment]::GetFolderPath('MyDocuments')
+        if (-not $docs) { $docs = Join-Path $HOME 'Documents' }
+        $block = @(
+            '# kp-themes: prompt (begin) - the prompt of the active kp-theme; delete this block to undo',
+            'if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {',
+            '    oh-my-posh init pwsh --config "$HOME\.config\kp-themes\prompt.omp.json" | Invoke-Expression',
+            '}',
+            '# kp-themes: prompt (end)'
+        ) -join "`r`n"
+        foreach ($folder in 'PowerShell', 'WindowsPowerShell') {
+            $profilePath = Join-Path $docs "$folder\Microsoft.PowerShell_profile.ps1"
+            [string]$text = if (Test-Path $profilePath) { Get-Content $profilePath -Raw } else { '' }
+            if ($text -notmatch 'kp-themes: prompt \(begin\)') {
+                Backup $profilePath | Out-Null
+                Write-Text $profilePath (($text.TrimEnd() + "`r`n`r`n" + $block + "`r`n").TrimStart())
+            }
+        }
+        Say 'prompt' "Oh My Posh prompt in KP $($Meta.label)'s colours; open a new tab to see it"
     }
 }
 
