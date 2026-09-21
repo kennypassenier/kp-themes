@@ -131,6 +131,8 @@ gate gen-ha-themes node gates/generate-ha-themes.mjs --check || exit 1
 gate gen-vscode-themes node gates/generate-vscode-themes.mjs --check || exit 1
 # The Rust palette kp-tui vendors, from the same tokens [scope-128].
 gate gen-tui-palette node gates/generate-tui-palette.mjs --check || exit 1
+# The Windows and Linux desktop files, from the same tokens (desktop/README.md).
+gate gen-desktop node gates/generate-desktop.mjs --check || exit 1
 
 # everything the package exports is published, and the checksum manifest holds every file a consumer can copy (TH103) [scope-76]
 gate manifest node gates/check-manifest.mjs || exit 1

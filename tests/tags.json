@@ -60,6 +60,7 @@
         { "path": "ha/**", "none": "Home Assistant themes; no browser test loads them" },
         { "path": "vscode/**", "none": "VS Code colour themes; no browser test loads them" },
         { "path": "tui/**", "none": "the Rust palette kp-tui vendors; no browser test loads it" },
+        { "path": "desktop/**", "none": "the Windows and Linux desktop files; no browser test loads them, check:desktop holds the generated ones" },
         { "path": "**/*.d.ts", "none": "type declarations; npm run gates checks them" },
         { "path": "LICENSE", "none": "licence text" },
         { "path": ".gitignore", "none": "repository housekeeping" },
