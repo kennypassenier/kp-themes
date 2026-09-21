@@ -63,7 +63,10 @@ $RepoRoot = Split-Path $Root -Parent
 $Stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
-$All = @(Get-Content (Join-Path $Root 'themes.json') -Raw | ConvertFrom-Json)
+# Windows PowerShell 5 hands a JSON array down the pipeline as one object, so
+# enumerate it by hand; PowerShell 7 would unroll it either way.
+$All = @()
+foreach ($t in (Get-Content (Join-Path $Root 'themes.json') -Raw | ConvertFrom-Json)) { $All += $t }
 
 function Show-Themes {
     Write-Host ''
@@ -218,7 +221,11 @@ Write-Host ''
 if (Step 'fonts') {
     $fonts = Join-Path $Root 'fonts'
     if ((Get-ChildItem $fonts -Filter '*.ttf' -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0) {
-        if (-not $DryRun) { & (Join-Path $Root 'install-fonts.ps1') -Source $fonts }
+        # A font problem must not stop the switch: say so and go on.
+        if (-not $DryRun) {
+            try { & (Join-Path $Root 'install-fonts.ps1') -Source $fonts }
+            catch { Say 'fonts' "skipped: $($_.Exception.Message)" 'Yellow' }
+        }
         else { Say 'fonts' "would install the fonts in $fonts" }
     } else { Say 'fonts' 'no fonts beside the script (python3 gates/windows-fonts.py), skipped' 'DarkGray' }
 }

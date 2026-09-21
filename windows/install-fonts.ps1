@@ -31,7 +31,13 @@ public static extern System.IntPtr SendMessageTimeoutW(System.IntPtr hWnd, uint 
 $count = 0
 foreach ($file in Get-ChildItem $Source -Filter '*.ttf') {
     $dest = Join-Path $target $file.Name
-    Copy-Item $file.FullName $dest -Force
+    # A font Windows has loaded is locked; if the same file is already there,
+    # there is nothing to copy. A different one in use is left for next time.
+    $same = (Test-Path $dest) -and ((Get-Item $dest).Length -eq $file.Length)
+    if (-not $same) {
+        try { Copy-Item $file.FullName $dest -Force }
+        catch { Write-Host "  fonts      $($file.Name) is in use; it updates after a restart" -ForegroundColor Yellow; continue }
+    }
     # The value name is only a label; Windows reads the family from the file.
     Set-ItemProperty -Path $key -Name "kp-themes $($file.BaseName) (TrueType)" -Value $dest
     [KpFonts.Native]::AddFontResourceW($dest) | Out-Null
