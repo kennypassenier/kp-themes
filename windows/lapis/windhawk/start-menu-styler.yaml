@@ -5,6 +5,9 @@ controlStyles:
   - target: Border#AcrylicBorder
     styles:
       - "Background:=<AcrylicBrush BackgroundSource=\"Backdrop\" TintColor=\"#1B2A6A\" TintOpacity=\"0.85\" />"
+      - "CornerRadius=8"
+      - "BorderBrush:=<SolidColorBrush Color=\"#D5A52A\" Opacity=\"0.55\" />"
+      - "BorderThickness=1"
   - target: Border#AppBorder
     styles:
       - "Background:=<AcrylicBrush BackgroundSource=\"Backdrop\" TintColor=\"#1B2A6A\" TintOpacity=\"0.85\" />"

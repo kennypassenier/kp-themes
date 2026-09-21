@@ -64,3 +64,29 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
+
+/* Shape: radius 12px, notch 0px, Titillium Web and ui-monospace. */
+:root {
+    --tab-border-radius: 12px !important;
+    --toolbarbutton-border-radius: 12px !important;
+    --arrowpanel-border-radius: 12px !important;
+    --panel-border-radius: 12px !important;
+    --urlbar-icon-border-radius: 12px !important;
+    --toolbar-field-border-radius: 12px !important;
+}
+.tab-label {
+    font-family: "Titillium Web", system-ui !important;
+    font-weight: 600 !important;
+}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "ui-monospace", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: 12px !important;
+}

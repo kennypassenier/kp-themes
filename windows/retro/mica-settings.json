@@ -4,7 +4,7 @@
             "type": "global",
             "titleBarColor": "Light",
             "backdropPreference": "Acrylic",
-            "cornerPreference": "Round",
+            "cornerPreference": "DoNotRound",
             "extendFrameIntoClientArea": false
         },
         {
@@ -12,7 +12,7 @@
             "processName": "explorer",
             "titleBarColor": "Light",
             "backdropPreference": "Acrylic",
-            "cornerPreference": "Round",
+            "cornerPreference": "DoNotRound",
             "extendFrameIntoClientArea": true
         },
         {
@@ -20,7 +20,7 @@
             "processName": "notepad",
             "titleBarColor": "Light",
             "backdropPreference": "Acrylic",
-            "cornerPreference": "Round",
+            "cornerPreference": "DoNotRound",
             "extendFrameIntoClientArea": true
         }
     ]

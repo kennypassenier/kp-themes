@@ -64,3 +64,36 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
+
+/* Shape: radius 0px, notch 10px, Be Vietnam Pro and Martian Mono. */
+:root {
+    --tab-border-radius: 0px !important;
+    --toolbarbutton-border-radius: 0px !important;
+    --arrowpanel-border-radius: 0px !important;
+    --panel-border-radius: 0px !important;
+    --urlbar-icon-border-radius: 0px !important;
+    --toolbar-field-border-radius: 0px !important;
+}
+.tab-label {
+    font-family: "Be Vietnam Pro", system-ui !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "Martian Mono", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: 0px !important;
+}
+/* The notch: the selected tab and the address bar lose their bottom-right corner. */
+.tab-background[selected],
+#urlbar-background {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) !important;
+}

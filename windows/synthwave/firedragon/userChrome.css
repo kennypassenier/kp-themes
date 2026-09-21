@@ -64,3 +64,29 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
+
+/* Shape: radius 2px, notch 0px, Rajdhani and VT323. */
+:root {
+    --tab-border-radius: 2px !important;
+    --toolbarbutton-border-radius: 2px !important;
+    --arrowpanel-border-radius: 2px !important;
+    --panel-border-radius: 2px !important;
+    --urlbar-icon-border-radius: 2px !important;
+    --toolbar-field-border-radius: 2px !important;
+}
+.tab-label {
+    font-family: "Rajdhani", system-ui !important;
+    font-weight: 600 !important;
+}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "VT323", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: 2px !important;
+}

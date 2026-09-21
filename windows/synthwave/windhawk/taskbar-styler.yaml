@@ -7,11 +7,11 @@ controlStyles:
       - "Fill:=<WindhawkBlur BlurAmount=\"30\" TintColor=\"#070113\" TintOpacity=\"0.72\" />"
   - target: Taskbar.TaskListButton
     styles:
-      - "CornerRadius=6"
+      - "CornerRadius=2"
   - target: Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement
     styles:
       - "Background:=<SolidColorBrush Color=\"#343144\" Opacity=\"0.85\" />"
-      - "CornerRadius=6"
+      - "CornerRadius=2"
   - target: Taskbar.TaskbarBackground#HoverFlyoutBackgroundControl > Grid > Rectangle#BackgroundFill
     styles:
       - "Fill:=<SolidColorBrush Color=\"#2B223A\" Opacity=\"0.95\" />"

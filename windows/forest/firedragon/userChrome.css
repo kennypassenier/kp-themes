@@ -64,3 +64,29 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
+
+/* Shape: radius 10px, notch 0px, Instrument Sans and ui-monospace. */
+:root {
+    --tab-border-radius: 10px !important;
+    --toolbarbutton-border-radius: 10px !important;
+    --arrowpanel-border-radius: 10px !important;
+    --panel-border-radius: 10px !important;
+    --urlbar-icon-border-radius: 10px !important;
+    --toolbar-field-border-radius: 10px !important;
+}
+.tab-label {
+    font-family: "Instrument Sans", system-ui !important;
+    font-weight: 600 !important;
+}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "ui-monospace", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: 10px !important;
+}

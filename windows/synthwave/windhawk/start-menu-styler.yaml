@@ -5,10 +5,13 @@ controlStyles:
   - target: Border#AcrylicBorder
     styles:
       - "Background:=<AcrylicBrush BackgroundSource=\"Backdrop\" TintColor=\"#0E0222\" TintOpacity=\"0.85\" />"
+      - "CornerRadius=2"
+      - "BorderBrush:=<SolidColorBrush Color=\"#FF4782\" Opacity=\"0.55\" />"
+      - "BorderThickness=1"
   - target: Border#AppBorder
     styles:
       - "Background:=<AcrylicBrush BackgroundSource=\"Backdrop\" TintColor=\"#0E0222\" TintOpacity=\"0.85\" />"
   - target: StartDocked.SearchBoxToggleButton
     styles:
       - "Background:=<SolidColorBrush Color=\"#2B223A\" Opacity=\"0.9\" />"
-      - "CornerRadius=8"
+      - "CornerRadius=2"

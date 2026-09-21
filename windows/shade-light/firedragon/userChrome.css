@@ -64,3 +64,29 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
+
+/* Shape: radius 4px, notch 0px, KP Shade Sans and ui-monospace. */
+:root {
+    --tab-border-radius: 4px !important;
+    --toolbarbutton-border-radius: 4px !important;
+    --arrowpanel-border-radius: 4px !important;
+    --panel-border-radius: 4px !important;
+    --urlbar-icon-border-radius: 4px !important;
+    --toolbar-field-border-radius: 4px !important;
+}
+.tab-label {
+    font-family: "KP Shade Sans", system-ui !important;
+    font-weight: 600 !important;
+}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "ui-monospace", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: 4px !important;
+}

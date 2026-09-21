@@ -116,8 +116,38 @@ function load(theme) {
         name: theme.name,
         label: raw.label ?? theme.name,
         dark: values['color-scheme'] === 'dark',
+        shape: shapeOf(values),
         c,
         vscode,
+    };
+}
+
+/**
+ * The theme's geometry, read from the same tokens the web register reads:
+ * the corner radius, the notch cut into buttons and plates (0 when the theme
+ * has none), and the first family of each font stack, which is the one the
+ * theme is drawn in (windows/fonts/ carries it as TrueType).
+ * @param {Record<string, string>} values
+ */
+function shapeOf(values) {
+    /** A length in px; rem is 16px, the browser default the themes assume. @param {string | undefined} v */
+    const px = (v) => {
+        const m = /^(-?[\d.]+)(px|rem)?$/.exec(String(v ?? '0').trim());
+        if (m === null) return 0;
+        return Math.round(Number(m[1]) * (m[2] === 'rem' ? 16 : 1));
+    };
+    /** The first family of a CSS font stack. @param {string | undefined} stack */
+    const first = (stack) =>
+        String(stack ?? '')
+            .split(',')[0]
+            .trim()
+            .replace(/^['"]|['"]$/g, '');
+    return {
+        radius: px(values.radius),
+        notch: px(values['fx-notch']),
+        body: first(values['theme-font-body']),
+        display: first(values['theme-font-display']),
+        mono: first(values['theme-font-mono']),
     };
 }
 
@@ -209,7 +239,9 @@ function yasb(d) {
         `    --yasb-accent-fg: ${hex(c.signalInk)};`,
         '    --icons-font: "Segoe Fluent Icons";',
         '    --icons-font-fallback: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo";',
-        '    --system-font: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo", "Segoe UI Variable", "Segoe UI";',
+        `    --system-font: "${d.shape.body}", "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo", "Segoe UI Variable", "Segoe UI";`,
+        `    --kp-font-mono: "${d.shape.mono}", "JetBrainsMono NFP", "Consolas";`,
+        `    --kp-font-display: "${d.shape.display}", "${d.shape.body}", "Segoe UI";`,
         '    --nerd-font: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo";',
         `    --kp-signal: ${hex(c.signal)};`,
         `    --kp-signal-wash: ${rgba(c.signal, 0.18)};`,
@@ -221,10 +253,115 @@ function yasb(d) {
         `    --kp-strong: ${hex(shade(c.ink, d.dark ? 0.6 : -0.6))};`,
         '}',
     ];
-    return YASB_TEMPLATE.replace('{{root}}', lines.join('\n'))
-        .replace('{{label}}', d.label)
-        .replace('{{name}}', d.name)
-        .replace('{{version}}', VERSION);
+    return (
+        YASB_TEMPLATE.replace('{{root}}', lines.join('\n'))
+            .replace('{{label}}', d.label)
+            .replace('{{name}}', d.name)
+            .replace('{{version}}', VERSION) + yasbShape(d)
+    );
+}
+
+/**
+ * The theme's shape in Qt's stylesheet dialect, appended after the colours.
+ * Qt has no clip-path, so a notch is drawn the way Qt can: a diagonal
+ * gradient that stops short of the corner. It has no text-transform or
+ * letter-spacing either, so the shouting capitals stay in the web register.
+ * @param {Desk} d
+ */
+function yasbShape(d) {
+    const { c, shape } = d;
+    const notched = shape.notch > 0 && shape.radius === 0;
+    // A notch as a gradient: solid to 84 % of the diagonal, then nothing.
+    const plate = (/** @type {Rgb} */ rgb) =>
+        notched ? `qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 ${hex(rgb)}, stop:0.84 ${hex(rgb)}, stop:0.841 transparent)` : hex(rgb);
+    const edge = (/** @type {Rgb} */ rgb) => (notched ? `border-left: 3px solid ${hex(rgb)};` : '');
+    const r = `${shape.radius}px`;
+    return `
+/* ------------------------------------------------------------------ */
+/* Shape: KP ${d.label}                                                  */
+/* radius ${shape.radius}px, notch ${shape.notch}px, ${shape.body} / ${shape.mono} / ${shape.display}      */
+/* ------------------------------------------------------------------ */
+
+.widget {
+    border-radius: ${r};
+    background-color: ${rgba(c.surface, 0.9)};
+    border: 1px solid ${rgba(c.signal, 0.22)};
+    margin: 5px 2px;
+}
+.widget .label {
+    font-family: var(--kp-font-mono);
+    font-size: 13px;
+}
+.active-window-widget .label {
+    font-family: var(--system-font);
+    font-size: 13px;
+    font-weight: 600;
+}
+.clock-widget .label {
+    font-family: var(--kp-font-display);
+    font-size: 15px;
+    font-weight: 800;
+    color: ${hex(c.ink)};
+}
+
+/* Every meter a plate with its own ink on the left edge. */
+.cpu-widget { ${edge(c.ok)} }
+.memory-widget { ${edge(c.warn)} }
+.clock-widget { ${edge(c.accent)} }
+.volume-widget { ${edge(c.accent)} }
+.notifications-widget { ${edge(c.violet)} }
+
+/* The one primary action: the signal as a plate, ink on it${notched ? ', the corner cut' : ''}. */
+.home-widget {
+    background: ${plate(c.signal)};
+    border: none;
+    border-radius: ${r};
+    padding: 0 16px 0 10px;
+}
+.home-widget .icon {
+    color: ${hex(c.signalInk)};
+}
+.home-widget:hover {
+    background: ${plate(c.signalHover)};
+}
+.home-widget:hover .icon {
+    color: ${hex(c.signalInk)};
+}
+
+/* The rest are void faces framed in the signal. */
+.power-menu-widget {
+    background-color: ${hex(c.ground)};
+    border: 1px solid ${hex(c.signal)};
+    border-radius: ${r};
+}
+
+.widget:hover,
+.quick-launch-widget:hover,
+.volume-widget:hover,
+.power-menu-widget:hover {
+    background-color: ${rgba(c.signal, 0.12)};
+}
+
+.home-menu,
+.systray-popup,
+.audio-menu,
+.context-menu,
+.clock-popup.calendar,
+.power-menu-compact,
+.quick-launch-popup .container {
+    border-radius: ${r};
+}
+.context-menu::item,
+.home-menu .menu-item,
+.clock-popup.calendar .calendar-table::item:selected {
+    border-radius: ${r};
+}
+.tooltip {
+    border-radius: ${r};
+    border: 1px solid ${hex(c.accent)};
+    font-family: var(--kp-font-mono);
+}
+`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -300,7 +437,42 @@ panel {
     --panel-color: var(--kp-ink) !important;
     --panel-border-color: var(--kp-line) !important;
 }
-`;
+
+/* Shape: radius ${d.shape.radius}px, notch ${d.shape.notch}px, ${d.shape.body} and ${d.shape.mono}. */
+:root {
+    --tab-border-radius: ${d.shape.radius}px !important;
+    --toolbarbutton-border-radius: ${d.shape.radius}px !important;
+    --arrowpanel-border-radius: ${d.shape.radius}px !important;
+    --panel-border-radius: ${d.shape.radius}px !important;
+    --urlbar-icon-border-radius: ${d.shape.radius}px !important;
+    --toolbar-field-border-radius: ${d.shape.radius}px !important;
+}
+.tab-label {
+    font-family: "${d.shape.body}", system-ui !important;
+    font-weight: 600 !important;
+${d.shape.notch > 0 ? '    text-transform: uppercase !important;\n    letter-spacing: 0.08em !important;\n' : ''}}
+#urlbar-input,
+.urlbarView-row {
+    font-family: "${d.shape.mono}", ui-monospace, monospace !important;
+}
+.tab-background,
+#urlbar-background,
+toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack,
+menupopup,
+panel {
+    border-radius: ${d.shape.radius}px !important;
+}
+${
+    d.shape.notch > 0
+        ? `/* The notch: the selected tab and the address bar lose their bottom-right corner. */
+.tab-background[selected],
+#urlbar-background {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - ${Math.min(d.shape.notch, 10)}px), calc(100% - ${Math.min(d.shape.notch, 10)}px) 100%, 0 100%) !important;
+}
+`
+        : ''
+}`;
 }
 
 /** @param {Desk} d */
@@ -429,10 +601,10 @@ function windhawkTaskbar(d) {
             target: 'Taskbar.TaskbarFrame > Grid#RootGrid > Taskbar.TaskbarBackground > Grid > Rectangle#BackgroundFill',
             styles: [`Fill:=<WindhawkBlur BlurAmount="30" TintColor="${p.deep}" TintOpacity="0.72" />`],
         },
-        { target: 'Taskbar.TaskListButton', styles: ['CornerRadius=6'] },
+        { target: 'Taskbar.TaskListButton', styles: [`CornerRadius=${d === null ? 6 : d.shape.radius}`] },
         {
             target: 'Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement',
-            styles: [`Background:=${p.solid(p.hover, 0.85)}`, 'CornerRadius=6'],
+            styles: [`Background:=${p.solid(p.hover, 0.85)}`, `CornerRadius=${d === null ? 6 : d.shape.radius}`],
         },
         {
             target: 'Taskbar.TaskbarBackground#HoverFlyoutBackgroundControl > Grid > Rectangle#BackgroundFill',
@@ -449,9 +621,19 @@ function windhawkStart(d) {
     const acrylic = (/** @type {string} */ colour, /** @type {number} */ opacity) =>
         `<AcrylicBrush BackgroundSource="Backdrop" TintColor="${colour}" TintOpacity="${opacity}" />`;
     return yaml('Windows 11 Start Menu Styler — https://windhawk.net/mods/windows-11-start-menu-styler', [
-        { target: 'Border#AcrylicBorder', styles: [`Background:=${acrylic(p.ground, 0.85)}`] },
+        {
+            target: 'Border#AcrylicBorder',
+            styles: [
+                `Background:=${acrylic(p.ground, 0.85)}`,
+                // The theme's corner, and its signal as a hairline frame.
+                ...(d === null ? [] : [`CornerRadius=${d.shape.radius}`, `BorderBrush:=${p.solid(p.signal, 0.55)}`, 'BorderThickness=1']),
+            ],
+        },
         { target: 'Border#AppBorder', styles: [`Background:=${acrylic(p.ground, 0.85)}`] },
-        { target: 'StartDocked.SearchBoxToggleButton', styles: [`Background:=${p.solid(p.raised, 0.9)}`, 'CornerRadius=8'] },
+        {
+            target: 'StartDocked.SearchBoxToggleButton',
+            styles: [`Background:=${p.solid(p.raised, 0.9)}`, `CornerRadius=${d === null ? 8 : d.shape.radius}`],
+        },
     ]);
 }
 
@@ -506,15 +688,17 @@ RuledPrograms: []
 /** @param {Desk} d */
 function mica(d) {
     const bar = d.dark ? 'Dark' : 'Light';
+    // A theme with no radius asks Windows for square window corners too.
+    const corner = d.shape.radius === 0 ? 'DoNotRound' : d.shape.radius <= 4 ? 'RoundSmall' : 'Round';
     return {
         rules: [
-            { type: 'global', titleBarColor: bar, backdropPreference: 'Acrylic', cornerPreference: 'Round', extendFrameIntoClientArea: false },
+            { type: 'global', titleBarColor: bar, backdropPreference: 'Acrylic', cornerPreference: corner, extendFrameIntoClientArea: false },
             {
                 type: 'process',
                 processName: 'explorer',
                 titleBarColor: bar,
                 backdropPreference: 'Acrylic',
-                cornerPreference: 'Round',
+                cornerPreference: corner,
                 extendFrameIntoClientArea: true,
             },
             {
@@ -522,7 +706,7 @@ function mica(d) {
                 processName: 'notepad',
                 titleBarColor: bar,
                 backdropPreference: 'Acrylic',
-                cornerPreference: 'Round',
+                cornerPreference: corner,
                 extendFrameIntoClientArea: true,
             },
         ],
@@ -855,7 +1039,7 @@ function main() {
             console.error('Run `npm run generate:windows` and commit the result.');
             process.exit(1);
         }
-        const shared = new Set(['templates', 'wsl', 'windhawk-accent']);
+        const shared = new Set(['templates', 'wsl', 'windhawk-accent', 'fonts']);
         const count = readdirSync(OUT, { withFileTypes: true }).filter((e) => e.isDirectory() && !shared.has(e.name)).length;
         console.log(`Windows: ${out.size} files for ${count} themes match their source.`);
         process.exit(0);

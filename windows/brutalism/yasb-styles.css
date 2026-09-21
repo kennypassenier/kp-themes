@@ -40,7 +40,9 @@
     --yasb-accent-fg: #FFD633;
     --icons-font: "Segoe Fluent Icons";
     --icons-font-fallback: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo";
-    --system-font: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo", "Segoe UI Variable", "Segoe UI";
+    --system-font: "Space Grotesk", "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo", "Segoe UI Variable", "Segoe UI";
+    --kp-font-mono: "ui-monospace", "JetBrainsMono NFP", "Consolas";
+    --kp-font-display: "Archivo Black", "Space Grotesk", "Segoe UI";
     --nerd-font: "JetBrainsMono NFP", "JetBrainsMono Nerd Font Propo";
     --kp-signal: #121212;
     --kp-signal-wash: rgba(18, 18, 18, 0.18);
@@ -905,4 +907,88 @@
 .tooltip {
     border: 1px solid var(--kp-signal-edge);
     font-family: var(--system-font);
+}
+/* ------------------------------------------------------------------ */
+/* Shape: KP Brutalism                                                  */
+/* radius 0px, notch 0px, Space Grotesk / ui-monospace / Archivo Black      */
+/* ------------------------------------------------------------------ */
+
+.widget {
+    border-radius: 0px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(18, 18, 18, 0.22);
+    margin: 5px 2px;
+}
+.widget .label {
+    font-family: var(--kp-font-mono);
+    font-size: 13px;
+}
+.active-window-widget .label {
+    font-family: var(--system-font);
+    font-size: 13px;
+    font-weight: 600;
+}
+.clock-widget .label {
+    font-family: var(--kp-font-display);
+    font-size: 15px;
+    font-weight: 800;
+    color: #121212;
+}
+
+/* Every meter a plate with its own ink on the left edge. */
+.cpu-widget {  }
+.memory-widget {  }
+.clock-widget {  }
+.volume-widget {  }
+.notifications-widget {  }
+
+/* The one primary action: the signal as a plate, ink on it. */
+.home-widget {
+    background: #121212;
+    border: none;
+    border-radius: 0px;
+    padding: 0 16px 0 10px;
+}
+.home-widget .icon {
+    color: #FFD633;
+}
+.home-widget:hover {
+    background: #050505;
+}
+.home-widget:hover .icon {
+    color: #FFD633;
+}
+
+/* The rest are void faces framed in the signal. */
+.power-menu-widget {
+    background-color: #FFFCF0;
+    border: 1px solid #121212;
+    border-radius: 0px;
+}
+
+.widget:hover,
+.quick-launch-widget:hover,
+.volume-widget:hover,
+.power-menu-widget:hover {
+    background-color: rgba(18, 18, 18, 0.12);
+}
+
+.home-menu,
+.systray-popup,
+.audio-menu,
+.context-menu,
+.clock-popup.calendar,
+.power-menu-compact,
+.quick-launch-popup .container {
+    border-radius: 0px;
+}
+.context-menu::item,
+.home-menu .menu-item,
+.clock-popup.calendar .calendar-table::item:selected {
+    border-radius: 0px;
+}
+.tooltip {
+    border-radius: 0px;
+    border: 1px solid #B9A6F2;
+    font-family: var(--kp-font-mono);
 }

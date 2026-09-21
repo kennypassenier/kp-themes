@@ -30,3 +30,6 @@ research/theme-portraits/*.png
 # Wallpapers are rendered from windows/<theme>/wallpaper.svg (npm run render:wallpapers).
 windows/*/wallpaper.png
 windows/*/wallpaper-lock.png
+
+# TrueType copies of fonts/, rebuilt by python3 gates/windows-fonts.py.
+windows/fonts/
