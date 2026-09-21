@@ -24,9 +24,20 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Theme = 'synthwave',
-    [ValidateSet('yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'wsl')]
+    # Leave it out to pick from a list; -List just prints the list.
+    [Parameter(Position = 0)]
+    [string]$Theme = '',
+    [switch]$List,
+    [ValidateSet('yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Skip = @(),
+    # Run only these steps; everything else is skipped. Used by the elevated
+    # re-run of the lockscreen step.
+    [ValidateSet('yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [string[]]$Only = @(),
+    # accent: one set of Windhawk styles that follows the Windows accent colour,
+    # so switching themes needs no pasting. theme: this theme's exact colours.
+    [ValidateSet('accent', 'theme')]
+    [string]$WindhawkFlavour = 'accent',
     [string]$WslDistro = 'archlinux',
     [string]$TerminalFont = '',
     [switch]$RestartExplorer,
@@ -42,11 +53,33 @@ $RepoRoot = Split-Path $Root -Parent
 $Stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
-if (-not (Test-Path (Join-Path $ThemeDir 'terminal.json'))) {
-    $known = (Get-Content (Join-Path $Root 'themes.json') -Raw | ConvertFrom-Json) | ForEach-Object { $_.name }
-    throw "Unknown theme '$Theme'. Known: $($known -join ', '). Run 'npm run generate:windows' if the folder is missing."
+$All = @(Get-Content (Join-Path $Root 'themes.json') -Raw | ConvertFrom-Json)
+
+function Show-Themes {
+    Write-Host ''
+    Write-Host '  kp-themes' -ForegroundColor Cyan
+    for ($i = 0; $i -lt $All.Count; $i++) {
+        $t = $All[$i]
+        $kind = if ($t.dark) { 'dark ' } else { 'light' }
+        Write-Host ('  {0,2}. {1,-14} {2}  {3}' -f ($i + 1), $t.name, $kind, $t.label)
+    }
+    Write-Host ''
 }
-$Meta = (Get-Content (Join-Path $Root 'themes.json') -Raw | ConvertFrom-Json) | Where-Object { $_.name -eq $Theme }
+
+if ($List) { Show-Themes; return }
+
+# No theme named: pick one from the list, so one command is the whole switch.
+if (-not $Theme) {
+    Show-Themes
+    $answer = Read-Host '  Theme (number or name)'
+    $Theme = if ($answer -match '^\d+$' -and [int]$answer -ge 1 -and [int]$answer -le $All.Count) { $All[[int]$answer - 1].name } else { $answer.Trim() }
+}
+
+$ThemeDir = Join-Path $Root $Theme
+if (-not (Test-Path (Join-Path $ThemeDir 'terminal.json'))) {
+    throw "Unknown theme '$Theme'. Known: $(($All | ForEach-Object { $_.name }) -join ', '). Run 'npm run generate:windows' if the folder is missing."
+}
+$Meta = $All | Where-Object { $_.name -eq $Theme }
 
 function Say([string]$step, [string]$text, [string]$colour = 'Gray') {
     Write-Host ('  {0,-11}' -f $step) -ForegroundColor Magenta -NoNewline
@@ -117,13 +150,24 @@ function Test-Font([string]$face) {
     return $false
 }
 
+# One gate for every step: -Only wins, -Skip removes.
+function Step([string]$name) {
+    if ($Only.Count -gt 0) { return $Only -contains $name }
+    return $Skip -notcontains $name
+}
+
+function Test-Admin {
+    $id = [Security.Principal.WindowsIdentity]::GetCurrent()
+    return (New-Object Security.Principal.WindowsPrincipal($id)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
 Write-Host ''
 Write-Host "  kp-themes -> Windows: KP $($Meta.label) ($Theme)" -ForegroundColor Cyan
 if ($DryRun) { Write-Host '  dry run: nothing is written' -ForegroundColor Yellow }
 Write-Host ''
 
 # --- YASB -------------------------------------------------------------------
-if ($Skip -notcontains 'yasb') {
+if (Step 'yasb') {
     $yasbHome = if ($env:YASB_CONFIG_HOME) { $env:YASB_CONFIG_HOME } else { Join-Path $HOME '.config\yasb' }
     if (Test-Path $yasbHome) {
         Copy-Themed (Join-Path $ThemeDir 'yasb-styles.css') (Join-Path $yasbHome 'styles.css')
@@ -132,7 +176,7 @@ if ($Skip -notcontains 'yasb') {
 }
 
 # --- Mica For Everyone --------------------------------------------------------
-if ($Skip -notcontains 'mica') {
+if (Step 'mica') {
     $pkg = Get-ChildItem (Join-Path $env:LOCALAPPDATA 'Packages') -Directory -Filter 'MicaForEveryone*' -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($pkg) {
         Copy-Themed (Join-Path $ThemeDir 'mica-settings.json') (Join-Path $pkg.FullName 'LocalState\settings.json')
@@ -141,7 +185,7 @@ if ($Skip -notcontains 'mica') {
 }
 
 # --- Windows Terminal ---------------------------------------------------------
-if ($Skip -notcontains 'terminal') {
+if (Step 'terminal') {
     $candidates = @(
         (Join-Path $env:LOCALAPPDATA 'Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'),
         (Join-Path $env:LOCALAPPDATA 'Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json'),
@@ -212,7 +256,7 @@ if ($Skip -notcontains 'terminal') {
 }
 
 # --- FireDragon -----------------------------------------------------------------
-if ($Skip -notcontains 'firedragon') {
+if (Step 'firedragon') {
     # Windows paths ignore case, so FireDragon and firedragon can be one folder: compare them resolved.
     $bases = @((Join-Path $env:APPDATA 'FireDragon'), (Join-Path $env:APPDATA 'garuda\firedragon')) |
         Where-Object { Test-Path $_ } | ForEach-Object { (Resolve-Path $_).Path } | Sort-Object -Unique
@@ -240,7 +284,7 @@ if ($Skip -notcontains 'firedragon') {
 }
 
 # --- VS Code ----------------------------------------------------------------------
-if ($Skip -notcontains 'vscode') {
+if (Step 'vscode') {
     $vsHome = Join-Path $HOME '.vscode\extensions'
     $vsSource = Join-Path $RepoRoot 'vscode'
     if ((Test-Path $vsHome) -and (Test-Path $vsSource)) {
@@ -273,7 +317,7 @@ if ($Skip -notcontains 'vscode') {
 }
 
 # --- Accent colour and dark mode ----------------------------------------------
-if ($Skip -notcontains 'accent') {
+if (Step 'accent') {
     if (-not $DryRun) {
         $r = Invoke-Native 'reg.exe' @('import', (Join-Path $ThemeDir 'accent.reg'))
         if ($r.Code -ne 0) { throw "reg.exe import failed ($($r.Code)): $($r.Output -join ' ')" }
@@ -284,7 +328,7 @@ if ($Skip -notcontains 'accent') {
 }
 
 # --- Wallpaper ----------------------------------------------------------------------
-if ($Skip -notcontains 'wallpaper') {
+if (Step 'wallpaper') {
     $png = Join-Path $ThemeDir 'wallpaper.png'
     if (Test-Path $png) {
         $keep = Join-Path ([Environment]::GetFolderPath('MyPictures')) "kp-themes\$Theme.png"
@@ -305,8 +349,53 @@ public static class KpWallpaper {
     } else { Say 'wallpaper' 'no wallpaper.png (run: npm run render:wallpapers), skipped' 'DarkGray' }
 }
 
+# --- Lock screen and sign-in screen -------------------------------------------------
+# PersonalizationCSP is the one place every edition of Windows 11 reads, and the
+# sign-in screen shows the lock screen picture, so both are set here. It writes
+# under HKLM, so this step needs administrator rights and asks for them once.
+if (Step 'lockscreen') {
+    $shared = 'C:\Users\Public\Pictures\kp-themes'
+    $desktop = Join-Path $ThemeDir 'wallpaper.png'
+    $lock = Join-Path $ThemeDir 'wallpaper-lock.png'
+    if (-not (Test-Path $desktop) -or -not (Test-Path $lock)) {
+        Say 'lockscreen' 'no rendered wallpapers (run: npm run render:wallpapers), skipped' 'DarkGray'
+    } elseif ($DryRun) {
+        Say 'lockscreen' "would copy both pictures to $shared and import personalization.reg"
+    } elseif (Test-Admin) {
+        New-Item -ItemType Directory -Path $shared -Force | Out-Null
+        Copy-Item $desktop (Join-Path $shared "$Theme.png") -Force
+        Copy-Item $lock (Join-Path $shared "$Theme-lock.png") -Force
+        $r = Invoke-Native 'reg.exe' @('import', (Join-Path $ThemeDir 'personalization.reg'))
+        if ($r.Code -ne 0) { throw "reg.exe import failed ($($r.Code)): $($r.Output -join ' ')" }
+        Say 'lockscreen' 'lock and sign-in picture set; lock with Win+L to see it'
+    } else {
+        Say 'lockscreen' 'asking for administrator rights (the lock screen lives under HKLM)...' 'Yellow'
+        $p = Start-Process -FilePath 'powershell.exe' -Verb RunAs -PassThru -Wait -ArgumentList @(
+            '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"", '-Theme', $Theme, '-Only', 'lockscreen')
+        if ($p.ExitCode -eq 0) { Say 'lockscreen' 'lock and sign-in picture set' }
+        else { Say 'lockscreen' "the elevated run ended with $($p.ExitCode); run this script as administrator to set it" 'Yellow' }
+    }
+}
+
+# --- Windhawk: Explorer, taskbar, start menu, menus ----------------------------------
+# Windhawk keeps mod settings in the registry in a shape it does not document,
+# so this step writes the styles where they are easy to paste and says where.
+if (Step 'windhawk') {
+    $source = if ($WindhawkFlavour -eq 'accent') { Join-Path $Root 'windhawk-accent' } else { Join-Path $ThemeDir 'windhawk' }
+    $dest = Join-Path $HOME '.config\kp-themes\windhawk'
+    if (Test-Path $source) {
+        foreach ($file in Get-ChildItem $source -Filter '*.yaml') { Copy-Themed $file.FullName (Join-Path $dest $file.Name) }
+        $installed = $env:ProgramData -and (Test-Path (Join-Path $env:ProgramData 'Windhawk'))
+        $note = if ($installed) { 'Windhawk is installed' } else { 'Windhawk is not installed yet (windhawk.net)' }
+        $flavour = if ($WindhawkFlavour -eq 'accent') { 'accent-following styles: paste once, they follow every theme' } else { "this theme's exact colours: paste again after a theme switch" }
+        Say 'windhawk' "$flavour"
+        Say 'windhawk' "$note; styles are in $dest"
+        Say 'windhawk' 'per mod: Settings tab > Textual mode > paste the matching .yaml > Save'
+    } else { Say 'windhawk' 'no styles found, skipped' 'DarkGray' }
+}
+
 # --- The shell inside WSL -------------------------------------------------------------
-if ($Skip -notcontains 'wsl') {
+if (Step 'wsl') {
     $distros = @()
     if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
         # wsl.exe prints UTF-16; PowerShell reads it with a NUL after every letter.
