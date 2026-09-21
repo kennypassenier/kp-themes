@@ -16,8 +16,8 @@
 #   command    ~/.local/bin/kp-theme, so `kp-theme lapis` switches the whole desktop
 #   theme      applies --theme, or the last one applied, or asks
 #
-# --build-only stops after the build: desktop/windows/install.ps1 uses it to
-# build the Windows kit in the WSL clone.
+# --build-only stops after the build: run it after a git pull, so the Windows
+# launchers and apply.sh find the fonts and wallpapers of the new version.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
