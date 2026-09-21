@@ -28,19 +28,29 @@ param(
     [Parameter(Position = 0)]
     [string]$Theme = '',
     [switch]$List,
-    [ValidateSet('yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Skip = @(),
     # Run only these steps; everything else is skipped. Used by the elevated
     # re-run of the lockscreen step.
-    [ValidateSet('yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Only = @(),
-    # accent: one set of Windhawk styles that follows the Windows accent colour,
-    # so switching themes needs no pasting. theme: this theme's exact colours.
+    # theme: this theme's own Windhawk styles, colours and shape, written into
+    # the registry. accent: one set that only follows the accent colour.
     [ValidateSet('accent', 'theme')]
-    [string]$WindhawkFlavour = 'accent',
+    [string]$WindhawkFlavour = 'theme',
     [string]$WslDistro = 'archlinux',
     [string]$TerminalFont = '',
+    # Explorer, the start menu and the notification centre are restarted at the
+    # end so the Windhawk styles and the accent colour show at once; -NoRestart
+    # leaves them. -RestartExplorer is kept for older shortcuts and does nothing.
+    [switch]$NoRestart,
     [switch]$RestartExplorer,
+    # Everything under HKLM (Windhawk, the lock screen) needs administrator
+    # rights, so the script asks for them once at the start; -NoElevate skips
+    # those steps instead.
+    [switch]$NoElevate,
+    # Wait for a key at the end, for a window opened by double-clicking.
+    [switch]$Pause,
     [switch]$DryRun
 )
 
@@ -80,6 +90,38 @@ if (-not (Test-Path (Join-Path $ThemeDir 'terminal.json'))) {
     throw "Unknown theme '$Theme'. Known: $(($All | ForEach-Object { $_.name }) -join ', '). Run 'npm run generate:windows' if the folder is missing."
 }
 $Meta = $All | Where-Object { $_.name -eq $Theme }
+
+function Test-Admin {
+    try {
+        $id = [Security.Principal.WindowsIdentity]::GetCurrent()
+        return (New-Object Security.Principal.WindowsPrincipal($id)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    } catch { return $false }
+}
+
+# One UAC prompt for the whole switch: re-run this script elevated with the
+# same arguments. An administrator's elevated process is the same user, so
+# HKCU, %APPDATA% and ~ are still that user's.
+if (-not $DryRun -and -not $NoElevate -and -not (Test-Admin)) {
+    # -Command rather than -File, because -File cannot pass a list (-Skip a,b).
+    $q = { param($t) "'" + ("$t" -replace "'", "''") + "'" }
+    $call = "& $(& $q $PSCommandPath) -Theme $(& $q $Theme)"
+    foreach ($k in $PSBoundParameters.Keys) {
+        if ($k -eq 'Theme') { continue }
+        $v = $PSBoundParameters[$k]
+        if ($v -is [switch]) { if ($v.IsPresent) { $call += " -$k" } }
+        elseif ($v -is [array]) { $call += " -$k " + (($v | ForEach-Object { & $q $_ }) -join ',') }
+        else { $call += " -$k $(& $q $v)" }
+    }
+    $argv = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', $call)
+    try {
+        $p = Start-Process -FilePath 'powershell.exe' -Verb RunAs -PassThru -Wait -ArgumentList $argv
+        exit $p.ExitCode
+    } catch {
+        Write-Host '  No administrator rights: Windhawk and the lock screen are skipped.' -ForegroundColor Yellow
+        $NoElevate = $true
+    }
+}
+if ($NoElevate -and -not (Test-Admin)) { $Skip = @($Skip) + @('windhawk', 'lockscreen') }
 
 function Say([string]$step, [string]$text, [string]$colour = 'Gray') {
     Write-Host ('  {0,-11}' -f $step) -ForegroundColor Magenta -NoNewline
@@ -156,15 +198,30 @@ function Step([string]$name) {
     return $Skip -notcontains $name
 }
 
-function Test-Admin {
-    $id = [Security.Principal.WindowsIdentity]::GetCurrent()
-    return (New-Object Security.Principal.WindowsPrincipal($id)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+# SendMessageTimeout to every window: how Windows tells programs that the
+# colours, the fonts or the wallpaper changed.
+Add-Type -Namespace KpShell -Name Native -MemberDefinition @'
+[DllImport("user32.dll", CharSet = CharSet.Unicode)]
+public static extern System.IntPtr SendMessageTimeoutW(System.IntPtr hWnd, uint msg, System.IntPtr w, string l, uint flags, uint timeout, out System.IntPtr result);
+'@ -ErrorAction SilentlyContinue
+function Send-SettingChange([string]$area) {
+    $out = [IntPtr]::Zero
+    [KpShell.Native]::SendMessageTimeoutW([IntPtr]0xffff, 0x001A, [IntPtr]::Zero, $area, 2, 2000, [ref]$out) | Out-Null
 }
 
 Write-Host ''
 Write-Host "  kp-themes -> Windows: KP $($Meta.label) ($Theme)" -ForegroundColor Cyan
 if ($DryRun) { Write-Host '  dry run: nothing is written' -ForegroundColor Yellow }
 Write-Host ''
+
+# --- Fonts ---------------------------------------------------------------------
+if (Step 'fonts') {
+    $fonts = Join-Path $Root 'fonts'
+    if ((Get-ChildItem $fonts -Filter '*.ttf' -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0) {
+        if (-not $DryRun) { & (Join-Path $Root 'install-fonts.ps1') -Source $fonts }
+        else { Say 'fonts' "would install the fonts in $fonts" }
+    } else { Say 'fonts' 'no fonts beside the script (python3 gates/windows-fonts.py), skipped' 'DarkGray' }
+}
 
 # --- YASB -------------------------------------------------------------------
 if (Step 'yasb') {
@@ -180,7 +237,14 @@ if (Step 'mica') {
     $pkg = Get-ChildItem (Join-Path $env:LOCALAPPDATA 'Packages') -Directory -Filter 'MicaForEveryone*' -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($pkg) {
         Copy-Themed (Join-Path $ThemeDir 'mica-settings.json') (Join-Path $pkg.FullName 'LocalState\settings.json')
-        Say 'mica' 'settings.json replaced; restart Mica For Everyone to pick it up.'
+        # It reads the file at start, so restart it: the folder name is its package family.
+        if (-not $DryRun) {
+            Get-Process -Name 'MicaForEveryone*' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+            try {
+                Start-Process 'explorer.exe' "shell:AppsFolder\$($pkg.Name)!App"
+                Say 'mica' 'settings.json replaced and Mica For Everyone restarted'
+            } catch { Say 'mica' 'settings.json replaced; start Mica For Everyone yourself to pick it up' 'Yellow' }
+        } else { Say 'mica' 'would replace settings.json' }
     } else { Say 'mica' 'Mica For Everyone not found, skipped' 'DarkGray' }
 }
 
@@ -231,6 +295,11 @@ if (Step 'terminal') {
         if (-not (Has $s.profiles 'defaults') -or $null -eq $s.profiles.defaults) { Set-Prop $s.profiles 'defaults' ([pscustomobject]@{}) }
         $d = $s.profiles.defaults
         Set-Prop $d 'colorScheme' $name
+        # A profile with its own KP scheme would keep the old theme: let it
+        # inherit from the defaults instead.
+        foreach ($profile in @($s.profiles.list)) {
+            if ((Has $profile 'colorScheme') -and ("$($profile.colorScheme)" -like 'KP *')) { $profile.PSObject.Properties.Remove('colorScheme') }
+        }
         Set-Prop $d 'opacity' 88
         Set-Prop $d 'useAcrylic' $true
         Set-Prop $d 'padding' '10, 8'
@@ -322,9 +391,8 @@ if (Step 'accent') {
         $r = Invoke-Native 'reg.exe' @('import', (Join-Path $ThemeDir 'accent.reg'))
         if ($r.Code -ne 0) { throw "reg.exe import failed ($($r.Code)): $($r.Output -join ' ')" }
     }
-    $restart = if ($RestartExplorer) { 'restarting Explorer' } else { 'sign out, or run with -RestartExplorer, to see it everywhere' }
-    Say 'accent' "accent colour and $(if ($Meta.dark) { 'dark' } else { 'light' }) mode set; $restart"
-    if ($RestartExplorer -and -not $DryRun) { Stop-Process -Name explorer -Force }
+    if (-not $DryRun) { Send-SettingChange 'ImmersiveColorSet' }
+    Say 'accent' "accent colour and $(if ($Meta.dark) { 'dark' } else { 'light' }) mode set"
 }
 
 # --- Wallpaper ----------------------------------------------------------------------
@@ -377,21 +445,36 @@ if (Step 'lockscreen') {
     }
 }
 
-# --- Windhawk: Explorer, taskbar, start menu, menus ----------------------------------
-# Windhawk keeps mod settings in the registry in a shape it does not document,
-# so this step writes the styles where they are easy to paste and says where.
+# --- Windhawk: taskbar, start menu, notification centre, Explorer, menus -----------
+# Windhawk keeps what its Settings tab saves as flat values under
+# HKLM\SOFTWARE\Windhawk\Engine\Mods\<mod>\Settings. windhawk.reg replaces all
+# five mods' settings; bumping each mod's SettingsChangeTime is what the Settings
+# tab does after a save, and the restart at the end reloads the processes the
+# mods live in.
 if (Step 'windhawk') {
-    $source = if ($WindhawkFlavour -eq 'accent') { Join-Path $Root 'windhawk-accent' } else { Join-Path $ThemeDir 'windhawk' }
-    $dest = Join-Path $HOME '.config\kp-themes\windhawk'
-    if (Test-Path $source) {
-        foreach ($file in Get-ChildItem $source -Filter '*.yaml') { Copy-Themed $file.FullName (Join-Path $dest $file.Name) }
-        $installed = $env:ProgramData -and (Test-Path (Join-Path $env:ProgramData 'Windhawk'))
-        $note = if ($installed) { 'Windhawk is installed' } else { 'Windhawk is not installed yet (windhawk.net)' }
-        $flavour = if ($WindhawkFlavour -eq 'accent') { 'accent-following styles: paste once, they follow every theme' } else { "this theme's exact colours: paste again after a theme switch" }
-        Say 'windhawk' "$flavour"
-        Say 'windhawk' "$note; styles are in $dest"
-        Say 'windhawk' 'per mod: Settings tab > Textual mode > paste the matching .yaml > Save'
-    } else { Say 'windhawk' 'no styles found, skipped' 'DarkGray' }
+    $reg = if ($WindhawkFlavour -eq 'accent') { Join-Path $Root 'windhawk-accent\windhawk.reg' } else { Join-Path $ThemeDir 'windhawk.reg' }
+    $mods = 'HKLM:\SOFTWARE\Windhawk\Engine\Mods'
+    if (-not (Test-Path $mods)) {
+        Say 'windhawk' 'Windhawk is not installed (windhawk.net), skipped' 'DarkGray'
+    } elseif ($DryRun) {
+        Say 'windhawk' "would import $reg"
+    } else {
+        # The start button picture the taskbar styles point at.
+        $startPng = Join-Path $ThemeDir 'start.png'
+        if (Test-Path $startPng) {
+            $startDir = 'C:\Users\Public\Pictures\kp-themes\start'
+            New-Item -ItemType Directory -Path $startDir -Force | Out-Null
+            Copy-Item $startPng (Join-Path $startDir "$Theme.png") -Force
+        }
+        $r = Invoke-Native 'reg.exe' @('import', $reg)
+        if ($r.Code -ne 0) { throw "reg.exe import failed ($($r.Code)): $($r.Output -join ' ')" }
+        $now = [int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+        foreach ($mod in Get-ChildItem $mods) {
+            Set-ItemProperty -Path $mod.PSPath -Name 'SettingsChangeTime' -Value $now -Type DWord
+        }
+        $flavour = if ($WindhawkFlavour -eq 'accent') { 'accent-following styles' } else { "KP $($Meta.label)'s own styles" }
+        Say 'windhawk' "$flavour written for 5 mods"
+    }
 }
 
 # --- The shell inside WSL -------------------------------------------------------------
@@ -415,6 +498,23 @@ if (Step 'wsl') {
     } else { Say 'wsl' "no WSL distro '$WslDistro' (see windows/wsl/README.md), skipped" 'DarkGray' }
 }
 
+# --- Reload the shell -------------------------------------------------------------------
+# The taskbar and Explorer live in explorer.exe, the start menu and the
+# notification centre in their own hosts; Windows restarts all three at once.
+if (-not $DryRun -and -not $NoRestart) {
+    foreach ($name in 'StartMenuExperienceHost', 'ShellExperienceHost', 'explorer') {
+        Get-Process -Name $name -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    }
+    Say 'shell' 'Explorer, start menu and notification centre restarted'
+}
+
+if (-not $DryRun) {
+    $state = Join-Path $HOME '.config\kp-themes'
+    New-Item -ItemType Directory -Path $state -Force | Out-Null
+    Set-Content -Path (Join-Path $state 'current.txt') -Value $Theme -Encoding ASCII
+}
+
 Write-Host ''
-Write-Host "  Done. Backups end in .kp-backup-$Stamp" -ForegroundColor Cyan
+Write-Host "  Done: KP $($Meta.label). Backups end in .kp-backup-$Stamp" -ForegroundColor Cyan
 Write-Host ''
+if ($Pause) { Write-Host '  Press a key to close.' -ForegroundColor DarkGray; [void][Console]::ReadKey($true) }

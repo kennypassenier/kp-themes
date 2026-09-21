@@ -33,3 +33,4 @@ windows/*/wallpaper-lock.png
 
 # TrueType copies of fonts/, rebuilt by python3 gates/windows-fonts.py.
 windows/fonts/
+windows/*/start.png
