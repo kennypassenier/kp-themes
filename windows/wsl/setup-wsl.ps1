@@ -77,6 +77,6 @@ if ($LASTEXITCODE -ne 0) { throw "bootstrap-arch.sh failed (exit $LASTEXITCODE);
 
 # 5. The theme's prompt and colours in the shell, and the Arch tab as default in Terminal.
 $apply = Join-Path (Split-Path $Here -Parent) 'apply.ps1'
-& $apply -Theme $Theme -Skip yasb, mica, firedragon, vscode, accent, wallpaper -WslDistro $Distro
+& $apply -Theme $Theme -Skip yasb, mica, firedragon, accent, wallpaper -WslDistro $Distro
 
 Say "Done. Open Windows Terminal: the default tab is now $Distro in fish." 'Cyan'

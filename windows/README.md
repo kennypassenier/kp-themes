@@ -28,6 +28,9 @@ switch (`apply.ps1 -WindhawkFlavour theme`).
 
 Hand-written, beside the output:
 
+- `install-vscode.ps1`: all 22 themes in VS Code as one extension, installed
+  through VS Code's own CLI (`Install VS Code themes.cmd`). Kept out of a theme
+  switch: which theme VS Code shows stays yours.
 - `kp.ps1`: the one command — `.\kp.ps1 synthwave`, or without a name to pick
   from the list. It forwards everything to `apply.ps1`.
 - `msstyles.md`: what the Windhawk layer cannot reach, and what it costs to go
@@ -48,7 +51,7 @@ npm run render:wallpapers
 powershell -ExecutionPolicy Bypass -File .\windows\kp.ps1 synthwave
 ```
 
-That one command is the whole switch: the bar, Terminal, FireDragon, VS Code,
+That one command is the whole switch: the bar, Terminal, FireDragon,
 the accent colour, the wallpaper, the lock and sign-in screen, and the shell in
 WSL. The lock screen step asks for administrator rights once, because it writes
 under HKLM. The Windhawk styles are copied ready to paste; with the
@@ -70,7 +73,7 @@ fish with Garuda's aliases, Starship, and the CLI tools a Garuda install
 ships. It asks once for a Linux password. Last, it applies the theme's
 prompt and colours and makes Arch the default tab in Windows Terminal. If
 Terminal has not seen the new distro yet, open and close Terminal once and run
-`apply.ps1 -Skip yasb,mica,firedragon,vscode,accent,wallpaper` again.
+`apply.ps1 -Skip yasb,mica,firedragon,accent,wallpaper` again.
 
 ## What a theme cannot reach
 

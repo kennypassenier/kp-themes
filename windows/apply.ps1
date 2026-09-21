@@ -12,7 +12,6 @@
       mica        Mica For Everyone's settings.json
       terminal    Windows Terminal: scheme, window theme, font, acrylic; Arch as default profile if installed
       firedragon  userChrome.css, userContent.css and user.js in every FireDragon profile
-      vscode      all 22 VS Code themes as a local extension (pick one with Ctrl+K Ctrl+T)
       accent      accent colour, dark/light mode, transparency (accent.reg)
       wallpaper   wallpaper.png, if rendered (npm run render:wallpapers)
       wsl         starship.toml and fish colours inside the Arch WSL distro, if installed
@@ -28,11 +27,11 @@ param(
     [Parameter(Position = 0)]
     [string]$Theme = '',
     [switch]$List,
-    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Skip = @(),
     # Run only these steps; everything else is skipped. Used by the elevated
     # re-run of the lockscreen step.
-    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'vscode', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
+    [ValidateSet('fonts', 'yasb', 'mica', 'terminal', 'prompt', 'firedragon', 'accent', 'wallpaper', 'lockscreen', 'windhawk', 'wsl')]
     [string[]]$Only = @(),
     # theme: this theme's own Windhawk styles, colours and shape, written into
     # the registry. accent: one set that only follows the accent colour.
@@ -419,39 +418,6 @@ if (Step 'firedragon') {
             Say 'firedragon' 'FireDragon is running: close every window and start it again to see the theme' 'Yellow'
         }
     }
-}
-
-# --- VS Code ----------------------------------------------------------------------
-if (Step 'vscode') {
-    $vsHome = Join-Path $HOME '.vscode\extensions'
-    $vsSource = Join-Path $RepoRoot 'vscode'
-    if ((Test-Path $vsHome) -and (Test-Path $vsSource)) {
-        $ext = Join-Path $vsHome 'kp-soft.kp-themes-local-0.0.0'
-        $contributes = @()
-        foreach ($file in Get-ChildItem $vsSource -Filter 'kp-*-color-theme.json') {
-            $json = Get-Content $file.FullName -Raw | ConvertFrom-Json
-            $contributes += [pscustomobject]@{
-                label   = $json.name
-                uiTheme = $(if ($json.type -eq 'light') { 'vs' } else { 'vs-dark' })
-                path    = "./themes/$($file.Name)"
-            }
-            if (-not $DryRun) {
-                New-Item -ItemType Directory -Path (Join-Path $ext 'themes') -Force | Out-Null
-                Copy-Item $file.FullName (Join-Path $ext "themes\$($file.Name)") -Force
-            }
-        }
-        $manifest = [pscustomobject]@{
-            name        = 'kp-themes-local'
-            displayName = 'KP Themes (local)'
-            publisher   = 'kp-soft'
-            version     = '0.0.0'
-            engines     = [pscustomobject]@{ vscode = '^1.70.0' }
-            categories  = @('Themes')
-            contributes = [pscustomobject]@{ themes = $contributes }
-        }
-        Write-Text (Join-Path $ext 'package.json') ($manifest | ConvertTo-Json -Depth 8)
-        Say 'vscode' "$($contributes.Count) themes installed; pick 'KP $($Meta.label)' with Ctrl+K Ctrl+T"
-    } else { Say 'vscode' 'VS Code not found, skipped' 'DarkGray' }
 }
 
 # --- Accent colour and dark mode ----------------------------------------------
