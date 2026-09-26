@@ -4047,9 +4047,13 @@
         cursor: not-allowed;
     }
 
-    input:invalid,
-    select:invalid,
-    textarea:invalid {
+    /* `:user-invalid`, not `:invalid` [fix-74]: an empty required field is
+       invalid the moment the page loads, and kyu's login opened with its
+       token field already red. The user-invalid state waits until someone
+       has touched the field or tried to submit. */
+    input:user-invalid,
+    select:user-invalid,
+    textarea:user-invalid {
         border-color: var(--destructive);
     }
 

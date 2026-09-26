@@ -91,7 +91,7 @@ dark themes where there are three.
 | TH31 | Links, visited links, text selection | browser blue scores 1.99 / 2.09 / 2.06 on the dark themes |
 | TH32 | Ordinary text elements | `code`, `pre`, `kbd`, `mark`, `blockquote`, `hr`, list markers |
 | TH33 | Showing data | long URL or identifier, masked value, tabular numerals, truncation, timestamp, empty state — three already hand-written in kyu |
-| TH34 | The browser's own hooks | `accent-color`, autofill, `::placeholder`, `:disabled` / `:invalid` / `:checked`, `::marker` |
+| TH34 | The browser's own hooks | `accent-color`, autofill, `::placeholder`, `:disabled` / `:user-invalid` [fix-74] / `:checked`, `::marker` |
 | TH35 | Components that sit above the page | dropdown, dialog with backdrop, tooltip, toast, accordion, tabs, breadcrumb, pagination, progress, spinner, skeleton |
 | TH36 | The page's shell | skip link, footer, print stylesheet, error page |
 

@@ -4442,6 +4442,48 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-74 · A required field loaded red before anyone touched it (2026-09-27)
+
+**1 · What went wrong.** Reported from kyu, which consumes 7.1.0: its login
+page opened with the token field already in the destructive colour. The base
+layer painted `input:invalid, select:invalid, textarea:invalid` with
+`--destructive` (`css/_rules.css:619`), and an empty `required` field is
+`:invalid` from the moment it renders. kyu worked around it with its own
+`:user-invalid` rule.
+
+**2 · Which gate let it through.** None asks what a form looks like before
+the user acts. `tests/forms.spec.mjs` drives every validation path through a
+submit or a blur first, so each assertion ran after the field had been
+touched, which is exactly when the old rule was right.
+
+**3 · Where else the same fault sits.** The fault as a property: *a
+validity state that is true at load, painted as an error.*
+**Gezocht met:** `grep -rnE ":(invalid|out-of-range|required|indeterminate)\b" css/_*.css css/components.css css/*-register.css`.
+Only `.kp-progress:indeterminate` answers besides this rule, and that is a
+progress bar's own state, not an error. The components' own error look keys
+on `aria-invalid='true'`, which the form script sets on blur or submit.
+
+**4 · How we prevent recurrence.** The rule reads `:user-invalid`, and
+`tests/forms.spec.mjs` asserts in both channels that an untouched required
+field does not carry the destructive border and a touched, emptied one does.
+
+**5 · What the remedy costs.** Three selectors and one test. The hash recipe
+brings back the review pairs whose blocks hold a native field.
+
+**6 · Who enforces it.** Code: the browser test above, in `npm run verify`.
+It was written on WSL, where no browser is installed, so it has not run yet.
+
+**7 · How we measure that it works, and when.** At the first browser run
+after this commit: the new test passes in both channels. Then at kyu's next
+upgrade: its own `:user-invalid` workaround can go and the login stays
+neutral at load. Queued as fix-74-M1.
+
+**8 · If the measurement fails.** If a browser in the suite lacks
+`:user-invalid`, the rule falls back to `[aria-invalid='true']` only, which
+the form script sets itself.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-73 · A theme's own dot stood still while its list scrolled (2026-09-20)
 
 **1 · What went wrong.** Kenny, reviewing nostromo's five side-navigation
