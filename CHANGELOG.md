@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+**Fixed.**
+
+- **An untouched required field no longer loads red** [fix-74] — kyu's login
+  page opened with its token field already in the destructive colour, because
+  the base layer painted every `:invalid` field and an empty required field is
+  invalid before anyone types. The rule now reads `:user-invalid`, which waits
+  until the field has been touched or a submit was tried. A consumer that
+  worked around it with its own `:user-invalid` rule can drop that rule.
+
 **Added.**
 
 - **A submenu item carries a mark of its own** — Kenny, 2026-09-20: _"bij
