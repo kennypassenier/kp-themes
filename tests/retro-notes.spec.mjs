@@ -461,3 +461,26 @@ test.describe('retro: the side navigation has the menu strip’s ground', { tag:
         }
     });
 });
+
+test.describe('retro: a pressed icon button keeps its plate on itself', { tag: ['@theme:retro', '@component:button'] }, () => {
+    // fix-75: retro draws the pressed plate as an absolutely placed
+    // `::before` on `.kp-icon-button`, which nothing positioned, so the plate
+    // resolved against the root and sat at the page's top-left corner.
+    // Measured in Chromium on 2026-09-27: owner `static`, plate 36×36 at
+    // -2px -2px of <html>. The same shape as fix-73, found by
+    // `npm run check:anchors`.
+    test('the button is the plate’s containing block while it is held down', async ({ page }) => {
+        await page.goto('/site/components/icon-button.html');
+        await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'retro'));
+        const button = page.locator('.kp-icon-button:not(:disabled)').first();
+        await button.hover();
+        await page.mouse.down();
+        const read = await button.evaluate((node) => ({
+            owner: getComputedStyle(node).position,
+            plate: getComputedStyle(node, '::before').position,
+        }));
+        await page.mouse.up();
+        expect(read.plate).toBe('absolute');
+        expect(read.owner).not.toBe('static');
+    });
+});

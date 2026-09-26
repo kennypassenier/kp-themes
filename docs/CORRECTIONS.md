@@ -4442,6 +4442,49 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-75 · Retro's pressed plate sat at the page's corner (2026-09-27)
+
+**1 · What went wrong.** Retro draws the pressed plate of an icon button as
+an absolutely placed `::before` (`css/retro-register.css`), and nothing gave
+`.kp-icon-button` a position. Measured in Chromium with `:active` forced: the
+button `static`, the plate 36×36 at -2px -2px of `<html>`, so pressing an
+icon button drew its plate at the page's top-left corner instead of behind
+the button. `.kp-button` shares the rule and is positioned by the package,
+which is why only the icon button showed it.
+
+**2 · Which gate let it through.** The same gap as fix-73: nothing asks
+whether an absolutely placed pseudo-element has the containing block its
+author meant, and the plate only exists while a button is held down.
+
+**3 · Where else the same fault sits.** The three findings `npm run
+check:anchors` left standing at fix-73, measured in the browser instead of
+read from the sheets. **Gezocht met:** a Playwright probe reading the
+computed `position` of each owner and its pseudo-element: pastel's headline
+(`[data-kp-reveal='headline']`) is `relative` on the effects page, and
+sepia's alternate divider (`[data-kp-divider='alt']`) is `relative` on the
+catalogue's effects page, so both marks hang off their own element. Those two
+are false positives of the search, which reads the shared sheets and the
+register but not every rule that positions an owner. Retro's is the only real
+one.
+
+**4 · How we prevent recurrence.** `position: relative` on retro's
+`.kp-icon-button`, beside the plate, with the reason in a comment. A test in
+`tests/retro-notes.spec.mjs` holds the button down and asserts it is the
+plate's containing block; it failed on the old register and passes now.
+
+**5 · What the remedy costs.** One rule. The review pairs that show a retro
+icon button come back.
+
+**6 · Who enforces it.** Code: the retro test above, in `npm run verify`.
+
+**7 · How we measure that it works, and when.** At Kenny's next review of a
+retro block with an icon button, pressing it. Queued as fix-75-M1.
+
+**8 · If the measurement fails.** Then the containing block goes into the
+package for `.kp-icon-button`, as it already is for `.kp-button`.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-74 · A required field loaded red before anyone touched it (2026-09-27)
 
 **1 · What went wrong.** Reported from kyu, which consumes 7.1.0: its login

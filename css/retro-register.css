@@ -621,6 +621,13 @@
         translate: 1px 1px;
     }
 
+    /* The plate below hangs off the button, so the button has to be its
+       containing block; `.kp-button` is positioned by the package, the icon
+       button is not, and its plate sat at the page's corner [fix-75]. */
+    [data-theme='retro'] .kp-icon-button {
+        position: relative;
+    }
+
     [data-theme='retro'] .kp-button:active:not(:disabled)::before,
     [data-theme='retro'] .kp-icon-button:active:not(:disabled)::before {
         content: '';
