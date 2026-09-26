@@ -4451,10 +4451,10 @@ layer painted `input:invalid, select:invalid, textarea:invalid` with
 `:invalid` from the moment it renders. kyu worked around it with its own
 `:user-invalid` rule.
 
-**2 · Which gate let it through.** None asks what a form looks like before
-the user acts. `tests/forms.spec.mjs` drives every validation path through a
-submit or a blur first, so each assertion ran after the field had been
-touched, which is exactly when the old rule was right.
+**2 · Which gate let it through.** None asks what a bare field looks like
+before the user acts. `tests/forms.spec.mjs` drives `.kp-field__input`, which
+sets its own border in the components layer and so never showed the base
+rule; a consumer's plain `<input required>` did.
 
 **3 · Where else the same fault sits.** The fault as a property: *a
 validity state that is true at load, painted as an error.*
@@ -4464,18 +4464,19 @@ progress bar's own state, not an error. The components' own error look keys
 on `aria-invalid='true'`, which the form script sets on blur or submit.
 
 **4 · How we prevent recurrence.** The rule reads `:user-invalid`, and
-`tests/forms.spec.mjs` asserts in both channels that an untouched required
-field does not carry the destructive border and a touched, emptied one does.
+`tests/forms.spec.mjs` asserts on a bare `<input required>` that it does not
+carry the destructive border at load and does once touched and emptied.
 
 **5 · What the remedy costs.** Three selectors and one test. The hash recipe
 brings back the review pairs whose blocks hold a native field.
 
 **6 · Who enforces it.** Code: the browser test above, in `npm run verify`.
-It was written on WSL, where no browser is installed, so it has not run yet.
+Run in Chromium on 2026-09-27: it fails against the old `:invalid` rule
+(border `rgb(163, 41, 41)` at load) and passes against the fix; the whole
+`tests/forms.spec.mjs` passes, 25 tests.
 
-**7 · How we measure that it works, and when.** At the first browser run
-after this commit: the new test passes in both channels. Then at kyu's next
-upgrade: its own `:user-invalid` workaround can go and the login stays
+**7 · How we measure that it works, and when.** The browser half is done
+(field 6). What remains is kyu's next upgrade: its own `:user-invalid` workaround can go and the login stays
 neutral at load. Queued as fix-74-M1.
 
 **8 · If the measurement fails.** If a browser in the suite lacks
