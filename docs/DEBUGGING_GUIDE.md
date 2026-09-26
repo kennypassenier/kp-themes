@@ -103,9 +103,10 @@ reasoning is in the header of `js/diagnostics.js`.
 npm run gates
 ```
 
-Thirty-three steps chained with `&&` (counted from `scripts.gates` in
-`package.json` on 2026-09-17, after scope-125 added the VS Code themes and
-scope-128 the Rust palette): thirty-two `check:*` scripts, then `npm test`
+Thirty-four steps chained with `&&` (counted from `scripts.gates` in
+`package.json` on 2026-09-26, after scope-125 added the VS Code themes,
+scope-128 the Rust palette and the desktop branch `check:desktop`):
+thirty-three `check:*` scripts, then `npm test`
 (the unit tests through `node --test gates/`).
 Five older checks run inside those steps and print their own lines there:
 the bundle in `check:min`, the migration
@@ -121,7 +122,7 @@ half its own line.
 **`npm run gates` and the hook are no longer the same cost.** Since
 2026-09-16 the hook runs each check through `gate` from
 `.githooks/gate-cache.sh`, which skips a check whose input files have not
-moved since it last passed; `npm run gates` still runs all thirty-two
+moved since it last passed; `npm run gates` still runs all thirty-four
 unconditionally. So a commit is fast and `npm run gates` is thorough, and
 when the two disagree the hook is the one that skipped something. To make
 the hook run everything — which is what to do when you suspect the cache

@@ -81,10 +81,10 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "85cd6f4056a2f0465d1c50ad95508fb612a9b45f2e0237e58fb251ab678af773",
-            "doc": "a46f733d0798a2c4378502517dbdca8d8719fc9156578872308d87afae340e7d",
+            "hash": "0d01744a1c82b35670a1ed585ae3ddb0ed592a2c24a71ad9561a87e88dc62512",
+            "doc": "f549757c0781eb3a7a17f16e23515294508e4a6e9e4f5c32b6f35b05be879f03",
             "files": {
-                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
+                ".claude/hooks/gates.sh": "490d800abdd813aa218d262dd42130c07f0aed00407b0b2d5db566f6bbe763b8",
                 "css/_header.css": "7fd8d01f80d36583f6edb4b440ef77e7ee92508f87798bcfa43d09de55acde03",
                 "gates/colour.mjs": "1de05f5f28b8f4c1970cf3df43db8b92482a2c82de04dc833fd5bac758010cfd",
                 "gates/generate-showcase.mjs": "3cd05f6a307fe1a00722aa5d13e808a956fa9fd6c73db46f62b6cbb0f713b852",
@@ -157,10 +157,10 @@
                 "tests/ring.mjs",
                 "playwright.config.mjs"
             ],
-            "hash": "eef7f0dbdb57f2322a96827bfabdf653cdd4bdb1f2a8125a2fa246971b5b0f8c",
-            "doc": "dc7a3769afb4145668c0ee22b73ae414707f60fed52fef7723e4ad61a4d65e76",
+            "hash": "b4dfeb83aa265cc555d7dc9c14aae72c014fc257ba825a485a03b384e151b81f",
+            "doc": "28bd35682c2c2d184606158101f516317aac33beee2b559260a872997adbf7ae",
             "files": {
-                ".claude/hooks/gates.sh": "ed177b9b190d1c29fb32665ae903178f62f973d35c046961667b893fd9b8f190",
+                ".claude/hooks/gates.sh": "490d800abdd813aa218d262dd42130c07f0aed00407b0b2d5db566f6bbe763b8",
                 ".githooks/pre-commit": "2d75d9879c99fd77024aa4a4f2f0f78061111c895e8cf06207404d4b15bef09c",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
                 "js/diagnostics.js": "f908e34ea79601359e5d8dc594bbb72da15fbbc4117d52c6b3a28aae705f9ff6",
