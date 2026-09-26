@@ -10,6 +10,9 @@
   invalid before anyone types. The rule now reads `:user-invalid`, which waits
   until the field has been touched or a submit was tried. A consumer that
   worked around it with its own `:user-invalid` rule can drop that rule.
+- **Retro's pressed icon button keeps its plate behind itself** [fix-75] —
+  the plate is an absolutely placed `::before`, and the icon button was not
+  positioned, so the plate was drawn at the page's top-left corner.
 
 **Added.**
 

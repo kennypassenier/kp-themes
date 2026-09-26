@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "fb6e207d066b75a845bbaa6e47573f0fc57befbfe9fc7321da2b25e38e24ef49",
+            "hash": "da494bb99cfe6c1e456adafc2781726c529938646a0dbcc1eb5ce958e0c24469",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "5383392820a1fc97c4e3a35491acbf9cf14a74bc33e032f4528f2dcb42b25f8e"
+                "CHANGELOG.md": "98db60b8dfc7fccd1f395749c22359a9840b60213803f9c76b419016ae91bcb6"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
