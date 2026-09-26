@@ -79,32 +79,6 @@ for (const channel of CHANNELS) {
             await expect(page.locator(`#${errorId}`)).toBeVisible();
         });
 
-        test('an untouched required field does not load red [fix-74]', async ({ page }) => {
-            // kyu's login page opened with its token field already in the
-            // destructive colour: the base layer painted every `:invalid`
-            // field, and an empty required field is invalid before anyone
-            // has typed. `:user-invalid` waits for the user.
-            await page.goto(URL);
-            const naam = page.locator(channel.naam);
-            const ink = (el) =>
-                el.evaluate((node) => {
-                    const probe = document.createElement('i');
-                    probe.style.color = 'var(--destructive)';
-                    document.body.append(probe);
-                    const destructive = getComputedStyle(probe).color;
-                    probe.remove();
-                    return { border: getComputedStyle(node).borderTopColor, destructive };
-                });
-            const atLoad = await ink(naam);
-            expect(atLoad.border).not.toBe(atLoad.destructive);
-            await naam.click();
-            await naam.type('x');
-            await naam.press('Backspace');
-            await naam.blur();
-            const touched = await ink(naam);
-            expect(touched.border).toBe(touched.destructive);
-        });
-
         test('validation reports on blur, not on every keystroke [TH38]', async ({ page }) => {
             await page.goto(URL);
             const form = page.locator(channel.form);
@@ -269,6 +243,40 @@ for (const channel of RICH) {
 }
 
 // TH62: the consumer's own link component.
+test('an untouched required field does not load red [fix-74]', { tag: ['@component:field'] }, async ({ page }) => {
+    // kyu's login page opened with its token field already in the
+    // destructive colour: the base layer painted every `:invalid` field,
+    // and an empty required field is invalid before anyone has typed.
+    // The field is bare on purpose — `.kp-field__input` sets its own
+    // border in the components layer, which is why the suite above never
+    // saw it; a consumer's plain `<input required>` did.
+    await page.goto(URL);
+    await page.evaluate(() => {
+        const input = document.createElement('input');
+        input.required = true;
+        input.dataset.test = 'bare-required';
+        document.body.prepend(input);
+    });
+    const bare = page.locator('[data-test="bare-required"]');
+    const ink = () =>
+        bare.evaluate((node) => {
+            const probe = document.createElement('i');
+            probe.style.color = 'var(--destructive)';
+            document.body.append(probe);
+            const destructive = getComputedStyle(probe).color;
+            probe.remove();
+            return { border: getComputedStyle(node).borderTopColor, destructive };
+        });
+    const atLoad = await ink();
+    expect(atLoad.border).not.toBe(atLoad.destructive);
+    await bare.click();
+    await bare.type('x');
+    await bare.press('Backspace');
+    await bare.blur();
+    const touched = await ink();
+    expect(touched.border).toBe(touched.destructive);
+});
+
 test('NavBar renders its links through the component a consumer hands in [TH62]', { tag: ['@component:navigation'] }, async ({ page }) => {
     await page.goto(URL);
     const nav = page.locator('[data-test="react-router-nav"]');
