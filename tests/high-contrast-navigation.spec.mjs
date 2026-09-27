@@ -233,6 +233,20 @@ test.describe('high-contrast: no blue is left in a navigation [navigation]', { t
 
     test('under the pointer, with the keyboard focus and while pressed, no navigation control paints a blue', async ({ page }) => {
         await open(page);
+        // Pressing a link must not leave the page. A side-navigation demo links
+        // to catalogue/datepicker.html, and in Firefox on WSL the walk followed
+        // it on mouse up and then waited on the next page until the test ran
+        // out, at v7.1.0 as well [step-2]. What is measured is the paint while
+        // pressed, not where the link goes.
+        await page.evaluate(() =>
+            document.addEventListener(
+                'click',
+                (event) => {
+                    if (event.target instanceof Element && event.target.closest('a[href]')) event.preventDefault();
+                },
+                true,
+            ),
+        );
         /** @type {string[]} */
         const faults = [];
         for (const block of BLOCKS) {

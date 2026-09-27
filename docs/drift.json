@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "da494bb99cfe6c1e456adafc2781726c529938646a0dbcc1eb5ce958e0c24469",
+            "hash": "adb794c616a596c2c95d5f18132e5b14c56b94a2bc31ece101c7947874b6af86",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "98db60b8dfc7fccd1f395749c22359a9840b60213803f9c76b419016ae91bcb6"
+                "CHANGELOG.md": "1fe4b1324f4d3006914a6809f786853510c6235e6e8bcfcc852e5e1868c741aa"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "0d01744a1c82b35670a1ed585ae3ddb0ed592a2c24a71ad9561a87e88dc62512",
+            "hash": "b5fc0da01380129e381b4961c272ce54f9867b0065dc71ca613c04a195293b4c",
             "doc": "f549757c0781eb3a7a17f16e23515294508e4a6e9e4f5c32b6f35b05be879f03",
             "files": {
                 ".claude/hooks/gates.sh": "490d800abdd813aa218d262dd42130c07f0aed00407b0b2d5db566f6bbe763b8",
@@ -118,7 +118,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "46090193f1ed57b4e96306edc79653d21eff69b71759a2a68dbd46c7281fc929",
+                "js/theme-registry.d.ts": "892474777afdb1d8464c6a5670021ff75d466ee42db56d414194febd9c788b4a",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",
@@ -295,7 +295,7 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "f28574348344d915e4251c665ea4accb8b337e96f1f5c0a957fb3dd91637ab40",
+            "hash": "42d9216964fffb151509f1321149617e0645606eb4c2b419cce91d7ac507c0c7",
             "doc": "c14ff1c428701f83231a264f01211468954071ad7ca6a7819b8e14f44edb7404",
             "files": {
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
@@ -358,7 +358,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "46090193f1ed57b4e96306edc79653d21eff69b71759a2a68dbd46c7281fc929",
+                "js/theme-registry.d.ts": "892474777afdb1d8464c6a5670021ff75d466ee42db56d414194febd9c788b4a",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",

@@ -4532,6 +4532,17 @@ package for `.kp-icon-button`, as it already is for `.kp-button`.
 
 **Approved by Kenny, 2026-09-27** (resume form v2: Klopt).
 
+**Field 8 triggered at the 7.2.0 verify, 2026-09-27.** The retro rule
+`[data-theme='retro'] .kp-icon-button { position: relative }` outranked the
+package's `.kp-dialog__close { position: absolute }`, so retro's dialog close
+button fell back into the title's line: `tests/retro-dialog-notes.spec.mjs`
+read 24px of the title under it, in both engines, four failures. The
+containing block moved into the package as `:where(.kp-icon-button) {
+position: relative }` in `css/components.css`: zero specificity, so a part
+that places the button itself still wins. The retro rule is gone. Re-run:
+`retro-dialog-notes` and `retro-notes`, 45 passed in both engines. The
+change reaches every theme's icon button, so those review pairs come back.
+
 ## fix-74 · A required field loaded red before anyone touched it (2026-09-27)
 
 **1 · What went wrong.** Reported from kyu, which consumes 7.1.0: its login

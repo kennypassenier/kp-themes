@@ -3268,6 +3268,15 @@
  * either measuring the other.
  */
 
+    /* An icon button is the containing block of whatever a register hangs
+       off it, as `.kp-button` already is [fix-75]. At zero specificity, so a
+       part that places the button itself — the dialog's close in its
+       corner — still wins; retro's own rule beat it and put the close button
+       back in the title's line. */
+    :where(.kp-icon-button) {
+        position: relative;
+    }
+
     .kp-icon-button {
         display: inline-flex;
         align-items: center;

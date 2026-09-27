@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased
+## 7.2.0 — 2026-09-27
+
+A minor for a new component and three fixes found in use. `.kp-log` gives a
+log line its time, source, level and message on fixed columns, with a
+source name's own colour from `js/log.js`; the side navigation marks a
+submenu item per theme. Then what a consumer and a desktop ran into: kyu's
+login opened with its required field already red [fix-74], retro drew its
+pressed icon-button plate at the page's corner [fix-75], and the desktop
+apply scripts wrote through Kenny's linked `starship.toml` [fix-76]. The
+Windows and Linux desktop files live in `desktop/` from this release on; they
+are not part of the npm package.
 
 **Fixed.**
 
@@ -10,12 +20,12 @@
   invalid before anyone types. The rule now reads `:user-invalid`, which waits
   until the field has been touched or a submit was tried. A consumer that
   worked around it with its own `:user-invalid` rule can drop that rule.
-- **Retro's pressed icon button keeps its plate behind itself** [fix-75] —
-  the plate is an absolutely placed `::before`, and the icon button was not
-  positioned, so the plate was drawn at the page's top-left corner.
-
-**Added.**
-
+- **An icon button is the containing block of what hangs off it** [fix-75]
+  — retro draws its pressed plate as an absolutely placed `::before`, and the
+  icon button was not positioned, so the plate was drawn at the page's
+  top-left corner. `.kp-icon-button` is now `position: relative` at zero
+  specificity, as `.kp-button` already was, in every theme; a part that
+  places the button itself, like the dialog's close, still wins.
 - **A submenu item carries a mark of its own** — Kenny, 2026-09-20: _"bij
   subitems op de sidenav zou ik graag nog, per thema, een specifiek symbool
   voor de subitemnaam willen zetten zodat het extra duidelijk is wat nu juist
