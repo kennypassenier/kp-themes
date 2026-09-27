@@ -94,8 +94,15 @@ backup() {
     [ "$DRY" = 1 ] || cp -p "$1" "$1.kp-backup-$STAMP"
 }
 
-# Copy src to dest, making the folder and keeping what was there.
+# Copy src to dest, making the folder and keeping what was there. A dest that
+# is a symlink belongs to another tool (the workstation repo links Kenny's own
+# starship.toml), and cp would write through it into that tool's file, so it
+# is left alone.
 put() {
+    if [ -L "$2" ]; then
+        skip link "$2 is a symlink to $(readlink "$2"); left alone"
+        return 0
+    fi
     [ "$DRY" = 1 ] && return 0
     mkdir -p "$(dirname "$2")"
     backup "$2"
