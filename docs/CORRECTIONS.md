@@ -4485,6 +4485,8 @@ workstation prompt includes.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-27** (form v4: Klopt).
+
 ## fix-75 · Retro's pressed plate sat at the page's corner (2026-09-27)
 
 **1 · What went wrong.** Retro draws the pressed plate of an icon button as
