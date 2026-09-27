@@ -4442,6 +4442,49 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-76 · A theme switch replaced Kenny's own prompt (2026-09-27)
+
+**1 · What went wrong.** On WSL, `~/.config/starship.toml` should be the
+workstation repo's link to Kenny's own prompt (`links.manifest`:
+`.config/starship.toml → shell/starship.toml`). On 2026-09-27 at 04:55 a
+theme switch left a plain file there holding KP Cyberpunk's generated prompt,
+so WSL and Garuda showed different prompts. Both apply scripts copy the
+prompt with `cp`, and `cp` onto a symlink writes through it: in a scratch
+HOME the old `desktop/linux/apply.sh` replaced the link's target, the
+workstation file itself, with the generated prompt.
+
+**2 · Which gate let it through.** None. `check:desktop` holds the generated
+files to their source; nothing asks what the apply scripts do to a machine
+where another tool already owns a file.
+
+**3 · Where else the same fault sits.** The fault as a property: *an apply
+step that copies onto a path another tool manages.* **Gezocht met:**
+`grep -n "put \|cp " desktop/linux/apply.sh desktop/windows/apply.ps1` against
+the workstation's `links.manifest`: only `starship.toml` is on both lists;
+the fish colours go to `conf.d/kp-colors.fish`, which the manifest does not
+link.
+
+**4 · How we prevent recurrence.** `put()` in `apply.sh` and the WSL step in
+`apply.ps1` skip a destination that is a symlink and say so.
+
+**5 · What the remedy costs.** A theme switch no longer changes the prompt
+where the prompt is linked, which is every machine the workstation repo set
+up. The prompt's colours then come from Kenny's own file.
+
+**6 · Who enforces it.** Discipline: the scripts are hand-written and no test
+runs them. Measured by hand on 2026-09-27: the old script wrote through the
+link, the new one leaves both link and target as they were.
+
+**7 · How we measure that it works, and when.** At the next theme switch on
+Windows or Garuda: `~/.config/starship.toml` is still a link afterwards.
+Queued as fix-76-M1.
+
+**8 · If the measurement fails.** Then the apply scripts stop writing
+`starship.toml` at all, and the prompt's theme colours move into a file the
+workstation prompt includes.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-75 · Retro's pressed plate sat at the page's corner (2026-09-27)
 
 **1 · What went wrong.** Retro draws the pressed plate of an icon button as
