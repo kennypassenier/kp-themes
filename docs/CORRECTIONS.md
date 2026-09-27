@@ -4485,6 +4485,8 @@ package for `.kp-icon-button`, as it already is for `.kp-button`.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-27** (resume form v2: Klopt).
+
 ## fix-74 · A required field loaded red before anyone touched it (2026-09-27)
 
 **1 · What went wrong.** Reported from kyu, which consumes 7.1.0: its login
@@ -4527,6 +4529,8 @@ neutral at load. Queued as fix-74-M1.
 the form script sets itself.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-27** (resume form v2: Klopt).
 
 ## fix-73 · A theme's own dot stood still while its list scrolled (2026-09-20)
 
