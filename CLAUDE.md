@@ -40,7 +40,7 @@ never a silent deviation. This project follows
 | `npm run test:browser`                                            | the whole suite, both engines                   | before a release, on Kenny's go given in a form; never on Claude's own |
 | `npm run advice`                                                  | the readings, printed, never refusing           | when Kenny wants the reading                                           |
 | `npm run verify`                                                  | gates, the whole suite, advice, in order        | before a release, on the same go                                       |
-| review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published | Claude pushes `round-six` whenever it asks Kenny to look [scope-67]    |
+| review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published | Claude pushes `main` whenever it asks Kenny to look [scope-67]         |
 
 No CI runs on commits; `release.yml` fires on a `v*` tag and `pages.yml`
 on a push to `main`. Node 26 (`.nvmrc`). All artefact text in English.

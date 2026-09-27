@@ -12,8 +12,9 @@ name: Documentation site
 # the site consists of means the CI one ships.
 
 # The review site rides along under /review/ (Kenny, 2026-09-13: a fixed
-# URL for the catalogue instead of a local server). It is taken from the
-# round-six branch, where the catalogue and the research demos live, and
+# URL for the catalogue instead of a local server). It was taken from the
+# round-six branch until that branch was deleted on 2026-09-26, after main
+# had caught up with it; it is now taken from main, and
 # carries only what those pages load — measured by loading all 23 of them:
 # catalogue/, research/, css/, js/ and fonts/. The documentation stays the
 # one on main, whichever branch the push came from. examples/ joined when the
@@ -22,7 +23,7 @@ name: Documentation site
 
 on:
   push:
-    branches: [main, round-six]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -44,7 +45,7 @@ jobs:
           path: main
       - uses: actions/checkout@v4
         with:
-          ref: round-six
+          ref: main
           path: review
       - uses: actions/setup-node@v4
         with:

@@ -80,7 +80,7 @@ theme its window plays, whatever the page wears [scope-86].
    (about 17 s for 158 entries). A mismatch means Kenny's browser saw
    something the tools do not — his desktop font on a control the package
    left without one was the cause of 39 of 158 on 2026-09-14 [fix-28] — and
-   goes into the report. Claude commits the register and pushes `round-six`.
+   goes into the report. Claude commits the register and pushes `main` (the review site is built from `main` since `round-six` was deleted on 2026-09-26).
 4. From the published register on, the block counts as judged in every
    browser of that engine ("In the register"). A verdict made later in a
    browser, and different from the register's, wins until it is recorded in
