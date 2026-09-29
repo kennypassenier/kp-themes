@@ -4479,6 +4479,8 @@ difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-29** (correction form: Klopt).
+
 ## fix-79 · A switch's words could move its label on every flip (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (item 3): the word
@@ -4514,6 +4516,8 @@ difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-29** (correction form: Klopt).
+
 ## fix-78 · A select's open list ran off the window and right-aligned its labels (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (item 2): with
@@ -4547,6 +4551,8 @@ fix-78-M1.
 difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-29** (correction form: Klopt).
 
 ## fix-77 · A ghost or icon button in the bar took the page's ink (2026-09-29)
 
@@ -4585,6 +4591,8 @@ fix-77-M1.
 difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-29** (correction form: Klopt).
 
 ## fix-76 · A theme switch replaced Kenny's own prompt (2026-09-27)
 

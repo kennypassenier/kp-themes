@@ -14,6 +14,18 @@
         position: static;
     }
 
+    /* Always reachable: fixed in the top right corner, above the page, on
+       the page's own ground so it reads over whatever scrolls under it. */
+    .sc-theme-switch {
+        position: fixed;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-md, 1rem);
+        z-index: 10;
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        box-shadow: 0 0 0 1px var(--border);
+    }
+
     .sc-brand {
         display: block;
         color: var(--primary);

@@ -8,6 +8,9 @@
 // stylesheet of its own to look right would be evidence against the
 // thing it documents.
 
+import { noFlashSnippet } from '../../js/no-flash.js';
+import { themeMenuMarkup } from '../../js/theme-picker.js';
+
 /** @typedef {{ href: string, label: string }} Link */
 
 /**
@@ -51,6 +54,11 @@ ${section.links
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>${page.title} — kp-themes</title>
         <meta name="description" content="${page.description}" />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+${noFlashSnippet()}
+        </script>
         <link rel="stylesheet" href="${up}css/themes.css" />
         <link rel="stylesheet" href="${up}css/components.css" />
         <link rel="stylesheet" href="${up}css/layout.css" />
@@ -87,6 +95,9 @@ ${section.links
     </head>
     <body>
         <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch">${themeMenuMarkup({ id: 'sc-theme-menu', label: 'Choose a theme' })}</div>
         <div class="kp-sidebar">
             <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
                 <a class="sc-brand kp-fw-bold" href="${up}site/index.html">kp-themes</a>
