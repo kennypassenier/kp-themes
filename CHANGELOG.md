@@ -1,5 +1,24 @@
 # Changelog
 
+## 8.0.1 — 2026-09-29
+
+A patch with nothing new for a web page that imports the package: the
+documentation site and the review tools.
+
+**Fixed.**
+
+- **The documentation site's theme menu opens under its button**: Firefox
+  drew it at the far left over the sidebar, and in Chromium it ran past the
+  window's right edge.
+
+**Changed (review tools)** [scope-138].
+
+- **The review hash is the block's markup alone** (hash version 10), and
+  `node gates/verdicts.mjs pixels` judges the rest: it photographs every
+  approved block at its approval commit and at HEAD, and carries the
+  approval when the pixels are equal. `catalogue/pixel-checks.json` records
+  each outcome.
+
 ## 8.0.0 — 2026-09-29
 
 A major that only removes: the themes for other programs leave for

@@ -293,7 +293,7 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "abe473b8851ac4f771e69a26b7177b461728c4e91666820e2364c0b085d57599",
+            "hash": "4f2ac417209608cc903896b386aa63528fd9c767859995f2106a3a2b90604a1a",
             "doc": "d9e4a38a0a41eea2c375e2957e5a447a65c613eb53ba01535f494c5e7e2b09f7",
             "files": {
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
@@ -356,7 +356,7 @@
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",
                 "js/theme-picker.d.ts": "c5baae7b99d37d71d86a792975a50e7ee1397da5d526f08ee714187fa95cfe2e",
-                "js/theme-registry.d.ts": "d1524037bb208f6e2f51605dc38653654efc6eb678a5469c000e944d1b7f34f1",
+                "js/theme-registry.d.ts": "58ea46075742fc1467ee239a745be976946b1c8efdfbc4cbb9ca2b1799f3b0d7",
                 "js/top-layer.d.ts": "83405c5a35796ee2a746a7adbe2fb3150737565e9f7dc5239aeb95c5ba3e229a",
                 "js/upload.d.ts": "2b1da61d760552addaa8a5b3db527ca1c78f8eee5da13c54de199cb7534aea67",
                 "js/wizard.d.ts": "e44c5d578432b1be407ce7577393057057a574f867c7bd9db8a6dbcb3ba94660",

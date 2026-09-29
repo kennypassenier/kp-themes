@@ -140,7 +140,12 @@ export const pixelChecksReady = (async () => {
 })();
 
 /** Whether the pixels of an approved pair moved since it was approved, or did not repeat. */
-export const pixelsReopened = (/** @type {string} */ key, /** @type {string} */ theme, engine = ENGINE, commit = registerVerdicts()[key]?.[theme]?.[engine]?.commit) => {
+export const pixelsReopened = (
+    /** @type {string} */ key,
+    /** @type {string} */ theme,
+    engine = ENGINE,
+    commit = registerVerdicts()[key]?.[theme]?.[engine]?.commit,
+) => {
     const check = pixelChecks.checks?.[key]?.[theme]?.[engine];
     // Only against the approval it compared from: a verdict recorded since
     // stands on its own.

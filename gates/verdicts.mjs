@@ -195,7 +195,7 @@ export function parseVerdictLines(text) {
  * Apply parsed lines to a register.
  * @param {Register} register
  * @param {ReturnType<typeof parseVerdictLines>} parsed
- * @param {{ hashVersion: number, known: Set<string> | Map<string, unknown>, themes: string[], commit: string, given: string }} context
+ * @param {{ hashVersion: number, known: Set<string> | Map<string, unknown>, themes: string[], commit: string, given: string, reopened?: (key: string, theme: string, engine: string, from: string) => boolean }} context
  * @returns {{ added: string[], changed: string[], unchanged: string[], faults: string[] }}
  */
 export function applyVerdictLines(register, { version, lines }, { hashVersion: current, known, themes, commit, given, reopened = () => false }) {
@@ -564,7 +564,20 @@ async function pixels(args) {
     const width = (args.includes('--width') && Number(args[args.indexOf('--width') + 1])) || 1920;
     // The register and this command's own output may be dirty: a second run
     // at the same HEAD picks up where the first left them.
-    const dirty = git('status', '--porcelain', '--', 'css', 'js', 'catalogue', 'themes', 'fonts', 'components', 'research', `:!${REGISTER}`, `:!${PIXELS}`);
+    const dirty = git(
+        'status',
+        '--porcelain',
+        '--',
+        'css',
+        'js',
+        'catalogue',
+        'themes',
+        'fonts',
+        'components',
+        'research',
+        `:!${REGISTER}`,
+        `:!${PIXELS}`,
+    );
     if (dirty) throw new Error(`pixels compares against HEAD, and the working tree has changes:\n${dirty}`);
     const head = git('rev-parse', 'HEAD');
     const register = readRegister();

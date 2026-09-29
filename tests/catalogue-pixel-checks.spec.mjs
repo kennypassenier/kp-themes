@@ -24,7 +24,9 @@ async function readState(page, { registerCommit }) {
     });
     await page.route('**/catalogue/pixel-checks.json', async (route) => {
         const check = { state: 'reopened', from: 'c0ffee' };
-        await route.fulfill({ json: { commit: 'head', checked: '2026-09-29T07:51:00.000Z', checks: { [KEY]: { [THEME]: { firefox: check, chromium: check } } } } });
+        await route.fulfill({
+            json: { commit: 'head', checked: '2026-09-29T07:51:00.000Z', checks: { [KEY]: { [THEME]: { firefox: check, chromium: check } } } },
+        });
     });
     await page.goto('/tests/fixtures/blank.html');
     return page.evaluate(
