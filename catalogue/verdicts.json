@@ -25773,10 +25773,10 @@
             "dark": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "8e7f59c386578b27b26b4c645045da2be4aef600e7ee261e191f13f67ed14fa4",
-                    "commit": "d25f2983f3540bf4ece33cb28f1e4d8d90e461b6",
-                    "given": "2026-09-20",
-                    "ratio": 2.222
+                    "hash": "fe4a3623a52bc2d54d1e1d50463af1fc170d7134bac9e19c0b4110cc8e16391f",
+                    "commit": "03f80aa1f6cb561c8050cafe914c02df6773576d",
+                    "given": "2026-09-29",
+                    "ratio": 2
                 }
             },
             "deco": {
