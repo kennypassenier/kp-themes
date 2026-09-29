@@ -759,7 +759,7 @@
     }
 
     [data-theme='deco'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 0;
     }

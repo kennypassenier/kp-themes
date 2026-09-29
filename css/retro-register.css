@@ -1559,7 +1559,7 @@
 
     /* The segmented progress bar of a 1995 installer. */
     [data-theme='retro'] .kp-progress {
-        background: var(--popover);
+        background-color: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-sunken);

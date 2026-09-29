@@ -933,7 +933,7 @@
     }
 
     [data-theme='sepia'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border-radius: 999px;
         overflow: hidden;
     }

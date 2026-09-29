@@ -730,7 +730,7 @@
     }
 
     [data-theme='shade-light'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: 999px;
         overflow: hidden;
     }

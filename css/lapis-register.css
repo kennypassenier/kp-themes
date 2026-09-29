@@ -770,7 +770,7 @@
     }
 
     [data-theme='lapis'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 1px solid var(--border-strong);
         padding: 1px;
     }

@@ -629,7 +629,7 @@
     }
 
     [data-theme='shade-dark'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border-radius: var(--radius);
     }
 

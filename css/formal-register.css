@@ -644,7 +644,7 @@
     }
 
     [data-theme='formal'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: var(--radius);
     }
 

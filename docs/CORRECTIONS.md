@@ -4442,6 +4442,39 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-86 · An indeterminate progress bar was an empty track in twenty themes (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard: `.kp-progress:indeterminate`
+draws its stripes as a `background-image`, and twenty registers set the
+track with `background: var(--…)` one layer later, which reset the image.
+A bar meaning "no idea yet" showed an empty track.
+
+**2 · Which gate let it through.** No test read the indeterminate bar with
+a register loaded; the fixtures that have one load no registers.
+
+**3 · Where else the same fault sits.** The fault as a property: *a
+register's shorthand resetting a longhand the components layer sets.*
+**Gezocht met:** the `.kp-progress` rules of every register, read for a
+`background` shorthand: twenty, all a plain colour.
+
+**4 · How we prevent recurrence.** Those twenty set `background-color`
+only. `tests/progress-indeterminate.spec.mjs` reads the bar in all 22
+themes on a page that loads each register: it failed first (twenty themes)
+and passes in both engines.
+
+**5 · What the remedy costs.** Nothing: the same colour, one longhand.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard
+takes the kp-themes that carries it through chassis-rs: its shim for the
+stripes goes and the bar still moves. Queued as fix-86-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its shim and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-85 · A table that loads its own rows could not fail visibly, nor tell empty from no match (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (its

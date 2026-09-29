@@ -565,7 +565,7 @@
 
     [data-theme='solstice'] .kp-progress {
         border-radius: var(--radius);
-        background: var(--popover);
+        background-color: var(--popover);
     }
 
     [data-theme='solstice'] .kp-spinner {

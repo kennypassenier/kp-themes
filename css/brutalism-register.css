@@ -878,7 +878,7 @@
     }
 
     [data-theme='brutalism'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);

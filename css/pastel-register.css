@@ -833,7 +833,7 @@
 
     [data-theme='pastel'] .kp-progress {
         border-radius: 999px;
-        background: var(--muted);
+        background-color: var(--muted);
     }
 
     [data-theme='pastel'] .kp-spinner {

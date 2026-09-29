@@ -488,7 +488,7 @@
     }
 
     [data-theme='light'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: var(--kp-radius-pill, 999px);
     }
 

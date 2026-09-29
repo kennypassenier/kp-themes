@@ -22,6 +22,7 @@
 //   tests/registers.spec.mjs:91       fix-12
 //   tests/reflow.spec.mjs:168         brutalism fails in firefox only
 //   tests/overflow.spec.mjs:76        sepia and solstice fail in chromium only
+//   tests/progress-indeterminate.spec.mjs  fix-86, twenty registers each
 //
 // Before narrowing a loop, ask whether its faults have ever been one
 // theme's. If they have, it stays whole.

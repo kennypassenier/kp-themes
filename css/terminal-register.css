@@ -941,7 +941,7 @@
 
     /* The progress bar is a run of cells. */
     [data-theme='terminal'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
         padding: 1px;

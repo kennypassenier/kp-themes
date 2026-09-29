@@ -825,7 +825,7 @@
     }
 
     [data-theme='grotesk'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 2px solid var(--border);
         border-radius: 0;
     }

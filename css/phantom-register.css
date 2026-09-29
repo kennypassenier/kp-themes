@@ -1061,7 +1061,7 @@
     }
 
     [data-theme='phantom'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 2px solid var(--border);
         border-radius: 0;
         transform: skewX(var(--kp-skew));

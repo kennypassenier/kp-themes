@@ -13800,7 +13800,7 @@
 
     /* The segmented progress bar of a 1995 installer. */
     [data-theme='retro'] .kp-progress {
-        background: var(--popover);
+        background-color: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-sunken);
@@ -15849,7 +15849,7 @@
     }
 
     [data-theme='synthwave'] .kp-progress {
-        background: var(--sidebar-background);
+        background-color: var(--sidebar-background);
         border: 1px solid var(--kp-hairline);
         border-radius: 0;
     }
@@ -17778,7 +17778,7 @@
     }
 
     [data-theme='phantom'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 2px solid var(--border);
         border-radius: 0;
         transform: skewX(var(--kp-skew));
@@ -19622,7 +19622,7 @@
 
     /* The progress bar is a run of cells. */
     [data-theme='terminal'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
         padding: 1px;
@@ -21323,7 +21323,7 @@
     }
 
     [data-theme='brutalism'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
@@ -23173,7 +23173,7 @@
     }
 
     [data-theme='titanium'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border-strong);
     }
 
@@ -24644,7 +24644,7 @@
 
     [data-theme='pastel'] .kp-progress {
         border-radius: 999px;
-        background: var(--muted);
+        background-color: var(--muted);
     }
 
     [data-theme='pastel'] .kp-spinner {
@@ -26065,7 +26065,7 @@
     }
 
     [data-theme='shade-light'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: 999px;
         overflow: hidden;
     }
@@ -27591,7 +27591,7 @@
     }
 
     [data-theme='forest'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border);
     }
 
@@ -28886,7 +28886,7 @@
     }
 
     [data-theme='deco'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 0;
     }
@@ -30081,7 +30081,7 @@
     }
 
     [data-theme='light'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: var(--kp-radius-pill, 999px);
     }
 
@@ -31490,7 +31490,7 @@
     }
 
     [data-theme='grotesk'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 2px solid var(--border);
         border-radius: 0;
     }
@@ -33081,7 +33081,7 @@
     }
 
     [data-theme='blueprint'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
     }
@@ -34475,7 +34475,7 @@
     }
 
     [data-theme='nostromo'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         padding: 1px;
@@ -36348,7 +36348,7 @@
     }
 
     [data-theme='dark'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border: 1px solid var(--border-strong);
     }
 
@@ -37691,7 +37691,7 @@
     }
 
     [data-theme='formal'] .kp-progress {
-        background: var(--muted);
+        background-color: var(--muted);
         border-radius: var(--radius);
     }
 
@@ -39207,7 +39207,7 @@
     }
 
     [data-theme='sepia'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border-radius: 999px;
         overflow: hidden;
     }
@@ -40453,7 +40453,7 @@
 
     [data-theme='solstice'] .kp-progress {
         border-radius: var(--radius);
-        background: var(--popover);
+        background-color: var(--popover);
     }
 
     [data-theme='solstice'] .kp-spinner {
@@ -43116,7 +43116,7 @@
     }
 
     [data-theme='lapis'] .kp-progress {
-        background: var(--background);
+        background-color: var(--background);
         border: 1px solid var(--border-strong);
         padding: 1px;
     }
@@ -44310,7 +44310,7 @@
     }
 
     [data-theme='shade-dark'] .kp-progress {
-        background: var(--card);
+        background-color: var(--card);
         border-radius: var(--radius);
     }
 

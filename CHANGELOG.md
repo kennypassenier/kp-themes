@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**Fixed.**
+
+- **An indeterminate progress bar shows its stripes in every theme** [fix-86]:
+  twenty registers set the track with the `background` shorthand, which
+  reset the stripes, so a bar meaning "no idea yet" was an empty track. The
+  registers set only the track's colour now. Reported by the homelab
+  dashboard, which can drop its shim once it runs a release carrying this.
+
 **Added.**
 
 - **A loading data table can show it over its rows**: `busy({ text, since,
