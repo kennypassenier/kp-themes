@@ -513,7 +513,7 @@ test('TH104: the container names and their wrappers are read from the stylesheet
     assert.deepEqual(wrappers.get('kp-table'), ['kp-table-wrap', 'kp-datatable']);
 });
 
-test('KT7: every check script runs in the gates chain, in the hook, and CI runs the chain', () => {
+test('KT7: every check script runs in the gates chain, in the hook, and the release runs the chain', () => {
     // Two lists that promise the same thing and nothing that lays them
     // side by side: the hook script omitted check:strings and CI ran the
     // hook script, so a red gate shipped inside a green build. This test
@@ -535,7 +535,7 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     assert.ok(checks.length >= 10, `expected the check scripts, found ${checks.length}`);
     const chain = pkg.scripts.gates;
     const hook = readFileSync(new URL('../.claude/hooks/gates.sh', import.meta.url), 'utf8');
-    const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
+    const release = readFileSync(new URL('../scripts/release.sh', import.meta.url), 'utf8');
     for (const name of checks) {
         assert.ok(chain.includes(`npm run ${name}`), `\`${name}\` is not in \`npm run gates\``);
         // The hook runs the same file the script does; match on the
@@ -574,8 +574,10 @@ test('KT7: every check script runs in the gates chain, in the hook, and CI runs 
     assert.ok(/'run', 'advice'/.test(verify), 'gates/verify.mjs does not run the advisory checks');
     // The third list, added at round five's Phase 5 gate (H2). It builds
     // the tag, and until then nothing held it: it ran the hook script,
-    // which is equivalent only for as long as nobody changes either.
-    assert.ok(/run:\s*npm run gates/.test(release), 'release.yml does not run `npm run gates`');
+    // which is equivalent only for as long as nobody changes either. Since
+    // 2026-09-29 the tag is built on Kenny's machine by scripts/release.sh
+    // instead of .github/workflows/release.yml; the promise is the same.
+    assert.ok(/^\s*npm run gates$/m.test(release), 'scripts/release.sh does not run `npm run gates`');
 });
 
 test('scope-76: every merged check still runs, inside the target that took it', () => {

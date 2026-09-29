@@ -55,6 +55,7 @@
         { "path": "*.md", "none": "documentation; no browser reads it" },
         { "path": ".claude/**", "none": "agent and hook configuration" },
         { "path": ".github/**", "none": "release and pages workflows" },
+        { "path": "scripts/**", "none": "the release and Pages scripts, run by hand" },
         { "path": ".githooks/**", "none": "the commit hook" },
         { "path": "reports/**", "none": "generated reports" },
         { "path": "**/*.d.ts", "none": "type declarations; npm run gates checks them" },

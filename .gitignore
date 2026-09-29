@@ -28,3 +28,6 @@ research/loading/out/
 research/theme-portraits/*.png
 # The release asset the split-out theme repos vendor (npm run tokens-tar).
 tokens.tar
+
+# What a dry run of scripts/release.sh builds, for inspection.
+.build/

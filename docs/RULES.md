@@ -120,12 +120,15 @@ project whose every change Kenny approves himself.
 
 **Amended 2026-09-12 (Phase 8).** This used to add "and nothing runs on a
 server", which is not true and has not been since the decision was made.
-Two workflows remain and both fire: `.github/workflows/release.yml` on a
-`v*` tag, which runs the gates, writes the checksums and creates the draft
+Two workflows remained and both fired: `.github/workflows/release.yml` on
+a `v*` tag, which ran the gates, wrote the checksums and created the draft
 release — the answer to `KT9`, where a hand-built release published a
 `SHA256SUMS` covering three files instead of ten — and
 `.github/workflows/pages.yml` on a push to `main`, which publishes the
-documentation site. What was deleted is the CI that ran on every commit
+documentation site. **Amended 2026-09-29:** the release workflow is gone;
+`scripts/release.sh X.Y.Z` runs the same steps on Kenny's machine from a
+clean checkout of the tag (`DRY_RUN=1` rehearses without a tag, push or
+release), so the answer to KT9 is still a script, not a hand. What was deleted is the CI that ran on every commit
 and made Kenny wait; what remains is the machinery that builds a release
 so a person does not build it by hand. Five commands replace it, and three
 of them are his to GIVE (amended 2026-09-10: the decision is his and the

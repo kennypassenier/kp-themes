@@ -43,9 +43,9 @@ they cost seconds and every later procedure rests on them.
     npm ci
     ```
 
-    `npm ci` and not `npm install` — this is what the release workflow
-    runs (`.github/workflows/release.yml`), so a local run and a tag
-    build see the same tree.
+    `npm ci` and not `npm install` — this is what the release script
+    runs (`scripts/release.sh`), so a local run and a tag build see the
+    same tree.
 
 3. **The git hooks are active.** They live in `.githooks/` and are not
    installed by cloning.
@@ -85,9 +85,9 @@ Three things about that table are not style, they are code:
 - **The gates chain and the hook are held together by a test.** `gates.test.mjs`
   asserts that every `check:` script outside `npm run advice` appears in
   `npm run gates` **and** in `.claude/hooks/gates.sh`, that none inside it
-  does, and that `.github/workflows/release.yml`
+  does, and that `scripts/release.sh`
   runs `npm run gates` (`gates/gates.test.mjs`, the test named
-  `KT7: every check script runs in the gates chain, in the hook, and CI runs the chain`).
+  `KT7: every check script runs in the gates chain, in the hook, and the release runs the chain`).
   Adding a gate therefore means three edits, not one, and the unit tests
   say so on the next commit.
 - **A document stops a commit when a file it describes moved.** `docs/drift.json`
@@ -236,8 +236,8 @@ generator writes outside the repository.
 **Note on `SHA256SUMS`.** The root manifest is in `.gitignore` and is
 **not** committed — it would change on every stylesheet edit, and a file
 that is wrong between commits is worse than no file
-(`.github/workflows/release.yml`, header comment). `npm run generate:all`
-writes it locally; the tag build regenerates it. The one checksum file
+(TH18). `npm run generate:all` writes it locally; `scripts/release.sh`
+regenerates it from the tagged tree. The one checksum file
 that *is* committed is `showcase/baseline/4.0.0/SHA256SUMS`, which
 `gates/check-baseline.mjs` reads.
 
@@ -495,17 +495,22 @@ redone here by procedure 4.2.
 
 Two facts decide the shape of this procedure, and both are in the code:
 
-- **Pushing a `v*` tag fires `.github/workflows/release.yml`.** That
-  workflow runs `npm ci`, `npm run gates`, `npm run checksums`,
+- **`scripts/release.sh X.Y.Z` builds the release on this machine**
+  (it replaced `.github/workflows/release.yml` on 2026-09-29; GitHub
+  Actions builds nothing). It tags `vX.Y.Z` at HEAD of a clean `main`
+  that equals `origin/main`, and in a clean checkout of that tag runs
+  `npm ci`, `npm run gates`, `npm run checksums`,
   `tar -cf fonts.tar fonts`, `npm run tokens-tar`,
-  `npm run consumer-tar`, and then `gh release create` with `--draft` and ten
+  `npm run consumer-tar`, verifies every line of `SHA256SUMS` against the
+  tree, then pushes the tag and runs `gh release create --draft` with ten
   assets (twelve from 7.0.0 to 7.3.0, when `ha-themes.tar`, `vscode-themes.tar`
   and `kp-tui-palette.rs` were attached; 8.0.0 replaced the three with
   `tokens.tar` at scope-139). Do not rebuild
   any of that by hand: doing exactly that is the fault recorded as KT9
   in `docs/CORRECTIONS.md`, where a hand-built release published a
   `SHA256SUMS` covering three files instead of ten.
-- **A draft is where the automation stops.** The workflow's own comment:
+- **A draft is where the automation stops.** The script's rule, kept from
+  the workflow it replaced:
   "Pushing a tag is a technical act; publishing is Kenny's, and the two
   should not be the same keystroke." Publishing the draft is not in this
   procedure because it is not the maintainer's step.
@@ -536,8 +541,8 @@ Two facts decide the shape of this procedure, and both are in the code:
 
     Correct: the line reads the new version.
 
-3. Write the `CHANGELOG.md` section. It is not decoration: the workflow
-   passes `--notes-file CHANGELOG.md`, so this file becomes the release
+3. Write the `CHANGELOG.md` section. It is not decoration: the release
+   script passes `--notes-file CHANGELOG.md`, so this file becomes the release
    notes body. Add the `MIGRATION.md` section too if anything breaks —
    `gates/check-migration.mjs` holds every class it names, inside
    `npm run check:docs-runnable` [scope-76].
@@ -577,27 +582,28 @@ Two facts decide the shape of this procedure, and both are in the code:
     git show --stat origin/main | head -20
     ```
 
-8. Tag and push. This, and nothing else, builds the release:
+8. Rehearse, then build. The rehearsal builds and verifies all ten assets
+   into `.build/release/v5.2.0/` and touches nothing outside the
+   repository:
 
     ```sh
-    git tag v5.2.0 <sha>
-    git push origin v5.2.0
+    DRY_RUN=1 scripts/release.sh 5.2.0
     ```
 
-9. Watch the run:
+    Then, from `main` at the pushed sha, the real run. This, and nothing
+    else, tags and builds the release:
 
     ```sh
-    gh run list --workflow=Release --limit 1
+    scripts/release.sh 5.2.0
     ```
 
-    Correct: one tab-separated line for your tag, beginning
-    `completed` and `success`, with `Release` as the workflow and the
-    tag as the branch. If `npm run gates` fails there, the tag has built
-    nothing and there is no draft — go to the abort below. That has
-    happened: run `34424091189` on `v5.1.0` failed at the `Gates` step,
-    and `Checksums`, `Fonts`, `Consumer tarball` and `Draft release` all
-    read `skipped`, so no release object was created at all. The next run
-    on the same tag built it.
+9. Read its last lines. Correct: `✓ v5.2.0: built here, tagged, pushed,
+   and a DRAFT release created with 10 assets.` If `npm run gates` fails
+   in the tagged checkout, the script stops before the push: the tag
+   exists only locally and there is no draft — delete it with
+   `git tag -d v5.2.0`, fix, and run again. (Under the workflow this
+   happened once: run `34424091189` on `v5.1.0` failed at the `Gates`
+   step and created no release object.)
 
 10. Check the draft has all ten assets:
 
@@ -659,10 +665,11 @@ git tag -d v5.2.0
 Then fix and re-tag. KT9 field 8 records this repair taking about ten
 minutes, and it has been exercised once.
 
-**Never** run `gh release create` by hand for a tag this workflow builds.
+**Never** run `gh release create` by hand for a tag: `scripts/release.sh`
+builds and uploads the whole asset list, and a hand-picked list is KT9.
 KT9's measure, in its own words: before performing by hand any action a
 project might already automate on a trigger you are about to fire, read
-that trigger's workflow file first.
+that trigger's workflow file first — here, read `scripts/release.sh`.
 
 ---
 
@@ -751,17 +758,17 @@ assumed.
 | Credential                       | Where it lives                                       | What it survives                                                                          | How it is used                                                     |
 | -------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
 | The maintainer's GitHub OAuth token | the machine's system keyring, via `gh`             | reboots and clone deletion; **not** a new machine, a wiped keyring, or a revoked token     | `git push`, `git push origin <tag>`, every `gh` command here       |
-| `GH_TOKEN` in the release workflow  | nowhere — GitHub mints `${{ github.token }}` per run | everything: there is no copy to lose                                                       | the `gh release create` step in `.github/workflows/release.yml`    |
 | The Pages deployment identity       | nowhere — OIDC, `permissions: id-token: write`      | everything: there is no copy to lose                                                       | `actions/deploy-pages@v4` in `.github/workflows/pages.yml`         |
 
 And three things that are **not** here, each checked:
 
 - **No repository or environment secret.** Measured 2026-09-12:
   `gh api repos/kennypassenier/kp-themes/actions/secrets` returns
-  `{"total_count":0,"secrets":[]}`. Both workflows reference only
-  `${{ github.token }}` and the OIDC permission block.
-- **No signing key.** `.github/workflows/release.yml` says so in its
-  own header: "This project signs nothing: there is no key baked into
+  `{"total_count":0,"secrets":[]}`. The release is uploaded by
+  `scripts/release.sh` with the maintainer's own `gh` token (the first
+  row above).
+- **No signing key.** `scripts/release.sh` says so (TH18), as the
+  release workflow it replaced did in its own header: "This project signs nothing: there is no key baked into
   anything, because nothing here is an executable a consumer runs. The
   checksums are the whole verification story." `SHA256SUMS` is the
   integrity mechanism, and it is regenerated at the tag from
@@ -867,7 +874,7 @@ previous credential in place.
   restore.
 - **A published release cannot be unpublished into a clean history.** A
   draft can be deleted; a published one leaves a record. That is why
-  the workflow stops at a draft.
+  the release script stops at a draft.
 - **A lost account, as opposed to a lost token, is a different problem**
   and this repository has no answer for it: the remote is
   `https://github.com/kennypassenier/kp-themes.git`, the published site
