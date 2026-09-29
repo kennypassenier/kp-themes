@@ -5,6 +5,32 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
+## Coming from 7.x to 8.0.0: the non-web themes live in their own repositories
+
+The package now holds the web themes only [scope-139]. What left, and where
+it went:
+
+| Was here                                                    | Now                                                                           |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `ha/`, the `./ha/*` export, `ha-themes.tar`                 | [kp-themes-ha](https://github.com/kennypassenier/kp-themes-ha)                |
+| `vscode/`, the `./vscode/*` export, `vscode-themes.tar`     | [kp-themes-vscode](https://github.com/kennypassenier/kp-themes-vscode)        |
+| `tui/palette.rs`, the `./tui/*` export, `kp-tui-palette.rs` | [kp-themes-tui](https://github.com/kennypassenier/kp-themes-tui) (was kp-tui) |
+| `desktop/windows/`                                          | [kp-themes-windows](https://github.com/kennypassenier/kp-themes-windows)      |
+| `desktop/linux/`                                            | [kp-themes-linux](https://github.com/kennypassenier/kp-themes-linux)          |
+| `research/jellyfin-dark/`                                   | [kp-themes-jellyfin](https://github.com/kennypassenier/kp-themes-jellyfin)    |
+
+A consumer that imported `@kp-soft/themes/ha/…`, `/vscode/…` or `/tui/…`, or
+downloaded one of the three assets from a release, takes the file from that
+repository's release instead. Nothing a web page imports changed.
+
+A project that generates its own files from the tokens vendors the new
+release asset `tokens.tar` and pins its sha256, as those repositories do:
+
+```sh
+curl -sSLO https://github.com/kennypassenier/kp-themes/releases/download/v8.0.0/tokens.tar
+sha256sum tokens.tar   # compare with the pin, then unpack into vendor/kp-themes/
+```
+
 ## Coming from 6.x to 7.0.0: `attachAll()` finishes after it returns
 
 One change a consumer may have to act on [scope-115]. `js/auto.js` now

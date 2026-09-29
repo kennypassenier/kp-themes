@@ -20,8 +20,9 @@ theme: its sixteen decisions are `scope-29` to `scope-44` in
 
 **Consumers:** JobTracker (npm, pinned at v5.0.0, measured 2026-09-26), Almanac and kyu (both
 vendor a copy of `css/themes.css`), kp-soft (via its queue item #21), and
-`~/Projects/kp-tui` from 2026-09-17, pinned to the 7.0.0 asset of
-`tui/palette.rs` by checksum [scope-128, scope-134].
+since 8.0.0 the split-out theme repositories (kp-themes-windows, -linux,
+-vscode, -tui, -ha, -jellyfin), each pinned to a `tokens.tar` release asset
+by checksum [scope-139].
 
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in

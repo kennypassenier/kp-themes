@@ -303,25 +303,6 @@ test('a computed animation duration is read, not skipped', () => {
     assert.equal(literal[0].durationMs, 2200);
 });
 
-test('HA1: every colour a Home Assistant theme uses as ink is readable on its card', () => {
-    // The mapping is not one-to-one and cannot be. Home Assistant uses
-    // warning/success/info as ink; ours are plate-and-ink pairs, and
-    // which half is the ink depends on the theme — pale plate with dark
-    // ink in six, saturated plate with white ink in high-contrast.
-    // Taking the foreground blindly put white on a white card there, at
-    // 1.0, which is what this test exists to keep from coming back.
-    for (const theme of themes()) {
-        const yaml = readFileSync(new URL(`../ha/kp-${theme.name}.yaml`, import.meta.url), 'utf8');
-        const card = hsl(theme.tokens.card);
-        for (const key of ['accent-color', 'error-color', 'warning-color', 'success-color', 'info-color']) {
-            const value = yaml.match(new RegExp(`${key}: "([^"]+)"`))?.[1];
-            assert.ok(value, `${theme.name}: ${key} missing from the generated theme`);
-            const ratio = contrast(hsl(value), card);
-            assert.ok(ratio >= 3, `${theme.name}: ${key} is ${ratio.toFixed(2)} on the card, under 3`);
-        }
-    }
-});
-
 // TH39/TH40: the subsequence match a command palette uses. Tested here
 // rather than in a browser because it is arithmetic, not behaviour.
 test('TH40: a subsequence match finds letters in order, not substrings', () => {
@@ -932,7 +913,7 @@ test('AR46: the effective texture opacity is the layer opacity times the stronge
 
 // ── The consumer tarball [CF1, 2026-09-09] ───────────────────────────────
 
-test('CF1: the tarball is the manifest minus the fonts, the source maps, the Home Assistant themes and the VS Code themes', async () => {
+test('CF1: the tarball is the manifest minus the fonts and the source maps', async () => {
     // The point of building it from SHA256SUMS is that its contents cannot
     // go stale. This holds the two exclusions and nothing else, so a file
     // can never fall out of the tarball by being forgotten — only by
@@ -946,14 +927,9 @@ test('CF1: the tarball is the manifest minus the fonts, the source maps, the Hom
     // here [fix-3].
     const { checksums } = await import('./checksums.mjs');
     const files = contents(checksums());
-    // The third exclusion was that decision: ha/ ships as ha-themes.tar
-    // [scope-120]; the fourth is vscode/, as vscode-themes.tar [scope-125].
-    // Neither is a stylesheet a page serves, and a web consumer unpacking
-    // the tarball has no use for either.
-    assert.equal(EXCLUDED.length, 5, 'the exclusions are fonts/, *.map, ha/, vscode/ and tui/, and adding a sixth is a decision');
-    assert.ok(!files.some((f) => f.startsWith('ha/')), 'the Home Assistant themes ship as their own asset');
-    assert.ok(!files.some((f) => f.startsWith('vscode/')), 'the VS Code themes ship as their own asset');
-    assert.ok(!files.some((f) => f.startsWith('tui/')), 'the Rust palette is vendored by kp-tui, not served by a page');
+    // ha/, vscode/ and tui/ were excluded here until 8.0.0 moved them to
+    // repositories of their own; only the two exclusions remain.
+    assert.equal(EXCLUDED.length, 2, 'the exclusions are fonts/ and *.map, and adding a third is a decision');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
     assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');

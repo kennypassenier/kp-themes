@@ -2317,3 +2317,18 @@ Supersedes the code digests of scope-114, scope-116, scope-136 and
 scope-137, which stay in `gates/generate-code-version.mjs` for the anchors
 search only. The run happens before the review site is asked to show
 anything, and at a release.
+
+**scope-139 · The non-web themes move to repositories of their own.**
+Kenny, 2026-09-29: "ik wil alle side-projects opsplitsen zodat ze niet de main
+kp-themes repo vervuilen". The split form: desktop-split "Twee repos windows en
+linux" (desktop/shared is generated into both); tui-home, his own answer:
+"naar kp-tui, maar hernoem die naar kp-themes-tui"; vscode-home "Eigen repo
+kp-themes-vscode"; apps-home, his own answer: "twee repos kp-themes-ha en
+kp-themes-jellyfin"; token-handover "Vastgepind tokens.tar"; history
+"Geschiedenis meenemen" (git filter-repo per repository); visibility "Publiek";
+split-go "Alles in één keer"; dialog-release "Mee met de splitsing" (the
+Translucent Windows dialog-contrast fix is kp-themes-windows' first release).
+kp-themes keeps the web themes, `fx/` and the research pages; it gains
+`gates/terminal.mjs` and `gates/palette.mjs`, shared by the generators that
+left, and `gates/tokens-tar.mjs`, which builds the `tokens.tar` asset they pin.
+Breaking, so 8.0.0.

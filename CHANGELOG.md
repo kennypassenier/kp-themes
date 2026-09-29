@@ -10,6 +10,23 @@ icon buttons wear the bar's ink at rest and on hover. Dark's pointer effect
 follows a theme switch. The site carries a theme switcher on every page and
 the catalogue's blocks as more examples on every component page.
 
+**Removed (breaking, 8.0.0)** [scope-139].
+
+- **The Home Assistant, VS Code, TUI, Windows, Linux and Jellyfin themes
+  moved to repositories of their own**: kp-themes-ha, kp-themes-vscode,
+  kp-themes-tui (kp-tui renamed), kp-themes-windows, kp-themes-linux and
+  kp-themes-jellyfin, each with its history. The `./ha/*`, `./vscode/*` and
+  `./tui/*` exports and the `ha-themes.tar`, `vscode-themes.tar` and
+  `kp-tui-palette.rs` assets are gone; MIGRATION.md says where each went.
+
+**Added.**
+
+- **`tokens.tar` on every release** [scope-139]: the tokens, `css/themes.css`
+  and the modules that read them, which those repositories pin by version
+  and sha256. `gates/terminal.mjs` holds the terminal colours and the sixteen
+  ANSI that VS Code, Windows Terminal and Konsole share; `check:tokens-tar`
+  unpacks a fresh build and imports every entry module from it.
+
 **Fixed.**
 
 - **A ghost or icon button in the bar wears the bar's ink** [fix-77] — it

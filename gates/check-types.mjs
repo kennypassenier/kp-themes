@@ -16,7 +16,7 @@
 // So this gate does two things, and neither of them checks our sources:
 //
 //   1. The declarations on disk match what the sources would emit today.
-//      Same contract as css/themes.css and ha/*.yaml — generated, and the
+//      Same contract as css/themes.css — generated, and the
 //      gate fails when they drift.
 //   2. A fixture consumer under gates/consumer/ imports the package the
 //      way JobTracker does and type-checks with a consumer's settings.

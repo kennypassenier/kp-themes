@@ -785,7 +785,7 @@ test(
     { tag: ['@component:catalogue'] },
     async ({ page }) => {
         await page.setViewportSize({ width: 1400, height: 900 });
-        for (const path of ['/research/vscode/demo.html', '/research/jellyfin-dark/demo.html']) {
+        for (const path of ['/research/vscode/demo.html']) {
             await page.goto(path);
             const nav = page.locator('.cat-nav');
             await expect(nav).toBeVisible();

@@ -79,7 +79,6 @@ export const PAGES = [
         pages: [
             // Decided at scope-124: the three research demos of 2026-09-17.
             { href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' },
-            { href: 'research/jellyfin-dark/demo.html', label: 'Jellyfin in dark, the paste for 10.11.11' },
             { href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' },
             { href: 'research/navbar/demo.html', label: 'Navigation alternatives' },
             { href: 'research/gap-9-far-edge/demo.html', label: 'The panel at the far edge, now and as proposed' },

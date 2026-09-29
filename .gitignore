@@ -26,10 +26,5 @@ research/loading/out/
 
 # Portrait screenshots are working aids, not kept [scope-99]
 research/theme-portraits/*.png
-
-# Pictures rendered from desktop/'s SVGs (npm run render:wallpapers).
-desktop/shared/*/wallpaper.png
-desktop/shared/*/wallpaper-lock.png
-desktop/windows/themes/*/start.png
-# TrueType copies of fonts/, rebuilt by python3 gates/desktop-fonts.py.
-desktop/shared/fonts/
+# The release asset the split-out theme repos vendor (npm run tokens-tar).
+tokens.tar

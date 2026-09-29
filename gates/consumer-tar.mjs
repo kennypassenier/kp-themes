@@ -20,8 +20,6 @@
 //   - `fonts/` — five megabytes of woff2 that already ship as fonts.tar.
 //     A consumer that wants the faces takes that asset; one that vendors
 //     a stylesheet does not want them in the same download.
-//   - `ha/` — the Home Assistant themes, which ship as ha-themes.tar
-//     [scope-120]; a page vendoring stylesheets has no use for them.
 //   - `*.map` — four megabytes of source maps for the minified twins.
 //     They are debugging aid, not something a consumer serves, and they
 //     are on the tag for whoever wants them.
@@ -43,7 +41,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Left out of the tarball, with the reason in the header above. */
-export const EXCLUDED = [/^fonts\//, /\.map$/, /^ha\//, /^vscode\//, /^tui\//];
+export const EXCLUDED = [/^fonts\//, /\.map$/];
 
 /**
  * The files the tarball carries, read from the manifest itself.

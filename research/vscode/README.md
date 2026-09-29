@@ -1,5 +1,7 @@
 # A VS Code colour theme from kp-themes
 
+> Since kp-themes 8.0.0 the VS Code themes, their generator and the extension live in [kp-themes-vscode](https://github.com/kennypassenier/kp-themes-vscode). This page is the research record that led there.
+
 Kenny, 2026-09-17: "ik wil ook eens nadenken over een vs-code thema dat we uit onze thema's kunnen maken, maak daar indien mogelijk een demo van gebaseerd op cyberpunk".
 
 It is possible, and it is built: `generate.mjs` reads `themes/<name>/tokens.json` and the derived states in `css/themes.css`, and writes a colour theme VS Code loads. The code colours come from the same table as the documentation site's highlighter (`TOKEN_TOKENS` in `gates/site/highlight.mjs`), so code looks the same in both places. `extension/` holds KP Cyberpunk, packaged as `kp-themes-vscode-0.0.1.vsix` (10,577 bytes, `wc -c`). `all/` holds the same generator's output for all 22 themes, and `demo.html` switches between them.

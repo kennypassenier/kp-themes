@@ -191,7 +191,7 @@ What that covers, by output:
 | `gates/generate-examples.mjs`    | the pages under `examples/`                                                   |
 | `gates/generate-showcase.mjs`    | the pages under `showcase/`                                                   |
 | `gates/generate-site.mjs`        | the documentation site under `site/`                                          |
-| `gates/generate-ha-themes.mjs`   | the Home Assistant themes under `ha/`                                         |
+| `gates/tokens-tar.mjs`           | `tokens.tar`, the asset the split-out theme repositories vendor               |
 | `gates/generate-compare.mjs`     | `examples/compare.html` and one `examples/compare-<name>.html` per theme      |
 | `gates/check-motion.mjs --report`| `reports/di5.md`                                                              |
 | `gates/check-types.mjs --write`  | the shipped `.d.ts` declarations                                              |
@@ -370,7 +370,7 @@ The worked example throughout is `titanium`, added in commit `51f803e`.
     ```
 
     This writes the theme's token block into `css/themes.css`, its entry
-    into `js/theme-registry.js`, `ha/kp-<name>.yaml`,
+    into `js/theme-registry.js`,
     `showcase/themes/<name>.html`, `examples/concept-<name>.html` and
     `examples/compare-<name>.html`.
 
@@ -497,11 +497,11 @@ Two facts decide the shape of this procedure, and both are in the code:
 
 - **Pushing a `v*` tag fires `.github/workflows/release.yml`.** That
   workflow runs `npm ci`, `npm run gates`, `npm run checksums`,
-  `tar -cf fonts.tar fonts`, `tar -cf ha-themes.tar -C ha .`,
-  `tar -cf vscode-themes.tar -C vscode .`, `cp tui/palette.rs kp-tui-palette.rs`,
-  `npm run consumer-tar`, and then `gh release create` with `--draft` and twelve
-  assets (nine until 7.0.0 added `ha-themes.tar` at scope-120,
-  `vscode-themes.tar` at scope-125 and `kp-tui-palette.rs` at scope-128). Do not rebuild
+  `tar -cf fonts.tar fonts`, `npm run tokens-tar`,
+  `npm run consumer-tar`, and then `gh release create` with `--draft` and ten
+  assets (twelve from 7.0.0 to 7.3.0, when `ha-themes.tar`, `vscode-themes.tar`
+  and `kp-tui-palette.rs` were attached; 8.0.0 replaced the three with
+  `tokens.tar` at scope-139). Do not rebuild
   any of that by hand: doing exactly that is the fault recorded as KT9
   in `docs/CORRECTIONS.md`, where a hand-built release published a
   `SHA256SUMS` covering three files instead of ten.
@@ -605,10 +605,10 @@ Two facts decide the shape of this procedure, and both are in the code:
     gh release view v5.2.0 --json tagName,isDraft,assets --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'
     ```
 
-    Correct, from 7.0.0 on:
+    Correct, from 8.0.0 on:
 
     ```
-    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","ha-themes.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css","vscode-themes.tar","kp-tui-palette.rs"],"draft":true,"tag":"v5.2.0"}
+    {"assets":["components.css","consumer.tar","fonts.css","fonts.tar","kp-themes.css","kp-themes.js","MIGRATION.md","SHA256SUMS","themes.css","tokens.tar"],"draft":true,"tag":"v5.2.0"}
     ```
 
 11. Verify every published checksum against the tagged tree. This is

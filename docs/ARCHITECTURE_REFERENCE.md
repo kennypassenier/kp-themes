@@ -207,11 +207,11 @@ colour space, and lightness alone left their pressed state invisible.
 
 ## The gates, and the advice beside them
 
-Thirty-four checks, all in Node, the whole chain in seconds, all run by
-`.claude/hooks/gates.sh` before every commit (the VS Code colour themes
-joined at scope-125, the Rust palette at scope-128 and the Windows and
-Linux desktop files with `check:desktop`, beside the Home Assistant
-ones). Since scope-76 older
+Thirty-one checks, all in Node, the whole chain in seconds, all run by
+`.claude/hooks/gates.sh` before every commit (the Home Assistant, VS Code,
+TUI and desktop generators left with their families for repositories of
+their own at scope-139; `check:tokens-tar` holds the asset they build
+from). Since scope-76 older
 checks run inside them rather than on their own line — tokens in `npm test`,
 the bundle in `generate-min --check`, the migration note in
 `check-docs-runnable`, the fonts stylesheet in `check-fonts`, the package in
