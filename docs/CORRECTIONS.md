@@ -4478,6 +4478,8 @@ difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-29** (correction form v2: Klopt).
+
 ## fix-84 · A consumer had to re-render the table every second to show how long it had been loading (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (item 7): to say
@@ -4512,6 +4514,8 @@ fix-84-M1.
 difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-29** (correction form v2: Klopt).
 
 ## fix-83 · Sorting on several columns moved the search and the rows (2026-09-29)
 
@@ -4548,6 +4552,8 @@ difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
 
+**Approved by Kenny, 2026-09-29** (correction form v2: Klopt).
+
 ## fix-82 · A hovered ghost button in the bar lost the bar's ink (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (item 5): fix-77
@@ -4582,6 +4588,8 @@ fix-82-M1.
 difference becomes the next correction here.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-29** (correction form v2: Klopt).
 
 ## fix-81 · Dark's pointer effect stood still after a theme switch (2026-09-29)
 
@@ -4623,6 +4631,8 @@ the film follow the pointer without a reload. Queued as fix-81-M1.
 for the pointer the way it already does for the caret.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+**Approved by Kenny, 2026-09-29** (correction form v2: Klopt).
 
 ## fix-80 · A datatable's first load showed no sign of progress (2026-09-29)
 

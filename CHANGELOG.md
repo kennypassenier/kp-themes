@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 7.3.0 — 2026-09-29
+
+A minor for what the homelab dashboard met in use, two rounds of it, and for
+the documentation site. The data table gains `busy()` with a count it keeps
+itself and `fail()` with the reason in its words, every table can fail
+visibly, a multi-sort summary has a line of its own, and a bar's ghost and
+icon buttons wear the bar's ink at rest and on hover. Dark's pointer effect
+follows a theme switch. The site carries a theme switcher on every page and
+the catalogue's blocks as more examples on every component page.
 
 **Fixed.**
 
