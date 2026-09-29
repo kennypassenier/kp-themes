@@ -599,7 +599,7 @@ Two facts decide the shape of this procedure, and both are in the code:
     read `skipped`, so no release object was created at all. The next run
     on the same tag built it.
 
-10. Check the draft has all twelve assets:
+10. Check the draft has all ten assets:
 
     ```sh
     gh release view v5.2.0 --json tagName,isDraft,assets --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'

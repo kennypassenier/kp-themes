@@ -1,16 +1,11 @@
 # Changelog
 
-## 7.3.0 — 2026-09-29
+## 8.0.0 — 2026-09-29
 
-A minor for what the homelab dashboard met in use, two rounds of it, and for
-the documentation site. The data table gains `busy()` with a count it keeps
-itself and `fail()` with the reason in its words, every table can fail
-visibly, a multi-sort summary has a line of its own, and a bar's ghost and
-icon buttons wear the bar's ink at rest and on hover. Dark's pointer effect
-follows a theme switch. The site carries a theme switcher on every page and
-the catalogue's blocks as more examples on every component page.
+A major that only removes: the themes for other programs leave for
+repositories of their own, and nothing a web page imports changes.
 
-**Removed (breaking, 8.0.0)** [scope-139].
+**Removed (breaking)** [scope-139].
 
 - **The Home Assistant, VS Code, TUI, Windows, Linux and Jellyfin themes
   moved to repositories of their own**: kp-themes-ha, kp-themes-vscode,
@@ -26,6 +21,16 @@ the catalogue's blocks as more examples on every component page.
   and sha256. `gates/terminal.mjs` holds the terminal colours and the sixteen
   ANSI that VS Code, Windows Terminal and Konsole share; `check:tokens-tar`
   unpacks a fresh build and imports every entry module from it.
+
+## 7.3.0 — 2026-09-29
+
+A minor for what the homelab dashboard met in use, two rounds of it, and for
+the documentation site. The data table gains `busy()` with a count it keeps
+itself and `fail()` with the reason in its words, every table can fail
+visibly, a multi-sort summary has a line of its own, and a bar's ghost and
+icon buttons wear the bar's ink at rest and on hover. Dark's pointer effect
+follows a theme switch. The site carries a theme switcher on every page and
+the catalogue's blocks as more examples on every component page.
 
 **Fixed.**
 
