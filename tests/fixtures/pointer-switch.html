@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pointer bus after a theme switch</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-81: the page attaches in formal, and the reader switches to
+             dark, whose oxide film follows the pointer. -->
+        <main><h1>Switch, then move</h1></main>
+        <script type="module">
+            import { attachEffects } from '/js/effects.js';
+            window.kpEffects = attachEffects(document);
+            document.documentElement.dataset.ready = '';
+        </script>
+    </body>
+</html>

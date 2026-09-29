@@ -107,3 +107,24 @@ test(
         expect(Number(await px(page)), 'the written value follows the hand across').toBeGreaterThan(0.6);
     },
 );
+
+test('a switch to a theme that tracks the pointer arms the bus [fix-81]', { tag: ['@component:page-effects', '@theme:dark'] }, async ({ page }) => {
+    // Kenny, 2026-09-29: dark's oxide film followed the pointer in kyu but
+    // not in almanac, the homelab dashboard or JobTracker. The bus was armed
+    // only if the theme active at attach asked for it, so a page that
+    // attached in another theme, or before its theme had arrived, and then
+    // wore dark never wrote the pointer down.
+    await page.goto('/tests/fixtures/pointer-switch.html');
+    await page.waitForSelector('html[data-ready]');
+    await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+    await expect.poll(() => px(page), 'dark declares its default').toBe('0.5');
+    const box = page.viewportSize();
+    await page.mouse.move(Math.round(box.width * 0.15), Math.round(box.height * 0.5));
+    await page.mouse.move(Math.round(box.width * 0.2), Math.round(box.height * 0.5));
+    await measured(
+        page.locator('html'),
+        (el) => getComputedStyle(el).getPropertyValue('--kp-px').trim(),
+        undefined,
+        'the bus writes after the switch',
+    ).not.toBe('0.5');
+});

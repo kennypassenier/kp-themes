@@ -5538,7 +5538,7 @@
             ]
         },
         "media": {
-            "modules": "12569cc886f5cf27",
+            "modules": "46ede5fba4c1ad19",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -5623,6 +5623,7 @@
                 "kp-rake",
                 "kp-redact-lift",
                 "kp-redaction-clear",
+                "kp-register-load",
                 "kp-registration",
                 "kp-resolve",
                 "kp-reveal",
@@ -5854,7 +5855,7 @@
             ]
         },
         "page-effects": {
-            "modules": "38f94cd9a138b43e",
+            "modules": "1d56e200c003fac7",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",
@@ -5918,6 +5919,7 @@
                 "kp-rake",
                 "kp-redact-lift",
                 "kp-redaction-clear",
+                "kp-register-load",
                 "kp-registration",
                 "kp-resolve",
                 "kp-reveal",

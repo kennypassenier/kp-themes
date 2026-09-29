@@ -1793,12 +1793,31 @@ function attachEffects(root = document, options = {}) {
   present = presentUnder(root);
   scan(root);
   const asked = (name) => rootStyle ? rootStyle.getPropertyValue(name).trim() : "";
-  if (asked(CARET_KNOB) === "block" && root.querySelector("input.kp-field__input")) run("caret", (hook) => hook.caret());
-  if (asked(POINTER_KNOB) === "track" || asked(PRESS_KNOB) === "point")
+  let pointerArmed = false;
+  let pressArmed = false;
+  const armThemeBuses = () => {
+    const wantPointer = !pointerArmed && asked(POINTER_KNOB) === "track";
+    const wantPress = !pressArmed && asked(PRESS_KNOB) === "point";
+    if (!wantPointer && !wantPress) return;
+    pointerArmed ||= wantPointer;
+    pressArmed ||= wantPress;
     run("pointer", (hook) => {
-      hook.pointerBus();
-      hook.pressBus();
+      if (wantPointer) hook.pointerBus();
+      if (wantPress) hook.pressBus();
     });
+  };
+  if (asked(CARET_KNOB) === "block" && root.querySelector("input.kp-field__input")) run("caret", (hook) => hook.caret());
+  armThemeBuses();
+  if (rootStyle && typeof MutationObserver === "function") {
+    const watch = new MutationObserver(() => armThemeBuses());
+    watch.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+    const onRegister = () => armThemeBuses();
+    html.addEventListener("kp-register-load", onRegister);
+    cleanups.push(() => {
+      watch.disconnect();
+      html.removeEventListener("kp-register-load", onRegister);
+    });
+  }
   if (asked(MEASURE_KNOB) === "live" && root.querySelector(`[${HOOKS.reveal}='headline']`)) run("measure", (hook) => hook.measure());
   if (root.querySelector(`[${HOOKS.marquee}]`)) run("marquee", (hook) => hook.marquee());
   if (arrivalPerformed) run("arrival", (hook) => hook.arrival());
