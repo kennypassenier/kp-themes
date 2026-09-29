@@ -622,6 +622,7 @@ async function pixels(args) {
                     'Pixel verdicts [scope-138]: each approved pair photographed at the commit it was approved or last carried at and at `commit`, in one browser of its engine at its ratio. carried: the same pixels, the approval stands; reopened: different pixels, or the block is gone; unstable: a photograph that did not repeat. Written by `node gates/verdicts.mjs pixels`.',
                 hashVersion: register.hashVersion,
                 commit: head,
+                checked: new Date().toISOString(),
                 checks,
             },
             null,

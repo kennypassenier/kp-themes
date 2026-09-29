@@ -2,6 +2,7 @@
     "$comment": "Pixel verdicts [scope-138]: each approved pair photographed at the commit it was approved or last carried at and at `commit`, in one browser of its engine at its ratio. carried: the same pixels, the approval stands; reopened: different pixels, or the block is gone; unstable: a photograph that did not repeat. Written by `node gates/verdicts.mjs pixels`.",
     "hashVersion": 10,
     "commit": "60df955320875af13f79fa35628a50c917f686c7",
+    "checked": "2026-09-29T07:51:00.000Z",
     "checks": {
         "alarm--ack": {
             "blueprint": {

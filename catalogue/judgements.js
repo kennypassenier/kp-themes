@@ -140,8 +140,12 @@ export const pixelChecksReady = (async () => {
 })();
 
 /** Whether the pixels of an approved pair moved since it was approved, or did not repeat. */
-export const pixelsReopened = (/** @type {string} */ key, /** @type {string} */ theme, engine = ENGINE) =>
-    ['reopened', 'unstable'].includes(pixelChecks.checks?.[key]?.[theme]?.[engine]?.state ?? '');
+export const pixelsReopened = (/** @type {string} */ key, /** @type {string} */ theme, engine = ENGINE, commit = registerVerdicts()[key]?.[theme]?.[engine]?.commit) => {
+    const check = pixelChecks.checks?.[key]?.[theme]?.[engine];
+    // Only against the approval it compared from: a verdict recorded since
+    // stands on its own.
+    return ['reopened', 'unstable'].includes(check?.state ?? '') && (!check?.from || check.from === commit);
+};
 
 /* ------------------------------------------------------------ the register */
 
@@ -199,6 +203,12 @@ export function stateOf(key, theme, hash, engine = ENGINE, stored = loadJudgemen
     if (!hash) return entry.verdict;
     if (entry.hash !== hash) return 'changed';
     // The same markup, but its pixels moved or did not hold still [scope-138].
-    if (entry.source === 'register' && entry.verdict === 'approved' && pixelsReopened(key, theme, engine)) return 'changed';
+    // A verdict this browser gave since the pixel run answers it, even when
+    // it repeats the register's.
+    if (entry.source === 'register' && entry.verdict === 'approved' && pixelsReopened(key, theme, engine)) {
+        const local = stored[key]?.[theme]?.[engine];
+        const since = local && local.hash === hash && local.v === HASH_VERSION && local.at && (!pixelChecks.checked || local.at >= Date.parse(pixelChecks.checked));
+        return since ? local.verdict : 'changed';
+    }
     return entry.verdict;
 }

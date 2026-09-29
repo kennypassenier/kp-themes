@@ -67,8 +67,10 @@ export function openPairs(known, themes, register, snapshot, comparable = () => 
     // Since version 10 the hash is the markup alone; a pair whose pixels moved
     // or did not repeat at the last `node gates/verdicts.mjs pixels` run is
     // open too [scope-138].
-    const pixelOpen = (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ engine) =>
-        ['reopened', 'unstable'].includes(pixels?.checks?.[key]?.[theme]?.[engine]?.state ?? '');
+    const pixelOpen = (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ engine, /** @type {string} */ commit) => {
+        const check = pixels?.checks?.[key]?.[theme]?.[engine];
+        return ['reopened', 'unstable'].includes(check?.state ?? '') && (!check?.from || check.from === commit);
+    };
     /** @type {{ key: string, theme: string, state: 'rejected' | 'never judged' | 'changed since judged' }[]} */
     const open = [];
     let approved = 0;
@@ -80,7 +82,7 @@ export function openPairs(known, themes, register, snapshot, comparable = () => 
                 // An approval still standing: one engine where nothing was
                 // measured, or where the reading is the hash it was given on.
                 const stands = approvals.some(([engine, entry]) => {
-                    if (pixelOpen(key, theme, engine)) return false;
+                    if (pixelOpen(key, theme, engine, entry.commit)) return false;
                     const now = readings[key]?.[theme]?.[engine];
                     if (!now || (now.ratio ?? 1) !== (entry.ratio ?? 1)) return true;
                     if (!comparable(entry.commit)) return true;
