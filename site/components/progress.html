@@ -215,6 +215,68 @@
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-feedback-progress">
+                        <figcaption class="kp-fw-semibold">Progress</figcaption>
+                        <p class="kp-text-muted">Four native <code>&lt;progress&gt;</code> bars painted by the theme: empty, a third, full, and indeterminate (no value). The track must be the theme's muted ground with a hairline, and the fill the theme's accent — never the browser's own grey track or blue fill, which is the fault that shows first in a dark theme. The empty bar must still show its track, so an empty bar is not an invisible one. The indeterminate bar wears diagonal stripes in the accent on the muted track, so it can never be mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. The filled part of each bar follows the shape of its track: square in a square track, rounded in a rounded one. Under them stands a group of three labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of them is called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is the fault this group exists to prevent [fix-64].</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>
+<p>
+    <span class="kp-progress__wrap"
+    ><progress class="kp-progress" value="35" max="100" aria-label="Export progress"></progress
+        ><span class="kp-progress__value">35%</span></span
+        >
+    </p>
+    <p><progress class="kp-progress" value="100" max="100" aria-label="Export finished"></progress></p>
+    <p style="margin-block-end: 0"><progress class="kp-progress" aria-label="Waiting for the export service"></progress></p>
+    <div class="kp-progress-group" style="margin-block-start: 1rem">
+        <span class="kp-progress__wrap"
+        ><span class="kp-progress__label">CPU</span><progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress
+            ><span class="kp-progress__value">22%</span></span
+            >
+            <span class="kp-progress__wrap"
+            ><span class="kp-progress__label">Memory</span
+                ><progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress
+                    ><span class="kp-progress__value">64%</span></span
+                    >
+                    <span class="kp-progress__wrap"
+                    ><span class="kp-progress__label">Disk</span
+                        ><progress class="kp-progress" value="61" max="100" aria-label="Disk"></progress
+                            ><span class="kp-progress__value">61%</span></span
+                            >
+                        </div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">p</span>&gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export not started&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;35&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export progress&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;35%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export finished&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-end: 0&quot;</span>&gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export service&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;CPU&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;22&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;22%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;64&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;64%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Disk&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">progress</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;61&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Disk&quot;</span>&gt;&lt;/<span class="kp-code__keyword">progress</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;61%&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -281,5 +343,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

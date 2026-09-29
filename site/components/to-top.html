@@ -177,6 +177,34 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top</span> <span class="kp-code__keyword">data-kp-to-top-after</span><span class="kp-code__string">=&quot;400&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-navigation-to-top">
+                        <figcaption class="kp-fw-semibold">Back to top</figcaption>
+                        <p class="kp-text-muted"><code>.kp-to-top</code> is fixed to the corner of the window and invisible until the reader has scrolled; the two in the box are frozen in their shown state (<code>data-kp-to-top-shown</code>) and pinned to the box's corner instead. The left one is written the way the package documents it — an empty button with only an accessible name — and holds the glyph the package puts in such a button (<code>.kp-to-top__glyph</code>, drawn from <code>--kp-glyph-to-top</code>): judge whether the arrow reads in every theme. The right one carries its own words. The live control is in the real corner of the window: it must fade in once you are 600 px down, sit above the page without covering the feedback field you are typing in, and on press scroll to the top <i>and</i> move focus there.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
+    <button type="button" class="kp-button kp-to-top" aria-label="Back to top" data-kp-to-top-shown>
+        <span class="kp-to-top__glyph" aria-hidden="true"></span>
+    </button>
+</div>
+<div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
+    <button type="button" class="kp-button kp-to-top" data-kp-to-top-shown>↑ Back to top</button>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Back to top&quot;</span> <span class="kp-code__keyword">data-kp-to-top-shown</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-to-top__glyph&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top-shown</span>&gt;↑ Back to top&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -235,5 +263,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

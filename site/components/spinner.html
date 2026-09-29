@@ -185,6 +185,30 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Saving…&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-feedback-spinner">
+                        <figcaption class="kp-fw-semibold">Spinner</figcaption>
+                        <p class="kp-text-muted">The spinner is a ring with one bright quarter turning over a track in the same hue at a quarter strength, so it turns visibly even in a theme where primary is black. It must be round, not an ellipse, at every size, and it must not wobble. Switch the system to reduced motion: the spinner stops, and a stopped spinner must still read as "busy" from the ring's shape. Beside a label, the spinner sits on the text's centre line. The large one sets <code>--kp-spinner-size</code>, the knob the React component writes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<span class="kp-spinner" role="status" aria-label="Working…"></span>
+<span><span class="kp-spinner" role="status" aria-label="Loading readings"></span> Loading readings…</span>
+<span class="kp-spinner" role="status" aria-label="Working…" style="--kp-spinner-size: 3rem"></span>
+<button type="button" class="kp-button kp-button--secondary" aria-busy="true" disabled>
+    <span class="kp-spinner" aria-hidden="true"></span> Exporting
+</button>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Working…&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading readings&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Loading readings…&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Working…&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-spinner-size: 3rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Exporting
+&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -239,5 +263,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

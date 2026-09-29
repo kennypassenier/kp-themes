@@ -213,6 +213,202 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-navigation-tabs">
+                        <figcaption class="kp-fw-semibold">Tabs</figcaption>
+                        <p class="kp-text-muted">The selected tab is marked three ways — the ink, the weight, and a rule in the primary colour on the list's bottom edge — and the unselected tabs must still pass contrast in their muted ink. Click into the first list and use the arrow keys: selection follows focus, Home and End jump, and the panel under it changes with no jump in height you did not cause. The second list is <code>data-kp-activation="manual"</code> and does not loop: the arrows only move focus, and Enter or Space selects, so for a moment the focused tab and the selected tab are different tabs — both must be visible at once.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-tabs">
+    <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471">
+        <button type="button" class="kp-tab" role="tab" id="nv-tab-a1" aria-controls="nv-panel-a1" aria-selected="true">
+            Summary
+        </button>
+        <button type="button" class="kp-tab" role="tab" id="nv-tab-a2" aria-controls="nv-panel-a2" aria-selected="false">
+            Readings
+        </button>
+        <button type="button" class="kp-tab" role="tab" id="nv-tab-a3" aria-controls="nv-panel-a3" aria-selected="false">
+            Handover
+        </button>
+    </div>
+    <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a1" aria-labelledby="nv-tab-a1">
+        Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.
+    </div>
+    <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a2" aria-labelledby="nv-tab-a2" hidden>
+        Sixty readings from the last hour; the gauge and the sensor agree within 0.05 bar.
+    </div>
+    <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-a3" aria-labelledby="nv-tab-a3" hidden>
+        Day shift checks the gauge against the sensor before reopening the line.
+    </div>
+</div>
+<div style="margin-block-start: 1.5rem">
+    <div class="kp-tabs">
+        <div class="kp-tabs__list" role="tablist" aria-label="Export" data-kp-activation="manual" data-kp-loop="false">
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-b1" aria-controls="nv-panel-b1" aria-selected="true">
+                Last hour
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-b2" aria-controls="nv-panel-b2" aria-selected="false">
+                Whole incident
+            </button>
+        </div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-b1" aria-labelledby="nv-tab-b1">60 rows, as CSV.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-b2" aria-labelledby="nv-tab-b2" hidden>
+            2,114 rows, as CSV, with the alarm log attached.
+        </div>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tablist&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident INC-4471&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-a1&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-a1&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+            Summary
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-a2&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-a2&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+            Readings
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-a3&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-a3&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+            Handover
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-a1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-a1&quot;</span>&gt;
+        Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-a2&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-a2&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        Sixty readings from the last hour; the gauge and the sensor agree within 0.05 bar.
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-a3&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-a3&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        Day shift checks the gauge against the sensor before reopening the line.
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tablist&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export&quot;</span> <span class="kp-code__keyword">data-kp-activation</span><span class="kp-code__string">=&quot;manual&quot;</span> <span class="kp-code__keyword">data-kp-loop</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-b1&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-b1&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                Last hour
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-b2&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-b2&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Whole incident
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-b1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-b1&quot;</span>&gt;60 rows, as CSV.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-b2&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-b2&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            2,114 rows, as CSV, with the alarm log attached.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-tabs-many">
+                        <figcaption class="kp-fw-semibold">Many tabs in a narrow pane</figcaption>
+                        <p class="kp-text-muted">Nine tabs, one with a long label, in a pane narrower than their row. The row scrolls sideways inside the pane (<code>data-kp-tabs-overflow</code> is written while it does) and never past its dashed edge; each label stays on one line and the selected tab's rule stays on the list's bottom edge. Click into the row and press End: the last tab is selected and scrolled into view, and Home brings the first back. Tab onto the row: in a scrolling row the focus ring is drawn inside the tab. Drag the pane wider until the tabs fit — the row must stop being a scroller and look exactly like the rows in the block above.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 24rem">
+    <div class="kp-tabs">
+        <div class="kp-tabs__list" role="tablist" aria-label="Line 2">
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c1" aria-controls="nv-panel-c1" aria-selected="false">
+                Pressure
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c2" aria-controls="nv-panel-c2" aria-selected="false">
+                Flow
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c3" aria-controls="nv-panel-c3" aria-selected="true">
+                Pump cycles
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c4" aria-controls="nv-panel-c4" aria-selected="false">
+                Valves
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c5" aria-controls="nv-panel-c5" aria-selected="false">
+                Alarms
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c6" aria-controls="nv-panel-c6" aria-selected="false">
+                Temperature at the manifold inlet
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c7" aria-controls="nv-panel-c7" aria-selected="false">
+                Vendor
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c8" aria-controls="nv-panel-c8" aria-selected="false">
+                Notes
+            </button>
+            <button type="button" class="kp-tab" role="tab" id="nv-tab-c9" aria-controls="nv-panel-c9" aria-selected="false">
+                Audit
+            </button>
+        </div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c1" aria-labelledby="nv-tab-c1" hidden>3.2 bar at rest.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c2" aria-labelledby="nv-tab-c2" hidden>41 litres a minute.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c3" aria-labelledby="nv-tab-c3">
+            The pump started every four minutes between 02:10 and 03:15.
+        </div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c4" aria-labelledby="nv-tab-c4" hidden>
+            Manifold valve closed.
+        </div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c5" aria-labelledby="nv-tab-c5" hidden>
+            Two low-pressure alarms.
+        </div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c6" aria-labelledby="nv-tab-c6" hidden>14 °C, steady.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c7" aria-labelledby="nv-tab-c7" hidden>Contract HF-2201.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c8" aria-labelledby="nv-tab-c8" hidden>No notes yet.</div>
+        <div class="kp-tabs__panel" role="tabpanel" id="nv-panel-c9" aria-labelledby="nv-tab-c9" hidden>
+            Opened by the night shift.
+        </div>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 24rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tablist&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Line 2&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c1&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c1&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Pressure
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c2&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c2&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Flow
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c3&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c3&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                Pump cycles
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c4&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c4&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Valves
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c5&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c5&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Alarms
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c6&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c6&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Temperature at the manifold inlet
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c7&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c7&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Vendor
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c8&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c8&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Notes
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-tab-c9&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-panel-c9&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+                Audit
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;3.2 bar at rest.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c2&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c2&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;41 litres a minute.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c3&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c3&quot;</span>&gt;
+            The pump started every four minutes between 02:10 and 03:15.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c4&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c4&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            Manifold valve closed.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c5&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c5&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            Two low-pressure alarms.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c6&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c6&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;14 °C, steady.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c7&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c7&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Contract HF-2201.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c8&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c8&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;No notes yet.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-panel-c9&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;nv-tab-c9&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            Opened by the night shift.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -292,5 +488,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

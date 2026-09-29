@@ -179,6 +179,68 @@
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">popover</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tooltip&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --doc-tooltip&quot;</span>&gt;An optional stylesheet that changes the texture of a theme without changing its colours.&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-overlays-tooltip">
+                        <figcaption class="kp-fw-semibold">Tooltip</figcaption>
+                        <p class="kp-text-muted">A tooltip is a <code>.kp-popover</code> with <code>.kp-tooltip</code> on it: the same surface and boundary as a menu, smaller text and less padding. It describes; it never holds the only copy of anything, so each trigger here has its own visible label. The short tooltip must hug its text; the long one must stop at its maximum width and wrap into a short paragraph, not stretch into one line across the page. The first two are shown open and held open for the eye; the two under them are live: <code>js/overlays.js</code> opens a tooltip after a moment under the pointer and at once on focus, closes it when the pointer or focus leaves or on Escape, and points the trigger's <code>aria-describedby</code> at it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="anchor-name: --ov-tt1">
+    <button type="button" class="kp-button" aria-describedby="ov-tt1">Recalibrate</button>
+    <span role="tooltip" id="ov-tt1" class="kp-popover kp-tooltip" style="position-anchor: --ov-tt1"
+    >Takes about two minutes</span
+    >
+</span>
+<span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="margin-inline-start: 14rem; anchor-name: --ov-tt2">
+    <button type="button" class="kp-button" aria-describedby="ov-tt2">Lock out line 2</button>
+    <span role="tooltip" id="ov-tt2" class="kp-popover kp-tooltip" style="position-anchor: --ov-tt2"
+    >Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
+    against the sensor.</span
+    >
+</span>
+</div>
+<div class="sc-example__stage">
+<span class="kp-tooltip-anchor">
+    <button type="button" class="kp-button" id="ov-tt-live-trigger">Recalibrate (live)</button>
+    <span role="tooltip" class="kp-popover kp-tooltip" id="ov-tt-live">Takes about two minutes</span>
+</span>
+<span class="kp-tooltip-anchor" style="margin-inline-start: 14rem">
+    <button type="button" class="kp-button">Lock out line 2 (live)</button>
+    <span role="tooltip" class="kp-popover kp-tooltip"
+    >Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
+    against the sensor.</span
+    >
+</span>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tooltip-anchor&quot;</span> <span class="kp-code__keyword">data-kp-tooltip-owner</span><span class="kp-code__string">=&quot;catalogue&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;anchor-name: --ov-tt1&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-tt1&quot;</span>&gt;Recalibrate&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-tt1&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --ov-tt1&quot;</span>
+    &gt;Takes about two minutes&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tooltip-anchor&quot;</span> <span class="kp-code__keyword">data-kp-tooltip-owner</span><span class="kp-code__string">=&quot;catalogue&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-inline-start: 14rem; anchor-name: --ov-tt2&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-tt2&quot;</span>&gt;Lock out line 2&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-tt2&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --ov-tt2&quot;</span>
+    &gt;Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
+    against the sensor.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tooltip-anchor&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-tt-live-trigger&quot;</span>&gt;Recalibrate (live)&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-tt-live&quot;</span>&gt;Takes about two minutes&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tooltip-anchor&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-inline-start: 14rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Lock out line 2 (live)&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tooltip&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover kp-tooltip&quot;</span>
+    &gt;Closes the valve at the manifold and stops the pump. The day shift has to reopen it by hand after checking the gauge
+    against the sensor.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -250,5 +312,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -221,6 +221,108 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-switch-states">
+                        <figcaption class="kp-fw-semibold">States</figcaption>
+                        <p class="kp-text-muted">Off, on, and both of them disabled. <b>Off</b> is the theme's resting track with the thumb at the start; <b>on</b> moves the thumb to the end and changes the paint the theme's way — a primary fill in most, a lit thumb on a dark track in cyberpunk, synthwave and terminal, an inverted slab in grotesk. The position says the state as well as the colour, and the word beside the track says it a third time. Compare the track with the same theme's checkbox on the Fields page: the corner, the edge and the ground should be the same family. Click the label, not only the track: the whole row is the target. Tab to each: the focus ring must be visible around the track on the page's ground. <b>Disabled</b> fades and refuses the pointer, and a disabled switch that is on must still read as on.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Night alarms</span>
+</label>
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" checked />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Weekly summary</span>
+</label>
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" disabled />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Vendor hotline (not in your contract)</span>
+</label>
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" checked disabled />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Audit log (always on)</span>
+</label>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Night alarms&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Weekly summary&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">disabled</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Vendor hotline (not in your contract)&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">checked</span> <span class="kp-code__keyword">disabled</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Audit log (always on)&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-switch-extremes">
+                        <figcaption class="kp-fw-semibold">A long label</figcaption>
+                        <p class="kp-text-muted">A label of sixty characters. It wraps beside the track, every line starting at the same inset, and the track stays whole at its own size on the first line rather than shrinking or dropping under the text. Drag the pane narrow to see it wrap.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize">
+    <label class="kp-switch">
+        <input class="kp-switch__input" type="checkbox" role="switch" checked />
+        <span class="kp-switch__state" aria-hidden="true"></span>
+        <span>Text the deputies when pump house 4 reports a pressure fault</span>
+    </label>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Text the deputies when pump house 4 reports a pressure fault&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-switch-keyboard">
+                        <figcaption class="kp-fw-semibold">Keyboard</figcaption>
+                        <p class="kp-text-muted">Tab lands on the switch, once per switch. <b>Space</b> flips it, as it ticks a checkbox — that is the browser's own behaviour, and the reason the switch is a checkbox rather than a button with a script. <b>Enter</b> does not flip it; inside a form it submits, as it does on a checkbox. The disabled switch is skipped by Tab. Shift+Tab walks back the same way. With reduced motion asked for, the thumb jumps instead of sliding.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Mute the alarm panel for an hour</span>
+</label>
+<label class="kp-switch">
+    <input class="kp-switch__input" type="checkbox" role="switch" checked />
+    <span class="kp-switch__state" aria-hidden="true"></span>
+    <span>Show the live readings</span>
+</label>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Mute the alarm panel for an hour&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Show the live readings&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -292,5 +394,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -211,6 +211,230 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-button-groups">
+                        <figcaption class="kp-fw-semibold">In a row, and on a card</figcaption>
+                        <p class="kp-text-muted">Buttons side by side must line up on their text, not on their boxes, and the row must wrap rather than scroll when the pane narrows. On the card, the pair must sit against the card's ground and not against the page's — a theme that paints its card a different colour has to keep the button legible on it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card">
+    <h3 class="kp-card__title">Discard this draft?</h3>
+    <p>The draft has not been published. Nobody else has seen it.</p>
+    <div class="kp-card__footer">
+        <button type="button" class="kp-button kp-button--ghost">Keep editing</button>
+        <button type="button" class="kp-button kp-button--destructive">Discard</button>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Discard this draft?&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The draft has not been published. Nobody else has seen it.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Keep editing&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>&gt;Discard&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-colorpicker-against">
+                        <figcaption class="kp-fw-semibold">Against another token, and a lower bar</figcaption>
+                        <p class="kp-text-muted">The left picker sits on a card and measures against <code>--card</code>; the sentence must name <code>--card</code>, not <code>--background</code>. The measurement reads the token from the root of the document, not from the card around the picker, so in a theme that repaints its cards locally the number can describe a ground the picker is not on — worth a finding if you see a verdict that contradicts your eye. The right picker measures the same orange with <code>data-kp-against-kind="non-text"</code>: its bar is 3:1, not 4.5:1, so it may pass where the left one fails.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card">
+    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--card">
+        <label class="kp-field__label" for="cp-card-h">Hue</label>
+        <input id="cp-card-h" type="range" data-kp-channel="h" min="0" max="360" value="28" />
+        <label class="kp-field__label" for="cp-card-s">Saturation</label>
+        <input id="cp-card-s" type="range" data-kp-channel="s" min="0" max="100" value="95" />
+        <label class="kp-field__label" for="cp-card-l">Lightness</label>
+        <input id="cp-card-l" type="range" data-kp-channel="l" min="0" max="100" value="45" />
+        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+    </div>
+</div>
+<div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background" data-kp-against-kind="non-text">
+    <label class="kp-field__label" for="cp-nt-h">Hue</label>
+    <input id="cp-nt-h" type="range" data-kp-channel="h" min="0" max="360" value="28" />
+    <label class="kp-field__label" for="cp-nt-s">Saturation</label>
+    <input id="cp-nt-s" type="range" data-kp-channel="s" min="0" max="100" value="95" />
+    <label class="kp-field__label" for="cp-nt-l">Lightness</label>
+    <input id="cp-nt-l" type="range" data-kp-channel="l" min="0" max="100" value="45" />
+    <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+    <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+    <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker</span> <span class="kp-code__keyword">data-kp-against</span><span class="kp-code__string">=&quot;--card&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-card-h&quot;</span>&gt;Hue&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-card-h&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;h&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;360&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;28&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-card-s&quot;</span>&gt;Saturation&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-card-s&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;s&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;95&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-card-l&quot;</span>&gt;Lightness&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-card-l&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;l&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;45&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__swatch&quot;</span> <span class="kp-code__keyword">data-kp-swatch</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">output</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__value&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-value</span>&gt;&lt;/<span class="kp-code__keyword">output</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker</span> <span class="kp-code__keyword">data-kp-against</span><span class="kp-code__string">=&quot;--background&quot;</span> <span class="kp-code__keyword">data-kp-against-kind</span><span class="kp-code__string">=&quot;non-text&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-nt-h&quot;</span>&gt;Hue&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-nt-h&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;h&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;360&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;28&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-nt-s&quot;</span>&gt;Saturation&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-nt-s&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;s&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;95&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cp-nt-l&quot;</span>&gt;Lightness&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cp-nt-l&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-channel</span><span class="kp-code__string">=&quot;l&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;45&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__swatch&quot;</span> <span class="kp-code__keyword">data-kp-swatch</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">output</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__value&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-value</span>&gt;&lt;/<span class="kp-code__keyword">output</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-effects-dossier">
+                        <figcaption class="kp-fw-semibold">Dossier</figcaption>
+                        <p class="kp-text-muted">The dossier card (<code>data-kp-reveal="emphasis"</code> with a trigger inside). The left copy is covered, waiting for its trigger; the right copy is the same file opened. In <b>every</b> theme: while covered the three redacted phrases are not readable but keep their place, so opening the file re-breaks no line; opened, they read at full contrast; the stamp reads the card's own <code>data-kp-label</code> ("Sealed") and never covers the title or the text; a theme that swaps the word shows <code>data-kp-label-open</code> ("Cleared") once open. In the live copy, press <b>Open the file</b>: the redactions must lift in one motion or on a short stagger, never a flicker, and a second press covers them again; <b>Replay</b> puts it back covered. Per theme: <b>formal</b> names its word, static, and clears left to right; <b>nostromo</b>'s label tape swaps its word and the redactions clear together; <b>grotesk</b>'s bars cut away in three steps; <b>retro</b> is a Notepad window with a read-only stamp and a dither brush lifting off; <b>terminal</b> a bracketed stamp with cells clearing; <b>brutalism</b> a tilted stamp with a pixel outline and bars sliding off; <b>phantom</b> a rotated red plate and censor plates shearing off; <b>solstice</b> a slightly rotated stamp and a boundary-coloured bar lifted right to left; <b>lapis</b> a seal over the redactions; <b>deco</b> jewel redactions; <b>synthwave</b> the stamp in the OSD face and noise that clears; <b>blueprint</b> solid ink blocks cleared left to right; <b>forest</b> and <b>sepia</b> a rotated stamp in the destructive ink; <b>pastel</b> a rotated stamp that swaps its word; <b>dark</b> a log with a redact bar; <b>high-contrast</b> staggered by 90 ms.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-pair">
+    <div data-cat-effect="armed">
+        <template>
+            <section class="kp-section kp-stack" data-kp-surface="app">
+                <div
+                class="kp-card"
+                data-slot="card"
+                data-kp-reveal="emphasis"
+                data-kp-label="Sealed"
+                data-kp-label-open="Cleared"
+                >
+                <div class="kp-card__header">
+                    <h3 class="kp-card__title">Incident INC-4471</h3>
+                </div>
+                <div class="kp-card__body">
+                    <p class="microlabel">FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD</p>
+                    <p>
+                        The pressure on line 2 dropped at <mark>03:12 on the night shift</mark>, the operator on duty was
+                        <mark>Bram De Smet</mark>, and the valve was replaced by <mark>the contractor on call</mark>. The line
+                        was back in service before the day shift arrived.
+                    </p>
+                    <p>Open the file to clear the redactions.</p>
+                    <div class="kp-row">
+                        <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                            <span class="kp-button__edge" aria-hidden="true"></span>
+                            <span class="kp-button__label">Open the file</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</div>
+<div data-cat-effect="open">
+    <template>
+        <section class="kp-section kp-stack" data-kp-surface="app">
+            <div
+            class="kp-card"
+            data-slot="card"
+            data-kp-reveal="emphasis"
+            data-kp-label="Sealed"
+            data-kp-label-open="Cleared"
+            >
+            <div class="kp-card__header">
+                <h3 class="kp-card__title">Incident INC-4471</h3>
+            </div>
+            <div class="kp-card__body">
+                <p class="microlabel">FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD</p>
+                <p>
+                    The pressure on line 2 dropped at <mark>03:12 on the night shift</mark>, the operator on duty was
+                    <mark>Bram De Smet</mark>, and the valve was replaced by <mark>the contractor on call</mark>. The line
+                    was back in service before the day shift arrived.
+                </p>
+                <p>Open the file to clear the redactions.</p>
+                <div class="kp-row">
+                    <button data-kp-reveal-trigger type="button" class="kp-button kp-button--primary">
+                        <span class="kp-button__edge" aria-hidden="true"></span>
+                        <span class="kp-button__label">Open the file</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-pair&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-cat-effect</span><span class="kp-code__string">=&quot;armed&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">template</span>&gt;
+            &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-section kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;app&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>
+                <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>
+                <span class="kp-code__keyword">data-kp-reveal</span><span class="kp-code__string">=&quot;emphasis&quot;</span>
+                <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Sealed&quot;</span>
+                <span class="kp-code__keyword">data-kp-label-open</span><span class="kp-code__string">=&quot;Cleared&quot;</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Incident INC-4471&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;microlabel&quot;</span>&gt;FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span>&gt;
+                        The pressure on line 2 dropped at &lt;<span class="kp-code__keyword">mark</span>&gt;03:12 on the night shift&lt;/<span class="kp-code__keyword">mark</span>&gt;, the operator on duty was
+                        &lt;<span class="kp-code__keyword">mark</span>&gt;Bram De Smet&lt;/<span class="kp-code__keyword">mark</span>&gt;, and the valve was replaced by &lt;<span class="kp-code__keyword">mark</span>&gt;the contractor on call&lt;/<span class="kp-code__keyword">mark</span>&gt;. The line
+                        was back in service before the day shift arrived.
+                    &lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span>&gt;Open the file to clear the redactions.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">data-kp-reveal-trigger</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__edge&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__label&quot;</span>&gt;Open the file&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-cat-effect</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">template</span>&gt;
+        &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-section kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;app&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>
+            <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>
+            <span class="kp-code__keyword">data-kp-reveal</span><span class="kp-code__string">=&quot;emphasis&quot;</span>
+            <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Sealed&quot;</span>
+            <span class="kp-code__keyword">data-kp-label-open</span><span class="kp-code__string">=&quot;Cleared&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Incident INC-4471&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;microlabel&quot;</span>&gt;FILE 4471 · STATUS: CLOSED · CLEARANCE: SHIFT LEAD&lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span>&gt;
+                    The pressure on line 2 dropped at &lt;<span class="kp-code__keyword">mark</span>&gt;03:12 on the night shift&lt;/<span class="kp-code__keyword">mark</span>&gt;, the operator on duty was
+                    &lt;<span class="kp-code__keyword">mark</span>&gt;Bram De Smet&lt;/<span class="kp-code__keyword">mark</span>&gt;, and the valve was replaced by &lt;<span class="kp-code__keyword">mark</span>&gt;the contractor on call&lt;/<span class="kp-code__keyword">mark</span>&gt;. The line
+                    was back in service before the day shift arrived.
+                &lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span>&gt;Open the file to clear the redactions.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">data-kp-reveal-trigger</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__edge&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__label&quot;</span>&gt;Open the file&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -276,5 +500,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

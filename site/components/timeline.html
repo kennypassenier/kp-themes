@@ -187,6 +187,92 @@
 &lt;/<span class="kp-code__keyword">ol</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-timeline">
+                        <figcaption class="kp-fw-semibold">Timeline</figcaption>
+                        <p class="kp-text-muted">Each event has a ring in the primary colour and a hairline running down to the next ring — and the last event must have no line hanging under it. The time sits above the text in tabular figures, muted and smaller, so a column of times lines up digit for digit. The fourth event's text is a long paragraph: it must wrap in its own column, never under the ring. The second timeline has one event, and must show a ring with no line at all.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<ol class="kp-timeline">
+    <li class="kp-timeline__item">
+        <span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span><time class="kp-timeline__when" datetime="2026-09-13T02:10">02:10</time>Pressure on line 2 starts to fall.</span>
+    </li>
+    <li class="kp-timeline__item">
+        <span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span><time class="kp-timeline__when" datetime="2026-09-13T02:14">02:14</time>Low-pressure alarm raised.</span>
+    </li>
+    <li class="kp-timeline__item">
+        <span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span
+        ><time class="kp-timeline__when" datetime="2026-09-13T02:40">02:40</time>Line closed at the manifold by the night
+        shift.</span
+        >
+    </li>
+    <li class="kp-timeline__item">
+        <span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span
+        ><time class="kp-timeline__when" datetime="2026-09-13T03:15">03:15</time>The pressure recovered to 3.2 bar without
+        anyone touching the valve, then dropped again; the gauge on the wall agreed with the sensor both times, so this is not
+        drift but something upstream of the manifold that nobody has looked into yet.</span
+        >
+    </li>
+    <li class="kp-timeline__item">
+        <span class="kp-timeline__marker" aria-hidden="true"></span>
+        <span><time class="kp-timeline__when" datetime="2026-09-13T06:00">06:00</time>Handed over to the day shift.</span>
+    </li>
+</ol>
+<div style="margin-block-start: 1.5rem">
+    <ol class="kp-timeline">
+        <li class="kp-timeline__item">
+            <span class="kp-timeline__marker" aria-hidden="true"></span>
+            <span><time class="kp-timeline__when" datetime="2026-09-12T22:00">22:00</time>Night shift started.</span>
+        </li>
+    </ol>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-13T02:10&quot;</span>&gt;02:10&lt;/<span class="kp-code__keyword">time</span>&gt;Pressure on line 2 starts to fall.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-13T02:14&quot;</span>&gt;02:14&lt;/<span class="kp-code__keyword">time</span>&gt;Low-pressure alarm raised.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        &gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-13T02:40&quot;</span>&gt;02:40&lt;/<span class="kp-code__keyword">time</span>&gt;Line closed at the manifold by the night
+        shift.&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        &gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-13T03:15&quot;</span>&gt;03:15&lt;/<span class="kp-code__keyword">time</span>&gt;The pressure recovered to 3.2 bar without
+        anyone touching the valve, then dropped again; the gauge on the wall agreed with the sensor both times, so this is not
+        drift but something upstream of the manifold that nobody has looked into yet.&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-13T06:00&quot;</span>&gt;06:00&lt;/<span class="kp-code__keyword">time</span>&gt;Handed over to the day shift.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ol</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__item&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__marker&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timeline__when&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-09-12T22:00&quot;</span>&gt;22:00&lt;/<span class="kp-code__keyword">time</span>&gt;Night shift started.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -240,5 +326,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

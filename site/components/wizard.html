@@ -211,6 +211,148 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-wizard">
+                        <figcaption class="kp-fw-semibold">Wizard, frozen on step 3 of 4</figcaption>
+                        <p class="kp-text-muted">The step list as <code>js/wizard.js</code> writes it on the third step, not attached. Done steps show a check in the success colour inside their circle, the current step a filled circle in the primary colour with a bold label and <code>aria-current="step"</code>, and the step still to come a plain numbered circle in the muted ink. The three states must be told apart without colour: check, fill, and outline. The second list has seven steps with long names in a narrow pane: it must wrap onto rows with each circle staying beside its own label. In every theme that draws a frame around the wizard, nothing inside may touch it: the step list, the step and the buttons keep at least 0.75rem from the frame on all four sides (<code>--kp-wizard-padding</code>, 1rem by default).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-wizard">
+    <ol class="kp-wizard__steps">
+        <li data-state="done">Incident</li>
+        <li data-state="done">Readings</li>
+        <li data-state="current" aria-current="step">Lock-out</li>
+        <li data-state="todo">Handover</li>
+    </ol>
+    <section>
+        <div class="kp-field kp-field--check">
+            <input class="kp-field__check" id="st-wz-lock" type="checkbox" checked />
+            <label class="kp-field__label" for="st-wz-lock">The line is locked out at the manifold</label>
+        </div>
+    </section>
+    <div class="kp-wizard__actions">
+        <button type="button" class="kp-button">Back</button>
+        <button type="button" class="kp-button kp-button--primary">Next</button>
+    </div>
+</div>
+<div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+    <div class="kp-wizard">
+        <ol class="kp-wizard__steps">
+            <li data-state="done">Where it happened</li>
+            <li data-state="done">What you saw</li>
+            <li data-state="done">Readings at the time</li>
+            <li data-state="current" aria-current="step">Who was told</li>
+            <li data-state="todo">Lock-out and sign-off</li>
+            <li data-state="todo">Vendor</li>
+            <li data-state="todo">Handover to the day shift</li>
+        </ol>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__steps&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;Incident&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;current&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;step&quot;</span>&gt;Lock-out&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;todo&quot;</span>&gt;Handover&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;st-wz-lock&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;st-wz-lock&quot;</span>&gt;The line is locked out at the manifold&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Back&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem; inline-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__steps&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;Where it happened&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;What you saw&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;Readings at the time&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;current&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;step&quot;</span>&gt;Who was told&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;todo&quot;</span>&gt;Lock-out and sign-off&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;todo&quot;</span>&gt;Vendor&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;todo&quot;</span>&gt;Handover to the day shift&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-structure-wizard-live">
+                        <figcaption class="kp-fw-semibold">Wizard, live</figcaption>
+                        <p class="kp-text-muted">The wizard exactly as the package documents it, with no form around it. Press <b>Next</b> with the reference empty: the wizard must refuse, keep the step list where it is, put focus on the field, and say why under it — the wizard writes the message itself when no <code>form[data-kp-form]</code> is around it. Type into the field and the message goes. Fill it in and press <b>Next</b>: the second label turns current, the first gets its check, focus moves to the new step, and the status line announces "Step 2 of 3". <b>Back</b> on the first step must be unavailable, and on the last step the <b>Next</b> button must read <b>Finish</b>. The same room inside the frame as the frozen wizard, on every step.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-wizard" data-kp-wizard>
+    <ol class="kp-wizard__steps">
+        <li data-kp-step-label>Incident</li>
+        <li data-kp-step-label>Readings</li>
+        <li data-kp-step-label>Handover</li>
+    </ol>
+    <p class="cat-note" data-kp-wizard-status role="status" aria-live="polite"></p>
+    <section data-kp-step>
+        <div class="kp-field">
+            <label class="kp-field__label" for="st-live-ref"
+            >Incident reference <span class="kp-field__required">required</span></label
+            >
+            <input class="kp-field__input" id="st-live-ref" type="text" required />
+            <span class="kp-field__error" data-kp-field-error hidden></span>
+        </div>
+    </section>
+    <section data-kp-step hidden>
+        <div class="kp-field">
+            <label class="kp-field__label" for="st-live-bar">Lowest pressure (bar)</label>
+            <input class="kp-field__input" id="st-live-bar" type="number" step="0.1" value="1.1" />
+        </div>
+    </section>
+    <section data-kp-step hidden>
+        <p>The day shift sees this incident first at 06:00.</p>
+    </section>
+    <div class="kp-wizard__actions">
+        <button type="button" class="kp-button" data-kp-wizard-back>Back</button>
+        <button type="button" class="kp-button kp-button--primary" data-kp-wizard-next>Next</button>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard&quot;</span> <span class="kp-code__keyword">data-kp-wizard</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__steps&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Incident&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Readings&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-step-label</span>&gt;Handover&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-note&quot;</span> <span class="kp-code__keyword">data-kp-wizard-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;st-live-ref&quot;</span>
+            &gt;Incident reference &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;st-live-ref&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;st-live-bar&quot;</span>&gt;Lowest pressure (bar)&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;st-live-bar&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;number&quot;</span> <span class="kp-code__keyword">step</span><span class="kp-code__string">=&quot;0.1&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;1.1&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">data-kp-step</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;The day shift sees this incident first at 06:00.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wizard__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-wizard-back</span>&gt;Back&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-wizard-next</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -301,5 +443,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

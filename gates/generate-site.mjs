@@ -28,6 +28,7 @@ import { extractEvents } from './site/extract-events.mjs';
 import { extractKnobs } from './site/extract-knobs.mjs';
 import { extractProps } from './site/extract-props.mjs';
 import { attributeOwners, eventOwners, knobsOf, rowsOf } from './site/selection.mjs';
+import { catalogueExamples } from './site/catalogue-examples.mjs';
 import { FAMILIES, names as utilityNames } from './generate-utilities.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -45,7 +46,10 @@ const UTILITY_COUNT = utilityNames().length;
 // here rather than in .github/workflows/pages.yml, because two lists of
 // what the site consists of means the CI one ships. `--assets` prints
 // it, one per line, and the workflow copies what it is told.
-export const ASSETS = ['css', 'js', 'dist', 'showcase', 'examples', 'fonts'];
+// `catalogue` since 2026-09-29: the component pages show the catalogue's
+// blocks, and the few that need behaviour of their own (the pretend server,
+// the toasts) get it from catalogue/demos.js.
+export const ASSETS = ['css', 'js', 'dist', 'showcase', 'examples', 'fonts', 'catalogue'];
 
 /**
  * @typedef {{ href: string, label: string }} Link
@@ -57,6 +61,7 @@ export const ASSETS = ['css', 'js', 'dist', 'showcase', 'examples', 'fonts'];
  *   attributes: ReturnType<typeof extractAttributes>,
  *   eventOwners: Map<string, Set<string>>,
  *   attributeOwners: Map<string, Set<string>>,
+ *   catalogue: Map<string, import('./site/catalogue-examples.mjs').Block[]>,
  * }} Sources
  * @typedef {import('./site/descriptors.mjs').Descriptor} Descriptor
  */
@@ -297,6 +302,30 @@ ${ex.markup}
         )
         .join('\n');
 
+    // The catalogue's blocks about this component, each with what to look at
+    // and the markup folded under it: the options and states the handful of
+    // examples above do not show (Kenny, 2026-09-29).
+    const more = (sources.catalogue.get(descriptor.id) ?? [])
+        .map((block) => {
+            const markup = block.stages.map((stage) => indent(stage)).join('\n');
+            // Several stages in one block (a loading table and a failed one)
+            // keep their own boxes, as they do in the catalogue.
+            const live = block.stages.map((stage) => `<div class="sc-example__stage">\n${indent(stage)}\n</div>`).join('\n');
+            const look = block.look.charAt(0).toUpperCase() + block.look.slice(1);
+            // Two catalogue pages may both have an #invalid block; the page
+            // name keeps the anchor unique.
+            const anchor = `more-${block.page.replace(/\.html$/, '')}-${block.id}`;
+            return `                    <figure class="sc-example" id="${escape(anchor)}">
+                        <figcaption class="kp-fw-semibold">${escape(block.title)}</figcaption>
+                        <p class="kp-text-muted">${look}</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+${live}
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>${highlight(markup.trim(), 'html')}</code></pre></details>
+                    </figure>`;
+        })
+        .join('\n');
+
     const ownEvents = rowsOf(events.events, sources.eventOwners, descriptor);
     const ownKnobs = knobsOf(knobs.knobs, descriptor);
     const ownAttributes = rowsOf(attributes.attributes, sources.attributeOwners, descriptor);
@@ -328,6 +357,15 @@ ${ex.markup}
                 </header>`,
         section('when', 'When to use it', `                    <p class="kp-prose">${escape(descriptor.whenToUse)}</p>`),
         section('example', 'Live example', examples),
+        ...(more === ''
+            ? []
+            : [
+                  section(
+                      'more-examples',
+                      'More examples',
+                      `                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>\n${more}`,
+                  ),
+              ]),
         section(
             'markup',
             'Framework-free markup',
@@ -530,6 +568,10 @@ function siteCss() {
        ran 60px past the box and the box grew a scrollbar. Wide examples
        are handled where they are wide: the package's own tables carry
        .kp-table-wrap, which is a scroll region on purpose. */
+    .sc-example__stage + .sc-example__stage {
+        margin-block-start: var(--kp-space-md, 1rem);
+    }
+
     .sc-example__live {
         overflow: visible;
     }
@@ -563,6 +605,7 @@ function build() {
         // on what every other page claims, not only on this one.
         eventOwners: eventOwners(events.events, DESCRIPTORS),
         attributeOwners: attributeOwners(attributes.attributes, DESCRIPTORS),
+        catalogue: catalogueExamples(ROOT, DESCRIPTORS),
     };
 
     /** @type {{group: string, links: {href: string, label: string}[]}[]} */

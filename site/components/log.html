@@ -211,6 +211,92 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;prometheus&quot;</span>&gt;prom&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-data-log">
+                        <figcaption class="kp-fw-semibold">Log</figcaption>
+                        <p class="kp-text-muted">Four columns that do not move — time, source, level, message — so every message begins in the same place whatever the source before it is called; cover the first three with a finger and the left edge of the text must be straight. The level is a word before it is a colour: read the list with the colours ignored and it must still say which line failed. Each source name keeps its own hue out of the theme's five chart colours, and the same name takes the same hue in every theme and in the terminal — <code>media</code> is the third chart colour in both. The error line takes the destructive ink for its level and its message, the warning line the warning ink, and a debug line is quieter than the rest. The pointed-at line wears the muted ground and no second colour. In the narrow pane a long message wraps under itself, inside its own column, and the three columns in front of it stay put.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-log">
+    <p class="kp-log__line" data-kp-severity="info">
+        <time class="kp-log__time">09:41:02</time><span class="kp-log__source" data-kp-source="media">media</span
+            ><span class="kp-log__level">info</span><span class="kp-log__message">jellyfin: transcode worker ready</span>
+        </p>
+        <p class="kp-log__line" data-kp-severity="info">
+            <time class="kp-log__time">09:41:03</time><span class="kp-log__source" data-kp-source="web">web</span
+                ><span class="kp-log__level">info</span><span class="kp-log__message">caddy: certificate renewed, 89 days left</span>
+            </p>
+            <p class="kp-log__line" data-kp-severity="warning">
+                <time class="kp-log__time">09:41:04</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                    ><span class="kp-log__level">warning</span
+                        ><span class="kp-log__message">restic: repository locked by another process</span>
+                    </p>
+                    <p class="kp-log__line" data-kp-severity="error" data-kp-current>
+                        <time class="kp-log__time">09:41:06</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                            ><span class="kp-log__level">error</span
+                                ><span class="kp-log__message">restic: snapshot failed, the lock is 41 minutes old</span>
+                            </p>
+                            <p class="kp-log__line" data-kp-severity="debug">
+                                <time class="kp-log__time">09:41:07</time><span class="kp-log__source" data-kp-source="monitoring">monitoring</span
+                                    ><span class="kp-log__level">debug</span
+                                        ><span class="kp-log__message">prometheus: scrape of node-exporter took 412 ms</span>
+                                    </p>
+                                </div>
+                                <div class="cat-resize" style="inline-size: 20rem; margin-block-start: 1rem">
+                                    <div class="kp-log">
+                                        <p class="kp-log__line" data-kp-severity="error">
+                                            <time class="kp-log__time">09:41:06</time><span class="kp-log__source" data-kp-source="backup">backup</span
+                                                ><span class="kp-log__level">error</span
+                                                    ><span class="kp-log__message"
+                                                    >restic: snapshot failed, the lock is 41 minutes old and no other process holds it; run unlock before the next
+                                                    attempt</span
+                                                    >
+                                                </p>
+                                            </div>
+                                        </div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:02&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;media&quot;</span>&gt;media&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;info&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;jellyfin: transcode worker ready&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:03&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;web&quot;</span>&gt;web&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;info&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;caddy: certificate renewed, 89 days left&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;warning&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:04&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;backup&quot;</span>&gt;backup&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;warning&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;restic: repository locked by another process&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;error&quot;</span> <span class="kp-code__keyword">data-kp-current</span>&gt;
+                        &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:06&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;backup&quot;</span>&gt;backup&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;error&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;restic: snapshot failed, the lock is 41 minutes old&lt;/<span class="kp-code__keyword">span</span>&gt;
+                            &lt;/<span class="kp-code__keyword">p</span>&gt;
+                            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;debug&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:07&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;monitoring&quot;</span>&gt;monitoring&lt;/<span class="kp-code__keyword">span</span>
+                                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;debug&lt;/<span class="kp-code__keyword">span</span>
+                                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>&gt;prometheus: scrape of node-exporter took 412 ms&lt;/<span class="kp-code__keyword">span</span>&gt;
+                                    &lt;/<span class="kp-code__keyword">p</span>&gt;
+                                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 20rem; margin-block-start: 1rem&quot;</span>&gt;
+                                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log&quot;</span>&gt;
+                                        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__line&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;
+                                            &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__time&quot;</span>&gt;09:41:06&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__source&quot;</span> <span class="kp-code__keyword">data-kp-source</span><span class="kp-code__string">=&quot;backup&quot;</span>&gt;backup&lt;/<span class="kp-code__keyword">span</span>
+                                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__level&quot;</span>&gt;error&lt;/<span class="kp-code__keyword">span</span>
+                                                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-log__message&quot;</span>
+                                                    &gt;restic: snapshot failed, the lock is 41 minutes old and no other process holds it; run unlock before the next
+                                                    attempt&lt;/<span class="kp-code__keyword">span</span>
+                                                    &gt;
+                                                &lt;/<span class="kp-code__keyword">p</span>&gt;
+                                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                                        &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -267,5 +353,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

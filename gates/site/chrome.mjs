@@ -111,7 +111,7 @@ ${page.body}
                 </div>
             </main>
         </div>
-        <script type="module" src="${up}js/auto.js"></script>
+        <script type="module" src="${up}js/auto.js"></script>${page.body.includes('data-sc-section="more-examples"') ? `\n        <script type="module" src="${up}catalogue/demos.js"></script>` : ''}
     </body>
 </html>
 `;

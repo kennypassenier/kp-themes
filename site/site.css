@@ -95,6 +95,10 @@
        ran 60px past the box and the box grew a scrollbar. Wide examples
        are handled where they are wide: the package's own tables carry
        .kp-table-wrap, which is a scroll region on purpose. */
+    .sc-example__stage + .sc-example__stage {
+        margin-block-start: var(--kp-space-md, 1rem);
+    }
+
     .sc-example__live {
         overflow: visible;
     }

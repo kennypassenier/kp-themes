@@ -185,6 +185,58 @@
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-reorder">
+                        <figcaption class="kp-fw-semibold">Reorder</figcaption>
+                        <p class="kp-text-muted">Each row is on the card surface with a boundary, and its handle is a real button with a boundary of its own and a grab pointer. Tab to a handle and press Down: the row moves, focus stays on the <i>same</i> handle, and a screen reader hears "Pressure moved to position 2 of 5". Drag a handle with the mouse: the row you hold (<code>data-kp-dragging</code>) turns its frame to the primary colour, dashed, and lifts off the list with a shadow; letting go takes all of it away. Drag Time's handle all the way to the bottom in one movement: the row must follow the pointer past every row it crosses, while the button is still held, not stop after one; the screen reader hears "Time moved to position 5 of 5", and the order is the one four presses of Down would have left. The fourth row's label is long: it must wrap beside the handle, with the handle staying at the top of the row.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="max-inline-size: 28rem">
+    <ul class="kp-reorder" data-kp-reorder aria-label="Columns in the handover report">
+        <li data-kp-item="time" data-kp-label="Time">
+            <button type="button" data-kp-handle aria-label="Move Time">⠿</button> Time
+        </li>
+        <li data-kp-item="pressure" data-kp-label="Pressure">
+            <button type="button" data-kp-handle aria-label="Move Pressure">⠿</button> Pressure
+        </li>
+        <li data-kp-item="flow" data-kp-label="Flow rate">
+            <button type="button" data-kp-handle aria-label="Move Flow rate">⠿</button> Flow rate
+        </li>
+        <li data-kp-item="note" data-kp-label="Note">
+            <button type="button" data-kp-handle aria-label="Move Note">⠿</button> Note from the engineer who read the gauge on
+            the wall, as typed on the handheld
+        </li>
+        <li data-kp-item="signed" data-kp-label="Signed by">
+            <button type="button" data-kp-handle aria-label="Move Signed by">⠿</button> Signed by
+        </li>
+    </ul>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;max-inline-size: 28rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-reorder&quot;</span> <span class="kp-code__keyword">data-kp-reorder</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Columns in the handover report&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;time&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Time&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Time&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Time
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;pressure&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Pressure&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Pressure&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Pressure
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;flow&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Flow rate&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Flow rate&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Flow rate
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;note&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Note&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Note&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Note from the engineer who read the gauge on
+            the wall, as typed on the handheld
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;signed&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Signed by&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-handle</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Move Signed by&quot;</span>&gt;⠿&lt;/<span class="kp-code__keyword">button</span>&gt; Signed by
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -260,5 +312,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -193,6 +193,200 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-overlays-menu">
+                        <figcaption class="kp-fw-semibold">Popover and menu</figcaption>
+                        <p class="kp-text-muted">The menu is a <code>.kp-menu</code> inside a <code>.kp-popover</code>: the popover surface, a strong boundary, and items with a small inset. Hover each item: the highlight is a soft wash of the ink and must span the item's <i>whole row</i>, not just its word. The separator is a hairline; the destructive item is the only one in the alarm colour. Press <b>Row actions</b> on the live copy: the menu must open against the button, close on Escape or a click outside, and return focus to the button.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+    Row actions (frozen open)
+</button>
+<div class="kp-popover">
+    <ul class="kp-menu" role="menu">
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Copy reference</button></li>
+        <li role="separator" class="kp-menu__separator"></li>
+        <li role="none">
+            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete incident</button>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="sc-example__stage">
+<button
+type="button"
+class="kp-button kp-button--ghost"
+popovertarget="ov-menu-live"
+aria-haspopup="menu"
+style="anchor-name: --ov-menu-live"
+>
+Row actions
+</button>
+<div popover="auto" id="ov-menu-live" class="kp-popover" style="position-anchor: --ov-menu-live">
+    <ul class="kp-menu" role="menu">
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
+        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Copy reference</button></li>
+        <li role="separator" class="kp-menu__separator"></li>
+        <li role="none">
+            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete incident</button>
+        </li>
+    </ul>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+    Row actions (frozen open)
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Open incident&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Assign to…&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Copy reference&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__separator&quot;</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>&gt;Delete incident&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>
+<span class="kp-code__keyword">popovertarget</span><span class="kp-code__string">=&quot;ov-menu-live&quot;</span>
+<span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;menu&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;anchor-name: --ov-menu-live&quot;</span>
+&gt;
+Row actions
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">popover</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-menu-live&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position-anchor: --ov-menu-live&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Open incident&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Assign to…&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Copy reference&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__separator&quot;</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>&gt;Delete incident&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-overlays-menu-extremes">
+                        <figcaption class="kp-fw-semibold">Menu extremes</figcaption>
+                        <p class="kp-text-muted">A disabled item, an item whose label is a whole sentence, and a menu with twenty-four items. The disabled item is faded and out of the pointer's reach, so it must not light up on hover in any theme. The long label must wrap inside the popover, never push it wider than the window. The long menu must stop at the popover's maximum height and scroll inside itself, with the items keeping their height rather than squashing to fit — the fault this rule was written for was a second column appearing beside the first.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div>
+    <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+        Export (frozen open)
+    </button>
+    <div class="kp-popover">
+        <ul class="kp-menu" role="menu">
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">As CSV</button></li>
+            <li role="none">
+                <button type="button" role="menuitem" class="kp-menu__item" disabled>As PDF (not available)</button>
+            </li>
+            <li role="none">
+                <button type="button" role="menuitem" class="kp-menu__item">
+                    As a zip of every raw telemetry file for the selected incidents, including the readings nobody has looked at
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div>
+    <button type="button" class="kp-button kp-button--ghost" aria-haspopup="menu" aria-expanded="true">
+        Move to line (frozen open)
+    </button>
+    <div class="kp-popover">
+        <ul class="kp-menu" role="menu">
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 1</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 2</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 3</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 4</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 5</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 6</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 7</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 8</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 9</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 10</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 11</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 12</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 13</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 14</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 15</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 16</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 17</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 18</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 19</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 20</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 21</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 22</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 23</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Line 24</button></li>
+        </ul>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+        Export (frozen open)
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;As CSV&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;As PDF (not available)&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;
+                    As a zip of every raw telemetry file for the selected incidents, including the readings nobody has looked at
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+        Move to line (frozen open)
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 1&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 3&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 4&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 5&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 6&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 7&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 8&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 9&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 10&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 11&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 12&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 13&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 14&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 15&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 16&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 17&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 18&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 19&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 20&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 21&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 22&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 23&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>&gt;Line 24&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -267,5 +461,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

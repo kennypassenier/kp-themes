@@ -189,6 +189,202 @@
 &lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-media-ratios">
+                        <figcaption class="kp-fw-semibold">Ratios</figcaption>
+                        <p class="kp-text-muted">One landscape picture in four frames: the default 16:9, <code>--wide</code> 21:9, <code>--square</code> and <code>--portrait</code> 3:4. Each frame keeps its own shape and the picture <i>covers</i> it, so the square and the portrait crop the sides of the pump house rather than squash it — a stretched roof is the fault. The fifth frame is the portrait again with the <code>--kp-media-fit: contain</code> knob: the whole picture shows, and the bands above and below it are the frame's muted ground, which must be visibly part of the frame and not a gap in the page. Each theme may give the frame an edge; it must be the same edge on all five.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-cell">
+    <h3>Default, 16:9</h3>
+    <div class="kp-media">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+    </div>
+</div>
+<div class="cat-cell">
+    <h3>Wide, 21:9</h3>
+    <div class="kp-media kp-media--wide">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+    </div>
+</div>
+<div class="cat-cell">
+    <h3>Square</h3>
+    <div class="kp-media kp-media--square">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+    </div>
+</div>
+<div class="cat-cell">
+    <h3>Portrait, 3:4</h3>
+    <div class="kp-media kp-media--portrait">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+    </div>
+</div>
+<div class="cat-cell">
+    <h3>Portrait, fit: contain</h3>
+    <div class="kp-media kp-media--portrait" style="--kp-media-fit: contain">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Default, 16:9&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Wide, 21:9&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--wide&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Square&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--square&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Portrait, 3:4&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--portrait&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Portrait, fit: contain&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--portrait&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-media-fit: contain&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-media-empty">
+                        <figcaption class="kp-fw-semibold">Before the picture arrives</figcaption>
+                        <p class="kp-text-muted">The frames with no picture in them, which is every frame for the first moments of a slow page. Each must already be its final shape on the muted ground, so the text under it does not jump when the picture lands — the sentence under the square must sit exactly as far down as it would with a picture. An empty frame must read as a place for something, not as a grey button; in a theme whose muted ground is close to its page, check the frame is still there at all.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-cell">
+    <div class="kp-media"></div>
+    <p>The readings chart for line 2 loads here.</p>
+</div>
+<div class="cat-cell">
+    <div class="kp-media kp-media--square"></div>
+    <p>The photograph of the gauge, taken at 02:40, loads here.</p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The readings chart for line 2 loads here.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--square&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The photograph of the gauge, taken at 02:40, loads here.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-media-figure">
+                        <figcaption class="kp-fw-semibold">Figure and overlay</figcaption>
+                        <p class="kp-text-muted">The caption under a figure sits close to its picture, smaller and muted, and belongs to it rather than to the next paragraph. The overlay text lies on a dark gradient at the bottom of the picture: it is white on that gradient in every theme on purpose, and it must stay legible over the pale sky of this picture too. The second overlay is a long sentence in a narrow frame: the gradient must grow with the text, and no line may run over the pale part of the picture without a ground under it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<figure class="kp-media-figure">
+    <div class="kp-media kp-media--square">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20600%20600%22%3E%20%3Crect%20width%3D%22600%22%20height%3D%22600%22%20fill%3D%22%23e7e2d6%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%22220%22%20fill%3D%22%23fbfaf6%22%20stroke%3D%22%233a3a3a%22%20stroke-width%3D%2218%22%2F%3E%20%3Cpath%20d%3D%22M140%20400%20A180%20180%200%201%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23b9b3a5%22%20stroke-width%3D%2210%22%2F%3E%20%3Cpath%20d%3D%22M400%20190%20A180%20180%200%200%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23c0392b%22%20stroke-width%3D%2214%22%2F%3E%20%3Cline%20x1%3D%22300%22%20y1%3D%22300%22%20x2%3D%22190%22%20y2%3D%22395%22%20stroke%3D%22%231f1f1f%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%2218%22%20fill%3D%22%231f1f1f%22%2F%3E%20%3Ctext%20x%3D%22300%22%20y%3D%22470%22%20font-family%3D%22sans-serif%22%20font-size%3D%2240%22%20text-anchor%3D%22middle%22%20fill%3D%22%233a3a3a%22%3E1.1%20bar%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="The wall gauge on line 2 reading 1.1 bar, its needle in the low zone"
+        />
+        <p class="kp-media__overlay">Line 2, 02:40</p>
+    </div>
+    <figcaption>The wall gauge at the moment the line was closed. It agreed with sensor PT-204 within 0.05 bar.</figcaption>
+</figure>
+<figure class="kp-media-figure">
+    <div class="kp-media">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="Pump house 4 from the access road, pipes running out on both sides"
+        />
+        <p class="kp-media__overlay">
+            Pump house 4 from the access road, where the day shift parks and the vendor's van unloads the replacement valve
+        </p>
+    </div>
+    <figcaption>Taken by the night shift at 06:05, in daylight.</figcaption>
+</figure>
+<figure class="kp-media-figure">
+    <div class="kp-media kp-media--portrait">
+        <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%201200%22%3E%20%3Crect%20width%3D%22900%22%20height%3D%221200%22%20fill%3D%22%23d6dde2%22%2F%3E%20%3Crect%20x%3D%22390%22%20y%3D%220%22%20width%3D%22120%22%20height%3D%221200%22%20fill%3D%22%237d8a93%22%2F%3E%20%3Crect%20x%3D%22250%22%20y%3D%22520%22%20width%3D%22400%22%20height%3D%22160%22%20rx%3D%2220%22%20fill%3D%22%234c5961%22%2F%3E%20%3Ccircle%20cx%3D%22450%22%20cy%3D%22600%22%20r%3D%2254%22%20fill%3D%22%23c0392b%22%2F%3E%20%3Crect%20x%3D%22280%22%20y%3D%22760%22%20width%3D%22340%22%20height%3D%2280%22%20fill%3D%22%23f4d35e%22%2F%3E%20%3Ctext%20x%3D%22450%22%20y%3D%22815%22%20font-family%3D%22sans-serif%22%20font-size%3D%2244%22%20text-anchor%3D%22middle%22%20fill%3D%22%231f1f1f%22%3ELOCKED%20OUT%3C%2Ftext%3E%20%3C%2Fsvg%3E"
+        alt="The manifold valve with a red lock-out tag and a yellow LOCKED OUT sign"
+        />
+    </div>
+    <figcaption>The lock-out tag on the manifold valve.</figcaption>
+</figure>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media-figure&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--square&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20600%20600%22%3E%20%3Crect%20width%3D%22600%22%20height%3D%22600%22%20fill%3D%22%23e7e2d6%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%22220%22%20fill%3D%22%23fbfaf6%22%20stroke%3D%22%233a3a3a%22%20stroke-width%3D%2218%22%2F%3E%20%3Cpath%20d%3D%22M140%20400%20A180%20180%200%201%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23b9b3a5%22%20stroke-width%3D%2210%22%2F%3E%20%3Cpath%20d%3D%22M400%20190%20A180%20180%200%200%201%20460%20400%22%20fill%3D%22none%22%20stroke%3D%22%23c0392b%22%20stroke-width%3D%2214%22%2F%3E%20%3Cline%20x1%3D%22300%22%20y1%3D%22300%22%20x2%3D%22190%22%20y2%3D%22395%22%20stroke%3D%22%231f1f1f%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Ccircle%20cx%3D%22300%22%20cy%3D%22300%22%20r%3D%2218%22%20fill%3D%22%231f1f1f%22%2F%3E%20%3Ctext%20x%3D%22300%22%20y%3D%22470%22%20font-family%3D%22sans-serif%22%20font-size%3D%2240%22%20text-anchor%3D%22middle%22%20fill%3D%22%233a3a3a%22%3E1.1%20bar%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;The wall gauge on line 2 reading 1.1 bar, its needle in the low zone&quot;</span>
+        /&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media__overlay&quot;</span>&gt;Line 2, 02:40&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span>&gt;The wall gauge at the moment the line was closed. It agreed with sensor PT-204 within 0.05 bar.&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media-figure&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20900%22%3E%20%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23cfd8dc%22%2F%3E%20%3Ccircle%20cx%3D%221320%22%20cy%3D%22180%22%20r%3D%2290%22%20fill%3D%22%23fff3c4%22%2F%3E%20%3Crect%20y%3D%22640%22%20width%3D%221600%22%20height%3D%22260%22%20fill%3D%22%238d9e87%22%2F%3E%20%3Crect%20x%3D%22520%22%20y%3D%22380%22%20width%3D%22560%22%20height%3D%22280%22%20fill%3D%22%236b7f8c%22%2F%3E%20%3Cpolygon%20points%3D%22490%2C390%20800%2C210%201110%2C390%22%20fill%3D%22%234a5a64%22%2F%3E%20%3Crect%20x%3D%22740%22%20y%3D%22520%22%20width%3D%22120%22%20height%3D%22140%22%20fill%3D%22%232b3439%22%2F%3E%20%3Crect%20x%3D%22600%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%22910%22%20y%3D%22440%22%20width%3D%2290%22%20height%3D%2260%22%20fill%3D%22%23dfe8ec%22%2F%3E%20%3Crect%20x%3D%221080%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Crect%20x%3D%22100%22%20y%3D%22600%22%20width%3D%22420%22%20height%3D%2226%22%20fill%3D%22%2356636b%22%2F%3E%20%3Ccircle%20cx%3D%221290%22%20cy%3D%22560%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%232b3439%22%20stroke-width%3D%2212%22%2F%3E%20%3Ctext%20x%3D%22800%22%20y%3D%22350%22%20font-family%3D%22sans-serif%22%20font-size%3D%2246%22%20text-anchor%3D%22middle%22%20fill%3D%22%23eef3f5%22%3EPUMP%20HOUSE%204%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;Pump house 4 from the access road, pipes running out on both sides&quot;</span>
+        /&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media__overlay&quot;</span>&gt;
+            Pump house 4 from the access road, where the day shift parks and the vendor's van unloads the replacement valve
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span>&gt;Taken by the night shift at 06:05, in daylight.&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media-figure&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-media kp-media--portrait&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">img</span>
+        <span class="kp-code__keyword">src</span><span class="kp-code__string">=&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%201200%22%3E%20%3Crect%20width%3D%22900%22%20height%3D%221200%22%20fill%3D%22%23d6dde2%22%2F%3E%20%3Crect%20x%3D%22390%22%20y%3D%220%22%20width%3D%22120%22%20height%3D%221200%22%20fill%3D%22%237d8a93%22%2F%3E%20%3Crect%20x%3D%22250%22%20y%3D%22520%22%20width%3D%22400%22%20height%3D%22160%22%20rx%3D%2220%22%20fill%3D%22%234c5961%22%2F%3E%20%3Ccircle%20cx%3D%22450%22%20cy%3D%22600%22%20r%3D%2254%22%20fill%3D%22%23c0392b%22%2F%3E%20%3Crect%20x%3D%22280%22%20y%3D%22760%22%20width%3D%22340%22%20height%3D%2280%22%20fill%3D%22%23f4d35e%22%2F%3E%20%3Ctext%20x%3D%22450%22%20y%3D%22815%22%20font-family%3D%22sans-serif%22%20font-size%3D%2244%22%20text-anchor%3D%22middle%22%20fill%3D%22%231f1f1f%22%3ELOCKED%20OUT%3C%2Ftext%3E%20%3C%2Fsvg%3E&quot;</span>
+        <span class="kp-code__keyword">alt</span><span class="kp-code__string">=&quot;The manifold valve with a red lock-out tag and a yellow LOCKED OUT sign&quot;</span>
+        /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span>&gt;The lock-out tag on the manifold valve.&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -243,5 +439,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

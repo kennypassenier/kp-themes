@@ -209,6 +209,416 @@
 &lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-data-spec">
+                        <figcaption class="kp-fw-semibold">Spec sheet</figcaption>
+                        <p class="kp-text-muted">A card with two columns: the terms in the muted ink, the values in the card's ink. Each colour row starts with a small square in that token's colour with a strong boundary — the <b>card</b> swatch sits on the card and must still be visible as a square. The three type rows are set in the theme's display, body and mono faces. The last value is a sentence with no natural break at the end; it must wrap inside the value column and never under the terms.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="max-inline-size: 30rem">
+    <aside class="kp-spec" aria-label="Palette and type of the theme on screen">
+        <dl>
+            <dt>ground</dt>
+            <dd><i class="kp-spec__swatch" data-token="background"></i>--background</dd>
+            <dt>card</dt>
+            <dd><i class="kp-spec__swatch" data-token="card"></i>--card</dd>
+            <dt>primary</dt>
+            <dd><i class="kp-spec__swatch" data-token="primary"></i>--primary</dd>
+            <dt>alarm</dt>
+            <dd><i class="kp-spec__swatch" data-token="destructive"></i>--destructive</dd>
+            <dt>ok</dt>
+            <dd><i class="kp-spec__swatch" data-token="success"></i>--success</dd>
+            <dt>boundary</dt>
+            <dd><i class="kp-spec__swatch" data-token="border-strong"></i>--border-strong</dd>
+            <dt>display</dt>
+            <dd><span class="kp-spec__font" data-font="display">Pump house 4</span></dd>
+            <dt>body</dt>
+            <dd><span class="kp-spec__font" data-font="body">Line closed at the manifold.</span></dd>
+            <dt>mono</dt>
+            <dd><span class="kp-spec__font" data-font="mono">PT-204 · 1.10 bar</span></dd>
+            <dt>contract</dt>
+            <dd>HF-2201/annex-B/valve-replacement-and-recalibration-of-every-sensor-on-line-2</dd>
+        </dl>
+    </aside>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;max-inline-size: 30rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Palette and type of the theme on screen&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">dl</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;ground&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;background&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--background&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;card&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;card&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--card&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;primary&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;primary&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--primary&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;alarm&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;destructive&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--destructive&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;ok&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;success&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--success&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;boundary&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">i</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__swatch&quot;</span> <span class="kp-code__keyword">data-token</span><span class="kp-code__string">=&quot;border-strong&quot;</span>&gt;&lt;/<span class="kp-code__keyword">i</span>&gt;--border-strong&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;display&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__font&quot;</span> <span class="kp-code__keyword">data-font</span><span class="kp-code__string">=&quot;display&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;body&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__font&quot;</span> <span class="kp-code__keyword">data-font</span><span class="kp-code__string">=&quot;body&quot;</span>&gt;Line closed at the manifold.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;mono&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spec__font&quot;</span> <span class="kp-code__keyword">data-font</span><span class="kp-code__string">=&quot;mono&quot;</span>&gt;PT-204 · 1.10 bar&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">dd</span>&gt;
+            &lt;<span class="kp-code__keyword">dt</span>&gt;contract&lt;/<span class="kp-code__keyword">dt</span>&gt;
+            &lt;<span class="kp-code__keyword">dd</span>&gt;HF-2201/annex-B/valve-replacement-and-recalibration-of-every-sensor-on-line-2&lt;/<span class="kp-code__keyword">dd</span>&gt;
+        &lt;/<span class="kp-code__keyword">dl</span>&gt;
+    &lt;/<span class="kp-code__keyword">aside</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-media-laurels">
+                        <figcaption class="kp-fw-semibold">Laurels and platforms</figcaption>
+                        <p class="kp-text-muted">Laurels are a quiet row of claims: each value bold in the page's ink on its own line, its source muted under it, the items wrapping as a row rather than stacking into a list. The platforms line is smaller and muted still, a row of names with a wide gap and nothing between them. Both are quiet by default and a register may dramatise them; whatever it does, the bold value must stay the loudest thing in each laurel. A theme that draws a box around each laurel or platform (nostromo boxes the laurels) keeps room between the words and the box’s edges. In the narrow pane both must wrap without an item splitting across two columns.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<ul class="kp-laurels" aria-label="What this site is measured against">
+    <li><b>412 days</b> without a lost-time injury</li>
+    <li><b>99.7 %</b> pump availability, last quarter</li>
+    <li><b>2 minutes</b> median time to lock out</li>
+</ul>
+<div style="margin-block-start: 1rem">
+    <div class="kp-platforms">
+        <span
+        ><svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+        >
+        <circle cx="12" cy="12" r="2.5" />
+        <path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10" />
+    </svg>
+    <small>Available on</small> PT-204 sensor</span
+    >
+    <span
+    ><svg
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+    >
+    <circle cx="12" cy="13" r="8" />
+    <path d="M12 13l4-4" />
+</svg>
+<small>Available on</small> Wall gauge</span
+>
+<span
+><svg
+viewBox="0 0 24 24"
+width="16"
+height="16"
+fill="none"
+stroke="currentColor"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+aria-hidden="true"
+focusable="false"
+>
+<rect x="7" y="3" width="10" height="18" rx="2" />
+<path d="M11 18h2" />
+</svg>
+<small>Available on</small> Handheld</span
+>
+<span
+><svg
+viewBox="0 0 24 24"
+width="16"
+height="16"
+fill="none"
+stroke="currentColor"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+aria-hidden="true"
+focusable="false"
+>
+<rect x="3" y="5" width="18" height="14" rx="2" />
+<path d="M3 9h18" />
+</svg>
+<small>Available on</small> Vendor portal</span
+>
+</div>
+</div>
+<div class="cat-resize" style="margin-block-start: 1rem; inline-size: 14rem">
+    <ul class="kp-laurels" aria-label="What this site is measured against, narrow">
+        <li><b>412 days</b> without a lost-time injury</li>
+        <li><b>99.7 %</b> pump availability, last quarter</li>
+    </ul>
+    <div style="margin-block-start: 1rem">
+        <div class="kp-platforms">
+            <span
+            ><svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+            >
+            <circle cx="12" cy="12" r="2.5" />
+            <path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10" />
+        </svg>
+        <small>Available on</small> PT-204 sensor</span
+        >
+        <span
+        ><svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+        >
+        <circle cx="12" cy="13" r="8" />
+        <path d="M12 13l4-4" />
+    </svg>
+    <small>Available on</small> Wall gauge</span
+    >
+    <span
+    ><svg
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+    >
+    <rect x="7" y="3" width="10" height="18" rx="2" />
+    <path d="M11 18h2" />
+</svg>
+<small>Available on</small> Handheld</span
+>
+<span
+><svg
+viewBox="0 0 24 24"
+width="16"
+height="16"
+fill="none"
+stroke="currentColor"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+aria-hidden="true"
+focusable="false"
+>
+<rect x="3" y="5" width="18" height="14" rx="2" />
+<path d="M3 9h18" />
+</svg>
+<small>Available on</small> Vendor portal</span
+>
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-laurels&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What this site is measured against&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;412 days&lt;/<span class="kp-code__keyword">b</span>&gt; without a lost-time injury&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;99.7 %&lt;/<span class="kp-code__keyword">b</span>&gt; pump availability, last quarter&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;2 minutes&lt;/<span class="kp-code__keyword">b</span>&gt; median time to lock out&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-platforms&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        &gt;&lt;<span class="kp-code__keyword">svg</span>
+        <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+        <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+        <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+        <span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+        <span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+        <span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+        <span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+        <span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+        <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        <span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">circle</span> <span class="kp-code__keyword">cx</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">cy</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">r</span><span class="kp-code__string">=&quot;2.5&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">svg</span>&gt;
+    &lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; PT-204 sensor&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span>
+    &gt;&lt;<span class="kp-code__keyword">svg</span>
+    <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+    <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+    <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+    <span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+    <span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+    <span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+    <span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+    <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">circle</span> <span class="kp-code__keyword">cx</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">cy</span><span class="kp-code__string">=&quot;13&quot;</span> <span class="kp-code__keyword">r</span><span class="kp-code__string">=&quot;8&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M12 13l4-4&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Wall gauge&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span>
+&gt;&lt;<span class="kp-code__keyword">svg</span>
+<span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+<span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+<span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+<span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+<span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+<span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">rect</span> <span class="kp-code__keyword">x</span><span class="kp-code__string">=&quot;7&quot;</span> <span class="kp-code__keyword">y</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;18&quot;</span> <span class="kp-code__keyword">rx</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M11 18h2&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Handheld&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span>
+&gt;&lt;<span class="kp-code__keyword">svg</span>
+<span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+<span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+<span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+<span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+<span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+<span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">rect</span> <span class="kp-code__keyword">x</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">y</span><span class="kp-code__string">=&quot;5&quot;</span> <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;18&quot;</span> <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;14&quot;</span> <span class="kp-code__keyword">rx</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M3 9h18&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Vendor portal&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem; inline-size: 14rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-laurels&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What this site is measured against, narrow&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;412 days&lt;/<span class="kp-code__keyword">b</span>&gt; without a lost-time injury&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;99.7 %&lt;/<span class="kp-code__keyword">b</span>&gt; pump availability, last quarter&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-platforms&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            &gt;&lt;<span class="kp-code__keyword">svg</span>
+            <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+            <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+            <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+            <span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+            <span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+            <span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+            <span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+            <span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+            <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+            <span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">circle</span> <span class="kp-code__keyword">cx</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">cy</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">r</span><span class="kp-code__string">=&quot;2.5&quot;</span> /&gt;
+            &lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">svg</span>&gt;
+        &lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; PT-204 sensor&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        &gt;&lt;<span class="kp-code__keyword">svg</span>
+        <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+        <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+        <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+        <span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+        <span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+        <span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+        <span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+        <span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+        <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        <span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">circle</span> <span class="kp-code__keyword">cx</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">cy</span><span class="kp-code__string">=&quot;13&quot;</span> <span class="kp-code__keyword">r</span><span class="kp-code__string">=&quot;8&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M12 13l4-4&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">svg</span>&gt;
+    &lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Wall gauge&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span>
+    &gt;&lt;<span class="kp-code__keyword">svg</span>
+    <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+    <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+    <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+    <span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+    <span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+    <span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+    <span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+    <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">rect</span> <span class="kp-code__keyword">x</span><span class="kp-code__string">=&quot;7&quot;</span> <span class="kp-code__keyword">y</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;18&quot;</span> <span class="kp-code__keyword">rx</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M11 18h2&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Handheld&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span>
+&gt;&lt;<span class="kp-code__keyword">svg</span>
+<span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span>
+<span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;16&quot;</span>
+<span class="kp-code__keyword">fill</span><span class="kp-code__string">=&quot;none&quot;</span>
+<span class="kp-code__keyword">stroke</span><span class="kp-code__string">=&quot;currentColor&quot;</span>
+<span class="kp-code__keyword">stroke-width</span><span class="kp-code__string">=&quot;1.6&quot;</span>
+<span class="kp-code__keyword">stroke-linecap</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">stroke-linejoin</span><span class="kp-code__string">=&quot;round&quot;</span>
+<span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+<span class="kp-code__keyword">focusable</span><span class="kp-code__string">=&quot;false&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">rect</span> <span class="kp-code__keyword">x</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">y</span><span class="kp-code__string">=&quot;5&quot;</span> <span class="kp-code__keyword">width</span><span class="kp-code__string">=&quot;18&quot;</span> <span class="kp-code__keyword">height</span><span class="kp-code__string">=&quot;14&quot;</span> <span class="kp-code__keyword">rx</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;
+&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M3 9h18&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;<span class="kp-code__keyword">small</span>&gt;Available on&lt;/<span class="kp-code__keyword">small</span>&gt; Vendor portal&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-side-note">
+                        <figcaption class="kp-fw-semibold">Side note</figcaption>
+                        <p class="kp-text-muted">The side note is the smallest, most muted text the package draws — a file code or a caption at the edge of a section, hidden from screen readers because it repeats nothing they need. It must still be legible: check its contrast with the Devtools colour tool in the palest and the darkest theme. A register may turn it into a stamp or a vertical label in the margin of its container; it must stay inside that container, never overlap the heading beside it or anything outside the block.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<p class="kp-side-note" aria-hidden="true">PH4 · LINE 02 · SHEET 3 OF 7</p>
+<h3 style="margin-block: 0.25rem 0">Handover, night to day</h3>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-side-note&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;PH4 · LINE 02 · SHEET 3 OF 7&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block: 0.25rem 0&quot;</span>&gt;Handover, night to day&lt;/<span class="kp-code__keyword">h3</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -285,5 +695,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

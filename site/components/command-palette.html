@@ -251,6 +251,288 @@
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-page-palette">
+                        <figcaption class="kp-fw-semibold">Command palette</figcaption>
+                        <p class="kp-text-muted">The frozen palette is on the card surface with a strong boundary; its input has no box of its own, only a rule under it, and the list below scrolls inside the palette. Group labels are small capitals in the muted ink. The first command is the highlighted one (<code>is-active</code>, the keyboard's position): a soft wash of the ink across the whole row, not the accent colour. Descriptions are smaller and muted, and key hints sit at the row's end without competing with the label. The status line under the list says how many commands match. Press <b>Open the commands</b> (<code>data-kp-palette-open</code>, so it opens through the palette's own open and fires <code>kp-palette-open</code>), or Ctrl+K: the live palette opens modal near the top of the window with focus in the input; type "lock" and the list must filter to <b>Lock out a line</b> and the status must say "1 command". The match is literal by default: "read" must show only <b>Readings for line 2</b>, not also <b>Report an incident</b>, and "lk" finds nothing (a palette that wants letters in order says <code>data-kp-match="subsequence"</code>). Escape closes it and clears the query.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<dialog class="kp-palette" open aria-label="Commands, frozen">
+    <input
+    class="kp-palette__input"
+    type="text"
+    role="combobox"
+    aria-label="Commands"
+    aria-expanded="true"
+    aria-controls="pg-pal-frozen-list"
+    autocomplete="off"
+    placeholder="Type a command…"
+    />
+    <ul class="kp-palette__list" id="pg-pal-frozen-list" role="listbox" aria-label="Commands">
+        <li role="presentation" class="kp-palette__group">
+            <span class="kp-palette__group-label">Incidents</span>
+            <ul role="group" aria-label="Incidents">
+                <li class="kp-palette__option is-active" role="option" aria-selected="true" id="pg-pal-frozen-open">
+                    Report an incident<span class="kp-palette__description">Opens the form for the site you are on</span
+                        ><kbd class="kp-palette__keys">N</kbd>
+                    </li>
+                    <li class="kp-palette__option" role="option">
+                        Lock out a line<span class="kp-palette__description">Needs the shift lead's signature</span
+                            ><kbd class="kp-palette__keys">L</kbd>
+                        </li>
+                    </ul>
+                </li>
+                <li role="presentation" class="kp-palette__group">
+                    <span class="kp-palette__group-label">Go to</span>
+                    <ul role="group" aria-label="Go to">
+                        <li class="kp-palette__option" role="option">Readings for line 2</li>
+                        <li class="kp-palette__option" role="option">
+                            Handover notes from the night shift, including the ones not yet signed by the day shift lead
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="kp-palette__status" role="status">4 commands</p>
+        </dialog>
+</div>
+<div class="sc-example__stage">
+<button type="button" class="kp-button kp-button--secondary" data-kp-palette-open="pg-pal-live">Open the commands</button>
+<dialog class="kp-palette" id="pg-pal-live" data-kp-palette data-kp-primary aria-label="Commands">
+    <input
+    class="kp-palette__input"
+    type="text"
+    role="combobox"
+    aria-label="Commands"
+    aria-expanded="true"
+    aria-controls="pg-pal-live-list"
+    autocomplete="off"
+    placeholder="Type a command…"
+    />
+    <ul class="kp-palette__list" id="pg-pal-live-list" role="listbox" aria-label="Commands">
+        <li role="presentation" class="kp-palette__group" data-kp-group>
+            <span class="kp-palette__group-label">Incidents</span>
+            <ul role="group" aria-label="Incidents">
+                <li class="kp-palette__option" role="option" data-kp-option data-value="report" data-kp-keys="N">
+                    Report an incident
+                </li>
+                <li class="kp-palette__option" role="option" data-kp-option data-value="lockout" data-kp-keys="L">
+                    Lock out a line
+                </li>
+            </ul>
+        </li>
+        <li role="presentation" class="kp-palette__group" data-kp-group>
+            <span class="kp-palette__group-label">Go to</span>
+            <ul role="group" aria-label="Go to">
+                <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+            </ul>
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands, frozen&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;pg-pal-frozen-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Type a command…&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-frozen-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group-label&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incidents&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option is-active&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-frozen-open&quot;</span>&gt;
+                    Report an incident&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__description&quot;</span>&gt;Opens the form for the site you are on&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;N&lt;/<span class="kp-code__keyword">kbd</span>&gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span>&gt;
+                        Lock out a line&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__description&quot;</span>&gt;Needs the shift lead's signature&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;L&lt;/<span class="kp-code__keyword">kbd</span>&gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group-label&quot;</span>&gt;Go to&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span>&gt;Readings for line 2&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span>&gt;
+                            Handover notes from the night shift, including the ones not yet signed by the day shift lead
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;4 commands&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">dialog</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-kp-palette-open</span><span class="kp-code__string">=&quot;pg-pal-live&quot;</span>&gt;Open the commands&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-live&quot;</span> <span class="kp-code__keyword">data-kp-palette</span> <span class="kp-code__keyword">data-kp-primary</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;pg-pal-live-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Type a command…&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-live-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group&quot;</span> <span class="kp-code__keyword">data-kp-group</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group-label&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incidents&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;report&quot;</span> <span class="kp-code__keyword">data-kp-keys</span><span class="kp-code__string">=&quot;N&quot;</span>&gt;
+                    Report an incident
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;lockout&quot;</span> <span class="kp-code__keyword">data-kp-keys</span><span class="kp-code__string">=&quot;L&quot;</span>&gt;
+                    Lock out a line
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group&quot;</span> <span class="kp-code__keyword">data-kp-group</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group-label&quot;</span>&gt;Go to&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;readings&quot;</span>&gt;Readings for line 2&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;handover&quot;</span>&gt;Handover notes&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-palette-empty">
+                        <figcaption class="kp-fw-semibold">Palette with no match</figcaption>
+                        <p class="kp-text-muted">A query nothing matches, frozen as <code>js/palette.js</code> leaves it: every command hidden, every group hidden with them, and the status line saying "No commands". The palette must not collapse into a line with no sign of a list — the input and the status keep their places, and the status must read as a message rather than as an empty footer.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<dialog class="kp-palette" open aria-label="Commands, no match">
+    <input
+    class="kp-palette__input"
+    type="text"
+    role="combobox"
+    aria-label="Commands"
+    aria-expanded="true"
+    aria-controls="pg-pal-empty-list"
+    autocomplete="off"
+    value="vendor invoice"
+    />
+    <ul class="kp-palette__list" id="pg-pal-empty-list" role="listbox" aria-label="Commands">
+        <li role="presentation" class="kp-palette__group" hidden>
+            <span class="kp-palette__group-label">Incidents</span>
+            <ul role="group" aria-label="Incidents">
+                <li class="kp-palette__option" role="option" hidden>Report an incident</li>
+                <li class="kp-palette__option" role="option" hidden>Lock out a line</li>
+            </ul>
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status">No commands</p>
+</dialog>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands, no match&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;pg-pal-empty-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;vendor invoice&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-empty-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__group-label&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incidents&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Report an incident&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Lock out a line&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No commands&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-palette-links">
+                        <figcaption class="kp-fw-semibold">Palette of links</figcaption>
+                        <p class="kp-text-muted">A palette whose commands are links (<code>&lt;a href&gt;</code> with the option's role), frozen with the second one highlighted. A link command must look exactly like any other command: the row's own ink, no underline, no link colour, the same padding and the same soft wash when highlighted — the row is the affordance, not an underline. The key hint still sits at the row's end. This one is frozen and does nothing; the live one, opened from the bar's trigger, is on the navigation page under <b>Search in the bar</b>, where Enter and a click follow the link.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<dialog class="kp-palette" open aria-label="Go to, frozen">
+    <input
+    class="kp-palette__input"
+    type="text"
+    role="combobox"
+    aria-label="Go to"
+    aria-expanded="true"
+    aria-controls="pg-pal-links-list"
+    aria-activedescendant="pg-pal-links-readings"
+    autocomplete="off"
+    placeholder="Where to?"
+    />
+    <ul class="kp-palette__list" id="pg-pal-links-list" role="listbox" aria-label="Go to">
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Incidents</a>
+        </li>
+        <li role="presentation">
+            <a
+            class="kp-palette__option is-active"
+            role="option"
+            aria-selected="true"
+            tabindex="-1"
+            id="pg-pal-links-readings"
+            href="#palette-links"
+            >Readings for line 2<kbd class="kp-palette__keys">G R</kbd></a
+            >
+        </li>
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" aria-selected="false" tabindex="-1" href="#palette-links">Rota</a>
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status">3 commands</p>
+</dialog>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to, frozen&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;pg-pal-links-list&quot;</span>
+    <span class="kp-code__keyword">aria-activedescendant</span><span class="kp-code__string">=&quot;pg-pal-links-readings&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Where to?&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-links-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#palette-links&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option is-active&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span>
+            <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+            <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pg-pal-links-readings&quot;</span>
+            <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#palette-links&quot;</span>
+            &gt;Readings for line 2&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span>&gt;G R&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+            &gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#palette-links&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;3 commands&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -367,5 +649,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

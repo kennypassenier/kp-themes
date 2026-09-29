@@ -215,6 +215,62 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-media-marquee">
+                        <figcaption class="kp-fw-semibold">Marquee</figcaption>
+                        <p class="kp-text-muted">The first band runs: its items pass right to left without a jump where the row repeats, at the theme's own speed, and a screen reader hears each item once — the moving copy is hidden from it. With reduced motion asked for in the system, the band must stand still. Scroll it out of view and back: it resumes where it was. The second band has no <code>data-kp-marquee</code>, which is the no-script answer: the same items laid out as a still row that wraps. The third holds long items; in the running band a long item must stay on one line, and in the still row it must wrap.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-marquee" data-kp-marquee>
+    <span>Line 1 · 3.2 bar</span>
+    <span>Line 2 · locked out</span>
+    <span>Cold store · −18 °C</span>
+    <span>Weighbridge · idle</span>
+    <span>Next shift · 06:00</span>
+</div>
+<div style="margin-block-start: 1rem">
+    <div class="kp-marquee">
+        <span>Line 1 · 3.2 bar</span>
+        <span>Line 2 · locked out</span>
+        <span>Cold store · −18 °C</span>
+        <span>Weighbridge · idle</span>
+        <span>Next shift · 06:00</span>
+    </div>
+</div>
+<div style="margin-block-start: 1rem">
+    <div class="kp-marquee" data-kp-marquee>
+        <span>Vendor on site Monday 08:00 to replace the manifold valve on line 2 — keep the access road clear</span>
+        <span>Lock-outs are signed by the shift lead only</span>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span> <span class="kp-code__keyword">data-kp-marquee</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Line 1 · 3.2 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Line 2 · locked out&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Cold store · −18 °C&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Weighbridge · idle&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Next shift · 06:00&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Line 1 · 3.2 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Line 2 · locked out&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Cold store · −18 °C&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Weighbridge · idle&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Next shift · 06:00&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-marquee&quot;</span> <span class="kp-code__keyword">data-kp-marquee</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Vendor on site Monday 08:00 to replace the manifold valve on line 2 — keep the access road clear&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Lock-outs are signed by the shift lead only&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -285,5 +341,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

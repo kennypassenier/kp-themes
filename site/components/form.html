@@ -205,6 +205,282 @@
 &lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-field-summary">
+                        <figcaption class="kp-fw-semibold">Error summary</figcaption>
+                        <p class="kp-text-muted">The first form shows the summary as <code>js/forms.js</code> writes it after a failed submit: a boundary in the alarm colour, a tinted ground, a sentence saying how many fields are wrong, and one link per field that moves focus to it. The tint must stay a tint — in a dark theme it must not become a red slab that swallows the links. The second form is live: press <b>Report</b> with both fields empty, and the summary must appear <i>and take focus</i>, with a visible focus ring around it; then fill one field and Tab away, and its message must clear without a second submit.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<form class="kp-form" novalidate aria-label="A failed submit, frozen">
+    <div class="kp-form__summary" tabindex="-1">
+        <p class="kp-form__summary-title">2 fields are not filled in correctly.</p>
+        <ul>
+            <li><a href="#f-sum-ref">Incident reference</a></li>
+            <li><a href="#f-sum-site">Site</a></li>
+        </ul>
+    </div>
+    <div class="kp-field kp-field--invalid">
+        <label class="kp-field__label" for="f-sum-ref">Incident reference</label>
+        <input class="kp-field__input" id="f-sum-ref" type="text" aria-invalid="true" aria-describedby="f-sum-ref-error" />
+        <span class="kp-field__error" id="f-sum-ref-error">Please fill in this field.</span>
+    </div>
+    <div class="kp-field kp-field--invalid">
+        <label class="kp-field__label" for="f-sum-site">Site</label>
+        <input class="kp-field__input" id="f-sum-site" type="text" aria-invalid="true" aria-describedby="f-sum-site-error" />
+        <span class="kp-field__error" id="f-sum-site-error">Please fill in this field.</span>
+    </div>
+</form>
+<form class="kp-form" data-kp-form novalidate aria-label="A live form">
+    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="f-live-ref"
+        >Incident reference <span class="kp-field__required">required</span></label
+        >
+        <input class="kp-field__input" id="f-live-ref" name="ref" type="text" required />
+        <span class="kp-field__error" data-kp-field-error hidden></span>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="f-live-mail">Reporter's email <span class="kp-field__required">required</span></label>
+        <input class="kp-field__input" id="f-live-mail" name="mail" type="email" required />
+        <span class="kp-field__error" data-kp-field-error hidden></span>
+    </div>
+    <div>
+        <button type="submit" class="kp-button" data-kp-submit>Report</button>
+    </div>
+</form>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">novalidate</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;A failed submit, frozen&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary-title&quot;</span>&gt;2 fields are not filled in correctly.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#f-sum-ref&quot;</span>&gt;Incident reference&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#f-sum-site&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--invalid&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-sum-ref&quot;</span>&gt;Incident reference&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-sum-ref&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-sum-ref-error&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-sum-ref-error&quot;</span>&gt;Please fill in this field.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--invalid&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-sum-site&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-sum-site&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-sum-site-error&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-sum-site-error&quot;</span>&gt;Please fill in this field.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">data-kp-form</span> <span class="kp-code__keyword">novalidate</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;A live form&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-live-ref&quot;</span>
+        &gt;Incident reference &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-live-ref&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;ref&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-live-mail&quot;</span>&gt;Reporter's email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-live-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Report&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-narrow">
+                        <figcaption class="kp-fw-semibold">A form in a narrow pane</figcaption>
+                        <p class="kp-text-muted">Every control in this form is the package's own: the site is a drawn select, the start is the date picker, the rest are fields, a fieldset and buttons — a bare browser control here is a fault the catalogue gate refuses. Drag the pane's right edge until it is as narrow as it goes. Every field must shrink with it — no input may stick out past the dashed edge, and no label may overlap its neighbour; the date picker's calendar button must stay beside its input or wrap under it, never overflow. The checkbox's label and its error must wrap under the box rather than into a column one word wide. The buttons at the bottom must wrap onto two lines rather than overflow. The gap between fields must stay the same at every width: it is the form's, not the pane's.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize">
+    <form class="kp-form" novalidate aria-label="Report an incident">
+        <div class="kp-field">
+            <label class="kp-field__label" for="f-n-site">Site <span class="kp-field__required">required</span></label>
+            <select class="kp-field__input" id="f-n-site">
+                <option>Pump house 4</option>
+                <option>Cold store</option>
+                <option>Weighbridge</option>
+            </select>
+        </div>
+        <div class="kp-field">
+            <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                <label class="kp-field__label" for="f-n-when">When did it start?</label>
+                <input
+                class="kp-field__input"
+                id="f-n-when"
+                type="text"
+                inputmode="numeric"
+                data-kp-date-input
+                value="13/09/2026"
+                aria-describedby="f-n-when-help"
+                />
+                <button
+                type="button"
+                class="kp-button"
+                data-kp-date-open
+                aria-label="Open the calendar"
+                title="Open the calendar"
+                >
+                <span aria-hidden="true">▦</span>
+            </button>
+            <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+        </div>
+        <span class="kp-field__help" id="f-n-when-help">Your best guess is fine; the log will have the exact time.</span>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="f-n-what">What did you see?</label>
+        <textarea class="kp-field__input kp-field__input--multiline" id="f-n-what">
+            Pump cycling every four minutes, gauge and sensor disagree.</textarea>
+    </div>
+    <fieldset class="kp-fieldset">
+        <legend class="kp-field__label">Is anyone at risk?</legend>
+        <label class="kp-field__option"
+        ><input class="kp-field__check" type="radio" name="n-risk" value="no" checked /> No</label
+        >
+        <label class="kp-field__option"
+        ><input class="kp-field__check" type="radio" name="n-risk" value="yes" /> Yes — someone is working near the
+        line</label
+        >
+    </fieldset>
+    <div class="kp-field kp-field--check kp-field--invalid">
+        <input class="kp-field__check" id="f-n-lock" type="checkbox" aria-invalid="true" aria-describedby="f-n-lock-error" />
+        <label class="kp-field__label" for="f-n-lock">The line is locked out at the manifold</label>
+        <span class="kp-field__error" id="f-n-lock-error">Lock the line out before you report it as safe.</span>
+    </div>
+    <div>
+        <button type="button" class="kp-button kp-button--ghost">Save as draft</button>
+        <button type="button" class="kp-button">Report the incident</button>
+    </div>
+</form>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">novalidate</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Report an incident&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-n-site&quot;</span>&gt;Site &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-site&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">option</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">option</span>&gt;
+                &lt;<span class="kp-code__keyword">option</span>&gt;Cold store&lt;/<span class="kp-code__keyword">option</span>&gt;
+                &lt;<span class="kp-code__keyword">option</span>&gt;Weighbridge&lt;/<span class="kp-code__keyword">option</span>&gt;
+            &lt;/<span class="kp-code__keyword">select</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker&quot;</span> <span class="kp-code__keyword">data-kp-datepicker</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-n-when&quot;</span>&gt;When did it start?&lt;/<span class="kp-code__keyword">label</span>&gt;
+                &lt;<span class="kp-code__keyword">input</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span>
+                <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-when&quot;</span>
+                <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+                <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span>
+                <span class="kp-code__keyword">data-kp-date-input</span>
+                <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;13/09/2026&quot;</span>
+                <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-n-when-help&quot;</span>
+                /&gt;
+                &lt;<span class="kp-code__keyword">button</span>
+                <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>
+                <span class="kp-code__keyword">data-kp-date-open</span>
+                <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>
+                <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▦&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-when-help&quot;</span>&gt;Your best guess is fine; the log will have the exact time.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-n-what&quot;</span>&gt;What did you see?&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-what&quot;</span>&gt;
+            Pump cycling every four minutes, gauge and sensor disagree.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fieldset&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;Is anyone at risk?&lt;/<span class="kp-code__keyword">legend</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;n-risk&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;no&quot;</span> <span class="kp-code__keyword">checked</span> /&gt; No&lt;/<span class="kp-code__keyword">label</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;n-risk&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;yes&quot;</span> /&gt; Yes — someone is working near the
+        line&lt;/<span class="kp-code__keyword">label</span>
+        &gt;
+    &lt;/<span class="kp-code__keyword">fieldset</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check kp-field--invalid&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-lock&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-n-lock-error&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-n-lock&quot;</span>&gt;The line is locked out at the manifold&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-n-lock-error&quot;</span>&gt;Lock the line out before you report it as safe.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Save as draft&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Report the incident&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-effects-density-compact-form">
+                        <figcaption class="kp-fw-semibold">Compact form</figcaption>
+                        <p class="kp-text-muted">The same form twice; the right one sits under <code>data-density="compact"</code>. In <b>every</b> theme the compact one is visibly tighter: the gap between the fields and the gap between a label and its input both come down, and so does the height of the inputs and the button — but a control never gets smaller than a comfortable pointer target (24 px is the floor; use the Devtools ruler), the labels stay the same readable size, and nothing overlaps.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div>
+    <form class="kp-form">
+        <div class="kp-field">
+            <label class="kp-field__label" for="pe-roomy-name">Name</label>
+            <input class="kp-field__input" id="pe-roomy-name" type="text" />
+        </div>
+        <div class="kp-field">
+            <label class="kp-field__label" for="pe-roomy-email">Email</label>
+            <input class="kp-field__input" id="pe-roomy-email" type="email" />
+        </div>
+        <button class="kp-button" type="submit">Save</button>
+    </form>
+</div>
+<div data-density="compact">
+    <form class="kp-form">
+        <div class="kp-field">
+            <label class="kp-field__label" for="pe-compact-name">Name</label>
+            <input class="kp-field__input" id="pe-compact-name" type="text" />
+        </div>
+        <div class="kp-field">
+            <label class="kp-field__label" for="pe-compact-email">Email</label>
+            <input class="kp-field__input" id="pe-compact-email" type="email" />
+        </div>
+        <button class="kp-button" type="submit">Save</button>
+    </form>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;pe-roomy-name&quot;</span>&gt;Name&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pe-roomy-name&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;pe-roomy-email&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pe-roomy-email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span>&gt;Save&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-density</span><span class="kp-code__string">=&quot;compact&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;pe-compact-name&quot;</span>&gt;Name&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pe-compact-name&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;pe-compact-email&quot;</span>&gt;Email&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;pe-compact-email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span>&gt;Save&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -334,5 +610,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

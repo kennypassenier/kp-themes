@@ -189,6 +189,282 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-media-grid">
+                        <figcaption class="kp-fw-semibold">Grid</figcaption>
+                        <p class="kp-text-muted">Six tiles on a six-column grid, each on the card surface with a boundary. Tab to a tile: its focus ring must sit just outside its boundary and not be cut by the tile next to it. Press the arrows to move it and Shift with the arrows to resize it; the neighbours stay where they are, and a tile can never leave the grid. The <b>Alarms</b> tile is two rows tall; its text must stay centred in the whole tile, not in its first row. A tile holding more text than fits must clip inside its boundary, not spill onto the tile below.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-grid-wrap">
+    <div class="kp-grid" data-kp-grid data-kp-columns="6">
+        <div
+        class="kp-grid__tile"
+        data-kp-tile="pressure"
+        data-x="0"
+        data-y="0"
+        data-w="2"
+        data-h="1"
+        tabindex="0"
+        role="group"
+        aria-label="Pressure"
+        >
+        Pressure · 1.1 bar
+    </div>
+    <div
+    class="kp-grid__tile"
+    data-kp-tile="flow"
+    data-x="2"
+    data-y="0"
+    data-w="2"
+    data-h="1"
+    tabindex="0"
+    role="group"
+    aria-label="Flow"
+    >
+    Flow · 0 l/min
+</div>
+<div
+class="kp-grid__tile"
+data-kp-tile="alarms"
+data-x="4"
+data-y="0"
+data-w="2"
+data-h="2"
+tabindex="0"
+role="group"
+aria-label="Alarms"
+>
+Alarms · 2 open
+</div>
+<div
+class="kp-grid__tile"
+data-kp-tile="pump"
+data-x="0"
+data-y="1"
+data-w="1"
+data-h="1"
+tabindex="0"
+role="group"
+aria-label="Pump starts"
+>
+Pump · 15/h
+</div>
+<div
+class="kp-grid__tile"
+data-kp-tile="valve"
+data-x="1"
+data-y="1"
+data-w="1"
+data-h="1"
+tabindex="0"
+role="group"
+aria-label="Valve"
+>
+Valve · shut
+</div>
+<div
+class="kp-grid__tile"
+data-kp-tile="note"
+data-x="2"
+data-y="1"
+data-w="2"
+data-h="1"
+tabindex="0"
+role="group"
+aria-label="Last note"
+>
+Last note: the gauge and the sensor agreed both times the pressure dropped, so something upstream of the manifold is
+at fault and the vendor is booked for Monday.
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid&quot;</span> <span class="kp-code__keyword">data-kp-grid</span> <span class="kp-code__keyword">data-kp-columns</span><span class="kp-code__string">=&quot;6&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+        <span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;pressure&quot;</span>
+        <span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;2&quot;</span>
+        <span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure&quot;</span>
+        &gt;
+        Pressure · 1.1 bar
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+    <span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;flow&quot;</span>
+    <span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;2&quot;</span>
+    <span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;2&quot;</span>
+    <span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Flow&quot;</span>
+    &gt;
+    Flow · 0 l/min
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+<span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;alarms&quot;</span>
+<span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;4&quot;</span>
+<span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;2&quot;</span>
+<span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;2&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Alarms&quot;</span>
+&gt;
+Alarms · 2 open
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+<span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;pump&quot;</span>
+<span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump starts&quot;</span>
+&gt;
+Pump · 15/h
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+<span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;valve&quot;</span>
+<span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Valve&quot;</span>
+&gt;
+Valve · shut
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+<span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;note&quot;</span>
+<span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;2&quot;</span>
+<span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;2&quot;</span>
+<span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Last note&quot;</span>
+&gt;
+Last note: the gauge and the sensor agreed both times the pressure dropped, so something upstream of the manifold is
+at fault and the vendor is booked for Monday.
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-media-grid-narrow">
+                        <figcaption class="kp-fw-semibold">Grid in a narrow box</figcaption>
+                        <p class="kp-text-muted">The same kind of grid in a box narrower than 40rem stops being an arrangement: one column, tiles in source order, each keeping its own height — the two-row tile stays twice as tall. No tile may sit on top of another. Drag the pane wider than 40rem and the six columns must come back with each tile where its numbers say.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 20rem">
+    <div class="kp-grid-wrap">
+        <div class="kp-grid" data-kp-grid data-kp-columns="6">
+            <div
+            class="kp-grid__tile"
+            data-kp-tile="pressure"
+            data-x="0"
+            data-y="0"
+            data-w="3"
+            data-h="1"
+            tabindex="0"
+            role="group"
+            aria-label="Pressure"
+            >
+            Pressure · 3.2 bar
+        </div>
+        <div
+        class="kp-grid__tile"
+        data-kp-tile="alarms"
+        data-x="3"
+        data-y="0"
+        data-w="3"
+        data-h="2"
+        tabindex="0"
+        role="group"
+        aria-label="Alarms"
+        >
+        Alarms · none
+    </div>
+    <div
+    class="kp-grid__tile"
+    data-kp-tile="flow"
+    data-x="0"
+    data-y="1"
+    data-w="3"
+    data-h="1"
+    tabindex="0"
+    role="group"
+    aria-label="Flow"
+    >
+    Flow · 41 l/min
+</div>
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid&quot;</span> <span class="kp-code__keyword">data-kp-grid</span> <span class="kp-code__keyword">data-kp-columns</span><span class="kp-code__string">=&quot;6&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+            <span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;pressure&quot;</span>
+            <span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;3&quot;</span>
+            <span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+            <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure&quot;</span>
+            &gt;
+            Pressure · 3.2 bar
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+        <span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;alarms&quot;</span>
+        <span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;3&quot;</span>
+        <span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;3&quot;</span>
+        <span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;2&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Alarms&quot;</span>
+        &gt;
+        Alarms · none
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-grid__tile&quot;</span>
+    <span class="kp-code__keyword">data-kp-tile</span><span class="kp-code__string">=&quot;flow&quot;</span>
+    <span class="kp-code__keyword">data-x</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">data-y</span><span class="kp-code__string">=&quot;1&quot;</span>
+    <span class="kp-code__keyword">data-w</span><span class="kp-code__string">=&quot;3&quot;</span>
+    <span class="kp-code__keyword">data-h</span><span class="kp-code__string">=&quot;1&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Flow&quot;</span>
+    &gt;
+    Flow · 41 l/min
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -280,5 +556,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

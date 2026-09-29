@@ -195,6 +195,68 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-accordion">
+                        <figcaption class="kp-fw-semibold">Accordion</figcaption>
+                        <p class="kp-text-muted">Each item is a native <code>&lt;details&gt;</code>: the summary is bold, the body is in the muted ink, and a hairline separates the items. The first item is open. The open and closed marker is the browser's own triangle, and every register now answers the summary in its own voice — the marker's colour, the summary's type, and a mark on the open one — so switch themes and judge whether each still reads as a disclosure, with the triangle visible on the summary's baseline in the dark themes. Press Enter or Space on a summary to toggle it. The third summary is a whole question: it must wrap with its marker staying at the start of the first line.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-accordion">
+    <details class="kp-accordion__item" open>
+        <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+        <div class="kp-accordion__body">
+            Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+        </div>
+    </details>
+    <details class="kp-accordion__item">
+        <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+        <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+    </details>
+    <details class="kp-accordion__item">
+        <summary class="kp-accordion__summary">
+            If the gauge on the wall and the sensor disagree by more than half a bar, which one do we believe until the vendor has
+            been out?
+        </summary>
+        <div class="kp-accordion__body">
+            <p style="margin-block-start: 0">Neither, on its own. Close the line and log both readings:</p>
+            <ul>
+                <li>the gauge, read at eye level;</li>
+                <li>the sensor, from the readings page, at the same minute.</li>
+            </ul>
+        </div>
+    </details>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span> <span class="kp-code__keyword">open</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;Who may reopen a locked-out line?&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;
+            Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;What counts as a pressure drop?&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;A fall of more than one bar within thirty minutes on any line.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;
+            If the gauge on the wall and the sensor disagree by more than half a bar, which one do we believe until the vendor has
+            been out?
+        &lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;Neither, on its own. Close the line and log both readings:&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;the gauge, read at eye level;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;the sensor, from the readings page, at the same minute.&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -250,5 +312,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

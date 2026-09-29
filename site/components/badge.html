@@ -193,6 +193,74 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span>&gt;Unread &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;12&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-feedback-badges">
+                        <figcaption class="kp-fw-semibold">Badges</figcaption>
+                        <p class="kp-text-muted">The plain badge is a muted pill; the seven status badges take their plate from <code>data-status</code>, and each plate's text must pass contrast on that plate in every theme — <b>draft</b> and <b>withdrawn</b> are the two that drift towards grey-on-grey. The second row is severity: <code>.kp-badge--success</code>, <code>--info</code>, <code>--warning</code> and <code>--destructive</code>, on the same four token pairs an alert of that severity wears, so a badge and an alert that mean the same thing are one colour; each word must pass contrast on its plate in every theme. All of them share one height and one baseline with the text around them, so a row reads as a sentence with pills in it, not a staircase.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<span class="kp-badge">Plain</span>
+<span class="kp-badge" data-kp-semantic data-status="draft">Draft</span>
+<span class="kp-badge" data-kp-semantic data-status="sent">Sent</span>
+<span class="kp-badge" data-kp-semantic data-status="screening">Screening</span>
+<span class="kp-badge" data-kp-semantic data-status="interview">Interview</span>
+<span class="kp-badge" data-kp-semantic data-status="offer">Offer</span>
+<span class="kp-badge" data-kp-semantic data-status="rejected">Rejected</span>
+<span class="kp-badge" data-kp-semantic data-status="withdrawn">Withdrawn</span>
+</div>
+<div class="sc-example__stage">
+<span class="kp-badge kp-badge--success" data-kp-semantic>Healthy</span>
+<span class="kp-badge kp-badge--info" data-kp-semantic>Scheduled</span>
+<span class="kp-badge kp-badge--warning" data-kp-semantic>Degraded</span>
+<span class="kp-badge kp-badge--destructive" data-kp-semantic>Down</span>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;Plain&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;draft&quot;</span>&gt;Draft&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;sent&quot;</span>&gt;Sent&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;screening&quot;</span>&gt;Screening&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;interview&quot;</span>&gt;Interview&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;offer&quot;</span>&gt;Offer&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;rejected&quot;</span>&gt;Rejected&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;withdrawn&quot;</span>&gt;Withdrawn&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--success&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;Healthy&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--info&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;Scheduled&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--warning&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;Degraded&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--destructive&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;Down&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-feedback-badge-long">
+                        <figcaption class="kp-fw-semibold">A long badge</figcaption>
+                        <p class="kp-text-muted">A badge holding 40 characters, and a badge holding an identifier with no spaces. By default the badge is allowed to break anywhere, so in a narrow pane it wraps — the pill must grow taller with its rounded ends intact (in nostromo a pill too, since 2026-09-13), not clip the text and not leave the text hanging outside the pill. The third copy sits under <code>--kp-badge-wrap: normal</code>, the knob for a column of labels: it breaks only between words. Drag the pane narrow and compare the three.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 20rem">
+    <p style="margin-block-start: 0">
+        <span class="kp-badge" data-kp-semantic data-status="screening">Awaiting a spare part from the supplier.</span>
+    </p>
+    <p>
+        <span class="kp-badge">f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3</span>
+    </p>
+    <p style="margin-block-end: 0; --kp-badge-wrap: normal">
+        <span class="kp-badge" data-kp-semantic data-status="screening">Awaiting a spare part from the supplier.</span>
+    </p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;screening&quot;</span>&gt;Awaiting a spare part from the supplier.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-end: 0; --kp-badge-wrap: normal&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span> <span class="kp-code__keyword">data-status</span><span class="kp-code__string">=&quot;screening&quot;</span>&gt;Awaiting a spare part from the supplier.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -256,5 +324,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

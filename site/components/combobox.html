@@ -227,6 +227,580 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-combobox-closed">
+                        <figcaption class="kp-fw-semibold">Closed</figcaption>
+                        <p class="kp-text-muted">Closed, a combobox is a text input with a label, and it must sit in a form beside a <code>.kp-field__input</code> without looking like a different control — compare the two. The combobox takes the field's ground, boundary, ink and height, so the two boxes must match in every theme; a theme where they do not is a finding, not a matter of taste. The status line under it is empty until you type.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox" data-kp-combobox>
+    <label class="kp-field__label" for="cb-closed">Site</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-closed"
+    type="text"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="cb-closed-list"
+    autocomplete="off"
+    />
+    <ul class="kp-combobox__list" id="cb-closed-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="weigh">Weighbridge</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="boiler">Boiler room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="bay">Loading bay</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="cb-beside">A plain field, for comparison</label>
+    <input class="kp-field__input" id="cb-beside" type="text" />
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-closed&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-closed&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-closed-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-closed-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;ph4&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;cold&quot;</span>&gt;Cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;weigh&quot;</span>&gt;Weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;boiler&quot;</span>&gt;Boiler room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;bay&quot;</span>&gt;Loading bay&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-beside&quot;</span>&gt;A plain field, for comparison&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-beside&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-open">
+                        <figcaption class="kp-fw-semibold">Open, with the list showing</figcaption>
+                        <p class="kp-text-muted">The list floats <i>over</i> what follows it, on a surface of its own with a boundary that stays visible against whatever is behind — here the list covers the note under the box, and the note must not show through. The highlighted option (<b >Cold store</b >, moved to with the arrow keys) must be told apart from the others by more than a hair of tint: in a theme with a loud register, check that the highlight is still readable and that the text on it keeps its contrast. The list is as wide as the input, no wider, and it opens directly under the input it belongs to — over the status line, not below it — so the two read as one control. The third option is disabled: it must look faded and must not light up under the pointer.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox">
+    <label class="kp-field__label" for="cb-open">Site</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-open"
+    type="text"
+    role="combobox"
+    aria-expanded="true"
+    aria-controls="cb-open-list"
+    aria-activedescendant="cb-open-list-option-1"
+    autocomplete="off"
+    value="o"
+    />
+    <ul class="kp-combobox__list" id="cb-open-list" role="listbox">
+        <li class="kp-combobox__option" role="option" id="cb-open-list-option-0" aria-selected="false" data-kp-option>
+            Pump house 4
+        </li>
+        <li class="kp-combobox__option is-active" role="option" id="cb-open-list-option-1" aria-selected="true" data-kp-option>
+            Cold store
+        </li>
+        <li class="kp-combobox__option" role="option" aria-disabled="true" data-kp-option>Weighbridge (closed for repairs)</li>
+        <li class="kp-combobox__option" role="option" id="cb-open-list-option-2" aria-selected="false" data-kp-option>
+            Boiler room
+        </li>
+        <li class="kp-combobox__option" role="option" id="cb-open-list-option-3" aria-selected="false" data-kp-option>
+            Loading bay
+        </li>
+    </ul>
+    <p class="kp-combobox__status" role="status" aria-live="polite">4 results</p>
+</div>
+<p class="cat-note">
+    This note sits under the combobox, outside it. The open list must cover it completely, with no text bleeding through.
+</p>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-open&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-open-list&quot;</span>
+    <span class="kp-code__keyword">aria-activedescendant</span><span class="kp-code__string">=&quot;cb-open-list-option-1&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;o&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open-list-option-0&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            Pump house 4
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option is-active&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open-list-option-1&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            Cold store
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Weighbridge (closed for repairs)&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open-list-option-2&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            Boiler room
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-open-list-option-3&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            Loading bay
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;4 results&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-note&quot;</span>&gt;
+    This note sits under the combobox, outside it. The open list must cover it completely, with no text bleeding through.
+&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-nothing">
+                        <figcaption class="kp-fw-semibold">Filtered to nothing</figcaption>
+                        <p class="kp-text-muted">When nothing matches, the list stays open under the input with one row that says <b>No results</b>, in the muted ink — where the eye already is — and the status line says it for a screen reader. The row is not an option: the arrows do not land on it and Enter takes nothing. It must be legible on the list's surface in every theme. A server that wants to offer "add this" writes its own <code>[data-kp-combobox-empty]</code> row into the list and the module uses that one instead. Type <code>zzz</code> into the live box beside the frozen one: both must look the same.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox">
+    <label class="kp-field__label" for="cb-none">Site (frozen)</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-none"
+    type="text"
+    role="combobox"
+    aria-expanded="true"
+    aria-controls="cb-none-list"
+    autocomplete="off"
+    value="Pump house 9"
+    />
+    <ul class="kp-combobox__list" id="cb-none-list" role="listbox">
+        <li class="kp-combobox__option" role="option" data-kp-option hidden>Pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option hidden>Cold store</li>
+        <li class="kp-combobox__empty" role="presentation" data-kp-combobox-empty>No results</li>
+    </ul>
+    <p class="kp-combobox__status" role="status" aria-live="polite">No results</p>
+</div>
+<div class="kp-combobox" data-kp-combobox>
+    <label class="kp-field__label" for="cb-none-live">Site (live — type zzz)</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-none-live"
+    type="text"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="cb-none-live-list"
+    autocomplete="off"
+    />
+    <ul class="kp-combobox__list" id="cb-none-live-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option>Pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Weighbridge</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-none&quot;</span>&gt;Site (frozen)&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-none&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-none-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;Pump house 9&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-none-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">hidden</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">hidden</span>&gt;Cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__empty&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">data-kp-combobox-empty</span>&gt;No results&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;No results&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-none-live&quot;</span>&gt;Site (live — type zzz)&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-none-live&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-none-live-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-none-live-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-long">
+                        <figcaption class="kp-fw-semibold">A very long option</figcaption>
+                        <p class="kp-text-muted">The second option is a sentence of 129 characters and the third an identifier with no space in it. Both must stay inside the list: the sentence wraps onto several lines with the same inset as the short options, and the identifier breaks inside itself rather than widening the list past the input or making it scroll sideways. The highlight on the long option must cover all of its lines, not just the first. Narrow the pane to see it worsen.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="min-block-size: 20rem">
+    <div class="kp-combobox">
+        <label class="kp-field__label" for="cb-long">Cause</label>
+        <input
+        class="kp-combobox__input"
+        id="cb-long"
+        type="text"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="cb-long-list"
+        aria-activedescendant="cb-long-list-option-1"
+        autocomplete="off"
+        />
+        <ul class="kp-combobox__list" id="cb-long-list" role="listbox">
+            <li class="kp-combobox__option" role="option" id="cb-long-list-option-0" aria-selected="false" data-kp-option>
+                Sensor drift
+            </li>
+            <li
+            class="kp-combobox__option is-active"
+            role="option"
+            id="cb-long-list-option-1"
+            aria-selected="true"
+            data-kp-option
+            >
+            Pressure loss upstream of the manifold that recovers without intervention and returns within the hour, seen on
+            more than one line
+        </li>
+        <li class="kp-combobox__option" role="option" id="cb-long-list-option-2" aria-selected="false" data-kp-option>
+            telemetry.pumphouse4.line2.manifold.pressure.upstream.raw_unfiltered_1hz
+        </li>
+        <li class="kp-combobox__option" role="option" id="cb-long-list-option-3" aria-selected="false" data-kp-option>
+            Operator error
+        </li>
+    </ul>
+    <p class="kp-combobox__status" role="status" aria-live="polite">4 results</p>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;min-block-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-long&quot;</span>&gt;Cause&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+        <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long&quot;</span>
+        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+        <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+        <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-long-list&quot;</span>
+        <span class="kp-code__keyword">aria-activedescendant</span><span class="kp-code__string">=&quot;cb-long-list-option-1&quot;</span>
+        <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+        /&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long-list-option-0&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+                Sensor drift
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option is-active&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span>
+            <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long-list-option-1&quot;</span>
+            <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>
+            <span class="kp-code__keyword">data-kp-option</span>
+            &gt;
+            Pressure loss upstream of the manifold that recovers without intervention and returns within the hour, seen on
+            more than one line
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long-list-option-2&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            telemetry.pumphouse4.line2.manifold.pressure.upstream.raw_unfiltered_1hz
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-long-list-option-3&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;
+            Operator error
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;4 results&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-many">
+                        <figcaption class="kp-fw-semibold">Forty options</figcaption>
+                        <p class="kp-text-muted">The list stops at its maximum height and scrolls <i>inside itself</i>; the page must not grow to fit it. The scrollbar, where the platform draws one, must sit inside the list's boundary and not hide the right edge of the options. Scroll the list to the end and keep scrolling: the page behind it should not start to move, or should move only once the list is exhausted. Open the live copy with the keyboard and press End — the last option must scroll into view.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox">
+    <label class="kp-field__label" for="cb-many">Line (frozen open)</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-many"
+    type="text"
+    role="combobox"
+    aria-expanded="true"
+    aria-controls="cb-many-list"
+    autocomplete="off"
+    />
+    <ul class="kp-combobox__list" id="cb-many-list" role="listbox">
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 1 — pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 2 — pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 3 — pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 4 — pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 5 — cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 6 — cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 7 — cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 8 — cold store</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 9 — weighbridge</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 10 — weighbridge</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 11 — weighbridge</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 12 — weighbridge</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 13 — boiler room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 14 — boiler room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 15 — boiler room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 16 — boiler room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 17 — loading bay</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 18 — loading bay</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 19 — loading bay</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 20 — loading bay</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 21 — main gate</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 22 — main gate</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 23 — main gate</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 24 — main gate</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 25 — server room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 26 — server room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 27 — server room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 28 — server room</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 29 — canteen</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 30 — canteen</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 31 — canteen</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 32 — canteen</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 33 — workshop</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 34 — workshop</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 35 — workshop</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 36 — workshop</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 37 — yard</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 38 — yard</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 39 — yard</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Line 40 — yard</li>
+    </ul>
+    <p class="kp-combobox__status" role="status" aria-live="polite">40 results</p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-many&quot;</span>&gt;Line (frozen open)&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-many&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-many-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-many-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 1 — pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 2 — pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 3 — pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 4 — pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 5 — cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 6 — cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 7 — cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 8 — cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 9 — weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 10 — weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 11 — weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 12 — weighbridge&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 13 — boiler room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 14 — boiler room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 15 — boiler room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 16 — boiler room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 17 — loading bay&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 18 — loading bay&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 19 — loading bay&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 20 — loading bay&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 21 — main gate&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 22 — main gate&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 23 — main gate&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 24 — main gate&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 25 — server room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 26 — server room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 27 — server room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 28 — server room&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 29 — canteen&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 30 — canteen&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 31 — canteen&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 32 — canteen&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 33 — workshop&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 34 — workshop&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 35 — workshop&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 36 — workshop&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 37 — yard&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 38 — yard&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 39 — yard&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Line 40 — yard&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;40 results&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-tags">
+                        <figcaption class="kp-fw-semibold">Tag input</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-tags</code> turns the combobox into a tag input. The tags already chosen sit above the input as <code>.kp-tag</code> pills; each has a remove button that must be hittable, must turn to the alarm colour on hover, and must be named "Remove …" to a screen reader. Click an option: it becomes a tag, disappears from the list, and the list stays open for the next one. Type a few letters and press ArrowDown once: the first option still showing is highlighted, never one the typing hid. Type a label and press Enter, or end it with a comma: text that names an option takes that option, and any other text becomes a tag of its own, because this box carries <code>data-kp-creatable</code>. Backspace only edits the text: pressing it once too often in an empty input must not remove a tag. A tag goes through its own remove button, which Shift+Tab reaches from the input; a box that wants the old Backspace behaviour opts in with <code>data-kp-backspace-removes</code>. The tag row must wrap rather than scroll when it fills.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox" data-kp-combobox data-kp-tags data-kp-creatable>
+    <label class="kp-field__label" for="cb-tags">Labels on this incident</label>
+    <ul class="kp-tag-list" data-kp-tag-list>
+        <li class="kp-tag" data-value="pressure">
+            <span>Pressure</span><button type="button" class="kp-tag__remove" aria-label="Remove Pressure">×</button>
+        </li>
+        <li class="kp-tag" data-value="night">
+            <span>Night shift</span><button type="button" class="kp-tag__remove" aria-label="Remove Night shift">×</button>
+        </li>
+    </ul>
+    <input
+    class="kp-combobox__input"
+    id="cb-tags"
+    type="text"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="cb-tags-list"
+    autocomplete="off"
+    />
+    <ul class="kp-combobox__list" id="cb-tags-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="pressure">Pressure</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="night">Night shift</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="vendor">Needs the vendor</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="repeat">Repeat of an earlier incident</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="safety">Safety</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span> <span class="kp-code__keyword">data-kp-tags</span> <span class="kp-code__keyword">data-kp-creatable</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-tags&quot;</span>&gt;Labels on this incident&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag-list&quot;</span> <span class="kp-code__keyword">data-kp-tag-list</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;pressure&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Pressure&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;night&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;Night shift&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Night shift&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-tags&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-tags-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-tags-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;pressure&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;night&quot;</span>&gt;Night shift&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;vendor&quot;</span>&gt;Needs the vendor&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;repeat&quot;</span>&gt;Repeat of an earlier incident&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;safety&quot;</span>&gt;Safety&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-combobox-keyboard">
+                        <figcaption class="kp-fw-semibold">Keyboard</figcaption>
+                        <p class="kp-text-muted">Tab into the box and never touch the mouse. Focus opens the list. <b>Down</b> and <b>Up</b> move the highlight while the caret stays in the input — typing must keep working at every moment. <b>Home</b> and <b>End</b> jump to the ends; <b>Down</b> on the last option stays on the last (this box does not loop). <b>Enter</b> takes the highlighted option and closes the list; with nothing highlighted, Enter does nothing here and would submit a form around it. <b>Escape</b> closes without choosing. <b>Tab</b> leaves and closes. The highlight you see must always be the option Enter would take — if hover and the arrows disagree, that is the fault.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-combobox" data-kp-combobox>
+    <label class="kp-field__label" for="cb-keys">Who takes this incident?</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-keys"
+    type="text"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="cb-keys-list"
+    autocomplete="off"
+    />
+    <ul class="kp-combobox__list" id="cb-keys-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option>Anneleen Verhoeven — site manager</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Mathias Dries — deputy</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Hydroflow — vendor hotline</li>
+        <li class="kp-combobox__option" role="option" data-kp-option>Night shift lead</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span> <span class="kp-code__keyword">data-kp-combobox</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-keys&quot;</span>&gt;Who takes this incident?&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-keys&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-keys-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-keys-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Anneleen Verhoeven — site manager&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Mathias Dries — deputy&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Hydroflow — vendor hotline&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span>&gt;Night shift lead&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-feedback-tags">
+                        <figcaption class="kp-fw-semibold">Tags</figcaption>
+                        <p class="kp-text-muted">A <code>.kp-tag-list</code> of <code>.kp-tag</code> pills. A tag differs from a badge by its hairline border and its remove button; side by side, nobody should mistake one for the other. Hover a remove button: it fills with the alarm colour, and the × on it must stay visible. The remove buttons have names ("Remove Night shift") — a row of identical × is useless to a screen reader. The tag holding a sentence must wrap inside its pill; the list must wrap onto new lines rather than scroll.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize">
+    <ul class="kp-tag-list">
+        <li class="kp-tag">
+            <span>Pressure</span><button type="button" class="kp-tag__remove" aria-label="Remove Pressure">×</button>
+        </li>
+        <li class="kp-tag">
+            <span>Night shift</span><button type="button" class="kp-tag__remove" aria-label="Remove Night shift">×</button>
+        </li>
+        <li class="kp-tag">
+            <span>Needs the vendor</span
+                ><button type="button" class="kp-tag__remove" aria-label="Remove Needs the vendor">×</button>
+            </li>
+            <li class="kp-tag">
+                <span>Repeat of an incident first reported on 2 September by the night operator</span
+                    ><button type="button" class="kp-tag__remove" aria-label="Remove Repeat of an incident">×</button>
+                </li>
+                <li class="kp-tag"><span>Read-only tag, no button</span></li>
+            </ul>
+            <p><span class="kp-badge">A badge, for comparison</span></p>
+        </div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag-list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Pressure&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;Night shift&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Night shift&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;Needs the vendor&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Needs the vendor&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>&gt;Repeat of an incident first reported on 2 September by the night operator&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag__remove&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove Repeat of an incident&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tag&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Read-only tag, no button&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;A badge, for comparison&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -364,5 +938,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

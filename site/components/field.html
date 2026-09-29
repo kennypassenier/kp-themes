@@ -235,6 +235,388 @@
 &lt;/<span class="kp-code__keyword">fieldset</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-field-text">
+                        <figcaption class="kp-fw-semibold">Text, email, number</figcaption>
+                        <p class="kp-text-muted">Three inputs of three types must look like one family: the same height, the same border, the same ground, and the label above each at the same distance. Click into each and Tab between them — the focus ring must be visible against the input's own ground <i>and</i> the page's, and it must not be the border merely changing colour. The placeholder in the empty one must read as a hint, clearly lighter than a typed value, yet still legible. The number input's spin buttons are the browser's; check that they do not sit on a white square in a dark theme.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field">
+    <label class="kp-field__label" for="f-site">Site</label>
+    <input class="kp-field__input" id="f-site" name="site" type="text" value="Pump house 4" />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-email">Escalation email</label>
+    <input class="kp-field__input" id="f-email" name="email" type="email" placeholder="night-shift@example.org" />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-bar">Alarm threshold (bar)</label>
+    <input class="kp-field__input" id="f-bar" name="bar" type="number" min="0" max="10" step="0.1" value="3.2" />
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-site&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-site&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;site&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;Pump house 4&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-email&quot;</span>&gt;Escalation email&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-email&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;night-shift@example.org&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-bar&quot;</span>&gt;Alarm threshold (bar)&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bar&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;bar&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;number&quot;</span> <span class="kp-code__keyword">min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">max</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">step</span><span class="kp-code__string">=&quot;0.1&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;3.2&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-multiline">
+                        <figcaption class="kp-fw-semibold">Textarea and select</figcaption>
+                        <p class="kp-text-muted">The textarea is <code>.kp-field__input--multiline</code>: it must be taller than a single-line input, it must resize vertically only — drag its corner sideways and nothing should happen — and its text must start at the same inset as the inputs above. The select is a plain <code>select.kp-field__input</code>: its list is drawn by the package in the combobox's look in every browser, Firefox included, without the page asking — the same surface, highlight and boundary as an open combobox, the chosen option in weight with a check, the disabled one faded. Open it with a click and with the keyboard (Down, Up, Home, End, a letter, Enter, Escape); the value you take must show in the closed box. Closed, it must be the same height as a text input. A page that wants the browser's own list writes <code>data-kp-select="native"</code>; a multiple select always keeps it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field">
+    <label class="kp-field__label" for="f-note">Handover note</label>
+    <textarea class="kp-field__input kp-field__input--multiline" id="f-note" name="note">
+        Line closed at the manifold. Day shift to check the gauge against the sensor before reopening.</textarea>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-severity-drawn">Severity</label>
+    <select class="kp-field__input" id="f-severity-drawn" name="severity-drawn">
+        <option>Low</option>
+        <option selected>High</option>
+        <option disabled>Blocked — not for this site</option>
+        <option>Critical — wake the on-call engineer</option>
+    </select>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-note&quot;</span>&gt;Handover note&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-note&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;note&quot;</span>&gt;
+        Line closed at the manifold. Day shift to check the gauge against the sensor before reopening.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-severity-drawn&quot;</span>&gt;Severity&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-severity-drawn&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;severity-drawn&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">option</span>&gt;Low&lt;/<span class="kp-code__keyword">option</span>&gt;
+        &lt;<span class="kp-code__keyword">option</span> <span class="kp-code__keyword">selected</span>&gt;High&lt;/<span class="kp-code__keyword">option</span>&gt;
+        &lt;<span class="kp-code__keyword">option</span> <span class="kp-code__keyword">disabled</span>&gt;Blocked — not for this site&lt;/<span class="kp-code__keyword">option</span>&gt;
+        &lt;<span class="kp-code__keyword">option</span>&gt;Critical — wake the on-call engineer&lt;/<span class="kp-code__keyword">option</span>&gt;
+    &lt;/<span class="kp-code__keyword">select</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-choices">
+                        <figcaption class="kp-fw-semibold">Checkbox and radio</figcaption>
+                        <p class="kp-text-muted">The box comes <i>before</i> its label and shares its baseline. Tick and untick: the checked mark must be visible in every theme — in a theme whose primary colour is its ink, a checked box that looks unchecked is the known fault. The radio group is a <code>.kp-fieldset</code>: the legend reads as the question, the options as answers, and clicking a label must select its radio. The second group asks for <code>data-kp-layout="inline"</code>; its options sit in a row and wrap. There is no switch in the package yet — a toggle is a checkbox here, and the switch is a concept on its own page for now.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div>
+    <div class="kp-field kp-field--check">
+        <input class="kp-field__check" id="f-weekly" name="weekly" type="checkbox" checked />
+        <label class="kp-field__label" for="f-weekly">Send me the weekly incident summary</label>
+    </div>
+    <div class="kp-field kp-field--check">
+        <input class="kp-field__check" id="f-sms" name="sms" type="checkbox" />
+        <label class="kp-field__label" for="f-sms">Also text me when an alarm is raised at night</label>
+    </div>
+</div>
+<fieldset class="kp-fieldset">
+    <legend class="kp-field__label">Who is told first?</legend>
+    <label class="kp-field__option"
+    ><input class="kp-field__check" type="radio" name="first" value="manager" checked /> Site manager</label
+    >
+    <label class="kp-field__option"><input class="kp-field__check" type="radio" name="first" value="deputy" /> Deputy</label>
+    <label class="kp-field__option"
+    ><input class="kp-field__check" type="radio" name="first" value="vendor" /> Vendor's hotline</label
+    >
+</fieldset>
+<fieldset class="kp-fieldset" data-kp-layout="inline">
+    <legend class="kp-field__label">Shift</legend>
+    <label class="kp-field__option"><input class="kp-field__check" type="radio" name="shift" value="early" /> Early</label>
+    <label class="kp-field__option"><input class="kp-field__check" type="radio" name="shift" value="late" checked /> Late</label>
+    <label class="kp-field__option"><input class="kp-field__check" type="radio" name="shift" value="night" /> Night</label>
+</fieldset>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-weekly&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;weekly&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">checked</span> /&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-weekly&quot;</span>&gt;Send me the weekly incident summary&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-sms&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;sms&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-sms&quot;</span>&gt;Also text me when an alarm is raised at night&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fieldset&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;Who is told first?&lt;/<span class="kp-code__keyword">legend</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;first&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;manager&quot;</span> <span class="kp-code__keyword">checked</span> /&gt; Site manager&lt;/<span class="kp-code__keyword">label</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;first&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;deputy&quot;</span> /&gt; Deputy&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;first&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;vendor&quot;</span> /&gt; Vendor's hotline&lt;/<span class="kp-code__keyword">label</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">fieldset</span>&gt;
+&lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fieldset&quot;</span> <span class="kp-code__keyword">data-kp-layout</span><span class="kp-code__string">=&quot;inline&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;Shift&lt;/<span class="kp-code__keyword">legend</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;shift&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;early&quot;</span> /&gt; Early&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;shift&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;late&quot;</span> <span class="kp-code__keyword">checked</span> /&gt; Late&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;shift&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;night&quot;</span> /&gt; Night&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;/<span class="kp-code__keyword">fieldset</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-help">
+                        <figcaption class="kp-fw-semibold">Help and required</figcaption>
+                        <p class="kp-text-muted">The help text sits under the input, smaller and quieter than the label, but must still pass contrast on the page's ground — check it with the Devtools colour tool in the palest and the darkest theme. The required marker is a star <i>and</i> the word: the star in the alarm colour, the word muted. A theme may swap the glyph, never drop the word. The optional field beside it must not look any less important for having no marker.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field">
+    <label class="kp-field__label" for="f-ref">Incident reference <span class="kp-field__required">required</span></label>
+    <input class="kp-field__input" id="f-ref" name="ref" type="text" required aria-describedby="f-ref-help" value="INC-4471" />
+    <span class="kp-field__help" id="f-ref-help">Printed on the alarm panel, starting with INC-.</span>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-deputy">Deputy</label>
+    <input class="kp-field__input" id="f-deputy" name="deputy" type="text" aria-describedby="f-deputy-help" />
+    <span class="kp-field__help" id="f-deputy-help">Leave empty if the site manager covers the whole week.</span>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-ref&quot;</span>&gt;Incident reference &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-ref&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;ref&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">required</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-ref-help&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;INC-4471&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-ref-help&quot;</span>&gt;Printed on the alarm panel, starting with INC-.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-deputy&quot;</span>&gt;Deputy&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-deputy&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;deputy&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-deputy-help&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-deputy-help&quot;</span>&gt;Leave empty if the site manager covers the whole week.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-invalid">
+                        <figcaption class="kp-fw-semibold">Invalid, with its message</figcaption>
+                        <p class="kp-text-muted">Every invalid field says what is wrong in words, under the control, in the alarm colour — and the colour must pass contrast on the ground, because the words are the message. The text input's border turns to the alarm colour; the checkbox, which has no border, gets an outline instead. The radio group carries <code>aria-invalid</code> on the group and gets one outline around the whole group — one wrong answer, one mark — while the radios inside it stay unframed. In a theme whose register repaints the input's border, the invalid border must still win over it; every theme answers that state now. The help text must survive beside the error rather than be replaced by it. Compare with the valid field at the end: the difference must be visible without colour — the message is what carries it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field kp-field--invalid">
+    <label class="kp-field__label" for="f-bad-email">Escalation email <span class="kp-field__required">required</span></label>
+    <input
+    class="kp-field__input"
+    id="f-bad-email"
+    type="email"
+    value="night-shift@"
+    aria-invalid="true"
+    aria-describedby="f-bad-email-help f-bad-email-error"
+    />
+    <span class="kp-field__help" id="f-bad-email-help">Goes to a shared inbox, not a person.</span>
+    <span class="kp-field__error" id="f-bad-email-error" data-kp-field-error
+    >Enter an address with a domain after the @, such as night-shift@example.org.</span
+    >
+</div>
+<div class="kp-field kp-field--check kp-field--invalid">
+    <input class="kp-field__check" id="f-bad-ack" type="checkbox" aria-invalid="true" aria-describedby="f-bad-ack-error" />
+    <label class="kp-field__label" for="f-bad-ack">I have read the lock-out procedure</label>
+    <span class="kp-field__error" id="f-bad-ack-error" data-kp-field-error>Tick this before you reopen the line.</span>
+</div>
+<div class="kp-field kp-field--invalid">
+    <fieldset class="kp-fieldset" aria-invalid="true" aria-describedby="f-bad-shift-error">
+        <legend class="kp-field__label">Shift <span class="kp-field__required">required</span></legend>
+        <label class="kp-field__option"
+        ><input class="kp-field__check" type="radio" name="bad-shift" value="early" /> Early</label
+        >
+        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="bad-shift" value="late" /> Late</label>
+    </fieldset>
+    <span class="kp-field__error" id="f-bad-shift-error" data-kp-field-error>Choose the shift the incident happened in.</span>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-good-email">Valid, for comparison</label>
+    <input class="kp-field__input" id="f-good-email" type="email" value="night-shift@example.org" />
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--invalid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-bad-email&quot;</span>&gt;Escalation email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-email&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;night-shift@&quot;</span>
+    <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-bad-email-help f-bad-email-error&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__help&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-email-help&quot;</span>&gt;Goes to a shared inbox, not a person.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-email-error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span>
+    &gt;Enter an address with a domain after the @, such as night-shift@example.org.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check kp-field--invalid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-ack&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-bad-ack-error&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-bad-ack&quot;</span>&gt;I have read the lock-out procedure&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-ack-error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span>&gt;Tick this before you reopen the line.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--invalid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fieldset&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;f-bad-shift-error&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">legend</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span>&gt;Shift &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">legend</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;bad-shift&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;early&quot;</span> /&gt; Early&lt;/<span class="kp-code__keyword">label</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__option&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;bad-shift&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;late&quot;</span> /&gt; Late&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;/<span class="kp-code__keyword">fieldset</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-bad-shift-error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span>&gt;Choose the shift the incident happened in.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-good-email&quot;</span>&gt;Valid, for comparison&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-good-email&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;night-shift@example.org&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-unavailable">
+                        <figcaption class="kp-fw-semibold">Disabled and read-only</figcaption>
+                        <p class="kp-text-muted">These two are different promises and must not look the same. <b>Disabled</b> cannot be used and says so: the pointer shows it is refused and the value is still readable. <b>Read-only</b> can be focused, selected and copied, but not changed — it should look like a value on a record, not like a broken input. The package fades the disabled field and gives the read-only one a dashed boundary on the muted ground at full ink. If the read-only field looks exactly like an editable one in some theme, a reviewer will type into it and think the page froze: that is the fault to watch for. The disabled checkbox and select must follow the same rule as the text input.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field">
+    <label class="kp-field__label" for="f-dis">Contract number</label>
+    <input class="kp-field__input" id="f-dis" type="text" value="HF-2201" disabled />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-ro">Opened at</label>
+    <input class="kp-field__input" id="f-ro" type="text" value="2026-09-13 00:14" readonly />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-dis-select">Region</label>
+    <select class="kp-field__input" id="f-dis-select" disabled>
+        <option>North</option>
+    </select>
+</div>
+<div class="kp-field kp-field--check">
+    <input class="kp-field__check" id="f-dis-check" type="checkbox" checked disabled />
+    <label class="kp-field__label" for="f-dis-check">Signed off by the vendor</label>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-ro-note">Closing note</label>
+    <textarea class="kp-field__input kp-field__input--multiline" id="f-ro-note" readonly>
+        Closed by the day shift after the gauge was replaced.</textarea>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-dis&quot;</span>&gt;Contract number&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-dis&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;HF-2201&quot;</span> <span class="kp-code__keyword">disabled</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-ro&quot;</span>&gt;Opened at&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-ro&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;2026-09-13 00:14&quot;</span> <span class="kp-code__keyword">readonly</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-dis-select&quot;</span>&gt;Region&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-dis-select&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;
+        &lt;<span class="kp-code__keyword">option</span>&gt;North&lt;/<span class="kp-code__keyword">option</span>&gt;
+    &lt;/<span class="kp-code__keyword">select</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-dis-check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">checked</span> <span class="kp-code__keyword">disabled</span> /&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-dis-check&quot;</span>&gt;Signed off by the vendor&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-ro-note&quot;</span>&gt;Closing note&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-ro-note&quot;</span> <span class="kp-code__keyword">readonly</span>&gt;
+        Closed by the day shift after the gauge was replaced.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-field-extremes">
+                        <figcaption class="kp-fw-semibold">Extremes</figcaption>
+                        <p class="kp-text-muted">The label is 120 characters: it must wrap onto as many lines as it needs and stay aligned to the input's left edge — never be cut, never push the field wider than its column. The input holds a 300-character value on one line: it must scroll inside itself, keep its height, and keep its padding on both ends when you move the caret to the end. The textarea holds the same 300 characters and must wrap them at word boundaries inside its padding. The last input holds an identifier with nowhere to break; it too must stay inside its box.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field">
+    <label class="kp-field__label" for="f-long-label"
+    >Full name of the person the site manager should call first when the pump house 4 alarm goes off outside of working
+    hours</label
+    >
+    <input class="kp-field__input" id="f-long-label" type="text" value="Anneleen Verhoeven" />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-long-value">Observation</label>
+    <input
+    class="kp-field__input"
+    id="f-long-value"
+    type="text"
+    value="The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, recovered without anyone touching the valve, and dropped again at 03:15; the gauge on the wall agreed with the sensor both times, so this is not drift but something upstream of the manifold that nobody has looked into yet."
+    />
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-long-area">Observation, as a textarea</label>
+    <textarea class="kp-field__input kp-field__input--multiline" id="f-long-area" rows="6">
+        The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, recovered without anyone touching the valve, and dropped again at 03:15; the gauge on the wall agreed with the sensor both times, so this is not drift but something upstream of the manifold that nobody has looked into yet.</textarea>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-long-key">Telemetry key</label>
+    <input
+    class="kp-field__input"
+    id="f-long-key"
+    type="text"
+    value="f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7e2504a71c6b8d3e9"
+    />
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-long-label&quot;</span>
+    &gt;Full name of the person the site manager should call first when the pump house 4 alarm goes off outside of working
+    hours&lt;/<span class="kp-code__keyword">label</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-long-label&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;Anneleen Verhoeven&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-long-value&quot;</span>&gt;Observation&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-long-value&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, recovered without anyone touching the valve, and dropped again at 03:15; the gauge on the wall agreed with the sensor both times, so this is not drift but something upstream of the manifold that nobody has looked into yet.&quot;</span>
+    /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-long-area&quot;</span>&gt;Observation, as a textarea&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-long-area&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;6&quot;</span>&gt;
+        The pressure on line two dropped from 3.2 to 1.1 bar between 02:10 and 02:40, recovered without anyone touching the valve, and dropped again at 03:15; the gauge on the wall agreed with the sensor both times, so this is not drift but something upstream of the manifold that nobody has looked into yet.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-long-key&quot;</span>&gt;Telemetry key&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-long-key&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;f3a9c1e7b25d48a06c9f1e3b7d5a2c8046e1b9f3a7c5d2e80b41f6a3c9d7e2504a71c6b8d3e9&quot;</span>
+    /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-switch-invalid">
+                        <figcaption class="kp-fw-semibold">Invalid</figcaption>
+                        <p class="kp-text-muted">A switch that must be on before the form goes through. It takes the same outline an invalid checkbox takes, in the alarm colour, and the message under it says what is wrong in words. The outline must show in every theme, including the ones whose track carries its own shadow (brutalism, retro, synthwave). Turn it on: nothing here clears the message, because this block is not inside a form — in a <code>data-kp-form</code>, <code>js/forms.js</code> would.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-field kp-field--check kp-field--invalid">
+    <label class="kp-switch">
+        <input class="kp-switch__input" type="checkbox" role="switch" aria-invalid="true" aria-describedby="sw-lock-error" />
+        <span class="kp-switch__state" aria-hidden="true"></span>
+        <span>Line locked out</span>
+    </label>
+    <span class="kp-field__error" id="sw-lock-error">Lock the line out before you start the repair.</span>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field kp-field--check kp-field--invalid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">aria-invalid</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;sw-lock-error&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__state&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Line locked out&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;sw-lock-error&quot;</span>&gt;Lock the line out before you start the repair.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -325,5 +707,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

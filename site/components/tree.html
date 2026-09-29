@@ -203,6 +203,136 @@
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-tree">
+                        <figcaption class="kp-fw-semibold">Tree</figcaption>
+                        <p class="kp-text-muted">A selectable tree (<code>data-kp-selectable</code>). The twisty before each branch points the way the branch <i>will</i> go and sits in the muted ink; leaves have none and must still line up with the branch labels. <b>Line 2</b> is open, <b>Line 1</b> is closed, and <b>readings-0240.csv</b> is written as selected (<code>aria-selected="true"</code>): it must carry a bar at its start edge, a wash of the primary colour over its own row only, and a heavier weight, in every theme. Click once into the tree and use the keyboard: Down skips the closed branch's children, Right opens a branch and then steps into it, Left closes it and then steps out, Home and End jump, and typing "pu" finds <b>pump-log.txt</b>. Enter selects the focused item. The focus ring must hug one row, not the whole branch under it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<ul class="kp-tree" role="tree" data-kp-tree data-kp-selectable aria-label="Pump house 4 files">
+    <li role="treeitem" aria-expanded="false">
+        Line 1
+        <ul role="group">
+            <li role="treeitem">readings-0100.csv</li>
+            <li role="treeitem">readings-0200.csv</li>
+        </ul>
+    </li>
+    <li role="treeitem" aria-expanded="true">
+        Line 2
+        <ul role="group">
+            <li role="treeitem" aria-expanded="true">
+                Manifold
+                <ul role="group">
+                    <li role="treeitem" aria-selected="true">readings-0240.csv</li>
+                    <li role="treeitem">pump-log.txt</li>
+                </ul>
+            </li>
+            <li role="treeitem">lock-out-signed.pdf</li>
+        </ul>
+    </li>
+    <li role="treeitem">site-plan.pdf</li>
+</ul>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tree&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tree&quot;</span> <span class="kp-code__keyword">data-kp-tree</span> <span class="kp-code__keyword">data-kp-selectable</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 4 files&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;
+        Line 1
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;readings-0100.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;readings-0200.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+        Line 2
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                Manifold
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;readings-0240.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;pump-log.txt&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;lock-out-signed.pdf&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;site-plan.pdf&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-structure-tree-deep">
+                        <figcaption class="kp-fw-semibold">Tree extremes</figcaption>
+                        <p class="kp-text-muted">Six levels deep, in a narrow pane. Each level must step in by the same amount; by the sixth the label still needs room to read. The deepest file has a name with no space to break at: it wraps inside the pane (the package breaks it anywhere rather than let it push the pane wider). The branch with a long name must wrap under its own twisty, not under the twisty of its parent.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 18rem">
+    <ul class="kp-tree" role="tree" data-kp-tree aria-label="Archive">
+        <li role="treeitem" aria-expanded="true">
+            Archive
+            <ul role="group">
+                <li role="treeitem" aria-expanded="true">
+                    2026
+                    <ul role="group">
+                        <li role="treeitem" aria-expanded="true">
+                            September
+                            <ul role="group">
+                                <li role="treeitem" aria-expanded="true">
+                                    Incidents closed after the vendor's second visit to the manifold
+                                    <ul role="group">
+                                        <li role="treeitem" aria-expanded="true">
+                                            INC-4471
+                                            <ul role="group">
+                                                <li role="treeitem">
+                                                    pumphouse4_line2_manifold_pressure_readings_20260913T021000Z.csv
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 18rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tree&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tree&quot;</span> <span class="kp-code__keyword">data-kp-tree</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Archive&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+            Archive
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                    2026
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                            September
+                            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                                    Incidents closed after the vendor's second visit to the manifold
+                                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+                                            INC-4471
+                                            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+                                                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span>&gt;
+                                                    pumphouse4_line2_manifold_pressure_readings_20260913T021000Z.csv
+                                                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -288,5 +418,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

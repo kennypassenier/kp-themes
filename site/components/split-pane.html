@@ -199,6 +199,106 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-structure-split">
+                        <figcaption class="kp-fw-semibold">Split pane</figcaption>
+                        <p class="kp-text-muted">Two panes and a separator you can grab. The separator is a narrow bar on the muted ground with a rule on each side; the pointer turns into a column-resize arrow over it. Drag it, then Tab to it and use Left and Right (Shift for big steps, Home and End for the limits of 20 % and 80 %): the focus ring must be drawn <i>inside</i> the bar so the panes do not cover it. Each pane scrolls on its own when its content is taller. The second split is <code>data-kp-orientation="horizontal"</code> — a top and bottom split: the panes stack, the separator is a bar across the full width with a rule above and below it and a row-resize pointer, and Up and Down (or a drag) move it. Registers that give the separator a thickness keep that thickness here.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="display: grid; block-size: 14rem">
+    <div class="kp-split" data-kp-split>
+        <div class="kp-split__pane">
+            <p style="margin-block-start: 0"><b>Open incidents</b></p>
+            <p>INC-4471 · line 2</p>
+            <p>INC-4468 · cold store</p>
+            <p>INC-4460 · weighbridge</p>
+            <p>INC-4455 · line 1</p>
+        </div>
+        <div
+        class="kp-split__separator"
+        role="separator"
+        tabindex="0"
+        aria-orientation="vertical"
+        aria-valuemin="20"
+        aria-valuemax="80"
+        aria-valuenow="35"
+        aria-label="Resize the incident list"
+        ></div>
+    <div class="kp-split__pane">
+        <p style="margin-block-start: 0"><b>INC-4471</b></p>
+        <p>
+            Pressure on line 2 dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without anyone touching the
+            valve. The line is locked out at the manifold until the day shift has checked the gauge against the sensor.
+        </p>
+    </div>
+</div>
+</div>
+<div style="display: grid; block-size: 14rem; margin-block-start: 1rem">
+    <div class="kp-split" data-kp-split data-kp-orientation="horizontal">
+        <div class="kp-split__pane">Readings table for line 2, last hour.</div>
+        <div
+        class="kp-split__separator"
+        role="separator"
+        tabindex="0"
+        aria-orientation="horizontal"
+        aria-valuemin="20"
+        aria-valuemax="80"
+        aria-valuenow="50"
+        aria-label="Resize the readings and the chart"
+        ></div>
+    <div class="kp-split__pane">Pressure chart for line 2, last hour.</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;display: grid; block-size: 14rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split&quot;</span> <span class="kp-code__keyword">data-kp-split</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;INC-4471 · line 2&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;INC-4468 · cold store&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;INC-4460 · weighbridge&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;INC-4455 · line 1&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__separator&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-orientation</span><span class="kp-code__string">=&quot;vertical&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;20&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;80&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Resize the incident list&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            Pressure on line 2 dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without anyone touching the
+            valve. The line is locked out at the manifold until the day shift has checked the gauge against the sensor.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;display: grid; block-size: 14rem; margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split&quot;</span> <span class="kp-code__keyword">data-kp-split</span> <span class="kp-code__keyword">data-kp-orientation</span><span class="kp-code__string">=&quot;horizontal&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;Readings table for line 2, last hour.&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__separator&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-orientation</span><span class="kp-code__string">=&quot;horizontal&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;20&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;80&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;50&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Resize the readings and the chart&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;Pressure chart for line 2, last hour.&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -278,5 +378,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

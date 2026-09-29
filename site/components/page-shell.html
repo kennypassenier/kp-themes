@@ -193,6 +193,134 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-footer&quot;</span>&gt;kp-themes · twenty-four themes, one set of tokens&lt;/<span class="kp-code__keyword">footer</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-field-error-page">
+                        <figcaption class="kp-fw-semibold">Error page</figcaption>
+                        <p class="kp-text-muted"><code>.kp-error</code> is the page a form lands on when the server gave up. The heading takes the alarm colour, the explanation stays on the ordinary ground in the ordinary ink — a whole page in red is a wall, not a message. The column must be narrow enough to read (about sixty characters) and centred. The way back must be a real button, not a sentence telling you to press Back.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-error">
+    <h1>The report was not saved</h1>
+    <p>
+        The incident service did not answer within thirty seconds. Your text is still in the form you came from; nothing was sent
+        to the on-call engineer.
+    </p>
+    <p><button type="button" class="kp-button">Back to the form</button></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-error&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h1</span>&gt;The report was not saved&lt;/<span class="kp-code__keyword">h1</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;
+        The incident service did not answer within thirty seconds. Your text is still in the form you came from; nothing was sent
+        to the on-call engineer.
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Back to the form&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-footer">
+                        <figcaption class="kp-fw-semibold">Footer</figcaption>
+                        <p class="kp-text-muted">The footer is the quietest thing on a page: a rule above it, muted ink, a smaller size, and generous padding that grows with the window rather than jumping. The first is one line. The second holds three columns of links laid out with the layout layer's <code>.kp-autogrid</code>: the links must inherit the footer's quiet voice while still being recognisably links, and the headings must not shout louder than the page's own. Narrow the window: the columns must stack, never squeeze into a word per line.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<footer class="kp-footer">Pump house 4 · north site · operated by the night and day shifts since 2019</footer>
+<div style="margin-block-start: 1rem">
+    <footer class="kp-footer">
+        <div class="kp-autogrid kp-autogrid--tight">
+            <div>
+                <h4>North site</h4>
+                <p>Readings are kept for seven years. Lock-outs are signed by the shift lead.</p>
+            </div>
+            <div>
+                <h4>Lines</h4>
+                <ul>
+                    <li><a href="#footer">Line 1</a></li>
+                    <li><a href="#footer">Line 2</a></li>
+                    <li><a href="#footer">Cold store</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>When something breaks</h4>
+                <ul>
+                    <li><a href="#footer">Report an incident</a></li>
+                    <li><a href="#footer">Vendor hotline, contract HF-2201</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-footer&quot;</span>&gt;Pump house 4 · north site · operated by the night and day shifts since 2019&lt;/<span class="kp-code__keyword">footer</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-footer&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid kp-autogrid--tight&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">h4</span>&gt;North site&lt;/<span class="kp-code__keyword">h4</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span>&gt;Readings are kept for seven years. Lock-outs are signed by the shift lead.&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">h4</span>&gt;Lines&lt;/<span class="kp-code__keyword">h4</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#footer&quot;</span>&gt;Line 1&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#footer&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#footer&quot;</span>&gt;Cold store&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">h4</span>&gt;When something breaks&lt;/<span class="kp-code__keyword">h4</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#footer&quot;</span>&gt;Report an incident&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#footer&quot;</span>&gt;Vendor hotline, contract HF-2201&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">footer</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-effects-dividers">
+                        <figcaption class="kp-fw-semibold">Dividers</figcaption>
+                        <p class="kp-text-muted">The plain divider (<code>data-kp-divider</code>) between the hero and the app surface, and the alt divider (<code>data-kp-divider="alt"</code>) between the app surface and the footer, laid out as the concept page lays them. In <b>every</b> theme a divider spans the full width, never overlaps the text of the surfaces it separates, and the two surfaces never touch without it: a theme that paints nothing still leaves one step of room. Per theme: <b>formal</b> a hairline with a short navy tick, the alt one dashed; <b>cyberpunk</b> the data stream — three rows of muted yellow dashes with a few cyan packets under a scan hairline, drifting right at two speeds with no jump and no seam, the alt one flowing left, both still under reduced motion; <b>nostromo</b> a row of vent dots, the alt one on the darker sidebar plate for the footer seam; <b>synthwave</b> the horizon, a 2 px line with its glow over a receding grid; <b>grotesk</b> two black rules with a signal hairline exactly centred between them; <b>high-contrast</b> a razor tear whose two tones swap; <b>lapis</b> the four-ring frame with the girih dot, the alt one a plain hatch; <b>terminal</b> dashes with a plus at each end, the alt one doubled; <b>forest</b> torn paper, the alt one two concentric rings; <b>pastel</b> pearls, round beads on a thread with no bar and no bead cut at either end, plum then mint ink; <b>light</b> hairline seams, the alt one tinting its circle with the accent; <b>dark</b> the instrument's scale — hairline, ticks, the oxide at centre; <b>brutalism</b> a marquee strip, the second running the other way; <b>titanium</b> a milled groove with the film lying in it; <b>retro</b> a dithered band, then a plain two-line groove; <b>solstice</b> a hairline with an accent peak, the alt one on the opposite side; <b>phantom</b> torn paper of three clipped plates, the second mirrored; <b>deco</b> a double rule with a lozenge; <b>sepia</b> a double warm-brown rule, the second with a diamond; <b>shade-light</b> a blurred seam, felt rather than seen; <b>shade-dark</b> a swell in the next surface's own tone.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<!-- One wrapper, so a compare column keeps the five as siblings: a register reads the surface before a divider. -->
+<div>
+    <section class="kp-section kp-stack" data-kp-surface="hero">
+        <p class="microlabel">hero surface</p>
+        <p class="kp-prose">The hero ends here. What follows is the working surface of the page.</p>
+    </section>
+    <div data-kp-divider></div>
+    <section class="kp-section kp-stack" data-kp-surface="app">
+        <p class="microlabel">app surface</p>
+        <p class="kp-prose">The working surface ends here, above the footer seam.</p>
+    </section>
+    <div data-kp-divider="alt"></div>
+    <footer class="kp-footer">
+        <p class="microlabel">Pump house 4 · handover log · rendered from tokens</p>
+    </footer>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__comment">&lt;!-- One wrapper, so a compare column keeps the five as siblings: a register reads the surface before a divider. --&gt;</span>
+&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-section kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;hero&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;microlabel&quot;</span>&gt;hero surface&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-prose&quot;</span>&gt;The hero ends here. What follows is the working surface of the page.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-divider</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-section kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-surface</span><span class="kp-code__string">=&quot;app&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;microlabel&quot;</span>&gt;app surface&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-prose&quot;</span>&gt;The working surface ends here, above the footer seam.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-divider</span><span class="kp-code__string">=&quot;alt&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-footer&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;microlabel&quot;</span>&gt;Pump house 4 · handover log · rendered from tokens&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">footer</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -241,5 +369,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

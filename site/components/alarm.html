@@ -211,6 +211,172 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-alarm-ack">
+                        <figcaption class="kp-fw-semibold">Must be acknowledged</figcaption>
+                        <p class="kp-text-muted">The frame first. It is the alarm held open and still, as a reader who asked for reduced motion sees it: the plate, the frame, the hazard bars, the code line in the theme's mono face, the headline in its display face, the reason under it and one button. It must read as this theme's alarm, in its own colours, and still as an alarm rather than a dialog. The headline must read at a glance and the button must be the only thing that looks pressable. Then press <b>Raise the alarm</b>: the plate fades in, the headline flickers in and each letter decodes through two noise glyphs, a split copy slices through it, the glow breathes and the bars march. Only the button closes it: a click, Enter or Space. Escape does nothing, a click on the plate does nothing, and waiting does nothing. The page behind cannot be clicked and Tab stays inside. When it closes, focus is back on the button you pressed. <b>Raise it, Escape allowed</b> is the same alarm with <code>escape</code> on.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
+    <div class="kp-alarm__scan" aria-hidden="true"></div>
+    <div class="kp-alarm__bars" aria-hidden="true"></div>
+    <div class="kp-alarm__panel">
+        <p class="kp-alarm__code">Security protocol 7 · lockout</p>
+        <div class="kp-alarm__title" role="heading" aria-level="2">
+            <span class="kp-alarm__glyphs" data-text="Access denied">Access denied</span>
+        </div>
+        <p class="kp-alarm__detail">Three failed attempts on terminal 4. This console is locked for ten minutes.</p>
+        <div class="kp-alarm__actions">
+            <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+            <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+        </div>
+    </div>
+</div>
+<div class="kp-row" style="margin-block-start: 1rem">
+    <button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-alarm="Access denied"
+    data-kp-alarm-code="Security protocol 7 · lockout"
+    data-kp-alarm-detail="Three failed attempts on terminal 4. This console is locked for ten minutes."
+    >
+    Raise the alarm
+</button>
+<button
+type="button"
+class="kp-button"
+data-kp-alarm="Clearance required"
+data-kp-alarm-code="Override refused"
+data-kp-alarm-detail="Coolant valves stay under supervisor control. Ask the shift lead for a level 3 key."
+data-kp-alarm-action="Understood"
+data-kp-alarm-escape
+>
+Raise it, Escape allowed
+</button>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm&quot;</span> <span class="kp-code__keyword">data-kp-alarm-inline</span> <span class="kp-code__keyword">data-kp-alarm-mode</span><span class="kp-code__string">=&quot;ack&quot;</span> <span class="kp-code__keyword">data-kp-alarm-motion</span><span class="kp-code__string">=&quot;still&quot;</span> <span class="kp-code__keyword">inert</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__scan&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__bars&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__panel&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__code&quot;</span>&gt;Security protocol 7 · lockout&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__title&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;heading&quot;</span> <span class="kp-code__keyword">aria-level</span><span class="kp-code__string">=&quot;2&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__glyphs&quot;</span> <span class="kp-code__keyword">data-text</span><span class="kp-code__string">=&quot;Access denied&quot;</span>&gt;Access denied&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__detail&quot;</span>&gt;Three failed attempts on terminal 4. This console is locked for ten minutes.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-alarm__ack&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__hint&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Press Enter&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm</span><span class="kp-code__string">=&quot;Access denied&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-code</span><span class="kp-code__string">=&quot;Security protocol 7 · lockout&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-detail</span><span class="kp-code__string">=&quot;Three failed attempts on terminal 4. This console is locked for ten minutes.&quot;</span>
+    &gt;
+    Raise the alarm
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm</span><span class="kp-code__string">=&quot;Clearance required&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-code</span><span class="kp-code__string">=&quot;Override refused&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-detail</span><span class="kp-code__string">=&quot;Coolant valves stay under supervisor control. Ask the shift lead for a level 3 key.&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-action</span><span class="kp-code__string">=&quot;Understood&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-escape</span>
+&gt;
+Raise it, Escape allowed
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-alarm-auto">
+                        <figcaption class="kp-fw-semibold">Closes by itself</figcaption>
+                        <p class="kp-text-muted">The frame holds the countdown at five of eight seconds left. The bar shrinks towards the start and must read as time running out, not as progress; the words under it count whole seconds. <b>Keep open</b> is a quiet button, because the point of this mode is that nobody has to touch it. Then press <b>Raise it for 6 seconds</b>: it blocks the page exactly like the acknowledged one, the bar empties and the alarm goes away by itself, with focus back on the button. Raise it again and press Escape: it closes. Raise it a third time and press Tab once: focus lands on Keep open, and pressing it stops the clock, brings the Acknowledge button back and gives it focus; from then on only that button closes it. With reduced motion asked for, the bar steps a whole second at a time instead of sliding.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div
+class="kp-alarm"
+data-kp-alarm-inline
+data-kp-alarm-mode="auto"
+data-kp-alarm-motion="still"
+style="--kp-alarm-left: 0.625; --kp-alarm-left-step: 0.625"
+inert
+>
+<div class="kp-alarm__scan" aria-hidden="true"></div>
+<div class="kp-alarm__bars" aria-hidden="true"></div>
+<div class="kp-alarm__panel">
+    <p class="kp-alarm__code">Perimeter · east wing</p>
+    <div class="kp-alarm__title" role="heading" aria-level="2">
+        <span class="kp-alarm__glyphs" data-text="Intrusion detected">Intrusion detected</span>
+    </div>
+    <p class="kp-alarm__detail">Unrecognised key presented at the east service door. Security has been notified.</p>
+    <div class="kp-alarm__countdown">
+        <span class="kp-alarm__track" aria-hidden="true"><span class="kp-alarm__fill"></span></span>
+        <span class="kp-alarm__left" aria-hidden="true">Closes in 5 s</span>
+        <button type="button" class="kp-button kp-button--ghost kp-button--sm kp-alarm__keep">Keep open</button>
+    </div>
+</div>
+</div>
+<div class="kp-row" style="margin-block-start: 1rem">
+    <button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-alarm="Intrusion detected"
+    data-kp-alarm-code="Perimeter · east wing"
+    data-kp-alarm-detail="Unrecognised key presented at the east service door. Security has been notified."
+    data-kp-alarm-mode="auto"
+    data-kp-alarm-seconds="6"
+    >
+    Raise it for 6 seconds
+</button>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-inline</span>
+<span class="kp-code__keyword">data-kp-alarm-mode</span><span class="kp-code__string">=&quot;auto&quot;</span>
+<span class="kp-code__keyword">data-kp-alarm-motion</span><span class="kp-code__string">=&quot;still&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-alarm-left: 0.625; --kp-alarm-left-step: 0.625&quot;</span>
+<span class="kp-code__keyword">inert</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__scan&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__bars&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__panel&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__code&quot;</span>&gt;Perimeter · east wing&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__title&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;heading&quot;</span> <span class="kp-code__keyword">aria-level</span><span class="kp-code__string">=&quot;2&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__glyphs&quot;</span> <span class="kp-code__keyword">data-text</span><span class="kp-code__string">=&quot;Intrusion detected&quot;</span>&gt;Intrusion detected&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__detail&quot;</span>&gt;Unrecognised key presented at the east service door. Security has been notified.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__countdown&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alarm__left&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Closes in 5 s&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm kp-alarm__keep&quot;</span>&gt;Keep open&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm</span><span class="kp-code__string">=&quot;Intrusion detected&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-code</span><span class="kp-code__string">=&quot;Perimeter · east wing&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-detail</span><span class="kp-code__string">=&quot;Unrecognised key presented at the east service door. Security has been notified.&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-mode</span><span class="kp-code__string">=&quot;auto&quot;</span>
+    <span class="kp-code__keyword">data-kp-alarm-seconds</span><span class="kp-code__string">=&quot;6&quot;</span>
+    &gt;
+    Raise it for 6 seconds
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -314,5 +480,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -233,6 +233,948 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-navigation-bar">
+                        <figcaption class="kp-fw-semibold">Bar</figcaption>
+                        <p class="kp-text-muted">The bar is on the card surface with a strong rule under it, and must read as the top of a page rather than as a card lying on one. The brand leads; the file code beside it (<code>.kp-nav__brand-tag</code>) is quieter than the brand, not a second brand — and still readable: in nostromo it reads at better than 4.5:1 on the dark strip, where it was 1.8:1. <b>Incidents</b> is the current page: it must be marked by more than colour — weight and an underline — and a screen reader hears <code>aria-current</code>. It keeps the size and the baseline of the other items: in nostromo its LED dot sits centred beside the text instead of pushing <b>Incidents</b> 1.6px below its neighbours. Tab through the links: the focus ring must stay visible on the bar's own ground, and no link may shift its neighbours when it takes focus or hover.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Site operations">
+        <a class="kp-nav__brand" href="#bar">Pump house 4 <span class="kp-nav__brand-tag">PH//04</span></a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#bar">Overview</a></li>
+            <li><a class="kp-nav__link" href="#bar" aria-current="page">Incidents</a></li>
+            <li><a class="kp-nav__link" href="#bar">Readings</a></li>
+            <li><a class="kp-nav__link" href="#bar">Rota</a></li>
+        </ul>
+    </nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span>&gt;Pump house 4 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand-tag&quot;</span>&gt;PH//04&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-dropdown">
+                        <figcaption class="kp-fw-semibold">Dropdown</figcaption>
+                        <p class="kp-text-muted">The dropdown under <b>Readings</b> is frozen open with <code>data-kp-nav-menu-open</code> on its item, so switch themes and judge it in each: it sits under the link on the popover surface with a strong boundary, its caption ("Readings · line 2") above a hairline in small capitals, and its links each on a full-width row. It must sit <i>over</i> the stage, not push it down, and must not be cut by the bar's edge. The second bar is the same dropdown with nothing declared: hover <b>Incidents</b> or Tab onto it and it opens the same way, and the next Tab lands on the first link inside it, which keeps it open while focus is there.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Site operations, with a dropdown">
+        <a class="kp-nav__brand" href="#dropdown">Pump house 4</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#dropdown">Overview</a></li>
+            <li><a class="kp-nav__link" href="#dropdown">Incidents</a></li>
+            <li data-kp-nav-menu-open>
+                <a class="kp-nav__link" href="#dropdown" aria-haspopup="true" aria-current="page">Readings</a>
+                <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                    <li><a href="#dropdown">Pressure</a></li>
+                    <li><a href="#dropdown">Flow rate</a></li>
+                    <li><a href="#dropdown">Pump cycles</a></li>
+                    <li><a href="#dropdown">Valve positions</a></li>
+                </ul>
+            </li>
+            <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
+        </ul>
+    </nav>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Site operations, with a dropdown on hover">
+        <a class="kp-nav__brand" href="#dropdown">Pump house 4</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#dropdown">Overview</a></li>
+            <li>
+                <a class="kp-nav__link" href="#dropdown" aria-haspopup="true">Incidents</a>
+                <ul class="kp-nav__menu" data-kp-menu-label="Incidents · open">
+                    <li><a href="#dropdown">INC-4471</a></li>
+                    <li><a href="#dropdown">INC-4468</a></li>
+                </ul>
+            </li>
+            <li><a class="kp-nav__link" href="#dropdown">Rota</a></li>
+        </ul>
+    </nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, with a dropdown&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-nav-menu-open</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span> <span class="kp-code__keyword">data-kp-menu-label</span><span class="kp-code__string">=&quot;Readings · line 2&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Flow rate&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Pump cycles&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Valve positions&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, with a dropdown on hover&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span> <span class="kp-code__keyword">data-kp-menu-label</span><span class="kp-code__string">=&quot;Incidents · open&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#dropdown&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-mega-menu">
+                        <figcaption class="kp-fw-semibold">Mega menu</figcaption>
+                        <p class="kp-text-muted">The links sit at the bar's far end. Press <b>Equipment</b>: a wide panel opens under the bar and spans its whole width, with three groups side by side, each under a heading in the voice of that theme's dropdown caption, and the links under each heading in the voice of that theme's dropdown links. It opens on a press only — hovering <b>Equipment</b> must not open it — and its caret turns while it is open. Press <b>Equipment</b> again, press Escape (the focus must land back on the button), or click anywhere outside the bar: each closes it. Tab from the open button: the focus walks the panel's links in order. Open <b>Sites</b> while <b>Equipment</b> is open: only one panel is ever open. Then hover <b>Account</b>, the last item: its dropdown must open towards the left, inside the window, instead of running past its right edge (fix-27). Narrow the window until the bar wraps and hover it again: still inside the window.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Site operations, with a mega menu">
+        <a class="kp-nav__brand" href="#mega-menu">Pump house 4</a>
+        <ul class="kp-nav__links" style="margin-inline-start: auto">
+            <li><a class="kp-nav__link" href="#mega-menu">Overview</a></li>
+            <li>
+                <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                <div class="kp-nav__menu kp-nav__menu--wide">
+                    <div class="kp-nav__group">
+                        <h3 class="kp-nav__menu-heading">Pumps</h3>
+                        <ul>
+                            <li><a href="#mega-menu">Main line pumps</a></li>
+                            <li><a href="#mega-menu">Booster sets</a></li>
+                            <li><a href="#mega-menu">Spare parts</a></li>
+                        </ul>
+                    </div>
+                    <div class="kp-nav__group">
+                        <h3 class="kp-nav__menu-heading">Valves</h3>
+                        <ul>
+                            <li><a href="#mega-menu">Gate valves</a></li>
+                            <li><a href="#mega-menu">Check valves</a></li>
+                        </ul>
+                    </div>
+                    <div class="kp-nav__group">
+                        <h3 class="kp-nav__menu-heading">Sensors</h3>
+                        <ul>
+                            <li><a href="#mega-menu">Pressure transducers</a></li>
+                            <li><a href="#mega-menu">Flow meters</a></li>
+                            <li><a href="#mega-menu">Calibration log</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Sites</button>
+                <div class="kp-nav__menu kp-nav__menu--wide">
+                    <div class="kp-nav__group">
+                        <h3 class="kp-nav__menu-heading">North</h3>
+                        <ul>
+                            <li><a href="#mega-menu">Pump house 4</a></li>
+                            <li><a href="#mega-menu">Reservoir 2</a></li>
+                        </ul>
+                    </div>
+                    <div class="kp-nav__group">
+                        <h3 class="kp-nav__menu-heading">South</h3>
+                        <ul>
+                            <li><a href="#mega-menu">Treatment works</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a class="kp-nav__link" href="#mega-menu" aria-haspopup="true">Account</a>
+                <ul class="kp-nav__menu" data-kp-menu-label="Signed in as J. Okafor">
+                    <li><a href="#mega-menu">Profile and preferences</a></li>
+                    <li><a href="#mega-menu">Signed-in devices</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, with a mega menu&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-inline-start: auto&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link kp-nav__disclosure&quot;</span> <span class="kp-code__keyword">data-kp-nav-disclosure</span>&gt;Equipment&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu kp-nav__menu--wide&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Pumps&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">ul</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Main line pumps&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Booster sets&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Spare parts&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Valves&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">ul</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Gate valves&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Check valves&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;Sensors&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">ul</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Pressure transducers&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Flow meters&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Calibration log&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link kp-nav__disclosure&quot;</span> <span class="kp-code__keyword">data-kp-nav-disclosure</span>&gt;Sites&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu kp-nav__menu--wide&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;North&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">ul</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Reservoir 2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__group&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu-heading&quot;</span>&gt;South&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">ul</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Treatment works&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Account&lt;/<span class="kp-code__keyword">a</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span> <span class="kp-code__keyword">data-kp-menu-label</span><span class="kp-code__string">=&quot;Signed in as J. Okafor&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Profile and preferences&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#mega-menu&quot;</span>&gt;Signed-in devices&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-bar-collapsed">
+                        <figcaption class="kp-fw-semibold">Collapsed bar</figcaption>
+                        <p class="kp-text-muted">Both bars sit in a box narrower than 40rem, so they collapse behind their three-bar toggle. The first is frozen open: the toggle wears the theme's accent as a plate (open is a state, and a state is visible), the links stack in a column under the brand, and the dropdown under <b>Readings</b> is no longer a floating panel but an indented list in the flow — no frame, no ground and no shadow in any theme, while the register's own type and item marks stay. Judge whether the indented list still reads as belonging to <b>Readings</b>, without touching it: in nostromo there is at least 0.5rem between <b>Readings</b> and the dropdown's caption, and again between the caption's rule and <b>Pressure</b>. The second bar is live: press its toggle, press Escape with focus inside, or click anywhere outside it — each must close it, and the toggle's accessible name must change between "Open the navigation" and "Close the navigation". Drag the panes' edges wider than 40rem and both must turn back into a plain bar.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Site operations, collapsed and frozen open" data-kp-nav-open>
+            <a class="kp-nav__brand" href="#bar-collapsed">Pump house 4</a>
+            <button type="button" class="kp-nav__toggle" aria-expanded="true" aria-label="Close the navigation"></button>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#bar-collapsed">Overview</a></li>
+                <li><a class="kp-nav__link" href="#bar-collapsed">Incidents</a></li>
+                <li>
+                    <a class="kp-nav__link" href="#bar-collapsed" aria-haspopup="true" aria-current="page">Readings</a>
+                    <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                        <li><a href="#bar-collapsed">Pressure</a></li>
+                        <li><a href="#bar-collapsed">Flow rate</a></li>
+                        <li><a href="#bar-collapsed">Pump cycles</a></li>
+                    </ul>
+                </li>
+                <li><a class="kp-nav__link" href="#bar-collapsed">Rota</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div class="cat-resize" style="inline-size: 22rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Site operations, collapsed and live">
+            <a class="kp-nav__brand" href="#bar-collapsed">Pump house 4</a>
+            <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#bar-collapsed" aria-current="page">Overview</a></li>
+                <li><a class="kp-nav__link" href="#bar-collapsed">Incidents</a></li>
+                <li><a class="kp-nav__link" href="#bar-collapsed">Readings</a></li>
+                <li><a class="kp-nav__link" href="#bar-collapsed">Rota</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, collapsed and frozen open&quot;</span> <span class="kp-code__keyword">data-kp-nav-open</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__toggle&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close the navigation&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span> <span class="kp-code__keyword">data-kp-menu-label</span><span class="kp-code__string">=&quot;Readings · line 2&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Flow rate&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Pump cycles&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, collapsed and live&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__toggle&quot;</span> <span class="kp-code__keyword">data-kp-nav-toggle</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-collapsed&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-bar-long">
+                        <figcaption class="kp-fw-semibold">Fourteen items, one label sixty characters long</figcaption>
+                        <p class="kp-text-muted">The wide bar must wrap its fourteen links onto more rows with an even gap between rows and columns — never scroll sideways, never push the page wider. The tenth link is sixty characters: it must wrap inside itself or take a row of its own, and its current-page underline must follow the text onto its second line rather than draw under one line only. No link's plate or rule may touch or cover a link in the row above it — in dark the current page's plate used to lie over the first row. The bar in the narrow pane collapses; open it with its toggle and check that the long label wraps in the column instead of running out of the pane.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Every section of the north site">
+        <a class="kp-nav__brand" href="#bar-long">North site</a>
+        <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#bar-long">Overview</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Incidents</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Readings</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Alarms</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Rota</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Handovers</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Vendors</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Spare parts</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Lock-outs</a></li>
+            <li>
+                <a class="kp-nav__link" href="#bar-long" aria-current="page"
+                >Pressure trends for all lines on the north site, last 24 hrs</a
+                >
+            </li>
+            <li><a class="kp-nav__link" href="#bar-long">Maintenance</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Reports</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Audit log</a></li>
+            <li><a class="kp-nav__link" href="#bar-long">Settings</a></li>
+        </ul>
+    </nav>
+</div>
+<div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Every section of the north site, narrow">
+            <a class="kp-nav__brand" href="#bar-long">North site</a>
+            <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#bar-long">Overview</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Incidents</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Readings</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Alarms</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Rota</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Handovers</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Vendors</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Spare parts</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Lock-outs</a></li>
+                <li>
+                    <a class="kp-nav__link" href="#bar-long" aria-current="page"
+                    >Pressure trends for all lines on the north site, last 24 hrs</a
+                    >
+                </li>
+                <li><a class="kp-nav__link" href="#bar-long">Maintenance</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Reports</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Audit log</a></li>
+                <li><a class="kp-nav__link" href="#bar-long">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every section of the north site&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;North site&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__toggle&quot;</span> <span class="kp-code__keyword">data-kp-nav-toggle</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Handovers&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Vendors&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Spare parts&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Lock-outs&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;Pressure trends for all lines on the north site, last 24 hrs&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Maintenance&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Reports&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Audit log&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem; inline-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every section of the north site, narrow&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;North site&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__toggle&quot;</span> <span class="kp-code__keyword">data-kp-nav-toggle</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Handovers&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Vendors&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Spare parts&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Lock-outs&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                    &gt;Pressure trends for all lines on the north site, last 24 hrs&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Maintenance&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Reports&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Audit log&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-long&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-bar-search">
+                        <figcaption class="kp-fw-semibold">Search in the bar</figcaption>
+                        <p class="kp-text-muted">The command palette's trigger sits in <code>.kp-nav__search</code> at the bar's far end, pushed right by the slot itself, and speaks in the voice of this theme's own bar links (Kenny, 2026-09-14, "Per thema"): the word <b>Search</b> with the key hint <b>Ctrl K</b> (<b>⌘K</b> on a Mac) at its end, in the links' typeface, case, letter-spacing and shape, and pointing at it or tabbing to it must do what pointing at <b>Overview</b> does — the same plate, rule, slash or ink — without the underline a link carries. Compare it with the links in every theme: it must read as one more item of this bar, not as a box from another theme. In the narrow pane the bar collapses and the trigger stays beside the toggle on the brand's row without pushing the pane wider. Press either trigger, or Ctrl+K: the palette opens with the focus in its input; type "tabs" and press Enter — the page must jump to <b>Tabs</b> and the palette close. Open it again and press Escape: the focus must return to the trigger you pressed, with its focus ring. Open it once more and click anywhere outside the palette: it must close the same way, focus back on the trigger. Choosing <b>Breadcrumb</b> with the mouse jumps there the same way.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Site operations, with search">
+        <a class="kp-nav__brand" href="#bar-search">Pump house 4</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#bar-search">Overview</a></li>
+            <li><a class="kp-nav__link" href="#bar-search" aria-current="page">Incidents</a></li>
+            <li><a class="kp-nav__link" href="#bar-search">Readings</a></li>
+        </ul>
+        <div class="kp-nav__search">
+            <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="nav-search-palette">
+                Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+            </button>
+        </div>
+    </nav>
+</div>
+<div class="cat-resize" style="margin-block-start: 1rem; inline-size: 20rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Site operations, with search, narrow">
+            <a class="kp-nav__brand" href="#bar-search">Pump house 4</a>
+            <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#bar-search">Overview</a></li>
+                <li><a class="kp-nav__link" href="#bar-search" aria-current="page">Incidents</a></li>
+                <li><a class="kp-nav__link" href="#bar-search">Readings</a></li>
+            </ul>
+            <div class="kp-nav__search">
+                <button type="button" class="kp-nav__search-trigger" data-kp-palette-open="nav-search-palette">
+                    Search <kbd class="kp-palette__keys" data-kp-palette-keys></kbd>
+                </button>
+            </div>
+        </nav>
+    </div>
+</div>
+<dialog class="kp-palette" id="nav-search-palette" data-kp-palette aria-label="Go to">
+    <input
+    class="kp-palette__input"
+    type="text"
+    role="combobox"
+    aria-label="Go to"
+    aria-expanded="true"
+    aria-controls="nav-search-palette-list"
+    autocomplete="off"
+    placeholder="Where to?"
+    />
+    <ul class="kp-palette__list" id="nav-search-palette-list" role="listbox" aria-label="Go to">
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option data-value="bar" href="#bar">Bar</a>
+        </li>
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option data-value="breadcrumb" href="#breadcrumb">Breadcrumb</a>
+        </li>
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option data-value="tabs" href="#tabs">Tabs</a>
+        </li>
+        <li role="presentation">
+            <a class="kp-palette__option" role="option" data-kp-option data-value="sidenav" href="#sidenav-side"
+            >Side navigation</a
+            >
+        </li>
+    </ul>
+    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, with search&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__search&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__search-trigger&quot;</span> <span class="kp-code__keyword">data-kp-palette-open</span><span class="kp-code__string">=&quot;nav-search-palette&quot;</span>&gt;
+                Search &lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span> <span class="kp-code__keyword">data-kp-palette-keys</span>&gt;&lt;/<span class="kp-code__keyword">kbd</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem; inline-size: 20rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, with search, narrow&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__toggle&quot;</span> <span class="kp-code__keyword">data-kp-nav-toggle</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-search&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__search&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__search-trigger&quot;</span> <span class="kp-code__keyword">data-kp-palette-open</span><span class="kp-code__string">=&quot;nav-search-palette&quot;</span>&gt;
+                    Search &lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__keys&quot;</span> <span class="kp-code__keyword">data-kp-palette-keys</span>&gt;&lt;/<span class="kp-code__keyword">kbd</span>&gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nav-search-palette&quot;</span> <span class="kp-code__keyword">data-kp-palette</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nav-search-palette-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Where to?&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nav-search-palette-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Go to&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;bar&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar&quot;</span>&gt;Bar&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;breadcrumb&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Breadcrumb&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;tabs&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#tabs&quot;</span>&gt;Tabs&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;sidenav&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+            &gt;Side navigation&lt;/<span class="kp-code__keyword">a</span>
+            &gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-bar-sticky">
+                        <figcaption class="kp-fw-semibold">Shrinking header</figcaption>
+                        <p class="kp-text-muted">The box below scrolls on its own, and its bar is <code>.kp-nav-wrap--sticky</code>. Scroll inside the box: the bar must stay at the box's top and cover the text passing under it completely — no text showing through its ground or beside its rule. Once you have scrolled further than the bar is tall it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by lowering its block padding only, so the brand, the links and the current page's mark keep their size, their baseline and their look — only the room above and below them goes. The change must glide, not jump, unless your system asks for less motion; then it must happen at once. Scroll back to the top: it returns to its full height. In the compact bar the links must not touch the rule under the bar or the box's top edge. Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)">
+    <div class="kp-nav-wrap kp-nav-wrap--sticky">
+        <nav class="kp-nav" aria-label="Site operations, sticky">
+            <a class="kp-nav__brand" href="#bar-sticky">Pump house 4</a>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#bar-sticky-1">Section 1</a></li>
+                <li><a class="kp-nav__link" href="#bar-sticky-2" aria-current="page">Section 2</a></li>
+                <li><a class="kp-nav__link" href="#bar-sticky-3">Section 3</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div style="padding: 1rem">
+        <h3 id="bar-sticky-1">Section 1</h3>
+        <p>
+            The morning round starts at the intake screens. Each screen is lifted, rinsed and logged before the first pump comes
+            up to speed, and the reading beside it is written down by hand as well as on the panel.
+        </p>
+        <p>
+            Flow at the first gauge is compared with yesterday's; a drop of more than a tenth goes on the incident board before
+            anything else happens.
+        </p>
+        <h3 id="bar-sticky-2">Section 2</h3>
+        <p>
+            The second pump runs on the night tariff. Its bearings are checked by ear and by the vibration sensor, and the two
+            answers are expected to agree.
+        </p>
+        <p>
+            When they do not, the sensor is trusted for the log and the ear for the call to the fitter, who is on the rota pinned
+            beside the door.
+        </p>
+        <h3 id="bar-sticky-3">Section 3</h3>
+        <p>
+            The outflow is sampled every two hours. The bottles are labelled with the time and the operator's initials and go in
+            the cold box by the stairs.
+        </p>
+        <p>
+            At the end of the shift the round is written up, the board is cleared of whatever was closed, and the keys go back on
+            their hook.
+        </p>
+        <p>Anything left open is handed over in person. A note on the board is not a handover; a name and a conversation are.</p>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap kp-nav-wrap--sticky&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, sticky&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-sticky&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-sticky-1&quot;</span>&gt;Section 1&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-sticky-2&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Section 2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-sticky-3&quot;</span>&gt;Section 3&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 1rem&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;bar-sticky-1&quot;</span>&gt;Section 1&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            The morning round starts at the intake screens. Each screen is lifted, rinsed and logged before the first pump comes
+            up to speed, and the reading beside it is written down by hand as well as on the panel.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            Flow at the first gauge is compared with yesterday's; a drop of more than a tenth goes on the incident board before
+            anything else happens.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;bar-sticky-2&quot;</span>&gt;Section 2&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            The second pump runs on the night tariff. Its bearings are checked by ear and by the vibration sensor, and the two
+            answers are expected to agree.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            When they do not, the sensor is trusted for the log and the ear for the call to the fitter, who is on the rota pinned
+            beside the door.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;bar-sticky-3&quot;</span>&gt;Section 3&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            The outflow is sampled every two hours. The bottles are labelled with the time and the operator's initials and go in
+            the cold box by the stairs.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;
+            At the end of the shift the round is written up, the board is cleared of whatever was closed, and the keys go back on
+            their hook.
+        &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Anything left open is handed over in person. A note on the board is not a handover; a name and a conversation are.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-app-shell">
+                        <figcaption class="kp-fw-semibold">Application shell</figcaption>
+                        <p class="kp-text-muted">The three navigations composed into one screen, as <code>examples/app-shell.html</code> builds it: the bar across the top holds the product's areas (<b>Invoices</b> is current), the rail beside the content holds the pages of that area, and the breadcrumb above the content says where in it. Judge them as one family: the bar, the rail and the breadcrumb must read as three levels of the same interface in every theme — no double border where the bar meets the rail, the rail running from the bar to the bottom of the box, the breadcrumb lined up with the content rather than with the rail. Collapse the rail from its arrow: the content must take the room without jumping, and the breadcrumb and the heading must move with it. Open <b>Reports</b> in the bar: its dropdown must lie above the rail and the content, never under them — that is the bar's layer, now the same in all 22 themes (<code>--kp-z-nav</code>). Then make the window narrower than 40rem of this stage (or open <code>examples/app-shell.html</code> at phone width): the rail leaves the page, and a <b>☰</b> appears in the bar. Press it: the rail slides in over the page with every label written out, even if you had collapsed it to icons, and the page behind it dims. It covers the bar, so it must close from inside — the <b>×</b> in its footer, Escape, or a press on the dimmed page — and the focus must land back on the <b>☰</b>. Widen the window again: the rail is back beside the content as it was, and the ☰ and × are gone. On the examples page at full width the rail must run to the bottom of the window, not stop where the content ends.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Northwind">
+        <a class="kp-nav__brand" href="#app-shell">Northwind</a>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#app-shell">Overview</a></li>
+            <li><a class="kp-nav__link" href="#app-shell" aria-current="page">Invoices</a></li>
+            <li>
+                <a class="kp-nav__link" href="#app-shell" aria-haspopup="true">Reports</a>
+                <ul class="kp-nav__menu">
+                    <li><a href="#app-shell">Monthly</a></li>
+                    <li><a href="#app-shell">Ageing</a></li>
+                    <li><a href="#app-shell">Tax</a></li>
+                </ul>
+            </li>
+            <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
+        </ul>
+        <button
+        type="button"
+        class="kp-sidenav__toggle kp-icon-button"
+        data-kp-sidenav-toggle
+        aria-controls="nv-shell-rail"
+        hidden
+        >
+        <span aria-hidden="true">☰</span>
+    </button>
+</nav>
+</div>
+<div class="kp-d-flex kp-flex-wrap" style="min-block-size: 26rem">
+    <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim data-kp-sidenav-over-below>
+        <div class="kp-sidenav__scroll">
+            <ul class="kp-sidenav__list">
+                <li>
+                    <a class="kp-sidenav__link" href="#app-shell" aria-current="page"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span
+                        ><span class="kp-sidenav__label">All invoices</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#app-shell"
+                        ><span class="kp-sidenav__icon" aria-hidden="true">✎</span
+                            ><span class="kp-sidenav__label">Drafts</span></a
+                            >
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#app-shell"
+                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span
+                                ><span class="kp-sidenav__label">Overdue</span></a
+                                >
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#app-shell"
+                                ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
+                                    ><span class="kp-sidenav__label">Customers</span></a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="kp-sidenav__footer">
+                            <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-shell-rail">
+                                <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+                                <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+                            </button>
+                            <button
+                            type="button"
+                            class="kp-sidenav__toggle kp-sidenav__link"
+                            data-kp-sidenav-toggle
+                            aria-controls="nv-shell-rail"
+                            hidden
+                            >
+                            <span class="kp-sidenav__icon" aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </nav>
+                <div class="kp-flex-1">
+                    <div class="kp-page kp-py-sm">
+                        <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                            <ol>
+                                <li><a href="#app-shell">Northwind</a></li>
+                                <li><a href="#app-shell">Invoices</a></li>
+                                <li><span aria-current="page">All invoices</span></li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="kp-page kp-stack">
+                        <h3>All invoices</h3>
+                        <div class="kp-autogrid">
+                            <div class="kp-card" data-slot="card">
+                                <div class="kp-card__header"><h4 class="kp-card__title">Open invoices</h4></div>
+                                <div class="kp-card__body"><p class="kp-mono">128</p></div>
+                            </div>
+                            <div class="kp-card" data-slot="card">
+                                <div class="kp-card__header"><h4 class="kp-card__title">Overdue</h4></div>
+                                <div class="kp-card__body"><p class="kp-mono">7</p></div>
+                            </div>
+                        </div>
+                        <p class="kp-prose">Invoice 2026-0114 was sent at 09:14; the monthly report was generated at 08:02.</p>
+                    </div>
+                </div>
+            </div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Northwind&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Northwind&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Invoices&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Reports&lt;/<span class="kp-code__keyword">a</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Monthly&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Ageing&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Tax&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span>
+        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-icon-button&quot;</span>
+        <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
+        <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span>
+        <span class="kp-code__keyword">hidden</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;☰&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-d-flex kp-flex-wrap&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;min-block-size: 26rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Invoices&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span> <span class="kp-code__keyword">data-kp-sidenav-over-below</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;All invoices&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;✎&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Drafts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overdue&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                                &gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>
+                                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Customers&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                                    &gt;
+                                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;«&lt;/<span class="kp-code__keyword">span</span>&gt;
+                                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;»&lt;/<span class="kp-code__keyword">span</span>&gt;
+                            &lt;/<span class="kp-code__keyword">button</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span>
+                            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-sidenav__link&quot;</span>
+                            <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
+                            <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span>
+                            <span class="kp-code__keyword">hidden</span>
+                            &gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">nav</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-flex-1&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page kp-py-sm&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-breadcrumb&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Breadcrumb&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">ol</span>&gt;
+                                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Northwind&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Invoices&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;All invoices&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;/<span class="kp-code__keyword">ol</span>&gt;
+                        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page kp-stack&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span>&gt;All invoices&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">h4</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Open invoices&lt;/<span class="kp-code__keyword">h4</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;128&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">h4</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Overdue&lt;/<span class="kp-code__keyword">h4</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;7&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-prose&quot;</span>&gt;Invoice 2026-0114 was sent at 09:14; the monthly report was generated at 08:02.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-page-effects-nav-cta">
+                        <figcaption class="kp-fw-semibold">Call to action and end side</figcaption>
+                        <p class="kp-text-muted">The last link of each bar is the call to action (<code>.kp-nav__link--cta</code>). In <b>every</b> theme it is the one link that reads as an action rather than a place — a plate, a bracket, a frame — yet keeps the bar's height and its neighbours' baseline, and its hover and focus stay visible on its own plate. Per theme: <b>formal</b> a primary plate with the radius; <b>terminal</b> bracketed; <b>brutalism</b> lifts away from its shadow on hover; <b>nostromo</b> a plate that lights under the pointer. The second bar carries <code>data-kp-nav-side="end"</code>, for a bar that sits on the end side of the screen: only <b>cyberpunk</b> answers it — its clipped strip mirrors, the notch moving from the top left to the top right and the cut corner from the bottom right to the bottom left. In every other theme the two bars must look identical.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Pump house navigation">
+        <span class="kp-nav__brand">
+            Pump house 4
+            <small class="kp-nav__brand-tag">PH//04</small>
+        </span>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Readings">Readings</a></li>
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Rota">Rota</a></li>
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Docs">Docs</a></li>
+            <li>
+                <a class="kp-nav__link kp-nav__link--cta" href="#nav-cta" data-kp-text="Request access">Request access</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-nav-wrap">
+    <nav class="kp-nav" aria-label="Pump house navigation, end side" data-kp-nav-side="end">
+        <span class="kp-nav__brand">
+            Pump house 4
+            <small class="kp-nav__brand-tag">PH//04</small>
+        </span>
+        <ul class="kp-nav__links">
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Readings">Readings</a></li>
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Rota">Rota</a></li>
+            <li><a class="kp-nav__link" href="#nav-cta" data-kp-text="Docs">Docs</a></li>
+            <li>
+                <a class="kp-nav__link kp-nav__link--cta" href="#nav-cta" data-kp-text="Request access">Request access</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house navigation&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span>&gt;
+            Pump house 4
+            &lt;<span class="kp-code__keyword">small</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand-tag&quot;</span>&gt;PH//04&lt;/<span class="kp-code__keyword">small</span>&gt;
+        &lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Readings&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Rota&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Docs&quot;</span>&gt;Docs&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link kp-nav__link--cta&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Request access&quot;</span>&gt;Request access&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house navigation, end side&quot;</span> <span class="kp-code__keyword">data-kp-nav-side</span><span class="kp-code__string">=&quot;end&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span>&gt;
+            Pump house 4
+            &lt;<span class="kp-code__keyword">small</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand-tag&quot;</span>&gt;PH//04&lt;/<span class="kp-code__keyword">small</span>&gt;
+        &lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Readings&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Rota&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Docs&quot;</span>&gt;Docs&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link kp-nav__link--cta&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-cta&quot;</span> <span class="kp-code__keyword">data-kp-text</span><span class="kp-code__string">=&quot;Request access&quot;</span>&gt;Request access&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -360,5 +1302,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

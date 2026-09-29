@@ -191,6 +191,72 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toasts&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-feedback-toasts">
+                        <figcaption class="kp-fw-semibold">Toasts</figcaption>
+                        <p class="kp-text-muted">The stack below is a real <code>.kp-toasts</code> region, pinned to the corner of this stage instead of the window so it can be reviewed in place. Five toasts: the plain one on the popover surface, and four with a meaning — success, info, warning and destructive — each on the same plate and ink as the severity badge and the alert of that meaning, with its words saying the meaning as well; every theme restates the four, so no toast of meaning may look like the plain one. The words and the buttons on each plate must pass contrast on it. The toasts float on the popover surface with a boundary that must stay visible over anything behind them. The words sit in <code>.kp-toast__body</code>; the action button and the close button sit at the toast's right end, level with the words, in every toast and whatever the length of its text — so the buttons of the five line up down the stack. A close button that drops below the text or hugs it with no gap is a fault. Hover each button: its ground turns a shade of that toast's own plate (green on the success toast, red on the error toast, the popover colour on the plain one), never the theme's page hover, and its word still reads on it. Then press the buttons to raise real toasts in the window's corner: they must stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-toasts" role="status" aria-live="polite">
+    <div class="kp-toast">
+        <span class="kp-toast__body">Saved. The handover note is visible to the day shift.</span>
+        <button type="button" class="kp-button kp-button--ghost">Undo</button>
+    </div>
+    <div class="kp-toast kp-toast--success" data-kp-variant="success">
+        <span class="kp-toast__body"><b>Success:</b> incident INC-4471 closed.</span>
+        <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+    </div>
+    <div class="kp-toast kp-toast--info" data-kp-variant="info">
+        <span class="kp-toast__body"><b>Info:</b> 3 new readings since you opened this page.</span>
+        <button type="button" class="kp-button kp-button--ghost">Refresh</button>
+    </div>
+    <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
+        <span class="kp-toast__body"><b>Warning:</b> the vendor has not answered in 2 hours.</span>
+        <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+    </div>
+    <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
+        <span class="kp-toast__body"><b>Error:</b> the note was not saved; you are offline.</span>
+        <button type="button" class="kp-button kp-button--ghost">Retry</button>
+    </div>
+</div>
+<p style="margin: 0">
+    <button type="button" class="kp-button kp-button--secondary" data-cat-toast="">Raise a plain toast</button>
+    <button type="button" class="kp-button kp-button--secondary" data-cat-toast="success">Raise a success toast</button>
+    <button type="button" class="kp-button kp-button--secondary" data-cat-toast="error">Raise an error toast</button>
+</p>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toasts&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast__body&quot;</span>&gt;Saved. The handover note is visible to the day shift.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Undo&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--success&quot;</span> <span class="kp-code__keyword">data-kp-variant</span><span class="kp-code__string">=&quot;success&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Success:&lt;/<span class="kp-code__keyword">b</span>&gt; incident INC-4471 closed.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-toast__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--info&quot;</span> <span class="kp-code__keyword">data-kp-variant</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Info:&lt;/<span class="kp-code__keyword">b</span>&gt; 3 new readings since you opened this page.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Refresh&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--warning&quot;</span> <span class="kp-code__keyword">data-kp-variant</span><span class="kp-code__string">=&quot;warning&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Warning:&lt;/<span class="kp-code__keyword">b</span>&gt; the vendor has not answered in 2 hours.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-toast__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast kp-toast--destructive&quot;</span> <span class="kp-code__keyword">data-kp-variant</span><span class="kp-code__string">=&quot;destructive&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toast__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Error:&lt;/<span class="kp-code__keyword">b</span>&gt; the note was not saved; you are offline.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Retry&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin: 0&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-cat-toast</span><span class="kp-code__string">=&quot;&quot;</span>&gt;Raise a plain toast&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-cat-toast</span><span class="kp-code__string">=&quot;success&quot;</span>&gt;Raise a success toast&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-cat-toast</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Raise an error toast&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -259,5 +325,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

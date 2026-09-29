@@ -303,6 +303,652 @@
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-navigation-sidenav-side">
+                        <figcaption class="kp-fw-semibold">Side navigation</figcaption>
+                        <p class="kp-text-muted"><code>.kp-sidenav</code> in its default <code>side</code> mode stands beside the content on the card surface with a rule on its inner edge. The header and the footer stay put while the list scrolls — scroll inside the panel to check. The current page (<b>Line 2</b>) is marked by a ground and weight, not colour alone; hover any row and the hover must be different from the current mark. <b>Readings</b> is an open category: its chevron points down and its links are indented; <b>Maintenance</b> is closed — press it and it must open smoothly, not jump. The fourth link's label is sixty characters: it must end in an ellipsis inside the panel with its count (<code>.kp-sidenav__badge</code>) still whole at the end of the row; the panel must never scroll sideways.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<nav class="kp-sidenav" id="nv-side" aria-label="North site sections">
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-side"
+                ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-side" aria-current="page"
+                ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                    ><span class="kp-sidenav__badge">2</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-side"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                        ><span class="kp-sidenav__badge">14</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#sidenav-side"
+                        ><span class="kp-sidenav__icon" aria-hidden="true">↗</span
+                            ><span class="kp-sidenav__label">Pressure trends for all lines on the north site, last 24 hrs</span
+                                ><span class="kp-sidenav__badge">128</span></a
+                                >
+                            </li>
+                            <li><hr class="kp-sidenav__divider" /></li>
+                            <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                <button type="button" class="kp-sidenav__category-toggle">
+                                    <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                                </button>
+                                <div class="kp-sidenav__submenu">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Pressure</span></a>
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Flow rate</span></a>
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#sidenav-side"
+                                            ><span class="kp-sidenav__label">Pump cycles</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="kp-sidenav__category">
+                                <button type="button" class="kp-sidenav__category-toggle">
+                                    <span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span>
+                                </button>
+                                <div class="kp-sidenav__submenu">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Lock-outs</span></a>
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#sidenav-side"
+                                            ><span class="kp-sidenav__label">Spare parts</span></a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Vendors</span></a>
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Rota</span></a>
+                            </li>
+                            <li>
+                                <a class="kp-sidenav__link" href="#sidenav-side"><span class="kp-sidenav__label">Audit log</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+                </nav>
+                <div style="padding: 1rem; min-inline-size: 0">
+                    <p style="margin-block-start: 0">
+                        Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without
+                        anyone touching the valve.
+                    </p>
+                    <p>The content beside the panel starts at the panel's edge and is not covered by it.</p>
+                </div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-side&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;North site sections&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;North site&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;14&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;↗&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Pressure trends for all lines on the north site, last 24 hrs&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;128&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                                &gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">hr</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__divider&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-expanded</span>&gt;
+                                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category-toggle&quot;</span>&gt;
+                                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;≋&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">span</span>&gt;
+                                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__submenu&quot;</span>&gt;
+                                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Flow rate&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+                                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Pump cycles&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                                            &gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category-toggle&quot;</span>&gt;
+                                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;⚙&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Maintenance&lt;/<span class="kp-code__keyword">span</span>&gt;
+                                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__submenu&quot;</span>&gt;
+                                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Lock-outs&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>
+                                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Spare parts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                                            &gt;
+                                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Vendors&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Rota&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">li</span>&gt;
+                                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-side&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Audit log&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Signed in as the night shift&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">nav</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 1rem; min-inline-size: 0&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;
+                        Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40 and recovered without
+                        anyone touching the valve.
+                    &lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span>&gt;The content beside the panel starts at the panel's edge and is not covered by it.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-sidenav-slim">
+                        <figcaption class="kp-fw-semibold">Slim rail</figcaption>
+                        <p class="kp-text-muted">The left panel is a collapsed rail (<code>data-kp-sidenav-slim-collapsed</code>): icons only, each still with an accessible name, the wordmark swapped for the monogram "N". Hover it — it must <i>not</i> widen, because it was not asked to. The middle rail has <code>data-kp-sidenav-expand-on-hover</code>: hover it and the labels must come back without the rail pushing the content beside it. The right panel is the same rail expanded. Press <b>Collapse or expand the right rail</b>: the width must change with the theme's own timing, and the labels must not overflow while it narrows. The button is wired by the package alone (<code>data-kp-sidenav-slim-toggle</code> with <code>aria-controls</code>), and a screen reader hears it as expanded while the rail is wide.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<nav class="kp-sidenav" id="nv-slim-a" aria-label="Rail, collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
+    <div class="kp-sidenav__header">
+        <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+        <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+    </div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim"
+                ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim"
+                ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                    ><span class="kp-sidenav__badge">14</span></a
+                    >
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <nav
+    class="kp-sidenav"
+    id="nv-slim-b"
+    aria-label="Rail, expands on hover"
+    data-kp-sidenav-slim
+    data-kp-sidenav-slim-collapsed
+    data-kp-sidenav-expand-on-hover
+    >
+    <div class="kp-sidenav__header">
+        <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+        <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+    </div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim"
+                ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim"
+                ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                    ><span class="kp-sidenav__badge">14</span></a
+                    >
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="kp-sidenav" id="nv-slim-c" aria-label="Rail, expanded" data-kp-sidenav-slim>
+        <div class="kp-sidenav__header">
+            <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
+            <span class="kp-sidenav__title" data-kp-sidenav-slim-show>N</span>
+        </div>
+        <div class="kp-sidenav__scroll">
+            <ul class="kp-sidenav__list">
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim" aria-current="page"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                        ><span class="kp-sidenav__badge">14</span></a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </nav>
+</div>
+<div class="sc-example__stage">
+<button type="button" class="kp-button kp-button--secondary" data-kp-sidenav-slim-toggle aria-controls="nv-slim-c">
+    Collapse or expand the right rail
+</button>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-slim-a&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Rail, collapsed&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span> <span class="kp-code__keyword">data-kp-sidenav-slim-collapsed</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;North site&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;N&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;14&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-slim-b&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Rail, expands on hover&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-slim</span>
+    <span class="kp-code__keyword">data-kp-sidenav-slim-collapsed</span>
+    <span class="kp-code__keyword">data-kp-sidenav-expand-on-hover</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;North site&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;N&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;14&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-slim-c&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Rail, expanded&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;North site&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;N&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Alarms&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__badge&quot;</span>&gt;14&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-slim-c&quot;</span>&gt;
+    Collapse or expand the right rail
+&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-sidenav-slim-toggle">
+                        <figcaption class="kp-fw-semibold">Rail toggle</figcaption>
+                        <p class="kp-text-muted">Each rail carries its own toggle in its footer (<code>data-kp-sidenav-slim-toggle</code>), drawn as a rail entry (<code>.kp-sidenav__link</code>) holding only an arrow. The left rail starts collapsed and its arrow points out (»); the right one starts wide and its arrow points in («). Press either: the rail must change width with the theme's own timing, the arrow must turn, and the button must stay where the pointer and the focus are — press it again from the keyboard (Enter or Space) without moving. The toggle must look like part of the rail in every theme, not a stray button, and its focus ring must stay visible in both widths. A screen reader hears "Expand the side navigation" or "Collapse the side navigation to its icons", and every link in the collapsed rail keeps its name.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<nav class="kp-sidenav" id="nv-rt-a" aria-label="Invoices, starts collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-slim-toggle" aria-current="page"
+                ><span class="kp-sidenav__icon" aria-hidden="true">▤</span
+                    ><span class="kp-sidenav__label">All invoices</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">✎</span><span class="kp-sidenav__label">Drafts</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Overdue</span></a
+                    >
+                </li>
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Customers</span></a
+                    >
+                </li>
+            </ul>
+        </div>
+        <div class="kp-sidenav__footer">
+            <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-rt-a">
+                <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+                <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+            </button>
+        </div>
+    </nav>
+    <nav class="kp-sidenav" id="nv-rt-b" aria-label="Invoices, starts wide" data-kp-sidenav-slim>
+        <div class="kp-sidenav__scroll">
+            <ul class="kp-sidenav__list">
+                <li>
+                    <a class="kp-sidenav__link" href="#sidenav-slim-toggle" aria-current="page"
+                    ><span class="kp-sidenav__icon" aria-hidden="true">▤</span
+                        ><span class="kp-sidenav__label">All invoices</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                        ><span class="kp-sidenav__icon" aria-hidden="true">✎</span><span class="kp-sidenav__label">Drafts</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                        ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Overdue</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#sidenav-slim-toggle"
+                        ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Customers</span></a
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="kp-sidenav__footer">
+                <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-rt-b">
+                    <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+                    <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+                </button>
+            </div>
+        </nav>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-rt-a&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Invoices, starts collapsed&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span> <span class="kp-code__keyword">data-kp-sidenav-slim-collapsed</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;All invoices&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;✎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Drafts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overdue&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Customers&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-rt-a&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;«&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;»&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-rt-b&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Invoices, starts wide&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;▤&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;All invoices&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;✎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Drafts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overdue&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-slim-toggle&quot;</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◎&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Customers&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                        &gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-rt-b&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-hide</span>&gt;«&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim-show</span>&gt;»&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-sidenav-over">
+                        <figcaption class="kp-fw-semibold">Over the page</figcaption>
+                        <p class="kp-text-muted">The left box is an <code>over</code> panel frozen open inside its box (<code>data-kp-sidenav-position="absolute"</code>): it covers the content, and the backdrop behind it <i>dims</i> the box — by darkening, never by tinting it with the theme's colour. The panel must have an edge against the dimmed content in every theme. Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is open.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div style="position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden">
+    <p style="margin: 1rem">
+        Incident INC-4471 is open on line 2. The day shift checks the gauge against the sensor before reopening the line.
+    </p>
+    <nav
+    class="kp-sidenav"
+    id="nv-over-frozen"
+    aria-label="Incident sections, frozen open"
+    data-kp-sidenav-mode="over"
+    data-kp-sidenav-position="absolute"
+    data-kp-sidenav-open="true"
+    style="--kp-sidenav-width: 13rem"
+    >
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+                ><span class="kp-sidenav__label">Summary</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Handover</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+<div>
+    <button
+    type="button"
+    class="kp-sidenav__toggle kp-button kp-button--secondary"
+    data-kp-sidenav-toggle
+    aria-controls="nv-over-live"
+    >
+    Open the panel
+</button>
+<nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over">
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+                ><span class="kp-sidenav__label">Summary</span></a
+                >
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+            </li>
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Handover</span></a>
+            </li>
+        </ul>
+    </div>
+    <div class="kp-sidenav__footer">
+        <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="nv-over-live">
+            Close
+        </button>
+    </div>
+</nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin: 1rem&quot;</span>&gt;
+        Incident INC-4471 is open on line 2. The day shift checks the gauge against the sensor before reopening the line.
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-over-frozen&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident sections, frozen open&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-position</span><span class="kp-code__string">=&quot;absolute&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-open</span><span class="kp-code__string">=&quot;true&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-sidenav-width: 13rem&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Summary&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Handover&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-button kp-button--secondary&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-over-live&quot;</span>
+    &gt;
+    Open the panel
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-over-live&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident sections&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Summary&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Handover&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-over-live&quot;</span>&gt;
+            Close
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -462,5 +1108,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -199,6 +199,116 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-feedback-alerts">
+                        <figcaption class="kp-fw-semibold">Alerts</figcaption>
+                        <p class="kp-text-muted">Five alerts — the plain one and the four flavours. Each flavour is a full plate in its status colour, and the text on it must pass contrast <i>on that plate</i>, not on the page: check the warning one in particular, where yellow grounds tempt a theme into pale ink. Each flavour also names itself in words ("Warning: ") so the plates do not rely on colour. The icon sits on the first line of the text, not centred on the block, and the close button sits at the far end at a size you can hit. An alert has no hover state: pointing at one must change nothing.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-alert" role="status">
+    <span class="kp-alert__body">The export schedule changes to 02:00 from Monday.</span>
+</div>
+<p></p>
+<div class="kp-alert kp-alert--success" role="status" data-kp-semantic>
+    <span class="kp-alert__icon" aria-hidden="true">✓</span>
+    <span class="kp-alert__body"
+    ><span class="kp-alert__label">Success: </span>The incident was closed and the vendor was told.</span
+    >
+    <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+</div>
+<p></p>
+<div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+    <span class="kp-alert__icon" aria-hidden="true">!</span>
+    <span class="kp-alert__body"
+    ><span class="kp-alert__label">Warning: </span>The service contract for pump house 4 ends in 12 days.</span
+    >
+    <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+</div>
+<p></p>
+<div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+    <span class="kp-alert__icon" aria-hidden="true">i</span>
+    <span class="kp-alert__body"
+    ><span class="kp-alert__label">Info: </span>Readings are delayed by up to five minutes tonight.</span
+    >
+    <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+</div>
+<p></p>
+<div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+    <span class="kp-alert__icon" aria-hidden="true">✕</span>
+    <span class="kp-alert__body"><span class="kp-alert__label">Error: </span>The alarm panel stopped reporting at 03:12.</span>
+    <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;The export schedule changes to 02:00 from Monday.&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--success&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;✓&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Success: &lt;/<span class="kp-code__keyword">span</span>&gt;The incident was closed and the vendor was told.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;The service contract for pump house 4 ends in 12 days.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;i&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Info: &lt;/<span class="kp-code__keyword">span</span>&gt;Readings are delayed by up to five minutes tonight.&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Error: &lt;/<span class="kp-code__keyword">span</span>&gt;The alarm panel stopped reporting at 03:12.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-feedback-alert-long">
+                        <figcaption class="kp-fw-semibold">A long alert</figcaption>
+                        <p class="kp-text-muted">Four sentences in a warning. The text wraps into a comfortable block, and every wrapped line starts at the same inset as the first — never back under the icon. The icon stays at the top beside the first line, and the close button stays at the top of its column rather than drifting to the vertical middle. Narrow the pane: the text column shrinks while the icon and the close button keep their size. Read it in the theme with the loudest warning plate; if you have to squint by the third line, the ink on the plate is too weak for body text.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 44rem">
+    <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+        <span class="kp-alert__icon" aria-hidden="true">!</span>
+        <span class="kp-alert__body"
+        ><span class="kp-alert__label">Warning: </span>The nightly export of the pressure telemetry for pump house 4 did not
+        finish. It stopped at 03:12, after 41 of the 60 files had been written. The files that were written are complete and
+        can be used as they are. Run the export again from the admin page to write the remaining 19, or ask the on-call
+        engineer to do it before the day shift starts.</span
+        >
+        <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 44rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-semantic</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;The nightly export of the pressure telemetry for pump house 4 did not
+        finish. It stopped at 03:12, after 41 of the 60 files had been written. The files that were written are complete and
+        can be used as they are. Run the export again from the admin page to write the remaining 19, or ask the on-call
+        engineer to do it before the day shift starts.&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -264,5 +374,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

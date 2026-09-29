@@ -189,6 +189,62 @@
 &lt;/<span class="kp-code__keyword">nav</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-navigation-breadcrumb">
+                        <figcaption class="kp-fw-semibold">Breadcrumb</figcaption>
+                        <p class="kp-text-muted">The separator between crumbs is the theme's glyph in the muted ink, and it belongs to the crumb after it — it must never be the last thing on a line with its crumb on the next. The last crumb is the page you are on: it is not a link, and it must look like plain text beside the links rather than like a link that forgot its underline. The second trail has seven levels and a long last crumb; in the narrow pane it must wrap onto more lines with the separators still between the words, never scroll sideways.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<nav class="kp-breadcrumb" aria-label="Breadcrumb">
+    <ol>
+        <li><a href="#breadcrumb">Sites</a></li>
+        <li><a href="#breadcrumb">Pump house 4</a></li>
+        <li><span aria-current="page">Incident INC-4471</span></li>
+    </ol>
+</nav>
+<div class="cat-resize" style="margin-block-start: 1rem; inline-size: 18rem">
+    <nav class="kp-breadcrumb" aria-label="Breadcrumb, deep">
+        <ol>
+            <li><a href="#breadcrumb">Sites</a></li>
+            <li><a href="#breadcrumb">North</a></li>
+            <li><a href="#breadcrumb">Pump house 4</a></li>
+            <li><a href="#breadcrumb">Line 2</a></li>
+            <li><a href="#breadcrumb">Manifold</a></li>
+            <li><a href="#breadcrumb">Incidents</a></li>
+            <li>
+                <span aria-current="page">INC-4471: pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40</span>
+            </li>
+        </ol>
+    </nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-breadcrumb&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Breadcrumb&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Sites&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Incident INC-4471&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem; inline-size: 18rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-breadcrumb&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Breadcrumb, deep&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ol</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Sites&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;North&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Manifold&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#breadcrumb&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;INC-4471: pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -248,5 +304,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

@@ -197,6 +197,82 @@
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-data-copyable">
+                        <figcaption class="kp-fw-semibold">Copyable value</figcaption>
+                        <p class="kp-text-muted">The value is in the mono face with its button beside it on one baseline. Press the first <b>Copy</b>: the button's own word must change to <b>Copied</b> and back after a moment, on the success colour — the word is the confirmation, the colour only the second carrier. Every register restates that plate over its own button rule, so it must hold in every theme, hovered or not. The second row is frozen in that confirmed state so it can be compared across themes. The third is frozen after a refused copy (<code>data-kp-copy-failed</code>): the package announces the refusal in a toast and marks the button too — the destructive ink and a dashed frame — while the word stays "Copy", because pressing it again is the way out. Compare it with the idle button above it. The last value is a 70-character key in a narrow pane: it must wrap, and its button must stay inside the pane.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<p style="margin-block-start: 0">
+    <span class="kp-copyable">
+        <span class="kp-copyable__value" id="dt-copy-ref">INC-4471</span>
+        <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="dt-copy-ref">Copy</button>
+    </span>
+</p>
+<p>
+    <span class="kp-copyable">
+        <span class="kp-copyable__value">HF-2201</span>
+        <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copied>Copied</button>
+    </span>
+</p>
+<p>
+    <span class="kp-copyable">
+        <span class="kp-copyable__value">PT-204</span>
+        <button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy-failed>Copy</button>
+    </span>
+</p>
+<div class="cat-resize" style="inline-size: 18rem">
+    <span class="kp-copyable">
+        <span class="kp-copyable__value">inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c</span>
+        <button
+        type="button"
+        class="kp-button kp-button--ghost kp-copyable__button"
+        data-kp-copy
+        data-kp-copy-value="inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c"
+        aria-label="Copy the incident key"
+        >
+        Copy
+    </button>
+</span>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;dt-copy-ref&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy</span><span class="kp-code__string">=&quot;dt-copy-ref&quot;</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span>&gt;HF-2201&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copied</span>&gt;Copied&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span>&gt;PT-204&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span> <span class="kp-code__keyword">data-kp-copy-failed</span>&gt;Copy&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 18rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-copyable__value&quot;</span>&gt;inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span>
+        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-copyable__button&quot;</span>
+        <span class="kp-code__keyword">data-kp-copy</span>
+        <span class="kp-code__keyword">data-kp-copy-value</span><span class="kp-code__string">=&quot;inc_4471_pumphouse4_line2_manifold_pressure_drop_20260913T021000Z_a91c&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Copy the incident key&quot;</span>
+        &gt;
+        Copy
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -273,5 +349,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

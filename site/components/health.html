@@ -181,6 +181,38 @@
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;down&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Unreachable&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
                 </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-data-health">
+                        <figcaption class="kp-fw-semibold">Health</figcaption>
+                        <p class="kp-text-muted">Every status is a word <i>and</i> a dot, and the word is what carries it — cover the dots with a finger and the row must still read. The dot takes the success, warning and alarm colours and has a boundary, so a yellow dot on a pale card is still a dot. The fourth has no <code>data-state</code> at all: its dot must look neutral, not like a fourth colour. In the narrow pane the long status must wrap beside its dot, with the dot staying on the first line.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Healthy</span>
+<span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Degraded</span>
+<span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span> Unreachable</span>
+<span class="kp-health"><span class="kp-health__dot" aria-hidden="true"></span> Not checked yet</span>
+<div class="cat-resize" style="inline-size: 16rem">
+    <span class="kp-health" data-state="warn"
+    ><span class="kp-health__dot" aria-hidden="true"></span> Degraded: sensor PT-204 reads 1.1 bar, the gauge 1.0 bar, for 43
+    minutes</span
+    >
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;ok&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Healthy&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;warn&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Degraded&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;down&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Unreachable&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Not checked yet&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 16rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;warn&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-health__dot&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Degraded: sensor PT-204 reads 1.1 bar, the gauge 1.0 bar, for 43
+    minutes&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
@@ -235,5 +267,6 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>
