@@ -162,6 +162,22 @@ bring anything back:
      `selectors is undefined`. `carry` refuses while any pair is
      unapproved, so step 1 cannot be skipped.
 
+**Pixel checks [scope-138].** From hash version 10 the hash is the block's
+markup alone (Kenny, 2026-09-29: "de hash is nu enkel de html"); what CSS and
+scripts do to a block is judged by its pixels. `node gates/verdicts.mjs
+pixels` photographs every approved pair twice, a short pause apart, at the
+commit it was approved or last carried at and at HEAD, in one run on one
+machine, in Playwright's browser of its engine at its ratio and 1920 px wide.
+Each block is photographed alone on the page and scrolled from the top
+before every stage, so a block that moved because another was added above it,
+or a tooltip placed against the window, does not read as changed. Equal
+pixels carry the approval to HEAD; different pixels, a block that is gone,
+or a photograph that did not repeat bring the pair back to Kenny.
+`catalogue/pixel-checks.json` records each outcome, the review page and
+`npm run advice` count a reopened or unstable pair as open, and a second run
+at the same HEAD compares only what did not carry. It runs locally, never in
+a workflow (Kenny, 2026-09-29).
+
 The entries recorded before verdicts kept a ratio (the light-theme review of
 2026-09-15, at d499b6b2) get theirs once, from readings of the blocks at
 several ratios: `node gates/verdicts.mjs annotate-ratio --from <readings.json>

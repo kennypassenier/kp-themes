@@ -553,7 +553,9 @@ export const PIXELS = 'catalogue/pixel-checks.json';
  */
 async function pixels(args) {
     const width = (args.includes('--width') && Number(args[args.indexOf('--width') + 1])) || 1920;
-    const dirty = git('status', '--porcelain', '--', 'css', 'js', 'catalogue', 'themes', 'fonts', 'components', 'research');
+    // The register and this command's own output may be dirty: a second run
+    // at the same HEAD picks up where the first left them.
+    const dirty = git('status', '--porcelain', '--', 'css', 'js', 'catalogue', 'themes', 'fonts', 'components', 'research', `:!${REGISTER}`, `:!${PIXELS}`);
     if (dirty) throw new Error(`pixels compares against HEAD, and the working tree has changes:\n${dirty}`);
     const head = git('rev-parse', 'HEAD');
     const register = readRegister();
@@ -569,7 +571,11 @@ async function pixels(args) {
                 groups.set(id, group);
             }
     /** @type {Record<string, Record<string, Record<string, { state: string, from: string }>>>} */
-    const checks = {};
+    let checks = {};
+    if (existsSync(join(ROOT, PIXELS))) {
+        const earlier = JSON.parse(readFileSync(join(ROOT, PIXELS), 'utf8'));
+        if (earlier.commit === head && earlier.hashVersion === register.hashVersion) checks = earlier.checks;
+    }
     const put = (
         /** @type {string} */ key,
         /** @type {string} */ theme,
@@ -664,7 +670,6 @@ async function shootAt({ commit, root, engine, ratio, width, requests }) {
             reducedMotion: 'reduce',
             ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}),
         });
-        const page = await context.newPage();
         /** @type {Map<string, { themes: Set<string>, keys: Set<string> }>} */
         const byPage = new Map();
         for (const request of requests) {
@@ -675,14 +680,29 @@ async function shootAt({ commit, root, engine, ratio, width, requests }) {
             wanted.keys.add(request.key);
             byPage.set(block.page, wanted);
         }
-        for (const [href, wanted] of byPage) {
-            try {
-                const shots = await shootPlaywright(page, { base: server.base, href, themes: [...wanted.themes], width, only: [...wanted.keys] });
-                for (const [k, v] of shots) out.set(k, v);
-            } catch (error) {
-                console.error(`  ${href} at ${commit ?? 'the working tree'}: ${String(error).split('\n')[0]}`);
+        // Four review pages at a time, each in its own tab of the one browser,
+        // with a line per page so a long run shows where it is.
+        const queue = [...byPage.entries()];
+        const where = commit ? String(commit).slice(0, 12) : 'HEAD';
+        const base = server.base;
+        let done = 0;
+        const worker = async () => {
+            const page = await context.newPage();
+            for (let next = queue.shift(); next; next = queue.shift()) {
+                const [href, wanted] = next;
+                const started = Date.now();
+                try {
+                    const shots = await shootPlaywright(page, { base, href, themes: [...wanted.themes], width, only: [...wanted.keys] });
+                    for (const [k, v] of shots) out.set(k, v);
+                } catch (error) {
+                    console.error(`  ${href} at ${where}: ${String(error).split('\n')[0]}`);
+                }
+                done += 1;
+                console.log(`  ${where}: ${done}/${byPage.size} pages, ${href} in ${Math.round((Date.now() - started) / 1000)} s`);
             }
-        }
+            await page.close();
+        };
+        await Promise.all([worker(), worker(), worker(), worker()]);
         return out;
     } finally {
         await browser?.close();

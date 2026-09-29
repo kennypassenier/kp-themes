@@ -221,12 +221,25 @@ export async function shootPlaywright(page, { base, href, themes, width, height 
     for (const theme of themes) {
         const blocks = await page.evaluate(PREPARE, { base, theme, only });
         for (const block of blocks) {
+            // The block alone on the page and the page at its top, so it sits
+            // where it sat on the other side of the comparison: a theme's
+            // texture is drawn against the page, and a block that moved down
+            // because another was added above it would read as changed.
+            await page.evaluate((id) => {
+                for (const section of document.querySelectorAll('.cat-block[id], main section[id]'))
+                    /** @type {HTMLElement} */ (section).hidden = section.id !== id && !section.contains(document.getElementById(id));
+                window.scrollTo(0, 0);
+            }, block.id);
             const parts = block.stages > 0 ? page.locator(`[id="${block.id}"] .cat-stage`) : page.locator(`[id="${block.id}"]`);
             const shot = async () => {
                 const hash = createHash('sha256');
                 const count = await parts.count();
                 for (let i = 0; i < count; i += 1) {
                     const part = parts.nth(i);
+                    // From the top every time, so a stage is scrolled to the
+                    // same place in each reading: a tooltip or a dialog is
+                    // placed against the window, not the page.
+                    await page.evaluate(() => window.scrollTo(0, 0));
                     await part.scrollIntoViewIfNeeded().catch(() => {});
                     hash.update(await part.screenshot({ animations: 'disabled', caret: 'hide', timeout: 15_000 }));
                 }
