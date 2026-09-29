@@ -22,6 +22,12 @@
 # and he gives that command before a release.
 set -uo pipefail
 
+# Standing rule 7d: git exports GIT_DIR (absolute in a linked worktree),
+# GIT_INDEX_FILE and friends to this hook, and gates/drift.test.mjs runs
+# `git init` in a fixture. On 2026-09-29 a commit from a worktree came back
+# with an index that had every file deleted. Drop them.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_PREFIX GIT_COMMON_DIR
+
 # Kenny, 2026-09-16 (gate-cache): a check whose inputs did not move does
 # not run. Each check's input set is recorded while it runs, so nothing
 # here is a hand-kept list. Measured over the last 200 commits of this

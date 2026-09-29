@@ -18,10 +18,10 @@
                 "components/*.d.ts",
                 "css/tailwind-bridge.css"
             ],
-            "hash": "0ab035c717cc175818d976d5e7e0fa33297c7b13fb6663e125e66afdfb8ef7a1",
+            "hash": "9a27a71960bb8863f8d6246dd73d37dfedd37ea603b595b9b70d849d5fa9a285",
             "doc": "0ae509471f1839c2ea63a4ed251b6bcf9bb26bbf39a11b1a49d6736c9015a6de",
             "files": {
-                ".claude/hooks/gates.sh": "452162aac0df54dfea8358931223c99c478b2e6d684f8413ed9349b7145dfe74",
+                ".claude/hooks/gates.sh": "aecdf9407601b1db250cff3f7fdbd7488bb3bdfd2d3829eeeac9b26e6ce782f4",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",

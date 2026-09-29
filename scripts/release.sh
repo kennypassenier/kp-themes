@@ -77,6 +77,12 @@ fi
 
 # A clean checkout of the tag: tracked files only, full history (a linked
 # worktree shares this repository's objects).
+# One full test run per release (Kenny, 2026-09-29): when the commit gate
+# stamped exactly this tree green (workstation/bin/gate-stamp), the tag is
+# that tree and `npm run gates` is not run a second time.
+fresh=0
+if [ -x "$HOME/Projects/workstation/bin/gate-stamp" ] && "$HOME/Projects/workstation/bin/gate-stamp" fresh; then fresh=1; fi
+
 work="$(mktemp -d)"
 cleanup() { git worktree remove --force "$work/src" >/dev/null 2>&1 || true; rm -rf "$work"; }
 trap cleanup EXIT
@@ -89,7 +95,7 @@ src="$work/src"
   npm ci
   # The tag must pass the same gates as a commit (H2, KT7).
   echo "== npm run gates"
-  npm run gates
+  if [ "$fresh" = 1 ]; then echo "already green on this tree at commit (gate-stamp)"; else npm run gates; fi
   echo "== checksums"
   npm run checksums
   echo "== fonts.tar"
