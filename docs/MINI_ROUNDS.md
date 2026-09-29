@@ -230,4 +230,5 @@ register's colours are.
 | fix-78-M1 | Does the homelab dashboard drop its workaround for the select picker once it takes the kp-themes that carries fix-78, and does the page look the same? | open |
 | fix-79-M1 | Does the homelab dashboard drop its workaround for the switch's words once it takes the kp-themes that carries fix-79, and does the page look the same? | open |
 | fix-80-M1 | Does the homelab dashboard drop its workaround for the first load's progress once it takes the kp-themes that carries fix-80, and does the page look the same? | open |
+| fix-81-M1 | Does dark's film follow the pointer after a switch in the picker, without a reload, once kyu or almanac takes the kp-themes that carries fix-81? | open |
 

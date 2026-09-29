@@ -4442,6 +4442,47 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-81 · Dark's pointer effect stood still after a theme switch (2026-09-29)
+
+**1 · What went wrong.** Kenny: dark's oxide film followed the pointer in kyu
+but not in almanac, the homelab dashboard or JobTracker. `attachEffects`
+armed the pointer and press buses only if the theme active at attach asked
+for them (`js/effects.js`, the `asked(POINTER_KNOB)` check), so a page that
+attached in another theme and then wore dark never wrote the pointer down.
+Measured in the consumers as well: JobTracker and the homelab dashboard
+never call `attachEffects` at all; kyu and almanac do, through chassis-rs's
+`chassis.js`, after `theme-boot.js` has set the stored theme.
+
+**2 · Which gate let it through.** `tests/pointer.spec.mjs` always attached
+with the tracking theme already on.
+
+**3 · Where else the same fault sits.** The fault as a property: *a hook that
+depends on the theme and is decided once at attach.* **Gezocht met:**
+`grep -n "asked(" js/effects.js`: the caret (`--kp-caret`), which chassis-rs
+already re-attaches on `kp-theme-change` itself, the measure
+(`--kp-measure`, blueprint's live dimension lines, still decided at attach),
+and the pointer and press buses fixed here.
+
+**4 · How we prevent recurrence.** Each bus is armed the first time a theme
+asks for it: at attach, on a `data-theme` change, and on a lazily loaded
+register. The new test in `tests/pointer.spec.mjs` attaches in formal,
+switches to dark and moves the pointer; it failed first and passes (14 in
+both engines). The consumers that never attach are reported to their own
+threads.
+
+**5 · What the remedy costs.** One observer and one listener per attach.
+
+**6 · Who enforces it.** Code: the pointer spec.
+
+**7 · How we measure that it works, and when.** When kyu or almanac takes
+the next kp-themes through chassis-rs: switching to dark in the picker makes
+the film follow the pointer without a reload. Queued as fix-81-M1.
+
+**8 · If the measurement fails.** The kit re-attaches on `kp-theme-change`
+for the pointer the way it already does for the caret.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-80 · A datatable's first load showed no sign of progress (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard (its
