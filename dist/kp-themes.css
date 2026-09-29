@@ -4994,6 +4994,15 @@
         color: inherit;
     }
 
+    /* And its hover is a veil of that ink, not the page's highlight: a
+       page-coloured plate under the bar's ink read 1.12:1 in nostromo
+       [fix-82]. --kp-nav-ink names the ink when a register wants another
+       than the bar's own colour. */
+    .kp-nav :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: hsl(from var(--kp-nav-ink, currentColor) h s l / 0.12);
+        color: inherit;
+    }
+
     .kp-button--ghost:hover:not(:disabled) {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
@@ -8424,6 +8433,24 @@
 
     .kp-datatable__sort-summary {
         flex: 1 1 auto;
+    }
+
+    /* The multi-sort summary's own line [fix-83]: one line high whatever it
+       says, so sorting moves nothing, and the way back to the opening sort
+       keeps its room when there is nothing to go back to. */
+    .kp-datatable__sort-line {
+        flex-wrap: nowrap;
+    }
+
+    .kp-datatable__sort-line > .kp-datatable__sort-summary {
+        min-inline-size: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    [data-kp-datatable-sort-reset][data-kp-datatable-at-opening] {
+        visibility: hidden;
     }
 
     /* Refreshing: a spinner beside the status words [#states]. */
@@ -34092,6 +34119,12 @@
 
     [data-theme='nostromo'] .kp-button--ghost:hover:not(:disabled) {
         background: var(--card);
+    }
+
+    /* In the bar the hover is a veil of the bar's ink, as in the package;
+       the card plate above is the page's and read 1.12:1 there [fix-82]. */
+    [data-theme='nostromo'] .kp-nav :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: hsl(from var(--kp-nav-ink, currentColor) h s l / 0.12);
     }
 
     [data-theme='nostromo'] .kp-button--destructive,

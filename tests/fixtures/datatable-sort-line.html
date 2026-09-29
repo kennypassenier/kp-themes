@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>A data table sorted on several columns</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-83: a search beside a multi-sort; the homelab dashboard's
+             search shrank and moved with every key added. -->
+        <div class="kp-datatable" data-kp-datatable data-kp-sort-multi data-kp-page-sizes="none" data-test="table" style="inline-size: 60rem">
+            <div class="kp-datatable__bar">
+                <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search incidents" data-test="search" />
+            </div>
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <caption class="kp-sr-only">
+                        Incidents
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" data-kp-sort="text">Reference</th>
+                            <th scope="col" data-kp-sort="text">Site</th>
+                            <th scope="col" data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical">Severity</th>
+                            <th scope="col" data-kp-sort="number">Hours open</th>
+                            <th scope="col" data-kp-sort="text">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INC-4471</td>
+                            <td>Antwerp</td>
+                            <td>High</td>
+                            <td>12</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td>INC-4472</td>
+                            <td>Ghent</td>
+                            <td>Low</td>
+                            <td>3</td>
+                            <td>Closed</td>
+                        </tr>
+                        <tr>
+                            <td>INC-4473</td>
+                            <td>Leuven</td>
+                            <td>Critical</td>
+                            <td>40</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td>INC-4474</td>
+                            <td>Bruges</td>
+                            <td>Medium</td>
+                            <td>7</td>
+                            <td>Watching</td>
+                        </tr>
+                        <tr>
+                            <td>INC-4475</td>
+                            <td>Mechelen</td>
+                            <td>High</td>
+                            <td>21</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td>INC-4476</td>
+                            <td>Hasselt</td>
+                            <td>Low</td>
+                            <td>1</td>
+                            <td>Closed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="kp-datatable__bar">
+                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+            </div>
+        </div>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

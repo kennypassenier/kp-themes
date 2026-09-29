@@ -178,6 +178,8 @@ var init_strings = __esm({
       },
       tableSortedBy: (keys) => `Sorted by ${keys.join(", then ")}.`,
       tableNotSorted: "Not sorted.",
+      tableSortReset: "Reset the sort",
+      tableBusyElapsed: (seconds) => seconds < 60 ? `${seconds} s so far` : `${Math.floor(seconds / 60)} min ${seconds % 60} s so far`,
       tableColumns: "Columns",
       tableColumnsLabel: "Visible columns",
       tableColumnLocked: (column) => `${column} (always shown)`,
@@ -6837,6 +6839,17 @@ function attachDataTables(root = document, {
       ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready"
     );
     let busyText = null;
+    let failReason = null;
+    let busySince = null;
+    let busyTimer = null;
+    let busyClock = null;
+    const busySeconds = () => Math.max(0, Math.floor((Date.now() - /** @type {number} */
+    busySince) / 1e3));
+    const stopBusyClock = () => {
+      if (busyTimer !== null) clearInterval(busyTimer);
+      busyTimer = null;
+      busyClock = null;
+    };
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
     const emptyWasHidden = empty?.hidden ?? false;
     const densityWas = wrap.getAttribute("data-density");
@@ -7104,14 +7117,27 @@ function attachDataTables(root = document, {
       wrap.insertBefore(control, tableBlock);
     }
     let sortSummary = null;
+    let openingSort = null;
     if (multi) {
       sortSummary = /** @type {HTMLElement | null} */
       wrap.querySelector(SORT_SUMMARY);
       if (sortSummary === null) {
-        sortSummary = add2(make2("p", "kp-datatable__status kp-datatable__sort-summary"));
+        const line = add2(make2("div", "kp-datatable__bar kp-datatable__sort-line"));
+        sortSummary = make2("p", "kp-datatable__status kp-datatable__sort-summary");
         sortSummary.dataset.kpDatatableSortSummary = "";
         sortSummary.setAttribute("aria-live", "polite");
-        ensureTopBar().prepend(sortSummary);
+        line.append(sortSummary);
+        if (wrap.querySelector(SORT_RESET) === null) {
+          const back = (
+            /** @type {HTMLButtonElement} */
+            make2("button", "kp-button kp-button--ghost kp-button--sm")
+          );
+          back.type = "button";
+          back.dataset.kpDatatableSortReset = "";
+          back.textContent = getStrings().tableSortReset;
+          line.append(back);
+        }
+        wrap.insertBefore(line, tableBlock);
       }
     }
     const locked = headers.map(
@@ -7172,12 +7198,13 @@ function attachDataTables(root = document, {
       gridReadout.textContent = s0.tableGridStart;
       putUnder(gridReadout);
     }
-    if (serverMode && failedSlot === null) {
+    if (failedSlot === null) {
       failedSlot = add2(make2("div", "kp-alert kp-alert--destructive"));
       failedSlot.dataset.kpDatatableFailed = "";
       failedSlot.setAttribute("role", "alert");
       failedSlot.hidden = true;
       const text = make2("p");
+      text.dataset.kpDatatableFailedReason = "";
       text.textContent = s0.tableFailed;
       const retry = (
         /** @type {HTMLButtonElement} */
@@ -7401,6 +7428,10 @@ function attachDataTables(root = document, {
         mark.textContent = String(index + 1);
         (header.querySelector("button") ?? header).append(mark);
       });
+      if (openingSort !== null) {
+        const atOpening = JSON.stringify(sorts) === openingSort;
+        for (const back of wrap.querySelectorAll(SORT_RESET)) back.toggleAttribute("data-kp-datatable-at-opening", atOpening);
+      }
       if (sortSummary !== null) {
         sortSummary.textContent = sorts.length === 0 ? s.tableNotSorted : s.tableSortedBy(
           sorts.map(
@@ -7411,6 +7442,7 @@ function attachDataTables(root = document, {
             )
           )
         );
+        sortSummary.title = sortSummary.textContent ?? "";
       }
     };
     const syncColumns = () => {
@@ -7508,6 +7540,17 @@ function attachDataTables(root = document, {
         status.append(
           state === "loading" ? busyText ?? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, count, serverMode ? count : all.length)
         );
+        stopBusyClock();
+        if (state === "loading" && busySince !== null) {
+          busyClock = make2("span", "kp-datatable__busy-clock");
+          busyClock.dataset.kpBusyClock = "";
+          busyClock.setAttribute("aria-hidden", "true");
+          busyClock.textContent = s.tableBusyElapsed(busySeconds());
+          status.append(" ", busyClock);
+          busyTimer = setInterval(() => {
+            if (busyClock !== null) busyClock.textContent = getStrings().tableBusyElapsed(busySeconds());
+          }, 1e3);
+        }
       }
       if (pager !== null) {
         pager.textContent = "";
@@ -7519,7 +7562,16 @@ function attachDataTables(root = document, {
         pager.append(label);
         pager.append(pagerButton(s.next, page < pages - 1, () => page += 1));
       }
-      if (empty !== null) empty.hidden = count > 0 || state !== "ready";
+      if (empty !== null) {
+        empty.hidden = count > 0 || state !== "ready";
+        const narrowing = query.trim() !== "" || filters.size > 0;
+        for (const part of empty.querySelectorAll("[data-kp-datatable-empty-none]")) part.hidden = narrowing;
+        for (const part of empty.querySelectorAll("[data-kp-datatable-empty-nomatch]")) part.hidden = !narrowing;
+      }
+      if (failedSlot !== null) {
+        const reason = failedSlot.querySelector("[data-kp-datatable-failed-reason]");
+        if (reason !== null) reason.textContent = failReason ?? s.tableFailed;
+      }
       syncSelectAll();
       syncActions();
       syncStateParts();
@@ -8746,6 +8798,7 @@ function attachDataTables(root = document, {
       header.getAttribute("aria-sort")
     ) })).slice(0, multi ? void 0 : 1);
     sorts = initialSorts.map((key) => ({ ...key }));
+    openingSort = JSON.stringify(initialSorts);
     for (const at of filterColumns) {
       const declared = headers[at]?.dataset.kpFilterValue;
       if (declared === void 0) continue;
@@ -8824,10 +8877,18 @@ function attachDataTables(root = document, {
       density: setDensity,
       state: (next) => {
         state = next;
+        if (next !== "failed") failReason = null;
         render();
       },
-      busy: (text) => {
-        busyText = text ?? null;
+      fail: (reason) => {
+        failReason = reason ?? null;
+        state = "failed";
+        render();
+      },
+      busy: (words) => {
+        const given = typeof words === "object" && words !== null ? words : { text: words };
+        busyText = given.text ?? null;
+        busySince = given.since === void 0 || given.since === null ? null : Number(given.since);
         render();
       },
       reload: () => serverMode ? request() : applyFilter({ keepPage: true }),
@@ -8854,6 +8915,7 @@ function attachDataTables(root = document, {
     handles6.set(wrap, handle);
     created.push(handle);
     cleanups.push(() => {
+      stopBusyClock();
       clearTimeout(pending);
       controller?.abort();
       resize?.disconnect();

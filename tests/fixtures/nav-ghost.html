@@ -16,5 +16,16 @@
             <button type="button" class="kp-button kp-button--ghost" data-test="ghost">?</button>
             <button type="button" class="kp-icon-button" aria-label="Bell" data-test="icon">🔔</button>
         </nav>
+        <!-- The same controls in a sticky bar, the homelab dashboard's: the
+             sticky wrapper is a stacking context, so a register's hover
+             sweep drawn at z-index -1 shows under the button instead of
+             behind the bar's ground [fix-82]. -->
+        <div class="kp-nav-wrap kp-nav-wrap--sticky">
+            <nav class="kp-nav" data-test="sticky-bar">
+                <span class="kp-nav__brand">kp</span>
+                <button type="button" class="kp-button kp-button--ghost" data-test="sticky-ghost">?</button>
+                <button type="button" class="kp-icon-button" aria-label="Bell" data-test="sticky-icon">🔔</button>
+            </nav>
+        </div>
     </body>
 </html>

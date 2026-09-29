@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "b70c9f01244f02cf7b377d3d5c48f4668a2ddf997c799381f3fc0994fc22bac3",
+            "hash": "68d277812cfa02b131c4165424379977580e877091d79cacb2ccace307005513",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "ac99dd595986da6abfc05d47a76f5d42c4abfecc30b664871fe3d7d63560f307"
+                "CHANGELOG.md": "aa282592ad3e2ac1faebf923362c568221850afa2d0ba898855e87d1d76d0ec5"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "553b2dfacd53fab782afc5ab9a0d3b3a54920dbcf9c91d8e732956d239779c24",
+            "hash": "e3cc4f916a2243ea978e908b6934a19feb48a81c771ef0f359954d933b9a2948",
             "doc": "f549757c0781eb3a7a17f16e23515294508e4a6e9e4f5c32b6f35b05be879f03",
             "files": {
                 ".claude/hooks/gates.sh": "490d800abdd813aa218d262dd42130c07f0aed00407b0b2d5db566f6bbe763b8",
@@ -97,7 +97,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "0483bdba13e0996c024152a6dd89330b7bb24e0dfb76a5467bb5e47756dd3ef2",
+                "js/datatable.d.ts": "b2765306a568fb34e336be15f786a28beebe8e4bcec1260ff3ee8fb2e7a357e9",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",
@@ -113,7 +113,7 @@
                 "js/patterns.d.ts": "6a4282ddb82f171cf99f2cc3fb417dc54ed34b4d35e450068442a323784bb7a5",
                 "js/remember.d.ts": "8947c7e0e9f475497e8c978450899d25df264d9a60d54b15b2b9160fad097b27",
                 "js/sidenav.d.ts": "2269640987551034fd72c14e1de39505596f6aa0050ef51029e9cfbc8cdbcc5e",
-                "js/strings.d.ts": "09576b169dd4c2d6885a245657c3aa0aadd791335f67aa8af5ee1506066149c9",
+                "js/strings.d.ts": "9ffcb0a659b3865217631add405f8d01d507addb5d9e23bc59b2457aa36bc0ab",
                 "js/structure.d.ts": "ec59c99e5e1d4b0f48019b84ebe4b028fceab0d8ea3128dc822bdec715130c2c",
                 "js/tables.d.ts": "cfde9ed7d59ed5e7644eaae9444260c2dee08b9a33c22dc8d7889a3973be461a",
                 "js/theme-core.d.ts": "8dbe7edaa2d5fee3140eec12e38d6222f22800a4a6e0551416136499ffcc1455",

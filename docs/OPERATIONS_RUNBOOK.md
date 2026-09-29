@@ -637,6 +637,12 @@ Two facts decide the shape of this procedure, and both are in the code:
     Correct: the tag's line carries `Latest`. Without that answer, stop
     here and hand him the link.
 
+13. Tell chassis-rs, without asking (Kenny, 2026-09-29): the release link,
+    what changed for a consumer, and his standing word that chassis-rs may
+    release even when the new kp-themes is its only change. kyu, almanac and
+    the homelab dashboard get kp-themes only through chassis-rs, so a release
+    that stops here reaches none of them.
+
 **Abort, at any step before 8:** nothing outside the repository has
 happened. Reset the version in `package.json`, `npm run generate:all`,
 and the tree is where it was.

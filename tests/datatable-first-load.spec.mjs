@@ -26,3 +26,36 @@ test("a first load carries a spinner and the consumer's own progress words [fix-
     await expect(status).not.toContainText('Asking the host');
     await expect(status.locator('.kp-spinner')).toHaveCount(0);
 });
+
+test('busy with a start time keeps its own count, told to no one each second [fix-84]', { tag: ['@component:datatable'] }, async ({ page }) => {
+    // The homelab dashboard's second round (2026-09-29): a consumer calling
+    // busy() every second to say how long it had been asking re-rendered the
+    // whole table each second, and the status line is a live region, so a
+    // screen reader would be told the new number every second too. busy()
+    // with `since` counts by itself, in a part the live region does not
+    // announce, and touches nothing else while it counts.
+    await page.goto('/tests/fixtures/datatable-first-load.html');
+    await page.waitForSelector('html[data-ready]');
+    const status = page.locator('[data-test="table"] [data-kp-datatable-status]');
+    await page.evaluate(() => /** @type {any} */ (window).kpTable.busy({ text: 'Asking the host…', since: Date.now() - 42_000 }));
+    await expect(status).toContainText('Asking the host…');
+    const clock = status.locator('[data-kp-busy-clock]');
+    await expect(clock).toHaveAttribute('aria-hidden', 'true');
+    await expect(clock).toHaveText(/^4[2-3] s so far$/);
+    // Watch what changes for two seconds: only the clock may.
+    await page.evaluate(() => {
+        const target = document.querySelector('[data-test="table"]');
+        /** @type {any} */ (window).kpMutations = [];
+        new MutationObserver((records) => {
+            for (const r of records) {
+                const inClock = (r.target instanceof Element ? r.target : r.target.parentElement)?.closest('[data-kp-busy-clock]');
+                if (!inClock) /** @type {any} */ (window).kpMutations.push(r.type);
+            }
+        }).observe(/** @type {Element} */ (target), { subtree: true, childList: true, characterData: true, attributes: true });
+    });
+    await page.waitForTimeout(2200);
+    await expect(clock).toHaveText(/^4[4-6] s so far$/);
+    expect(await page.evaluate(() => /** @type {any} */ (window).kpMutations), 'nothing but the clock changed while it counted').toEqual([]);
+    await page.evaluate(() => /** @type {any} */ (window).kpTable.state('ready'));
+    await expect(status.locator('[data-kp-busy-clock]')).toHaveCount(0);
+});

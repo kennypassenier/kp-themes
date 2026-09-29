@@ -213,6 +213,8 @@ export type Strings = {
      */
     tableSortedBy: (keys: string[]) => string;
     tableNotSorted: string;
+    tableSortReset: string;
+    tableBusyElapsed: (seconds: number) => string;
     /**
      * The column menu's button
      */
@@ -545,6 +547,8 @@ export type Strings = {
  * @property {(column: string, direction: 'ascending' | 'descending', kind: string) => string} tableSortKey  One key of a multi-column sort in words; `kind` is text, number, date or order
  * @property {(keys: string[]) => string} tableSortedBy  The multi-sort summary, from the keys in order
  * @property {string} tableNotSorted
+ * @property {string} tableSortReset
+ * @property {(seconds: number) => string} tableBusyElapsed
  * @property {string} tableColumns          The column menu's button
  * @property {string} tableColumnsLabel     The column menu's name
  * @property {(column: string) => string} tableColumnLocked  A column that cannot be hidden, in the menu

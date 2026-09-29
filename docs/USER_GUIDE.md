@@ -841,8 +841,14 @@ is thrown away, and the older request's `signal` is aborted. While it
 waits the old rows stay, dimmed, and the status shows the theme's spinner;
 a first load with no loading slot of yours shows three skeleton rows and
 the same spinner [fix-80]; `busy(text)` on the handle puts your own words in
-the status line while it loads (how long it has been asking, say), kept
-across `refresh()` and gone once the table is ready; a failed answer shows the failed slot — made, with **Try again**, when the
+the status line while it loads, kept across `refresh()` and gone once the
+table is ready, and `busy({ text, since })` has the table count how long it
+has been loading by itself ("42 s so far"), in a part the live region does
+not announce each second [fix-84]; `fail(reason)` puts any table, not only a
+server's, in the failed state with your reason in the words and Try again
+under them [fix-85]; an empty slot may hold a `data-kp-datatable-empty-none`
+part and a `data-kp-datatable-empty-nomatch` part, shown when there are no
+rows at all and when a search or a filter hides them all; a failed answer shows the failed slot — made, with **Try again**, when the
 markup has none — and Try again asks again. A server-rendered first page
 with `data-kp-total` is shown without asking. Selected keys outlive the
 page they were ticked on.

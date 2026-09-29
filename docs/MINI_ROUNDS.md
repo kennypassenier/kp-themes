@@ -231,4 +231,8 @@ register's colours are.
 | fix-79-M1 | Does the homelab dashboard drop its workaround for the switch's words once it takes the kp-themes that carries fix-79, and does the page look the same? | open |
 | fix-80-M1 | Does the homelab dashboard drop its workaround for the first load's progress once it takes the kp-themes that carries fix-80, and does the page look the same? | open |
 | fix-81-M1 | Does dark's film follow the pointer after a switch in the picker, without a reload, once kyu or almanac takes the kp-themes that carries fix-81? | open |
+| fix-82-M1 | Does the homelab dashboard drop its hover workaround for the bar's buttons once it takes the kp-themes that carries fix-82, and does every hover still read? | open |
+| fix-83-M1 | Does the homelab dashboard drop its own sort line once it takes the kp-themes that carries fix-83, with its search and rows still in place across sorts? | open |
+| fix-84-M1 | Does the homelab dashboard drop its busy-text shim and pass `since` instead once it takes the kp-themes that carries fix-84? | open |
+| fix-85-M1 | Does the homelab dashboard drop its own failed and empty slots once it takes the kp-themes that carries fix-85? | open |
 

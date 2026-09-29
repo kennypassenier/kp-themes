@@ -242,7 +242,11 @@ test.describe('sepia: the failed data table’s Try again [scope-107]', { tag: [
     test('Try again reads white on the destructive plate, and nothing else on an alert does', async ({ page }) => {
         await open(page, '/catalogue/table.html', 'sepia');
         const measured = await page.evaluate(() => {
-            const button = /** @type {HTMLElement} */ (document.querySelector('#datatable-states [data-kp-datatable-retry]'));
+            // The failed table's own slot: since fix-85 every table carries a
+            // hidden failed slot of its own, the loading ones too.
+            const button = /** @type {HTMLElement} */ (
+                document.querySelector('#datatable-states [data-kp-state="failed"] [data-kp-datatable-retry]')
+            );
             const alert = /** @type {HTMLElement} */ (button.closest('[data-kp-datatable-failed]'));
             const own = getComputedStyle(button);
             return {

@@ -446,6 +446,12 @@
         background: var(--card);
     }
 
+    /* In the bar the hover is a veil of the bar's ink, as in the package;
+       the card plate above is the page's and read 1.12:1 there [fix-82]. */
+    [data-theme='nostromo'] .kp-nav :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: hsl(from var(--kp-nav-ink, currentColor) h s l / 0.12);
+    }
+
     [data-theme='nostromo'] .kp-button--destructive,
     [data-theme='nostromo'] .kp-button--destructive:hover:not(:disabled) {
         background: var(--destructive);

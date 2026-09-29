@@ -4442,6 +4442,147 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-85 · A table that loads its own rows could not fail visibly, nor tell empty from no match (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (its
+`docs/admin/KP_THEMES_REPORTS.md`, item 8): the failed slot and its Try again
+were made only for a `data-kp-server` table, so a table whose page loads its
+own rows and calls `state('failed')` showed only "Showing 0 of 0"; the
+slot's words could not carry the reason; and one empty slot served both
+"there is nothing yet" and "nothing matches the search".
+
+**2 · Which gate let it through.** The failed state was only ever tested on
+a server-backed table and on catalogue markup that writes its own slot.
+
+**3 · Where else the same fault sits.** The fault as a property: *a state
+the datatable draws only in server mode.* **Gezocht met:**
+`grep -n "serverMode &&\|if (serverMode)" js/datatable.js`, read for what
+a reader sees: the failed slot was the one; the others are requests.
+
+**4 · How we prevent recurrence.** The failed slot is made for every table,
+`fail(reason)` on the handle puts the reason in its words, and an empty slot
+may hold `data-kp-datatable-empty-none` and `data-kp-datatable-empty-nomatch`
+parts, each shown in its case. `tests/datatable-empty-failed.spec.mjs`
+failed first and passes in both engines.
+
+**5 · What the remedy costs.** A hidden alert on every table that never
+fails, one handle method, two optional attributes.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard takes the kp-themes that carries it through chassis-rs: its workaround goes (`admin/web/css/app.css`, `admin/web/js/dom.js` `tableBlock`) and the page behaves the same. Queued as
+fix-85-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-84 · A consumer had to re-render the table every second to show how long it had been loading (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 7): to say
+"42 s so far" a consumer called `busy()` every second, which re-rendered the
+whole table each second, and the status line is a live region, so a screen
+reader would be told the new number every second.
+
+**2 · Which gate let it through.** fix-80's `busy(text)` was designed for
+fixed words only.
+
+**3 · Where else the same fault sits.** The fault as a property: *a count a
+consumer must drive through a full render.* **Gezocht met:**
+`grep -n "setInterval" js/*.js`: the alarm and the toasts keep their own
+clocks; the datatable had none.
+
+**4 · How we prevent recurrence.** `busy({ text, since })` has the table
+count by itself into one `aria-hidden` element, rewritten each second with
+nothing else touched; `tableBusyElapsed` words it in seconds, and in minutes
+and seconds past a minute. The new test in
+`tests/datatable-first-load.spec.mjs` failed first and passes, with a
+mutation observer showing only the clock changed while it counted.
+
+**5 · What the remedy costs.** One timer per counting table, stopped when it
+leaves the loading state or is detached.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard takes the kp-themes that carries it through chassis-rs: its workaround goes (`admin/web/css/app.css`, `admin/web/js/dom.js` `tableBlock`) and the page behaves the same. Queued as
+fix-84-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-83 · Sorting on several columns moved the search and the rows (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 6): the
+multi-sort summary was prepended to the toolbar and grew with its words
+(`flex: 1 1 auto`), so the search shrank and slid under the pointer with
+every key added (Kenny: "als ik nu veel dingen sort, verschuift de UI ook").
+
+**2 · Which gate let it through.** No test measured the toolbar across a
+sort.
+
+**3 · Where else the same fault sits.** The fault as a property: *a line
+whose words change and that shares a row with a control.* **Gezocht met:**
+`grep -n "ensureTopBar().prepend\|ensureTopBar().append" js/datatable.js`:
+the summary was the only live text put in the toolbar.
+
+**4 · How we prevent recurrence.** The summary has a line of its own under
+the toolbar, one line high with its whole text as a title, and a **Reset
+the sort** button that keeps its room and shows only when the sort differs
+from the opening one. `tests/datatable-sort-line.spec.mjs` failed first
+(the summary shared the search's line) and passes: search, first row and
+summary height unchanged over four keys.
+
+**5 · What the remedy costs.** One line under the toolbar on a multi-sort
+table, and one string.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard takes the kp-themes that carries it through chassis-rs: its workaround goes (`admin/web/css/app.css`, `admin/web/js/dom.js` `tableBlock`) and the page behaves the same. Queued as
+fix-83-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-82 · A hovered ghost button in the bar lost the bar's ink (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 5): fix-77
+gave a ghost or icon button in the bar the bar's ink at rest, but its hover
+plate stayed the page's. Measured here first, by the pixels under the
+hovered button in all 22 themes: nostromo 1.12:1 (its `var(--card)` hover).
+The report's high-contrast and phantom readings came from the dashboard's
+own override on top; in the package both read above 4.5:1.
+
+**2 · Which gate let it through.** fix-77's test read the resting state
+only.
+
+**3 · Where else the same fault sits.** The fault as a property: *a hover
+plate painted for the page under the bar's ink.* **Gezocht met:**
+`tests/nav-ghost.spec.mjs`, which now screenshots each control hovered and
+focused, in a plain and in a sticky bar, in all 22 themes and both engines:
+nostromo only.
+
+**4 · How we prevent recurrence.** In the bar the hover is a veil of the
+bar's ink (`--kp-nav-ink`, the bar's colour by default), in the package and
+in nostromo's register. 88 passed after the fix.
+
+**5 · What the remedy costs.** One rule in the package, one in nostromo, one
+knob.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard takes the kp-themes that carries it through chassis-rs: its workaround goes (`admin/web/css/app.css`, `admin/web/js/dom.js` `tableBlock`) and the page behaves the same. Queued as
+fix-82-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-81 · Dark's pointer effect stood still after a theme switch (2026-09-29)
 
 **1 · What went wrong.** Kenny: dark's oxide film followed the pointer in kyu

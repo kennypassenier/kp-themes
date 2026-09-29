@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>A data table that fails, and two kinds of empty</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-85: a table whose page loads its own rows, no data-kp-server. -->
+        <div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none" data-test="table">
+            <div class="kp-datatable__bar">
+                <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search stacks" data-test="search" />
+            </div>
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <caption class="kp-sr-only">
+                        Stacks
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" data-kp-sort="text">Stack</th>
+                            <th scope="col" data-kp-sort="text">State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>jellyfin</td>
+                            <td>running</td>
+                        </tr>
+                        <tr>
+                            <td>paperless</td>
+                            <td>running</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="kp-empty" data-kp-datatable-empty hidden>
+                <p data-kp-datatable-empty-none data-test="none">There are no stacks yet.</p>
+                <p data-kp-datatable-empty-nomatch data-test="nomatch">
+                    No stack matches the search. <button type="button" class="kp-button" data-kp-datatable-clear>Clear the search</button>
+                </p>
+            </div>
+            <div class="kp-datatable__bar">
+                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+            </div>
+        </div>
+        <script type="module">
+            import { attachDataTables } from '/js/datatable.js';
+            window.kpTable = attachDataTables(document).handles[0];
+            window.kpRetries = 0;
+            document.addEventListener('kp-datatable-retry', () => (window.kpRetries += 1));
+            document.documentElement.dataset.ready = '';
+        </script>
+    </body>
+</html>

@@ -19,6 +19,27 @@
 - **A datatable's first load shows its spinner** [fix-80], as a refresh
   does, and the handle's new `busy(text)` puts the consumer's own progress
   words in the status line while it loads.
+- **Dark's pointer effect follows a theme switch** [fix-81]: the effects
+  module arms the pointer and press buses the first time a theme asks for
+  them, not only at attach.
+- **A hovered ghost or icon button in the bar keeps the bar's ink** [fix-82]:
+  its hover plate is a veil of that ink (nostromo's read 1.12:1).
+- **Sorting on several columns moves nothing** [fix-83]: the summary has a
+  line of its own under the toolbar, one line high, with a **Reset the sort**
+  button that keeps its room and shows only when the sort differs from the
+  opening one.
+- **`busy({ text, since })` counts by itself** [fix-84], in a part the live
+  region does not announce each second.
+- **Every data table can fail, with its reason** [fix-85]: the failed slot and
+  its Try again are made for any table, `fail(reason)` puts the reason in its
+  words, and the empty slot may say "nothing yet" and "nothing matches" apart
+  (`data-kp-datatable-empty-none`, `data-kp-datatable-empty-nomatch`).
+
+**Added.**
+
+- **The documentation site**: a theme switcher fixed top right on every page,
+  the choice carried from page to page, and every component page showing the
+  catalogue's blocks as more examples (136 of them).
 
 ## 7.2.0 — 2026-09-27
 

@@ -346,9 +346,16 @@ export type DataTableHandle = {
      */
     state: (state: State) => void;
     /**
-     * the status line's words while the table loads, such as how long it has been asking; kept across refresh(), shown only while loading, cleared with no text [fix-80]
+     * the status line's words while the table loads, kept across refresh(), shown only while loading, cleared with no text [fix-80]; with `since` (a time or a Date) the table counts how long it has been loading by itself, in a part the live region does not announce [fix-84]
      */
-    busy: (text?: string | null) => void;
+    busy: (words?: string | null | {
+        text?: string | null;
+        since?: number | Date | null;
+    }) => void;
+    /**
+     * the failed state with the app's reason in the failed slot's words, and Try again under them; any table, not only a server's [fix-85]
+     */
+    fail: (reason?: string | null) => void;
     /**
      * ask the server again for what the table shows
      */
