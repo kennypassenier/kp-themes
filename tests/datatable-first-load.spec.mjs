@@ -59,3 +59,33 @@ test('busy with a start time keeps its own count, told to no one each second [fi
     await page.evaluate(() => /** @type {any} */ (window).kpTable.state('ready'));
     await expect(status.locator('[data-kp-busy-clock]')).toHaveCount(0);
 });
+
+test('busy with overlay puts a large spinner over the rows, moving nothing [busy overlay]', { tag: ['@component:datatable'] }, async ({ page }) => {
+    // The homelab dashboard (2026-09-29, Kenny: "ik zie nog altijd geen
+    // spinner in de tabellen"): on a long table, or a read of 90 s, the
+    // status line's 1em spinner sits below the fold. busy({ overlay: true })
+    // draws one over the rows, under the header, hidden from assistive
+    // technology while the status line stays the live region.
+    await page.goto('/tests/fixtures/datatable-first-load.html');
+    await page.waitForSelector('html[data-ready]');
+    const wrap = page.locator('[data-test="table"]');
+    // The same words and count without the layer first, so what is compared
+    // is only what the layer does.
+    await page.evaluate(() => /** @type {any} */ (window).kpTable.busy({ text: 'Asking the host…', since: Date.now() - 42_000 }));
+    const before = await wrap.boundingBox();
+    await page.evaluate(() => /** @type {any} */ (window).kpTable.busy({ text: 'Asking the host…', since: Date.now() - 42_000, overlay: true }));
+    const layer = wrap.locator('.kp-datatable__busy-overlay');
+    await expect(layer).toBeVisible();
+    await expect(layer).toHaveAttribute('aria-hidden', 'true');
+    await expect(layer.locator('.kp-spinner')).toHaveCount(1);
+    await expect(layer).toContainText('Asking the host…');
+    await expect(layer).toContainText('42 s so far');
+    await expect(layer, 'the count moves in the layer too').toContainText('43 s so far', { timeout: 3000 });
+    await expect(wrap.locator('[data-kp-datatable-status]'), 'the status line still says it').toContainText('Asking the host…');
+    const head = await wrap.locator('thead').boundingBox();
+    const box = await layer.boundingBox();
+    expect(box && head && box.y >= head.y + head.height - 1, 'under the header').toBe(true);
+    expect(await wrap.boundingBox(), 'nothing around it moved').toEqual(before);
+    await page.evaluate(() => /** @type {any} */ (window).kpTable.state('ready'));
+    await expect(layer).toHaveCount(0);
+});

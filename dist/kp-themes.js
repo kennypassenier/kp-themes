@@ -6843,12 +6843,50 @@ function attachDataTables(root = document, {
     let busySince = null;
     let busyTimer = null;
     let busyClock = null;
+    let busyOverlay = wrap.hasAttribute("data-kp-busy-overlay");
+    let overlayLayer = null;
+    let overlayClock = null;
     const busySeconds = () => Math.max(0, Math.floor((Date.now() - /** @type {number} */
     busySince) / 1e3));
     const stopBusyClock = () => {
       if (busyTimer !== null) clearInterval(busyTimer);
       busyTimer = null;
       busyClock = null;
+      overlayClock = null;
+    };
+    const drawOverlay = (s) => {
+      overlayLayer?.remove();
+      overlayLayer = null;
+      overlayClock = null;
+      const host = wrap;
+      if (state !== "loading" || !busyOverlay) return;
+      const layer = make2("div", "kp-datatable__busy-overlay");
+      layer.setAttribute("aria-hidden", "true");
+      const head = table.tHead;
+      const hostBox = host.getBoundingClientRect();
+      const body2 = (table.tBodies[0] ?? table).getBoundingClientRect();
+      const tableBox = (scrollBox ?? table).getBoundingClientRect();
+      const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
+      layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
+      layer.style.setProperty(
+        "--kp-busy-overlay-bottom",
+        `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`
+      );
+      layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
+      layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+      const panel2 = make2("div", "kp-datatable__busy-panel");
+      const spinner = make2("span", "kp-spinner");
+      const words = make2("span", "kp-datatable__busy-words");
+      words.textContent = busyText ?? s.busy;
+      panel2.append(spinner, words);
+      if (busySince !== null) {
+        overlayClock = make2("span", "kp-datatable__busy-clock");
+        overlayClock.textContent = s.tableBusyElapsed(busySeconds());
+        panel2.append(overlayClock);
+      }
+      layer.append(panel2);
+      host.append(layer);
+      overlayLayer = layer;
     };
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
     const emptyWasHidden = empty?.hidden ?? false;
@@ -7548,10 +7586,13 @@ function attachDataTables(root = document, {
           busyClock.textContent = s.tableBusyElapsed(busySeconds());
           status.append(" ", busyClock);
           busyTimer = setInterval(() => {
-            if (busyClock !== null) busyClock.textContent = getStrings().tableBusyElapsed(busySeconds());
+            const words = getStrings().tableBusyElapsed(busySeconds());
+            if (busyClock !== null) busyClock.textContent = words;
+            if (overlayClock !== null) overlayClock.textContent = words;
           }, 1e3);
         }
       }
+      drawOverlay(s);
       if (pager !== null) {
         pager.textContent = "";
         if (sizeLabel !== null) pager.append(sizeLabel);
@@ -8889,6 +8930,7 @@ function attachDataTables(root = document, {
         const given = typeof words === "object" && words !== null ? words : { text: words };
         busyText = given.text ?? null;
         busySince = given.since === void 0 || given.since === null ? null : Number(given.since);
+        busyOverlay = "overlay" in given && given.overlay !== void 0 ? Boolean(given.overlay) : wrap.hasAttribute("data-kp-busy-overlay");
         render();
       },
       reload: () => serverMode ? request() : applyFilter({ keepPage: true }),
@@ -8979,6 +9021,8 @@ function attachDataTables(root = document, {
       if (loadingSlot !== null) loadingSlot.hidden = true;
       if (failedSlot !== null) failedSlot.hidden = true;
       if (actions !== null) actions.hidden = true;
+      stopBusyClock();
+      overlayLayer?.remove();
       for (const node of added) node.remove();
       for (const step of undo) step();
       if (densityWas === null) wrap.removeAttribute("data-density");

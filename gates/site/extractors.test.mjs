@@ -236,7 +236,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-78 added one (2026-09-29), --kp-picker-max-width, the select's
     // open list's inline limit: 237 + 1. fix-82 added --kp-nav-ink, the ink
     // a bar's hover veil is made of: 238 + 1.
-    assert.equal(result.expected, 239, 'AR21 counted the --kp-* properties in css/components.css');
+    assert.equal(result.expected, 245, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -274,7 +274,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-64's --kp-progress-group-gap, the log's four, fix-70's one and
     // the submenu mark's three, fix-78's --kp-picker-max-width and fix-82's
     // --kp-nav-ink.
-    assert.equal(result.readCount, 239);
+    assert.equal(result.readCount, 245);
     assert.deepEqual(result.unread, []);
 });
 

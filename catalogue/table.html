@@ -1194,6 +1194,76 @@
                 </div>
             </section>
 
+            <section class="cat-block" id="datatable-busy-overlay">
+                <h2>Data table: loading, in sight</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a data table loading again over the rows it already shows, with <code>data-kp-busy-overlay</code> (or
+                    <code>busy({ overlay: true })</code>): a large spinner in a small card over the rows, the app's words under it, the rows dimmed
+                    behind a veil, and the header left readable. It is for a table long or slow enough that the status line under it is out of sight;
+                    the status line still says the same, and it is the one a screen reader hears. Nothing around the table moves when the layer comes
+                    or goes.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div
+                        class="kp-datatable"
+                        data-kp-datatable
+                        data-kp-state="loading"
+                        data-kp-busy-overlay
+                        data-cat-busy="Asking the host… 42 s so far"
+                    >
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Containers, loading again
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Stack</th>
+                                        <th scope="col">Container</th>
+                                        <th scope="col">State</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>media</td>
+                                        <td>jellyfin</td>
+                                        <td>running</td>
+                                    </tr>
+                                    <tr>
+                                        <td>media</td>
+                                        <td>sonarr</td>
+                                        <td>running</td>
+                                    </tr>
+                                    <tr>
+                                        <td>platform</td>
+                                        <td>traefik</td>
+                                        <td>running</td>
+                                    </tr>
+                                    <tr>
+                                        <td>platform</td>
+                                        <td>crowdsec</td>
+                                        <td>restarting</td>
+                                    </tr>
+                                    <tr>
+                                        <td>monitoring</td>
+                                        <td>grafana</td>
+                                        <td>running</td>
+                                    </tr>
+                                    <tr>
+                                        <td>monitoring</td>
+                                        <td>loki</td>
+                                        <td>stopped</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="cat-block" id="datatable-multi-sort">
                 <h2>Data table: sorting on more than one column</h2>
                 <div class="cat-look">

@@ -293,8 +293,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "4f2ac417209608cc903896b386aa63528fd9c767859995f2106a3a2b90604a1a",
-            "doc": "d9e4a38a0a41eea2c375e2957e5a447a65c613eb53ba01535f494c5e7e2b09f7",
+            "hash": "028141997522d5dcd163dbe7622659b737409ebca0478722782bd7235513ae2c",
+            "doc": "ce7945bc8ef4f48c243b98f258bb5ec4cf66870d6a3c5ee60b9d5f41f07f5e6d",
             "files": {
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
@@ -335,7 +335,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "b2765306a568fb34e336be15f786a28beebe8e4bcec1260ff3ee8fb2e7a357e9",
+                "js/datatable.d.ts": "90c750605a40127f06b7066f206efb940c2a3a002f1402d3ffff9a3ded693048",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",

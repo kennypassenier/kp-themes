@@ -844,7 +844,12 @@ the same spinner [fix-80]; `busy(text)` on the handle puts your own words in
 the status line while it loads, kept across `refresh()` and gone once the
 table is ready, and `busy({ text, since })` has the table count how long it
 has been loading by itself ("42 s so far"), in a part the live region does
-not announce each second [fix-84]; `fail(reason)` puts any table, not only a
+not announce each second [fix-84]; `busy({ text, since, overlay: true })`, or
+`data-kp-busy-overlay` on the wrapper, also sets a large spinner with those
+words and that count over the rows while it loads, for a table long or slow
+enough that the status line is out of sight — hidden from a screen reader,
+which hears the status line, and moving nothing when it comes or goes;
+`fail(reason)` puts any table, not only a
 server's, in the failed state with your reason in the words and Try again
 under them [fix-85]; an empty slot may hold a `data-kp-datatable-empty-none`
 part and a `data-kp-datatable-empty-nomatch` part, shown when there are no

@@ -8464,6 +8464,48 @@
         --kp-spinner-size: 1em;
     }
 
+    /* Loading, in sight [busy overlay]: a table long or slow enough that its
+ * status line sits below the fold asks for a large spinner over its rows,
+ * with the status words and the count under it. The layer is placed in the
+ * box that holds the table, under the header, so nothing moves when it
+ * comes or goes; the rows show dimmed through it. */
+    .kp-datatable:has(> .kp-datatable__busy-overlay) {
+        position: relative;
+    }
+
+    .kp-datatable__busy-overlay {
+        position: absolute;
+        inset: var(--kp-busy-overlay-top, 0px) var(--kp-busy-overlay-right, 0px) var(--kp-busy-overlay-bottom, 0px) var(--kp-busy-overlay-left, 0px);
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        background: color-mix(in oklab, var(--background) var(--kp-busy-overlay-veil, 70%), transparent);
+        pointer-events: none;
+    }
+
+    .kp-datatable__busy-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1rem);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0 0 1px var(--border);
+        text-align: center;
+    }
+
+    .kp-datatable__busy-panel > .kp-spinner {
+        --kp-spinner-size: var(--kp-busy-overlay-spinner, 2.5rem);
+    }
+
+    .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
     /* Choosing which columns show [#columns]. The menu hangs under its
  * button, and above it where the window has no room below, placed as the
  * "+ Add filter" menu is (fixed, see there): opened at the bottom of a

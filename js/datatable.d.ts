@@ -346,11 +346,12 @@ export type DataTableHandle = {
      */
     state: (state: State) => void;
     /**
-     * the status line's words while the table loads, kept across refresh(), shown only while loading, cleared with no text [fix-80]; with `since` (a time or a Date) the table counts how long it has been loading by itself, in a part the live region does not announce [fix-84]
+     * the status line's words while the table loads, kept across refresh(), shown only while loading, cleared with no text [fix-80]; with `since` (a time or a Date) the table counts how long it has been loading by itself, in a part the live region does not announce [fix-84]; with `overlay: true` (or `data-kp-busy-overlay` on the wrapper) a large spinner with those words and that count sits over the rows while it loads, aria-hidden
      */
     busy: (words?: string | null | {
         text?: string | null;
         since?: number | Date | null;
+        overlay?: boolean;
     }) => void;
     /**
      * the failed state with the app's reason in the failed slot's words, and Try again under them; any table, not only a server's [fix-85]

@@ -1544,6 +1544,128 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-table-datatable-busy-overlay">
+                        <figcaption class="kp-fw-semibold">Data table: loading, in sight</figcaption>
+                        <p class="kp-text-muted">A data table loading again over the rows it already shows, with <code>data-kp-busy-overlay</code> (or <code>busy({ overlay: true })</code>): a large spinner in a small card over the rows, the app's words under it, the rows dimmed behind a veil, and the header left readable. It is for a table long or slow enough that the status line under it is out of sight; the status line still says the same, and it is the one a screen reader hears. Nothing around the table moves when the layer comes or goes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div
+class="kp-datatable"
+data-kp-datatable
+data-kp-state="loading"
+data-kp-busy-overlay
+data-cat-busy="Asking the host… 42 s so far"
+>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption class="kp-sr-only">
+            Containers, loading again
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Stack</th>
+                <th scope="col">Container</th>
+                <th scope="col">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>media</td>
+                <td>jellyfin</td>
+                <td>running</td>
+            </tr>
+            <tr>
+                <td>media</td>
+                <td>sonarr</td>
+                <td>running</td>
+            </tr>
+            <tr>
+                <td>platform</td>
+                <td>traefik</td>
+                <td>running</td>
+            </tr>
+            <tr>
+                <td>platform</td>
+                <td>crowdsec</td>
+                <td>restarting</td>
+            </tr>
+            <tr>
+                <td>monitoring</td>
+                <td>grafana</td>
+                <td>running</td>
+            </tr>
+            <tr>
+                <td>monitoring</td>
+                <td>loki</td>
+                <td>stopped</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="kp-datatable__bar">
+    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span>
+<span class="kp-code__keyword">data-kp-datatable</span>
+<span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span>
+<span class="kp-code__keyword">data-kp-busy-overlay</span>
+<span class="kp-code__keyword">data-cat-busy</span><span class="kp-code__string">=&quot;Asking the host… 42 s so far&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+            Containers, loading again
+        &lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Stack&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Container&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;State&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;media&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;jellyfin&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;media&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;sonarr&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;platform&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;traefik&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;platform&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;crowdsec&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;restarting&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;monitoring&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;grafana&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;monitoring&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;loki&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;stopped&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-table-datatable-multi-sort">
                         <figcaption class="kp-fw-semibold">Data table: sorting on more than one column</figcaption>
                         <p class="kp-text-muted"><code>data-kp-sort-multi</code>. It opens sorted by <b>Severity</b> high to low, then <b>Hours open</b> high to low: the small numbers in the two headers give the order, and the line above the table says it in words. A plain click on a header sorts on that column alone; <b>Shift</b> + click (or Shift + Enter on a focused header) adds the column as the next key, a second Shift + click turns it round and a third takes it out again. <b>Back to Severity, then Hours open</b> restores the opening sort. Severity sorts by its meaning, Critical above Low. Check that the numbers read clearly beside the theme's sort arrow and stay on the header's line in every theme.</p>
@@ -6116,6 +6238,12 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-busy-overlay-bottom</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-busy-overlay-left</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-busy-overlay-right</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-busy-overlay-spinner</code></td><td><code>2.5rem</code></td></tr>
+                            <tr><td><code>--kp-busy-overlay-top</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-busy-overlay-veil</code></td><td><code>70%</code></td></tr>
                             <tr><td><code>--kp-cell-truncate-max</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-datatable-add-mark-gap</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-datatable-bar-padding-block</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
@@ -6147,6 +6275,7 @@
                             <tr><td><code>--kp-datatable-sort-order-radius</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-datatable-sort-order-size</code></td><td><code>0.7em</code></td></tr>
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>

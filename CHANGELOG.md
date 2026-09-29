@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+**Added.**
+
+- **A loading data table can show it over its rows**: `busy({ text, since,
+overlay: true })`, or `data-kp-busy-overlay` on the wrapper, sets a large
+  spinner with the status words and the count over the rows while it loads,
+  under the header and hidden from assistive technology; the status line
+  stays the live region. Asked for by the homelab dashboard, where a long
+  table's status line sat below the fold.
+
 ## 8.0.1 — 2026-09-29
 
 A patch with nothing new for a web page that imports the package: the
