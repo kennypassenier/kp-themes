@@ -346,6 +346,10 @@ export type DataTableHandle = {
      */
     state: (state: State) => void;
     /**
+     * the status line's words while the table loads, such as how long it has been asking; kept across refresh(), shown only while loading, cleared with no text [fix-80]
+     */
+    busy: (text?: string | null) => void;
+    /**
      * ask the server again for what the table shows
      */
     reload: () => void;

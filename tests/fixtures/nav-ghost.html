@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>A ghost button in the bar</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-77: a consumer puts icon and ghost buttons in the bar (a bell,
+             a "?"); they must wear the bar's ink, as the theme trigger does. -->
+        <nav class="kp-nav" data-test="bar">
+            <span class="kp-nav__brand">kp</span>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#a" aria-current="page">One</a></li>
+            </ul>
+            <button type="button" class="kp-button kp-button--ghost" data-test="ghost">?</button>
+            <button type="button" class="kp-icon-button" aria-label="Bell" data-test="icon">🔔</button>
+        </nav>
+    </body>
+</html>

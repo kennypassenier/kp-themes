@@ -391,6 +391,13 @@
         color: var(--muted-foreground);
     }
 
+    /* In the bar the ghost takes the bar's ink; the rule above paints it
+       for the page [fix-77]. */
+    [data-theme='deco'] .kp-nav .kp-button--ghost {
+        --kp-btn-fg: currentColor;
+        color: inherit;
+    }
+
     [data-theme='deco'] .kp-button--ghost:hover,
     [data-theme='deco'] .kp-button--ghost:focus-visible {
         color: var(--foreground);

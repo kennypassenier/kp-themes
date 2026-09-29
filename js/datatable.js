@@ -642,6 +642,7 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {(keys: readonly string[]) => void} expand  the rows to open, by key
  * @property {(density: Density) => void} density
  * @property {(state: State) => void} state  loading, failed, or ready again
+ * @property {(text?: string | null) => void} busy  the status line's words while the table loads, such as how long it has been asking; kept across refresh(), shown only while loading, cleared with no text [fix-80]
  * @property {() => void} reload  ask the server again for what the table shows
  * @property {(key: string, column: number) => void} edit  open a cell's editor
  * @property {() => void} cancelEdit
@@ -897,6 +898,8 @@ export function attachDataTables(
         let sorts = [];
         /** @type {State} */
         let state = /** @type {State} */ (['loading', 'failed'].includes(wrap.dataset.kpState ?? '') ? wrap.dataset.kpState : 'ready');
+        /** The consumer's own words for the status line while it loads (busy(), fix-80); null is the dictionary's busy word. @type {string | null} */
+        let busyText = null;
         /** The server's count, in a server-backed table. */
         let total = Number.parseInt(wrap.dataset.kpTotal ?? '', 10);
         const emptyWasHidden = empty?.hidden ?? false;
@@ -1672,15 +1675,17 @@ export function attachDataTables(
             const s = getStrings();
             if (status !== null) {
                 status.textContent = '';
-                if (state === 'loading' && all.length > 0) {
-                    // Refreshing: the old rows stay, dimmed, and a spinner says it is working [#states].
+                if (state === 'loading') {
+                    // Loading, first or again: a spinner says it is working
+                    // [#states]. It used to come only on a refresh, so a first
+                    // load that took minutes showed no sign of life [fix-80].
                     const spinner = make('span', 'kp-spinner');
                     spinner.setAttribute('aria-hidden', 'true');
                     status.append(spinner, ' ');
                 }
                 status.append(
                     state === 'loading'
-                        ? s.busy
+                        ? (busyText ?? s.busy)
                         : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, count, serverMode ? count : all.length),
                 );
             }
@@ -2945,6 +2950,10 @@ export function attachDataTables(
             density: setDensity,
             state: (next) => {
                 state = next;
+                render();
+            },
+            busy: (text) => {
+                busyText = text ?? null;
                 render();
             },
             reload: () => (serverMode ? request() : applyFilter({ keepPage: true })),

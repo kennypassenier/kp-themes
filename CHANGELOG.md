@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+**Fixed.**
+
+- **A ghost or icon button in the bar wears the bar's ink** [fix-77] — it
+  took the page's, and read 1.2:1 on cyberpunk's yellow bar and 1:1 on
+  nostromo's. `.kp-nav :is(.kp-button--ghost, .kp-icon-button)` inherits the
+  bar's colour, in the package and in the four registers that repaint the
+  ghost.
+- **A select's open list stays in the window** [fix-78] — with
+  `appearance: base-select` it was as wide as its longest option and the
+  check mark pushed every label to the end. It is now at most
+  `--kp-picker-max-width` (40rem, or the window less 2rem), options wrap, and
+  the mark sits after the label.
+- **Flipping a switch moves nothing** [fix-79] — both words share one cell,
+  so the box is as wide as the wider word in any language.
+- **A datatable's first load shows its spinner** [fix-80], as a refresh
+  does, and the handle's new `busy(text)` puts the consumer's own progress
+  words in the status line while it loads.
+
 ## 7.2.0 — 2026-09-27
 
 A minor for a new component and three fixes found in use. `.kp-log` gives a

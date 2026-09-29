@@ -686,6 +686,15 @@
         border-color: transparent;
     }
 
+    /* A ghost or icon button in the bar wears the bar's ink, not the page's [fix-77].
+ * The bar has its own plate in several registers (cyberpunk's yellow,
+ * nostromo's sidebar), and the page's ink on it read 1.2:1 and 1:1 in the
+ * homelab dashboard's bar; the bar's own colour is the ink every register
+ * already gates against that plate. */
+    .kp-nav :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
     .kp-button--ghost:hover:not(:disabled) {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
@@ -1021,12 +1030,17 @@
             background: var(--popover);
             color: var(--popover-foreground);
             max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+            /* Without an inline limit the list is as wide as its longest
+               option, and a long one ran past the window's edge [fix-78]. */
+            max-inline-size: var(--kp-picker-max-width, min(40rem, calc(100vw - 2rem)));
             overflow: auto;
         }
 
         select.kp-field__input option {
             padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
             border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         select.kp-field__input option:hover,
@@ -1038,8 +1052,12 @@
             font-weight: 600;
         }
 
+        /* The check mark is the option's first flex item, so an auto margin
+           alone pushed the label to the end with it [fix-78]; ordered last,
+           the label keeps the start edge and the mark sits at the end. */
         select.kp-field__input option::checkmark {
             content: var(--kp-glyph-check, '✓');
+            order: 1;
             margin-inline-start: auto;
         }
     }
@@ -1274,19 +1292,29 @@
  * the one that does not apply is not rendered. aria-hidden on the
  * wrapper, because the role already announces the state. */
     .kp-switch__state {
+        display: inline-grid;
         min-inline-size: var(--kp-switch-state-min, 2rem);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
         font-variant-numeric: tabular-nums;
     }
 
+    /* Both words share one cell and the one that does not apply is only
+       hidden, so the box is as wide as the wider word in any face or
+       language and a flip moves nothing after it [fix-79]. It used to be
+       display: none, which held only while a word fitted the 2rem floor. */
+    .kp-switch__on,
+    .kp-switch__off {
+        grid-area: 1 / 1;
+    }
+
     .kp-switch__on,
     .kp-switch:has(:checked) .kp-switch__off {
-        display: none;
+        visibility: hidden;
     }
 
     .kp-switch:has(:checked) .kp-switch__on {
-        display: inline;
+        visibility: visible;
     }
 
     .kp-switch:has(:disabled) {

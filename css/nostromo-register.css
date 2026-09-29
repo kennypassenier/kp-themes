@@ -435,6 +435,13 @@
         color: var(--foreground);
     }
 
+    /* In the bar the ghost and the icon button take the bar's ink; the rules
+       here paint them for the page [fix-77]. */
+    [data-theme='nostromo'] .kp-nav :is(.kp-button--ghost, .kp-icon-button) {
+        --kp-btn-fg: currentColor;
+        color: inherit;
+    }
+
     [data-theme='nostromo'] .kp-button--ghost:hover:not(:disabled) {
         background: var(--card);
     }

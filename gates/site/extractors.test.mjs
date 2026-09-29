@@ -233,7 +233,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // itself and so took the plate ink of a warning with it: 233 + 1.
     // Kenny's submenu mark added three (2026-09-20): the mark itself, where
     // it sits in the indent, and its ink — 234 + 3.
-    assert.equal(result.expected, 237, 'AR21 counted the --kp-* properties in css/components.css');
+    // fix-78 added one (2026-09-29), --kp-picker-max-width, the select's
+    // open list's inline limit: 237 + 1.
+    assert.equal(result.expected, 238, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -269,8 +271,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Option B's eighteen (scope-87), scope-88's two, fix-32's one and the surface's one are read through var() too.
     // So are the alarm's twenty-three (scope-94), fix-41's one,
     // fix-64's --kp-progress-group-gap, the log's four, fix-70's one and
-    // the submenu mark's three.
-    assert.equal(result.readCount, 237);
+    // the submenu mark's three, and fix-78's --kp-picker-max-width.
+    assert.equal(result.readCount, 238);
     assert.deepEqual(result.unread, []);
 });
 

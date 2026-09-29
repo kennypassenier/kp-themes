@@ -553,6 +553,13 @@
         --kp-btn-ground: transparent;
     }
 
+    /* In the bar the ghost takes the bar's ink; the rule above paints it
+       for the page [fix-77]. */
+    [data-theme='cyberpunk'] .kp-nav .kp-button--ghost {
+        --kp-btn-fg: currentColor;
+        color: inherit;
+    }
+
     [data-theme='cyberpunk'] .kp-button--ghost:hover:not(:disabled) {
         background-color: transparent;
         --kp-btn-fill: hsl(from var(--foreground) h s l / 0.08);

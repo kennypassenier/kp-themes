@@ -4442,6 +4442,150 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-80 · A datatable's first load showed no sign of progress (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (its
+`docs/admin/KP_THEMES_REPORTS.md`, item 4): a table with no rows yet, loading
+for the 93 s its host takes, showed three pulsing rows and the busy word and
+no spinner, because `js/datatable.js` drew the spinner only when
+`state === 'loading' && all.length > 0`. Kenny read it as "nothing loads".
+
+**2 · Which gate let it through.** `tests/datatable.spec.mjs` sets `loading`
+on a table that already has rows, the refresh case; nothing drove a first
+load.
+
+**3 · Where else the same fault sits.** The fault as a property: *a loading
+state drawn only for the case with data.* **Gezocht met:**
+`grep -rn "length > 0" js/*.js`, read for loading and busy states: the
+datatable's status line only.
+
+**4 · How we prevent recurrence.** The spinner comes with every loading
+state, and the handle's `busy(text)` gives the consumer the status line's
+words while it loads. `tests/datatable-first-load.spec.mjs` failed first
+(no spinner) and passes in both engines.
+
+**5 · What the remedy costs.** One condition, one handle method, one
+paragraph in `docs/USER_GUIDE.md`.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard
+takes the next kp-themes through chassis-rs: its own workaround in
+`homelab/admin/web/css/app.css` goes, and the page looks the same. Queued as
+fix-80-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-79 · A switch's words could move its label on every flip (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 3): the word
+that does not apply was `display: none` (`css/components.css`), so the state
+box was as wide as the word showing, over a 2rem floor. The English "On" and
+"Off" fitted the floor; "Enabled" and "Disabled for now" moved the label on a
+flip (measured by the new test: x 167.6 before, 117.2 after), and a second
+click without moving the mouse then lands elsewhere.
+
+**2 · Which gate let it through.** None measured the switch across a flip;
+the English defaults held it by the floor, not by construction.
+
+**3 · Where else the same fault sits.** The fault as a property: *two states
+inside a line that swap by `display: none`.* **Gezocht met:**
+`grep -n "display: none" css/components.css`, read against what each hides:
+the switch's words only; the other swaps hide whole blocks.
+
+**4 · How we prevent recurrence.** Both words share one grid cell and the
+other is `visibility: hidden`, so the box is as wide as the wider word. The
+new test in `tests/switch.spec.mjs` failed first and passes.
+
+**5 · What the remedy costs.** Four declarations.
+
+**6 · Who enforces it.** Code: the switch test.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard
+takes the next kp-themes through chassis-rs: its own workaround in
+`homelab/admin/web/css/app.css` goes, and the page looks the same. Queued as
+fix-79-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-78 · A select's open list ran off the window and right-aligned its labels (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 2): with
+`appearance: base-select`, `::picker(select)` had no inline limit, so the
+list was as wide as its longest option (983px to the window's edge at 1280),
+and `option::checkmark { margin-inline-start: auto }` pushed every label to
+the end, where the window cut it. Measured here first: an option 1083px wide.
+
+**2 · Which gate let it through.** No spec opened a select with long options.
+
+**3 · Where else the same fault sits.** The fault as a property: *a popover
+list with no inline limit.* **Gezocht met:**
+`grep -n "picker\|popover" css/components.css`, read against each list's
+`max-inline-size`: the select's picker was the one without.
+
+**4 · How we prevent recurrence.** `max-inline-size:
+var(--kp-picker-max-width, min(40rem, 100vw - 2rem))`, options that wrap, and
+the check mark ordered last. `tests/select-picker.spec.mjs` failed first and
+passes (Chromium only; base-select is Chromium's).
+
+**5 · What the remedy costs.** Four declarations and a knob.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard
+takes the next kp-themes through chassis-rs: its own workaround in
+`homelab/admin/web/css/app.css` goes, and the page looks the same. Queued as
+fix-78-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
+## fix-77 · A ghost or icon button in the bar took the page's ink (2026-09-29)
+
+**1 · What went wrong.** Reported by the homelab dashboard (item 1): a "?"
+ghost button and a bell icon button in its `.kp-nav` were painted with the
+page's ink on a bar with its own plate. Measured here first in all 22 themes:
+cyberpunk 1.20:1, deco 1.85:1, nostromo 1.00:1 (and its icon button 1.00:1),
+shade-dark 1.80:1.
+
+**2 · Which gate let it through.** The contrast gate reads token pairs, and
+no fixture put a ghost or icon button in the bar.
+
+**3 · Where else the same fault sits.** The fault as a property: *a control
+in the bar painted with the page's ink.* **Gezocht met:**
+`tests/nav-ghost.spec.mjs`, which reads the painted ink of both controls in
+the bar against the bar's plate in all 22 themes: the four registers above,
+nothing else.
+
+**4 · How we prevent recurrence.** `.kp-nav :is(.kp-button--ghost,
+.kp-icon-button)` inherits the bar's colour in the package, restated in the
+four registers that repaint the ghost (nostromo also for its icon button).
+The spec failed first and passes in both engines, 44 tests.
+
+**5 · What the remedy costs.** One package rule and four register rules. The
+report's second half, muted text in the bar, is the consumer's own text and
+stays with the dashboard.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** When the homelab dashboard
+takes the next kp-themes through chassis-rs: its own workaround in
+`homelab/admin/web/css/app.css` goes, and the page looks the same. Queued as
+fix-77-M1.
+
+**8 · If the measurement fails.** The dashboard keeps its workaround and the
+difference becomes the next correction here.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-76 · A theme switch replaced Kenny's own prompt (2026-09-27)
 
 **1 · What went wrong.** On WSL, `~/.config/starship.toml` should be the

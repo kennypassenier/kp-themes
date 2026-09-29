@@ -63,10 +63,10 @@
             "sources": [
                 "CHANGELOG.md"
             ],
-            "hash": "adb794c616a596c2c95d5f18132e5b14c56b94a2bc31ece101c7947874b6af86",
+            "hash": "b70c9f01244f02cf7b377d3d5c48f4668a2ddf997c799381f3fc0994fc22bac3",
             "doc": "4cf7067b89803e9827b2f4f5cdd25afc7726277078d9c1aecb36f8abc86da34e",
             "files": {
-                "CHANGELOG.md": "1fe4b1324f4d3006914a6809f786853510c6235e6e8bcfcc852e5e1868c741aa"
+                "CHANGELOG.md": "ac99dd595986da6abfc05d47a76f5d42c4abfecc30b664871fe3d7d63560f307"
             }
         },
         "docs/ARCHITECTURE_REFERENCE.md": {
@@ -81,7 +81,7 @@
                 ".claude/hooks/gates.sh",
                 "playwright.config.mjs"
             ],
-            "hash": "b5fc0da01380129e381b4961c272ce54f9867b0065dc71ca613c04a195293b4c",
+            "hash": "553b2dfacd53fab782afc5ab9a0d3b3a54920dbcf9c91d8e732956d239779c24",
             "doc": "f549757c0781eb3a7a17f16e23515294508e4a6e9e4f5c32b6f35b05be879f03",
             "files": {
                 ".claude/hooks/gates.sh": "490d800abdd813aa218d262dd42130c07f0aed00407b0b2d5db566f6bbe763b8",
@@ -97,7 +97,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
+                "js/datatable.d.ts": "0483bdba13e0996c024152a6dd89330b7bb24e0dfb76a5467bb5e47756dd3ef2",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",
@@ -295,8 +295,8 @@
                 "themes/order.json",
                 "themes/hooks.json"
             ],
-            "hash": "42d9216964fffb151509f1321149617e0645606eb4c2b419cce91d7ac507c0c7",
-            "doc": "c14ff1c428701f83231a264f01211468954071ad7ca6a7819b8e14f44edb7404",
+            "hash": "5fc7706057182cda831e75070398009fdf0f9a7064422b0b823d8293ef85a8e7",
+            "doc": "f5292168dcfc5bb4013e49e563b4141ff3680f1785437f538af1f170bb624fd0",
             "files": {
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
@@ -337,7 +337,7 @@
                 "js/combobox.d.ts": "5eb024381d3f874b8a7dd2f230a4ffe885a8031231462217b2490f3aa23d62b1",
                 "js/components.d.ts": "e7b4263054d0ce928f9deea0ae42a6dfbe05b182945b396e96b9981245c71d28",
                 "js/contrast.d.ts": "e3c275e542f7ce47c3953c4392046e81cd19cb8502799ac06579eb70ef07c425",
-                "js/datatable.d.ts": "af8687c41a487018b56d934febdb63ef8f351c8b05a7baa04ebd8cc9f336774c",
+                "js/datatable.d.ts": "0483bdba13e0996c024152a6dd89330b7bb24e0dfb76a5467bb5e47756dd3ef2",
                 "js/datepicker.d.ts": "af6fa4cf0b04aaae450e4f9d81bce378602c70443427704c33cd4ee9a652cb97",
                 "js/diagnostics.d.ts": "64c87fa3284f5103bc521bf8c63644071d0566842f8242557e2155e1b2fab110",
                 "js/effects.d.ts": "78cd37e01cadcb062e934341aff547309054e03d89deea4f619dd5511b804e4b",

@@ -371,6 +371,13 @@
         border-color: var(--border-strong);
     }
 
+    /* In the bar the ghost takes the bar's ink; the rule above paints it
+       for the page [fix-77]. */
+    [data-theme='shade-dark'] .kp-nav .kp-button--ghost {
+        --kp-btn-fg: currentColor;
+        color: inherit;
+    }
+
     [data-theme='shade-dark'] .kp-button--ghost:hover {
         background: var(--card);
     }

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>A select with long options</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-78: the homelab dashboard's "Answer a manual check" form, a
+             select of long options in a 40rem dialog. -->
+        <div style="inline-size: 40rem; margin-inline-start: 18rem">
+            <label class="kp-field__label" for="check">Check</label>
+            <select class="kp-field__input" id="check" data-test="select">
+                <option>Short</option>
+                <option>paperwork: the paperless-ngx inbox is empty and every document of the last week carries a correspondent and a type</option>
+                <option>
+                    media-posters: every film and series added since the last check shows its poster, its fanart and its season artwork in Jellyfin
+                    and in the Kodi skins
+                </option>
+                <option>
+                    kyu-e576: the subscription of the ha app on notify.kenny delivers again after the archive of its held messages, measured on the
+                    phone
+                </option>
+            </select>
+        </div>
+    </body>
+</html>

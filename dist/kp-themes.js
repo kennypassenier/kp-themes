@@ -6817,6 +6817,7 @@ function attachDataTables(root = document, {
       /** @type {State} */
       ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready"
     );
+    let busyText = null;
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
     const emptyWasHidden = empty?.hidden ?? false;
     const densityWas = wrap.getAttribute("data-density");
@@ -7480,13 +7481,13 @@ function attachDataTables(root = document, {
       const s = getStrings();
       if (status !== null) {
         status.textContent = "";
-        if (state === "loading" && all.length > 0) {
+        if (state === "loading") {
           const spinner = make2("span", "kp-spinner");
           spinner.setAttribute("aria-hidden", "true");
           status.append(spinner, " ");
         }
         status.append(
-          state === "loading" ? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, count, serverMode ? count : all.length)
+          state === "loading" ? busyText ?? s.busy : s.tableShowing(pageRows.length === 0 ? 0 : from + 1, from + pageRows.length, count, serverMode ? count : all.length)
         );
       }
       if (pager !== null) {
@@ -8804,6 +8805,10 @@ function attachDataTables(root = document, {
       density: setDensity,
       state: (next) => {
         state = next;
+        render();
+      },
+      busy: (text) => {
+        busyText = text ?? null;
         render();
       },
       reload: () => serverMode ? request() : applyFilter({ keepPage: true }),

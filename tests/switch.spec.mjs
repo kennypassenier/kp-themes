@@ -180,3 +180,29 @@ test(
         await expect.poll(async () => (await durations()).every((d) => d.split(',').some((part) => Number.parseFloat(part) > 0))).toBe(true);
     },
 );
+
+test('flipping a switch moves nothing, however long its words are [fix-79]', { tag: ['@component:switch'] }, async ({ page }) => {
+    // The homelab dashboard's finding (2026-09-29): the word that does not
+    // apply was `display: none`, so the state box was as wide as the word
+    // showing, over a 2rem floor. The English defaults fit that floor; a
+    // longer pair ("Enabled"/"Disabled", or a translation) moved the label
+    // after it on every flip — and a second click without moving the mouse
+    // then lands on something else. Both words now take the box's width.
+    await page.goto(FIXTURE);
+    const input = page.locator('[data-test="plain-off"]');
+    const label = page.locator('label.kp-switch', { has: input }).locator('> span').last();
+    await page
+        .locator('label.kp-switch', { has: input })
+        .locator('.kp-switch__on')
+        .evaluate((el) => (el.textContent = 'Enabled'));
+    await page
+        .locator('label.kp-switch', { has: input })
+        .locator('.kp-switch__off')
+        .evaluate((el) => (el.textContent = 'Disabled for now'));
+    const before = await label.boundingBox();
+    await input.focus();
+    await page.keyboard.press('Space');
+    await expect(input).toBeChecked();
+    const after = await label.boundingBox();
+    expect(after?.x, 'the label after the words stays put').toBe(before?.x);
+});

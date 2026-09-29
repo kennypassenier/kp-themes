@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>A datatable's first load</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- fix-80: a table with no rows yet, left loading for as long as its
+             source takes (the homelab dashboard's host needs 93 s). -->
+        <div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-test="table">
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <caption>
+                        Today
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th data-kp-sort="text">Stack</th>
+                            <th data-kp-sort="text">State</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="kp-datatable__bar">
+                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+            </div>
+        </div>
+        <script type="module">
+            import { attachDataTables } from '/js/datatable.js';
+            window.kpTable = attachDataTables(document).handles[0];
+            document.documentElement.dataset.ready = '';
+        </script>
+    </body>
+</html>
