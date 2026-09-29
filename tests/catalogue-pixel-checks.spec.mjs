@@ -5,6 +5,9 @@
 // hash, so the register's entry counted, and the pixel check reopened it
 // again. What holds now: a verdict this browser gave since the pixel run
 // answers it, and a check only applies to the approval it compared from.
+// That verdict is the browser's until recorded, so the prompt carries its
+// verdict line (Kenny, same day: "er staat niks meer open?" while the
+// register still had 47 pairs open).
 //
 // Red run first, on 15f2a94b in firefox: the stored approval read "changed".
 
@@ -31,14 +34,14 @@ async function readState(page, { registerCommit }) {
             await j.registerReady;
             const before = j.stateOf(key, theme, 'h1');
             j.storeVerdict(key, theme, 'approved', 'h1');
-            return { before, after: j.stateOf(key, theme, 'h1') };
+            return { before, after: j.stateOf(key, theme, 'h1'), source: j.verdictOf(key, theme)?.source };
         },
         { key: KEY, theme: THEME },
     );
 }
 
 test('an approval given after the pixel run closes the pair it reopened [scope-138]', { tag: ['@component:catalogue'] }, async ({ page }) => {
-    expect(await readState(page, { registerCommit: 'c0ffee' })).toEqual({ before: 'changed', after: 'approved' });
+    expect(await readState(page, { registerCommit: 'c0ffee' })).toEqual({ before: 'changed', after: 'approved', source: 'browser' });
 });
 
 test('a pixel check does not reopen a verdict recorded since it [scope-138]', { tag: ['@component:catalogue'] }, async ({ page }) => {

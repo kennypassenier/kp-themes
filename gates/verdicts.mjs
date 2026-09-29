@@ -82,7 +82,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { hashVersion, knownBlocks, NOTES, ratioFault, REGISTER, unapprovedPairs, VERDICTS } from './check-verdicts.mjs';
 
@@ -198,7 +198,7 @@ export function parseVerdictLines(text) {
  * @param {{ hashVersion: number, known: Set<string> | Map<string, unknown>, themes: string[], commit: string, given: string }} context
  * @returns {{ added: string[], changed: string[], unchanged: string[], faults: string[] }}
  */
-export function applyVerdictLines(register, { version, lines }, { hashVersion: current, known, themes, commit, given }) {
+export function applyVerdictLines(register, { version, lines }, { hashVersion: current, known, themes, commit, given, reopened = () => false }) {
     /** @type {{ added: string[], changed: string[], unchanged: string[], faults: string[] }} */
     const report = { added: [], changed: [], unchanged: [], faults: [] };
     if (version !== current) report.faults.push(`the lines were taken with hash version ${version}, the pages read ${current}`);
@@ -220,7 +220,10 @@ export function applyVerdictLines(register, { version, lines }, { hashVersion: c
         const engines = ((register.verdicts[line.key] ??= {})[line.theme] ??= {});
         const before = engines[line.engine];
         const ratio = line.ratio ?? 1;
-        if (before && before.verdict === line.verdict && before.hash === line.hash && ratioOf(before) === ratio) {
+        // The same verdict still answers a pixel check that reopened it: it
+        // moves to this commit, so the check no longer applies [scope-138].
+        const same = before && before.verdict === line.verdict && before.hash === line.hash && ratioOf(before) === ratio;
+        if (same && !reopened(line.key, line.theme, line.engine, before.commit)) {
             report.unchanged.push(at);
             continue;
         }
@@ -317,7 +320,13 @@ export function recordPrompt(input, { registerFile = registerPath, notesFile = n
     const parsed = parseVerdictLines(input);
     if (parsed.faults.length) return { ok: false, out: [], err: [`Nothing recorded:\n  ${parsed.faults.join('\n  ')}`] };
     const register = readRegister(registerFile);
-    const report = applyVerdictLines(register, parsed, context);
+    const pixelFile = join(dirname(registerFile), 'pixel-checks.json');
+    const pixels = existsSync(pixelFile) ? JSON.parse(readFileSync(pixelFile, 'utf8')) : null;
+    const reopened = (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ engine, /** @type {string} */ from) => {
+        const check = pixels?.checks?.[key]?.[theme]?.[engine];
+        return ['reopened', 'unstable'].includes(check?.state ?? '') && (!check?.from || check.from === from);
+    };
+    const report = applyVerdictLines(register, parsed, { reopened, ...context });
     if (report.faults.length) {
         return { ok: false, out: [], err: [`Nothing recorded; ${report.faults.length} line(s) refused:\n  ${report.faults.join('\n  ')}`] };
     }

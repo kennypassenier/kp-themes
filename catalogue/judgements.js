@@ -182,10 +182,18 @@ export const registerVerdicts = () => register.verdicts ?? {};
 export function verdictOf(key, theme, engine = ENGINE, stored = loadJudgements()) {
     const kept = registerVerdicts()[key]?.[theme]?.[engine];
     const local = stored[key]?.[theme]?.[engine];
-    const same = kept && local && kept.verdict === local.verdict && kept.hash === local.hash;
+    // A verdict repeating the register's still answers a pixel check the
+    // register's could not: it is this browser's until recorded [scope-138].
+    const same = kept && local && kept.verdict === local.verdict && kept.hash === local.hash && !answersPixels(key, theme, engine, local, kept);
     if (kept && (!local || same || !newer(local, kept))) return { verdict: kept.verdict, hash: kept.hash, source: 'register', recorded: true };
     if (local) return { verdict: local.verdict, hash: local.hash, source: 'browser', recorded: false };
     return null;
+}
+
+/** Whether this browser's verdict was given since the pixel run that reopened the register's. */
+function answersPixels(key, theme, engine, local, kept) {
+    if (!pixelsReopened(key, theme, engine, kept.commit)) return false;
+    return local.v === HASH_VERSION && Boolean(local.at) && (!pixelChecks.checked || local.at >= Date.parse(pixelChecks.checked));
 }
 
 function newer(local, kept) {
@@ -203,12 +211,6 @@ export function stateOf(key, theme, hash, engine = ENGINE, stored = loadJudgemen
     if (!hash) return entry.verdict;
     if (entry.hash !== hash) return 'changed';
     // The same markup, but its pixels moved or did not hold still [scope-138].
-    // A verdict this browser gave since the pixel run answers it, even when
-    // it repeats the register's.
-    if (entry.source === 'register' && entry.verdict === 'approved' && pixelsReopened(key, theme, engine)) {
-        const local = stored[key]?.[theme]?.[engine];
-        const since = local && local.hash === hash && local.v === HASH_VERSION && local.at && (!pixelChecks.checked || local.at >= Date.parse(pixelChecks.checked));
-        return since ? local.verdict : 'changed';
-    }
+    if (entry.source === 'register' && entry.verdict === 'approved' && pixelsReopened(key, theme, engine)) return 'changed';
     return entry.verdict;
 }
