@@ -310,7 +310,9 @@ ${ex.markup}
             const markup = block.stages.map((stage) => indent(stage)).join('\n');
             // Several stages in one block (a loading table and a failed one)
             // keep their own boxes, as they do in the catalogue.
-            const live = block.stages.map((stage) => `<div class="sc-example__stage">\n${indent(stage)}\n</div>`).join('\n');
+            const live = block.stages
+                .map((stage, i) => `<div class="sc-example__stage${block.rows[i] ? ' sc-example__stage--row' : ''}">\n${indent(stage)}\n</div>`)
+                .join('\n');
             const look = block.look.charAt(0).toUpperCase() + block.look.slice(1);
             // Two catalogue pages may both have an #invalid block; the page
             // name keeps the anchor unique.
@@ -491,8 +493,10 @@ function siteCss() {
        the page's own ground so it reads over whatever scrolls under it. */
     .sc-theme-switch {
         position: fixed;
-        inset-block-start: var(--kp-space-sm, 0.5rem);
-        inset-inline-end: var(--kp-space-md, 1rem);
+        /* Inside a theme's bezel (terminal draws one round the window),
+           never under it. */
+        inset-block-start: calc(var(--kp-bezel, 0px) + var(--kp-space-sm, 0.5rem));
+        inset-inline-end: calc(var(--kp-bezel, 0px) + var(--kp-space-md, 1rem));
         z-index: 10;
         border-radius: var(--radius, 0.5rem);
         background: var(--background);
@@ -568,6 +572,23 @@ function siteCss() {
        ran 60px past the box and the box grew a scrollbar. Wide examples
        are handled where they are wide: the package's own tables carry
        .kp-table-wrap, which is a scroll region on purpose. */
+    /* A catalogue block's stage. Its own scroll box, because a catalogue demo
+       may be as wide as a desktop and the page must not scroll sideways at
+       360px (DI11); popovers and tooltips live in the top layer and are not
+       clipped by it. A row stage wraps its demos as the catalogue does. */
+    .sc-example__stage {
+        position: relative;
+        overflow-x: auto;
+        max-inline-size: 100%;
+    }
+
+    .sc-example__stage--row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-md, 1rem);
+        align-items: flex-start;
+    }
+
     .sc-example__stage + .sc-example__stage {
         margin-block-start: var(--kp-space-md, 1rem);
     }

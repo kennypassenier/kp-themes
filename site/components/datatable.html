@@ -1400,7 +1400,7 @@
                     </figure>
                     <figure class="sc-example" id="more-table-datatable-states">
                         <figcaption class="kp-fw-semibold">Data table: loading and failed</figcaption>
-                        <p class="kp-text-muted">Two data tables held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the loading slot — the shape of what is coming, not a blank box — and the status line says it is busy. <b>Failed</b> shows the alert with its way out, <b>Try again</b>, which fires <code>kp-datatable-retry</code> for the app to load again. Only the failed one may be in the alarm colour.</p>
+                        <p class="kp-text-muted">Three data tables held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the loading slot — the shape of what is coming, not a blank box — and the status line turns its spinner and says it is busy. The third is loading too, with the app's own words in the status line through the handle's <code>busy(text)</code>, the way a page says how long it has been asking [fix-80]. <b>Failed</b> shows the alert with its way out, <b>Try again</b>, which fires <code>kp-datatable-retry</code> for the app to load again. Only the failed one may be in the alarm colour.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div class="kp-datatable" data-kp-datatable data-kp-state="loading">
@@ -1419,6 +1419,28 @@
                     <th scope="col">Reference</th>
                     <th scope="col">Site</th>
                     <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-cat-busy="Asking the host… 42 s so far">
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">
+                Stacks, loading with the app's own words
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Stack</th>
+                    <th scope="col">Container</th>
+                    <th scope="col">State</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -1470,6 +1492,26 @@
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span> <span class="kp-code__keyword">data-cat-busy</span><span class="kp-code__string">=&quot;Asking the host… 42 s so far&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+                Stacks, loading with the app's own words
+            &lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Stack&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Container&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;State&lt;/<span class="kp-code__keyword">th</span>&gt;
                 &lt;/<span class="kp-code__keyword">tr</span>&gt;
             &lt;/<span class="kp-code__keyword">thead</span>&gt;
             &lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;

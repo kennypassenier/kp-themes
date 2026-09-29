@@ -204,7 +204,7 @@
                         <figcaption class="kp-fw-semibold">Default</figcaption>
                         <p class="kp-text-muted">Each slider has its label to its left, and the three sliders line up in one column. The slider tracks and thumbs are the browser's, tinted by the theme's accent: in a dark theme the track must not sit on a grey or white slab of its own. The swatch has a boundary, so a colour close to the page's ground is still a visible square. The value is in the mono face. The sentence under it gives the ratio <i>and</i> the verdict in words; move a slider and both must update as you drag, not only when you let go.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
     <label class="kp-field__label" for="cp-h">Hue</label>
     <input id="cp-h" type="range" data-kp-channel="h" min="0" max="360" value="220" />
@@ -234,7 +234,7 @@
                         <figcaption class="kp-fw-semibold">Passes and fails</figcaption>
                         <p class="kp-text-muted">A pale yellow on the left and a deep blue on the right, both measured as body text against <code>--background</code>. In a light theme the yellow must fail and the blue pass; in a dark theme the verdicts swap. A failing verdict is written in the alarm colour and a passing one in the muted ink — but the words "too little" and "passes" are what carry it, so read them, then switch the theme and read them again. A verdict that does not change when the theme flips from light to dark means the picker is not re-measuring.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-colorpicker" data-kp-colorpicker>
     <label class="kp-field__label" for="cp-pale-h">Hue</label>
     <input id="cp-pale-h" type="range" data-kp-channel="h" min="0" max="360" value="50" />
@@ -286,7 +286,7 @@
                         <figcaption class="kp-fw-semibold">A token that does not exist</figcaption>
                         <p class="kp-text-muted">This picker is pointed at <code>--sidebar-highlight</code>, which no theme defines. It must <i>say</i> that there is nothing to measure against, in words, in the alarm colour — never show a blank line, and never a ratio. A picker that silently stops measuring looks exactly like one that says the colour is fine, which is the failure this block exists to catch.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--sidebar-highlight">
     <label class="kp-field__label" for="cp-miss-h">Hue</label>
     <input id="cp-miss-h" type="range" data-kp-channel="h" min="0" max="360" value="160" />

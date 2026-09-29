@@ -234,7 +234,7 @@
                         <figcaption class="kp-fw-semibold">Closed</figcaption>
                         <p class="kp-text-muted">Closed, a combobox is a text input with a label, and it must sit in a form beside a <code>.kp-field__input</code> without looking like a different control — compare the two. The combobox takes the field's ground, boundary, ink and height, so the two boxes must match in every theme; a theme where they do not is a finding, not a matter of taste. The status line under it is empty until you type.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-combobox" data-kp-combobox>
     <label class="kp-field__label" for="cb-closed">Site</label>
     <input
@@ -364,7 +364,7 @@
                         <figcaption class="kp-fw-semibold">Filtered to nothing</figcaption>
                         <p class="kp-text-muted">When nothing matches, the list stays open under the input with one row that says <b>No results</b>, in the muted ink — where the eye already is — and the status line says it for a screen reader. The row is not an option: the arrows do not land on it and Enter takes nothing. It must be legible on the list's surface in every theme. A server that wants to offer "add this" writes its own <code>[data-kp-combobox-empty]</code> row into the list and the module uses that one instead. Type <code>zzz</code> into the live box beside the frozen one: both must look the same.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-combobox">
     <label class="kp-field__label" for="cb-none">Site (frozen)</label>
     <input
@@ -528,7 +528,7 @@
                         <figcaption class="kp-fw-semibold">Forty options</figcaption>
                         <p class="kp-text-muted">The list stops at its maximum height and scrolls <i>inside itself</i>; the page must not grow to fit it. The scrollbar, where the platform draws one, must sit inside the list's boundary and not hide the right edge of the options. Scroll the list to the end and keep scrolling: the page behind it should not start to move, or should move only once the list is exhausted. Open the live copy with the keyboard and press End — the last option must scroll into view.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-combobox">
     <label class="kp-field__label" for="cb-many">Line (frozen open)</label>
     <input
@@ -710,7 +710,7 @@
                         <figcaption class="kp-fw-semibold">Keyboard</figcaption>
                         <p class="kp-text-muted">Tab into the box and never touch the mouse. Focus opens the list. <b>Down</b> and <b>Up</b> move the highlight while the caret stays in the input — typing must keep working at every moment. <b>Home</b> and <b>End</b> jump to the ends; <b>Down</b> on the last option stays on the last (this box does not loop). <b>Enter</b> takes the highlighted option and closes the list; with nothing highlighted, Enter does nothing here and would submit a form around it. <b>Escape</b> closes without choosing. <b>Tab</b> leaves and closes. The highlight you see must always be the option Enter would take — if hover and the arrows disagree, that is the fault.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-combobox" data-kp-combobox>
     <label class="kp-field__label" for="cb-keys">Who takes this incident?</label>
     <input

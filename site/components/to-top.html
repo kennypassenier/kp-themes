@@ -184,7 +184,7 @@
                         <figcaption class="kp-fw-semibold">Back to top</figcaption>
                         <p class="kp-text-muted"><code>.kp-to-top</code> is fixed to the corner of the window and invisible until the reader has scrolled; the two in the box are frozen in their shown state (<code>data-kp-to-top-shown</code>) and pinned to the box's corner instead. The left one is written the way the package documents it — an empty button with only an accessible name — and holds the glyph the package puts in such a button (<code>.kp-to-top__glyph</code>, drawn from <code>--kp-glyph-to-top</code>): judge whether the arrow reads in every theme. The right one carries its own words. The live control is in the real corner of the window: it must fade in once you are 600 px down, sit above the page without covering the feedback field you are typing in, and on press scroll to the top <i>and</i> move focus there.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div style="contain: layout; inline-size: 12rem; block-size: 7rem; border: 1px dashed var(--border)">
     <button type="button" class="kp-button kp-to-top" aria-label="Back to top" data-kp-to-top-shown>
         <span class="kp-to-top__glyph" aria-hidden="true"></span>

@@ -212,7 +212,7 @@
                         <figcaption class="kp-fw-semibold">Error summary</figcaption>
                         <p class="kp-text-muted">The first form shows the summary as <code>js/forms.js</code> writes it after a failed submit: a boundary in the alarm colour, a tinted ground, a sentence saying how many fields are wrong, and one link per field that moves focus to it. The tint must stay a tint — in a dark theme it must not become a red slab that swallows the links. The second form is live: press <b>Report</b> with both fields empty, and the summary must appear <i>and take focus</i>, with a visible focus ring around it; then fill one field and Tab away, and its message must clear without a second submit.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <form class="kp-form" novalidate aria-label="A failed submit, frozen">
     <div class="kp-form__summary" tabindex="-1">
         <p class="kp-form__summary-title">2 fields are not filled in correctly.</p>
@@ -424,7 +424,7 @@
                         <figcaption class="kp-fw-semibold">Compact form</figcaption>
                         <p class="kp-text-muted">The same form twice; the right one sits under <code>data-density="compact"</code>. In <b>every</b> theme the compact one is visibly tighter: the gap between the fields and the gap between a label and its input both come down, and so does the height of the inputs and the button — but a control never gets smaller than a comfortable pointer target (24 px is the floor; use the Devtools ruler), the labels stay the same readable size, and nothing overlaps.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div>
     <form class="kp-form">
         <div class="kp-field">

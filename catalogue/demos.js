@@ -103,6 +103,21 @@ import('../js/datatable.js').then(({ dataTable }) => {
     for (const table of document.querySelectorAll('[data-cat-server]')) {
         if (!heard.has(table)) dataTable(table)?.reload();
     }
+    // catalogue/table.html#datatable-states: a loading table that says, in the
+    // app's own words, how long it has been asking (the handle's busy(), fix-80).
+    // The words are fixed rather than a running clock, so the block reads the
+    // same at every look.
+    let tries = 0;
+    const busy = () => {
+        const waiting = [...document.querySelectorAll('[data-cat-busy]')].filter((table) => {
+            const handle = dataTable(table);
+            if (handle === null) return true;
+            handle.busy(table.getAttribute('data-cat-busy'));
+            return false;
+        });
+        if (waiting.length > 0 && tries++ < 60) requestAnimationFrame(busy);
+    };
+    busy();
 });
 
 /* ------------------------------------------ the data table's edit refusal */

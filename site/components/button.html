@@ -240,7 +240,7 @@
                         <figcaption class="kp-fw-semibold">Variants</figcaption>
                         <p class="kp-text-muted">Six variants that must read as one family at six weights. <b>Primary</b> (<code>--primary</code>) is the loudest thing on the page and there is one per view. The bare <code>.kp-button</code> is the everyday secondary look, and <code>--secondary</code> must match it. <b>Ghost</b> has no ground until touched; <b>destructive</b> is the only one allowed the alarm colour. <b>Mirror</b> exists in the registers only — the themes that answer it draw the flipped silhouette, the others must leave it looking like the bare button, never broken. A theme that cuts a notch or a bevel does it to every variant, not to one.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--primary">Save changes</button>
 <button type="button" class="kp-button">Save as draft</button>
 <button type="button" class="kp-button kp-button--secondary">Preview</button>
@@ -260,7 +260,7 @@
                         <figcaption class="kp-fw-semibold">States</figcaption>
                         <p class="kp-text-muted">Hover and press with the mouse, then walk the row with Tab. Every state must be visible <i>without</i> colour alone — a lift, an inset, a frame, a shift. The pressed state must differ from hover by more than a hair: the rule is at least ten steps of lightness, and the two themes that could not reach it were changed rather than excused. The focus ring must stay visible on the ground behind it in every theme, including the ones that paint their own elevation. <b>Disabled</b> must look unavailable and must not respond to hover at all.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--primary">Rest</button>
 <button type="button" class="kp-button">Focus me with Tab</button>
 <button type="button" class="kp-button" disabled>Disabled</button>
@@ -280,7 +280,7 @@
                         <figcaption class="kp-fw-semibold">Sizes</figcaption>
                         <p class="kp-text-muted">Three sizes on one baseline. The label must stay centred at every size, the padding must scale with the text rather than jump, and the small size must still be large enough to hit — 44 px is the floor on a touch screen. Use the ruler in Devtools to check the height of each.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--sm">Small</button>
 <button type="button" class="kp-button">Default</button>
 <button type="button" class="kp-button kp-button--lg">Large</button>
@@ -294,7 +294,7 @@
                         <figcaption class="kp-fw-semibold">Icons</figcaption>
                         <p class="kp-text-muted">The icon and the label must share a baseline, and the gap between them must not grow with the button. The icon-only button must have an accessible name — hover it and read the tooltip, then Tab to it and listen: a screen reader has to say something other than "button".</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button">
     <span aria-hidden="true">↻</span>
     <span class="kp-button__text">Retry</span>
@@ -368,7 +368,7 @@
                         <figcaption class="kp-fw-semibold">The keyboard accelerator</figcaption>
                         <p class="kp-text-muted"><b>only retro</b> underlines the marked letter — measured over all 22 themes on 2026-09-13, retro is the one register that answers <code>data-kp-key</code>. In retro, hover or Tab to each button: one letter of its label gains an underline, and that is the only change, because a 1995 desktop had no hover and showed the accelerator instead (decided 2026-09-12). In every other theme the letter looks like the rest of the label and the button keeps its own hover. In <b>every</b> theme the label must read as one word — "Save", never "S ave".</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--primary"><span data-kp-key>S</span>ave</button>
 <button type="button" class="kp-button">Save <span data-kp-key>a</span>s…</button>
 <button type="button" class="kp-button kp-button--destructive"><span data-kp-key>D</span>elete</button>
@@ -500,7 +500,7 @@
                         <figcaption class="kp-fw-semibold">Button readout</figcaption>
                         <p class="kp-text-muted">The first button carries a readout (<code>.kp-button__readout</code>, the word "READY"), the second does not. At rest, in <b>every</b> theme, the readout is invisible and the two buttons are exactly the same height: the readout is out of the flow and costs the control nothing. Hover or Tab to the first button: in <b>dark</b> and <b>titanium</b> the small reading appears above the control, in the theme's oxide, and goes again when the pointer leaves; in every other theme nothing appears at all. The readout is decoration — a screen reader hears "Send", never "READY Send".</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--primary">
     <span class="kp-button__edge" aria-hidden="true"></span>
     <span class="kp-button__readout" aria-hidden="true">READY</span>

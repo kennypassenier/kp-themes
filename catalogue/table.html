@@ -1113,10 +1113,11 @@
             <section class="cat-block" id="datatable-states">
                 <h2>Data table: loading and failed</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> two data tables held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the
-                    loading slot — the shape of what is coming, not a blank box — and the status line says it is busy. <b>Failed</b> shows the alert
-                    with its way out, <b>Try again</b>, which fires <code>kp-datatable-retry</code> for the app to load again. Only the failed one may
-                    be in the alarm colour.
+                    <b>Look at:</b> three data tables held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the
+                    loading slot — the shape of what is coming, not a blank box — and the status line turns its spinner and says it is busy. The third
+                    is loading too, with the app's own words in the status line through the handle's <code>busy(text)</code>, the way a page says how
+                    long it has been asking [fix-80]. <b>Failed</b> shows the alert with its way out, <b>Try again</b>, which fires
+                    <code>kp-datatable-retry</code> for the app to load again. Only the failed one may be in the alarm colour.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-datatable" data-kp-datatable data-kp-state="loading">
@@ -1135,6 +1136,28 @@
                                         <th scope="col">Reference</th>
                                         <th scope="col">Site</th>
                                         <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-cat-busy="Asking the host… 42 s so far">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Stacks, loading with the app's own words
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Stack</th>
+                                        <th scope="col">Container</th>
+                                        <th scope="col">State</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

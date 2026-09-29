@@ -54,9 +54,13 @@ for (const descriptor of DESCRIPTORS) {
 
         // The sections, by name and in order: a page missing one of them
         // is a page that answers eight of the nine questions.
-        expect(await page.locator('[data-sc-section]').evaluateAll((els) => els.map((el) => el.getAttribute('data-sc-section')))).toEqual(SECTIONS);
+        // Since 2026-09-29 a page may carry a tenth, `more-examples` (the
+        // catalogue's blocks), right after the live example; the nine stand.
+        const found = await page.locator('[data-sc-section]').evaluateAll((els) => els.map((el) => el.getAttribute('data-sc-section')));
+        expect(found.filter((name) => name !== 'more-examples')).toEqual(SECTIONS);
+        if (found.includes('more-examples')) expect(found[found.indexOf('more-examples') - 1]).toBe('example');
 
-        const live = page.locator('[data-sc-live]');
+        const live = page.locator('#example [data-sc-live]');
         // Both halves: a page shows what its descriptor promises, and a
         // descriptor that promises nothing is not a documented unit.
         expect(descriptor.examples.length, `${descriptor.id} has no example at all`).toBeGreaterThan(0);

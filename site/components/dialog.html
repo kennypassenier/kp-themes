@@ -242,7 +242,7 @@
     </div>
 </dialog>
 </div>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ov-d1-live">Open the dialog</button>
 <dialog class="kp-dialog" id="ov-d1-live" aria-labelledby="ov-d1-live-title">
     <h2 class="kp-dialog__title" id="ov-d1-live-title">Close incident INC-4471?</h2>
@@ -332,7 +332,7 @@ aria-describedby="ov-c1-description"
 </div>
 </dialog>
 </div>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button
 type="button"
 class="kp-button kp-button--destructive"
@@ -370,7 +370,7 @@ Delete incident
                         <figcaption class="kp-fw-semibold">A dialog with sixty rows</figcaption>
                         <p class="kp-text-muted">Press <b>Open sixty readings</b>. The modal dialog is taller than any window, so it stops a margin short of the window's edges and scrolls its <code>.kp-dialog__body</code> <i>inside itself</i>: the title stays at the top and the buttons stay at the bottom while the rows move between them, and the page behind must not scroll along. The frozen copy below is <i>not</i> modal and takes the same cap (<code>--kp-dialog-max-height</code>, the window minus 2rem), so it scrolls its body the same way; the stage around it still scrolls so it does not cover the rest of this page, and that scrollbar belongs to the catalogue, not to the dialog.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ov-long-live">Open sixty readings</button>
 <dialog class="kp-dialog" id="ov-long-live" aria-labelledby="ov-long-live-title">
     <h2 class="kp-dialog__title" id="ov-long-live-title">Pressure readings, line 2, last hour</h2>

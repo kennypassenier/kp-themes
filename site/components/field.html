@@ -242,7 +242,7 @@
                         <figcaption class="kp-fw-semibold">Text, email, number</figcaption>
                         <p class="kp-text-muted">Three inputs of three types must look like one family: the same height, the same border, the same ground, and the label above each at the same distance. Click into each and Tab between them — the focus ring must be visible against the input's own ground <i>and</i> the page's, and it must not be the border merely changing colour. The placeholder in the empty one must read as a hint, clearly lighter than a typed value, yet still legible. The number input's spin buttons are the browser's; check that they do not sit on a white square in a dark theme.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field">
     <label class="kp-field__label" for="f-site">Site</label>
     <input class="kp-field__input" id="f-site" name="site" type="text" value="Pump house 4" />
@@ -274,7 +274,7 @@
                         <figcaption class="kp-fw-semibold">Textarea and select</figcaption>
                         <p class="kp-text-muted">The textarea is <code>.kp-field__input--multiline</code>: it must be taller than a single-line input, it must resize vertically only — drag its corner sideways and nothing should happen — and its text must start at the same inset as the inputs above. The select is a plain <code>select.kp-field__input</code>: its list is drawn by the package in the combobox's look in every browser, Firefox included, without the page asking — the same surface, highlight and boundary as an open combobox, the chosen option in weight with a check, the disabled one faded. Open it with a click and with the keyboard (Down, Up, Home, End, a letter, Enter, Escape); the value you take must show in the closed box. Closed, it must be the same height as a text input. A page that wants the browser's own list writes <code>data-kp-select="native"</code>; a multiple select always keeps it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field">
     <label class="kp-field__label" for="f-note">Handover note</label>
     <textarea class="kp-field__input kp-field__input--multiline" id="f-note" name="note">
@@ -310,7 +310,7 @@
                         <figcaption class="kp-fw-semibold">Checkbox and radio</figcaption>
                         <p class="kp-text-muted">The box comes <i>before</i> its label and shares its baseline. Tick and untick: the checked mark must be visible in every theme — in a theme whose primary colour is its ink, a checked box that looks unchecked is the known fault. The radio group is a <code>.kp-fieldset</code>: the legend reads as the question, the options as answers, and clicking a label must select its radio. The second group asks for <code>data-kp-layout="inline"</code>; its options sit in a row and wrap. There is no switch in the package yet — a toggle is a checkbox here, and the switch is a concept on its own page for now.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div>
     <div class="kp-field kp-field--check">
         <input class="kp-field__check" id="f-weekly" name="weekly" type="checkbox" checked />
@@ -370,7 +370,7 @@
                         <figcaption class="kp-fw-semibold">Help and required</figcaption>
                         <p class="kp-text-muted">The help text sits under the input, smaller and quieter than the label, but must still pass contrast on the page's ground — check it with the Devtools colour tool in the palest and the darkest theme. The required marker is a star <i>and</i> the word: the star in the alarm colour, the word muted. A theme may swap the glyph, never drop the word. The optional field beside it must not look any less important for having no marker.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field">
     <label class="kp-field__label" for="f-ref">Incident reference <span class="kp-field__required">required</span></label>
     <input class="kp-field__input" id="f-ref" name="ref" type="text" required aria-describedby="f-ref-help" value="INC-4471" />
@@ -398,7 +398,7 @@
                         <figcaption class="kp-fw-semibold">Invalid, with its message</figcaption>
                         <p class="kp-text-muted">Every invalid field says what is wrong in words, under the control, in the alarm colour — and the colour must pass contrast on the ground, because the words are the message. The text input's border turns to the alarm colour; the checkbox, which has no border, gets an outline instead. The radio group carries <code>aria-invalid</code> on the group and gets one outline around the whole group — one wrong answer, one mark — while the radios inside it stay unframed. In a theme whose register repaints the input's border, the invalid border must still win over it; every theme answers that state now. The help text must survive beside the error rather than be replaced by it. Compare with the valid field at the end: the difference must be visible without colour — the message is what carries it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field kp-field--invalid">
     <label class="kp-field__label" for="f-bad-email">Escalation email <span class="kp-field__required">required</span></label>
     <input
@@ -474,7 +474,7 @@
                         <figcaption class="kp-fw-semibold">Disabled and read-only</figcaption>
                         <p class="kp-text-muted">These two are different promises and must not look the same. <b>Disabled</b> cannot be used and says so: the pointer shows it is refused and the value is still readable. <b>Read-only</b> can be focused, selected and copied, but not changed — it should look like a value on a record, not like a broken input. The package fades the disabled field and gives the read-only one a dashed boundary on the muted ground at full ink. If the read-only field looks exactly like an editable one in some theme, a reviewer will type into it and think the page froze: that is the fault to watch for. The disabled checkbox and select must follow the same rule as the text input.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field">
     <label class="kp-field__label" for="f-dis">Contract number</label>
     <input class="kp-field__input" id="f-dis" type="text" value="HF-2201" disabled />
@@ -528,7 +528,7 @@
                         <figcaption class="kp-fw-semibold">Extremes</figcaption>
                         <p class="kp-text-muted">The label is 120 characters: it must wrap onto as many lines as it needs and stay aligned to the input's left edge — never be cut, never push the field wider than its column. The input holds a 300-character value on one line: it must scroll inside itself, keep its height, and keep its padding on both ends when you move the caret to the end. The textarea holds the same 300 characters and must wrap them at word boundaries inside its padding. The last input holds an identifier with nowhere to break; it too must stay inside its box.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field">
     <label class="kp-field__label" for="f-long-label"
     >Full name of the person the site manager should call first when the pump house 4 alarm goes off outside of working
@@ -596,7 +596,7 @@
                         <figcaption class="kp-fw-semibold">Invalid</figcaption>
                         <p class="kp-text-muted">A switch that must be on before the form goes through. It takes the same outline an invalid checkbox takes, in the alarm colour, and the message under it says what is wrong in words. The outline must show in every theme, including the ones whose track carries its own shadow (brutalism, retro, synthwave). Turn it on: nothing here clears the message, because this block is not inside a form — in a <code>data-kp-form</code>, <code>js/forms.js</code> would.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div class="kp-field kp-field--check kp-field--invalid">
     <label class="kp-switch">
         <input class="kp-switch__input" type="checkbox" role="switch" aria-invalid="true" aria-describedby="sw-lock-error" />

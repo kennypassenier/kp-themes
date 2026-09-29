@@ -20,7 +20,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-/** @typedef {{ page: string, id: string, title: string, look: string, stages: string[] }} Block */
+/** @typedef {{ page: string, id: string, title: string, look: string, stages: string[], rows: boolean[] }} Block */
 
 /**
  * The catalogue pages that hold component blocks, in the catalogue's own order.
@@ -53,8 +53,15 @@ export function blocksOf(html, page) {
             .trim();
         /** @type {string[]} */
         const stages = [];
-        for (const s of inner.matchAll(/^( *)<div class="cat-stage[^"]*"[^>]*>\n([\s\S]*?)^\1<\/div>/gm)) stages.push(s[2]);
-        if (stages.length > 0) blocks.push({ page, id, title, look, stages });
+        // Whether a stage lays its demos out in a wrapping row, as the
+        // catalogue's `.cat-stage` does unless it is `--block`.
+        /** @type {boolean[]} */
+        const rows = [];
+        for (const s of inner.matchAll(/^( *)<div class="(cat-stage[^"]*)"[^>]*>\n([\s\S]*?)^\1<\/div>/gm)) {
+            stages.push(s[3]);
+            rows.push(!s[2].split(/\s+/).includes('cat-stage--block'));
+        }
+        if (stages.length > 0) blocks.push({ page, id, title, look, stages, rows });
     }
     return blocks;
 }

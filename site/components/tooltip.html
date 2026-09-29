@@ -186,7 +186,7 @@
                         <figcaption class="kp-fw-semibold">Tooltip</figcaption>
                         <p class="kp-text-muted">A tooltip is a <code>.kp-popover</code> with <code>.kp-tooltip</code> on it: the same surface and boundary as a menu, smaller text and less padding. It describes; it never holds the only copy of anything, so each trigger here has its own visible label. The short tooltip must hug its text; the long one must stop at its maximum width and wrap into a short paragraph, not stretch into one line across the page. The first two are shown open and held open for the eye; the two under them are live: <code>js/overlays.js</code> opens a tooltip after a moment under the pointer and at once on focus, closes it when the pointer or focus leaves or on Escape, and points the trigger's <code>aria-describedby</code> at it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <span class="kp-tooltip-anchor" data-kp-tooltip-owner="catalogue" style="anchor-name: --ov-tt1">
     <button type="button" class="kp-button" aria-describedby="ov-tt1">Recalibrate</button>
     <span role="tooltip" id="ov-tt1" class="kp-popover kp-tooltip" style="position-anchor: --ov-tt1"
@@ -201,7 +201,7 @@
     >
 </span>
 </div>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <span class="kp-tooltip-anchor">
     <button type="button" class="kp-button" id="ov-tt-live-trigger">Recalibrate (live)</button>
     <span role="tooltip" class="kp-popover kp-tooltip" id="ov-tt-live">Takes about two minutes</span>

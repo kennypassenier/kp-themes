@@ -310,7 +310,7 @@
                         <figcaption class="kp-fw-semibold">Side navigation</figcaption>
                         <p class="kp-text-muted"><code>.kp-sidenav</code> in its default <code>side</code> mode stands beside the content on the card surface with a rule on its inner edge. The header and the footer stay put while the list scrolls — scroll inside the panel to check. The current page (<b>Line 2</b>) is marked by a ground and weight, not colour alone; hover any row and the hover must be different from the current mark. <b>Readings</b> is an open category: its chevron points down and its links are indented; <b>Maintenance</b> is closed — press it and it must open smoothly, not jump. The fourth link's label is sixty characters: it must end in an ellipsis inside the panel with its count (<code>.kp-sidenav__badge</code>) still whole at the end of the row; the panel must never scroll sideways.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <nav class="kp-sidenav" id="nv-side" aria-label="North site sections">
     <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
     <div class="kp-sidenav__scroll">
@@ -490,7 +490,7 @@
                         <figcaption class="kp-fw-semibold">Slim rail</figcaption>
                         <p class="kp-text-muted">The left panel is a collapsed rail (<code>data-kp-sidenav-slim-collapsed</code>): icons only, each still with an accessible name, the wordmark swapped for the monogram "N". Hover it — it must <i>not</i> widen, because it was not asked to. The middle rail has <code>data-kp-sidenav-expand-on-hover</code>: hover it and the labels must come back without the rail pushing the content beside it. The right panel is the same rail expanded. Press <b>Collapse or expand the right rail</b>: the width must change with the theme's own timing, and the labels must not overflow while it narrows. The button is wired by the package alone (<code>data-kp-sidenav-slim-toggle</code> with <code>aria-controls</code>), and a screen reader hears it as expanded while the rail is wide.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <nav class="kp-sidenav" id="nv-slim-a" aria-label="Rail, collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
     <div class="kp-sidenav__header">
         <span class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</span>
@@ -577,7 +577,7 @@
             </div>
         </nav>
 </div>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--secondary" data-kp-sidenav-slim-toggle aria-controls="nv-slim-c">
     Collapse or expand the right rail
 </button>
@@ -676,7 +676,7 @@
                         <figcaption class="kp-fw-semibold">Rail toggle</figcaption>
                         <p class="kp-text-muted">Each rail carries its own toggle in its footer (<code>data-kp-sidenav-slim-toggle</code>), drawn as a rail entry (<code>.kp-sidenav__link</code>) holding only an arrow. The left rail starts collapsed and its arrow points out (»); the right one starts wide and its arrow points in («). Press either: the rail must change width with the theme's own timing, the arrow must turn, and the button must stay where the pointer and the focus are — press it again from the keyboard (Enter or Space) without moving. The toggle must look like part of the rail in every theme, not a stray button, and its focus ring must stay visible in both widths. A screen reader hears "Expand the side navigation" or "Collapse the side navigation to its icons", and every link in the collapsed rail keeps its name.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <nav class="kp-sidenav" id="nv-rt-a" aria-label="Invoices, starts collapsed" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed>
     <div class="kp-sidenav__scroll">
         <ul class="kp-sidenav__list">
@@ -816,7 +816,7 @@
                         <figcaption class="kp-fw-semibold">Over the page</figcaption>
                         <p class="kp-text-muted">The left box is an <code>over</code> panel frozen open inside its box (<code>data-kp-sidenav-position="absolute"</code>): it covers the content, and the backdrop behind it <i>dims</i> the box — by darkening, never by tinting it with the theme's colour. The panel must have an edge against the dimmed content in every theme. Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is open.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
+<div class="sc-example__stage sc-example__stage--row">
 <div style="position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden">
     <p style="margin: 1rem">
         Incident INC-4471 is open on line 2. The day shift checks the gauge against the sensor before reopening the line.
