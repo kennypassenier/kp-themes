@@ -531,6 +531,173 @@ async function rehash(args) {
     console.log(`${REGISTER}: ${total} entr${total === 1 ? 'y' : 'ies'} rehashed from version ${from} to ${HASH_VERSION}, ${moved} hash(es) moved.`);
 }
 
+/* ------------------------------------------------------------------ pixels */
+
+/** Where the pixel verdicts live [scope-138]. */
+export const PIXELS = 'catalogue/pixel-checks.json';
+
+/**
+ * Judge by pixels what the markup hash cannot see [scope-138].
+ *
+ * Kenny, 2026-09-29: the block hash is the markup alone, and what CSS and
+ * scripts do to a block is read from its pixels. Every approved entry is
+ * photographed at the commit it was approved (or last carried) at and in the
+ * working tree, in one browser of its engine at its ratio, each twice. Both
+ * pairs of photographs steady and equal: the approval stands, and the entry is
+ * carried to HEAD so the next run compares from here. Steady and different:
+ * the pair comes back to Kenny. Not steady in either place: it comes back as
+ * well, marked unstable. A block that no longer exists at HEAD comes back.
+ * The outcome is written to catalogue/pixel-checks.json, which the review
+ * page reads beside the register.
+ * @param {string[]} args
+ */
+async function pixels(args) {
+    const width = (args.includes('--width') && Number(args[args.indexOf('--width') + 1])) || 1920;
+    const dirty = git('status', '--porcelain', '--', 'css', 'js', 'catalogue', 'themes', 'fonts', 'components', 'research');
+    if (dirty) throw new Error(`pixels compares against HEAD, and the working tree has changes:\n${dirty}`);
+    const head = git('rev-parse', 'HEAD');
+    const register = readRegister();
+    /** @type {Map<string, { commit: string, engine: string, ratio: number, requests: { key: string, theme: string, entry: Entry }[] }>} */
+    const groups = new Map();
+    for (const [key, themes] of Object.entries(register.verdicts))
+        for (const [theme, engines] of Object.entries(themes))
+            for (const [engine, entry] of Object.entries(engines)) {
+                if (entry.verdict !== 'approved' || entry.commit === head) continue;
+                const id = `${entry.commit}|${engine}|${ratioOf(entry)}`;
+                const group = groups.get(id) ?? { commit: entry.commit, engine, ratio: ratioOf(entry), requests: [] };
+                group.requests.push({ key, theme, entry });
+                groups.set(id, group);
+            }
+    /** @type {Record<string, Record<string, Record<string, { state: string, from: string }>>>} */
+    const checks = {};
+    const put = (
+        /** @type {string} */ key,
+        /** @type {string} */ theme,
+        /** @type {string} */ engine,
+        /** @type {string} */ state,
+        /** @type {string} */ from,
+    ) => {
+        checks[key] ??= {};
+        checks[key][theme] ??= {};
+        checks[key][theme][engine] = { state, from };
+    };
+    const tally = { carried: 0, reopened: 0, unstable: 0, gone: 0 };
+    const knownNow = await knownBlocks(ROOT);
+    let n = 0;
+    for (const { commit, engine, ratio, requests } of groups.values()) {
+        n += 1;
+        console.log(`[${n}/${groups.size}] ${commit.slice(0, 12)} in ${engine} at ratio ${ratio}: ${requests.length} pair(s)`);
+        const here = requests.filter((r) => knownNow.has(r.key));
+        for (const r of requests.filter((r) => !knownNow.has(r.key))) {
+            put(r.key, r.theme, engine, 'reopened', commit);
+            tally.gone += 1;
+        }
+        if (!here.length) continue;
+        const then = await shootAt({ commit, engine, ratio, width, requests: here });
+        const now = await shootAt({ root: ROOT, engine, ratio, width, requests: here });
+        for (const { key, theme, entry } of here) {
+            const a = then.get(`${key}|${theme}`);
+            const b = now.get(`${key}|${theme}`);
+            let state = 'reopened';
+            if (!a || !b) state = 'reopened';
+            else if (a.first !== a.second || b.first !== b.second) state = 'unstable';
+            else if (a.first === b.first) state = 'carried';
+            put(key, theme, engine, state, commit);
+            tally[/** @type {'carried' | 'reopened' | 'unstable'} */ (state)] += 1;
+            if (state === 'carried') entry.commit = head;
+        }
+    }
+    writeRegister(register);
+    writeFileSync(
+        join(ROOT, PIXELS),
+        `${JSON.stringify(
+            {
+                $comment:
+                    'Pixel verdicts [scope-138]: each approved pair photographed at the commit it was approved or last carried at and at `commit`, in one browser of its engine at its ratio. carried: the same pixels, the approval stands; reopened: different pixels, or the block is gone; unstable: a photograph that did not repeat. Written by `node gates/verdicts.mjs pixels`.',
+                hashVersion: register.hashVersion,
+                commit: head,
+                checks,
+            },
+            null,
+            4,
+        )}\n`,
+    );
+    console.log(
+        `${PIXELS}: ${tally.carried} carried, ${tally.reopened + tally.gone} reopened (${tally.gone} no longer a block), ${tally.unstable} unstable, compared against ${head.slice(0, 12)}.`,
+    );
+}
+
+/**
+ * Photograph blocks at a commit (a temporary worktree) or in a directory.
+ * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[] }} options
+ * @returns {Promise<Map<string, { first: string, second: string }>>}
+ */
+async function shootAt({ commit, root, engine, ratio, width, requests }) {
+    const { serve, shootPlaywright } = await import('./verdict-hashes.mjs');
+    const playwright = await import('@playwright/test');
+    /** @type {Record<string, import('@playwright/test').BrowserType>} */
+    const engines = { firefox: playwright.firefox, chromium: playwright.chromium, webkit: playwright.webkit };
+    const type = engines[engine];
+    if (!type) throw new Error(`no browser for the engine "${engine}"`);
+    /** @type {string | null} */
+    let dir = null;
+    /** @type {{ base: string, close: () => Promise<void> } | null} */
+    let server = null;
+    /** @type {import('@playwright/test').Browser | null} */
+    let browser = null;
+    /** @type {Map<string, { first: string, second: string }>} */
+    const out = new Map();
+    try {
+        if (!root) {
+            dir = await mkdtemp(join(tmpdir(), 'kp-pixels-worktree-'));
+            git('worktree', 'add', '--detach', dir, String(commit));
+        }
+        const served = root ?? String(dir);
+        const known = await knownBlocks(served);
+        server = await serve(served);
+        browser = await type.launch({
+            headless: true,
+            ...(ratio !== 1 && engine === 'firefox' ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
+        });
+        const context = await browser.newContext({
+            viewport: { width, height: 1000 },
+            reducedMotion: 'reduce',
+            ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}),
+        });
+        const page = await context.newPage();
+        /** @type {Map<string, { themes: Set<string>, keys: Set<string> }>} */
+        const byPage = new Map();
+        for (const request of requests) {
+            const block = known.get(request.key);
+            if (!block) continue;
+            const wanted = byPage.get(block.page) ?? { themes: new Set(), keys: new Set() };
+            wanted.themes.add(request.theme);
+            wanted.keys.add(request.key);
+            byPage.set(block.page, wanted);
+        }
+        for (const [href, wanted] of byPage) {
+            try {
+                const shots = await shootPlaywright(page, { base: server.base, href, themes: [...wanted.themes], width, only: [...wanted.keys] });
+                for (const [k, v] of shots) out.set(k, v);
+            } catch (error) {
+                console.error(`  ${href} at ${commit ?? 'the working tree'}: ${String(error).split('\n')[0]}`);
+            }
+        }
+        return out;
+    } finally {
+        await browser?.close();
+        await server?.close();
+        if (dir) {
+            try {
+                git('worktree', 'remove', '--force', dir);
+            } finally {
+                await rm(dir, { recursive: true, force: true });
+                git('worktree', 'prune');
+            }
+        }
+    }
+}
+
 /* ------------------------------------------------------------------ settle */
 
 /**
@@ -1315,6 +1482,7 @@ async function main() {
     if (command === 'rehash') return rehash(args);
     if (command === 'carry') return carry(args);
     if (command === 'snapshot') return snapshot(args);
+    if (command === 'pixels') return pixels(args);
     if (command === 'settle') return settle(args);
     if (command === 'compare' && args.includes('--against-browser')) return compareAgainstBrowser(args);
     if (command === 'compare') return compare(args);
@@ -1325,6 +1493,7 @@ async function main() {
             '       node gates/verdicts.mjs rehash [--width 1920]\n' +
             '       node gates/verdicts.mjs carry [--width 1920] [--register <file>]\n' +
             '       node gates/verdicts.mjs snapshot [--width 1920]\n' +
+            '       node gates/verdicts.mjs pixels [--width 1920]\n' +
             '       node gates/verdicts.mjs settle [--ratio 2.222] [--width 1920]\n' +
             '       node gates/verdicts.mjs compare --browser /usr/bin/firedragon [--engine firefox] [--width 1920] [--height 1000] [--themes formal,nostromo]\n' +
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +

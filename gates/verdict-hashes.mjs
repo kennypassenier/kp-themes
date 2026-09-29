@@ -155,6 +155,93 @@ export async function measurePlaywright(page, { base, href, themes, width, heigh
 }
 
 /**
+ * Runs inside the review page: puts one theme on and waits until the page is
+ * at rest, the way IN_PAGE does before it reads, and returns the blocks there
+ * are, each with the selectors of the parts that are the component (its
+ * stages, or the block itself without its heading and reading aids).
+ * @param {{ base: string, theme: string, only?: string[] | null }} options
+ */
+export const PREPARE = async ({ base, theme, only = null }) => {
+    const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const core = await import(`${base}js/theme-core.js`);
+    /** @type {{ COMPONENT_PAGES: { href: string }[] }} */
+    const { COMPONENT_PAGES } = await import(`${base}catalogue/pages.js`);
+    const here = decodeURIComponent(location.pathname).slice(new URL(base).pathname.length);
+    const component = COMPONENT_PAGES.find((page) => page.href === here);
+    const slug = (here.split('/').pop() ?? '').replace(/\.html$/, '');
+    if (core.currentTheme() !== theme) core.applyTheme(theme);
+    for (let i = 0; i < 400; i += 1) {
+        const sheets = [...document.querySelectorAll('link[rel="stylesheet"]')].every((link) => /** @type {HTMLLinkElement} */ (link).sheet);
+        if (core.currentTheme() === theme && sheets) break;
+        await sleep(50);
+    }
+    if (core.currentTheme() !== theme) throw new Error(`${here}: the theme ${theme} never applied`);
+    const busy = () => [...document.querySelectorAll('[data-cat-approval-state]')].some((el) => /Checking|…/.test(el.textContent ?? ''));
+    await sleep(200);
+    for (let i = 0; i < 300 && busy(); i += 1) await sleep(100);
+    // A block still building itself (a data table on a mock server) is given
+    // up to three seconds, as the hash reading gives it.
+    for (let i = 0; i < 60 && document.querySelector('[aria-busy="true"]:not([data-kp-state="loading"])'); i += 1) await sleep(50);
+    await document.fonts?.ready;
+    await sleep(300);
+    /** @type {HTMLElement[]} */
+    let sections = [...document.querySelectorAll('.cat-block[id]')].map((el) => /** @type {HTMLElement} */ (el));
+    if (!sections.length) sections = [...document.querySelectorAll('main section[id]')].map((el) => /** @type {HTMLElement} */ (el));
+    const blocks = sections
+        .map((section) => ({
+            key: component ? `${slug}--${section.id}` : `${here}#${section.id}`,
+            id: section.id,
+            stages: section.querySelectorAll('.cat-stage').length,
+        }))
+        .filter((block) => !only || only.includes(block.key));
+    for (const section of sections) section.hidden = false;
+    // Nothing the reviewer's panel draws, and no caret or focus ring left over.
+    const style = document.createElement('style');
+    style.textContent =
+        '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge { visibility: hidden !important } * { caret-color: transparent !important }';
+    document.head.append(style);
+    /** @type {HTMLElement | null} */ (document.activeElement)?.blur?.();
+    return blocks;
+};
+
+/**
+ * The pixels of blocks on one review page, in each theme asked for: every
+ * stage of a block photographed twice, a short pause apart, so a block that
+ * does not hold still says so rather than reading as changed [scope-138].
+ * @param {import('@playwright/test').Page} page
+ * @param {{ base: string, href: string, themes: string[], width: number, height?: number, only?: string[] | null }} options
+ * @returns {Promise<Map<string, { first: string, second: string }>>} `key|theme` -> the two readings' digests
+ */
+export async function shootPlaywright(page, { base, href, themes, width, height = 1000, only = null }) {
+    const { createHash } = await import('node:crypto');
+    await page.setViewportSize({ width, height });
+    await page.goto(new URL(href, base).href, { waitUntil: 'load' });
+    /** @type {Map<string, { first: string, second: string }>} */
+    const out = new Map();
+    for (const theme of themes) {
+        const blocks = await page.evaluate(PREPARE, { base, theme, only });
+        for (const block of blocks) {
+            const parts = block.stages > 0 ? page.locator(`[id="${block.id}"] .cat-stage`) : page.locator(`[id="${block.id}"]`);
+            const shot = async () => {
+                const hash = createHash('sha256');
+                const count = await parts.count();
+                for (let i = 0; i < count; i += 1) {
+                    const part = parts.nth(i);
+                    await part.scrollIntoViewIfNeeded().catch(() => {});
+                    hash.update(await part.screenshot({ animations: 'disabled', caret: 'hide', timeout: 15_000 }));
+                }
+                return hash.digest('hex');
+            };
+            const first = await shot();
+            await page.waitForTimeout(250);
+            const second = await shot();
+            out.set(`${block.key}|${theme}`, { first, second });
+        }
+    }
+    return out;
+}
+
+/**
  * A Gecko build Playwright cannot drive with its own protocol (FireDragon:
  * Playwright's BiDi launcher opens a window, which the remote agent refuses
  * outside Firefox proper), driven over WebDriver BiDi directly: the tab the

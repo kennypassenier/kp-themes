@@ -73,13 +73,13 @@
  * where only the markup line changed, `migrate --to <version>`) has brought
  * the register to it.
  */
-export const HASH_VERSION = 9;
+export const HASH_VERSION = 10;
 
 /** The versions readBlocks also reads each block with (`earlier`), newest first, so a verdict stored under one carries over. */
 export const EARLIER_VERSIONS = [];
 
 /** The version `previous` (readBlocks) is read with: the one before this. */
-export const PREVIOUS_VERSION = 8;
+export const PREVIOUS_VERSION = 9;
 
 export const PROPS = [
     'color',
@@ -662,12 +662,16 @@ export async function readBlocks(items, { lines = false } = {}) {
     for (const started = performance.now(); items.some(busy) && performance.now() - started < 3000;) {
         await new Promise((resolve) => setTimeout(resolve, 50));
     }
-    // Version 5 reads the inputs, not the paint [scope-114]: the markup as
-    // written, the theme, and the digests of the code that shapes it. The
-    // waiting above stays, because a block that is still building its own
-    // markup (a data table filling its rows) is not yet the block.
-    const code = await readCodeVersion();
-    const readings = items.map((item) => inputLines(item.root, item.source, code));
+    // Version 10 reads the markup as written and nothing else (Kenny,
+    // 2026-09-29: "de hash is nu enkel de html, niet de html + css of js.
+    // pure html"). What CSS and scripts do to a block is judged by its pixels
+    // instead: `node gates/verdicts.mjs pixels` photographs every approved
+    // block at the commit it was approved at and at HEAD, in one run, and a
+    // block whose pixels moved comes back through catalogue/pixel-checks.json
+    // [scope-138]. Versions 5 to 9 hashed the code that reaches a block as
+    // well (inputLines, below), and a change to the shared base sent every
+    // pair back at once.
+    const readings = items.map((item) => [componentMarkup(item.source)]);
     const out = [];
     for (const read of readings) {
         const hash = await sha256(read.join('\n'));

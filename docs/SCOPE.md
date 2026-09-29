@@ -2287,3 +2287,33 @@ reaches 220 pairs, `.kp-log` 44, `.kp-button` 2552 because buttons really
 are everywhere. `HASH_VERSION` is 9 and `carry` brought all 3111 approvals
 onto it in 239.4 s; nothing was judged again.
 
+
+**scope-138 · The hash is the markup alone; pixels judge the rest.**
+2026-09-29, the review forms v3 and v4, Kenny's own answers. On why every
+pair came back after 7.3.0, when little had changed: two edits to the shared
+base (fix-74's `input:user-invalid`, and two strings in the dictionary) moved
+every block's hash at once, though no block without a field or a data table
+looked any different. His answer: *"kunnen we eigenlijk niet beter de
+componenten via screenshots vergelijken dan? en misschien apart ook een hash
+van de html zelf? als de hash van de html hetzelfde is, dan checken we de
+hash van de image?"*, and after the measurement *"ok, maar de hash is nu
+enkel de html, niet de html + css of js. pure html. Voor de rest voortaan
+altijd"*. So `HASH_VERSION` is 10 and reads `componentMarkup(source)` and
+nothing else: a changed markup reopens its pairs on the review page as
+before. What CSS and scripts do is judged by `node gates/verdicts.mjs
+pixels`: every approved pair photographed twice at the commit it was
+approved (or last carried) at and twice at HEAD, in one browser of its
+engine at its ratio, in the same run on the same machine. Steady and equal:
+the approval stands and the entry is carried to HEAD. Steady and different,
+or a block that is gone: reopened. A photograph that does not repeat:
+unstable, reopened as well. The outcome is `catalogue/pixel-checks.json`,
+read by the review page and the approvals advice beside the register. No
+photograph is kept between runs, because screenshots are only comparable
+within one environment (WSL's Firefox build is not Garuda's, and Kenny's
+own browser draws at his 2.222 zoom). Measured before the decision: of 32
+pairs, every hundredth in the register, photographed twice in a row, 31
+repeated exactly; `table--datatable-multi-sort` in synthwave did not.
+Supersedes the code digests of scope-114, scope-116, scope-136 and
+scope-137, which stay in `gates/generate-code-version.mjs` for the anchors
+search only. The run happens before the review site is asked to show
+anything, and at a release.

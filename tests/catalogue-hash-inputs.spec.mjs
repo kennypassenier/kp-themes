@@ -74,14 +74,18 @@ test.describe('the hash follows the inputs [scope-114]', { tag: ['@component:cat
         expect(review).toBe(own);
     });
 
-    test('a theme keeps its own digest: another theme reads differently', async ({ page }) => {
+    test('the hash is the markup alone: another theme reads the same, its pixels are judged apart [scope-138]', async ({ page }) => {
+        // Version 10 (Kenny, 2026-09-29): "de hash is nu enkel de html, niet
+        // de html + css of js. pure html". A theme is CSS; what it does to a
+        // block is read from its pixels by `node gates/verdicts.mjs pixels`,
+        // and verdicts are kept per theme all the same.
         await page.setViewportSize({ width: 1440, height: 900 });
         await page.goto('/catalogue/field.html');
         await waitForJudging(page, { timeout: 60_000 });
         const formal = await hashOf(page, 'text');
         await page.evaluate(() => import('/js/theme-core.js').then((m) => m.applyTheme('dark')));
         await waitForJudging(page, { timeout: 60_000 });
-        expect(await hashOf(page, 'text')).not.toBe(formal);
+        expect(await hashOf(page, 'text')).toBe(formal);
     });
 });
 

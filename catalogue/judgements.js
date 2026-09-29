@@ -117,6 +117,32 @@ export function restoreVerdict(key, theme, previous, engine = ENGINE) {
     saveJudgements(all);
 }
 
+/* ---------------------------------------------------------- the pixel checks */
+
+/** @type {{ checks: Record<string, Record<string, Record<string, { state: string, from: string }>>> }} */
+let pixelChecks = { checks: {} };
+/**
+ * Resolves once catalogue/pixel-checks.json is read (or found missing) [scope-138]:
+ * since version 10 the hash is the markup alone, and what CSS and scripts do
+ * to a block is judged by its pixels, `node gates/verdicts.mjs pixels`.
+ */
+export const pixelChecksReady = (async () => {
+    try {
+        const response = await fetch(new URL('./pixel-checks.json', import.meta.url), { cache: 'no-cache' });
+        if (response.ok) {
+            const data = await response.json();
+            if (data && typeof data.checks === 'object') pixelChecks = data;
+        }
+    } catch {
+        /* no pixel checks yet: the markup decides alone */
+    }
+    return pixelChecks;
+})();
+
+/** Whether the pixels of an approved pair moved since it was approved, or did not repeat. */
+export const pixelsReopened = (/** @type {string} */ key, /** @type {string} */ theme, engine = ENGINE) =>
+    ['reopened', 'unstable'].includes(pixelChecks.checks?.[key]?.[theme]?.[engine]?.state ?? '');
+
 /* ------------------------------------------------------------ the register */
 
 let register = { hashVersion: HASH_VERSION, verdicts: {} };
@@ -135,6 +161,7 @@ export const registerReady = (async () => {
     } catch {
         /* no register: every verdict is this browser's */
     }
+    await pixelChecksReady;
     return register;
 })();
 
@@ -170,5 +197,8 @@ export function stateOf(key, theme, hash, engine = ENGINE, stored = loadJudgemen
     const entry = verdictOf(key, theme, engine, stored);
     if (!entry) return 'new';
     if (!hash) return entry.verdict;
-    return entry.hash === hash ? entry.verdict : 'changed';
+    if (entry.hash !== hash) return 'changed';
+    // The same markup, but its pixels moved or did not hold still [scope-138].
+    if (entry.source === 'register' && entry.verdict === 'approved' && pixelsReopened(key, theme, engine)) return 'changed';
+    return entry.verdict;
 }

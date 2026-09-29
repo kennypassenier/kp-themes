@@ -59,10 +59,16 @@ const root = new URL('../', import.meta.url);
  * @param {any} register the parsed catalogue/verdicts.json
  * @param {any} [snapshot] the parsed catalogue/hashes-now.json
  * @param {(commit: string) => boolean} [comparable] is this verdict's commit at or before the snapshot's
+ * @param {any} [pixels] the parsed catalogue/pixel-checks.json [scope-138]
  */
-export function openPairs(known, themes, register, snapshot, comparable = () => true) {
+export function openPairs(known, themes, register, snapshot, comparable = () => true, pixels = null) {
     const verdicts = register?.verdicts ?? {};
     const readings = snapshot?.readings ?? {};
+    // Since version 10 the hash is the markup alone; a pair whose pixels moved
+    // or did not repeat at the last `node gates/verdicts.mjs pixels` run is
+    // open too [scope-138].
+    const pixelOpen = (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ engine) =>
+        ['reopened', 'unstable'].includes(pixels?.checks?.[key]?.[theme]?.[engine]?.state ?? '');
     /** @type {{ key: string, theme: string, state: 'rejected' | 'never judged' | 'changed since judged' }[]} */
     const open = [];
     let approved = 0;
@@ -74,6 +80,7 @@ export function openPairs(known, themes, register, snapshot, comparable = () => 
                 // An approval still standing: one engine where nothing was
                 // measured, or where the reading is the hash it was given on.
                 const stands = approvals.some(([engine, entry]) => {
+                    if (pixelOpen(key, theme, engine)) return false;
                     const now = readings[key]?.[theme]?.[engine];
                     if (!now || (now.ratio ?? 1) !== (entry.ratio ?? 1)) return true;
                     if (!comparable(entry.commit)) return true;
@@ -151,8 +158,19 @@ async function main() {
     const themes = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('themes/order.json', root), 'utf8')));
     const register = JSON.parse(readFileSync(new URL('catalogue/verdicts.json', root), 'utf8'));
     const file = new URL(SNAPSHOT, root);
-    const snapshot = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
-    const { open, approved, pairs } = openPairs(known, themes, register, snapshot, snapshot ? comparableTo(snapshot.commit, root) : undefined);
+    const read = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+    // A reading taken under another recipe says nothing about these hashes.
+    const snapshot = read && read.hashVersion === register.hashVersion ? read : null;
+    const pixelFile = new URL('catalogue/pixel-checks.json', root);
+    const pixels = existsSync(pixelFile) ? JSON.parse(readFileSync(pixelFile, 'utf8')) : null;
+    const { open, approved, pairs } = openPairs(
+        known,
+        themes,
+        register,
+        snapshot,
+        snapshot ? comparableTo(snapshot.commit, root) : undefined,
+        pixels,
+    );
     const counted = (/** @type {string} */ state) => open.filter((pair) => pair.state === state);
     const rejected = counted('rejected');
     const changed = counted('changed since judged');
