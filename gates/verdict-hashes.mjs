@@ -200,6 +200,14 @@ export const PREPARE = async ({ base, theme, only = null }) => {
     style.textContent =
         '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge { visibility: hidden !important } * { caret-color: transparent !important }';
     document.head.append(style);
+    // Nor the page's own sticky or fixed chrome (the review bar and its
+    // count): a stage taller than the window is photographed in parts, and
+    // that chrome, which says how many blocks are left, lay over it.
+    for (const el of document.body.querySelectorAll('*')) {
+        if (el.closest('.cat-stage')) continue;
+        const { position } = getComputedStyle(el);
+        if (position === 'sticky' || position === 'fixed') /** @type {HTMLElement} */ (el).style.setProperty('visibility', 'hidden', 'important');
+    }
     /** @type {HTMLElement | null} */ (document.activeElement)?.blur?.();
     return blocks;
 };

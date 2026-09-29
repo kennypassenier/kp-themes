@@ -170,7 +170,7 @@ commit it was approved or last carried at and at HEAD, in one run on one
 machine, in Playwright's browser of its engine at its ratio and 1920 px wide.
 Each block is photographed alone on the page and scrolled from the top
 before every stage, so a block that moved because another was added above it,
-or a tooltip placed against the window, does not read as changed. Equal
+or a tooltip placed against the window, does not read as changed; the page's own sticky chrome (the review bar with its count of blocks left) is hidden, since a stage taller than the window was photographed with it on top. Equal
 pixels carry the approval to HEAD; different pixels, a block that is gone,
 or a photograph that did not repeat bring the pair back to Kenny.
 `catalogue/pixel-checks.json` records each outcome, the review page and
