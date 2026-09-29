@@ -503,6 +503,19 @@ function siteCss() {
         box-shadow: 0 0 0 1px var(--border);
     }
 
+    /* Its menu is placed by the same numbers as the button, not by anchor
+       positioning: Firefox does not anchor to a trigger inside a fixed box
+       and drew the menu at the far left, over the sidebar, and the package's
+       span-inline-end ran past the window's edge in Chromium (Kenny,
+       2026-09-29). Under the button, its right edge on the button's. */
+    .sc-theme-switch .kp-popover {
+        position: fixed;
+        position-area: none;
+        inset: auto;
+        inset-block-start: calc(var(--kp-bezel, 0px) + var(--kp-space-sm, 0.5rem) + 2.5rem);
+        inset-inline-end: calc(var(--kp-bezel, 0px) + var(--kp-space-md, 1rem));
+    }
+
     .sc-brand {
         display: block;
         color: var(--primary);

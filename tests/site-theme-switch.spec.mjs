@@ -22,6 +22,12 @@ test(
         await page.mouse.wheel(0, 2000);
         await expect.poll(async () => (await trigger.boundingBox())?.y).toBe(at?.y);
         await trigger.click();
+        // The menu hangs under its button, inside the window: Firefox had it
+        // at the far left over the sidebar (Kenny, 2026-09-29).
+        const button = await trigger.boundingBox();
+        const menu = await page.locator('#sc-theme-menu').boundingBox();
+        expect(menu && button && menu.y, 'under the button').toBeGreaterThanOrEqual((button?.y ?? 0) + (button?.height ?? 0));
+        expect(menu && button && Math.abs(menu.x + menu.width - (button.x + button.width)), 'right edge on the button').toBeLessThan(2);
         await page.locator('#sc-theme-menu [data-kp-theme="cyberpunk"]').click();
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'cyberpunk');
         await page.goto('/site/components/button.html');
