@@ -4444,6 +4444,9 @@ round.
 
 ## fix-87 · 8.1.0 was released with 18 block/theme pairs not approved (2026-09-30)
 
+Approved by Kenny on the form of 2026-09-30 ("Klopt"); 8.1.0 stays published
+("Laten staan") while he reviews the 18 pairs.
+
 **1 · What went wrong.** Kenny: *"ik dacht dat we pas releasen nadat alle
 goedgekeurd is?"* `npm run advice` read 3088 of 3106 approved at the
 release; the 18 open were `table--datatable-busy-overlay`, whose layer the
