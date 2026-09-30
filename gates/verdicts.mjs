@@ -579,6 +579,7 @@ async function pixels(args) {
         `:!${PIXELS}`,
     );
     if (dirty) throw new Error(`pixels compares against HEAD, and the working tree has changes:\n${dirty}`);
+    const started = Date.now();
     const head = git('rev-parse', 'HEAD');
     const register = readRegister();
     /** @type {Map<string, { commit: string, engine: string, ratio: number, requests: { key: string, theme: string, entry: Entry }[] }>} */
@@ -592,22 +593,39 @@ async function pixels(args) {
                 group.requests.push({ key, theme, entry });
                 groups.set(id, group);
             }
-    /** @type {Record<string, Record<string, Record<string, { state: string, from: string }>>>} */
+    /** @type {Record<string, Record<string, Record<string, { state: string, from: string, shot?: string }>>>} */
     let checks = {};
+    // The browser the photographs are taken in: a digest is only reused in
+    // the same one, since another build draws text a pixel differently.
+    const { version: playwrightVersion } = JSON.parse(readFileSync(join(ROOT, 'node_modules/@playwright/test/package.json'), 'utf8'));
+    const renderer = `${process.platform} playwright ${playwrightVersion} width ${width}`;
+    /** @type {any} */
+    let earlier = null;
     if (existsSync(join(ROOT, PIXELS))) {
-        const earlier = JSON.parse(readFileSync(join(ROOT, PIXELS), 'utf8'));
+        earlier = JSON.parse(readFileSync(join(ROOT, PIXELS), 'utf8'));
         if (earlier.commit === head && earlier.hashVersion === register.hashVersion) checks = earlier.checks;
+        if (earlier.hashVersion !== register.hashVersion || earlier.renderer !== renderer) earlier = null;
     }
+    // The last run photographed HEAD as it then was; an approval carried to
+    // that commit need not be photographed there again, only now [scope-138].
+    // Kenny, 2026-09-30: runs took 28 to 38 min, nearly all of it spent
+    // taking photographs, half of them of a commit already photographed.
+    const cached = (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ engine, /** @type {string} */ commit) => {
+        if (earlier === null || earlier.commit !== commit) return null;
+        const shot = earlier.checks?.[key]?.[theme]?.[engine]?.shot;
+        return typeof shot === 'string' ? { first: shot, second: shot } : null;
+    };
     const put = (
         /** @type {string} */ key,
         /** @type {string} */ theme,
         /** @type {string} */ engine,
         /** @type {string} */ state,
         /** @type {string} */ from,
+        /** @type {string | undefined} */ shot = undefined,
     ) => {
         checks[key] ??= {};
         checks[key][theme] ??= {};
-        checks[key][theme][engine] = { state, from };
+        checks[key][theme][engine] = { state, from, ...(shot ? { shot } : {}) };
     };
     const tally = { carried: 0, reopened: 0, unstable: 0, gone: 0 };
     const knownNow = await knownBlocks(ROOT);
@@ -621,16 +639,63 @@ async function pixels(args) {
             tally.gone += 1;
         }
         if (!here.length) continue;
-        const then = await shootAt({ commit, engine, ratio, width, requests: here });
-        const now = await shootAt({ root: ROOT, engine, ratio, width, requests: here });
-        for (const { key, theme, entry } of here) {
-            const a = then.get(`${key}|${theme}`);
+        // A pair none of whose inputs moved since its approval carries
+        // without a photograph: the files a page draws with are the shared
+        // CSS, scripts and fonts, its theme's register and tokens, and its
+        // own review page.
+        const moved = git('diff', '--name-only', commit, head, '--', 'css', 'js', 'fonts', 'themes', 'components', 'catalogue', 'research')
+            .split('\n')
+            .filter((file) => file && !/^catalogue\/[^/]+\.json$/.test(file));
+        const touches = (/** @type {{ key: string, theme: string }} */ r) => {
+            const page = /** @type {any} */ (knownNow.get(r.key))?.page ?? '';
+            return moved.some((file) => {
+                const register = /^css\/(.+)-register\.css$/.exec(file) ?? /^themes\/([^/]+)\//.exec(file);
+                if (register) return register[1] === r.theme;
+                if (/^catalogue\/[^/]+\.html$/.test(file)) return file === page;
+                if (file.startsWith('research/')) return page.startsWith('research/');
+                return true;
+            });
+        };
+        const still = here.filter((r) => !touches(r));
+        for (const { key, theme, entry } of still) {
+            put(key, theme, engine, 'carried', commit, cached(key, theme, engine, commit)?.first);
+            tally.carried += 1;
+            entry.commit = head;
+        }
+        if (still.length) console.log(`  ${still.length} of ${here.length} carried: nothing they draw with moved since ${commit.slice(0, 12)}`);
+        const asked = here.filter((r) => touches(r));
+        if (!asked.length) continue;
+        const unseen = asked.filter((r) => cached(r.key, r.theme, engine, commit) === null);
+        if (asked.length > unseen.length)
+            console.log(`  ${asked.length - unseen.length} of ${asked.length} taken from the last run at ${commit.slice(0, 12)}`);
+        // One photograph a side first; only a pair whose sides differ is
+        // photographed again, twice a side, to tell a change from a block
+        // that does not hold still.
+        const then = unseen.length ? await shootAt({ commit, engine, ratio, width, requests: unseen, repeat: false }) : new Map();
+        const now = await shootAt({ root: ROOT, engine, ratio, width, requests: asked, repeat: false });
+        const doubt = asked.filter((r) => {
+            const a = cached(r.key, r.theme, engine, commit) ?? then.get(`${r.key}|${r.theme}`);
+            const b = now.get(`${r.key}|${r.theme}`);
+            return !a || !b || a.first !== b.first;
+        });
+        if (doubt.length) {
+            console.log(`  ${doubt.length} pair(s) differ: photographing them again, twice a side`);
+            const thenAgain = await shootAt({ commit, engine, ratio, width, requests: doubt });
+            const nowAgain = await shootAt({ root: ROOT, engine, ratio, width, requests: doubt });
+            for (const [k, v] of thenAgain) then.set(k, v);
+            for (const [k, v] of nowAgain) now.set(k, v);
+        }
+        const doubted = new Set(doubt.map((r) => `${r.key}|${r.theme}`));
+        for (const { key, theme, entry } of asked) {
+            const a = doubted.has(`${key}|${theme}`)
+                ? then.get(`${key}|${theme}`)
+                : (cached(key, theme, engine, commit) ?? then.get(`${key}|${theme}`));
             const b = now.get(`${key}|${theme}`);
             let state = 'reopened';
             if (!a || !b) state = 'reopened';
             else if (a.first !== a.second || b.first !== b.second) state = 'unstable';
             else if (a.first === b.first) state = 'carried';
-            put(key, theme, engine, state, commit);
+            put(key, theme, engine, state, commit, b && b.first === b.second ? b.first : undefined);
             tally[/** @type {'carried' | 'reopened' | 'unstable'} */ (state)] += 1;
             if (state === 'carried') entry.commit = head;
         }
@@ -645,12 +710,14 @@ async function pixels(args) {
                 hashVersion: register.hashVersion,
                 commit: head,
                 checked: new Date().toISOString(),
+                renderer,
                 checks,
             },
             null,
             4,
         )}\n`,
     );
+    console.log(`pixels took ${Math.round((Date.now() - started) / 60000)} min`);
     console.log(
         `${PIXELS}: ${tally.carried} carried, ${tally.reopened + tally.gone} reopened (${tally.gone} no longer a block), ${tally.unstable} unstable, compared against ${head.slice(0, 12)}.`,
     );
@@ -658,10 +725,10 @@ async function pixels(args) {
 
 /**
  * Photograph blocks at a commit (a temporary worktree) or in a directory.
- * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[] }} options
+ * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean }} options
  * @returns {Promise<Map<string, { first: string, second: string }>>}
  */
-async function shootAt({ commit, root, engine, ratio, width, requests }) {
+async function shootAt({ commit, root, engine, ratio, width, requests, repeat = true }) {
     const { serve, shootPlaywright } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     /** @type {Record<string, import('@playwright/test').BrowserType>} */
@@ -715,7 +782,7 @@ async function shootAt({ commit, root, engine, ratio, width, requests }) {
                 const [href, wanted] = next;
                 const started = Date.now();
                 try {
-                    const shots = await shootPlaywright(page, { base, href, themes: [...wanted.themes], width, only: [...wanted.keys] });
+                    const shots = await shootPlaywright(page, { base, href, themes: [...wanted.themes], width, only: [...wanted.keys], repeat });
                     for (const [k, v] of shots) out.set(k, v);
                 } catch (error) {
                     console.error(`  ${href} at ${where}: ${String(error).split('\n')[0]}`);

@@ -6854,7 +6854,10 @@ function attachDataTables(root = document, {
       busyClock = null;
       overlayClock = null;
     };
+    let overlayUnwatch = null;
     const drawOverlay = (s) => {
+      overlayUnwatch?.();
+      overlayUnwatch = null;
       overlayLayer?.remove();
       overlayLayer = null;
       overlayClock = null;
@@ -6862,18 +6865,28 @@ function attachDataTables(root = document, {
       if (state !== "loading" || !busyOverlay) return;
       const layer = make2("div", "kp-datatable__busy-overlay");
       layer.setAttribute("aria-hidden", "true");
-      const head = table.tHead;
-      const hostBox = host.getBoundingClientRect();
-      const body2 = (table.tBodies[0] ?? table).getBoundingClientRect();
-      const tableBox = (scrollBox ?? table).getBoundingClientRect();
-      const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
-      layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
-      layer.style.setProperty(
-        "--kp-busy-overlay-bottom",
-        `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`
-      );
-      layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
-      layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+      const place2 = () => {
+        const head = table.tHead;
+        const hostBox = host.getBoundingClientRect();
+        const body2 = (table.tBodies[0] ?? table).getBoundingClientRect();
+        const tableBox = (scrollBox ?? table).getBoundingClientRect();
+        const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
+        layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
+        layer.style.setProperty(
+          "--kp-busy-overlay-bottom",
+          `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`
+        );
+        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
+        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+      };
+      place2();
+      if (typeof ResizeObserver === "function") {
+        const watcher = new ResizeObserver(() => place2());
+        watcher.observe(host);
+        watcher.observe(table);
+        if (table.tHead !== null) watcher.observe(table.tHead);
+        overlayUnwatch = () => watcher.disconnect();
+      }
       const panel2 = make2("div", "kp-datatable__busy-panel");
       const spinner = make2("span", "kp-spinner");
       const words = make2("span", "kp-datatable__busy-words");
@@ -9022,6 +9035,7 @@ function attachDataTables(root = document, {
       if (failedSlot !== null) failedSlot.hidden = true;
       if (actions !== null) actions.hidden = true;
       stopBusyClock();
+      overlayUnwatch?.();
       overlayLayer?.remove();
       for (const node of added) node.remove();
       for (const step of undo) step();

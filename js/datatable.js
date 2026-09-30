@@ -922,15 +922,19 @@ export function attachDataTables(
             busyClock = null;
             overlayClock = null;
         };
+        /** Stops the layer following the table's size, while one shows. @type {(() => void) | null} */
+        let overlayUnwatch = null;
         /**
          * The layer over the rows while the table loads [busy overlay]: a
          * large spinner, the status words and the count, centred on the body
          * and hidden from assistive technology, which hears the status line.
-         * Absolutely placed in the scroll box, so nothing moves when it comes
-         * or goes; the header stays readable above it.
+         * Absolutely placed in the wrapper, so nothing moves when it comes or
+         * goes; the header stays readable above it.
          * @param {ReturnType<typeof getStrings>} s
          */
         const drawOverlay = (s) => {
+            overlayUnwatch?.();
+            overlayUnwatch = null;
             overlayLayer?.remove();
             overlayLayer = null;
             overlayClock = null;
@@ -940,18 +944,32 @@ export function attachDataTables(
             if (state !== 'loading' || !busyOverlay) return;
             const layer = make('div', 'kp-datatable__busy-overlay');
             layer.setAttribute('aria-hidden', 'true');
-            const head = table.tHead;
-            const hostBox = host.getBoundingClientRect();
-            const body = (table.tBodies[0] ?? table).getBoundingClientRect();
-            const tableBox = (scrollBox ?? table).getBoundingClientRect();
-            const top = head === null ? body.top : head.getBoundingClientRect().bottom;
-            layer.style.setProperty('--kp-busy-overlay-top', `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
-            layer.style.setProperty(
-                '--kp-busy-overlay-bottom',
-                `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`,
-            );
-            layer.style.setProperty('--kp-busy-overlay-left', `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
-            layer.style.setProperty('--kp-busy-overlay-right', `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+            // Measured, and measured again whenever the table or its header
+            // changes size: a theme switched after it was drawn, or a font
+            // arriving late, moves the header, and the layer must stay under
+            // it rather than where the header first was.
+            const place = () => {
+                const head = table.tHead;
+                const hostBox = host.getBoundingClientRect();
+                const body = (table.tBodies[0] ?? table).getBoundingClientRect();
+                const tableBox = (scrollBox ?? table).getBoundingClientRect();
+                const top = head === null ? body.top : head.getBoundingClientRect().bottom;
+                layer.style.setProperty('--kp-busy-overlay-top', `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
+                layer.style.setProperty(
+                    '--kp-busy-overlay-bottom',
+                    `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`,
+                );
+                layer.style.setProperty('--kp-busy-overlay-left', `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
+                layer.style.setProperty('--kp-busy-overlay-right', `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+            };
+            place();
+            if (typeof ResizeObserver === 'function') {
+                const watcher = new ResizeObserver(() => place());
+                watcher.observe(host);
+                watcher.observe(table);
+                if (table.tHead !== null) watcher.observe(table.tHead);
+                overlayUnwatch = () => watcher.disconnect();
+            }
             const panel = make('div', 'kp-datatable__busy-panel');
             const spinner = make('span', 'kp-spinner');
             const words = make('span', 'kp-datatable__busy-words');
@@ -3180,6 +3198,7 @@ export function attachDataTables(
             if (failedSlot !== null) failedSlot.hidden = true;
             if (actions !== null) actions.hidden = true;
             stopBusyClock();
+            overlayUnwatch?.();
             overlayLayer?.remove();
             for (const node of added) node.remove();
             for (const step of undo) step();

@@ -9,7 +9,7 @@
             "digest": "1bae74bd1f61fd19",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
-        "js/datatable.js": { "digest": "3d1bf0d297742356", "when": "[data-kp-datatable]" },
+        "js/datatable.js": { "digest": "f7d62f893edb4aff", "when": "[data-kp-datatable]" },
         "js/datepicker.js": { "digest": "4f5ec0d8a5274638", "when": "[data-kp-datepicker]" },
         "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },

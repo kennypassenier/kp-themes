@@ -86,6 +86,23 @@ test('busy with overlay puts a large spinner over the rows, moving nothing [busy
     const box = await layer.boundingBox();
     expect(box && head && box.y >= head.y + head.height - 1, 'under the header').toBe(true);
     expect(await wrap.boundingBox(), 'nothing around it moved').toEqual(before);
+    // A header that grows after the layer was drawn (a theme switched, a
+    // font arriving late) keeps the layer under it: the pixel check caught
+    // the layer left at the old height after a theme switch.
+    await wrap
+        .locator('thead th')
+        .first()
+        .evaluate((th) => /** @type {HTMLElement} */ (th.style.paddingBlock = '2rem'));
+    await expect
+        .poll(
+            async () => {
+                const h = await wrap.locator('thead').boundingBox();
+                const l = await layer.boundingBox();
+                return h && l ? Math.abs(l.y - (h.y + h.height)) < 2 : false;
+            },
+            { message: 'the layer follows the header' },
+        )
+        .toBe(true);
     await page.evaluate(() => /** @type {any} */ (window).kpTable.state('ready'));
     await expect(layer).toHaveCount(0);
 });

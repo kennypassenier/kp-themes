@@ -181,7 +181,10 @@ export const PREPARE = async ({ base, theme, only = null }) => {
     for (let i = 0; i < 300 && busy(); i += 1) await sleep(100);
     // A block still building itself (a data table on a mock server) is given
     // up to three seconds, as the hash reading gives it.
-    for (let i = 0; i < 60 && document.querySelector('[aria-busy="true"]:not([data-kp-state="loading"])'); i += 1) await sleep(50);
+    // Only a data table: a busy button or a busy table wrap is a demo that
+    // stays busy by design, and waiting on those cost three seconds on every
+    // page in every theme, most of a run's time (measured 2026-09-30).
+    for (let i = 0; i < 60 && document.querySelector('[data-kp-datatable][aria-busy="true"]:not([data-kp-state="loading"])'); i += 1) await sleep(50);
     await document.fonts?.ready;
     await sleep(300);
     /** @type {HTMLElement[]} */
@@ -217,10 +220,10 @@ export const PREPARE = async ({ base, theme, only = null }) => {
  * stage of a block photographed twice, a short pause apart, so a block that
  * does not hold still says so rather than reading as changed [scope-138].
  * @param {import('@playwright/test').Page} page
- * @param {{ base: string, href: string, themes: string[], width: number, height?: number, only?: string[] | null }} options
+ * @param {{ base: string, href: string, themes: string[], width: number, height?: number, only?: string[] | null, repeat?: boolean }} options
  * @returns {Promise<Map<string, { first: string, second: string }>>} `key|theme` -> the two readings' digests
  */
-export async function shootPlaywright(page, { base, href, themes, width, height = 1000, only = null }) {
+export async function shootPlaywright(page, { base, href, themes, width, height = 1000, only = null, repeat = true }) {
     const { createHash } = await import('node:crypto');
     await page.setViewportSize({ width, height });
     await page.goto(new URL(href, base).href, { waitUntil: 'load' });
@@ -254,8 +257,13 @@ export async function shootPlaywright(page, { base, href, themes, width, height 
                 return hash.digest('hex');
             };
             const first = await shot();
-            await page.waitForTimeout(250);
-            const second = await shot();
+            // The second reading only when asked: a pair whose two sides
+            // already agree has shown it holds still [scope-138].
+            let second = first;
+            if (repeat) {
+                await page.waitForTimeout(250);
+                second = await shot();
+            }
             out.set(`${block.key}|${theme}`, { first, second });
         }
     }
