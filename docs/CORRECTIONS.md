@@ -4442,6 +4442,41 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-87 · 8.1.0 was released with 18 block/theme pairs not approved (2026-09-30)
+
+**1 · What went wrong.** Kenny: *"ik dacht dat we pas releasen nadat alle
+goedgekeurd is?"* `npm run advice` read 3088 of 3106 approved at the
+release; the 18 open were `table--datatable-busy-overlay`, whose layer the
+pixel check had just found moved.
+
+**2 · Which gate let it through.** None: scope-107 (docs/RULES.md, "approved
+first, released after") was written down only; the release script and the
+procedure never read the approvals.
+
+**3 · Where else the same fault sits.** The fault as a property: *a
+standing release condition no step of the release checks.* **Gezocht met:**
+the conditions in docs/RULES.md that name a release, against
+scripts/release.sh and procedure 5.1: scope-107 was the only one unread.
+
+**4 · How we prevent recurrence.** `scripts/release.sh` runs
+`node gates/advice-approvals.mjs --require-all` before it tags, in the
+rehearsal too, and refuses while a pair is open; measured: it refused 8.1.0
+with the 18 still open.
+
+**5 · What the remedy costs.** A release waits on the review; seconds of
+reading.
+
+**6 · Who enforces it.** Code: the release script.
+
+**7 · How we measure that it works, and when.** At the next release: the
+script refuses while anything is open, and passes once all is approved.
+Queued as fix-87-M1.
+
+**8 · If the measurement fails.** The check moves into `npm run gates`
+with a release flag.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-86 · An indeterminate progress bar was an empty track in twenty themes (2026-09-29)
 
 **1 · What went wrong.** Reported by the homelab dashboard: `.kp-progress:indeterminate`

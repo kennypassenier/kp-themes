@@ -62,6 +62,14 @@ if [ "$dry" != 1 ]; then
   }
 fi
 
+# Nothing is released while a block is not approved in every theme
+# (Kenny, 2026-09-16, scope-107). 8.1.0 went out with 18 pairs open
+# because this rule was only written down [fix-87].
+node gates/advice-approvals.mjs --require-all >/dev/null || {
+  node gates/advice-approvals.mjs --require-all >&2 || true
+  exit 1
+}
+
 if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
   ref="$tag"
   if [ "$dry" != 1 ] && [ "$(git rev-parse "$tag^{commit}")" != "$(git rev-parse HEAD)" ]; then

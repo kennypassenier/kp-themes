@@ -191,6 +191,13 @@ async function main() {
         console.log(`    - ${pair.key} · ${pair.theme}: ${pair.state}`);
     }
     if (open.length > 20) console.log(`    … and ${open.length - 20} more`);
+    // A reading everywhere else; a refusal where the release asks for it
+    // [scope-107]: 8.1.0 went out with 18 pairs open, because the rule
+    // lived only in docs/RULES.md and nothing in the release refused.
+    if (process.argv.includes('--require-all')) {
+        console.error(`refusing: ${open.length} block/theme pair(s) not approved; a release waits until every one is [scope-107]`);
+        process.exitCode = 1;
+    }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) await main();

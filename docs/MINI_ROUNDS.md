@@ -237,4 +237,5 @@ register's colours are.
 | fix-84-M1 | Does the homelab dashboard drop its busy-text shim and pass `since` instead once it takes the kp-themes that carries fix-84? | open |
 | fix-85-M1 | Does the homelab dashboard drop its own failed and empty slots once it takes the kp-themes that carries fix-85? | open |
 | fix-86-M1 | Does the homelab dashboard drop its stripes shim for `.kp-progress:indeterminate` once it takes the kp-themes that carries fix-86, with the bar still striped and moving? | open |
+| fix-87-M1 | Does the next release refuse while a block/theme pair is open, and pass once all are approved? Measured at the fix (2026-09-30): the rehearsal of 8.1.0 refused with 18 open. | open |
 
