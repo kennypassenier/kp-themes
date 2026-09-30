@@ -218,14 +218,18 @@ test(
         await expect(dialog.locator('[data-cat-dialog-state]')).toContainText('Not yet judged');
         await expect(noteOf(page)).toBeFocused();
 
-        // Judging every block of every theme ends the round, in the same dialog.
+        // Judging every block of every theme ends the round, and the dialog
+        // closes (Kenny, 2026-09-30: "gewoon de dialog sluiten vanaf nu").
         for (let press = 0; press < 700; press += 1) {
-            if ((await live.textContent())?.includes('the round is over')) break;
+            if (!(await dialog.isVisible())) break;
             await page.keyboard.press('ArrowUp');
-            await expect(noteOf(page)).toBeFocused({ timeout: 30_000 });
+            // The next block's note takes the focus, or the round ended.
+            await expect
+                .poll(async () => !(await dialog.isVisible()) || (await noteOf(page).evaluate((el) => el === document.activeElement)), { timeout: 30_000 })
+                .toBe(true);
         }
-        await expect(live).toContainText('Every block is judged in every theme: the round is over.', { timeout: 30_000 });
-        await expect(dialog).toBeVisible();
+        await expect(dialog).toBeHidden({ timeout: 30_000 });
+        await expect(live).toContainText('Every block is judged in every theme: the round is over.');
     },
 );
 

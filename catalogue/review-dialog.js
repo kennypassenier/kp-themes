@@ -306,7 +306,10 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
                 live.textContent = `${done} is done. Now judging in ${themeLabel(themeOf(next))}.`;
                 return;
             }
-            rest(item, 'Every block is judged in every theme: the round is over. Escape closes the dialog.');
+            // The round is over: the dialog closes rather than resting on the
+            // last block (Kenny, 2026-09-30, "gewoon de dialog sluiten").
+            rest(item, 'Every block is judged in every theme: the round is over.');
+            dialog.close();
         } finally {
             walking = false;
         }

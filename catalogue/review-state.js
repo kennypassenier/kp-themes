@@ -9,7 +9,7 @@
 import { THEMES } from '../js/theme-registry.js';
 import { currentTheme } from '../js/theme-core.js';
 import { COMPONENT_PAGES, PAGES } from './pages.js';
-import { JUDGEMENTS_KEY, loadJudgements, verdictOf } from './judgements.js';
+import { JUDGEMENTS_KEY, loadJudgements, pixelRunFor, verdictOf } from './judgements.js';
 import { HASH_VERSION } from './block-hash.js';
 import { ENGINE, engineLabel } from './engine.js';
 
@@ -226,7 +226,7 @@ export function promptItems() {
                     engine,
                     text: titleOf(page, block),
                     // At a ratio of 1 the signature is the one copied prompts already hold.
-                    signature: `verdict|${key}|${theme}|${engine}|${verdict}|${hash}${ratio && ratio !== 1 ? `|@${ratio}` : ''}`,
+                    signature: `verdict|${key}|${theme}|${engine}|${verdict}|${hash}${ratio && ratio !== 1 ? `|@${ratio}` : ''}${pixelRunFor(key, theme, engine) ? `|pixels ${pixelRunFor(key, theme, engine)}` : ''}`,
                     // Only a verdict taken with the recipe of now can be recorded. One
                     // read at another device pixel ratio than 1 says which, as a sixth
                     // field `@1.25` (fix-34); five fields mean a ratio of 1.

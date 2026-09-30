@@ -490,11 +490,35 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
      * theme (a portrait, data-cat-theme-fixed) stays where it is.
      * @returns {Promise<string | null>} the theme it stopped on, or null when the round is over
      */
+    /**
+     * Whether a theme still has a block to judge, read without switching to
+     * it: since hash version 10 a block's hash is its markup, the same in
+     * every theme, so the hash measured here answers for all of them. Only
+     * a theme this says has work is switched to (and measured there, which
+     * confirms it); when none has, the walk ends where it is (Kenny,
+     * 2026-09-30: after the last open block the dialog visited every theme
+     * before it said the round was over).
+     * @param {string} theme
+     */
+    function hasWork(theme) {
+        const all = loadJudgements();
+        return items.some((item) => {
+            const fixed = item.entry.root.getAttribute('data-cat-theme');
+            if (fixed && fixed !== theme) return false;
+            const hash = current.get(item.entry.key);
+            if (!hash) return true;
+            const state = stateOf(item.entry.key, theme, hash, ENGINE, all);
+            const asking = Boolean(reviewNoteOf(item.entry.key, theme)) && verdictOf(item.entry.key, theme, ENGINE, all)?.source !== 'browser';
+            return !((state === 'approved' || state === 'rejected') && !asking);
+        });
+    }
+
     async function walkToNextTheme() {
         const order = THEMES.map((theme) => theme.name);
         const from = order.indexOf(currentTheme());
         for (let step = 1; step <= order.length; step += 1) {
             const theme = order[(from + step + order.length) % order.length];
+            if (!hasWork(theme)) continue;
             applyTheme(theme);
             // The theme event clears the readings and schedules its own pass;
             // the register needs the same moment to paint that it does there.

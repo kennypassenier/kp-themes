@@ -195,6 +195,15 @@ export function verdictOf(key, theme, engine = ENGINE, stored = loadJudgements()
     return null;
 }
 
+/**
+ * The pixel run a verdict on this pair answers, or '' when none reopened it.
+ * The prompt puts it in the verdict's signature: an approval repeating one
+ * copied before the run is still news after it (Kenny, 2026-09-30: "nothing
+ * new for the prompt since the last copy", with 18 fresh approvals waiting).
+ */
+export const pixelRunFor = (/** @type {string} */ key, /** @type {string} */ theme, engine = ENGINE) =>
+    pixelsReopened(key, theme, engine) ? String(pixelChecks.commit ?? pixelChecks.checked ?? 'pixels') : '';
+
 /** Whether this browser's verdict was given since the pixel run that reopened the register's. */
 function answersPixels(key, theme, engine, local, kept) {
     if (!pixelsReopened(key, theme, engine, kept.commit)) return false;
