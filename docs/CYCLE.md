@@ -176,7 +176,16 @@ or a photograph that did not repeat bring the pair back to Kenny.
 `catalogue/pixel-checks.json` records each outcome, the review page and
 `npm run advice` count a reopened or unstable pair as open, and a second run
 at the same HEAD compares only what did not carry. It runs locally, never in
-a workflow (Kenny, 2026-09-29).
+a workflow (Kenny, 2026-09-29). Since 2026-09-30 it photographs only what can
+have changed: a pair none of whose files moved carries at once; when the moved
+files are CSS or modules `catalogue/code-version.json` describes rule by rule,
+only a block naming a family of a changed rule (widened to its components'
+families) is photographed; the approval side reuses the last run's digest; one
+photograph a side unless the sides differ; and page-and-theme units run in
+eight browsers side by side. Measured on a scratch branch: a docs change 0 s,
+one rule in forest's register 43 s (15 pairs, all changed), one shared
+progress rule 43 s (22 pairs); a run that must photograph everything took
+17 min.
 
 The entries recorded before verdicts kept a ratio (the light-theme review of
 2026-09-15, at d499b6b2) get theirs once, from readings of the blocks at
