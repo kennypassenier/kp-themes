@@ -646,13 +646,20 @@ async function pixels(args) {
         const moved = git('diff', '--name-only', commit, head, '--', 'css', 'js', 'fonts', 'themes', 'components', 'catalogue', 'research')
             .split('\n')
             .filter((file) => file && !/^catalogue\/[^/]+\.json$/.test(file));
+        // Finer, when every moved file is one catalogue/code-version.json
+        // describes rule by rule (components.css, a register, a module the
+        // loader attaches by selector): only a block naming a family of a
+        // rule that changed, in its theme or in every theme, is asked about
+        // [scope-116's map, used as Chromatic's TurboSnap uses its graph].
+        const narrow = narrowing(commit, head, moved);
         const touches = (/** @type {{ key: string, theme: string }} */ r) => {
             const page = /** @type {any} */ (knownNow.get(r.key))?.page ?? '';
             return moved.some((file) => {
                 const register = /^css\/(.+)-register\.css$/.exec(file) ?? /^themes\/([^/]+)\//.exec(file);
-                if (register) return register[1] === r.theme;
+                if (register && register[1] !== r.theme) return false;
                 if (/^catalogue\/[^/]+\.html$/.test(file)) return file === page;
                 if (file.startsWith('research/')) return page.startsWith('research/');
+                if (narrow && narrow.covers(file)) return narrow.touches(r.key, r.theme, page);
                 return true;
             });
         };
@@ -724,6 +731,77 @@ async function pixels(args) {
 }
 
 /**
+ * Which blocks a set of moved files can have changed, read from
+ * catalogue/code-version.json at both commits: its rules (keyed
+ * `theme||at-rule||selector`, the theme empty for every theme), its modules
+ * (each with the selector the loader attaches it by) and its base (the CSS
+ * that names no family, which reaches every block). Null when the map cannot
+ * answer: missing at either commit, or its base moved.
+ * @param {string} from
+ * @param {string} to
+ * @param {string[]} moved
+ */
+function narrowing(from, to, moved) {
+    /** @type {any} */
+    let before;
+    /** @type {any} */
+    let after;
+    try {
+        before = JSON.parse(git('show', `${from}:catalogue/code-version.json`));
+        after = JSON.parse(git('show', `${to}:catalogue/code-version.json`));
+    } catch {
+        return null;
+    }
+    if (!before?.rules || !after?.rules || before.base !== after.base) return null;
+    const familiesIn = (/** @type {string} */ text) => [...new Set([...text.matchAll(/(?<![\w-])((?:data-)?kp-[a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => m[1]))];
+    /** @type {{ theme: string, families: string[] }[]} */
+    const changed = [];
+    for (const key of new Set([...Object.keys(before.rules), ...Object.keys(after.rules)])) {
+        if (before.rules[key] === after.rules[key]) continue;
+        const parts = key.split('||');
+        changed.push({ theme: parts[0], families: familiesIn(parts[parts.length - 1]) });
+    }
+    for (const name of new Set([...Object.keys(before.modules ?? {}), ...Object.keys(after.modules ?? {})])) {
+        const a = before.modules?.[name];
+        const b = after.modules?.[name];
+        if (a?.digest === b?.digest) continue;
+        changed.push({ theme: '', families: familiesIn(`${a?.when ?? ''} ${b?.when ?? ''}`) });
+    }
+    const modules = new Set([...Object.keys(before.modules ?? {}), ...Object.keys(after.modules ?? {})]);
+    // A rule keyed by something other than a theme (a stylesheet of its own)
+    // reaches every theme.
+    const themeNames = new Set(Object.keys(after.themes ?? {}));
+    /** @type {Map<string, string[]>} */
+    const pageFamilies = new Map();
+    const familiesOf = (/** @type {string} */ page, /** @type {string} */ key) => {
+        const id = key.includes('#') ? key.split('#').pop() : key.split('--').slice(1).join('--');
+        const cacheKey = `${page}#${id}`;
+        if (!pageFamilies.has(cacheKey)) {
+            const html = existsSync(join(ROOT, page)) ? readFileSync(join(ROOT, page), 'utf8') : '';
+            const start = html.indexOf(`id="${id}"`);
+            const end = start < 0 ? -1 : html.indexOf('<section', start + 1);
+            pageFamilies.set(cacheKey, start < 0 ? [] : familiesIn(html.slice(start, end < 0 ? undefined : end)));
+        }
+        return /** @type {string[]} */ (pageFamilies.get(cacheKey));
+    };
+    return {
+        /** A file the map describes rule by rule. */
+        covers: (/** @type {string} */ file) => file === 'css/components.css' || /^css\/.+-register\.css$/.test(file) || modules.has(file),
+        /** Whether a changed rule or module can reach this block in this theme. */
+        touches: (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ page) => {
+            const own = new Set(familiesOf(page, key));
+            // A block whose markup the map cannot read is asked about.
+            if (!own.size) return true;
+            return changed.some(
+                (rule) =>
+                    (rule.theme === '' || rule.theme === theme || !themeNames.has(rule.theme)) &&
+                    (!rule.families.length || rule.families.some((f) => own.has(f))),
+            );
+        },
+    };
+}
+
+/**
  * Photograph blocks at a commit (a temporary worktree) or in a directory.
  * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean }} options
  * @returns {Promise<Map<string, { first: string, second: string }>>}
@@ -739,8 +817,8 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
     let dir = null;
     /** @type {{ base: string, close: () => Promise<void> } | null} */
     let server = null;
-    /** @type {import('@playwright/test').Browser | null} */
-    let browser = null;
+    /** @type {import('@playwright/test').Browser[]} */
+    const browsers = [];
     /** @type {Map<string, { first: string, second: string }>} */
     const out = new Map();
     try {
@@ -751,15 +829,17 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
         const served = root ?? String(dir);
         const known = await knownBlocks(served);
         server = await serve(served);
-        browser = await type.launch({
-            headless: true,
-            ...(ratio !== 1 && engine === 'firefox' ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
-        });
-        const context = await browser.newContext({
-            viewport: { width, height: 1000 },
-            reducedMotion: 'reduce',
-            ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}),
-        });
+        const launch = () =>
+            type.launch({
+                headless: true,
+                ...(ratio !== 1 && engine === 'firefox' ? { firefoxUserPrefs: { 'layout.css.devPixelsPerPx': String(ratio) } } : {}),
+            });
+        const contextOf = (/** @type {import('@playwright/test').Browser} */ b) =>
+            b.newContext({
+                viewport: { width, height: 1000 },
+                reducedMotion: 'reduce',
+                ...(ratio !== 1 ? { deviceScaleFactor: ratio } : {}),
+            });
         /** @type {Map<string, { themes: Set<string>, keys: Set<string> }>} */
         const byPage = new Map();
         for (const request of requests) {
@@ -770,14 +850,22 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
             wanted.keys.add(request.key);
             byPage.set(block.page, wanted);
         }
-        // Four review pages at a time, each in its own tab of the one browser,
-        // with a line per page so a long run shows where it is.
-        const queue = [...byPage.entries()];
+        // One review page in one theme is a unit of work, handed to several
+        // browsers side by side, each its own process (Kenny, 2026-09-30:
+        // the machine has 16 cores and the run used one browser). A page in
+        // every theme was one unit before, and the table page alone took
+        // 145 s while the others waited.
+        /** @type {[string, { themes: Set<string>, keys: Set<string> }][]} */
+        const queue = [];
+        for (const [href, wanted] of byPage) for (const theme of wanted.themes) queue.push([href, { themes: new Set([theme]), keys: wanted.keys }]);
+        const units = queue.length;
         const where = commit ? String(commit).slice(0, 12) : 'HEAD';
         const base = server.base;
         let done = 0;
         const worker = async () => {
-            const page = await context.newPage();
+            const own = await launch();
+            browsers.push(own);
+            const page = await (await contextOf(own)).newPage();
             for (let next = queue.shift(); next; next = queue.shift()) {
                 const [href, wanted] = next;
                 const started = Date.now();
@@ -788,14 +876,15 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
                     console.error(`  ${href} at ${where}: ${String(error).split('\n')[0]}`);
                 }
                 done += 1;
-                console.log(`  ${where}: ${done}/${byPage.size} pages, ${href} in ${Math.round((Date.now() - started) / 1000)} s`);
+                if (done % 20 === 0 || done === units) console.log(`  ${where}: ${done}/${units} page-and-theme units, last ${href} in ${Math.round((Date.now() - started) / 1000)} s`);
             }
             await page.close();
         };
-        await Promise.all([worker(), worker(), worker(), worker()]);
+        const workers = Math.max(1, Math.min(units, Number(process.env.PIXELS_WORKERS) || 8));
+        await Promise.all(Array.from({ length: workers }, worker));
         return out;
     } finally {
-        await browser?.close();
+        await Promise.all(browsers.map((b) => b.close()));
         await server?.close();
         if (dir) {
             try {
