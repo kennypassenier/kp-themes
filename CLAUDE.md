@@ -24,6 +24,12 @@ since 8.0.0 the split-out theme repositories (kp-themes-windows, -linux,
 -vscode, -tui, -ha, -jellyfin), each pinned to a `tokens.tar` release asset
 by checksum [scope-139].
 
+**Tests only after a release go** (Kenny, 2026-09-30: "tests draaien we vanaf
+nu pas na dat ik de toestemming geef voor een release"): no browser test runs
+while building, not even a tagged subset; the suite runs once, after his go for
+a release. The gates in the commit hook and the screenshot check inside
+`scripts/release.sh` stay.
+
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
 `npm run gates`. Two that shape every turn: a released theme never
