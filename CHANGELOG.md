@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 8.1.0 — 2026-09-30
+
+A minor: pages use the width of a wide screen, a loading table can show it
+over its rows, and an indeterminate progress bar is striped again.
 
 **Changed.**
 
