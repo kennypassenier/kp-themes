@@ -780,7 +780,17 @@ function narrowing(from, to, moved) {
             const html = existsSync(join(ROOT, page)) ? readFileSync(join(ROOT, page), 'utf8') : '';
             const start = html.indexOf(`id="${id}"`);
             const end = start < 0 ? -1 : html.indexOf('<section', start + 1);
-            pageFamilies.set(cacheKey, start < 0 ? [] : familiesIn(html.slice(start, end < 0 ? undefined : end)));
+            const named = start < 0 ? [] : familiesIn(html.slice(start, end < 0 ? undefined : end));
+            // What a script draws at run time is not in the markup (a
+            // combobox's chips, a table's sort line): a block naming any
+            // family of a component takes all of that component's, as the
+            // block hash did from version 7 [scope-116].
+            const all = new Set(named);
+            for (const component of Object.values(after.components ?? {})) {
+                const families = /** @type {string[]} */ (component.families ?? []);
+                if (families.some((f) => all.has(f))) for (const f of families) all.add(f);
+            }
+            pageFamilies.set(cacheKey, [...all]);
         }
         return /** @type {string[]} */ (pageFamilies.get(cacheKey));
     };
