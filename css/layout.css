@@ -28,12 +28,15 @@
 
     /* ── Containers ─────────────────────────────────────────────────── */
 
-    /* The page itself: a measure to read within, centred, with margins that
-       shrink on a phone instead of stepping at a breakpoint. Knobs:
-       --kp-page-max (64rem), --kp-page-pad (between the md and xl steps of
-       the scale, 3vw in between), --kp-page-pad-block (the xl step). */
+    /* The page itself: centred, eighty percent of the window wide and never
+       narrower than 64rem, so a wide desktop screen is used and a laptop
+       keeps the old measure; on a phone it is the whole width, with margins
+       that shrink instead of stepping at a breakpoint. Text inside keeps
+       its own measure through kp-prose. Knobs: --kp-page-max (the larger of
+       80vw and 64rem), --kp-page-pad (between the md and xl steps of the
+       scale, 3vw in between), --kp-page-pad-block (the xl step). */
     .kp-page {
-        max-inline-size: var(--kp-page-max, 64rem);
+        max-inline-size: var(--kp-page-max, max(80vw, 64rem));
         margin-inline: auto;
         padding-inline: var(--kp-page-pad, clamp(var(--kp-space-md), 3vw, var(--kp-space-xl)));
         padding-block: var(--kp-page-pad-block, var(--kp-space-xl));

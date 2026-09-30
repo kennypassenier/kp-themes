@@ -95,7 +95,11 @@ src="$work/src"
   npm ci
   # The tag must pass the same gates as a commit (H2, KT7).
   echo "== npm run gates"
-  if [ "$fresh" = 1 ]; then echo "already green on this tree at commit (gate-stamp)"; else npm run gates; fi
+  if [ "$fresh" = 1 ]; then
+    echo "already green on this tree at commit (gate-stamp)"
+  else
+    npm run gates
+  fi
   echo "== checksums"
   npm run checksums
   echo "== fonts.tar"

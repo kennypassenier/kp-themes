@@ -65,7 +65,8 @@ test.describe('the layout layer', { tag: ['@component:layout'] }, () => {
         // declared token, so the probe asks for the same default the CSS
         // does. And the box is content-box, so its padding sits outside the
         // measure.
-        const max = Number.parseFloat(await token(page, '--kp-page-max, 64rem')) * 16;
+        // The default is the larger of 80vw and 64rem: at 1280 both are 1024.
+        const max = Math.max(0.8 * 1280, 64 * 16);
         const pad = await page.evaluate(() => {
             const s = getComputedStyle(document.querySelector('[data-test="page"]'));
             return Number.parseFloat(s.paddingLeft) + Number.parseFloat(s.paddingRight);
@@ -73,6 +74,22 @@ test.describe('the layout layer', { tag: ['@component:layout'] }, () => {
         expect(p.width).toBeLessThanOrEqual(max + pad + 1);
         // Centred: the gap left of it equals the gap right of it.
         expect(Math.abs(p.left - (1280 - p.right))).toBeLessThan(2);
+    });
+
+    // Kenny, 2026-09-30: "gebruik standaard 80% vanaf nu van de breedte" —
+    // on his 4K desktop the 64rem page left most of the screen empty.
+    test('.kp-page takes 80% of a wide window and all of a phone', async ({ page }) => {
+        const content = async () =>
+            page.evaluate(() => {
+                const el = document.querySelector('[data-test="page"]');
+                const s = getComputedStyle(el);
+                return el.getBoundingClientRect().width - Number.parseFloat(s.paddingLeft) - Number.parseFloat(s.paddingRight);
+            });
+        await page.setViewportSize({ width: 2560, height: 1200 });
+        expect(Math.abs((await content()) - 0.8 * 2560)).toBeLessThan(2);
+        await page.setViewportSize({ width: 390, height: 800 });
+        const phone = await box(page, 'page');
+        expect(phone.width).toBeLessThanOrEqual(390);
     });
 
     // Drill: removing `gap` from .kp-stack drops the distance to 0 and this

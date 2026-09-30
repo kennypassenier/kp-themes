@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**Changed.**
+
+- **`.kp-page` takes 80% of the window**, never narrower than the old 64rem
+  and the whole width on a phone (Kenny: "gebruik standaard 80% vanaf nu van
+  de breedte"). A wide desktop screen is used instead of left empty; text
+  keeps its measure through `.kp-prose`, and `--kp-page-max` still sets any
+  other width.
+
 **Fixed.**
 
 - **An indeterminate progress bar shows its stripes in every theme** [fix-86]:
