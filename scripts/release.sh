@@ -64,7 +64,16 @@ fi
 
 # Nothing is released while a block is not approved in every theme
 # (Kenny, 2026-09-16, scope-107). 8.1.0 went out with 18 pairs open
-# because this rule was only written down [fix-87].
+# because this rule was only written down [fix-87]. The screenshots are
+# compared first, so an approval whose look moved since is not counted
+# [scope-138]; a run with nothing changed takes seconds.
+if [ "$dry" != 1 ] || [ "${PIXELS:-1}" = 1 ]; then
+  node gates/verdicts.mjs pixels
+  test -z "$(git status --porcelain -- catalogue/verdicts.json catalogue/pixel-checks.json)" || {
+    echo "refusing: the screenshot check changed catalogue/verdicts.json or pixel-checks.json; commit them (and review what came back) first" >&2
+    exit 1
+  }
+fi
 node gates/advice-approvals.mjs --require-all >/dev/null || {
   node gates/advice-approvals.mjs --require-all >&2 || true
   exit 1

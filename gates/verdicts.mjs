@@ -593,6 +593,10 @@ async function pixels(args) {
                 group.requests.push({ key, theme, entry });
                 groups.set(id, group);
             }
+    if (!groups.size) {
+        console.log(`${PIXELS}: every approval is already at ${head.slice(0, 12)}; nothing to compare.`);
+        return;
+    }
     /** @type {Record<string, Record<string, Record<string, { state: string, from: string, shot?: string }>>>} */
     let checks = {};
     // The browser the photographs are taken in: a digest is only reused in
@@ -627,7 +631,7 @@ async function pixels(args) {
         checks[key][theme] ??= {};
         checks[key][theme][engine] = { state, from, ...(shot ? { shot } : {}) };
     };
-    const tally = { carried: 0, reopened: 0, unstable: 0, gone: 0 };
+    const tally = { carried: 0, reopened: 0, unstable: 0, gone: 0, untouched: 0 };
     const knownNow = await knownBlocks(ROOT);
     let n = 0;
     for (const { commit, engine, ratio, requests } of groups.values()) {
@@ -664,11 +668,12 @@ async function pixels(args) {
             });
         };
         const still = here.filter((r) => !touches(r));
-        for (const { key, theme, entry } of still) {
-            put(key, theme, engine, 'carried', commit, cached(key, theme, engine, commit)?.first);
-            tally.carried += 1;
-            entry.commit = head;
-        }
+        // Left where they are: nothing they draw with moved, so the next run
+        // reads the same from the same commit, and a run that finds only
+        // these writes nothing (a commit of its output would move HEAD and
+        // give the release script a new run to ask for, forever).
+        tally.carried += still.length;
+        tally.untouched += still.length;
         if (still.length) console.log(`  ${still.length} of ${here.length} carried: nothing they draw with moved since ${commit.slice(0, 12)}`);
         const asked = here.filter((r) => touches(r));
         if (!asked.length) continue;
@@ -687,8 +692,12 @@ async function pixels(args) {
         });
         if (doubt.length) {
             console.log(`  ${doubt.length} pair(s) differ: photographing them again, twice a side`);
-            const thenAgain = await shootAt({ commit, engine, ratio, width, requests: doubt });
-            const nowAgain = await shootAt({ root: ROOT, engine, ratio, width, requests: doubt });
+            // In one browser, nothing else drawing beside it: under eight
+            // browsers at once a block photographed steady on both sides yet
+            // differently (page-effects--palette-narrow in pastel, 2026-09-30),
+            // and alone it was identical.
+            const thenAgain = await shootAt({ commit, engine, ratio, width, requests: doubt, parallel: 1 });
+            const nowAgain = await shootAt({ root: ROOT, engine, ratio, width, requests: doubt, parallel: 1 });
             for (const [k, v] of thenAgain) then.set(k, v);
             for (const [k, v] of nowAgain) now.set(k, v);
         }
@@ -706,6 +715,10 @@ async function pixels(args) {
             tally[/** @type {'carried' | 'reopened' | 'unstable'} */ (state)] += 1;
             if (state === 'carried') entry.commit = head;
         }
+    }
+    if (tally.untouched === tally.carried && !tally.reopened && !tally.unstable && !tally.gone) {
+        console.log(`${PIXELS}: ${tally.carried} approval(s) stand, nothing they draw with moved; nothing written.`);
+        return;
     }
     writeRegister(register);
     writeFileSync(
@@ -813,10 +826,10 @@ function narrowing(from, to, moved) {
 
 /**
  * Photograph blocks at a commit (a temporary worktree) or in a directory.
- * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean }} options
+ * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean, parallel?: number }} options
  * @returns {Promise<Map<string, { first: string, second: string }>>}
  */
-async function shootAt({ commit, root, engine, ratio, width, requests, repeat = true }) {
+async function shootAt({ commit, root, engine, ratio, width, requests, repeat = true, parallel = 0 }) {
     const { serve, shootPlaywright } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     /** @type {Record<string, import('@playwright/test').BrowserType>} */
@@ -890,7 +903,7 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
             }
             await page.close();
         };
-        const workers = Math.max(1, Math.min(units, Number(process.env.PIXELS_WORKERS) || 8));
+        const workers = Math.max(1, Math.min(units, parallel || Number(process.env.PIXELS_WORKERS) || 8));
         await Promise.all(Array.from({ length: workers }, worker));
         return out;
     } finally {
