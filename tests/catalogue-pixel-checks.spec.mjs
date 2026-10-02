@@ -50,15 +50,25 @@ test('a pixel check does not reopen a verdict recorded since it [scope-138]', { 
     expect((await readState(page, { registerCommit: 'later' })).before).toBe('approved');
 });
 
-test('a fresh approval of a reopened pair is news for the prompt, though copied before [scope-138]', { tag: ['@component:catalogue'] }, async ({ page }) => {
-    // Kenny, 2026-09-30: after approving the 18 reopened pairs, Copy prompt
-    // said "Nothing new for the prompt since the last copy": the verdict's
-    // signature was the one he had copied before the pixel run.
-    await readState(page, { registerCommit: 'c0ffee' });
-    const text = await page.evaluate(async ({ key, theme }) => {
-        const { COPIED_KEY, buildPrompt } = await import('/catalogue/review-state.js');
-        localStorage.setItem(COPIED_KEY, JSON.stringify([`verdict|${key}|${theme}|firefox|approved|h1`, `verdict|${key}|${theme}|chromium|approved|h1`]));
-        return buildPrompt().text;
-    }, { key: KEY, theme: THEME });
-    expect(text).toContain(`${KEY} · ${THEME}`);
-});
+test(
+    'a fresh approval of a reopened pair is news for the prompt, though copied before [scope-138]',
+    { tag: ['@component:catalogue'] },
+    async ({ page }) => {
+        // Kenny, 2026-09-30: after approving the 18 reopened pairs, Copy prompt
+        // said "Nothing new for the prompt since the last copy": the verdict's
+        // signature was the one he had copied before the pixel run.
+        await readState(page, { registerCommit: 'c0ffee' });
+        const text = await page.evaluate(
+            async ({ key, theme }) => {
+                const { COPIED_KEY, buildPrompt } = await import('/catalogue/review-state.js');
+                localStorage.setItem(
+                    COPIED_KEY,
+                    JSON.stringify([`verdict|${key}|${theme}|firefox|approved|h1`, `verdict|${key}|${theme}|chromium|approved|h1`]),
+                );
+                return buildPrompt().text;
+            },
+            { key: KEY, theme: THEME },
+        );
+        expect(text).toContain(`${KEY} · ${THEME}`);
+    },
+);

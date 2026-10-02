@@ -8798,6 +8798,17 @@ function attachDataTables(root = document, {
         );
         setExpanded(row, !expanded.has(keyOf(row)));
         row.querySelector(ROW_TOGGLE)?.focus();
+      } else if (expandable && body.contains(target)) {
+        const row = (
+          /** @type {HTMLTableRowElement | null} */
+          target.closest("tr")
+        );
+        const interactive = target.closest(ROW_CONTROLS);
+        const control = interactive !== null && !interactive.matches("td, th, tr") ? interactive : null;
+        const selecting = (window.getSelection?.()?.toString() ?? "") !== "";
+        if (row !== null && row.parentElement === body && !row.matches(DETAIL) && row.querySelector(ROW_TOGGLE) !== null && (control === null || !row.contains(control)) && !selecting) {
+          setExpanded(row, !expanded.has(keyOf(row)));
+        }
       }
       const editButton = (
         /** @type {HTMLElement | null} */
@@ -9053,7 +9064,7 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList, shown, defaultFilter, handles6, instances;
+var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, ROW_CONTROLS, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList, shown, defaultFilter, handles6, instances;
 var init_datatable = __esm({
   "js/datatable.js"() {
     "use strict";
@@ -9090,6 +9101,7 @@ var init_datatable = __esm({
     COLLAPSE_ALL = "[data-kp-datatable-collapse-all]";
     EXPAND_COLUMN = "[data-kp-expand-column]";
     ROW_TOGGLE = "[data-kp-row-toggle]";
+    ROW_CONTROLS = 'a[href], button, input, select, textarea, label, summary, details, [contenteditable=""], [contenteditable="true"], [role="button"], [role="link"], [role="checkbox"], [role="switch"], [role="menuitem"], [tabindex]:not([tabindex="-1"])';
     DETAIL = "[data-kp-row-detail]";
     EDIT_CELL = "[data-kp-edit-cell]";
     EDIT_VALUE = "[data-kp-edit-value]";

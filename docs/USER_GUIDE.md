@@ -763,7 +763,11 @@ the row opens, or — with neither — the `kp-datatable-expand` event, whose
 `cell` you fill. The table puts a column in front (its header read by a
 screen reader only, `strings.tableDetailsColumn`) with a button per row:
 `aria-expanded`, `aria-controls` on the detail, a name from
-`strings.tableRowDetails`, Enter and Space from the keyboard. Column
+`strings.tableRowDetails`, Enter and Space from the keyboard. A click
+anywhere else in the row opens and closes it too, and the row shows a
+pointer; a click on a control in the row (a button, a link, a field, a
+checkbox) does only what that control does, and a click that ends a text
+selection does nothing. Column
 indices the handle takes count that column. An open row keeps its detail
 directly under it through a sort and onto another page, and the detail
 spans every visible column. `data-kp-expanded` opens a row from the start;

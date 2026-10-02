@@ -9,7 +9,7 @@
             "digest": "1bae74bd1f61fd19",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
-        "js/datatable.js": { "digest": "f7d62f893edb4aff", "when": "[data-kp-datatable]" },
+        "js/datatable.js": { "digest": "8a83d37839a1a011", "when": "[data-kp-datatable]" },
         "js/datepicker.js": { "digest": "4f5ec0d8a5274638", "when": "[data-kp-datepicker]" },
         "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
@@ -5059,6 +5059,7 @@
         "||||[data-kp-marquee-track]": "13677d13adfe2a10",
         "||||[data-kp-marquee]": "406720ee47dfdd6e",
         "||||[data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky)": "a319654a8a72b35a",
+        "||||[data-kp-row-toggle])": "f2950133b6ee6c53",
         "||||[data-kp-select-list]": "88b098dc40626023",
         "||||[data-kp-sidenav-slim-hide]": "f41fdd923cbf7faa",
         "||||[data-kp-sidenav-slim-show]": "9c4fc1911757cde3",

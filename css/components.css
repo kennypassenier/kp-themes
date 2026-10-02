@@ -4226,6 +4226,11 @@
     /* Rows that open: the detail row wraps its prose rather than widening
  * the table, and the toggle keeps its width when its glyph turns
  * [#expansion]. */
+    /* The whole row opens it, so the whole row says so [Kenny, 2026-10-02]. */
+    .kp-datatable tbody > tr:has(> td [data-kp-row-toggle]) {
+        cursor: pointer;
+    }
+
     .kp-datatable__expand {
         min-inline-size: var(--kp-datatable-expand-size, 2em);
     }

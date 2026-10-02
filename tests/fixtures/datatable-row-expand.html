@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>An expandable data table opened from anywhere in a row</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- Kenny, 2026-10-02, on the homelab dashboard's notifications: a
+             click anywhere in the row opens it, not on the button column. -->
+        <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-page-sizes="none" data-test="table" style="inline-size: 50rem">
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <caption class="kp-sr-only">
+                        Notifications
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Reference</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">When</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>N-101</td>
+                            <td>Backup finished</td>
+                            <td>2 min ago</td>
+                            <td><button type="button" class="kp-button kp-button--sm" data-test="ack-N-101">Acknowledge</button></td>
+                        </tr>
+                        <tr data-kp-row-detail>
+                            <td colspan="4">Details of N-101: Backup finished.</td>
+                        </tr>
+                        <tr>
+                            <td>N-102</td>
+                            <td>Disk almost full</td>
+                            <td>14 min ago</td>
+                            <td><button type="button" class="kp-button kp-button--sm" data-test="ack-N-102">Acknowledge</button></td>
+                        </tr>
+                        <tr data-kp-row-detail>
+                            <td colspan="4">Details of N-102: Disk almost full.</td>
+                        </tr>
+                        <tr>
+                            <td>N-103</td>
+                            <td>Update ready</td>
+                            <td>1 h ago</td>
+                            <td><button type="button" class="kp-button kp-button--sm" data-test="ack-N-103">Acknowledge</button></td>
+                        </tr>
+                        <tr data-kp-row-detail>
+                            <td colspan="4">Details of N-103: Update ready.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

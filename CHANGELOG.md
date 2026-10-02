@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+**Changed.**
+
+- **An expandable data table row opens from anywhere in it** (Kenny, on the
+  homelab dashboard's notifications: "ergens in die rij klikken, niet enkel
+  op dat icoon"), and shows a pointer; a click on a button, link, field or
+  checkbox in the row does only its own thing, and the toggle keeps Enter
+  and Space.
+
 ## 8.1.0 — 2026-09-30
 
 A minor: pages use the width of a wide screen, a loading table can show it

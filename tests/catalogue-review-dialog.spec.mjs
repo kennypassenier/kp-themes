@@ -225,7 +225,9 @@ test(
             await page.keyboard.press('ArrowUp');
             // The next block's note takes the focus, or the round ended.
             await expect
-                .poll(async () => !(await dialog.isVisible()) || (await noteOf(page).evaluate((el) => el === document.activeElement)), { timeout: 30_000 })
+                .poll(async () => !(await dialog.isVisible()) || (await noteOf(page).evaluate((el) => el === document.activeElement)), {
+                    timeout: 30_000,
+                })
                 .toBe(true);
         }
         await expect(dialog).toBeHidden({ timeout: 30_000 });

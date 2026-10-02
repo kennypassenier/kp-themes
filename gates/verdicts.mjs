@@ -766,7 +766,9 @@ function narrowing(from, to, moved) {
         return null;
     }
     if (!before?.rules || !after?.rules || before.base !== after.base) return null;
-    const familiesIn = (/** @type {string} */ text) => [...new Set([...text.matchAll(/(?<![\w-])((?:data-)?kp-[a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => m[1]))];
+    const familiesIn = (/** @type {string} */ text) => [
+        ...new Set([...text.matchAll(/(?<![\w-])((?:data-)?kp-[a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => m[1])),
+    ];
     /** @type {{ theme: string, families: string[] }[]} */
     const changed = [];
     for (const key of new Set([...Object.keys(before.rules), ...Object.keys(after.rules)])) {
@@ -899,7 +901,8 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
                     console.error(`  ${href} at ${where}: ${String(error).split('\n')[0]}`);
                 }
                 done += 1;
-                if (done % 20 === 0 || done === units) console.log(`  ${where}: ${done}/${units} page-and-theme units, last ${href} in ${Math.round((Date.now() - started) / 1000)} s`);
+                if (done % 20 === 0 || done === units)
+                    console.log(`  ${where}: ${done}/${units} page-and-theme units, last ${href} in ${Math.round((Date.now() - started) / 1000)} s`);
             }
             await page.close();
         };
