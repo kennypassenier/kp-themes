@@ -20358,7 +20358,7 @@
                 "firefox": {
                     "verdict": "approved",
                     "hash": "e7d2955a8ae3170c1e9885e18e30444cd47617244b5dcae6582edb8559b2de16",
-                    "commit": "d97f1fc617c11962e158d360cfb9223c6e158fe0",
+                    "commit": "2ba4cd986dd7a944ed6b5f0b5f5babadec89f78b",
                     "given": "2026-09-20",
                     "ratio": 2.222
                 }

@@ -5580,17 +5580,14 @@
         background: var(--primary);
     }
 
-    /* On, the thumb travels the track's width less its height: moved by
- * transform, not by its inset, so a click changes no layout (the signature
- * survey of 2026-10-03 measured inset-inline-start animating in all 22
- * themes). The travel is negative right to left. */
+    /* The thumb travels by its inset. Moving it by transform instead (fix-88,
+ * 2026-10-03) put the same thumb in the same place but rasterised its edge
+ * differently, which sent 62 approved switch pairs back to Kenny for no
+ * visible change; for a 24px thumb over 150ms the layout cost is not worth
+ * that, so the inset stays. */
     .kp-switch__input:checked::before {
-        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+        inset-inline-start: calc(100% - var(--kp-switch-height, 1.5rem) + var(--kp-switch-inset, 0.125rem) + 2 * var(--kp-switch-border, 1px));
         background: var(--primary-foreground);
-    }
-
-    .kp-switch__input:checked:dir(rtl)::before {
-        transform: translateX(calc(-1 * (var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))));
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -5598,7 +5595,7 @@
         .kp-switch__input::before {
             transition:
                 background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
-                transform var(--fx-duration, 150ms) var(--fx-ease, ease);
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease);
         }
     }
 

@@ -702,6 +702,13 @@ async function pixels(args) {
             for (const [k, v] of nowAgain) now.set(k, v);
         }
         const doubted = new Set(doubt.map((r) => `${r.key}|${r.theme}`));
+        if (process.env.PIXELS_DEBUG)
+            for (const r of doubt) {
+                const k = `${r.key}|${r.theme}`;
+                console.log(
+                    `  debug ${k}: then ${JSON.stringify(then.get(k))} now ${JSON.stringify(now.get(k))} cached ${JSON.stringify(cached(r.key, r.theme, engine, commit))}`,
+                );
+            }
         for (const { key, theme, entry } of asked) {
             const a = doubted.has(`${key}|${theme}`)
                 ? then.get(`${key}|${theme}`)
@@ -906,7 +913,7 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
             }
             await page.close();
         };
-        const workers = Math.max(1, Math.min(units, parallel || Number(process.env.PIXELS_WORKERS) || 8));
+        const workers = Math.max(1, Math.min(units, parallel || Number(process.env.PIXELS_WORKERS) || 4));
         await Promise.all(Array.from({ length: workers }, worker));
         return out;
     } finally {

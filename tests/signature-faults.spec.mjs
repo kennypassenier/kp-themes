@@ -3,8 +3,9 @@
 //   - retro and cyberpunk drew every .kp-field__check square, so a radio
 //     looked like a checkbox;
 //   - cyberpunk styled .kp-wizard__step, a class the package never renders;
-//   - the switch thumb travelled by inset-inline-start, a layout property,
-//     in all 22 themes, where transform moves it without a layout.
+// (The third, the switch thumb moving by inset-inline-start, was fixed and
+// then undone the same day: the transform drew the same thumb with other edge
+// pixels and sent 62 approved pairs back for review; see fix-88.)
 // Written on the day; run with the suite at Kenny's release go (his rule of
 // 2026-09-30), red on the commit before the fix.
 
@@ -39,24 +40,4 @@ test('cyberpunk styles the wizard steps the package renders', { tag: ['@componen
     await wear(page, 'cyberpunk');
     const step = page.locator('.kp-wizard__steps li').first();
     expect(await step.evaluate((el) => getComputedStyle(el).textTransform)).toBe('uppercase');
-});
-
-test('the switch thumb moves by transform, not by its inset', { tag: ['@component:switch'] }, async ({ page }) => {
-    await page.goto('/catalogue/switch.html');
-    const input = page.locator('.kp-switch__input').first();
-    const read = () =>
-        input.evaluate((el) => {
-            const style = getComputedStyle(el, '::before');
-            return { left: style.insetInlineStart, transform: style.transform };
-        });
-    await input.evaluate((el) => {
-        /** @type {HTMLInputElement} */ (el).checked = false;
-    });
-    const off = await read();
-    await input.evaluate((el) => {
-        /** @type {HTMLInputElement} */ (el).checked = true;
-    });
-    const on = await read();
-    expect(on.left, 'the inset stays where it was').toBe(off.left);
-    expect(on.transform, 'the thumb travels by transform').not.toBe('none');
 });

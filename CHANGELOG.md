@@ -8,9 +8,6 @@
   `.kp-field__check` square, so an option button looked like a checkbox.
 - **Cyberpunk's wizard steps get their mono capitals**: the rule targeted
   `.kp-wizard__step`, a class the package never renders.
-- **The switch thumb travels by transform**, not by `inset-inline-start`, so a
-  click no longer lays the page out again; right to left it travels the other
-  way.
 
 **Changed.**
 

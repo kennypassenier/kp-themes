@@ -182,7 +182,7 @@ files are CSS or modules `catalogue/code-version.json` describes rule by rule,
 only a block naming a family of a changed rule (widened to its components'
 families) is photographed; the approval side reuses the last run's digest; one
 photograph a side unless the sides differ; and page-and-theme units run in
-eight browsers side by side. Measured on a scratch branch: a docs change 0 s,
+four browsers side by side (eight when measured; four since the PC is shared with other work, 2026-10-03). Measured on a scratch branch: a docs change 0 s,
 one rule in forest's register 43 s (15 pairs, all changed), one shared
 progress rule 43 s (22 pairs); a run that must photograph everything took
 17 min.

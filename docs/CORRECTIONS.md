@@ -4457,7 +4457,10 @@ switch animates.
 22 registers (its `measure.sh`, verbatim in research/signature-elements/):
 these three only.
 
-**4 · How we prevent recurrence.** The fixes above, locked by
+**4 · How we prevent recurrence.** Radios round and the wizard rule
+retargeted. The switch thumb consciously stays on its inset: moved by
+transform it landed on the same place with other edge pixels, and 62
+approved pairs came back for no visible change. Locked by
 `tests/signature-faults.spec.mjs`, run with the suite at Kenny's release
 go (rule of 2026-09-30).
 
