@@ -2381,4 +2381,8 @@ research/signature-elements/check-flush.mjs (sepia's drop cap became a one-line
 initial, blueprint's ticks moved 3px). The dialog entrances: 14 approved;
 light, dark, cyberpunk, synthwave and brutalism at a quarter of their speed,
 blueprint and deco at half, titanium's corners cut from the first frame.
+Round three, the same day: everything approved — the ten elements in all 22
+themes (198 of 198) and the dialog entrance in all 22. Both demos moved to
+"Archived research". Next: build them into the package in place of today's
+looks, with `.kp-progressbar` replacing `.kp-progress` (9.0.0).
 

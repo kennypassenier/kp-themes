@@ -1,5 +1,7 @@
 # Signature elements: which other elements can carry a theme's identity
 
+**Decided (scope-140, 2026-10-03: all ten elements approved in all 22 themes after three rounds, built into the package in 9.0.0).**
+
 Kenny, 2026-10-03, after asking for a progress bar with an identity per theme
 (pacman's ILoveCandy bar): "en zoek uit voor welke andere elementen/effecten
 dit ook kan". This round inventories the candidates, measures how much the 22

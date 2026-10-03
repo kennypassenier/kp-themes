@@ -1,5 +1,7 @@
 # How a dialog opens, per theme
 
+**Decided (scope-140, 2026-10-03: the entrance approved in all 22 themes after two rounds).**
+
 Kenny, 2026-10-03, judging the signature-elements round: "was het de bedoeling
 dat die een bepaalde animatie ofzo toonden als de dialog opende? want dat heb
 ik niet kunnen zien? maak een aparte demo pagina hiervoor om dat te testen, dus
@@ -12,4 +14,3 @@ comparison. In the review dialog (research/_review) each theme's step opens it
 once by itself. The drawings are the round's own files under
 `../signature-elements/`, so nothing is copied.
 
-Open: Kenny judges all 22 themes here.

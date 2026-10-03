@@ -42,6 +42,9 @@ function buildNavigation() {
     list.className = 'kp-sidenav__list';
 
     for (const { group, pages } of PAGES) {
+        // "Research to look at" is empty while nothing waits on Kenny; an empty
+        // heading would read as something to open.
+        if (!pages.length) continue;
         const category = document.createElement('li');
         category.className = 'kp-sidenav__category';
         // Each group keeps its own state under its own name, so adding a
