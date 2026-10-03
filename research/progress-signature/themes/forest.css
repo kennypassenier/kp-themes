@@ -1,80 +1,179 @@
-/* forest: the map's scale bar. The track is a surveyed ruler with a tick at
-   every step; what is done fills in as the two-row checkered scale bar of
-   a field map, in forest ink, and the head is a trig point, the triangle
-   with its dot. Busy is unsurveyed ground: the cartographer's hatching,
-   drifting one way, standing still without motion. From the printed map on
-   kraft, forest green as the one ink and clay as the map's own marker. */
+/* forest: the bar is a forest being planted. The empty track is cleared
+   ground on kraft with a row of seedlings, one per planting slot; what is
+   done is a grown treeline, pines, a spruce and a broadleaf in forest ink,
+   standing on its own forest floor. The head is the newest sapling, in the
+   lighter green of new growth, on its mound of fresh earth, swaying while
+   the work is under way; the
+   treeline only ever shows whole trees, so the forest grows one tree at a
+   time and every seedling ahead is exactly where its tree will stand. At
+   100% the forest runs to the edge of the map and the sapling has gone.
+
+   Busy is a planting front with no end in sight: a grove travels along the
+   row, led by its sapling, over trees that stand still. Without motion it
+   is a grove standing in the middle of the row, seedlings on both sides,
+   which no determinate value ever draws (they all grow from the left).
+
+   Colour discipline: --primary for the trees and their floor, --selected
+   for the sapling, --border-strong for the seedlings and the ground line,
+   --muted for the cleared ground. The tree, seedling and sapling shapes
+   are masks, so their own fill is never seen. Clay stays out: it never
+   acts, and a progress bar is not decoration. Only transform and
+   clip-path move; the sway is a slow 2.8 s rock, nothing flickers. */
 
 [data-theme='forest'] .kp-progressbar {
-    --kp-progressbar-height: 0.875rem;
-    --kp-ps-head: 0.875rem;
-    --kp-ps-seg: calc(100% / var(--kp-steps));
-    --kp-ps-light: color-mix(in oklab, var(--primary) 58%, var(--card));
+    --kp-progressbar-height: 1.25rem;
+    /* One planting slot: half the bar's height, so a tree keeps its shape
+       at any height the bar is given. */
+    --kp-fo-pitch: calc(var(--kp-progressbar-height) / 2);
+    /* The row holds whole slots only, centred: the few pixels a track's
+       width leaves over are a margin of plain ground on both ends, so no
+       tree or seedling is ever cut by the edge of the bar. */
+    --kp-fo-run: round(down, 100cqi, var(--kp-fo-pitch));
+    --kp-fo-margin: calc((100cqi - var(--kp-fo-run)) / 2);
+    /* Where the grown forest ends: on a slot boundary, so only whole trees
+       stand, and on the far edge at 100% (the extra slot in the product
+       lets the last one land there). */
+    --kp-fo-edge: min(var(--kp-fo-margin) + round(down, var(--kp-value) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), 100cqi);
+    /* Seven trees per tile, one per slot: pines, spruces and two
+       broadleaves of seven heights, so the skyline does not read as a
+       pattern. */
+    --kp-fo-trees: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='15' cy='10.4' rx='4.5' ry='5.2'/%3E%3Crect x='14.3' y='10.4' width='1.4' height='9.6'/%3E%3Cpolygon points='25.0,4.4 27.5,8.5 26.4,8.5 28.3,12.7 26.8,12.7 29.0,16.8 21.0,16.8 23.2,12.7 21.7,12.7 23.6,8.5 22.5,8.5'/%3E%3Crect x='24.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='35.0,1.2 37.5,5.1 36.4,5.1 38.0,9.0 36.7,9.0 38.6,12.9 37.0,12.9 39.2,16.8 30.8,16.8 33.0,12.9 31.4,12.9 33.3,9.0 32.0,9.0 33.6,5.1 32.5,5.1'/%3E%3Crect x='34.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='45.0,2.6 48.1,7.3 46.7,7.3 49.0,12.1 47.2,12.1 49.9,16.8 40.1,16.8 42.8,12.1 41.0,12.1 43.3,7.3 41.9,7.3'/%3E%3Crect x='44.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='55' cy='11.1' rx='3.9' ry='4.5'/%3E%3Crect x='54.3' y='11.1' width='1.4' height='8.9'/%3E%3Cpolygon points='65.0,0.6 67.5,4.6 66.4,4.6 68.1,8.7 66.7,8.7 68.7,12.7 67.0,12.7 69.3,16.8 60.7,16.8 63.0,12.7 61.3,12.7 63.3,8.7 61.9,8.7 63.6,4.6 62.5,4.6'/%3E%3Crect x='64.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+    --kp-fo-seedling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3C/svg%3E");
+    --kp-fo-mound: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cellipse cx='5' cy='20' rx='4.2' ry='1.7'/%3E%3C/svg%3E");
+    --kp-fo-sapling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5,5.2 7.2,9.2 6.1,9.2 8.0,13.2 6.7,13.2 8.8,17.4 1.2,17.4 3.3,13.2 2.0,13.2 3.9,9.2 2.8,9.2'/%3E%3Crect x='4.45' y='17' width='1.1' height='3'/%3E%3C/svg%3E");
 }
 
+/* The cleared ground: kraft with its ground line, and a seedling in every
+   slot. */
 [data-theme='forest'] .kp-progressbar__track {
-    border-radius: 2px;
-    background:
-        repeating-linear-gradient(90deg, transparent 0 calc(var(--kp-ps-seg) - 1px), var(--border-strong) 0 var(--kp-ps-seg)) top / 100% 30% no-repeat,
-        repeating-linear-gradient(90deg, transparent 0 calc(var(--kp-ps-seg) - 1px), var(--border-strong) 0 var(--kp-ps-seg)) bottom / 100% 30%
-            no-repeat,
-        var(--card);
-    box-shadow: inset 0 0 0 1px var(--border-strong);
+    border-radius: 3px;
+    background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
 }
 
-/* The scale bar: forest and its lighter tone alternating per step, the
-   bottom row a step out of phase with the top. */
-[data-theme='forest'] .kp-progressbar__fill {
-    background:
-        linear-gradient(90deg, var(--primary) 50%, var(--kp-ps-light) 0) 0 0 / calc(var(--kp-ps-seg) * 2) 50% repeat-x,
-        linear-gradient(90deg, var(--kp-ps-light) 50%, var(--primary) 0) 0 100% / calc(var(--kp-ps-seg) * 2) 50% repeat-x;
-    box-shadow: inset 0 0 0 1px var(--primary);
-    clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0);
-    transition: clip-path var(--fx-duration) var(--fx-ease);
-}
-
-/* The trig point: a clay-ink triangle with its survey dot, the map's own
-   marker; clay is decorative here, never an action. */
-[data-theme='forest'] .kp-progressbar__head {
-    inline-size: var(--kp-ps-head);
-    background: radial-gradient(circle at 50% 66%, var(--card) 0 1.5px, var(--accent-foreground) 2px);
-    clip-path: polygon(50% 4%, 96% 96%, 4% 96%);
-    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
-    transition: transform var(--fx-duration) var(--fx-ease);
-}
-
-/* Busy: hatching over the whole ruler, drifting one period at a time. Only
-   the hatch layer moves, and only by transform. */
-[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-    inset-inline: 0;
-    inline-size: auto;
-    background: none;
-    box-shadow: none;
-    animation: none;
-    overflow: hidden;
-}
-
-[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+[data-theme='forest'] .kp-progressbar__track::before {
     content: '';
     position: absolute;
     inset-block: 0;
-    inset-inline: -12px 0;
-    background: repeating-linear-gradient(-45deg, var(--primary) 0 2px, transparent 2px 6px);
-    animation: kp-progressbar-forest-hatch 900ms linear infinite;
+    inset-inline: var(--kp-fo-margin);
+    background: var(--border-strong);
+    mask: var(--kp-fo-seedling) 0 0 / var(--kp-fo-pitch) 100% repeat-x;
 }
 
-@keyframes kp-progressbar-forest-hatch {
+/* The grown part: the same ground, covering the seedlings, with the
+   forest floor in ink and the treeline on it. */
+[data-theme='forest'] .kp-progressbar__fill {
+    background: linear-gradient(to top, var(--primary) 0 1.5px, transparent 1.5px) var(--muted);
+    clip-path: inset(0 calc(100% - var(--kp-fo-edge)) 0 0);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+[data-theme='forest'] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: var(--kp-fo-margin);
+    background: var(--primary);
+    mask: var(--kp-fo-trees) 0 0 / calc(var(--kp-fo-pitch) * 7) 100% repeat-x;
+}
+
+/* The newest sapling, standing in the next slot; its box is cleared
+   ground, so the seedling it grew from is gone. */
+[data-theme='forest'] .kp-progressbar__head {
+    inline-size: var(--kp-fo-pitch);
+    background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
+    transform: translateX(var(--kp-fo-edge));
+    transition: transform var(--fx-duration) var(--fx-ease);
+}
+
+[data-theme='forest'] .kp-progressbar__head::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--selected);
+    mask: var(--kp-fo-sapling) 0 0 / 100% 100% no-repeat;
+    transform-origin: 50% 100%;
+}
+
+/* The planting hole: a mound of turned earth in the sapling's own green,
+   standing still while the sapling sways above it, so the head reads as
+   "just planted here" at a glance. */
+[data-theme='forest'] .kp-progressbar__head::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--selected);
+    mask: var(--kp-fo-mound) 0 0 / 100% 100% no-repeat;
+}
+
+/* Under way, the sapling rocks in the wind; at 0% it waits upright. */
+[data-theme='forest'] .kp-progressbar:not([aria-valuenow='0']):not([aria-valuenow='100']) .kp-progressbar__head::before {
+    animation: kp-progressbar-forest-sway 2800ms ease-in-out infinite alternate;
+}
+
+@keyframes kp-progressbar-forest-sway {
+    from {
+        transform: rotate(-5deg);
+    }
+    to {
+        transform: rotate(5deg);
+    }
+}
+
+/* Busy: a grove a third of the row wide travels over trees that stand
+   still, its sapling leading the front. */
+[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] {
+    --kp-fo-grove: 32cqi;
+}
+
+[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline: 0;
+    inline-size: auto;
+    transition: none;
+    animation: kp-progressbar-forest-grove 3200ms linear infinite;
+}
+
+[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+    display: block;
+    transition: none;
+    animation: kp-progressbar-forest-front 3200ms linear infinite;
+}
+
+@keyframes kp-progressbar-forest-grove {
+    from {
+        clip-path: inset(0 100% 0 calc(-1 * var(--kp-fo-grove)));
+    }
+    to {
+        clip-path: inset(0 calc(-1 * var(--kp-fo-grove)) 0 100%);
+    }
+}
+
+@keyframes kp-progressbar-forest-front {
     from {
         transform: translateX(0);
     }
     to {
-        transform: translateX(8.485px);
+        transform: translateX(calc(100cqi + var(--kp-fo-grove)));
     }
 }
 
+/* Reduced motion: the sapling stands upright, and busy is a grove standing
+   in the middle of the row with its sapling at the front. */
 @media (prefers-reduced-motion: reduce) {
-    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    [data-theme='forest'] .kp-progressbar .kp-progressbar__head::before {
         animation: none;
         transform: none;
+    }
+
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        --kp-fo-from: calc(var(--kp-fo-margin) + round(down, 0.35 * var(--kp-fo-run), var(--kp-fo-pitch)));
+        --kp-fo-to: calc(var(--kp-fo-margin) + round(down, 0.65 * var(--kp-fo-run), var(--kp-fo-pitch)));
+        animation: none;
+        /* On slot boundaries, like the determinate edge: whole trees only. */
+        clip-path: inset(0 calc(100% - var(--kp-fo-to)) 0 var(--kp-fo-from));
+    }
+
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        animation: none;
+        transform: translateX(calc(var(--kp-fo-margin) + round(down, 0.65 * var(--kp-fo-run), var(--kp-fo-pitch))));
     }
 }
