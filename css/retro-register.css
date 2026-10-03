@@ -792,19 +792,6 @@
         image-rendering: pixelated;
     }
 
-    /* The radio: the round well of a 1995 option button with a solid dot,
-       not the checkbox's square and pixel tick (the survey of 2026-10-03). */
-    [data-theme='retro'] .kp-field__check[type='radio'] {
-        border-radius: 50%;
-    }
-
-    [data-theme='retro'] .kp-field__check[type='radio']:checked::before {
-        inline-size: 5px;
-        block-size: 5px;
-        border-radius: 50%;
-        background: var(--foreground);
-    }
-
     [data-theme='retro'] .kp-field__check:focus-visible {
         box-shadow:
             0 0 0 2px var(--focus-ring-contrast),
@@ -901,22 +888,7 @@
         );
     }
 
-    /* The switch [gap-11], in the checkbox's voice: a sunken square well on
-       the popover, a square thumb, and the title bar's primary once on.
-       The ring keeps the bevel under it, as the check's does. */
-    [data-theme='retro'] .kp-switch {
-        --kp-switch-radius: 0;
-        --kp-switch-thumb-radius: 0;
-    }
-
-    [data-theme='retro'] .kp-switch__input {
-        border: 1px solid var(--border-strong);
-        background: var(--popover);
-        box-shadow: var(--kp-sunken);
-    }
-
     [data-theme='retro'] .kp-switch__input:checked {
-        background: var(--primary);
         border-color: var(--border-strong);
     }
 
@@ -1570,29 +1542,9 @@
         border-radius: 0;
     }
 
-    /* The segmented progress bar of a 1995 installer. */
-    [data-theme='retro'] .kp-progress {
-        background-color: var(--popover);
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-        box-shadow: var(--kp-sunken);
-        padding: 2px;
-    }
-
     [data-theme='retro'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-        border-radius: 0;
-    }
-
-    [data-theme='retro'] .kp-empty {
-        border: 2px groove var(--border);
-        border-radius: 0;
-    }
-
-    [data-theme='retro'] .kp-empty__title {
-        font-family: var(--theme-font-display);
-        font-weight: 700;
     }
 
     [data-theme='retro'] .kp-error {
@@ -2560,3 +2512,503 @@
         --kp-sidenav-submenu-mark: '▸';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* retro's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/retro.css and research/signature-elements/demo.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='retro'] .kp-progressbar {
+        --kp-progressbar-height: 1.25rem;
+        --kp-rp-block: 0.5rem;
+        --kp-rp-gap: 2px;
+        --kp-rp-pitch: calc(var(--kp-rp-block) + var(--kp-rp-gap));
+        /* The run of blocks: a whole number of them, centred in the field, so
+           100% is the last block whole and never a sliver. */
+        --kp-rp-run: calc(round(down, 100% - 6px + var(--kp-rp-gap), var(--kp-rp-pitch)) - var(--kp-rp-gap));
+        border-radius: 0;
+        background: var(--popover);
+        /* The sunken field: the 3:1 boundary outside, the bevel inside it. */
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 2px 2px 0 0 var(--border),
+            inset -2px -2px 0 0 var(--card);
+    }
+
+    [data-theme='retro'] .kp-progressbar__track {
+        inset-block: 3px;
+        inset-inline: calc((100% - var(--kp-rp-run)) / 2) auto;
+        inline-size: var(--kp-rp-run);
+        border-radius: 0;
+        background: transparent;
+    }
+
+    [data-theme='retro'] .kp-progressbar__fill {
+        background: repeating-linear-gradient(90deg, var(--primary) 0 var(--kp-rp-block), transparent var(--kp-rp-block) var(--kp-rp-pitch));
+        clip-path: inset(0 max(0px, 100% - round(down, var(--kp-value) * (100% + var(--kp-rp-gap)) + 0.5px, var(--kp-rp-pitch))) 0 0);
+        transition: none;
+    }
+
+    [data-theme='retro'] .kp-progressbar__head {
+        display: none;
+    }
+
+    [data-theme='retro'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background:
+            repeating-linear-gradient(90deg, transparent 0 var(--kp-rp-block), var(--popover) var(--kp-rp-block) var(--kp-rp-pitch)),
+            repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
+    }
+
+    [data-theme='retro'] .kp-spinner {
+        --kp-sig-dur: 2600ms;
+        position: relative;
+        inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.7);
+        border: 0;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) top / 100% 11% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 11% no-repeat;
+        /* The one-pixel outline of the glass, the cursor's black edge. */
+        filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground))
+            drop-shadow(0 -1px 0 var(--foreground));
+        animation: none;
+    }
+
+    [data-theme='retro'] .kp-spinner::before,
+    [data-theme='retro'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset-block: 11%;
+        inset-inline: 14%;
+        clip-path: polygon(0 0, 100% 0, 56% 48%, 56% 52%, 100% 100%, 0 100%, 44% 52%, 44% 48%);
+    }
+
+    [data-theme='retro'] .kp-spinner::before {
+        background: var(--popover);
+    }
+
+    [data-theme='retro'] .kp-spinner::after {
+        background-image: var(--kp-brush);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        clip-path: polygon(
+            13.72% 14.96%,
+            86.28% 14.96%,
+            56% 48%,
+            53% 52%,
+            53% 80.47%,
+            88.5% 87.45%,
+            100% 100%,
+            0% 100%,
+            11.5% 87.45%,
+            47% 80.47%,
+            47% 52%,
+            44% 48%
+        );
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-spinner {
+            animation: kp-sig-retro-turn var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='retro'] .kp-spinner::after {
+            animation: kp-sig-retro-sand var(--kp-sig-dur) linear infinite;
+        }
+    }
+
+    [data-theme='retro'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1600ms;
+        position: relative;
+        block-size: 1.1rem;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+        animation: none;
+    }
+
+    [data-theme='retro'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        background-image: var(--kp-brush);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        opacity: 0.45;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-retro-dither var(--kp-sig-dur) steps(4, jump-none) infinite alternate;
+        }
+    }
+
+    [data-theme='retro'] .kp-switch {
+        --kp-switch-border: 0px;
+        --kp-switch-inset: 3px;
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='retro'] .kp-switch__input {
+        border: 0;
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-switch__input:checked {
+        background: var(--primary);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-switch__input::before,
+    [data-theme='retro'] .kp-switch__input:checked::before {
+        background: var(--card);
+        box-shadow: var(--kp-raised);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-switch__input,
+        [data-theme='retro'] .kp-switch__input::before {
+            transition: none;
+        }
+    }
+
+    [data-theme='retro'] .kp-field__check[type='radio'] {
+        inline-size: 14px;
+        block-size: 14px;
+        border: 0;
+        border-radius: 50%;
+    }
+
+    [data-theme='retro'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 4px;
+        block-size: 4px;
+        border-radius: 50%;
+        background: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-toast {
+        --kp-sig-dur: 240ms;
+        position: relative;
+        padding-block-start: calc(0.625rem + 7px);
+        border: 0;
+        border-radius: 0;
+        box-shadow: var(--kp-raised);
+    }
+
+    [data-theme='retro'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 3px;
+        inset-inline: 3px;
+        block-size: 6px;
+        background: var(--kp-ramp);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-toast {
+            animation: kp-sig-retro-drop var(--kp-sig-dur) steps(3, jump-end) both;
+        }
+    }
+
+    [data-theme='retro'] .kp-dialog {
+        --kp-sig-dur: 280ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-dialog {
+            animation: kp-sig-retro-zoom var(--kp-sig-dur) steps(4, jump-end) both;
+        }
+    }
+
+    [data-theme='retro'] .kp-tooltip {
+        --kp-sig-dur: 500ms;
+        padding: 0 0.35rem;
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+        background: color-mix(in oklab, var(--warning) 30%, var(--popover));
+        color: var(--foreground);
+        box-shadow: none;
+        font-family: var(--kp-dos);
+        font-size: 1.05rem;
+        line-height: 1.3;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-tooltip {
+            animation: kp-sig-retro-hold var(--kp-sig-dur) step-end;
+        }
+    }
+
+    [data-theme='retro'] .kp-wizard__steps {
+        gap: 0.4rem;
+    }
+
+    [data-theme='retro'] .kp-wizard__steps li {
+        padding: 3px 0.6rem 3px 3px;
+        background: var(--background);
+        box-shadow: var(--kp-raised);
+    }
+
+    [data-theme='retro'] .kp-wizard__steps li[data-state='done'] {
+        background: var(--card);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] .kp-wizard__steps li[data-state='current'] {
+        background: var(--kp-ramp);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='retro'] .kp-wizard__steps li::before {
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--popover);
+        color: var(--primary);
+    }
+
+    [data-theme='retro'] .kp-empty {
+        position: relative;
+        padding: 1rem 1rem 1rem 3.5rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: var(--kp-sunken);
+        text-align: start;
+    }
+
+    [data-theme='retro'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-start: 1rem;
+        inline-size: 24px;
+        block-size: 24px;
+        background-image: var(--kp-brush);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        box-shadow: var(--kp-raised);
+        opacity: 0.6;
+    }
+
+    [data-theme='retro'] .kp-empty__title {
+        margin: 0;
+        font-family: var(--kp-dos);
+        font-size: 1.3rem;
+        font-weight: 400;
+    }
+
+    [data-theme='retro'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='retro'] a:not([class]):hover {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    @keyframes kp-sig-retro-turn {
+        0%,
+        80% {
+            transform: rotate(0);
+        }
+
+        100% {
+            transform: rotate(180deg);
+        }
+    }
+
+    @keyframes kp-sig-retro-sand {
+        0% {
+            clip-path: polygon(0% 0%, 100% 0%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 56% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+        }
+
+        6% {
+            clip-path: polygon(
+                1.77% 1.93%,
+                98.23% 1.93%,
+                56% 48%,
+                53% 52%,
+                53% 100%,
+                53% 100%,
+                53% 100%,
+                47% 100%,
+                47% 100%,
+                47% 100%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        10% {
+            clip-path: polygon(3% 3.27%, 97% 3.27%, 56% 48%, 53% 52%, 53% 100%, 100% 100%, 100% 100%, 0% 100%, 0% 100%, 47% 100%, 47% 52%, 44% 48%);
+        }
+
+        20% {
+            clip-path: polygon(
+                6.23% 6.8%,
+                93.77% 6.8%,
+                56% 48%,
+                53% 52%,
+                53% 92.57%,
+                96.53% 96.21%,
+                100% 100%,
+                0% 100%,
+                3.47% 96.21%,
+                47% 92.57%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        30% {
+            clip-path: polygon(
+                9.77% 10.66%,
+                90.23% 10.66%,
+                56% 48%,
+                53% 52%,
+                53% 85.85%,
+                92.73% 92.07%,
+                100% 100%,
+                0% 100%,
+                7.27% 92.07%,
+                47% 85.85%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        40% {
+            clip-path: polygon(
+                13.72% 14.96%,
+                86.28% 14.96%,
+                56% 48%,
+                53% 52%,
+                53% 80.47%,
+                88.5% 87.45%,
+                100% 100%,
+                0% 100%,
+                11.5% 87.45%,
+                47% 80.47%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        50% {
+            clip-path: polygon(
+                18.26% 19.92%,
+                81.74% 19.92%,
+                56% 48%,
+                53% 52%,
+                53% 76.42%,
+                83.62% 82.13%,
+                100% 100%,
+                0% 100%,
+                16.38% 82.13%,
+                47% 76.42%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        60% {
+            clip-path: polygon(
+                23.81% 25.98%,
+                76.19% 25.98%,
+                56% 48%,
+                53% 52%,
+                53% 72.88%,
+                77.66% 75.63%,
+                100% 100%,
+                0% 100%,
+                22.34% 75.63%,
+                47% 72.88%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        70% {
+            clip-path: polygon(
+                31.64% 34.51%,
+                68.36% 34.51%,
+                56% 48%,
+                53% 52%,
+                53% 66.47%,
+                69.27% 66.47%,
+                100% 100%,
+                0% 100%,
+                30.73% 66.47%,
+                47% 66.47%,
+                47% 52%,
+                44% 48%
+            );
+        }
+
+        76% {
+            clip-path: polygon(44% 48%, 56% 48%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 100% 100%, 0% 100%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+        }
+
+        100% {
+            clip-path: polygon(44% 48%, 56% 48%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 100% 100%, 0% 100%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+        }
+    }
+
+    @keyframes kp-sig-retro-dither {
+        from {
+            opacity: 0.15;
+        }
+
+        to {
+            opacity: 0.6;
+        }
+    }
+
+    @keyframes kp-sig-retro-drop {
+        from {
+            transform: translateY(-12px);
+        }
+
+        to {
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-retro-zoom {
+        from {
+            transform: scale(0.25);
+        }
+
+        to {
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-retro-hold {
+        0%,
+        100% {
+            opacity: 0;
+        }
+    }
+}
+/* ── End of the signature ── */

@@ -405,7 +405,7 @@ which of these it is.
 ### Family 1 · A later layer beats a state
 
 `css/_header.css` line 22 declares the order:
-`@layer kp.base, kp.components, kp.register, kp.layout, kp.utilities;`. A
+`@layer kp.base, kp.components, kp.register, kp.signature, kp.layout, kp.utilities;`. A
 layer beats specificity outright. So a register writing
 `[data-theme='x'] .kp-button:hover { background: … }` in `kp.register`
 outranks `.kp-button:active { background: var(--secondary-active) }` in

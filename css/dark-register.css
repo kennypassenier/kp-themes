@@ -890,17 +890,6 @@
         color: var(--destructive);
     }
 
-    [data-theme='dark'] .kp-field__check {
-        appearance: none;
-        inline-size: 1.15rem;
-        block-size: 1.15rem;
-        border: 1px solid var(--border-strong);
-        border-radius: 0.25rem;
-        background: var(--card);
-        display: grid;
-        place-items: center;
-    }
-
     [data-theme='dark'] .kp-field__check:checked {
         background: var(--primary);
         border-color: var(--primary);
@@ -917,24 +906,6 @@
     [data-theme='dark'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-    }
-
-    /* The switch [gap-11], in the checkbox's voice: the box's small corner
-       on a card-grounded track, a square-ish thumb, and the primary fill
-       once on. */
-    [data-theme='dark'] .kp-switch {
-        --kp-switch-radius: 0.25rem;
-        --kp-switch-thumb-radius: 0.1rem;
-    }
-
-    [data-theme='dark'] .kp-switch__input {
-        border: 1px solid var(--border-strong);
-        background: var(--card);
-    }
-
-    [data-theme='dark'] .kp-switch__input:checked {
-        background: var(--primary);
-        border-color: var(--primary);
     }
 
     [data-theme='dark'] .kp-form__summary {
@@ -1180,18 +1151,9 @@
         background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-progress {
-        background-color: var(--card);
-        border: 1px solid var(--border-strong);
-    }
-
     [data-theme='dark'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='dark'] .kp-empty {
-        border: 1px dashed var(--border-strong);
     }
 
     [data-theme='dark'] .kp-error {
@@ -1877,3 +1839,537 @@
         --kp-sidenav-submenu-mark: '–';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* dark's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/dark.css and research/signature-elements/themes/dark.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='dark'] .kp-progressbar {
+        --kp-progressbar-height: 0.75rem;
+        --kp-ps-cut: 4px;
+        /* The film along the scale. --kp-px is the pointer's share across the
+           page (0.5 at rest, written by js/effects.js); it slides the film by
+           up to a fifth of the scale, the way the anodised edge turns with the
+           angle you look from. */
+        --kp-ps-film: linear-gradient(90deg, var(--chart-1), var(--chart-2) 36%, var(--chart-3) 68%, var(--chart-4));
+    }
+
+    [data-theme='dark'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / calc(100% / var(--kp-steps)) 45% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(
+            var(--kp-ps-cut) 0,
+            100% 0,
+            100% calc(100% - var(--kp-ps-cut)),
+            calc(100% - var(--kp-ps-cut)) 100%,
+            0 100%,
+            0 var(--kp-ps-cut)
+        );
+    }
+
+    [data-theme='dark'] .kp-progressbar__fill {
+        inset-block: 2px;
+        background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
+        transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar__head {
+        inline-size: 6px;
+        translate: -100% 0;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat;
+        transition: transform 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+    }
+
+    [data-theme='dark'] {
+        --kp-sig-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+        --kp-sig-dark-c: 0.35rem;
+        --kp-sig-dark-cut: polygon(
+            0 0,
+            calc(100% - var(--kp-sig-dark-c)) 0,
+            100% var(--kp-sig-dark-c),
+            100% 100%,
+            var(--kp-sig-dark-c) 100%,
+            0 calc(100% - var(--kp-sig-dark-c))
+        );
+        /* Four corner brackets in one ink, as background layers. */
+        --kp-sig-dark-bk: var(--border-strong);
+        --kp-sig-dark-arm: 0.6rem;
+        --kp-sig-dark-brackets:
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / 1px var(--kp-sig-dark-arm) no-repeat;
+    }
+
+    [data-theme='dark'] .kp-spinner {
+        --kp-sig-dur: 1400ms;
+        position: relative;
+        border: 0;
+        border-radius: 50%;
+        background: var(--kp-iris);
+        -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
+        mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
+        animation: none;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        block-size: 0.9rem;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
+            var(--kp-iris);
+        clip-path: var(--kp-sig-dark-cut);
+        animation: none;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        background: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        background: hsl(from var(--chart-3) h s l / 0.55);
+    }
+
+    [data-theme='dark'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='dark'] .kp-switch__input {
+        --kp-sig-dark-bk: var(--muted-foreground);
+        --kp-sig-dark-arm: 0.4rem;
+        border: 1px solid var(--border-strong);
+        background: var(--kp-sig-dark-brackets), var(--card);
+    }
+
+    [data-theme='dark'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='dark'] .kp-field__check {
+        --kp-sig-dur: 320ms;
+        appearance: none;
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check::before,
+    [data-theme='dark'] .kp-field__check::after {
+        grid-area: 1 / 1;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--primary), var(--primary)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::before,
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::after {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-radius: 0;
+        background: none;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::after {
+        border-color: var(--chart-3);
+        opacity: 0;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::before,
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
+        background: var(--chart-1);
+        opacity: 0;
+    }
+
+    [data-theme='dark'] .kp-toast {
+        --kp-sig-dur: 520ms;
+        position: relative;
+    }
+
+    [data-theme='dark'] .kp-toast:not([class*='kp-toast--']) {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    [data-theme='dark'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        background: var(--kp-iris);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+        --kp-sig-dur: 2400ms;
+    }
+
+    [data-theme='dark'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--kp-iris);
+        clip-path: var(--kp-sig-dark-cut);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] .kp-tooltip {
+        --kp-sig-dur: 260ms;
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.75rem;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        box-shadow: none;
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+        clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+    }
+
+    [data-theme='dark'] .kp-wizard__steps {
+        gap: 0.5rem 0.9rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li {
+        gap: 0.5rem;
+        padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done']::before {
+        background: var(--kp-iris);
+        box-shadow: none;
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current'] {
+        --kp-sig-dark-bk: var(--primary);
+        --kp-sig-dark-arm: 0.45rem;
+        background: var(--kp-sig-dark-brackets);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--primary);
+        box-shadow: none;
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-empty {
+        --kp-sig-dark-arm: 1rem;
+        position: relative;
+        padding: 1.5rem 1.5rem 2.25rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            var(--kp-sig-dark-brackets), repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem);
+    }
+
+    [data-theme='dark'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 1.1rem;
+        inset-inline: 30%;
+        block-size: 1px;
+        background: var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-empty__title {
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='dark'] a:not([class]) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+        text-underline-offset: 0.25em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='dark'] a:not([class]):hover {
+        padding-block-end: 1px;
+        background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+        text-decoration-color: transparent;
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='dark'] a:not([class]):hover {
+            text-decoration-color: currentColor;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-spinner {
+            animation: kp-sig-dark-dark-turn var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-dark-dark-ghost-l var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-dark-dark-ghost-r var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before,
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: calc(var(--kp-sig-dur) * -5 / 6);
+        }
+
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before,
+        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: calc(var(--kp-sig-dur) * -2 / 3);
+        }
+
+        [data-theme='dark'] .kp-switch__input::before {
+            transition: transform 260ms var(--kp-sig-dark-ease);
+        }
+
+        [data-theme='dark'] .kp-field__check:checked::before {
+            animation: kp-sig-dark-dark-resolve var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
+        }
+
+        [data-theme='dark'] .kp-field__check:checked::after {
+            animation: kp-sig-dark-dark-resolve-ghost var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
+        }
+
+        [data-theme='dark'] .kp-field__check[type='radio']:checked::before {
+            animation-name: kp-sig-dark-dark-dot;
+        }
+
+        [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
+            animation-name: kp-sig-dark-dark-dot-ghost;
+        }
+
+        [data-theme='dark'] .kp-toast {
+            animation: kp-sig-dark-dark-settle var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
+        }
+
+        [data-theme='dark'] .kp-toast::after,
+        [data-theme='dark'] .kp-dialog::after {
+            animation: kp-sig-dark-dark-develop var(--kp-sig-dur) ease-out both;
+        }
+
+        [data-theme='dark'] .kp-dialog {
+            animation: kp-sig-dark-dark-settle-in var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
+        }
+
+        [data-theme='dark'] .kp-tooltip {
+            animation: kp-sig-dark-dark-brackets-open var(--kp-sig-dur) var(--kp-sig-dark-ease) backwards;
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-turn {
+        to {
+            transform: rotate(1turn);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-ghost-l {
+        0%,
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: translateX(-8px);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-ghost-r {
+        0%,
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: translateX(8px);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-resolve {
+        from {
+            opacity: 0;
+            transform: translateX(-4px) translateY(-1px) rotate(-45deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(-1px) rotate(-45deg);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-resolve-ghost {
+        from {
+            opacity: 0.9;
+            transform: translateX(4px) translateY(-1px) rotate(-45deg);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-1px) rotate(-45deg);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-dot {
+        from {
+            opacity: 0;
+            transform: translateX(-4px);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-dot-ghost {
+        from {
+            opacity: 0.9;
+            transform: translateX(4px);
+        }
+
+        to {
+            opacity: 0;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-settle {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-settle-in {
+        from {
+            opacity: 0;
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-develop {
+        0% {
+            opacity: 0.55;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-dark-dark-brackets-open {
+        from {
+            clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
+        }
+
+        to {
+            clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+        }
+    }
+}
+/* ── End of the signature ── */

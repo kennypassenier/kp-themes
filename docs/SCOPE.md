@@ -2385,4 +2385,15 @@ Round three, the same day: everything approved — the ten elements in all 22
 themes (198 of 198) and the dialog entrance in all 22. Both demos moved to
 "Archived research". Next: build them into the package in place of today's
 looks, with `.kp-progressbar` replacing `.kp-progress` (9.0.0).
+The build into the package, the same day: the approved CSS goes into a new
+layer, `kp.signature`, ordered right after `kp.register` and written at the
+end of each register file (Kenny's form "Eén eigen laag"); the research files
+were ported once and the registers are the source from then on, with the
+register rules the signature fully overrides removed. Nine themes' dialog
+titles set their own size, line height or block padding, which scope-87
+refuses; shown side by side (research/dialog-title), Kenny chose the fixed
+size for all nine ("Approved betekent vaste maat"), and grotesk's red rule
+moved into its own space above the title after "the red line above the
+title is touching the text". research/dialog-title/check-clear.mjs measures
+that no ornament touches a dialog title in any of the 22 themes.
 

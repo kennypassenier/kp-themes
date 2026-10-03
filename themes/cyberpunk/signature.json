@@ -517,7 +517,7 @@
         {
             "situation": "Wait for something",
             "verb": "load",
-            "answer": "A square spinner in yellow and cyan and a skeleton sweeping card to secondary; the package's own spin and pulse drive them.",
+            "answer": "A notched sensor window a signal-yellow scan line sweeps, notched data slots under a scan head, and the gauge bar: a yellow face cut at 45 degrees with a cyan packet riding the cut [scope-140].",
             "components": ["kp-spinner", "kp-skeleton", "kp-progressbar"],
             "open": false,
             "proof": [

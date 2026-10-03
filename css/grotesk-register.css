@@ -553,12 +553,6 @@
         color: var(--destructive);
     }
 
-    [data-theme='grotesk'] .kp-field__check {
-        border: 2px solid var(--foreground);
-        border-radius: 0;
-        background: var(--background);
-    }
-
     [data-theme='grotesk'] .kp-field__check:checked {
         background: var(--foreground);
         border-color: var(--foreground);
@@ -572,33 +566,6 @@
     [data-theme='grotesk'] .kp-fieldset {
         border: 2px solid var(--border);
         border-radius: 0;
-    }
-
-    /* The switch [gap-11], in the checkbox's voice: square, two pixels of
-       ink, the ground inside — and inverted once on, an ink track and a
-       thumb in the ground. */
-    [data-theme='grotesk'] .kp-switch {
-        --kp-switch-radius: 0;
-        --kp-switch-thumb-radius: 0;
-        --kp-switch-border: 2px;
-    }
-
-    [data-theme='grotesk'] .kp-switch__input {
-        border: 2px solid var(--foreground);
-        background: var(--background);
-    }
-
-    [data-theme='grotesk'] .kp-switch__input::before {
-        background: var(--foreground);
-    }
-
-    [data-theme='grotesk'] .kp-switch__input:checked {
-        background: var(--foreground);
-        border-color: var(--foreground);
-    }
-
-    [data-theme='grotesk'] .kp-switch__input:checked::before {
-        background: var(--background);
     }
 
     [data-theme='grotesk'] .kp-switch__input:focus-visible {
@@ -824,26 +791,9 @@
         border-radius: 0;
     }
 
-    [data-theme='grotesk'] .kp-progress {
-        background-color: var(--background);
-        border: 2px solid var(--border);
-        border-radius: 0;
-    }
-
     [data-theme='grotesk'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-        border-radius: 0;
-    }
-
-    [data-theme='grotesk'] .kp-empty {
-        border: 2px dashed var(--border);
-        border-radius: 0;
-    }
-
-    [data-theme='grotesk'] .kp-empty__title {
-        font-family: var(--theme-font-display);
-        font-weight: 800;
     }
 
     [data-theme='grotesk'] .kp-error {
@@ -1542,3 +1492,484 @@
         --kp-sidenav-submenu-mark: '—';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* grotesk's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/grotesk.css and research/signature-elements/themes/grotesk.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='grotesk'] .kp-progressbar {
+        --kp-progressbar-height: 1rem;
+        --gr-ink: var(--border-strong);
+        --gr-red: var(--primary);
+        --gr-base: 2px;
+        --gr-col: calc(100% / 12);
+    }
+
+    [data-theme='grotesk'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--gr-ink), var(--gr-ink)) left bottom / 100% var(--gr-base) no-repeat,
+            linear-gradient(color-mix(in oklab, var(--gr-ink) 28%, transparent), color-mix(in oklab, var(--gr-ink) 28%, transparent)) right top / 1px
+                100% no-repeat,
+            linear-gradient(90deg, color-mix(in oklab, var(--gr-ink) 28%, transparent) 0 1px, transparent 1px) 0 0 / var(--gr-col) 100% repeat-x,
+            var(--card);
+    }
+
+    [data-theme='grotesk'] .kp-progressbar__fill {
+        inset-block-end: var(--gr-base);
+        background: var(--gr-red);
+        transition: clip-path var(--fx-duration, 120ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='grotesk'] .kp-progressbar__head {
+        inline-size: 3px;
+        background: var(--gr-ink);
+        transform: translateX(calc(var(--kp-value) * (100cqi - 3px)));
+        transition: transform var(--fx-duration, 120ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-block: 45% calc(var(--gr-base) + 2px);
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: linear-gradient(90deg, var(--gr-red) 0 50%, transparent 50%) 0 0 / calc(var(--gr-col) * 2) 100% repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-block: 0 var(--gr-base);
+            inset-inline-end: auto;
+            inline-size: var(--gr-col);
+            background: var(--gr-red);
+            animation: kp-progressbar-grotesk-cut 1440ms steps(12, jump-none) infinite;
+        }
+    }
+
+    [data-theme='grotesk'] {
+        --kp-sig-gr-draw: var(--kp-rule-draw, 320ms);
+        --kp-sig-gr-ease: cubic-bezier(0.2, 0, 0, 1);
+        --kp-sig-gr-cols: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.06) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    [data-theme='grotesk'] .kp-spinner {
+        --kp-sig-dur: 1600ms;
+        position: relative;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='grotesk'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        background: radial-gradient(circle at 100% 100%, var(--primary) 0 70%, transparent calc(70% + 0.5px)) 0 0 / 50% 50% no-repeat;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        --kp-sig-gr-base: 2px;
+        position: relative;
+        overflow: hidden;
+        block-size: 0.75rem;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) bottom / 100% var(--kp-sig-gr-base) no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.09), hsl(from var(--foreground) h s l / 0.09)) top / 100%
+                calc(100% - var(--kp-sig-gr-base) - 3px) no-repeat;
+        animation: none;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):first-child {
+        --kp-sig-gr-base: 4px;
+        block-size: 1.5rem;
+        margin-block-end: 0.5rem;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.7rem;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: var(--kp-sig-gr-base);
+        background: var(--primary);
+        transform: translateX(-100%);
+    }
+
+    [data-theme='grotesk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 2px;
+        --kp-sig-gr-bar: 0.4rem;
+    }
+
+    [data-theme='grotesk'] .kp-switch__input {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input::before {
+        inline-size: var(--kp-sig-gr-bar);
+        background: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked {
+        border-color: var(--foreground);
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        transform: translateX(
+            calc(var(--kp-switch-width, 2.5rem) - 2 * var(--kp-switch-inset, 0.125rem) - 2 * var(--kp-switch-border, 2px) - var(--kp-sig-gr-bar))
+        );
+    }
+
+    [data-theme='grotesk'] .kp-field__check {
+        --kp-sig-dur: 220ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2.5px solid var(--primary-foreground);
+        border-block-end: 2.5px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='grotesk'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='grotesk'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-toast {
+        --kp-sig-dur: 220ms;
+        position: relative;
+        border-radius: 0;
+        border-block-start: 0.375rem solid transparent;
+        font-weight: 600;
+    }
+
+    [data-theme='grotesk'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline: -1px;
+        inset-block-start: -0.375rem;
+        block-size: 0.375rem;
+        background: var(--primary);
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='grotesk'] .kp-toast--success::before {
+        background: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-dialog {
+        --kp-sig-dur: 280ms;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        position: relative;
+        /* The rule stands in the space above the title, clear of the letters
+           (Kenny, 2026-10-03: "the red line above the title is touching the text"). */
+        margin-block-start: 0.75rem;
+        font-family: var(--theme-font-display);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+    }
+
+    [data-theme='grotesk'] .kp-dialog__title::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.75rem;
+        inset-inline-start: 0;
+        inline-size: 33%;
+        block-size: 0.3rem;
+        background: var(--primary);
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='grotesk'] .kp-tooltip {
+        --kp-sig-dur: 160ms;
+        margin-inline-start: 0;
+        padding: 0.3rem 0.7rem 0.3rem 0.6rem;
+        border: 0;
+        border-inline-start: 0.25rem solid var(--primary);
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: none;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps {
+        gap: 0.75rem 0.5rem;
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li {
+        flex: 1 1 5.5rem;
+        gap: 0.4rem;
+        padding-block-start: 0.35rem;
+        border-block-start: 2px solid var(--foreground);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li::before {
+        inline-size: auto;
+        block-size: auto;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li[data-state='done']::before {
+        border: 0;
+        color: var(--foreground);
+        font-size: 1.1rem;
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li[data-state='current'] {
+        padding-block-start: calc(0.35rem - 2px);
+        border-block-start: 4px solid var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li[data-state='current']::before {
+        border: 0;
+        background: none;
+        color: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li[data-state='todo'] {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='grotesk'] .kp-wizard__steps li[data-state='todo']::before {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='grotesk'] .kp-empty {
+        position: relative;
+        overflow: hidden;
+        padding: 1.25rem 5.5rem 1.5rem 0.75rem;
+        border: 0;
+        border-block-start: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--kp-sig-gr-cols);
+        color: var(--foreground);
+        text-align: start;
+    }
+
+    [data-theme='grotesk'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 1.1rem;
+        inset-inline-end: 1rem;
+        inline-size: 3.5rem;
+        block-size: 3.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] .kp-empty__title {
+        font-family: var(--theme-font-display);
+        font-size: 1.4rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+    }
+
+    [data-theme='grotesk'] .kp-empty__body {
+        margin: 0.35rem 0 0;
+    }
+
+    [data-theme='grotesk'] a:not([class]) {
+        color: var(--primary);
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.18em;
+    }
+
+    [data-theme='grotesk'] a:not([class]):hover {
+        color: var(--foreground);
+        text-decoration-thickness: 4px;
+        text-underline-offset: 0.12em;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-spinner::after {
+            animation: kp-sig-grotesk-gr-quarter var(--kp-sig-dur) var(--kp-sig-gr-ease) infinite;
+        }
+
+        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-grotesk-gr-baseline var(--kp-sig-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 180ms;
+        }
+
+        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 360ms;
+        }
+
+        [data-theme='grotesk'] .kp-switch__input::before {
+            transition: transform 140ms var(--kp-sig-gr-ease);
+        }
+
+        [data-theme='grotesk'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-grotesk-gr-cut var(--kp-sig-dur) var(--kp-sig-gr-ease) both;
+        }
+
+        [data-theme='grotesk'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-grotesk-gr-disc var(--kp-sig-dur) var(--kp-sig-gr-ease) both;
+        }
+
+        [data-theme='grotesk'] .kp-toast::before {
+            animation: kp-sig-grotesk-gr-rule var(--kp-sig-gr-draw) var(--kp-sig-gr-ease) both;
+        }
+
+        [data-theme='grotesk'] .kp-toast {
+            animation: kp-sig-grotesk-gr-cut-in calc(var(--kp-sig-dur) + 160ms) var(--kp-sig-gr-ease) backwards;
+        }
+
+        [data-theme='grotesk'] .kp-dialog {
+            animation: kp-sig-grotesk-gr-cut-in var(--kp-sig-dur) var(--kp-sig-gr-ease) backwards;
+        }
+
+        [data-theme='grotesk'] .kp-dialog__title::before {
+            animation: kp-sig-grotesk-gr-rule var(--kp-sig-gr-draw) var(--kp-sig-gr-ease) 120ms both;
+        }
+
+        [data-theme='grotesk'] .kp-tooltip {
+            animation: kp-sig-grotesk-gr-cut-in var(--kp-sig-dur) var(--kp-sig-gr-ease) backwards;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-quarter {
+        0%,
+        15% {
+            transform: rotate(0);
+        }
+
+        25%,
+        40% {
+            transform: rotate(90deg);
+        }
+
+        50%,
+        65% {
+            transform: rotate(180deg);
+        }
+
+        75%,
+        90% {
+            transform: rotate(270deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-baseline {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(100%);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-cut {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-disc {
+        from {
+            transform: scale(0);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-rule {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-gr-cut-in {
+        from {
+            clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
+        }
+
+        to {
+            clip-path: inset(-0.5rem -0.5rem -0.5rem -0.5rem);
+        }
+    }
+
+    @keyframes kp-progressbar-grotesk-cut {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(1100%);
+        }
+    }
+}
+/* ── End of the signature ── */

@@ -740,9 +740,6 @@
     }
 
     [data-theme='synthwave'] .kp-field__check {
-        border: 2px solid var(--primary);
-        border-radius: var(--radius);
-        background: var(--sidebar-background);
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
     }
 
@@ -764,24 +761,11 @@
        primary-edged track over the sidebar's night with a faint glow, and
        a thumb that lights in the accent with its own glow once on. */
     [data-theme='synthwave'] .kp-switch {
-        --kp-switch-radius: var(--radius);
         --kp-switch-border: 2px;
     }
 
     [data-theme='synthwave'] .kp-switch__input {
-        border: 2px solid var(--primary);
-        background: var(--sidebar-background);
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
-    }
-
-    [data-theme='synthwave'] .kp-switch__input:checked {
-        background: var(--sidebar-background);
-        border-color: var(--primary);
-    }
-
-    [data-theme='synthwave'] .kp-switch__input:checked::before {
-        background: var(--accent);
-        box-shadow: 0 0 8px var(--accent);
     }
 
     [data-theme='synthwave'] .kp-form__summary {
@@ -1057,28 +1041,15 @@
         border-radius: 0;
     }
 
-    [data-theme='synthwave'] .kp-progress {
-        background-color: var(--sidebar-background);
-        border: 1px solid var(--kp-hairline);
-        border-radius: 0;
-    }
-
     [data-theme='synthwave'] .kp-spinner {
         border-color: hsl(from var(--accent) h s l / 0.25);
         border-top-color: var(--accent);
         filter: drop-shadow(0 0 4px var(--accent));
     }
 
-    [data-theme='synthwave'] .kp-empty {
-        border: 1px dashed var(--kp-hairline);
-        border-radius: 0;
-    }
-
     [data-theme='synthwave'] .kp-empty__title {
         font-family: var(--kp-osd);
-        letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--kp-pink-text);
     }
 
     [data-theme='synthwave'] .kp-error {
@@ -1923,3 +1894,559 @@
         --kp-sidenav-submenu-mark: '●';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* synthwave's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/synthwave.css and research/signature-elements/themes/synthwave.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='synthwave'] .kp-progressbar {
+        --kp-progressbar-height: 1.125rem;
+        --kp-sw-void: var(--sidebar-background);
+        --kp-sw-core: var(--kp-core, hsl(from var(--foreground) h 20% 98%));
+    }
+
+    [data-theme='synthwave'] .kp-progressbar__track {
+        border-radius: var(--radius);
+        background: var(--kp-sw-void);
+    }
+
+    [data-theme='synthwave'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.5) 0 0) 0 50% / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.38) 0 1px, transparent 1px 1.5rem);
+    }
+
+    [data-theme='synthwave'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        pointer-events: none;
+    }
+
+    [data-theme='synthwave'] .kp-progressbar__fill {
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 0 48%,
+                var(--kp-sw-void) 48% 54%,
+                transparent 54% 64%,
+                var(--kp-sw-void) 64% 73%,
+                transparent 73% 81%,
+                var(--kp-sw-void) 81% 92%,
+                transparent 92%
+            ),
+            linear-gradient(
+                90deg,
+                var(--kp-sun-bottom, hsl(from var(--primary) calc(h - 34) s l)),
+                var(--primary) 45%,
+                var(--kp-sun-top, var(--warning-foreground))
+            );
+        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    [data-theme='synthwave'] .kp-progressbar__head {
+        inset-inline-start: -2px;
+        inline-size: 2px;
+        z-index: 1;
+        background: var(--kp-sw-core);
+        box-shadow:
+            0 0 3px hsl(from var(--primary) h s l / 0.9),
+            0 0 8px hsl(from var(--primary) h s l / 0.7),
+            0 0 16px hsl(from var(--primary) h s l / 0.45);
+        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: 0;
+        inline-size: auto;
+        overflow: hidden;
+        clip-path: none;
+        animation: none;
+        background: none;
+    }
+
+    [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -2.25rem;
+        inline-size: calc(100% + 4.5rem);
+        background: linear-gradient(90deg, var(--kp-sw-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 3px repeat-x;
+        filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-sw-road 600ms linear infinite;
+        }
+    }
+
+    [data-theme='synthwave'] {
+        --kp-sig-sw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --kp-sig-sw-sun: linear-gradient(var(--kp-sun-top), var(--kp-sun-bottom));
+        /* The sun's stripe cuts: opaque, then horizontal gaps that widen
+           towards the horizon. Used as a mask, so only their alpha counts. */
+        --kp-sig-sw-cuts: linear-gradient(
+            to bottom,
+            var(--foreground) 0 52%,
+            transparent 52% 58%,
+            var(--foreground) 58% 68%,
+            transparent 68% 76%,
+            var(--foreground) 76% 84%,
+            transparent 84% 93%,
+            var(--foreground) 93%
+        );
+    }
+
+    [data-theme='synthwave'] .kp-spinner {
+        --kp-sig-dur: 2800ms;
+        position: relative;
+        overflow: hidden;
+        border: 0;
+        border-radius: 2px;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='synthwave'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset-inline: 8%;
+        inset-block-start: 10%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--kp-sig-sw-sun);
+        -webkit-mask: var(--kp-sig-sw-cuts);
+        mask: var(--kp-sig-sw-cuts);
+    }
+
+    [data-theme='synthwave'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block: 66% 0;
+        border-block-start: 1.5px solid var(--accent);
+        background: var(--background);
+        box-shadow: 0 -1px 4px hsl(from var(--accent) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 2600ms;
+        position: relative;
+        overflow: hidden;
+        block-size: 0.9rem;
+        border-radius: 2px;
+        background:
+            var(--kp-stripe) left bottom / 100% 2px no-repeat,
+            var(--card);
+        animation: none;
+    }
+
+    [data-theme='synthwave']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.55rem;
+    }
+
+    [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0 2px;
+        inset-inline-start: 0;
+        inline-size: 40%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.22), transparent);
+        transform: translateX(-100%);
+    }
+
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.55), hsl(from var(--accent) h s l / 0.55)), var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--kp-core);
+        box-shadow: var(--kp-tube-pink);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='synthwave'] .kp-field__check {
+        --kp-sig-dur: 620ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        border-radius: 50%;
+        background: var(--kp-core);
+        box-shadow: var(--kp-tube-pink);
+    }
+
+    [data-theme='synthwave'] .kp-toast {
+        --kp-sig-dur: 620ms;
+        position: relative;
+        border-radius: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: -1px;
+        block-size: 2px;
+        background: var(--kp-stripe);
+        pointer-events: none;
+    }
+
+    [data-theme='synthwave'] .kp-dialog::backdrop {
+        position: relative;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent calc(50% - 1px),
+                hsl(from var(--accent) h s l / 0.5) calc(50% - 1px) calc(50% + 1px),
+                transparent calc(50% + 1px)
+            ),
+            hsl(from var(--sidebar-background) h s l / 0.7);
+    }
+
+    [data-theme='synthwave'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+        --kp-sig-dur: calc(4 * var(--kp-wipe, 720ms));
+        border-radius: 2px;
+        box-shadow:
+            inset 0 2px 0 var(--primary),
+            0 0 24px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    [data-theme='synthwave'] .kp-tooltip {
+        --kp-sig-dur: 280ms;
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.65rem;
+        border: 1px solid var(--kp-hairline);
+        border-radius: 2px;
+        background: var(--background);
+        color: var(--accent);
+        box-shadow: none;
+        font-family: var(--kp-osd);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-shadow: var(--kp-tube-cyan);
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.25rem;
+        block-size: 2px;
+        margin-inline: 0.2rem 0.45rem;
+        background: var(--kp-stripe);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='current']::before {
+        border: 0;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 62%,
+                hsl(from var(--sidebar-background) h s l / 0.55) 62% 68%,
+                transparent 68% 78%,
+                hsl(from var(--sidebar-background) h s l / 0.55) 78% 84%,
+                transparent 84%
+            ),
+            var(--kp-sig-sw-sun);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
+        color: var(--sidebar-background);
+        font-weight: 700;
+    }
+
+    [data-theme='synthwave'] .kp-empty {
+        position: relative;
+        padding: 3.75rem 1.5rem 1.25rem;
+        border: 0;
+        border-radius: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.6rem;
+        inset-inline-start: calc(50% - 1.6rem);
+        inline-size: 3.2rem;
+        block-size: 3.2rem;
+        border-radius: 50%;
+        background: var(--kp-sig-sw-sun);
+        -webkit-mask: linear-gradient(
+            to bottom,
+            var(--foreground) 0 50%,
+            transparent 50% 56%,
+            var(--foreground) 56% 63%,
+            transparent 63% 70%,
+            var(--foreground) 70% 75%,
+            transparent 75%
+        );
+        mask: linear-gradient(
+            to bottom,
+            var(--foreground) 0 50%,
+            transparent 50% 56%,
+            var(--foreground) 56% 63%,
+            transparent 63% 70%,
+            var(--foreground) 70% 75%,
+            transparent 75%
+        );
+    }
+
+    [data-theme='synthwave'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(0.6rem + 2.4rem);
+        inset-inline: 15%;
+        block-size: 1.5px;
+        background: linear-gradient(to right, transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-empty__title {
+        color: var(--foreground);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] a:not([class]) {
+        padding-block-end: 2px;
+        text-decoration: none;
+        background: var(--kp-stripe) left bottom / 100% 2px no-repeat;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='synthwave'] a:not([class]):hover {
+        background-size: 100% 3px;
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] a:not([class]) {
+            text-decoration: underline;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-spinner::before {
+            animation: kp-sig-synthwave-sw-set var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-synthwave-sw-sheen var(--kp-sig-dur) var(--kp-sig-sw-ease) infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 220ms;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 440ms;
+        }
+
+        [data-theme='synthwave'] .kp-switch__input::before {
+            transition: transform 260ms var(--kp-sig-sw-ease);
+        }
+
+        [data-theme='synthwave'] .kp-field__check:checked {
+            animation: kp-sig-synthwave-sw-tube var(--kp-sig-dur) linear both;
+        }
+
+        [data-theme='synthwave'] .kp-toast {
+            animation: kp-sig-synthwave-sw-rise var(--kp-sig-dur) var(--kp-sig-sw-ease) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-toast::before {
+            animation: kp-sig-synthwave-sw-horizon calc(var(--kp-sig-dur) * 0.6) var(--kp-sig-sw-ease) both;
+        }
+
+        [data-theme='synthwave'] .kp-dialog {
+            animation: kp-sig-synthwave-sw-rise var(--kp-sig-dur) var(--kp-sig-sw-ease) 640ms backwards;
+        }
+
+        [data-theme='synthwave'] .kp-tooltip {
+            animation: kp-sig-synthwave-sw-osd var(--kp-sig-dur) steps(8, jump-end) backwards;
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-set {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(45%);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-sheen {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        65%,
+        100% {
+            transform: translateX(260%);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-tube {
+        0% {
+            opacity: 0.3;
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        40% {
+            opacity: 0.55;
+        }
+
+        60% {
+            opacity: 1;
+        }
+
+        75% {
+            opacity: 0.75;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-rise {
+        from {
+            transform: translateY(8px);
+            clip-path: inset(100% -2rem -2rem -2rem);
+        }
+
+        to {
+            transform: none;
+            clip-path: inset(-2rem);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-horizon {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-osd {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sw-road {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(2.25rem);
+        }
+    }
+}
+/* ── End of the signature ── */

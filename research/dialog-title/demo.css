@@ -18,3 +18,13 @@
     line-height: var(--kp-heading-line-height, 1.1) !important;
     padding-block: 0 !important;
 }
+
+/* grotesk, round two: the rule stands in its own space above the title, as
+   the register now draws it, so it no longer touches the letters. */
+[data-theme='grotesk'] .dt-fixed .kp-dialog__title {
+    margin-block-start: 0.75rem;
+}
+
+[data-theme='grotesk'] .dt-fixed .kp-dialog__title::before {
+    inset-block-start: -0.75rem;
+}

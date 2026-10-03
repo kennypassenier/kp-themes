@@ -497,13 +497,6 @@
         border: 2px solid var(--border-strong);
     }
 
-    /* The switch [gap-11]: the pill with the inputs' two-pixel boundary,
-       and no transition, as the fields here have none. */
-    [data-theme='high-contrast'] .kp-switch {
-        --kp-switch-radius: var(--kp-radius-pill, 999px);
-        --kp-switch-border: 2px;
-    }
-
     [data-theme='high-contrast'] .kp-switch__input {
         border-width: 2px;
     }
@@ -743,21 +736,9 @@
         border: 1px solid var(--border);
     }
 
-    [data-theme='high-contrast'] .kp-progress {
-        border: 2px solid var(--border-strong);
-    }
-
     [data-theme='high-contrast'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--foreground);
-    }
-
-    [data-theme='high-contrast'] .kp-empty {
-        border: 2px dashed var(--border);
-    }
-
-    [data-theme='high-contrast'] .kp-empty__title {
-        font-weight: 700;
     }
 
     [data-theme='high-contrast'] .kp-error {
@@ -1302,3 +1283,409 @@
         --kp-sidenav-submenu-mark: '■';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* high-contrast's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/high-contrast.css and research/signature-elements/themes/high-contrast.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='high-contrast'] .kp-progressbar {
+        --kp-progressbar-height: 1rem;
+    }
+
+    [data-theme='high-contrast'] .kp-progressbar__track,
+    [data-theme='high-contrast'] .kp-progressbar__fill {
+        --kp-ps-tick: linear-gradient(90deg, var(--kp-ps-tick-ink) 0 1px, transparent 1px calc(100% - 1px), var(--kp-ps-tick-ink) calc(100% - 1px));
+    }
+
+    [data-theme='high-contrast'] .kp-progressbar__track {
+        --kp-ps-tick-ink: var(--foreground);
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-radius: var(--radius, 0.25rem);
+        background:
+            var(--kp-ps-tick) 0 100% / calc(100% / var(--kp-steps)) 40% repeat-x,
+            var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-progressbar__fill {
+        --kp-ps-tick-ink: var(--background);
+        background:
+            var(--kp-ps-tick) 0 100% / calc(100% / var(--kp-steps)) 40% repeat-x,
+            var(--foreground);
+        transition: clip-path 120ms linear;
+    }
+
+    [data-theme='high-contrast'] .kp-progressbar__head {
+        inline-size: 8px;
+        translate: -100% 0;
+        background: linear-gradient(90deg, var(--accent) 0 6px, var(--foreground) 6px);
+        transition: transform 120ms linear;
+    }
+
+    [data-theme='high-contrast'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+    }
+
+    [data-theme='high-contrast'] {
+        --kp-sig-hc-wipe: var(--kp-headline-wipe, 550ms);
+        --kp-sig-hc-ease: cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    [data-theme='high-contrast'] .kp-spinner {
+        --kp-sig-dur: 1400ms;
+        --kp-sig-b: calc(var(--kp-spinner-size, 1.25rem) * 0.28);
+        /* One step between two cell centres. */
+        --kp-sig-hc-step: calc((var(--kp-spinner-size, 1.25rem) - var(--kp-sig-b)) / 2);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        /* Three white cells, each a 2px black frame: a black square with a
+           white square 4px smaller laid on it. */
+        background:
+            linear-gradient(var(--background), var(--background)) left 2px center / calc(var(--kp-sig-b) - 4px) calc(var(--kp-sig-b) - 4px) no-repeat,
+            linear-gradient(var(--background), var(--background)) center / calc(var(--kp-sig-b) - 4px) calc(var(--kp-sig-b) - 4px) no-repeat,
+            linear-gradient(var(--background), var(--background)) right 2px center / calc(var(--kp-sig-b) - 4px) calc(var(--kp-sig-b) - 4px) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) left center / var(--kp-sig-b) var(--kp-sig-b) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) center / var(--kp-sig-b) var(--kp-sig-b) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) right center / var(--kp-sig-b) var(--kp-sig-b) no-repeat;
+        animation: none;
+    }
+
+    [data-theme='high-contrast'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - var(--kp-sig-b) / 2);
+        inset-inline-end: 0;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-b);
+        block-size: var(--kp-sig-b);
+        border: 2px solid var(--foreground);
+        background: var(--accent);
+    }
+
+    [data-theme='high-contrast'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: var(--kp-sig-hc-wipe);
+        /* The hatch repeats every 8px along the line: an 8px tile holding
+           two 45° strokes about 2px thick, so a whole-pixel move is seamless. */
+        --kp-sig-hc-hatch: 8px;
+        position: relative;
+        overflow: hidden;
+        block-size: 1rem;
+        border: 2px solid var(--foreground);
+        border-radius: 0.25rem;
+        background: var(--background);
+        animation: none;
+    }
+
+    [data-theme='high-contrast'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        --kp-sig-dur: 520ms;
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--kp-sig-hc-hatch) * -1);
+        inset-inline-end: 0;
+        background: linear-gradient(45deg, var(--foreground) 0 17.7%, transparent 17.7% 50%, var(--foreground) 50% 67.7%, transparent 67.7%) 0 0 /
+            var(--kp-sig-hc-hatch) var(--kp-sig-hc-hatch);
+    }
+
+    [data-theme='high-contrast']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.5rem;
+    }
+
+    [data-theme='high-contrast'] [aria-busy='true']:has(> .kp-skeleton) {
+        --kp-busy-opacity: 1;
+    }
+
+    [data-theme='high-contrast'] .kp-switch {
+        --kp-switch-radius: 0.25rem;
+        --kp-switch-thumb-radius: 0.125rem;
+        --kp-switch-border: 2px;
+        --kp-switch-inset: 0.1875rem;
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input::before {
+        background: var(--background);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input:checked {
+        border-color: var(--foreground);
+        background: var(--accent);
+    }
+
+    [data-theme='high-contrast'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='high-contrast'] .kp-field__check {
+        --kp-sig-dur: 160ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin: 0;
+        border: 2px solid var(--foreground);
+        border-radius: 0.2rem;
+        background: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-field__check[type='checkbox']:checked {
+        background: var(--accent);
+    }
+
+    [data-theme='high-contrast'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.7rem;
+        block-size: 0.36rem;
+        border-inline-start: 3px solid var(--foreground);
+        border-block-end: 3px solid var(--foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='high-contrast'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='high-contrast'] .kp-field__check[type='radio']:checked {
+        background: radial-gradient(circle closest-side, var(--foreground) 0 55%, var(--accent) 56%);
+    }
+
+    [data-theme='high-contrast'] .kp-toast {
+        --kp-sig-dur: 300ms;
+        border-width: 2px;
+        border-inline-start-width: 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+
+    [data-theme='high-contrast'] .kp-toast:not([class*='kp-toast--']) {
+        border-color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-dialog {
+        --kp-sig-dur: 360ms;
+        border: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        border-block-end: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-tooltip {
+        --kp-sig-dur: 140ms;
+        margin-block-start: 0.35rem;
+        padding: 0.3rem 0.6rem;
+        border: 2px solid var(--foreground);
+        border-radius: 0.25rem;
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.85rem;
+        border: 6px solid transparent;
+        border-block-end-color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li {
+        gap: 0.45rem;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1rem;
+        block-size: 2px;
+        margin-inline: 0.15rem 0.45rem;
+        background: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 2px solid var(--foreground);
+        border-radius: 0.2rem;
+        background: var(--background);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--foreground);
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li[data-state='current'] {
+        font-weight: 700;
+        text-decoration: underline 3px;
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='high-contrast'] .kp-wizard__steps li[data-state='current']::before {
+        border-width: 3px;
+        border-color: var(--foreground);
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] .kp-empty {
+        padding: 1.25rem 1.25rem 1.1rem;
+        border: 2px solid var(--foreground);
+        border-block-start-width: 0.5rem;
+        border-radius: 0.25rem;
+        color: var(--foreground);
+        text-align: start;
+    }
+
+    [data-theme='high-contrast'] .kp-empty__title {
+        margin-block-end: 0.35rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='high-contrast'] a:not([class]) {
+        font-weight: 700;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='high-contrast'] a:not([class]):hover {
+        background: var(--accent);
+        color: var(--foreground);
+        text-decoration-thickness: 3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] .kp-spinner::after {
+            animation: kp-sig-high-contrast-hc-walk var(--kp-sig-dur) cubic-bezier(0.5, 0, 0.2, 1) infinite;
+        }
+
+        [data-theme='high-contrast'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-high-contrast-hc-march var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='high-contrast'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: 90ms;
+        }
+
+        [data-theme='high-contrast'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: 180ms;
+        }
+
+        [data-theme='high-contrast'] .kp-switch__input::before {
+            transition: transform 120ms var(--kp-sig-hc-ease);
+        }
+
+        [data-theme='high-contrast'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-high-contrast-hc-wipe-x var(--kp-sig-dur) var(--kp-sig-hc-ease) both;
+        }
+
+        [data-theme='high-contrast'] .kp-toast {
+            animation: kp-sig-high-contrast-hc-wipe-x var(--kp-sig-dur) var(--kp-sig-hc-ease) backwards;
+        }
+
+        [data-theme='high-contrast'] .kp-dialog {
+            animation: kp-sig-high-contrast-hc-wipe-y var(--kp-sig-dur) var(--kp-sig-hc-ease) backwards;
+        }
+
+        [data-theme='high-contrast'] .kp-tooltip {
+            animation: kp-sig-high-contrast-hc-hold var(--kp-sig-dur) step-end;
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-hc-walk {
+        0%,
+        10% {
+            transform: translateX(calc(var(--kp-sig-hc-step) * -2));
+        }
+
+        25%,
+        35% {
+            transform: translateX(calc(var(--kp-sig-hc-step) * -1));
+        }
+
+        50%,
+        60% {
+            transform: none;
+        }
+
+        75%,
+        85% {
+            transform: translateX(calc(var(--kp-sig-hc-step) * -1));
+        }
+
+        100% {
+            transform: translateX(calc(var(--kp-sig-hc-step) * -2));
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-hc-march {
+        to {
+            transform: translateX(var(--kp-sig-hc-hatch));
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-hc-wipe-x {
+        from {
+            clip-path: inset(-4px 100% -4px -4px);
+        }
+
+        to {
+            clip-path: inset(-4px -4px -4px -4px);
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-hc-wipe-y {
+        from {
+            clip-path: inset(-4px -4px 100% -4px);
+        }
+
+        to {
+            clip-path: inset(-4px);
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-hc-hold {
+        0%,
+        100% {
+            opacity: 0;
+        }
+    }
+}
+/* ── End of the signature ── */

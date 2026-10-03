@@ -7,6 +7,24 @@ end.
 
 ## Coming from 8.x to 9.0.0: the progress bar is `.kp-progressbar`
 
+Two things change in 9.0.0, both from Kenny's signature round [scope-140]:
+the progress bar below, and a new cascade layer.
+
+**The layer order gains `kp.signature`.** css/themes.css now declares
+
+```css
+@layer kp.base, kp.components, kp.register, kp.signature, kp.layout, kp.utilities;
+```
+
+Each theme's own drawing of the progress bar, spinner, skeleton, switch,
+checkbox and radio, toast, dialog, tooltip, wizard steps, empty state and link
+hover sits in `kp.signature`, at the end of its register file. A page that
+declares its own `@layer` order statement before the package's must add
+`kp.signature` right after `kp.register`; a page that lets themes.css declare
+the order needs to do nothing. Unlayered consumer CSS still wins over all of
+it, as before.
+
+
 The native `<progress class="kp-progress">` is gone [scope-140]. Every theme
 now draws a progress bar of its own, and a native `<progress>` has nothing a
 theme can give a shape, so the bar is an element with three parts. A page

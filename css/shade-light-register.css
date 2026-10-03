@@ -485,11 +485,6 @@
         border-radius: var(--radius);
     }
 
-    /* The switch [gap-11]: the pill, on the card as the inputs are. */
-    [data-theme='shade-light'] .kp-switch {
-        --kp-switch-radius: var(--kp-radius-pill, 999px);
-    }
-
     [data-theme='shade-light'] .kp-switch__input:not(:checked) {
         background: var(--card);
     }
@@ -665,16 +660,6 @@
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-        box-shadow: var(--kp-shadow-3);
-    }
-
-    [data-theme='shade-light'] .kp-dialog::backdrop {
-        background: var(--kp-backdrop);
-    }
-
-    [data-theme='shade-light'] .kp-dialog__title {
-        font-family: var(--theme-font-display);
-        font-weight: 600;
     }
 
     /* ── Badges, tags, status ──────────────────────────────────────── */
@@ -729,25 +714,9 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='shade-light'] .kp-progress {
-        background-color: var(--muted);
-        border-radius: 999px;
-        overflow: hidden;
-    }
-
     [data-theme='shade-light'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='shade-light'] .kp-empty {
-        border: 1px dashed var(--border-strong);
-        border-radius: var(--radius);
-    }
-
-    [data-theme='shade-light'] .kp-empty__title {
-        font-family: var(--theme-font-display);
-        font-weight: 600;
     }
 
     [data-theme='shade-light'] .kp-error {
@@ -1496,3 +1465,447 @@
         --kp-sidenav-submenu-mark: '·';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* shade-light's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/shade-light.css and research/signature-elements/themes/shade-light.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='shade-light'] .kp-progressbar {
+        --kp-progressbar-height: 0.75rem;
+    }
+
+    [data-theme='shade-light'] .kp-progressbar__track {
+        border-radius: var(--radius, 0.25rem);
+        background: var(--muted);
+        box-shadow:
+            inset 0 0 0 1px var(--border),
+            inset 0 2px 3px hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    [data-theme='shade-light'] .kp-progressbar__fill {
+        inset: 1px;
+        border-radius: calc(var(--radius, 0.25rem) - 1px);
+        background:
+            linear-gradient(hsl(from var(--card) h s l / 0.55), hsl(from var(--card) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.25), hsl(from var(--foreground) h s l / 0.25)) 0 100% / 100% 1px no-repeat,
+            var(--primary);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 1px));
+        transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='shade-light'] .kp-progressbar__head {
+        inline-size: 1.25rem;
+        inset-block: 1px;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.16) 40%, transparent);
+        /* Nothing entered, nothing to throw a shade. */
+        opacity: clamp(0, var(--kp-value) * 1000, 1);
+        transform-origin: left center;
+        transform: translateX(calc(var(--kp-value) * 100cqi)) scaleX(var(--kp-light-x, 1));
+        transition:
+            transform 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)),
+            opacity 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='shade-light'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 1px;
+        inline-size: auto;
+        clip-path: none;
+        background: repeating-linear-gradient(-60deg, hsl(from var(--foreground) h s l / 0.7) 0 1.5px, transparent 1.5px 5px);
+        animation: kp-ps-shade-light-hatch 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
+    }
+
+    [data-theme='shade-light'] {
+        --kp-sig-sh-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+        --kp-sig-sh-shade: hsl(from var(--foreground) h s l / 0.32);
+        --kp-sig-sh-seam: linear-gradient(to right, transparent, var(--border-strong) 22%, var(--border-strong) 78%, transparent);
+    }
+
+    [data-theme='shade-light'] .kp-spinner {
+        --kp-sig-dur: 1500ms;
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: inset 1px 1px 2px hsl(from var(--foreground) h s l / 0.12);
+        animation: none;
+    }
+
+    [data-theme='shade-light'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0 40%, var(--kp-sig-sh-shade) 85%, hsl(from var(--primary) h s l / 0.5));
+    }
+
+    [data-theme='shade-light'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+            linear-gradient(var(--primary), var(--primary)) 50% 1px / 1.5px calc(50% - 1px) no-repeat;
+    }
+
+    [data-theme='shade-light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 2200ms;
+        block-size: 0.7rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: linear-gradient(to right, hsl(from var(--foreground) h s l / 0.2) 65%, transparent);
+        animation: none;
+    }
+
+    [data-theme='shade-light']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='shade-light'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        box-shadow: inset 1px 1px 3px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input::before {
+        background: var(--card);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            1px 2px 3px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+        box-shadow: inset 1px 1px 3px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--card);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='shade-light'] .kp-field__check {
+        --kp-sig-dur: 340ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.25rem;
+        background: var(--card);
+        box-shadow: inset 1px 1px 2px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='shade-light'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='shade-light'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='shade-light'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='shade-light'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='shade-light'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 1px 1px 2px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    [data-theme='shade-light'] .kp-toast {
+        --kp-sig-dur: 520ms;
+        position: relative;
+        border-color: var(--border);
+        box-shadow: none;
+    }
+
+    [data-theme='shade-light'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        box-shadow: var(--kp-shadow-2);
+        pointer-events: none;
+    }
+
+    [data-theme='shade-light'] .kp-dialog::backdrop {
+        background: radial-gradient(ellipse 80% 90% at 50% 45%, hsl(from var(--foreground) h s l / 0.12), hsl(from var(--foreground) h s l / 0.3));
+    }
+
+    [data-theme='shade-light'] .kp-dialog {
+        --kp-sig-dur: 480ms;
+        border-color: var(--border);
+        box-shadow: var(--kp-shadow-3);
+    }
+
+    [data-theme='shade-light'] .kp-dialog__title {
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    [data-theme='shade-light'] .kp-tooltip {
+        --kp-sig-dur: 320ms;
+        margin-inline-start: 0.75rem;
+        padding: 0.3rem 0.7rem;
+        border: 0;
+        border-radius: 0.25rem;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: var(--kp-shadow-2);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-style: italic;
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps {
+        gap: 0.5rem 2.25rem;
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li {
+        position: relative;
+        gap: 0.45rem;
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% + 0.25rem);
+        inline-size: 1.75rem;
+        block-size: 1px;
+        background: var(--kp-sig-sh-seam);
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li::before {
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-family: var(--theme-font-display);
+        font-size: 0.9rem;
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--border-strong);
+        color: var(--foreground);
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li[data-state='current'] {
+        padding: 0.2rem 0.8rem 0.2rem 0.2rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 1px 2px 4px hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    [data-theme='shade-light'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary-foreground);
+        background: var(--primary-foreground);
+        color: var(--primary);
+    }
+
+    [data-theme='shade-light'] .kp-empty {
+        padding: 2rem 1.5rem;
+        border: 0;
+        border-radius: 0;
+        background: radial-gradient(ellipse 60% 70% at 50% 50%, hsl(from var(--foreground) h s l / 0.05), transparent 75%);
+    }
+
+    [data-theme='shade-light'] .kp-empty::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin: 1rem auto 0;
+        inline-size: 50%;
+        background: var(--kp-sig-sh-seam);
+    }
+
+    [data-theme='shade-light'] .kp-empty__title {
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    [data-theme='shade-light'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='shade-light'] a:not([class]) {
+        border-radius: 0.2em;
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.45);
+        text-underline-offset: 0.2em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='shade-light'] a:not([class]):hover {
+        background: hsl(from var(--primary) h s l / 0.1);
+        text-decoration-color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] .kp-spinner::before,
+        [data-theme='shade-light'] .kp-spinner::after {
+            animation: kp-sig-shade-light-shade-sweep var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='shade-light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+            animation: kp-sig-shade-light-shade-breathe var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='shade-light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: calc(var(--kp-sig-dur) * -5 / 6);
+        }
+
+        [data-theme='shade-light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: calc(var(--kp-sig-dur) * -2 / 3);
+        }
+
+        [data-theme='shade-light'] .kp-switch__input::before {
+            transition: transform 320ms var(--kp-sig-sh-ease);
+        }
+
+        [data-theme='shade-light'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-shade-light-shade-pencil var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-light'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-shade-light-shade-pebble var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-light'] .kp-toast {
+            animation: kp-sig-shade-light-shade-lift var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-light'] .kp-toast::after {
+            animation: kp-sig-shade-light-shade-grow var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-light'] .kp-dialog {
+            animation: kp-sig-shade-light-shade-rise var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-light'] .kp-tooltip {
+            animation: kp-sig-shade-light-shade-surface var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-sweep {
+        from {
+            transform: rotate(0);
+        }
+
+        to {
+            transform: rotate(1turn);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-breathe {
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-surface {
+        from {
+            opacity: 0;
+            transform: translateY(3px);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-pencil {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-pebble {
+        from {
+            opacity: 0;
+            transform: scale(0.4);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-lift {
+        from {
+            opacity: 0;
+        }
+
+        40% {
+            opacity: 1;
+            transform: none;
+        }
+
+        to {
+            transform: translateY(-2px);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-grow {
+        0%,
+        40% {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-shade-light-shade-rise {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    }
+
+    @keyframes kp-ps-shade-light-hatch {
+        from {
+            opacity: 0;
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+        }
+    }
+}
+/* ── End of the signature ── */

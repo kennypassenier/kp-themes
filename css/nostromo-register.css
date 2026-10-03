@@ -534,23 +534,6 @@
         border-radius: var(--radius);
     }
 
-    /* The switch [gap-11], in the checkbox's voice: the console's rounded
-       corner on the popover, and the selection colour once on. */
-    [data-theme='nostromo'] .kp-switch {
-        --kp-switch-radius: 0.3rem;
-        --kp-switch-thumb-radius: 0.2rem;
-    }
-
-    [data-theme='nostromo'] .kp-switch__input {
-        border: 1px solid var(--input);
-        background: var(--popover);
-    }
-
-    [data-theme='nostromo'] .kp-switch__input:checked {
-        background: var(--selected);
-        border-color: var(--selected);
-    }
-
     [data-theme='nostromo'] .kp-form__summary {
         background: var(--card);
         border: 1px solid var(--border-strong);
@@ -691,7 +674,6 @@
     }
 
     [data-theme='nostromo'] .kp-dialog__title {
-        font-family: var(--theme-font-display);
         font-weight: 400;
     }
 
@@ -757,13 +739,6 @@
         border-radius: 0.2rem;
     }
 
-    [data-theme='nostromo'] .kp-progress {
-        background-color: var(--muted);
-        border: 1px solid var(--border-strong);
-        border-radius: 999px;
-        padding: 1px;
-    }
-
     /* --selected against --border-strong only reaches 1.17:1 (KT8's 1.5
    floor for a visibly turning head): --foreground reaches 2.92. */
     [data-theme='nostromo'] .kp-spinner {
@@ -771,13 +746,7 @@
         border-top-color: var(--foreground);
     }
 
-    [data-theme='nostromo'] .kp-empty {
-        border: 1px dashed var(--border-strong);
-        border-radius: var(--radius);
-    }
-
     [data-theme='nostromo'] .kp-empty__title {
-        font-family: var(--theme-font-display);
         font-weight: 400;
     }
 
@@ -1447,3 +1416,516 @@
         opacity: 1;
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* nostromo's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/nostromo.css and research/signature-elements/themes/nostromo.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-progressbar {
+        --kp-progressbar-height: 1rem;
+        --kp-np-lit: var(--sidebar-primary);
+        --kp-np-unlit: var(--sidebar-accent);
+        --kp-np-glow: hsl(from var(--sidebar-primary) h s l / 0.55);
+        /* One LED: a rounded-off lens inside its pitch, 2px of window between
+           neighbours and 2px above and below. */
+        --kp-np-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+        border-radius: 0.3rem;
+        background: var(--secondary);
+        /* The moulded bezel: the 3:1 boundary, the lit top edge of the plastic. */
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__track {
+        inset: 3px;
+        border-radius: 0.15rem;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 1px 2px hsl(from var(--sidebar-background) h s 4% / 0.9);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 2px 1px;
+        background: var(--kp-np-unlit);
+        mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__fill {
+        inset: 2px 1px;
+        background: none;
+        filter: drop-shadow(0 0 3px var(--kp-np-glow));
+        clip-path: inset(-4px calc((1 - round(down, var(--kp-value) * var(--kp-steps), 1) / var(--kp-steps)) * 100%) -4px 0);
+        transition: none;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__fill::before,
+    [data-theme='nostromo'] .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, hsl(from var(--kp-np-lit) h s calc(l + 18)) 0 30%, var(--kp-np-lit) 30% 100%);
+        mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__head {
+        inset-block: 2px;
+        inset-inline-start: 1px;
+        inline-size: calc((100cqi - 2px) / var(--kp-steps));
+        opacity: calc(mod(var(--kp-value) * var(--kp-steps), 1) * 0.9);
+        transform: translateX(calc(round(down, var(--kp-value) * var(--kp-steps), 1) * (100cqi - 2px) / var(--kp-steps)));
+        transition: opacity 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__head::before {
+        mask-size: 100% 100%;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: 1px;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        mask: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(50% - 1px), transparent 0) 0 0 / calc(200% / var(--kp-steps)) 100%
+            repeat-x;
+    }
+
+    [data-theme='nostromo'] {
+        --kp-sig-no-led: var(--sidebar-primary);
+        --kp-sig-no-ease: cubic-bezier(0.2, 0, 0, 1);
+        /* Moulded: a highlight along the top edge and a shadow under. */
+        --kp-sig-no-raised:
+            inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9), 0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+            0 2px 3px hsl(from var(--foreground) h s l / 0.15);
+        /* Pressed in: a shadow inside the top edge, a highlight under. */
+        --kp-sig-no-well: inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3), 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
+        /* A lit LED: a bright lens with a hot centre, in a dark bezel ring. */
+        --kp-sig-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--kp-sig-no-led) 30%, var(--accent) 70%);
+    }
+
+    [data-theme='nostromo'] .kp-spinner {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        border: 0;
+        border-radius: 50%;
+        /* The tape pack: dark, with a faint wound ring. */
+        background: radial-gradient(circle, transparent 0 62%, hsl(from var(--card) h s l / 0.18) 63% 64%, transparent 65%), var(--foreground);
+        box-shadow: var(--kp-sig-no-well);
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 18%;
+        border-radius: 50%;
+        background: repeating-conic-gradient(from -15deg, var(--card) 0 90deg, transparent 90deg 120deg);
+        box-shadow: inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9);
+    }
+
+    [data-theme='nostromo'] .kp-spinner::after {
+        --kp-sig-dur: 260ms;
+        content: '';
+        position: absolute;
+        inset: 36%;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 280ms;
+        position: relative;
+        overflow: hidden;
+        block-size: 0.75rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: hsl(from var(--foreground) h s l / 0.14);
+        box-shadow: var(--kp-sig-no-well);
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        --kp-sig-dur: 2200ms;
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 25%;
+        border-radius: inherit;
+        background: radial-gradient(
+            ellipse 50% 70% at 50% 50%,
+            hsl(from var(--kp-sig-no-led) h s calc(l + 12)) 0 18%,
+            hsl(from var(--kp-sig-no-led) h s l / 0.75) 40%,
+            transparent 100%
+        );
+        transform: translateX(-100%);
+    }
+
+    [data-theme='nostromo']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.65rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background:
+            radial-gradient(circle at calc(100% - 0.6rem) 50%, hsl(from var(--foreground) h s l / 0.35) 0 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background:
+            radial-gradient(circle at 0.6rem 50%, var(--primary-foreground) 0 0.06rem, var(--kp-sig-no-led) 0.12rem 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='nostromo'] .kp-field__check {
+        --kp-sig-dur: 160ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--selected);
+        background: var(--selected);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+        background: hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked {
+        border-color: var(--foreground);
+        background: var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+
+    [data-theme='nostromo'] .kp-toast {
+        --kp-sig-dur: 240ms;
+        position: relative;
+        padding-inline-start: 2rem;
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.75rem;
+        inset-block-start: calc(50% - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 2px var(--foreground),
+            0 0 6px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
+    }
+
+    [data-theme='nostromo'] .kp-dialog {
+        --kp-sig-dur: 260ms;
+        --kp-sig-no-screw: radial-gradient(
+            circle,
+            hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
+            hsl(from var(--foreground) h s l / 0.2) 2px 3px,
+            transparent 3.5px
+        );
+        background:
+            var(--kp-sig-no-screw) 6px 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) 6px calc(100% - 6px) / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat,
+            var(--card);
+        box-shadow:
+            var(--kp-sig-no-raised),
+            0 12px 28px -14px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='nostromo'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-tooltip {
+        --kp-sig-dur: 160ms;
+        margin-inline-start: 0.5rem;
+        padding: 0.2rem 0.6rem;
+        border: 0;
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.9);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps {
+        gap: 0.5rem 1rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li {
+        gap: 0.5rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li::before {
+        inline-size: 1.7rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.25rem;
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--border-strong);
+        color: var(--selected);
+        font-weight: 700;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--foreground);
+        transform: translateY(1px);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='current']::after {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 2px var(--foreground),
+            0 0 5px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
+    }
+
+    [data-theme='nostromo'] .kp-empty {
+        position: relative;
+        padding: 2.4rem 1.25rem 1.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.8rem;
+        inset-inline: calc(50% - 3rem);
+        block-size: 0.9rem;
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 2px, transparent 2px 4.5px);
+        border-radius: 1px;
+    }
+
+    [data-theme='nostromo'] .kp-empty__title {
+        display: inline-block;
+        margin-block-end: 0.5rem;
+        padding: 0.15rem 0.6rem;
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='nostromo'] a:not([class]) {
+        color: var(--primary);
+        text-decoration-color: var(--kp-underline, hsl(from var(--selected) h s l / 0.28));
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.22em;
+    }
+
+    [data-theme='nostromo'] a:not([class]):hover {
+        text-decoration-color: var(--selected);
+        text-decoration-thickness: 3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-spinner::before {
+            animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-nostromo-no-scan var(--kp-sig-dur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 160ms;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 320ms;
+        }
+
+        [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-nostromo-no-strike var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        }
+
+        [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-nostromo-no-punch var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: 90ms;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: 180ms;
+        }
+
+        [data-theme='nostromo'] .kp-switch__input::before {
+            transition: transform 110ms var(--kp-sig-no-ease);
+        }
+
+        [data-theme='nostromo'] .kp-toast,
+        [data-theme='nostromo'] .kp-dialog {
+            animation: kp-sig-nostromo-no-popdown var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        }
+
+        [data-theme='nostromo'] .kp-toast::before {
+            animation: kp-sig-nostromo-no-strike 200ms var(--kp-sig-no-ease) var(--kp-sig-dur) both;
+        }
+
+        [data-theme='nostromo'] .kp-tooltip {
+            animation: kp-sig-nostromo-no-stamp var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-strike {
+        from {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+
+        60% {
+            opacity: 1;
+            transform: scale(1.12);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-reel {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-scan {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        75%,
+        100% {
+            transform: translateX(400%);
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-punch {
+        from {
+            opacity: 0;
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            opacity: 1;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-popdown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-stamp {
+        from {
+            opacity: 0;
+            transform: scale(1.08);
+        }
+    }
+}
+/* ── End of the signature ── */

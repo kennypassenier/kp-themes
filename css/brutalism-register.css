@@ -515,19 +515,10 @@
     /* The checkbox: a small box with its own shadow; checked is the ink
        with a yellow square. */
     [data-theme='brutalism'] .kp-field__check {
-        appearance: none;
-        inline-size: 1.25rem;
-        block-size: 1.25rem;
-        border: var(--kp-line) solid var(--border-strong);
-        border-radius: 0;
-        background: var(--card);
-        box-shadow: 3px 3px 0 0 var(--border-strong);
-        display: grid;
         place-items: center;
     }
 
     [data-theme='brutalism'] .kp-field__check:checked {
-        background: var(--primary);
         border-color: var(--border-strong);
     }
 
@@ -543,32 +534,8 @@
         border-radius: 0;
     }
 
-    /* The switch [gap-11], in the checkbox's voice: a square slab with the
-       heavy line and the offset shadow, a square thumb in ink, and the
-       primary fill once on. */
-    [data-theme='brutalism'] .kp-switch {
-        --kp-switch-radius: 0;
-        --kp-switch-thumb-radius: 0;
-        --kp-switch-border: var(--kp-line);
-    }
-
     [data-theme='brutalism'] .kp-switch__input {
         border: var(--kp-line) solid var(--border-strong);
-        background: var(--card);
-        box-shadow: 3px 3px 0 0 var(--border-strong);
-    }
-
-    [data-theme='brutalism'] .kp-switch__input::before {
-        background: var(--border-strong);
-    }
-
-    [data-theme='brutalism'] .kp-switch__input:checked {
-        background: var(--primary);
-        border-color: var(--border-strong);
-    }
-
-    [data-theme='brutalism'] .kp-switch__input:checked::before {
-        background: var(--primary-foreground);
     }
 
     [data-theme='brutalism'] .kp-form__summary {
@@ -663,9 +630,6 @@
     }
 
     [data-theme='brutalism'] .kp-toast {
-        background: var(--success);
-        color: var(--success-foreground);
-        font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
@@ -675,8 +639,6 @@
        plate; each is restated on the alert's token pair, as the severity
        badge wears it. */
     [data-theme='brutalism'] .kp-toast--success {
-        background: var(--success);
-        color: var(--success-foreground);
         border-color: var(--success);
     }
 
@@ -877,27 +839,9 @@
         border-radius: 0;
     }
 
-    [data-theme='brutalism'] .kp-progress {
-        background-color: var(--card);
-        border: var(--kp-line) solid var(--border-strong);
-        border-radius: 0;
-        box-shadow: var(--kp-shadow);
-    }
-
     [data-theme='brutalism'] .kp-spinner {
         border-color: var(--border-strong);
         border-top-color: var(--secondary);
-        border-radius: 0;
-    }
-
-    [data-theme='brutalism'] .kp-empty {
-        border: var(--kp-line) dashed var(--border-strong);
-        border-radius: 0;
-    }
-
-    [data-theme='brutalism'] .kp-empty__title {
-        font-family: var(--theme-font-display);
-        text-transform: uppercase;
     }
 
     [data-theme='brutalism'] .kp-error {
@@ -1754,3 +1698,542 @@
         --kp-sidenav-submenu-mark: '▪';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* brutalism's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/brutalism.css and research/signature-elements/themes/brutalism.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-progressbar {
+        --kp-progressbar-height: 1.375rem;
+        --br-line: var(--kp-line, 3px);
+        --br-drop: 4px;
+        --br-ink: var(--border-strong);
+        --br-block: 1.375rem;
+        --br-pitch: 20px; /* horizontal repeat of a 45° stripe at 14.142px */
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__track {
+        inset: 0 var(--br-drop) var(--br-drop) 0;
+        border: var(--br-line) solid var(--br-ink);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--br-drop) var(--br-drop) 0 0 var(--br-ink);
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__fill {
+        background: repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px), var(--primary);
+        transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__head {
+        box-sizing: border-box;
+        inline-size: var(--br-block);
+        margin-inline-start: calc(-1 * var(--br-block));
+        background: var(--secondary);
+        border-inline: var(--br-line) solid var(--br-ink);
+        transition: transform var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: none;
+        overflow: hidden;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(-1 * var(--br-pitch));
+        inline-size: calc(100% + var(--br-pitch));
+        background: repeating-linear-gradient(-45deg, var(--br-ink) 0 3px, transparent 3px 14.1421px);
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        margin-inline-start: 0;
+        transform: translateX(calc(50cqi - 50%));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-progressbar-brutalism-tape 600ms linear infinite;
+        }
+
+        [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            animation: kp-progressbar-brutalism-shuttle 1600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) infinite alternate;
+        }
+    }
+
+    [data-theme='brutalism'] {
+        --kp-sig-br-drop: var(--kp-drop, 6px);
+    }
+
+    [data-theme='brutalism'] .kp-spinner {
+        --kp-sig-dur: 1400ms;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::before,
+    [data-theme='brutalism'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 2px 4px 4px 2px;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::before {
+        background: var(--border-strong);
+        translate: 3px 3px;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::after {
+        border: 2px solid var(--border-strong);
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1500ms;
+        position: relative;
+        block-size: 1rem;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='brutalism']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset: 0 4px 4px 0;
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        background: var(--border-strong);
+        translate: 4px 4px;
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        border: 2px solid var(--border-strong);
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n + 2)::after {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n)::after {
+        background: var(--info);
+    }
+
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-border: 2px;
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-inset: 3px;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        border: 2px solid var(--border-strong);
+        background: var(--muted);
+        box-sizing: border-box;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background: var(--primary);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary-foreground);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='brutalism'] .kp-field__check {
+        --kp-sig-dur: 260ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin: 0;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:checked {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.7rem;
+        block-size: 0.36rem;
+        border-inline-start: 3px solid var(--border-strong);
+        border-block-end: 3px solid var(--border-strong);
+        transform: translateY(-2px) rotate(-45deg);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-toast {
+        --kp-sig-dur: 420ms;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: var(--kp-sig-br-drop) var(--kp-sig-br-drop) 0 var(--border-strong);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-dialog::backdrop {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+        --kp-sig-dur: 1520ms;
+        padding-block-start: 0;
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: calc(var(--kp-sig-br-drop) + 4px) calc(var(--kp-sig-br-drop) + 4px) 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        margin-inline: calc(-1 * var(--kp-dialog-padding, 1.25rem));
+        padding-inline: var(--kp-dialog-padding, 1.25rem);
+        border-block-end: 3px solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-family: var(--theme-font-display);
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-tooltip {
+        --kp-sig-dur: 240ms;
+        margin-block-start: 0.6rem;
+        margin-inline-start: 0.35rem;
+        padding: 0.25rem 0.6rem;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--info);
+        color: var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.8rem;
+        inline-size: 12px;
+        block-size: 8px;
+        background: var(--border-strong);
+        clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps {
+        gap: 0.75rem 0;
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li {
+        gap: 0.5rem;
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.1rem;
+        block-size: 3px;
+        margin-inline: 0.35rem;
+        background: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li::before {
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li[data-state='done']::before {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 5px 5px 0 var(--border-strong);
+        translate: -2px -2px;
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li[data-state='current'] {
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps li[data-state='todo'] {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty {
+        padding: 1.25rem 1rem 1.4rem;
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-sig-br-drop) var(--kp-sig-br-drop) 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-empty::before {
+        content: '0';
+        display: grid;
+        place-content: center;
+        inline-size: 3rem;
+        block-size: 3rem;
+        margin: 0 auto 0.7rem;
+        border: 3px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: 1.4rem;
+        line-height: 1;
+        box-shadow: 3px 3px 0 var(--border-strong);
+        rotate: -8deg;
+    }
+
+    [data-theme='brutalism'] .kp-empty__title {
+        margin: 0 0 0.3rem;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-empty__body {
+        margin: 0;
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] a:not([class]) {
+        color: var(--foreground);
+        font-weight: 700;
+        text-decoration-color: var(--border-strong);
+        text-decoration-thickness: 3px;
+        text-underline-offset: 0.18em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='brutalism'] a:not([class]):hover {
+        padding-inline: 0.15em;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow:
+            0 0 0 2px var(--border-strong),
+            3px 3px 0 2px var(--border-strong);
+        text-decoration-color: var(--border-strong);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-spinner::after {
+            animation: kp-sig-brutalism-brutalism-turn var(--kp-sig-dur) var(--fx-ease) infinite;
+        }
+
+        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-brutalism-brutalism-press var(--kp-sig-dur) var(--fx-ease) infinite;
+        }
+
+        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 200ms;
+        }
+
+        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 400ms;
+        }
+
+        [data-theme='brutalism'] .kp-switch__input::before {
+            transition: transform 160ms var(--fx-ease);
+        }
+
+        [data-theme='brutalism'] .kp-field__check:checked::before {
+            animation: kp-sig-brutalism-brutalism-stamp var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='brutalism'] .kp-toast {
+            animation: kp-sig-brutalism-brutalism-drop var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='brutalism'] .kp-dialog {
+            animation: kp-sig-brutalism-brutalism-drop-big var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='brutalism'] .kp-tooltip {
+            animation: kp-sig-brutalism-brutalism-drop var(--kp-sig-dur) var(--fx-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-brutalism-turn {
+        0% {
+            transform: none;
+        }
+
+        25% {
+            transform: translate(-3px, -3px);
+        }
+
+        65% {
+            transform: translate(-3px, -3px) rotate(90deg);
+        }
+
+        85%,
+        100% {
+            transform: rotate(90deg);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-brutalism-press {
+        0%,
+        40%,
+        100% {
+            transform: none;
+        }
+
+        15%,
+        25% {
+            transform: translate(4px, 4px);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-brutalism-stamp {
+        from {
+            opacity: 0;
+            scale: 1.8;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-brutalism-drop {
+        0% {
+            opacity: 0;
+            transform: translate(-10px, -18px) rotate(-3deg);
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        70% {
+            transform: translate(-4px, -4px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-brutalism-drop-big {
+        0% {
+            opacity: 0;
+            transform: translate(-14px, -40px) rotate(-2deg);
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        70% {
+            transform: translate(-6px, -6px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-progressbar-brutalism-tape {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(var(--br-pitch));
+        }
+    }
+
+    @keyframes kp-progressbar-brutalism-shuttle {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(100cqi - 100%));
+        }
+    }
+}
+/* ── End of the signature ── */

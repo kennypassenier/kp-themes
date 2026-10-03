@@ -2,7 +2,7 @@
 //
 // `css/themes.css` declares the order once:
 //
-//     @layer kp.base, kp.components, kp.register, kp.layout, kp.utilities;
+//     @layer kp.base, kp.components, kp.register, kp.signature, kp.layout, kp.utilities;
 //
 // and everything about which class wins follows from that one line. Three
 // claims live in it, and until now none of them was measured as a claim:

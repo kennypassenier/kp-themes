@@ -769,19 +769,9 @@
         background: var(--card);
     }
 
-    [data-theme='lapis'] .kp-progress {
-        background-color: var(--background);
-        border: 1px solid var(--border-strong);
-        padding: 1px;
-    }
-
     [data-theme='lapis'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='lapis'] .kp-empty {
-        border: 1px dashed var(--border-strong);
     }
 
     [data-theme='lapis'] .kp-error {
@@ -1332,3 +1322,628 @@
         --kp-sidenav-submenu-mark: '▫';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* lapis's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/lapis.css and research/signature-elements/themes/lapis.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='lapis'] .kp-progressbar {
+        --kp-progressbar-height: 1.375rem;
+        --lp-gold: var(--primary);
+        --lp-star: 0.95rem;
+        --lp-band: 0.75rem;
+        --lp-bead: 0.5rem;
+    }
+
+    [data-theme='lapis'] .kp-progressbar__track {
+        inset-block: calc((var(--kp-progressbar-height) - var(--lp-band)) / 2);
+        inset-inline: calc(var(--lp-star) * 0.72);
+        overflow: visible;
+        border-radius: var(--kp-radius-pill, 999px);
+        background:
+            radial-gradient(circle, color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 1.4px, transparent 1.9px) 0 50% / var(--lp-bead) 100%
+                repeat-x,
+            var(--background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 0 1px var(--background);
+    }
+
+    [data-theme='lapis'] .kp-progressbar__fill {
+        inset: 2px;
+        border-radius: inherit;
+        background:
+            radial-gradient(circle, var(--primary-foreground) 0 1.1px, transparent 1.6px) calc(-2px) 50% / var(--lp-bead) 100% repeat-x,
+            var(--lp-gold);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round 999px);
+        transition: clip-path var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+    }
+
+    [data-theme='lapis'] .kp-progressbar__head {
+        inset-block: 50% auto;
+        inline-size: 0;
+        block-size: 0;
+        transition: transform var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+    }
+
+    [data-theme='lapis'] .kp-progressbar__head::before,
+    [data-theme='lapis'] .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--lp-star) / -2);
+        inset-inline-start: calc(var(--lp-star) / -2);
+        inline-size: var(--lp-star);
+        block-size: var(--lp-star);
+        background: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--lp-gold);
+    }
+
+    [data-theme='lapis'] .kp-progressbar__head::after {
+        transform: rotate(45deg);
+        background:
+            radial-gradient(
+                circle,
+                var(--lp-gold) 0 1.6px,
+                var(--accent) 2.1px 3.2px,
+                color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px,
+                transparent 4.6px
+            ),
+            var(--accent);
+    }
+
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+        background:
+            radial-gradient(circle, var(--lp-gold) 0 1.6px, transparent 2.1px) 0 50% / var(--lp-bead) 100% repeat-x,
+            var(--background);
+    }
+
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        display: none;
+    }
+
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(50cqi);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            animation: kp-progressbar-lapis-walk 2400ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1)) infinite alternate;
+        }
+
+        [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::before {
+            animation: kp-progressbar-lapis-turn 2400ms linear infinite;
+        }
+
+        [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::after {
+            animation: kp-progressbar-lapis-turn-45 2400ms linear infinite;
+        }
+    }
+
+    [data-theme='lapis'] {
+        --kp-sig-lapis-star10: polygon(
+            50% 0%,
+            61.1% 15.8%,
+            79.4% 9.5%,
+            79.1% 28.8%,
+            97.6% 34.5%,
+            86% 50%,
+            97.6% 65.5%,
+            79.1% 71.2%,
+            79.4% 90.5%,
+            61.1% 84.2%,
+            50% 100%,
+            38.9% 84.2%,
+            20.6% 90.5%,
+            20.9% 71.2%,
+            2.4% 65.5%,
+            14% 50%,
+            2.4% 34.5%,
+            20.9% 28.8%,
+            20.6% 9.5%,
+            38.9% 15.8%
+        );
+        --kp-sig-lapis-star8: polygon(
+            50% 0%,
+            61.9% 21.4%,
+            85.4% 14.6%,
+            78.6% 38.1%,
+            100% 50%,
+            78.6% 61.9%,
+            85.4% 85.4%,
+            61.9% 78.6%,
+            50% 100%,
+            38.1% 78.6%,
+            14.6% 85.4%,
+            21.4% 61.9%,
+            0% 50%,
+            21.4% 38.1%,
+            14.6% 14.6%,
+            38.1% 21.4%
+        );
+    }
+
+    [data-theme='lapis'] :is(.kp-toast, .kp-dialog, .kp-empty) {
+        --kp-sig-lapis-rings:
+            inset 0 0 0 3px var(--kp-sig-lapis-ground), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.55),
+            inset 0 0 0 6px var(--kp-sig-lapis-ground), inset 0 0 0 7px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='lapis'] .kp-spinner {
+        /* A tenth of a turn per tick. 2000ms per tick at first (18 deg/s),
+           1300ms after Kenny's first note (28 deg/s), which he could not tell
+           from the first ("ik zei snellere animatie, dit lijkt bijna hetzelfde",
+           2026-10-03); now 450ms (80 deg/s, four and a half times the first). */
+        --kp-sig-dur: 450ms;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='lapis'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: var(--kp-sig-lapis-star10);
+    }
+
+    [data-theme='lapis'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 32%;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 1.5px var(--background);
+    }
+
+    [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 2600ms;
+        position: relative;
+        block-size: 0.8rem;
+        /* Lines start at the inline-start edge (Kenny, 2026-10-03: "it should
+           be left aligned"); the short line ends early on the right. */
+        border-radius: 999px;
+        background: var(--muted);
+        animation: none;
+    }
+
+    [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.85rem;
+    }
+
+    [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.35rem;
+        block-size: 1px;
+        background: hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: hsl(from var(--primary) h s l / 0.3);
+        opacity: 0;
+    }
+
+    [data-theme='lapis'] .kp-switch__input {
+        --kp-sig-lapis-ground: var(--background);
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow:
+            inset 0 0 0 2px var(--background),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='lapis'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: var(--kp-sig-lapis-star8);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.4);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))) rotate(45deg);
+    }
+
+    [data-theme='lapis'] .kp-field__check {
+        --kp-sig-dur: 380ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 3px;
+        background: var(--background);
+        box-shadow:
+            inset 0 0 0 2px var(--background),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='lapis'] .kp-field__check:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-field__check[type='checkbox']:checked {
+        background: var(--primary);
+        box-shadow: none;
+    }
+
+    [data-theme='lapis'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='lapis'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='lapis'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 1.5px var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-toast {
+        --kp-sig-dur: 600ms;
+        --kp-sig-lapis-ground: var(--popover);
+        position: relative;
+        padding-inline-start: 2.1rem;
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--popover);
+        box-shadow: var(--kp-sig-lapis-rings);
+    }
+
+    [data-theme='lapis'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 0.5rem);
+        inset-inline-start: 0.75rem;
+        inline-size: 1rem;
+        block-size: 1rem;
+        background: radial-gradient(circle, var(--accent) 0 2.5px, transparent 3px), var(--primary);
+        clip-path: var(--kp-sig-lapis-star8);
+    }
+
+    [data-theme='lapis'] .kp-toast--success::before {
+        background: radial-gradient(circle, var(--popover) 0 2.5px, transparent 3px), var(--success-foreground, var(--primary));
+    }
+
+    [data-theme='lapis'] .kp-dialog::backdrop {
+        background: hsl(from var(--background) h s calc(l * 0.55));
+    }
+
+    [data-theme='lapis'] .kp-dialog {
+        --kp-sig-dur: 640ms;
+        --kp-sig-lapis-ground: var(--popover);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--popover);
+        box-shadow:
+            var(--kp-sig-lapis-rings),
+            0 18px 40px -20px hsl(from var(--background) h s calc(l * 0.3));
+        text-align: center;
+    }
+
+    [data-theme='lapis'] .kp-dialog::before {
+        content: '';
+        display: block;
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        margin: 0 auto 0.4rem;
+        background: radial-gradient(circle, var(--accent) 0 3px, var(--popover) 3.5px 5px, transparent 5.5px), var(--primary);
+        clip-path: var(--kp-sig-lapis-star10);
+    }
+
+    [data-theme='lapis'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        font-weight: 500;
+        color: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-dialog__actions {
+        justify-content: center;
+    }
+
+    [data-theme='lapis'] .kp-tooltip {
+        --kp-sig-dur: 420ms;
+        margin-block-start: 0.3rem;
+        margin-inline-start: 0.4rem;
+        padding: 0.3rem 1.3rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+        font-weight: 600;
+        /* The toranj's pointed ends; never focusable, so it may be clipped. */
+        clip-path: polygon(0.7rem 0, calc(100% - 0.7rem) 0, 100% 50%, calc(100% - 0.7rem) 100%, 0.7rem 100%, 0 50%);
+    }
+
+    [data-theme='lapis'] .kp-tooltip::after {
+        content: '';
+        position: absolute;
+        inset-block: 3px;
+        inset-inline: 0.7rem;
+        border-block: 1px solid hsl(from var(--primary-foreground) h s l / 0.45);
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.5rem;
+        block-size: 5px;
+        margin-inline: 0.35rem;
+        background:
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+            linear-gradient(hsl(from var(--primary) h s l / 0.5), hsl(from var(--primary) h s l / 0.5)) 0 50% / 100% 1px no-repeat;
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li::before {
+        content: counter(kp-step, persian);
+        inline-size: 1.8rem;
+        block-size: 1.8rem;
+        border: 1px solid var(--border-strong);
+        background: var(--background);
+        color: var(--primary);
+        /* Vazirmatn draws the Persian digits at a readable size. */
+        font-family: var(--theme-font-body);
+        font-size: 1.05rem;
+        font-weight: 600;
+        line-height: 1;
+        box-shadow:
+            inset 0 0 0 2px var(--background),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--accent);
+        color: var(--background);
+        font-weight: 700;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 3px var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='lapis'] .kp-empty {
+        --kp-sig-lapis-ground: var(--card);
+        padding: 1.4rem 1rem 1.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+        box-shadow: var(--kp-sig-lapis-rings);
+    }
+
+    [data-theme='lapis'] .kp-empty::before {
+        content: '';
+        display: block;
+        inline-size: 3rem;
+        block-size: 3rem;
+        margin: 0 auto 0.6rem;
+        background: radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px), var(--primary);
+        clip-path: var(--kp-sig-lapis-star10);
+        mask: radial-gradient(circle, black 0 4px, transparent 4px 9px, black 9px 11px, transparent 11px 13.5px, black 13.5px);
+    }
+
+    [data-theme='lapis'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        font-size: 1.35rem;
+    }
+
+    [data-theme='lapis'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='lapis'] a:not([class]) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: var(--primary);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='lapis'] a:not([class]):hover {
+        text-decoration-style: dotted;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] .kp-spinner::before {
+            animation: kp-sig-lapis-lapis-turn var(--kp-sig-dur) var(--fx-ease) infinite;
+        }
+
+        [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-lapis-lapis-write var(--kp-sig-dur) var(--fx-ease) infinite;
+        }
+
+        [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 300ms;
+        }
+
+        [data-theme='lapis'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 600ms;
+        }
+
+        [data-theme='lapis'] .kp-switch__input::before {
+            transition: transform 300ms var(--fx-ease);
+        }
+
+        [data-theme='lapis'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-lapis-lapis-burnish var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='lapis'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-lapis-lapis-dot var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='lapis'] .kp-toast {
+            animation: kp-sig-lapis-lapis-burnish-wide var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+
+        [data-theme='lapis'] .kp-dialog {
+            animation:
+                kp-sig-lapis-lapis-burnish-wide var(--kp-sig-dur) var(--fx-ease) backwards,
+                kp-sig-lapis-lapis-rise var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+
+        [data-theme='lapis'] .kp-dialog::before {
+            animation: kp-sig-lapis-lapis-medallion calc(var(--kp-sig-dur) * 1.4) var(--fx-ease) both;
+        }
+
+        [data-theme='lapis'] .kp-tooltip {
+            animation: kp-sig-lapis-lapis-burnish var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-turn {
+        0%,
+        25% {
+            transform: rotate(0);
+        }
+
+        100% {
+            transform: rotate(36deg);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-write {
+        0% {
+            opacity: 1;
+            clip-path: inset(0 0 0 100%);
+        }
+
+        50%,
+        75% {
+            opacity: 1;
+            clip-path: inset(0);
+        }
+
+        100% {
+            opacity: 0;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-burnish {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-burnish-wide {
+        from {
+            clip-path: inset(-20px 100% -40px -20px);
+        }
+
+        to {
+            clip-path: inset(-20px -20px -40px -20px);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-rise {
+        from {
+            transform: translateY(10px);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-dot {
+        from {
+            opacity: 0;
+            transform: scale(0);
+        }
+    }
+
+    @keyframes kp-sig-lapis-lapis-medallion {
+        from {
+            opacity: 0;
+            transform: rotate(-36deg) scale(0.6);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-progressbar-lapis-walk {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes kp-progressbar-lapis-turn {
+        to {
+            transform: rotate(90deg);
+        }
+    }
+
+    @keyframes kp-progressbar-lapis-turn-45 {
+        from {
+            transform: rotate(45deg);
+        }
+        to {
+            transform: rotate(135deg);
+        }
+    }
+}
+/* ── End of the signature ── */

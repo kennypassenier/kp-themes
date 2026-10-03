@@ -1,4 +1,3 @@
 {
-    "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry once every register covers it, so nothing can sit here after the work is done.",
-    "progressbar": "the signature progress bar replaced .kp-progress in 9.0.0 [scope-140]; each register ports its approved design from research/progress-signature/themes/<theme>.css"
+    "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry once every register covers it, so nothing can sit here after the work is done."
 }

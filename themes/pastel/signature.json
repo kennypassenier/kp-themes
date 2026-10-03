@@ -226,7 +226,7 @@
             "proof": [
                 { "file": "themes/pastel/tokens.json", "token": "radius" },
                 { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progress" }
+                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progressbar" }
             ]
         },
         "borders": {
@@ -546,11 +546,11 @@
         {
             "situation": "Wait for something",
             "verb": "load",
-            "answer": "A pill progress bar on the muted ground, a rounded skeleton, a spinner with a plum head.",
+            "answer": "The risograph pearl string for progress, sugar-pill skeleton lines a sherbet ribbon flows through, and a spinner with a plum head [scope-140].",
             "components": ["kp-progressbar", "kp-skeleton", "kp-spinner"],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progress" },
+                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progressbar" },
                 { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-spinner" }
             ]
         },

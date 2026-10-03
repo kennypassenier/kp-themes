@@ -18,8 +18,12 @@
    file order. Consequence taken deliberately: a consumer's own UNLAYERED
    CSS wins over everything here, components included — which is the right
    default for a package whose posture is that a consumer overrides it.
-   Token declarations stay outside the layers. */
-@layer kp.base, kp.components, kp.register, kp.layout, kp.utilities;
+   Token declarations stay outside the layers.
+   kp.signature [scope-140] holds each theme's approved signature for the
+   progress bar and ten elements, at the end of its register file: it comes
+   right after kp.register, so it draws over the register as the approved
+   demos did, whatever the weight of a register selector. */
+@layer kp.base, kp.components, kp.register, kp.signature, kp.layout, kp.utilities;
 
 /* ═══════════════════════════════════════════════════════════════════
    The seven themes (T1, T9). Each block is a COMPLETE token set; the

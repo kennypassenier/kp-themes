@@ -700,32 +700,6 @@
         border-color: var(--kp-hairline);
     }
 
-    /* The switch [gap-11], in the checkbox's voice: a square track on the
-       card with a primary hairline, and a thumb that is the checkbox's
-       notched block — dim at rest, signal once on. The track keeps its
-       ground when on; the block carries the state, as the check does. */
-    [data-theme='cyberpunk'] .kp-switch {
-        --kp-switch-radius: 0;
-        --kp-switch-thumb-radius: 0;
-    }
-
-    [data-theme='cyberpunk'] .kp-switch__input {
-        border: 1px solid var(--primary);
-        background: var(--card);
-    }
-
-    [data-theme='cyberpunk'] .kp-switch__input::before {
-        clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
-    }
-
-    [data-theme='cyberpunk'] .kp-switch__input:checked {
-        background: var(--card);
-    }
-
-    [data-theme='cyberpunk'] .kp-switch__input:checked::before {
-        background: var(--primary);
-    }
-
     [data-theme='cyberpunk'] .kp-switch__input:focus-visible {
         outline: 2px solid var(--focus-ring);
         outline-offset: 2px;
@@ -791,10 +765,6 @@
     [data-theme='cyberpunk'] .kp-dialog {
         border: 1px solid var(--primary);
         clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
-    }
-
-    [data-theme='cyberpunk'] .kp-dialog::backdrop {
-        background: hsl(from var(--sidebar-background) h s l / 0.75);
     }
 
     [data-theme='cyberpunk'] .kp-menu {
@@ -937,36 +907,12 @@
         transform: rotate(45deg) scale(0.8);
     }
 
-    [data-theme='cyberpunk'] .kp-progress {
-        border-radius: 0;
-        accent-color: var(--primary);
-    }
-
-    /* Determinate bars only: this layer beats the components layer, so an
-       unguarded bar colour painted an indeterminate bar full, the fault
-       gap-11 closed (found again 2026-09-13 when its test was repaired). */
-    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-webkit-progress-bar {
-        border-radius: 0;
-        background: var(--card);
-    }
-
-    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-webkit-progress-value {
-        border-radius: 0;
-        background: var(--primary);
-    }
-
-    [data-theme='cyberpunk'] .kp-progress:not(:indeterminate)::-moz-progress-bar {
-        border-radius: 0;
-        background: var(--primary);
-    }
-
     [data-theme='cyberpunk'] .kp-skeleton {
         border-radius: 0;
         background: linear-gradient(90deg, var(--card), var(--secondary), var(--card));
     }
 
     [data-theme='cyberpunk'] .kp-spinner {
-        border-radius: 0;
         border-color: var(--primary) transparent var(--accent) transparent;
     }
 
@@ -1358,10 +1304,7 @@
     }
 
     [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
-        inline-size: 0.5rem;
-        block-size: 0.5rem;
         border-radius: 50%;
-        clip-path: none;
     }
 
     [data-theme='cyberpunk'] .kp-field__check:focus-visible {
@@ -2033,3 +1976,642 @@
         --kp-sidenav-submenu-mark: '//';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* cyberpunk's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/cyberpunk.css and research/signature-elements/demo.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-progressbar {
+        --kp-progressbar-height: 0.875rem;
+        --kp-cp-void: var(--sidebar-background);
+        --kp-cp-cut: var(--kp-progressbar-height);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__track {
+        border-radius: 0;
+        background: var(--kp-cp-void);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.32) 0 6px, transparent 6px 10px) 0 50% / 100% 2px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 0 0 2px var(--kp-cp-void);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__fill {
+        overflow: hidden;
+        background: linear-gradient(
+            to bottom,
+            var(--primary) 0 calc(50% - 1px),
+            var(--kp-cp-void) calc(50% - 1px) calc(50% + 1px),
+            var(--primary) calc(50% + 1px)
+        );
+        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__fill::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 3rem;
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-hot, var(--foreground)) h s 96% / 0.75), transparent);
+        transform: translateX(-100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head {
+        z-index: 1;
+        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::before,
+    [data-theme='cyberpunk'] .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::before {
+        inset-inline-end: 0;
+        inline-size: var(--kp-cp-cut);
+        background: var(--kp-cp-void);
+        clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::after {
+        /* Parallel to the cut, 3px of void between them. */
+        inset-inline-start: calc(5px - var(--kp-cp-cut));
+        inset-block: 2px;
+        inline-size: calc(var(--kp-cp-cut) + 1px);
+        background: var(--accent);
+        clip-path: polygon(0 0, 5px 0, 100% 100%, calc(100% - 5px) 100%);
+        /* Only between the ends: an empty rail and a full face carry no packet. */
+        opacity: clamp(0, min(var(--kp-value), 1 - var(--kp-value)) * 1000, 1);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        content: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -216px;
+        inline-size: calc(100% + 432px);
+        transform: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        --kp-cp-dash: hsl(from var(--primary) h s l / 0.6);
+        background:
+            linear-gradient(
+                    90deg,
+                    transparent 6px,
+                    var(--kp-cp-dash) 6px 28px,
+                    transparent 28px 36px,
+                    var(--kp-cp-dash) 36px 44px,
+                    transparent 44px 52px,
+                    var(--kp-cp-dash) 52px 92px,
+                    transparent 92px 100px,
+                    var(--kp-cp-dash) 100px 114px,
+                    transparent 114px 122px,
+                    var(--kp-cp-dash) 122px 138px,
+                    transparent 138px
+                )
+                0 3px / 144px 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent 4px,
+                    var(--kp-cp-dash) 4px 14px,
+                    transparent 14px 20px,
+                    var(--kp-cp-dash) 20px 54px,
+                    transparent 54px 62px,
+                    var(--kp-cp-dash) 62px 68px,
+                    transparent 68px 76px,
+                    var(--kp-cp-dash) 76px 104px,
+                    transparent 104px 112px,
+                    var(--kp-cp-dash) 112px 138px,
+                    transparent 138px
+                )
+                0 6px / 144px 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent 10px,
+                    var(--kp-cp-dash) 10px 40px,
+                    transparent 40px 48px,
+                    var(--kp-cp-dash) 48px 60px,
+                    transparent 60px 68px,
+                    var(--kp-cp-dash) 68px 112px,
+                    transparent 112px 120px,
+                    var(--kp-cp-dash) 120px 138px,
+                    transparent 138px
+                )
+                0 9px / 144px 2px repeat-x;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+        background:
+            linear-gradient(90deg, transparent 58px, var(--accent) 58px 70px, transparent 70px) 0 3px / 216px 2px repeat-x,
+            linear-gradient(90deg, transparent 150px, var(--accent) 150px 166px, transparent 166px) 0 6px / 216px 2px repeat-x,
+            linear-gradient(90deg, transparent 24px, var(--accent) 24px 32px, transparent 32px 176px, var(--accent) 176px 188px, transparent 188px) 0
+                9px / 216px 2px repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__fill::after {
+            animation: kp-cp-charge 520ms cubic-bezier(0.2, 0.9, 0.2, 1) 200ms 1 both;
+        }
+
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-cp-stream-144 1800ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+            animation: kp-cp-stream-216 1200ms linear infinite;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner {
+        --kp-sig-dur: 1200ms;
+        position: relative;
+        overflow: hidden;
+        border: 0;
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.1);
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.6);
+        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        block-size: 45%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.35) calc(100% - 2px), var(--primary) calc(100% - 2px));
+        transform: translateY(-100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 36%;
+        background: var(--accent);
+        transform: scale(0.6);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-spinner::before {
+            animation: kp-sig-cyberpunk-scan-down 1200ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-spinner::after {
+            animation: kp-sig-cyberpunk-core 600ms ease-in-out infinite alternate;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        overflow: hidden;
+        block-size: 1.1rem;
+        border-radius: 0;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.08) 0 3px, transparent 3px 7px), var(--card);
+        box-shadow: inset 2px 0 0 hsl(from var(--accent) h s l / 0.7);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 35%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.28) 93%, var(--primary) 93%);
+        transform: translateX(-100%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-cyberpunk-sweep 1800ms cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 160ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 320ms;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input {
+        border: 1px solid var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked {
+        /* The stripes stop short of the thumb, so the yellow plate never sits on yellow. */
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.5) 0 3px, transparent 3px 7px) left /
+                calc(100% - var(--kp-switch-height, 1.5rem)) 100% no-repeat,
+            var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:checked::before {
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-switch__input::before {
+            transition: transform 150ms steps(3, jump-end);
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check {
+        --kp-sig-dur: 180ms;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked {
+        background: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked::before {
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        background: none;
+        clip-path: none;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio'] {
+        transform: rotate(45deg) scale(0.8);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        clip-path: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-cyberpunk-pen 180ms steps(3, jump-end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-cyberpunk-dot 180ms steps(2, jump-end) both;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-toast {
+        --kp-sig-dur: 360ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-toast {
+            animation: kp-sig-cyberpunk-slice 360ms step-end backwards;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+        /* The dialog entrance at a quarter of its first speed (Kenny, 2026-10-03:
+           "I prefer this at 1/4 speed"); durations are written in each animation
+           as literals, so the flash gate can compute their rate [DI5]. */
+        --kp-sig-dur: 1520ms;
+        box-shadow: inset 0 3px 0 var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 1px);
+        block-size: 2px;
+        background: var(--primary);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog::backdrop {
+        background:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-dialog {
+            animation: kp-sig-cyberpunk-crt 1520ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-dialog::after {
+            animation: kp-sig-cyberpunk-crt-line 1520ms cubic-bezier(0.3, 0, 0.2, 1);
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-tooltip {
+        --kp-sig-dur: 220ms;
+        padding: 0.35rem 0.75rem 0.35rem 0.6rem;
+        text-transform: uppercase;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-tooltip::before {
+        content: '>';
+        margin-inline-end: 0.6ch;
+        color: var(--accent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-tooltip {
+            animation: kp-sig-cyberpunk-wipe 220ms steps(4, jump-end) backwards;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps {
+        gap: 3px;
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
+        gap: 0.6rem;
+        padding: 0.45rem 1.2rem 0.45rem 1.1rem;
+        background: var(--card);
+        color: var(--muted-foreground);
+        clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%, 0.6rem 50%);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li:first-child {
+        padding-inline-start: 0.7rem;
+        clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: auto;
+        block-size: auto;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        font-size: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='done'] {
+        background: hsl(from var(--accent) h s l / 0.14);
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='current'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-empty {
+        padding: 1.25rem;
+        border: 1px solid hsl(from var(--primary) h s l / 0.45);
+        border-radius: 0;
+        background: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px), var(--card);
+        clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        text-align: start;
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__title {
+        margin: 0 0 0.35rem;
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__title::before {
+        content: '/// ';
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__body {
+        margin: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+    }
+
+    [data-theme='cyberpunk'] a:not([class]) {
+        position: relative;
+        text-decoration: underline dotted var(--accent);
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='cyberpunk'] a:not([class])::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.1em;
+        block-size: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='cyberpunk'] a:not([class]):hover {
+        text-decoration-color: transparent;
+    }
+
+    [data-theme='cyberpunk'] a:not([class]):hover::after {
+        transform: scaleX(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] a:not([class])::after {
+            transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-scan-down {
+        to {
+            transform: translateY(225%);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-core {
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-sweep {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        70%,
+        100% {
+            transform: translateX(290%);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-pen {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-dot {
+        from {
+            transform: scale(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-slice {
+        0% {
+            opacity: 0;
+            transform: translateX(10px);
+            clip-path: inset(0 0 100% 0);
+        }
+
+        15% {
+            opacity: 1;
+            transform: translateX(-6px);
+            clip-path: inset(0 0 55% 0);
+        }
+
+        35% {
+            transform: translateX(5px);
+            clip-path: inset(40% 0 15% 0);
+        }
+
+        55% {
+            transform: translateX(-3px);
+            clip-path: inset(60% 0 0 0);
+        }
+
+        75% {
+            transform: translateX(1px);
+            clip-path: inset(0);
+        }
+
+        100% {
+            transform: none;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-crt {
+        0%,
+        45% {
+            clip-path: inset(calc(50% - 1px) 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-crt-line {
+        0% {
+            opacity: 1;
+            transform: scaleX(0.1);
+        }
+
+        45% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-wipe {
+        from {
+            clip-path: polygon(0 0, 0 0, 0 calc(100% - 7px), 0 100%, 0 100%);
+        }
+
+        to {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+        }
+    }
+
+    @keyframes kp-cp-charge {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes kp-cp-stream-144 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(144px);
+        }
+    }
+
+    @keyframes kp-cp-stream-216 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(216px);
+        }
+    }
+}
+/* ── End of the signature ── */

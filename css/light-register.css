@@ -369,11 +369,6 @@
         border-radius: var(--radius, 0.5rem);
     }
 
-    /* The switch [gap-11]: the pill, on the field's ground as the inputs are. */
-    [data-theme='light'] .kp-switch {
-        --kp-switch-radius: var(--kp-radius-pill, 999px);
-    }
-
     [data-theme='light'] .kp-switch__input:not(:checked) {
         background: var(--background);
     }
@@ -446,12 +441,6 @@
         background: var(--muted);
     }
 
-    /* ── The confirmation dialog: the deepest shadow, the demo's own
-       backdrop stays the base layer's (not a token, by design) ────────── */
-    [data-theme='light'] .kp-dialog {
-        box-shadow: var(--kp-shadow-lg);
-    }
-
     /* ── Badges, tags, status ────────────────────────────────────────────── */
 
     [data-theme='light'] .kp-badge,
@@ -487,19 +476,9 @@
         background: var(--muted);
     }
 
-    [data-theme='light'] .kp-progress {
-        background-color: var(--muted);
-        border-radius: var(--kp-radius-pill, 999px);
-    }
-
     [data-theme='light'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='light'] .kp-empty {
-        border: 1px dashed var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
     }
 
     [data-theme='light'] .kp-error {
@@ -1069,3 +1048,418 @@
         --kp-sidenav-submenu-mark: '–';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* light's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/light.css and research/signature-elements/themes/light.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='light'] .kp-progressbar {
+        --kp-progressbar-height: 0.75rem;
+        --kp-ps-bead: 0.75rem;
+    }
+
+    [data-theme='light'] .kp-progressbar__track {
+        border-radius: 0;
+        background: linear-gradient(var(--border), var(--border)) 0 50% / 100% 2px no-repeat;
+    }
+
+    [data-theme='light'] .kp-progressbar__fill {
+        inset-block: calc(50% - 2px);
+        block-size: 4px;
+        background: var(--primary);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round var(--kp-radius-pill, 999px));
+        transition: clip-path 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    [data-theme='light'] .kp-progressbar__head {
+        inset-block: calc(50% - var(--kp-ps-bead) / 2);
+        inline-size: var(--kp-ps-bead);
+        block-size: var(--kp-ps-bead);
+        border-radius: 50%;
+        background: var(--fx-signal);
+        box-shadow: inset 0 0 0 2px var(--background);
+        transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-bead))));
+        transition: transform 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    [data-theme='light'] .kp-progressbar[aria-valuenow='100'] .kp-progressbar__head {
+        background: var(--primary);
+    }
+
+    [data-theme='light'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        inline-size: auto;
+        block-size: auto;
+        clip-path: none;
+        animation: none;
+        background:
+            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% - 1rem) 50% / 0.75rem 0.75rem
+                no-repeat,
+            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) 50% 50% / 0.75rem 0.75rem no-repeat,
+            radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem
+                no-repeat;
+    }
+
+    [data-theme='light'] {
+        --kp-sig-light-ease: var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+        --kp-sig-light-pill: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='light'] .kp-spinner {
+        --kp-sig-dur: 1200ms;
+        --kp-sig-s: var(--kp-spinner-size, 1.25rem);
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='light'] .kp-spinner::before,
+    [data-theme='light'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+    }
+
+    [data-theme='light'] .kp-spinner::after {
+        background: radial-gradient(circle at 50% 4.5px, var(--primary) 0 3px, transparent 3.5px);
+    }
+
+    [data-theme='light'] .kp-spinner::before {
+        background: radial-gradient(circle at 50% 4.5px, var(--fx-signal) 0 2px, transparent 2.5px);
+        transform: rotate(-40deg);
+    }
+
+    [data-theme='light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 900ms;
+        block-size: 0.75rem;
+        border-radius: var(--kp-sig-light-pill);
+        background: var(--muted);
+        animation: none;
+    }
+
+    [data-theme='light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='light'] .kp-switch {
+        --kp-switch-radius: var(--kp-sig-light-pill);
+        --kp-switch-thumb-radius: 50%;
+    }
+
+    [data-theme='light'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--muted);
+    }
+
+    [data-theme='light'] .kp-switch__input::before {
+        background: var(--background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 2px 4px hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='light'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='light'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        box-shadow: 0 2px 4px hsl(from var(--foreground) h s l / 0.3);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='light'] .kp-field__check {
+        --kp-sig-dur: 360ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--background);
+    }
+
+    [data-theme='light'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='light'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        border-end-start-radius: 1px;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='light'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='light'] .kp-field__check[type='radio']:checked {
+        border: 1.5px solid var(--primary);
+    }
+
+    [data-theme='light'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='light'] .kp-toast {
+        --kp-sig-dur: 520ms;
+        border-color: var(--border);
+        box-shadow: var(--kp-shadow-md);
+    }
+
+    [data-theme='light'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+        --kp-sig-dur: 2240ms;
+        border-color: var(--border);
+        box-shadow: var(--kp-shadow-lg);
+    }
+
+    [data-theme='light'] .kp-tooltip {
+        --kp-sig-dur: 280ms;
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.8rem;
+        border: 0;
+        border-radius: var(--kp-sig-light-pill);
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: var(--kp-shadow-md);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        transform-origin: 1.25rem 0;
+    }
+
+    [data-theme='light'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline-start: 1rem;
+        inline-size: 7px;
+        block-size: 7px;
+        border-radius: 1px;
+        background: var(--foreground);
+        transform: rotate(45deg);
+    }
+
+    [data-theme='light'] .kp-wizard__steps {
+        gap: 0.5rem 1.5rem;
+    }
+
+    [data-theme='light'] .kp-wizard__steps li {
+        position: relative;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+        border-radius: var(--kp-sig-light-pill);
+    }
+
+    [data-theme='light'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% + 0.25rem);
+        inline-size: 1rem;
+        block-size: 1px;
+        background: var(--border-strong);
+    }
+
+    [data-theme='light'] .kp-wizard__steps li::before {
+        border-color: var(--border-strong);
+        background: var(--background);
+        font-weight: 600;
+    }
+
+    [data-theme='light'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='light'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    [data-theme='light'] .kp-wizard__steps li[data-state='current'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='light'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='light'] .kp-empty {
+        position: relative;
+        padding: 2.75rem 1.5rem 1.25rem;
+        border: 0;
+        border-radius: var(--radius);
+    }
+
+    [data-theme='light'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 1.1rem;
+        inset-inline-start: calc(50% - 3.5rem);
+        inline-size: 7rem;
+        block-size: 9px;
+        background:
+            radial-gradient(circle, var(--fx-signal) 0 3.5px, transparent 4px) center / 9px 9px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) center / 100% 1px no-repeat;
+    }
+
+    [data-theme='light'] .kp-empty__title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='light'] a:not([class]) {
+        border-radius: 0.2em;
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.45);
+        text-underline-offset: 0.22em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='light'] a:not([class]):hover {
+        background: var(--accent);
+        box-shadow:
+            -0.15em 0 0 var(--accent),
+            0.15em 0 0 var(--accent);
+        text-decoration-color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-spinner::after {
+            animation: kp-sig-light-light-orbit var(--kp-sig-dur) var(--kp-sig-light-ease) infinite;
+        }
+
+        [data-theme='light'] .kp-spinner::before {
+            animation: kp-sig-light-light-orbit var(--kp-sig-dur) var(--kp-sig-light-ease) -1100ms infinite;
+        }
+
+        [data-theme='light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+            animation: kp-sig-light-light-open-x var(--kp-sig-dur) var(--kp-sig-light-ease) both;
+        }
+
+        [data-theme='light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: 120ms;
+        }
+
+        [data-theme='light'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: 240ms;
+        }
+
+        [data-theme='light'] .kp-switch__input::before {
+            transition:
+                transform 280ms var(--kp-sig-light-ease),
+                background-color 150ms ease;
+        }
+
+        [data-theme='light'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-light-light-tick var(--kp-sig-dur) var(--kp-sig-light-ease) both;
+        }
+
+        [data-theme='light'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-light-light-bead var(--kp-sig-dur) var(--kp-sig-light-ease) both;
+        }
+
+        [data-theme='light'] .kp-toast {
+            animation: kp-sig-light-light-window var(--kp-sig-dur) var(--kp-sig-light-ease) backwards;
+        }
+
+        [data-theme='light'] .kp-toast + .kp-toast {
+            animation-delay: 90ms;
+        }
+
+        [data-theme='light'] .kp-dialog {
+            animation: kp-sig-light-light-window var(--kp-sig-dur) var(--kp-sig-light-ease) backwards;
+        }
+
+        [data-theme='light'] .kp-tooltip {
+            animation: kp-sig-light-light-float var(--kp-sig-dur) var(--kp-sig-light-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-light-light-orbit {
+        from {
+            transform: rotate(0);
+        }
+
+        to {
+            transform: rotate(1turn);
+        }
+    }
+
+    @keyframes kp-sig-light-light-open-x {
+        from {
+            clip-path: inset(0 100% 0 0 round 999px);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+    }
+
+    @keyframes kp-sig-light-light-tick {
+        from {
+            clip-path: inset(0 100% 0 0 round 2px);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0 round 2px);
+        }
+    }
+
+    @keyframes kp-sig-light-light-bead {
+        from {
+            transform: scale(0);
+        }
+    }
+
+    @keyframes kp-sig-light-light-window {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+            clip-path: inset(40% 30% round var(--radius));
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        to {
+            transform: none;
+            clip-path: inset(-3rem round var(--radius));
+        }
+    }
+
+    @keyframes kp-sig-light-light-float {
+        from {
+            opacity: 0;
+            transform: translateY(4px) scale(0.96);
+        }
+    }
+}
+/* ── End of the signature ── */

@@ -442,11 +442,6 @@
         border-radius: var(--radius);
     }
 
-    /* The switch [gap-11]: the pill, on the card as the inputs are. */
-    [data-theme='shade-dark'] .kp-switch {
-        --kp-switch-radius: var(--kp-radius-pill, 999px);
-    }
-
     [data-theme='shade-dark'] .kp-switch__input:not(:checked) {
         background: var(--card);
     }
@@ -628,19 +623,9 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='shade-dark'] .kp-progress {
-        background-color: var(--card);
-        border-radius: var(--radius);
-    }
-
     [data-theme='shade-dark'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='shade-dark'] .kp-empty {
-        border: 1px dashed var(--border);
-        border-radius: var(--radius);
     }
 
     [data-theme='shade-dark'] .kp-error {
@@ -1322,3 +1307,453 @@
         --kp-sidenav-submenu-mark: '·';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* shade-dark's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/shade-dark.css and research/signature-elements/themes/shade-dark.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='shade-dark'] .kp-progressbar {
+        --kp-progressbar-height: 0.75rem;
+    }
+
+    [data-theme='shade-dark'] .kp-progressbar__track {
+        border-radius: var(--radius, 0.25rem);
+        background: var(--background);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    [data-theme='shade-dark'] .kp-progressbar__fill {
+        inset: 2px;
+        border-radius: calc(var(--radius, 0.25rem) - 2px);
+        background: linear-gradient(90deg, hsl(from var(--primary) h s calc(l - 22)), var(--primary) 70%, hsl(from var(--primary) h s calc(l + 8)));
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 2px));
+        transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='shade-dark'] .kp-progressbar__head {
+        inline-size: 3.5rem;
+        translate: -50% 0;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px calc(100% - 4px)
+                no-repeat,
+            radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.14) 55%, transparent);
+        opacity: clamp(0, var(--kp-value) * 1000, 1);
+        transition:
+            transform 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)),
+            opacity 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    [data-theme='shade-dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        inline-size: auto;
+        clip-path: none;
+        border-radius: 0;
+        background:
+            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% - 1rem) 50% / 1rem
+                100% no-repeat,
+            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) 50% 50% / 1rem 100%
+                no-repeat,
+            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% + 1rem) 50% / 1rem
+                100% no-repeat;
+        animation: kp-ps-shade-dark-focus 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
+    }
+
+    [data-theme='shade-dark'] {
+        --kp-sig-sh-ease: var(--kp-ease-reveal, cubic-bezier(0.2, 0.75, 0.35, 1));
+        --kp-sig-sh-shade: hsl(from var(--foreground) h s l / 0.45);
+        --kp-sig-sh-seam: linear-gradient(to right, transparent, var(--border-strong) 22%, var(--border-strong) 78%, transparent);
+    }
+
+    [data-theme='shade-dark'] .kp-spinner {
+        --kp-sig-dur: 1500ms;
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--card);
+        animation: none;
+    }
+
+    [data-theme='shade-dark'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0 40%, var(--kp-sig-sh-shade) 85%, hsl(from var(--primary) h s l / 0.5));
+    }
+
+    [data-theme='shade-dark'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+            linear-gradient(var(--primary), var(--primary)) 50% 1px / 1.5px calc(50% - 1px) no-repeat;
+    }
+
+    [data-theme='shade-dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 2200ms;
+        block-size: 0.7rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: linear-gradient(to right, var(--popover) 65%, transparent);
+        animation: none;
+    }
+
+    [data-theme='shade-dark']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='shade-dark'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='shade-dark'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='shade-dark'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='shade-dark'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='shade-dark'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        box-shadow: none;
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='shade-dark'] .kp-field__check {
+        --kp-sig-dur: 340ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.25rem;
+        background: var(--card);
+    }
+
+    [data-theme='shade-dark'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='shade-dark'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='shade-dark'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='shade-dark'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='shade-dark'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    [data-theme='shade-dark'] .kp-toast {
+        --kp-sig-dur: 520ms;
+        position: relative;
+        border-color: var(--border);
+        box-shadow: none;
+    }
+
+    [data-theme='shade-dark'] .kp-toast:not([class*='kp-toast--']) {
+        background: var(--popover);
+    }
+
+    [data-theme='shade-dark'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(ellipse 60% 140% at 0 0, hsl(from var(--foreground) h s l / 0.1), transparent 70%);
+        pointer-events: none;
+    }
+
+    [data-theme='shade-dark'] .kp-dialog::backdrop {
+        background: radial-gradient(ellipse 80% 90% at 50% 45%, hsl(from var(--background) h s l / 0.35), hsl(from var(--background) h s 4% / 0.85));
+    }
+
+    [data-theme='shade-dark'] .kp-dialog {
+        --kp-sig-dur: 480ms;
+        border-color: var(--border);
+        background: radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--foreground) h s l / 0.07), transparent 75%), var(--popover);
+        box-shadow: none;
+    }
+
+    [data-theme='shade-dark'] .kp-dialog__title {
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    [data-theme='shade-dark'] .kp-tooltip {
+        --kp-sig-dur: 320ms;
+        margin-inline-start: 0.75rem;
+        padding: 0.3rem 0.7rem;
+        border: 1px solid var(--border);
+        border-radius: 0.25rem;
+        background: var(--popover);
+        color: var(--foreground);
+        box-shadow: none;
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-style: italic;
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps {
+        gap: 0.5rem 2.25rem;
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li {
+        position: relative;
+        gap: 0.45rem;
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% + 0.25rem);
+        inline-size: 1.75rem;
+        block-size: 1px;
+        background: var(--kp-sig-sh-seam);
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li::before {
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-family: var(--theme-font-display);
+        font-size: 0.9rem;
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--border-strong);
+        color: var(--foreground);
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li[data-state='current'] {
+        padding: 0.2rem 0.8rem 0.2rem 0.2rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='shade-dark'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary-foreground);
+        background: var(--primary-foreground);
+        color: var(--primary);
+    }
+
+    [data-theme='shade-dark'] .kp-empty {
+        padding: 2rem 1.5rem;
+        border: 0;
+        border-radius: 0;
+        background: radial-gradient(
+            ellipse 62% 90% at 50% 50%,
+            hsl(from var(--popover) h s l / 0.6),
+            hsl(from var(--popover) h s l / 0.18) 45%,
+            transparent 75%
+        );
+    }
+
+    [data-theme='shade-dark'] .kp-empty::after {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin: 1rem auto 0;
+        inline-size: 50%;
+        background: var(--kp-sig-sh-seam);
+    }
+
+    [data-theme='shade-dark'] .kp-empty__title {
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    [data-theme='shade-dark'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='shade-dark'] a:not([class]) {
+        border-radius: 0.2em;
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.45);
+        text-underline-offset: 0.2em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='shade-dark'] a:not([class]):hover {
+        background: hsl(from var(--foreground) h s l / 0.1);
+        text-decoration-color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] .kp-spinner::before,
+        [data-theme='shade-dark'] .kp-spinner::after {
+            animation: kp-sig-shade-dark-shdk-sweep var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='shade-dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+            animation: kp-sig-shade-dark-shdk-breathe var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='shade-dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: calc(var(--kp-sig-dur) * -5 / 6);
+        }
+
+        [data-theme='shade-dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: calc(var(--kp-sig-dur) * -2 / 3);
+        }
+
+        [data-theme='shade-dark'] .kp-switch__input::before {
+            transition: transform 320ms var(--kp-sig-sh-ease);
+        }
+
+        [data-theme='shade-dark'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-shade-dark-shdk-pencil var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-dark'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-shade-dark-shdk-pebble var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-dark'] .kp-toast {
+            animation: kp-sig-shade-dark-shdk-lift var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-dark'] .kp-toast::after {
+            animation: kp-sig-shade-dark-shdk-grow var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-dark'] .kp-dialog {
+            animation: kp-sig-shade-dark-shdk-rise var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+
+        [data-theme='shade-dark'] .kp-tooltip {
+            animation: kp-sig-shade-dark-shdk-surface var(--kp-sig-dur) var(--kp-sig-sh-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-sweep {
+        from {
+            transform: rotate(0);
+        }
+
+        to {
+            transform: rotate(1turn);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-breathe {
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.55;
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-surface {
+        from {
+            opacity: 0;
+            transform: translateY(3px);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-pencil {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-pebble {
+        from {
+            opacity: 0;
+            transform: scale(0.4);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-lift {
+        from {
+            opacity: 0;
+        }
+
+        40% {
+            opacity: 1;
+            transform: none;
+        }
+
+        to {
+            transform: translateY(-2px);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-grow {
+        0%,
+        40% {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-shdk-rise {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    }
+
+    @keyframes kp-ps-shade-dark-focus {
+        from {
+            opacity: 0;
+            transform: scale(1.6);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}
+/* ── End of the signature ── */

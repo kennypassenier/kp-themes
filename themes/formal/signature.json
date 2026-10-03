@@ -537,12 +537,12 @@
         {
             "situation": "Wait for something",
             "verb": "load",
-            "answer": "A hairline spinner with a navy head, a half-radius skeleton, a progress track on the muted stock.",
+            "answer": "A watch-dial spinner, ledger lines a navy pen inks in reading order, and the docket-cut progress bar entered across its column [scope-140].",
             "components": ["kp-spinner", "kp-skeleton", "kp-progressbar"],
             "open": false,
             "proof": [
                 { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-spinner" },
-                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-progress" }
+                { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-progressbar" }
             ]
         },
         {

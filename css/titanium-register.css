@@ -700,13 +700,6 @@
     }
 
     [data-theme='titanium'] .kp-field__check {
-        appearance: none;
-        inline-size: 1.15rem;
-        block-size: 1.15rem;
-        border: 1px solid var(--border-strong);
-        border-radius: 0.25rem;
-        background: var(--card);
-        display: grid;
         place-items: center;
     }
 
@@ -726,23 +719,6 @@
     [data-theme='titanium'] .kp-fieldset {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-    }
-
-    /* The switch [gap-11], in the checkbox's voice: the machined corner on
-       the card, a small square thumb, and the primary fill once on. */
-    [data-theme='titanium'] .kp-switch {
-        --kp-switch-radius: 0.25rem;
-        --kp-switch-thumb-radius: 0.1rem;
-    }
-
-    [data-theme='titanium'] .kp-switch__input {
-        border: 1px solid var(--border-strong);
-        background: var(--card);
-    }
-
-    [data-theme='titanium'] .kp-switch__input:checked {
-        background: var(--primary);
-        border-color: var(--primary);
     }
 
     [data-theme='titanium'] .kp-form__summary {
@@ -970,18 +946,9 @@
         background: var(--accent);
     }
 
-    [data-theme='titanium'] .kp-progress {
-        background-color: var(--card);
-        border: 1px solid var(--border-strong);
-    }
-
     [data-theme='titanium'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-    }
-
-    [data-theme='titanium'] .kp-empty {
-        border: 1px dashed var(--border-strong);
     }
 
     [data-theme='titanium'] .kp-error {
@@ -1606,3 +1573,569 @@
         --kp-sidenav-submenu-mark: '‐';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* titanium's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/titanium.css and research/signature-elements/themes/titanium.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-progressbar {
+        --kp-progressbar-height: 0.875rem;
+        --ti-cut: 0.4rem;
+        --ti-edge: var(--border-strong);
+        --ti-iris: linear-gradient(90deg, var(--chart-1), var(--chart-2) 55%, var(--chart-3));
+        --ti-slug: 0.35rem;
+        --ti-weave: color-mix(in oklab, var(--foreground) 9%, transparent);
+    }
+
+    [data-theme='titanium'] .kp-progressbar__track {
+        border-radius: 0;
+        clip-path: polygon(var(--ti-cut) 0, 100% 0, 100% calc(100% - var(--ti-cut)), calc(100% - var(--ti-cut)) 100%, 0 100%, 0 var(--ti-cut));
+        background:
+            linear-gradient(
+                    to bottom right,
+                    transparent calc(50% - 0.8px),
+                    var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px),
+                    transparent calc(50% + 0.8px)
+                )
+                left top / var(--ti-cut) var(--ti-cut) no-repeat,
+            linear-gradient(
+                    to bottom right,
+                    transparent calc(50% - 0.8px),
+                    var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px),
+                    transparent calc(50% + 0.8px)
+                )
+                right bottom / var(--ti-cut) var(--ti-cut) no-repeat,
+            linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 100% 1px no-repeat,
+            linear-gradient(var(--ti-edge), var(--ti-edge)) left bottom / 100% 1px no-repeat,
+            linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--ti-edge), var(--ti-edge)) right top / 1px 100% no-repeat,
+            linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
+                0 0 / 5px 5px,
+            linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
+                0 0 / 5px 5px,
+            var(--muted);
+    }
+
+    [data-theme='titanium'] .kp-progressbar__fill {
+        inset: 1px;
+        background:
+            linear-gradient(color-mix(in oklab, var(--foreground) 45%, transparent), color-mix(in oklab, var(--foreground) 45%, transparent)) left
+                top / 100% 1px no-repeat,
+            linear-gradient(color-mix(in oklab, var(--background) 35%, transparent), color-mix(in oklab, var(--background) 35%, transparent)) left
+                bottom / 100% 1px no-repeat,
+            var(--ti-iris);
+        transition: clip-path var(--fx-duration, 60ms) linear;
+    }
+
+    [data-theme='titanium'] .kp-progressbar__head {
+        inline-size: 2px;
+        margin-inline-start: -2px;
+        background: var(--primary);
+        box-shadow: 1px 0 0 var(--background);
+        transition: transform var(--fx-duration, 60ms) linear;
+    }
+
+    [data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 1px;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        opacity: 0.7;
+        -webkit-mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
+        mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline-end: auto;
+            inline-size: 28%;
+            opacity: 1;
+            -webkit-mask: none;
+            mask: none;
+            clip-path: polygon(var(--ti-slug) 0, 100% 0, calc(100% - var(--ti-slug)) 100%, 0 100%);
+            animation: kp-progressbar-titanium-slug 1100ms linear infinite;
+        }
+    }
+
+    [data-theme='titanium'] {
+        --kp-sig-ti-fast: var(--fx-duration, 60ms);
+        --kp-sig-ti-c: 0.35rem;
+        --kp-sig-ti-cut: polygon(
+            0 0,
+            calc(100% - var(--kp-sig-ti-c)) 0,
+            100% var(--kp-sig-ti-c),
+            100% 100%,
+            var(--kp-sig-ti-c) 100%,
+            0 calc(100% - var(--kp-sig-ti-c))
+        );
+        --kp-sig-ti-weave:
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px);
+        --kp-sig-ti-edge: var(--kp-tool-edge, inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14));
+    }
+
+    [data-theme='titanium'] .kp-spinner {
+        --kp-sig-dur: 480ms;
+        /* One flute pitch along the body: the gradient's 8px period at 53.13deg
+           (sin = 0.8) repeats every 10px horizontally. */
+        --kp-sig-ti-pitch: 10px;
+        --kp-sig-ti-shade: linear-gradient(
+            to bottom,
+            hsl(from var(--background) h s l / 0.75) 0%,
+            transparent 30%,
+            hsl(from var(--foreground) h s l / 0.22) 42%,
+            transparent 55%,
+            hsl(from var(--background) h s l / 0.85) 100%
+        );
+        position: relative;
+        inline-size: calc(var(--kp-spinner-size, 1.25rem) * 1.6);
+        block-size: calc(var(--kp-spinner-size, 1.25rem) * 0.6);
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        /* The silhouette: the chamfered shank end and the chamfered tip. */
+        clip-path: polygon(0 22%, 3% 0, 93% 0, 100% 30%, 100% 70%, 93% 100%, 3% 100%, 0 78%);
+        vertical-align: middle;
+        animation: none;
+    }
+
+    [data-theme='titanium'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(40% - var(--kp-sig-ti-pitch));
+        inline-size: calc(60% + var(--kp-sig-ti-pitch));
+        background: repeating-linear-gradient(
+            53.13deg,
+            var(--primary) 0 3px,
+            hsl(from var(--primary) h s calc(l - 22)) 3px 4px,
+            var(--muted) 4px 7px,
+            hsl(from var(--primary) h s calc(l - 30)) 7px 8px
+        );
+    }
+
+    [data-theme='titanium'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            var(--kp-sig-ti-shade),
+            var(--kp-iris) 9% 0 / 6% 100% no-repeat,
+            var(--kp-iris) 100% 0 / 3px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 40% 100% no-repeat;
+    }
+
+    [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        --kp-sig-ti-c: 5px;
+        position: relative;
+        overflow: hidden;
+        block-size: 0.95rem;
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--card);
+        box-shadow: var(--kp-sig-ti-edge);
+        clip-path: var(--kp-sig-ti-cut);
+        animation: none;
+    }
+
+    [data-theme='titanium']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.55rem;
+    }
+
+    [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 100%;
+        background: var(--kp-iris) right / 2px 100% no-repeat;
+        transform: translateX(-100%);
+    }
+
+    [data-theme='titanium'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='titanium'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--kp-sig-ti-weave), var(--background);
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-switch__input::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+            var(--muted-foreground);
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--background), var(--background)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+            var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='titanium'] .kp-field__check {
+        --kp-sig-dur: 120ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-radius: 0;
+        background: none;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-toast {
+        --kp-sig-dur: 160ms;
+        position: relative;
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 2px;
+        background: var(--kp-iris);
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+
+    @property --kp-sig-ti-cut {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    [data-theme='titanium'] .kp-dialog {
+        --kp-sig-dur: 240ms;
+        clip-path: polygon(
+            var(--kp-chamfer-panel) 0,
+            100% 0,
+            100% min(var(--kp-sig-ti-cut), 100% - var(--kp-chamfer-panel)),
+            calc(100% - var(--kp-chamfer-panel)) var(--kp-sig-ti-cut),
+            0 var(--kp-sig-ti-cut),
+            0 min(var(--kp-chamfer-panel), var(--kp-sig-ti-cut))
+        );
+    }
+
+    [data-theme='titanium'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='titanium'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-ti-fast);
+        --kp-sig-ti-c: 0.4rem;
+        margin-inline-start: 0.5rem;
+        padding: 0.35rem 0.75rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 1px) no-repeat,
+            var(--kp-iris);
+        color: var(--foreground);
+        box-shadow: var(--kp-sig-ti-edge);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        clip-path: polygon(0 0, calc(100% - var(--kp-sig-ti-c)) 0, 100% var(--kp-sig-ti-c), 100% 100%, 0 100%);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1rem;
+        block-size: 1px;
+        margin-inline: 0.3rem 0.45rem;
+        background: var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: auto;
+        min-inline-size: 1.9rem;
+        block-size: 1.5rem;
+        padding-inline: 0.3rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            var(--kp-sig-ti-edge),
+            inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--primary);
+        box-shadow: var(--kp-sig-ti-edge);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='titanium'] .kp-empty {
+        --kp-sig-ti-c: 1rem;
+        padding: 1.5rem 1.25rem 1.6rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            var(--kp-sig-ti-weave),
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        box-shadow: var(--kp-sig-ti-edge);
+        clip-path: var(--kp-sig-ti-cut);
+        text-align: start;
+    }
+
+    [data-theme='titanium'] .kp-empty__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='titanium'] .kp-empty__body {
+        margin: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.78rem;
+    }
+
+    [data-theme='titanium'] a:not([class]) {
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+        text-decoration-color: var(--border-strong);
+        text-underline-offset: 0.3em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='titanium'] a:not([class]):hover {
+        padding-block-end: 1px;
+        background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+        text-decoration-color: transparent;
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='titanium'] a:not([class]):hover {
+            text-decoration-color: currentColor;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-spinner::before {
+            animation: kp-sig-titanium-ti-flutes var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-titanium-ti-pass var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 300ms;
+        }
+
+        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 600ms;
+        }
+
+        [data-theme='titanium'] .kp-switch__input::before {
+            transition: transform var(--kp-sig-ti-fast) linear;
+        }
+
+        [data-theme='titanium'] .kp-field__check:checked::before {
+            animation: kp-sig-titanium-ti-stamp var(--kp-sig-dur) steps(2, jump-end) both;
+        }
+
+        [data-theme='titanium'] .kp-toast {
+            animation: kp-sig-titanium-ti-rail var(--kp-sig-dur) linear both;
+        }
+
+        [data-theme='titanium'] .kp-toast::after {
+            animation: kp-sig-titanium-ti-scribe calc(var(--kp-sig-dur) * 1.5) linear both;
+        }
+
+        [data-theme='titanium'] .kp-dialog {
+            animation: kp-sig-titanium-ti-cut var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='titanium'] .kp-dialog::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) linear;
+        }
+
+        [data-theme='titanium'] .kp-tooltip {
+            animation: kp-sig-titanium-ti-appear var(--kp-sig-dur) linear both;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-flutes {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(var(--kp-sig-ti-pitch));
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-pass {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        60%,
+        100% {
+            transform: translateX(4px);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-stamp {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-rail {
+        from {
+            opacity: 0;
+            transform: translateX(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-scribe {
+        0%,
+        33% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cut {
+        from {
+            --kp-sig-ti-cut: 0%;
+        }
+
+        to {
+            --kp-sig-ti-cut: 100%;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cutter {
+        from {
+            opacity: 1;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-appear {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-progressbar-titanium-slug {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(360%);
+        }
+    }
+}
+/* ── End of the signature ── */

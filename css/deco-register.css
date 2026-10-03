@@ -502,12 +502,6 @@
         border-radius: 0;
     }
 
-    /* The switch [gap-11]: square, like every deco field, on its ground. */
-    [data-theme='deco'] .kp-switch {
-        --kp-switch-radius: 0;
-        --kp-switch-thumb-radius: 0;
-    }
-
     [data-theme='deco'] .kp-switch__input:not(:checked) {
         background: var(--background);
     }
@@ -597,14 +591,7 @@
         background: var(--kp-backdrop);
     }
 
-    [data-theme='deco'] .kp-dialog__title {
-        font-family: var(--theme-font-display);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
     [data-theme='deco'] .kp-toast {
-        background: var(--popover);
         border-color: var(--border-strong);
     }
 
@@ -615,7 +602,6 @@
     [data-theme='deco'] .kp-toast--success {
         background: var(--success);
         color: var(--success-foreground);
-        border-color: var(--success);
     }
 
     [data-theme='deco'] .kp-toast--info {
@@ -758,29 +744,12 @@
         border-radius: 0;
     }
 
-    [data-theme='deco'] .kp-progress {
-        background-color: var(--card);
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-    }
-
     /* The track is --border (the quiet hairline, not the gold boundary):
    --border-strong shares the gold hue with --primary and reads as one
    ring turning, not a head against a track [KT8]. */
     [data-theme='deco'] .kp-spinner {
         border-color: var(--border);
         border-top-color: var(--primary);
-        border-radius: 0;
-    }
-
-    [data-theme='deco'] .kp-empty {
-        border: 1px dashed var(--border-strong);
-        border-radius: 0;
-    }
-
-    [data-theme='deco'] .kp-empty__title {
-        font-family: var(--theme-font-display);
-        text-transform: uppercase;
     }
 
     [data-theme='deco'] .kp-error {
@@ -1463,3 +1432,515 @@
         --kp-sidenav-submenu-mark: '◇';
     }
 }
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* deco's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/deco.css and research/signature-elements/themes/deco.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-progressbar {
+        --kp-progressbar-height: 1.125rem;
+        --dc-gold: var(--primary);
+        --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
+        --dc-tip: 0.45rem;
+        --dc-jewel: 0.4rem;
+        --dc-chevron: 0.8rem;
+    }
+
+    [data-theme='deco'] .kp-progressbar__track {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='deco'] .kp-progressbar__fill {
+        --dc-at: calc(var(--kp-value) * 100%);
+        inset: 1px;
+        background:
+            linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x,
+            var(--dc-gold);
+        clip-path: polygon(
+            0 0,
+            max(0px, calc(var(--dc-at) - var(--dc-tip))) 0,
+            var(--dc-at) 50%,
+            max(0px, calc(var(--dc-at) - var(--dc-tip))) 100%,
+            0 100%,
+            min(calc(var(--dc-tip) * 0.6), calc(var(--dc-at) * 0.5)) 50%
+        );
+        transition: clip-path 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+    }
+
+    [data-theme='deco'] .kp-progressbar__head {
+        inline-size: 0;
+        transition: transform 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+    }
+
+    [data-theme='deco'] .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(-1 * var(--dc-tip) - var(--dc-jewel) * 0.9);
+        inline-size: var(--dc-jewel);
+        block-size: var(--dc-jewel);
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 0 2px var(--dc-gold);
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 1px;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: none;
+        overflow: hidden;
+    }
+
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset-block: 1px;
+        inset-inline-start: calc(-1 * var(--dc-chevron));
+        inline-size: calc(100% + var(--dc-chevron));
+        background:
+            linear-gradient(
+                    to bottom left,
+                    transparent calc(50% - 1.5px),
+                    var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px),
+                    transparent calc(50% + 1px)
+                )
+                left top / var(--dc-chevron) 50% repeat-x,
+            linear-gradient(to top left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px))
+                left bottom / var(--dc-chevron) 50% repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-progressbar-deco-ascent 900ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+        }
+    }
+
+    [data-theme='deco'] {
+        --kp-sig-deco-rays: repeating-conic-gradient(from -90deg at 50% 100%, hsl(from var(--primary) h s l / 0.55) 0 4deg, transparent 4deg 15deg);
+    }
+
+    [data-theme='deco'] .kp-spinner {
+        --kp-sig-dur: 3600ms;
+        position: relative;
+        border: 3px double var(--primary);
+        border-radius: 50%;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--primary) 0 1.6px, transparent 2px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
+        mask: radial-gradient(circle, black 0 2px, transparent 2px 3.5px, black 3.5px);
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 2800ms;
+        position: relative;
+        block-size: 0.9rem;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
+        background: hsl(from var(--primary) h s l / 0.12);
+        clip-path: polygon(0.5rem 0, calc(100% - 0.5rem) 0, 100% 50%, calc(100% - 0.5rem) 100%, 0.5rem 100%, 0 50%);
+    }
+
+    [data-theme='deco'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 3px;
+        --kp-switch-inset: 1px;
+        --kp-switch-width: 2.75rem;
+    }
+
+    [data-theme='deco'] .kp-switch__input {
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='deco'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    [data-theme='deco'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='deco'] .kp-field__check {
+        --kp-sig-dur: 360ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        margin: 0;
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='deco'] .kp-field__check:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='checkbox']:checked {
+        background: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.28rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='deco'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    [data-theme='deco'] .kp-toast {
+        --kp-sig-dur: 520ms;
+        position: relative;
+        padding-inline-start: 1.6rem;
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow:
+            inset 0 0 0 3px var(--popover),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='deco'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 5px);
+        inset-inline-start: 0.6rem;
+        inline-size: 0.5rem;
+        block-size: 10px;
+        background: var(--primary);
+        clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
+    }
+
+    [data-theme='deco'] .kp-toast--success {
+        border-color: var(--accent);
+    }
+
+    [data-theme='deco'] .kp-toast--success::before {
+        background: var(--success-foreground, var(--accent));
+    }
+
+    [data-theme='deco'] .kp-dialog {
+        /* Kenny, 2026-10-03: the entrance at ½ of its first speed ("I prefer this at half speed"). */
+        --kp-sig-dur: 1120ms;
+        position: relative;
+        isolation: isolate;
+        border: 4px double var(--primary);
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow:
+            inset 0 0 0 5px var(--popover),
+            inset 0 0 0 6px hsl(from var(--primary) h s l / 0.35);
+        text-align: center;
+    }
+
+    [data-theme='deco'] .kp-dialog::before {
+        content: '';
+        display: block;
+        inline-size: 6rem;
+        block-size: 1.4rem;
+        margin: -0.25rem auto 0.6rem;
+        border-block-end: 1px solid var(--primary);
+        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.4rem, transparent 0.45rem), var(--kp-sig-deco-rays);
+        mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 55%, transparent);
+    }
+
+    [data-theme='deco'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-dialog__actions {
+        justify-content: center;
+    }
+
+    [data-theme='deco'] .kp-tooltip {
+        --kp-sig-dur: 340ms;
+        margin-block-start: 0.65rem;
+        margin-inline-start: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow:
+            inset 0 0 0 2px var(--popover),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.4);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.9rem;
+        inline-size: 14px;
+        block-size: 7px;
+        background: var(--primary);
+        clip-path: polygon(0 100%, 0 67%, 2px 67%, 2px 33%, 4px 33%, 4px 0, 10px 0, 10px 33%, 12px 33%, 12px 67%, 14px 67%, 14px 100%);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li {
+        gap: 0.45rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.4rem;
+        block-size: 4px;
+        margin-inline: 0.45rem;
+        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='done']::after {
+        border-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li::before {
+        inline-size: 1.9rem;
+        block-size: 1.9rem;
+        border: 0;
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.22);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        color: var(--foreground);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='done']::before {
+        background: hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='current']::before {
+        inline-size: 2.3rem;
+        block-size: 2.3rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-empty {
+        padding: 1.25rem 1rem 1.4rem;
+        border: 4px double var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+    }
+
+    [data-theme='deco'] .kp-empty::before {
+        content: '';
+        display: block;
+        inline-size: 7rem;
+        block-size: 2.4rem;
+        margin: 0 auto 0.7rem;
+        border-block-end: 4px double var(--primary);
+        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.55rem, transparent 0.6rem), var(--kp-sig-deco-rays);
+        mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 60%, transparent);
+    }
+
+    [data-theme='deco'] .kp-empty__title {
+        margin: 0 0 0.3rem;
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='deco'] a:not([class]) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.7);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='deco'] a:not([class]):hover {
+        text-decoration-line: underline overline;
+        text-decoration-color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-spinner::before {
+            animation: kp-sig-deco-deco-turn var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-deco-deco-open var(--kp-sig-dur) var(--fx-ease) infinite;
+        }
+
+        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: 200ms;
+        }
+
+        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: 400ms;
+        }
+
+        [data-theme='deco'] .kp-switch__input::before {
+            transition: transform 280ms var(--fx-ease);
+        }
+
+        [data-theme='deco'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-deco-deco-unfold var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='deco'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-deco-deco-grow var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='deco'] .kp-toast {
+            animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+
+        [data-theme='deco'] .kp-dialog {
+            animation: kp-sig-deco-deco-sunburst var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+
+        [data-theme='deco'] .kp-tooltip {
+            animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-turn {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-open {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        40%,
+        75% {
+            opacity: 1;
+            transform: none;
+        }
+
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-unfold {
+        from {
+            clip-path: inset(50% 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-grow {
+        from {
+            transform: scale(0) rotate(-90deg);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-centre {
+        from {
+            clip-path: inset(-12px 50%);
+        }
+
+        to {
+            clip-path: inset(-12px 0);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-sunburst {
+        from {
+            clip-path: circle(0 at 50% 0);
+        }
+
+        to {
+            clip-path: circle(150% at 50% 0);
+        }
+    }
+
+    @keyframes kp-progressbar-deco-ascent {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(var(--dc-chevron));
+        }
+    }
+}
+/* ── End of the signature ── */
