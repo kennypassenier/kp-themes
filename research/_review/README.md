@@ -23,25 +23,41 @@ copy one structured answer back into the conversation [scope-141].
 `data-review-themes` is optional; without it the dialog walks all 22 themes
 in the registry's order.
 
+Catalogue blocks can ride along as a last step, each in its own theme
+(shown through `block.html`, which copies the block's stages from the
+catalogue page itself):
+
+```html
+<script type="application/json" data-review-extra>
+    [{ "page": "catalogue/field.html", "block": "choices", "theme": "retro",
+       "engine": "firefox", "title": "Fields › Choices", "look": "What changed." }]
+</script>
+```
+
 ## What the reviewer gets
 
-- A bar at the top of the page: how many pairs (theme × section) are judged,
+- A bar at the top of the page: how many steps and pairs are judged,
   "Review in a dialog" and "Copy answer".
-- The dialog walks theme by theme: every section in one theme, then it loads
-  the next theme's register and switches by itself. Up approves, Down rejects
-  (a note is required), Left/Right move while the note is empty, Escape
-  closes. "Approve the rest of this theme" approves every open section in
-  the theme on screen. After the last open pair the dialog closes.
-- Full screen on a phone, the section on top and the buttons below.
+- One step per theme: every section of the demo at once, stacked as on
+  "Every component, one page", and at the side one row per section with its
+  look-at line and a "Not approved" box. The reviewer ticks only what is
+  wrong, writes why, and approves the theme in one click (or Up); the dialog
+  then loads the next theme's register and switches by itself. Left/Right
+  move between steps, Escape closes, and after the last open step the dialog
+  closes. Twenty-two themes are twenty-two clicks.
+- Full screen on a phone: the sections on top, the rows and buttons below.
 - At the foot of the page, the answer:
 
 ```
-Demo review · signature-elements · 220 of 220 judged, 217 approved, 3 not approved, 0 open
+Demo review · signature-elements · 228 of 228 judged, 227 approved, 1 not approved, 0 open
 
-Approved in every theme: spinner, skeleton, switch, …
+Approved in full: formal, light, dark, …
+
+Catalogue pairs approved:
+- field--choices · retro · firefox
 
 Not approved:
-- tooltip · forest: the sign reads too dark on the green
+- switch · light: the thumb is too small
 ```
 
 Verdicts and notes live in the browser's localStorage under

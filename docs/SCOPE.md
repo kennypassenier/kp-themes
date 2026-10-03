@@ -2358,7 +2358,10 @@ veel en ik wil niet altijd heen en weer switchen tussen themas en componenten
 … kan dit vanaf nu altijd voor demos? zodat ze makkelijk te beoordelen zijn en
 jij een gestructureerd antwoord terugkrijgt telkens". `research/_review/`
 holds a kit every demo loads: a dialog modelled on the catalogue's (keys,
-note, one fixed size, full screen on a phone) that walks theme by theme,
-switches the theme itself, keeps verdicts and notes in the browser, and
+one fixed size, full screen on a phone) with one step per theme, every
+section of the demo stacked in it; the reviewer ticks only what is wrong,
+with a note, and approves the theme in one click, so 22 themes are 22
+clicks. It switches the theme itself, can carry catalogue blocks as a last
+step (`data-review-extra`), keeps verdicts and notes in the browser, and
 builds one answer ("Demo review · <demo> · …") to paste into the
 conversation. The researcher agent builds it into every new demo.

@@ -120,35 +120,85 @@
     margin: 0;
 }
 
-/* The look-at line is shown at the side, for the theme on screen. */
+/* The look-at lines are shown at the side, one per section. */
 .rv-dialog__stage [data-review-look] {
     display: none;
 }
 
+/* Sections stacked as on "Every component, one page". */
+.rv-dialog__stage > * + * {
+    margin-block-start: 1.5rem;
+}
+
 .rv-dialog__side {
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
     gap: 0.75rem;
     min-block-size: 0;
     padding: 1rem;
     border-inline-start: 1px solid var(--border);
 }
 
-.rv-dialog__look {
+.rv-dialog__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     overflow: auto;
-    font-size: 0.9375rem;
+    overscroll-behavior: contain;
 }
 
-.rv-dialog__look p {
-    margin: 0 0 0.5rem;
+.rv-row {
+    padding-block: 0.5rem;
+    border-block-end: 1px solid var(--border);
 }
 
-.rv-dialog__field {
+.rv-row--rejected {
+    box-shadow: inset 3px 0 0 var(--destructive);
+    padding-inline-start: 0.6rem;
+}
+
+.rv-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+}
+
+.rv-row__jump {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--foreground);
+    font: inherit;
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+}
+
+.rv-row__jump:hover {
+    text-decoration: underline;
+}
+
+.rv-row__check {
     margin: 0;
 }
 
-.rv-dialog__field textarea {
-    resize: none;
+.rv-row__look {
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+}
+
+.rv-row__note {
+    margin-block-start: 0.4rem;
+    inline-size: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.rv-dialog__side > .kp-field__error {
+    margin: 0;
 }
 
 .rv-dialog__actions {
@@ -159,6 +209,19 @@
 
 .rv-dialog__wide {
     grid-column: 1 / -1;
+}
+
+/* A catalogue block, in its own document so it wears its own theme. */
+.rv-extra__title {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.rv-extra__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: 12rem;
+    border: 1px solid var(--border);
 }
 
 @media (max-width: 48rem) {
@@ -177,19 +240,21 @@
     }
 
     .rv-dialog__side {
-        grid-template-rows: auto auto auto;
-        max-block-size: 55dvh;
+        grid-template-rows: auto minmax(0, 1fr) auto auto;
+        max-block-size: 50dvh;
         overflow: auto;
         padding: 0.75rem 16px;
         border-inline-start: 0;
         border-block-start: 1px solid var(--border);
     }
 
-    .rv-dialog__look {
-        max-block-size: 6rem;
-    }
-
     #rv-keys {
         display: none;
     }
+}
+
+/* block.html: one catalogue block, nothing around it. */
+.rv-block {
+    margin: 0;
+    padding: 1rem;
 }
