@@ -322,6 +322,11 @@ layout family, a loading strategy — goes to the `researcher` agent
 while Bouwen and Kijken continue. It delivers `research/<topic>/README.md`
 and `demo.html`; the demo is looked at the Kijken way, and its outcome is
 a form. What Kenny approves becomes an ordinary Bouwen step.
+Every demo carries the demo review kit (`research/_review/`, scope-141):
+its judged sections are marked `data-review-item`, and Kenny judges them in
+one dialog that walks every theme by itself and gives one structured answer
+to paste back. The form after a demo then asks only what the answer leaves
+open; it does not repeat a verdict per section.
 The demo enters the catalogue navigation under "Research to look at"
 and moves to "Archived research" once his decision is taken, so the
 navigation shows what still waits for him [scope-81].

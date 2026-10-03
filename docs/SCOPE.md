@@ -2348,3 +2348,17 @@ state, wizard steps, link hover), each to be designed for all 22 themes and show
 again; sig-faults "Herstellen" (fix-88). Contract for every one: identical markup
 and ARIA in every theme, motion only through transform, opacity and clip-path,
 a readable still state under reduced motion.
+The second form, the same day: progress-forest "Goedkeuren" (the rewrite, a
+forest being planted, approved as it is, so all 22 bars are approved).
+
+**scope-141 · Every research demo is judged in one dialog.**
+Kenny, 2026-10-03, on the ten elements: "is er een manier om dit allemaal goed
+te keuren in een dialog zoals bij every component, one page? want dit is heel
+veel en ik wil niet altijd heen en weer switchen tussen themas en componenten
+… kan dit vanaf nu altijd voor demos? zodat ze makkelijk te beoordelen zijn en
+jij een gestructureerd antwoord terugkrijgt telkens". `research/_review/`
+holds a kit every demo loads: a dialog modelled on the catalogue's (keys,
+note, one fixed size, full screen on a phone) that walks theme by theme,
+switches the theme itself, keeps verdicts and notes in the browser, and
+builds one answer ("Demo review · <demo> · …") to paste into the
+conversation. The researcher agent builds it into every new demo.

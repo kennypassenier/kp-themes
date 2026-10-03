@@ -1,0 +1,195 @@
+/* The demo review kit's chrome (research/_review/review.js). Colours come from
+   the theme's own tokens, so the bar and the dialog follow the theme under
+   review. Narrow windows (a phone) get the dialog full-screen, the section
+   on top and the buttons under it. */
+
+.rv-bar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    padding: 0.5rem 16px;
+    background: var(--background);
+    border-block-end: 1px solid var(--border);
+}
+
+.rv-bar__count {
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.rv-bar__spacer {
+    flex: 1 1 auto;
+}
+
+.rv-meta {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+}
+
+.rv-answer {
+    margin-block-start: 3rem;
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--border);
+}
+
+.rv-answer__text {
+    max-block-size: 24rem;
+    overflow: auto;
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.8125rem;
+    background: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+}
+
+.rv-answer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* One fixed size whatever the section holds, as the catalogue's dialog. */
+.rv-dialog {
+    box-sizing: border-box;
+    inline-size: 94vw;
+    block-size: 92vh;
+    max-inline-size: none;
+    max-block-size: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.rv-dialog[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.rv-dialog__head {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    padding: 0.75rem 3.5rem 0.75rem 1rem;
+    border-block-end: 1px solid var(--border);
+}
+
+.rv-dialog__head > h2 {
+    margin: 0;
+    flex: 1 1 12rem;
+    min-inline-size: 0;
+}
+
+.rv-dialog__position {
+    margin: 0;
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+}
+
+.rv-dialog__close {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
+}
+
+.rv-dialog__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    min-block-size: 0;
+}
+
+.rv-dialog__stage {
+    contain: strict;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 1rem 1.25rem;
+}
+
+.rv-dialog__stage > * {
+    margin: 0;
+}
+
+/* The look-at line is shown at the side, for the theme on screen. */
+.rv-dialog__stage [data-review-look] {
+    display: none;
+}
+
+.rv-dialog__side {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    gap: 0.75rem;
+    min-block-size: 0;
+    padding: 1rem;
+    border-inline-start: 1px solid var(--border);
+}
+
+.rv-dialog__look {
+    overflow: auto;
+    font-size: 0.9375rem;
+}
+
+.rv-dialog__look p {
+    margin: 0 0 0.5rem;
+}
+
+.rv-dialog__field {
+    margin: 0;
+}
+
+.rv-dialog__field textarea {
+    resize: none;
+}
+
+.rv-dialog__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.rv-dialog__wide {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 48rem) {
+    .rv-dialog {
+        inline-size: 100vw;
+        block-size: 100dvh;
+    }
+
+    .rv-dialog__grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .rv-dialog__stage {
+        padding: 0.75rem 16px;
+    }
+
+    .rv-dialog__side {
+        grid-template-rows: auto auto auto;
+        max-block-size: 55dvh;
+        overflow: auto;
+        padding: 0.75rem 16px;
+        border-inline-start: 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .rv-dialog__look {
+        max-block-size: 6rem;
+    }
+
+    #rv-keys {
+        display: none;
+    }
+}

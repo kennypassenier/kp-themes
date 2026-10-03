@@ -26,6 +26,13 @@ Every deliverable is two files under `research/<topic>/`:
    every section a "Look at:" paragraph telling the reviewer what to check.
    Anything that opens (a menu, a dialog) is shown in its opened state too.
    Say plainly which parts are mock and which reuse package classes.
+   Load the demo review kit [scope-141]: `data-review="<topic>"` on
+   `<html>` (plus `data-review-themes="a,b"` when the demo covers only some
+   themes), `data-review-item="<id>"` and `data-review-title` on every
+   section Kenny judges, the "Look at" text per theme inside
+   `[data-review-look]` as `<p data-for="<theme>">`, and
+   `<script type="module" src="../_review/review.js"></script>`. See
+   `research/_review/README.md`.
 
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
