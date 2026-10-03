@@ -102,6 +102,8 @@ gate ids node gates/check-ids.mjs || exit 1
 
 # every component the package defines is shown somewhere in the catalogue [scope-31]
 gate catalogue node gates/check-catalogue.mjs || exit 1
+# a demo under review shows every variant the catalogue has of its component [fix-90]
+gate demo-variants node gates/check-demo-variants.mjs || exit 1
 
 # while a review round is open, the blocks Kenny is judging do not move [fix-46]
 gate round node gates/check-round.mjs || exit 1

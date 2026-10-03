@@ -39,7 +39,9 @@ export default defineConfig({
     // goes, which is the whole point. KP_TEST_WORKERS overrides it for a
     // machine with room to spare.
     workers: Number(process.env.KP_TEST_WORKERS ?? 0) || '25%',
-    reporter: 'line',
+    // Every run keeps its per-test durations (Kenny, 2026-10-03, asking what
+    // each kind of test costs): test-timings/last.json, gitignored.
+    reporter: [['line'], ['json', { outputFile: 'test-timings/last.json' }]],
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,
         trace: 'retain-on-failure',

@@ -33,6 +33,10 @@ Every deliverable is two files under `research/<topic>/`:
    `[data-review-look]` as `<p data-for="<theme>">`, and
    `<script type="module" src="../_review/review.js"></script>`. See
    `research/_review/README.md`.
+   Show every variant the catalogue renders of the component a section is
+   about (`kp-<component>--<variant>`: success, info, warning, destructive,
+   circle, block, invalid…); `npm run gates` refuses a demo under review that
+   leaves one out [fix-90].
 
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.

@@ -281,7 +281,12 @@ export function buildPrompt({ includeCopied = false } = {}) {
         .filter((i) => i.line)
         .map((i) => i.line)
         .sort();
-    if (recordable.length) lines.push('', `Verdict lines (hash version ${HASH_VERSION}):`, ...recordable);
+    // The block ends in a line of its own with its count, so a prompt cut off
+    // in transit is refused rather than read short: twice on 2026-10-03 the
+    // last line arrived without its `@2`, the chat taking the tail of the
+    // message for a mention.
+    if (recordable.length)
+        lines.push('', `Verdict lines (hash version ${HASH_VERSION}):`, ...recordable, `End of verdict lines: ${recordable.length}.`);
     return { text: lines.join('\n'), items: items.length, pages: pages.length, total: all.length };
 }
 

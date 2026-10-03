@@ -48,7 +48,7 @@ function files(notes) {
     return { dir, registerFile, notesFile, read: () => JSON.parse(readFileSync(notesFile, 'utf8')) };
 }
 
-const prompt = (/** @type {string[]} */ ...lines) => ['Verdict lines (hash version 2):', ...lines, ''].join('\n');
+const prompt = (/** @type {string[]} */ ...lines) => ['Verdict lines (hash version 2):', ...lines, `End of verdict lines: ${lines.length}.`, ''].join('\n');
 
 test('record clears the note of a block approved in that theme, in any engine, and says so', () => {
     const f = files({ 'button--variants': { formal: note(), nostromo: note() } });

@@ -52,6 +52,7 @@ never a silent deviation. This project follows
 | `npm run test:tags -- --level commit`                             | building plus every `@sweep` test, firefox      | once before a report or a commit; manual, not in the hook              |
 | `npm run test:tags -- --level engines`                            | the commit selection, both engines              | at a layer's close and after a paint, focus or keyboard fix [fix-51]   |
 | `npm run test:browser`                                            | the whole suite, both engines                   | before a release, on Kenny's go given in a form; never on Claude's own |
+| `npm run release:preflight -- X.Y.Z`                              | what `scripts/release.sh` would refuse, seconds | before any release form or "nothing blocks" claim [fix-89]             |
 | `npm run advice`                                                  | the readings, printed, never refusing           | when Kenny wants the reading                                           |
 | `npm run verify`                                                  | gates, the whole suite, advice, in order        | before a release, on the same go                                       |
 | review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published | Claude pushes `main` whenever it asks Kenny to look [scope-67]         |

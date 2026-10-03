@@ -18,10 +18,10 @@
                 "components/*.d.ts",
                 "css/tailwind-bridge.css"
             ],
-            "hash": "e95645826a48871124a6ed554dc52ee39f00fe19842b806192b4a54fde0cef12",
-            "doc": "0ae509471f1839c2ea63a4ed251b6bcf9bb26bbf39a11b1a49d6736c9015a6de",
+            "hash": "f1d9b7058c23fd00029c511308443a234aee2612cf3ecc177fe3b1ea3b071d38",
+            "doc": "818025a1fc1c20c398d7d7eb06c189a1c59476a4b60312568273334f05eafe7e",
             "files": {
-                ".claude/hooks/gates.sh": "aecdf9407601b1db250cff3f7fdbd7488bb3bdfd2d3829eeeac9b26e6ce782f4",
+                ".claude/hooks/gates.sh": "2e2b2f028b8d543a44629a3907575b252bb9635f66c007b4dc5ed033c3ac9d51",
                 "components/alarm.d.ts": "ee834354f991e482884d358cf5459731e3cde57585ec7df2ccf6aca527675c61",
                 "components/alert.d.ts": "1fcfff8375a5eb1f3f61a18e079a19e38a40e7f62a13abaa4c321251938b810e",
                 "components/badge.d.ts": "deec9004922e5d5e736430c7af5913ad0c8961246a3ce13d333885c01a8e274e",
@@ -242,13 +242,13 @@
                 "gates/check-tags.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "e98a3a970b8ff17430ee37c2f3987cfd1dd2a35a81f4c00766a14811c6269f68",
-            "doc": "6c101bed86948a38de7e9c127a11bfa897f1f51e6c84ec625e8cae173b7eacf5",
+            "hash": "16b55e27dee1fb8396e8addf86d82bbc17fcd9a45cbb57cdf129cfec30d2d4f7",
+            "doc": "ebb11b3300750915b232b7132b187030fed2ad829c510e0c80d9c4d3ab76aaa1",
             "files": {
                 "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
                 "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
-                "playwright.config.mjs": "9aca9c37829a93df9e328610dd52ae1bd241c52aa28dbe1181dbf91b2f3f5fea"
+                "playwright.config.mjs": "4de3c2122f1d2821f03eb2fc9e14ac0d825b5168763e8848620824f4f6bbdbae"
             }
         },
         "docs/TROUBLESHOOTING.md": {

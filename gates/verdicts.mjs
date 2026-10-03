@@ -172,9 +172,16 @@ export function parseVerdictLines(text) {
     const lines = [];
     /** @type {string[]} */
     const faults = [];
+    /** @type {number | null} */
+    let declared = null;
     for (const row of rows.slice(start + 1)) {
         const raw = row.trim();
         if (!raw) break;
+        const end = /^End of verdict lines: (\d+)\.$/.exec(raw);
+        if (end) {
+            declared = Number(end[1]);
+            break;
+        }
         const parts = raw.split(' · ').map((part) => part.trim());
         if (parts.length !== 5 && parts.length !== 6) {
             faults.push(`not five fields (or six, with @ratio) separated by " · ": ${raw}`);
@@ -188,6 +195,10 @@ export function parseVerdictLines(text) {
         lines.push({ key, theme, engine, verdict, hash, ratio: at === undefined ? 1 : Number(at.slice(1)), raw });
     }
     if (!lines.length && !faults.length) faults.push('the "Verdict lines" block is empty');
+    // A copied prompt ends its block with "End of verdict lines: N." (2026-10-03,
+    // after two prompts lost the tail of their last line in transit).
+    if (declared === null) faults.push('the "Verdict lines" block has no "End of verdict lines: N." line: the prompt was cut off; copy it again');
+    else if (declared !== lines.length + faults.length) faults.push(`the block says ${declared} line(s) and holds ${lines.length + faults.length}: the prompt was cut off or edited; copy it again`);
     return { version, lines, faults };
 }
 

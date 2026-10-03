@@ -5290,3 +5290,101 @@ because a second branch that must be remembered is a fault waiting for the
 next tired evening.
 
 **9 · When we review the measure.** At the retrospective of this round.
+
+## fix-89 · "It does not block the release", said without checking (2026-10-03)
+
+**1 · What went wrong.** Claude told Kenny the five open portrait pairs did not
+block 9.0.0; `scripts/release.sh 9.0.0` refused on exactly those
+("the screenshot check changed catalogue/verdicts.json or pixel-checks.json").
+
+**2 · Which gate let it through.** None: the release script's refusals could
+only be learned by running it, which takes a screenshot run, so the claim was
+made from memory of `advice-approvals`, which counts catalogue pairs only.
+
+**3 · Where else the same fault sits.** Searched for: statements to Kenny about
+what a release needs, made before the release script ran. Every release form of
+this project relied on them; no command answered the question beforehand.
+
+**4 · How we prevent recurrence.** `npm run release:preflight -- <x.y.z>`
+(gates/release-preflight.mjs) lists everything the release script refuses on,
+in seconds and without photographs: version, clean tree, main and pushed, the
+tag, every pair the last screenshot check left open (catalogue and research
+pages alike), files the check reads that moved since it ran, and the approvals.
+It runs before every release form and before any "nothing blocks" sentence.
+
+**5 · What the remedy costs.** One command, about two seconds.
+
+**6 · Who enforces it.** Discipline (CLAUDE.md, the release procedure); the
+script itself is code.
+
+**7 · How we measure that it works, and when.** At the next release: its
+preflight output is quoted in the release form, and the release script then
+refuses on nothing the preflight did not list. Queued as fix-89-M1.
+
+**8 · If the measurement fails.** The preflight learns the refusal it missed,
+in the same commit as the release.
+
+**9 · When we review the measure.** After three releases.
+
+## fix-90 · A demo approved without the variants the catalogue has (2026-10-03)
+
+**1 · What went wrong.** The signature toasts were approved from a demo that
+showed the plain and the success toast only; the destructive toast, never
+shown, came out at 1.0 to 1.9:1 in five themes and was found by the release
+suite (tests/nostromo-notes.spec.mjs, scope-60).
+
+**2 · Which gate let it through.** Nothing compared a demo's markup with the
+variants the catalogue renders of the same component.
+
+**3 · Where else the same fault sits.** Searched with the new check over the
+decided signature-elements demo: six missing variants (the skeleton's circle
+and block, the invalid field, the info, warning and destructive toasts). The
+circle and block skeletons were caught during the build; the toasts by the
+suite.
+
+**4 · How we prevent recurrence.** gates/check-demo-variants.mjs, in
+`npm run gates`: a demo under "Research to look at" with the review kit must
+show, in each judged section, every `kp-<component>--<variant>` the catalogue
+pages render of that section's component.
+
+**5 · What the remedy costs.** Bigger demos; a gate of under a second.
+
+**6 · Who enforces it.** Code: the gate.
+
+**7 · How we measure that it works, and when.** At the next research demo put
+to Kenny: the gate runs on it at the commit that lists it. Queued as
+fix-90-M1.
+
+**8 · If the measurement fails.** The check widens to what it missed.
+
+**9 · When we review the measure.** After the next three demos.
+
+## fix-91 · The last verdict line of a pasted prompt arrived cut off (2026-10-03)
+
+**1 · What went wrong.** Twice the same evening the last verdict line Kenny
+pasted lost its `· @2`; Claude completed it by hand from the lines above.
+
+**2 · Which gate let it through.** `node gates/verdicts.mjs record` read a block
+up to its first blank line and had no way to tell a whole block from a cut one.
+
+**3 · Where else the same fault sits.** Searched for: other prompts Kenny
+pastes that end in data (the demo review kit's answer ends in a prose list,
+not in fields; it is not affected).
+
+**4 · How we prevent recurrence.** The catalogue's prompt ends its block with
+`End of verdict lines: N.`; the importer refuses a block without that line or
+with another count ("the prompt was cut off; copy it again"). Locked by a test
+in gates/check-verdicts.test.mjs.
+
+**5 · What the remedy costs.** One line per prompt.
+
+**6 · Who enforces it.** Code: the importer and its test.
+
+**7 · How we measure that it works, and when.** At Kenny's next pasted
+catalogue prompt: it records with no hand edit. Queued as fix-91-M1.
+
+**8 · If the measurement fails.** The prompt is offered as a file to download
+instead of text to paste.
+
+**9 · When we review the measure.** After the next five prompts.
+

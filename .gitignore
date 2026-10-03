@@ -35,3 +35,4 @@ tokens.tar
 # Screenshots of the signature research rounds (2026-10-03): made on demand, not kept.
 research/progress-signature/out/
 research/signature-elements/out/
+test-timings/
