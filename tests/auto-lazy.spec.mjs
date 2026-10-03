@@ -30,6 +30,7 @@
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { NEEDS } from '../js/auto.js';
 
 const ROOT = new URL('../', import.meta.url);
 // A module born after 6.1.0 that writes markup is attached on the eager side
@@ -42,10 +43,69 @@ const EAGER =
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
 
 /** Every page under these folders that loads js/auto.js. */
-const PAGES = ['tests/fixtures', 'examples', 'catalogue', 'site/components']
+const ALL_PAGES = ['tests/fixtures', 'examples', 'catalogue', 'site/components']
     .flatMap((dir) => readdirSync(new URL(`${dir}/`, ROOT)).map((name) => `${dir}/${name}`))
     .filter((path) => path.endsWith('.html') && /src="[^"]*js\/auto\.js"/.test(readFileSync(new URL(path, ROOT), 'utf8')))
     .sort();
+
+/** The `kp-` classes a script names: a class only a stylesheet reads asks nothing of the loader. */
+const SCRIPTED = new Set(
+    ['js/', 'js/effects/']
+        .flatMap((dir) =>
+            readdirSync(new URL(dir, ROOT))
+                .filter((name) => name.endsWith('.js'))
+                .map((name) => readFileSync(new URL(`${dir}${name}`, ROOT), 'utf8')),
+        )
+        .flatMap((source) => [...source.matchAll(/(?<![\w-])(kp-[a-z0-9]+(?:[-_]{1,2}[a-z0-9]+)*)/g)].map((m) => m[1])),
+);
+
+/**
+ * What a page can ask of the loader, read from its markup: every `kp-` class a
+ * script names, every `data-kp-` attribute, the bare elements a module acts on, and per
+ * module the exact set of its `when` selectors the page carries (a module
+ * attached through one selector alone is a different case from the same
+ * module reached through two).
+ * @param {string} html
+ */
+const asks = (html) => {
+    const found = new Set();
+    for (const m of html.matchAll(/\bclass="([^"]*)"/g)) for (const c of m[1].split(/\s+/)) if (SCRIPTED.has(c)) found.add(`.${c}`);
+    for (const m of html.matchAll(/\s(data-kp-[a-z0-9-]+)/g)) found.add(`[${m[1]}]`);
+    for (const m of html.matchAll(/<(select|mark|dialog|details|input|textarea)\b/g)) found.add(m[1]);
+    for (const need of NEEDS) {
+        const carried = need.when
+            .split(',')
+            .map((one) => one.trim())
+            .filter((one) => found.has(one));
+        if (carried.length) found.add(`${need.name}:${carried.join('+')}`);
+    }
+    return found;
+};
+
+/**
+ * The pages read [Kenny, form v9, 2026-10-04: from 148 to the pages that ask
+ * something no other does]. The catalogue and the fixtures always; beyond
+ * them, the fewest of the example and site pages that together ask
+ * everything those ask and the always-read pages do not. 22 compare and 22
+ * concept pages are one markup each in 22 themes, and a component's site
+ * page repeats its catalogue page, so most of them add nothing. Computed, not
+ * listed: a new page that asks something new is read without anyone adding it.
+ */
+const PAGES = (() => {
+    const asked = new Map(ALL_PAGES.map((path) => [path, asks(readFileSync(new URL(path, ROOT), 'utf8'))]));
+    const always = ALL_PAGES.filter((path) => path.startsWith('catalogue/') || path.startsWith('tests/fixtures/'));
+    const covered = new Set(always.flatMap((path) => [...(asked.get(path) ?? [])]));
+    const rest = ALL_PAGES.filter((path) => !always.includes(path));
+    const chosen = [];
+    for (;;) {
+        const gain = (/** @type {string} */ path) => [...(asked.get(path) ?? [])].filter((one) => !covered.has(one)).length;
+        const best = rest.filter((path) => !chosen.includes(path)).sort((a, b) => gain(b) - gain(a) || a.localeCompare(b))[0];
+        if (!best || gain(best) === 0) break;
+        chosen.push(best);
+        for (const one of asked.get(best) ?? []) covered.add(one);
+    }
+    return [...always, ...chosen].sort();
+})();
 
 /** The attributes an attach function never sets or sets to a moment, not a state. */
 const VOLATILE = new Set(['style', 'data-kp-effects-done', 'data-kp-auto-ready', 'data-n1', 'data-n2']);

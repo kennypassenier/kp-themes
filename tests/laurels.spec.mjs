@@ -50,9 +50,10 @@ const open = async (page) => {
     await expect(page.locator('#laurels .kp-laurels').first()).toBeVisible();
 };
 
-// Kenny browses zoomed: 1.25 is a desktop scaled by a quarter. Firefox takes
-// it as a preference at launch, chromium as a context's scale.
-const RATIOS = [1, 1.25];
+// Read at a ratio of 1. Until 2026-10-04 also at 1.25 (a desktop scaled by a
+// quarter); Kenny trimmed the second ratio (form v9, 2026-10-04, trim-ratios): the fault this
+// guards was the same at both ratios, so one reads it.
+const RATIOS = [1];
 
 /**
  * @param {import('@playwright/test').BrowserType} browserType

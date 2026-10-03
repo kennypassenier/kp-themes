@@ -319,10 +319,9 @@ test.describe(
     "every theme: a tooltip on the overlays page sits under its trigger [Kenny's phantom note, 2026-09-15]",
     { tag: ['@sweep', '@component:overlays', '@component:catalogue'] },
     () => {
-        for (const [width, height] of [
-            [1920, 1000],
-            [1400, 900],
-        ]) {
+        // At 1920×1000. Until 2026-10-04 also at 1400×900; Kenny trimmed it
+        // (form v9, trim-copies): the fault showed in all 22 themes at both.
+        for (const [width, height] of [[1920, 1000]]) {
             test(`all four tooltips of #tooltip open under their trigger's start edge, at ${width}×${height}`, async ({ page }) => {
                 // Twenty-two themes, two of them hovered open and closed each time.
                 test.setTimeout(120_000);

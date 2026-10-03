@@ -19,19 +19,19 @@
 // because the button arms instead of opening anything.
 import { readdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { sweepThemes } from './helpers/sweep-themes.mjs';
 
 const PAGES = readdirSync(new URL('../examples/', import.meta.url))
     .filter((n) => n.startsWith('concept-') && n.endsWith('.html'))
     .map((n) => n.slice('concept-'.length, -'.html'.length));
 
 // The generator writes a concept page per theme; the confirmation behind
-// every one of them is the same `attachConfirmations` default, so the level
-// decides how many are pressed [scope-103]. All of them at the release
-// level. cyberpunk and synthwave have no concept page at all, so a narrowed
-// run presses formal and dark.
-const SWEEP = sweepThemes().filter((n) => PAGES.includes(n));
-if (SWEEP.length === 0) throw new Error(`no concept page for any of ${sweepThemes().join(', ')}`);
+// every one of them is the same `attachConfirmations` default, so three are
+// pressed at every level: formal, dark, and retro, whose arrival overlay
+// lies over the page and takes another path [Kenny, form v9, 2026-10-04,
+// trim-confirm; until then the release level pressed all 20]. cyberpunk and
+// synthwave have no concept page at all.
+const SWEEP = ['formal', 'dark', 'retro'].filter((n) => PAGES.includes(n));
+if (SWEEP.length === 0) throw new Error('no concept page for formal, dark or retro');
 
 for (const theme of SWEEP) {
     test(

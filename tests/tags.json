@@ -4,7 +4,8 @@
         "building": "the tags of the changed files only, firefox; a theme sweep runs on the three themes below",
         "commit": "building plus every @sweep test, firefox; a theme sweep runs on the three themes below",
         "engines": "the commit selection in chromium and firefox, at the close of a layer and after a fix to paint, focus or the keyboard [fix-51]; a theme sweep runs on the three themes below",
-        "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go; a theme sweep runs on all 22"
+        "release": "every test, chromium and firefox (npm run test:browser), on Kenny's go; a theme sweep runs on all 22",
+        "changed": "the run before a minor or patch release (npm run test:release, on Kenny's go): the tags of everything changed since the last release tag plus every @sweep test, each sweep on all 22 themes; a major release, or a change the map cannot narrow, runs every test [Kenny, form v9, 2026-10-04]"
     },
     "sweepThemes": {
         "$comment": "How wide a theme-parameterised sweep runs, per level [scope-103]. gates/run-tags.mjs sets KP_SWEEP_THEMES for the first two levels and nothing for release; tests/helpers/sweep-themes.mjs reads it and answers with every theme when it is unset, so a bare `npx playwright test` still runs all 22. Four theme loops are deliberately NOT narrowed, each with a per-theme fault behind it: focus-visible.spec.mjs (fix-38), registers.spec.mjs:91 (fix-12), reflow.spec.mjs and overflow.spec.mjs (brutalism in firefox only, sepia and solstice in chromium only).",

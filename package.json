@@ -304,6 +304,7 @@
         "generate:min": "node gates/generate-min.mjs",
         "check:min": "node gates/generate-min.mjs --check",
         "test:tags": "node gates/run-tags.mjs",
+        "test:release": "node gates/run-tags.mjs --level changed",
         "check:tags": "node gates/check-tags.mjs",
         "test:firefox": "playwright test --project=firefox",
         "advice": "npm run check:contrast ; npm run check:anchors ; npm run check:motion ; npm run check:di5-report ; npm run check:texture ; npm run check:invariants ; npm run check:variant-ground ; npm run check:compliance ; npm run check:baseline ; npm run check:signature ; npm run check:approvals ; npm run check:format",

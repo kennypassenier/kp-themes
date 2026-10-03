@@ -378,6 +378,13 @@ export function select(changes) {
             reasons.push({ file, why: `none: ${rule.none}` });
             continue;
         }
+        // A release bumps the version in package.json and nothing else there:
+        // that reaches no test [Kenny, form v9, 2026-10-04, "Alleen wat
+        // veranderde" — without this every release selected everything].
+        if (rule.all && onlyTheVersionMoved(change)) {
+            reasons.push({ file, why: 'none: only the version moved' });
+            continue;
+        }
         if (rule.all) {
             all = true;
             reasons.push({ file, why: `everything: ${rule.all}` });
@@ -481,6 +488,23 @@ function chainsOfFile(css, selectors, themes) {
     return [...tags].sort();
 }
 
+/**
+ * Whether a JSON file changed in its `version` field alone.
+ * @param {{ file: string, before: string | null, after: string | null }} change
+ */
+function onlyTheVersionMoved({ file, before, after }) {
+    if (!file.endsWith('.json') || before === null || after === null) return false;
+    try {
+        const [a, b] = [JSON.parse(before), JSON.parse(after)];
+        if (a.version === b.version) return false;
+        delete a.version;
+        delete b.version;
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return false;
+    }
+}
+
 // ─── From a selection to Playwright ───────────────────────────────────────
 
 const escape = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -495,13 +519,13 @@ const tagPattern = (/** @type {string} */ t) => `(?:^|\\s)${escape(t)}(?=\\s|$)`
  * matched by its name as the title path writes it.
  *
  * @param {{ all: boolean, terms: string[][], specs: string[] }} selection
- * @param {'building' | 'commit' | 'engines' | 'release'} level
+ * @param {'building' | 'commit' | 'engines' | 'release' | 'changed'} level
  * @returns {string | null | ''} null: every test; '': nothing to run
  */
 export function grepFor(selection, level) {
     if (level === 'release' || selection.all) return null;
     const terms = [...selection.terms];
-    if (level === 'commit' || level === 'engines') terms.push(['@sweep']);
+    if (level === 'commit' || level === 'engines' || level === 'changed') terms.push(['@sweep']);
     const parts = terms.map((and) => (and.length === 1 ? tagPattern(and[0]) : `^${and.map((t) => `(?=[\\s\\S]*${tagPattern(t)})`).join('')}`));
     for (const spec of selection.specs) parts.push(`(?:^|\\s)${escape(relative('tests', spec))}\\s`);
     return parts.length ? parts.join('|') : '';

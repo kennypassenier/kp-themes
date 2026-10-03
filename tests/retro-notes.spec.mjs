@@ -12,13 +12,10 @@
 // modules of be9c034 and went red (ten of eleven, in firefox), with the
 // measured values beside each; the eleventh is a guard and says why.
 
-import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { contrast as contrast01 } from '../gates/colour.mjs';
-
-const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
 /** @param {number[]} ink 0..255 @param {number[]} ground 0..255 */
 const contrast = (ink, ground) =>
@@ -221,23 +218,10 @@ test.describe('retro: a label never runs into the next control', { tag: ['@theme
     });
 });
 
-test(
-    'no theme strikes a legend through with its fieldset’s paint [retro notes, 2026-09-15]',
-    { tag: ['@component:field', '@sweep', '@component:catalogue'] },
-    async ({ page }) => {
-        // A sweep over 22 themes; under a parallel run it needs more than the default 30 s.
-        test.setTimeout(120_000);
-        // The search behind Kenny's retro note, kept: on 2026-09-15 retro was
-        // the only one of the 22 themes with a line through a legend.
-        await openCatalogue(page, '/catalogue/field.html', THEME_NAMES[0]);
-        const found = [];
-        for (const theme of THEME_NAMES) {
-            await wear(page, theme);
-            for (const line of await struckLegends(page)) found.push(`${theme} ${line}`);
-        }
-        expect(found).toEqual([]);
-    },
-);
+// Until 2026-10-04 a sweep here read every theme for a legend struck
+// through; on 2026-09-15 retro was the only one, and the retro test above
+// (drilled red first) keeps the note. The other 21 are approved from their
+// screenshots. Kenny trimmed it (form v9, trim-copies).
 
 /* ───────────────────────────── 3 · a window's scrollbar, whole and honest */
 

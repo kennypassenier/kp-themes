@@ -27,7 +27,7 @@
 //     (js/effects.js) replaced by a plain `return` → the light kept
 //     following after a Tab, red on "a Tab puts the light out";
 //   - the card's `box-shadow` rule removed from the shade-light register →
-//     red on "a card carries a shadow at rest", on "flips the sign" and on
+//     red on "a card carries a shadow at rest" (since trimmed), on "flips the sign" and on
 //     "a Tab puts the light out", all three reading 0;
 //   - shade-dark's card patch put back to the 9% the research demo
 //     measured before it was cut → red on "keeps 4.5 under the patch", at
@@ -152,14 +152,9 @@ for (const [theme, url] of PAIR) {
             expect(right, 'pointer at the right edge: the shade falls to the left').toBeLessThan(-0.5);
         });
 
-        test('a card carries a shadow at rest, at the fixed top-left light [scope-101]', async ({ page }) => {
-            await open(page, theme, url);
-            const card = page.locator('.kp-card').first();
-            await card.scrollIntoViewIfNeeded();
-            const shadow = await card.evaluate((el) => getComputedStyle(el).boxShadow);
-            expect(shadow, 'the card is no longer flat').not.toBe('none');
-            expect(shadowX(shadow), 'no pointer: the light is at the top left, so the shade falls right').toBeGreaterThan(0);
-        });
+        // "A card carries a shadow at rest" was its own test until 2026-10-04;
+        // the two below read the same shadow at the fixed light, and Kenny
+        // trimmed it (form v9, trim-copies).
 
         test('under reduced motion nothing is written and the fixed top-left light stays', async ({ page }) => {
             await open(page, theme, url, { reduced: true });

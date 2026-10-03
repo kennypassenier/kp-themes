@@ -48,19 +48,11 @@
 //
 // Firefox only — see the skip in beforeEach.
 
-import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { sweepThemes } from './helpers/sweep-themes.mjs';
-
-const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8')));
-
-const VIEWPORTS = [
-    { width: 1920, height: 1000 },
-    { width: 1400, height: 900 },
-];
 
 /** Rounding allowed on each edge, in CSS pixels. */
 const SLACK = 1;
@@ -298,63 +290,16 @@ test.beforeEach(async ({ context, page, browserName }) => {
     }, PROBE_CSS);
 });
 
-for (const viewport of VIEWPORTS) {
-    test(
-        `every redaction on the dossier covers its phrase as the page lays it out at ${viewport.width}×${viewport.height} [fix-33]`,
-        { tag: ['@sweep', '@component:page-effects'] },
-        async ({ page }) => {
-            await page.setViewportSize(viewport);
-            await page.goto('/catalogue/page-effects.html#dossier');
-            await waitForJudging(page);
-            /** @type {string[]} */
-            const faults = [];
-            /** @type {string[]} */
-            const report = [];
-            for (const theme of THEMES) {
-                const card = await setTheme(page, theme);
-                for (let i = 0; i < 3; i++) {
-                    const { line, fault } = judge(theme, await measureMark(card, i));
-                    report.push(line);
-                    if (fault) faults.push(fault);
-                }
-            }
-            if (process.env.KP_REDACTION_REPORT) console.log(`as laid out, ${viewport.width}×${viewport.height}\n${report.join('\n')}`);
-            expect(faults).toEqual([]);
-        },
-    );
-}
-
-test(
-    'every redaction on the dossier covers its phrase wherever the line breaks it [fix-33]',
-    { tag: ['@sweep', '@component:page-effects'] },
-    async ({ page }) => {
-        await page.setViewportSize(VIEWPORTS[1]);
-        await page.goto('/catalogue/page-effects.html#dossier');
-        await waitForJudging(page);
-        /** @type {string[]} */
-        const faults = [];
-        /** @type {string[]} */
-        const report = [];
-        for (const theme of THEMES) {
-            const card = await setTheme(page, theme);
-            for (let i = 0; i < 3; i++) {
-                const breaks = await narrowUntilItBreaks(card, i);
-                const { line, fault } = judge(theme, await measureMark(card, i));
-                report.push(`${breaks ? 'at its break' : 'never breaks'}: ${line}`);
-                if (fault) faults.push(fault);
-                await widen(card);
-            }
-        }
-        if (process.env.KP_REDACTION_REPORT) console.log(`at the break\n${report.join('\n')}`);
-        expect(faults).toEqual([]);
-    },
-);
+// Every theme, every width and every break are read by the per-theme test
+// below. Until 2026-10-04 two 22-theme sweeps at 1920 and 1400 and one at the
+// break ran beside it and read a subset of what it reads; Kenny trimmed them
+// (form v9, trim-redaction).
 
 // Three widths, and the width the reader arrived at rather than loaded at
 // [scope-103].
 //
-// The two tests above load the page at a width and read it; the one after
-// them narrows a paragraph by hand. None of them resizes the WINDOW, and a
+// Loading the page at a width and reading it, or narrowing a paragraph by
+// hand, never resizes the WINDOW, and a
 // resize is a different thing: the card is laid out once, the phrase rewraps
 // in place, and a bar drawn against the first layout stays where it was.
 // That is the shape of the fault Kenny met — a redaction beside its phrase
@@ -367,9 +312,8 @@ test(
 // is ALSO read at its break at each width, with narrowUntilItBreaks. Three
 // widths of the same single line would be one layout read three times.
 //
-// Three themes rather than 22: the sweep list, since a fault here is the
-// register's way of drawing a bar and the release level still reads all of
-// them. The two tests above keep their 22.
+// The sweep list of themes: three while building, all 22 at the release
+// level, since a fault here is the register's way of drawing a bar.
 //
 // Drilled 2026-09-16 in firefox: formal's redaction returned to the shape
 // scope-93 replaced — `background: none` on the mark and the bar back on an

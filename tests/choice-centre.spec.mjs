@@ -144,9 +144,10 @@ const openColumns = async (page) => {
     await expect(page.locator('#datatable-columns .kp-datatable__column-option').first()).toBeVisible();
 };
 
-// Kenny may browse zoomed: 1.25 is a desktop scaled by a quarter. Firefox
-// takes it as a preference at launch, chromium as a context's scale.
-const RATIOS = [1, 1.25];
+// Read at a ratio of 1. Until 2026-10-04 also at 1.25 (a desktop scaled by a
+// quarter); Kenny trimmed the second ratio (form v9, 2026-10-04, trim-ratios): the fault this
+// guards was the same at both ratios, so one reads it.
+const RATIOS = [1];
 
 /**
  * A page at `ratio`, in a browser of the project's engine launched for it.

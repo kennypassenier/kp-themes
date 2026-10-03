@@ -12,6 +12,12 @@
 //   release    every test, chromium and firefox — `npm run test:browser`,
 //              which stays Kenny's to authorise: this refuses to run it
 //              without `--go`, and `--go` is given only on his word
+//   changed    the release run of a minor or patch release [Kenny, form v9,
+//              2026-10-04: "Alleen wat veranderde"]: the tags of everything
+//              changed since the last release tag, plus every @sweep test,
+//              each sweep over all 22 themes. A major release, or a change
+//              the map cannot narrow, runs every test. Also only on his go
+//              (`--go`), like the release level it stands in for.
 //
 // Firefox alone for the first two because Kenny's own browser is a firefox
 // derivative and firefox has been the odd engine here more often than
@@ -32,7 +38,9 @@
 // `--dry-run` counts with `playwright test --list`, which starts no browser
 // and no server.
 
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import process from 'node:process';
 import { ROOT, changes, grepFor, select } from './tags.mjs';
 import { NARROW_THEMES } from '../tests/helpers/sweep-themes.mjs';
@@ -40,11 +48,23 @@ import { NARROW_THEMES } from '../tests/helpers/sweep-themes.mjs';
 /**
  * The environment a level runs its playwright in.
  *
- * @param {'building' | 'commit' | 'engines' | 'release'} level
+ * @param {'building' | 'commit' | 'engines' | 'release' | 'changed'} level
  * @returns {NodeJS.ProcessEnv}
  */
 export function envFor(level) {
-    return level === 'release' ? { ...process.env } : { ...process.env, KP_SWEEP_THEMES: NARROW_THEMES.join(',') };
+    return level === 'release' || level === 'changed' ? { ...process.env } : { ...process.env, KP_SWEEP_THEMES: NARROW_THEMES.join(',') };
+}
+
+/**
+ * The last release tag and whether the version in package.json is a major
+ * step past it: a major release runs every test.
+ *
+ * @returns {{ tag: string, major: boolean }}
+ */
+export function lastRelease() {
+    const tag = execFileSync('git', ['-C', ROOT, 'describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*'], { encoding: 'utf8' }).trim();
+    const version = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version;
+    return { tag, major: Number(version.split('.')[0]) > Number(tag.slice(1).split('.')[0]) };
 }
 
 /** @param {string[]} argv */
@@ -68,15 +88,15 @@ export function parse(argv) {
             while (argv[i + 1] && !argv[i + 1].startsWith('--')) args.files.push(argv[++i]);
         } else throw new Error(`unknown argument ${a}`);
     }
-    if (!['building', 'commit', 'engines', 'release'].includes(args.level))
-        throw new Error(`--level is building, commit, engines or release, not ${args.level}`);
+    if (!['building', 'commit', 'engines', 'release', 'changed'].includes(args.level))
+        throw new Error(`--level is building, commit, engines, release or changed, not ${args.level}`);
     return args;
 }
 
 /**
  * The playwright arguments for a level; null when there is nothing to run.
  *
- * @param {'building' | 'commit' | 'engines' | 'release'} level @param {string | null | ''} grep
+ * @param {'building' | 'commit' | 'engines' | 'release' | 'changed'} level @param {string | null | ''} grep
  */
 export function playwrightArgs(level, grep) {
     if (grep === '') return null;
@@ -110,8 +130,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(/** @type {Error} */ (e).message);
         process.exit(2);
     }
-    const level = /** @type {'building' | 'commit' | 'engines' | 'release'} */ (args.level);
-    const selection = select(changes({ files: args.files, commit: args.commit }));
+    let level = /** @type {'building' | 'commit' | 'engines' | 'release' | 'changed'} */ (args.level);
+    let base;
+    if (level === 'changed') {
+        const last = lastRelease();
+        console.log(`since ${last.tag}${last.major ? ': a major release, so every test' : ''}`);
+        if (last.major) level = 'release';
+        base = last.tag;
+    }
+    const selection = select(changes({ files: args.files, commit: args.commit, base }));
     for (const { file, why } of selection.reasons) console.log(`  ${file} → ${why}`);
     const grep = grepFor(selection, level);
     const pw = playwrightArgs(level, grep);
@@ -119,14 +146,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         `level ${level}: ${pw === null ? 'nothing to run' : grep === null ? `every test${level === 'release' || level === 'engines' ? ', both engines' : ', firefox'}` : `--grep ${grep}${level === 'engines' ? ', both engines' : ''}`}`,
     );
     const env = envFor(level);
-    if (level !== 'release') console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 22 at the release level) [scope-103]`);
+    if (level !== 'release' && level !== 'changed')
+        console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 22 at the release level) [scope-103]`);
     if (args.dryRun) {
         if (pw) console.log(`tests: ${count(pw, env)}`);
         process.exit(0);
     }
     if (pw === null) process.exit(0);
-    if (level === 'release' && !args.go) {
-        console.error('The release level is the whole suite in both engines, and that is Kenny’s to authorise. Pass --go only with his go.');
+    if ((level === 'release' || level === 'changed') && !args.go) {
+        console.error('The release levels run on Kenny’s go alone. Pass --go only with his go.');
         process.exit(2);
     }
     const run = spawnSync('npx', pw, { cwd: ROOT, env, stdio: ['ignore', 'inherit', 'inherit'] });

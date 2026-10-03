@@ -298,7 +298,10 @@ const HALO_OFF = `
     [data-halo-probe] .kp-nav__menu,
     dialog.kp-dialog:modal { box-shadow: none !important; }`;
 
-for (const ratio of [1, 2.222]) {
+// At Kenny's own zoom, 2.222, which the approved screenshots (taken at 1) do
+// not show. Until 2026-10-04 also at 1; Kenny trimmed the second ratio (form v9, 2026-10-04, trim-ratios): the fault this
+// guards was the same at both ratios, so one reads it.
+for (const ratio of [2.222]) {
     test.describe(`dark: the oxide halo at devicePixelRatio ${ratio} [scope-102]`, { tag: ['@theme:dark', '@component:overlays'] }, () => {
         test(`the dialog, the card, the popover and the navbar's dropdown each stand off the ground`, async ({ playwright }) => {
             test.setTimeout(180_000);
