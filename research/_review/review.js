@@ -114,6 +114,21 @@ function save() {
         /* a private window: the answer on the page still holds everything */
     }
 }
+
+// A later round reopens the pairs it redrew, and only those, once per browser:
+//   <script type="application/json" data-review-round>{"round": "<id>", "reopen": ["<theme>|<item>", …]}</script>
+// Every other verdict stands, and the dialog walks only what is open again.
+let round = null;
+try {
+    round = JSON.parse(document.querySelector('script[data-review-round]')?.textContent || 'null');
+} catch {
+    round = null;
+}
+if (round?.round && state.__round !== round.round) {
+    for (const key of round.reopen || []) delete state[key];
+    state.__round = round.round;
+    save();
+}
 const verdictOf = (pair) => state[pair.key]?.verdict;
 const noteOf = (pair) => state[pair.key]?.note || '';
 const isOpen = (pair) => !verdictOf(pair);
@@ -269,6 +284,8 @@ const refused = $('[data-rv-refused]');
 const approveButton = $('[data-rv-approve]');
 
 let index = 0;
+/** The pairs on screen: the open ones of the step, or all of it once it is judged. */
+let shownPairs = [];
 /** @type {[Comment, HTMLElement][]} */
 let moved = [];
 /** True while a theme loads: a key pressed then would judge a step not yet on screen. */
@@ -367,7 +384,8 @@ async function show(at) {
         if (step.theme) await switchTheme(step.theme);
         index = steps.indexOf(step);
         putBack();
-        for (const pair of step.pairs) {
+        shownPairs = stepOpen(step) ? step.pairs.filter(isOpen) : step.pairs;
+        for (const pair of shownPairs) {
             if (pair.item) {
                 const placeholder = document.createComment('review');
                 pair.item.section.replaceWith(placeholder);
@@ -379,8 +397,11 @@ async function show(at) {
             }
         }
         stage.scrollTop = 0;
-        list.replaceChildren(...step.pairs.map(rowFor));
-        $('[data-rv-position]').textContent = `Step ${index + 1}/${steps.length} · ${step.pairs.length} ${step.theme ? 'sections' : 'blocks'}`;
+        list.replaceChildren(...shownPairs.map(rowFor));
+        const judgedHere = step.pairs.length - shownPairs.length;
+        $('[data-rv-position]').textContent =
+            `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
+            (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
         $('[data-rv-title]').textContent = step.title;
         const badge = $('[data-rv-state]');
         const rejected = step.pairs.filter((p) => verdictOf(p) === 'rejected').length;
@@ -390,6 +411,9 @@ async function show(at) {
         updateApprove();
         if (!dialog.open) dialog.showModal();
         approveButton.focus();
+        // A demo can act when its section comes on screen (signature-dialog
+        // opens its dialog, so the entrance plays without a click).
+        for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
     } finally {
         busy = false;
     }
@@ -405,7 +429,6 @@ function nextOpenStep(from) {
 
 function approveStep() {
     if (busy) return;
-    const step = steps[index];
     const rows = [...list.querySelectorAll('.rv-row')];
     const missing = rows.filter((row) => row.querySelector('[data-rv-reject]').checked && !row.querySelector('[data-rv-row-note]').value.trim());
     if (missing.length) {
@@ -415,7 +438,7 @@ function approveStep() {
         return;
     }
     const at = new Date().toISOString();
-    for (const [i, pair] of step.pairs.entries()) {
+    for (const [i, pair] of shownPairs.entries()) {
         const rejected = rows[i].querySelector('[data-rv-reject]').checked;
         const note = rows[i].querySelector('[data-rv-row-note]').value.trim();
         state[pair.key] = { verdict: rejected ? 'rejected' : 'approved', note, at };

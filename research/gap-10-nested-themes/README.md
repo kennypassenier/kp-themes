@@ -1,5 +1,7 @@
 # gap-10 — a theme inside a theme
 
+**Decided (gap-10, closed in docs/MINI_ROUNDS.md).**
+
 **Measured 2026-09-20**, Firefox, `research/gap-10-nested-themes/demo.html`
 with the catalogue's own `deps.css` (the tokens, the components and all
 twenty-two registers in the package's cascade order).

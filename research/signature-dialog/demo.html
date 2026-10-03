@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="signature-dialog">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — how a dialog opens, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <!-- The drawings are the signature-elements round's own: the same files, so what is approved here is what was drafted there. -->
+        <link rel="stylesheet" href="../signature-elements/demo.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/light.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/dark.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/synthwave.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/pastel.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/terminal.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/forest.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/high-contrast.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/sepia.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/blueprint.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/solstice.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/brutalism.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/deco.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/phantom.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/shade-light.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/shade-dark.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/grotesk.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/lapis.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/nostromo.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/titanium.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="sx-page">
+            <header class="sx-intro">
+                <h1>How a dialog opens, per theme</h1>
+                <p>
+                    Kenny, 2026-10-03, on the signature-elements round: "was het de bedoeling dat die een bepaalde animatie ofzo toonden als de
+                    dialog opende? want dat heb ik niet kunnen zien? maak een aparte demo pagina hiervoor". There the dialog stood open in the page,
+                    so its entrance played once, on load. Here it opens when you ask: <b>Open the dialog</b> plays the theme's entrance over a
+                    screen-sized backdrop, <b>Slow motion</b> plays it at a quarter of its speed, and <b>Package today</b> shows what the package does
+                    now, for comparison. Close it with Escape, a button, or a click on the backdrop. In the review dialog each theme opens it once by itself.
+                </p>
+                <p class="sd-motion" data-sd-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so every entrance is switched off and the dialog simply appears. Turn it off in the
+                    system settings to judge the motion.
+                </p>
+            </header>
+
+            <section class="sx-sec sd-sec" data-review-item="dialog" data-review-title="Dialog open" aria-labelledby="h-dialog">
+                <div class="sx-sec__head">
+                    <h2 id="h-dialog">Dialog open</h2>
+                    <p class="sx-count">Theme: <b data-sd-theme>formal</b></p>
+                </div>
+                <div class="sx-ideas" data-review-look data-sd-ideas></div>
+                <p class="sd-idea" data-sd-idea></p>
+                <p class="sd-actions">
+                    <button type="button" class="kp-button kp-button--primary" data-sd-open="signature">Open the dialog</button>
+                    <button type="button" class="kp-button" data-sd-open="signature" data-sd-slow>Slow motion (¼ speed)</button>
+                    <button type="button" class="kp-button kp-button--ghost" data-sd-open="package">Package today</button>
+                </p>
+                <p class="sx-col__label">The opened dialog, standing still</p>
+                <div class="sx-sig sd-still">
+                    <div class="sx-backdrop">
+                        <div class="kp-dialog" role="presentation">
+                            <h3 class="kp-dialog__title">Close incident INC-4471?</h3>
+                            <p class="kp-dialog__description">The day shift sees your note first.</p>
+                            <div class="kp-dialog__actions">
+                                <span class="kp-button kp-button--secondary">Cancel</span><span class="kp-button kp-button--primary">Close incident</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- The overlay the buttons open: the signature's backdrop over the screen, the dialog inside it. -->
+        <template data-sd-template>
+            <div class="sd-overlay sx-backdrop" data-sd-overlay>
+                <dialog class="kp-dialog" open aria-labelledby="sd-t" aria-describedby="sd-d">
+                    <h2 class="kp-dialog__title" id="sd-t">Close incident INC-4471?</h2>
+                    <p class="kp-dialog__description" id="sd-d">The day shift sees your note first.</p>
+                    <div class="kp-dialog__actions">
+                        <button type="button" class="kp-button kp-button--secondary" data-sd-close>Cancel</button
+                        ><button type="button" class="kp-button kp-button--primary" data-sd-close>Close incident</button>
+                    </div>
+                </dialog>
+            </div>
+        </template>
+
+        <script type="module" src="demo.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+    </body>
+</html>

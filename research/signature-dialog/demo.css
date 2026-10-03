@@ -1,0 +1,61 @@
+/* How a dialog opens, per theme: the page's own furniture. The drawings
+   themselves come from ../signature-elements/. */
+
+[data-sd-ideas] {
+    display: none;
+}
+
+.sd-idea {
+    max-inline-size: 72ch;
+}
+
+.sd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.sd-still .sx-backdrop {
+    display: grid;
+    place-items: center;
+    min-block-size: 14rem;
+}
+
+.sd-still .kp-dialog {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    max-inline-size: min(28rem, 100%);
+    /* Standing still: the entrance is what the buttons are for. */
+    animation: none !important;
+}
+
+.sd-still .kp-dialog::before,
+.sd-still .kp-dialog::after {
+    animation: none !important;
+}
+
+/* The overlay fills the screen, or the review dialog's stage. */
+.sd-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    margin: 0;
+    background: hsl(from var(--foreground) h s l / 0.32);
+}
+
+.sd-overlay dialog.kp-dialog {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    max-inline-size: min(30rem, 100%);
+}
+
+.sd-motion {
+    padding: 0.5rem 0.75rem;
+    background: var(--warning);
+    color: var(--warning-foreground);
+}

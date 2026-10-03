@@ -1,5 +1,7 @@
 # Loading exactly what a page needs, per theme
 
+**Decided (scope-92: built as the per-theme loading of 7.0.0).**
+
 Measured 2026-09-13 on this checkout (6.0.0) with `node research/loading/run.mjs`; raw is `Buffer.byteLength`, gz is
 node's zlib at its default level, min is esbuild — the same minifier `dist/` is built with. The browser numbers are
 Firefox's own resource log, read by `verify.spec.mjs` on the demo page and its twin.

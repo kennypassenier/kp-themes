@@ -1,5 +1,7 @@
 # A VS Code colour theme from kp-themes
 
+**Decided (scope-124 and scope-125: the VS Code themes ship).**
+
 > Since kp-themes 8.0.0 the VS Code themes, their generator and the extension live in [kp-themes-vscode](https://github.com/kennypassenier/kp-themes-vscode). This page is the research record that led there.
 
 Kenny, 2026-09-17: "ik wil ook eens nadenken over een vs-code thema dat we uit onze thema's kunnen maken, maak daar indien mogelijk een demo van gebaseerd op cyberpunk".

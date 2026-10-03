@@ -1,5 +1,7 @@
 # The look-round: five measurements waiting on Kenny
 
+**Decided (2026-09-20: the look-round closed; Kenny: "ik heb die the look-round bekeken en dat is allemaal goedgekeurd").**
+
 Five rows in `docs/MINI_ROUNDS.md` name their moment as "the next time
 Kenny looks at it". They are not approvals — nothing is signed off — and
 together they take about five minutes. This page puts them in one place

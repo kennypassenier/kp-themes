@@ -1,5 +1,7 @@
 # Theming the Jellyfin web client with kp-themes
 
+**Decided (scope-124, with the other research demos of 2026-09-17).**
+
 Kenny, 2026-09-17 ("Eerst onderzoek"): can the package theme Jellyfin's web
 client, and how brittle would that be? Demo: [`demo.html`](demo.html).
 

@@ -1,5 +1,7 @@
 # gap-9 — the panel at the far edge
 
+**Decided (gap-9, closed in docs/MINI_ROUNDS.md).**
+
 `research/gap-9-far-edge/demo.html` puts the two side by side: the panel as
 it is today and the panel with the same transition the near edge already
 has. Both open from the right; the theme picker at the top changes the

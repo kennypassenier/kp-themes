@@ -152,6 +152,27 @@ export function decidedOutsideArchive(shell, readmes) {
 }
 
 /**
+ * The other way round: research topics the navigation files under "Archived
+ * research" while their README carries no "**Decided (" line near its top.
+ * On 2026-10-03 the signature-elements demo went straight into the archive
+ * while Kenny was still judging it, and the closed look-round still stood
+ * under "Research to look at" (Kenny: "wat een omgekeerde wereld"). A topic
+ * without a README is not judged here.
+ * @param {string} shell the text of catalogue/pages.js
+ * @param {Record<string, string>} readmes topic → README text
+ * @returns {string[]}
+ */
+export function archivedUndecided(shell, readmes) {
+    const archive = shell.split(/group:\s*'Archived research'/)[1] ?? '';
+    const topics = new Set([...archive.matchAll(/href:\s*'research\/([^/']+)\//g)].map((m) => m[1]));
+    return [...topics]
+        .filter((topic) => topic in readmes)
+        .filter((topic) => !/^\*\*Decided \(/m.test(readmes[topic].split('\n').slice(0, 12).join('\n')))
+        .map((topic) => `research/${topic} (no "**Decided (" line in its README)`)
+        .sort();
+}
+
+/**
  * The catalogue pages that carry blocks but are not listed as component pages
  * [scope-111]. Kenny judges through "Every component, one page", which gathers
  * the component pages only, so a block on an unlisted page can never be judged.
@@ -261,6 +282,13 @@ function main() {
             const readme = new URL(`research/${topic}/README.md`, root);
             if (existsSync(readme)) readmes[topic] = readFileSync(readme, 'utf8');
         }
+    }
+    const archivedOpen = archivedUndecided(shell, readmes);
+    if (archivedOpen.length) {
+        console.error(
+            `${archivedOpen.length} research topic(s) are under "Archived research" without a decision; list them under "Research to look at" until Kenny decides:\n  ` +
+                archivedOpen.join('\n  '),
+        );
     }
     const undecided = decidedOutsideArchive(shell, readmes);
     if (undecided.length) {
@@ -428,6 +456,7 @@ function main() {
     if (
         blockable.length ||
         undecided.length ||
+        archivedOpen.length ||
         unjudgeable.length ||
         dead.length ||
         invisible.length ||
