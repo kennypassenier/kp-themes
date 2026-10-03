@@ -40,6 +40,7 @@
                     package look in both columns. Motion uses only <code>transform</code>, <code>opacity</code> and <code>clip-path</code>, and stops
                     under reduced motion. The strip under a signature is the same animation frozen at four moments.
                 </p>
+                <p class="sx-drafted"><b>Designed so far:</b> <span data-sx-drafted>formal, cyberpunk, retro</span>. Themes marked “not designed yet” show the package look in both columns.</p>
                 <nav class="sx-themes" aria-label="Theme">
                     <a href="?theme=formal">formal</a><a href="?theme=cyberpunk">cyberpunk</a><a href="?theme=retro">retro</a
                     ><a href="?theme=terminal">terminal</a><a href="?theme=blueprint">blueprint</a><a href="?theme=deco">deco</a
@@ -520,25 +521,42 @@
         </main>
         <script>
             (function () {
-                var t = document.documentElement.getAttribute('data-theme');
-                document.querySelector('[data-sx-theme]').textContent = t;
-                document.querySelectorAll('.sx-themes a').forEach(function (a) {
-                    if (a.getAttribute('href') === '?theme=' + t) a.setAttribute('aria-current', 'page');
-                });
-                // One idea line per section: the drafted one for this theme, or a note that there is none.
-                document.querySelectorAll('.sx-ideas').forEach(function (box) {
-                    var hit = box.querySelector('[data-for="' + t + '"]');
-                    if (hit) hit.hidden = false;
-                    else {
-                        var p = document.createElement('p');
-                        p.className = 'sx-none';
-                        p.textContent = 'No signature drafted for ' + t + ' yet: both columns show the package look.';
-                        box.appendChild(p);
-                    }
-                    box.querySelectorAll('[data-for]').forEach(function (p) {
-                        if (p !== hit) p.hidden = true;
+                // Which themes carry a drafted signature, read from the page itself.
+                var drafted = Array.from(new Set(Array.from(document.querySelectorAll('.sx-ideas [data-for]')).map(function (p) {
+                    return p.getAttribute('data-for');
+                })));
+                var banner = document.querySelector('[data-sx-drafted]');
+                if (banner) banner.textContent = drafted.join(', ');
+                // Rendered again on every theme change, also one made through the
+                // review page's own theme control without a reload (Kenny,
+                // 2026-10-03: in the other themes he saw no difference, because
+                // the idea lines stayed those of the theme the page opened in).
+                function render() {
+                    var t = document.documentElement.getAttribute('data-theme');
+                    document.querySelector('[data-sx-theme]').textContent = t + (drafted.indexOf(t) < 0 ? ' (not designed yet)' : '');
+                    document.querySelectorAll('.sx-themes a').forEach(function (a) {
+                        if (a.getAttribute('href') === '?theme=' + t) a.setAttribute('aria-current', 'page');
+                        else a.removeAttribute('aria-current');
+                        a.classList.toggle('sx-undrafted', drafted.indexOf(a.getAttribute('href').replace('?theme=', '')) < 0);
                     });
-                });
+                    document.querySelectorAll('.sx-ideas').forEach(function (box) {
+                        box.querySelectorAll('.sx-none').forEach(function (n) {
+                            n.remove();
+                        });
+                        var hit = box.querySelector('[data-for="' + t + '"]');
+                        box.querySelectorAll('[data-for]').forEach(function (p) {
+                            p.hidden = p !== hit;
+                        });
+                        if (!hit) {
+                            var p = document.createElement('p');
+                            p.className = 'sx-none';
+                            p.textContent = 'Not designed yet for ' + t + ': both columns show the package look. Drafted: ' + drafted.join(', ') + '.';
+                            box.appendChild(p);
+                        }
+                    });
+                }
+                render();
+                new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
                 // Replay: swap every replayable stage for a fresh copy so its entrance runs again.
                 document.querySelector('[data-sx-replay]').addEventListener('click', function () {
                     document.querySelectorAll('.sx-replay').forEach(function (el) {

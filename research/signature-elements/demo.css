@@ -1732,3 +1732,15 @@
         padding: 0.5rem;
     }
 }
+
+/* A theme with no drafted signature says so in the theme list. */
+.sx-themes a.sx-undrafted {
+    opacity: 0.6;
+}
+.sx-themes a.sx-undrafted::after {
+    content: ' · not designed yet';
+    font-size: 0.85em;
+}
+.sx-drafted {
+    margin: 0.5rem 0;
+}
