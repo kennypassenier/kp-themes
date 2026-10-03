@@ -1,0 +1,361 @@
+/* high-contrast: the signature elements, written by the design pass.
+
+   Ink & Signal. Black on white at 21:1, one signal yellow that is only ever
+   a flat fill with black ink on it, and a vocabulary of line weight: 1px
+   for decoration, 2px for every control edge, 3px for structure. Two rules
+   of the theme shape every element here:
+     - Nothing loops, ever (the register has no infinite animation). So
+       even the spinner plays once and then stands as a readable busy sign;
+       its role="status" label says "Loading" whatever it shows.
+     - Panels do not float and do not fade. Every entrance is a wipe, the
+       register's own headline verb (--kp-headline-wipe), on a hard edge.
+   Selected things wear the signal: a ticked box, a chosen radio, the
+   current step and a hovered link are yellow under black ink. */
+
+[data-theme='high-contrast'] .sx-sig {
+    --sx-hc-wipe: var(--kp-headline-wipe, 550ms);
+    --sx-hc-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ── 1 · Spinner: three blocks, set once ─────────────────────────────────
+   The typographic sign for "more to come", drawn as three 2px-framed
+   blocks in one cell: two black, the last in the signal. They are set
+   down one at a time, once, and then stay. Same footprint as the ring. */
+
+[data-theme='high-contrast'] .sx-sig .kp-spinner {
+    --sx-dur: 900ms;
+    --sx-b: calc(var(--kp-spinner-size, 1.25rem) * 0.28);
+    border: 0;
+    border-radius: 0;
+    background:
+        linear-gradient(var(--foreground), var(--foreground)) left center / var(--sx-b) var(--sx-b) no-repeat,
+        linear-gradient(var(--foreground), var(--foreground)) center / var(--sx-b) var(--sx-b) no-repeat,
+        linear-gradient(var(--accent), var(--accent)) right center / calc(var(--sx-b) - 4px) calc(var(--sx-b) - 4px) no-repeat,
+        linear-gradient(var(--foreground), var(--foreground)) right center / var(--sx-b) var(--sx-b) no-repeat;
+    background-position:
+        left center,
+        center,
+        right 2px center,
+        right center;
+    animation: none;
+}
+
+/* ── 2 · Skeleton: a hatched form, waiting ───────────────────────────────
+   Each line is a 2px black frame with a 45° hatch in it, the mark a form
+   uses for "not yet". It is wiped in once, left to right, and stands. No
+   pulse, no grey. */
+
+[data-theme='high-contrast'] .sx-sig .kp-skeleton {
+    --sx-dur: var(--sx-hc-wipe);
+    block-size: 1rem;
+    border: 2px solid var(--foreground);
+    border-radius: 0.25rem;
+    background: repeating-linear-gradient(-45deg, var(--foreground) 0 1px, var(--background) 1px 7px);
+    animation: none;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.5rem;
+}
+
+/* ── 3 · Switch: a square slot that lights the signal ────────────────────
+   Nearly square (the theme's 0.25rem: an edge is information), 2px black
+   frame. Off: a white slot with a black-framed white block. On: the slot
+   fills signal yellow and the block goes solid black. One short move, no
+   ease to watch. */
+
+[data-theme='high-contrast'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0.25rem;
+    --kp-switch-thumb-radius: 0.125rem;
+    --kp-switch-border: 2px;
+    --kp-switch-inset: 0.1875rem;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-switch__input {
+    border: 2px solid var(--foreground);
+    background: var(--background);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-switch__input::before {
+    background: var(--background);
+    box-shadow: inset 0 0 0 2px var(--foreground);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--foreground);
+    background: var(--accent);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--foreground);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: the signal, inked ───────────────────────────
+   A 2px black box. Ticked: it fills the signal and a 3px black tick is
+   wiped in. The radio is a 2px black ring; chosen, a black dot sits in a
+   yellow ring inside it, so the choice is the signal too and a radio can
+   never be mistaken for a box. */
+
+[data-theme='high-contrast'] .sx-sig .kp-field__check {
+    --sx-dur: 160ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    margin: 0;
+    border: 2px solid var(--foreground);
+    border-radius: 0.2rem;
+    background: var(--background);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    background: var(--accent);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.7rem;
+    block-size: 0.36rem;
+    border-inline-start: 3px solid var(--foreground);
+    border-block-end: 3px solid var(--foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-field__check[type='radio']:checked {
+    background: radial-gradient(circle closest-side, var(--foreground) 0 55%, var(--accent) 56%);
+}
+
+/* ── 5 · Toast: wiped onto the page ──────────────────────────────────────
+   The register's 2px frame and a 3px structural rule down its leading
+   edge, in black. It is wiped in once from the leading edge; no float, no
+   fade. The wipe runs only during the entrance, so the close button's
+   focus ring is never clipped afterwards. */
+
+[data-theme='high-contrast'] .sx-sig .kp-toast {
+    --sx-dur: 300ms;
+    border-width: 2px;
+    border-inline-start-width: 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-toast:not([class*='kp-toast--']) {
+    border-color: var(--foreground);
+}
+
+/* ── 6 · Dialog: the same wipe, from the top ─────────────────────────────
+   The register's 3px frame, a 3px rule under the title, and a wipe from
+   the top edge down: a sheet put in front of you, not floated at you. */
+
+[data-theme='high-contrast'] .sx-sig .kp-dialog {
+    --sx-dur: 360ms;
+    border: 3px solid var(--foreground);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-dialog__title {
+    padding-block-end: 0.35rem;
+    border-block-end: 3px solid var(--foreground);
+}
+
+/* ── 7 · Tooltip: inverted, bold ─────────────────────────────────────────
+   The one inverted surface: white bold words on black, a pointer of the
+   same black, square corners. It appears whole after the hover delay; a
+   tooltip that fades is a tooltip read late. */
+
+[data-theme='high-contrast'] .sx-sig .kp-tooltip {
+    --sx-dur: 140ms;
+    margin-block-start: 0.35rem;
+    padding: 0.3rem 0.6rem;
+    border: 2px solid var(--foreground);
+    border-radius: 0.25rem;
+    background: var(--foreground);
+    color: var(--background);
+    font-weight: 700;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 0.85rem;
+    border: 6px solid transparent;
+    border-block-end-color: var(--foreground);
+}
+
+/* ── 8 · Wizard steps: blocks on a 2px line ──────────────────────────────
+   Square markers joined by 2px rules. Done: solid black with a white
+   tick. Current: the signal block with a 3px black frame, its name bold
+   and underlined 3px, so the state is never colour alone. */
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+    color: var(--foreground);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1rem;
+    block-size: 2px;
+    margin-inline: 0.15rem 0.45rem;
+    background: var(--foreground);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 2px solid var(--foreground);
+    border-radius: 0.2rem;
+    background: var(--background);
+    color: var(--foreground);
+    font-weight: 700;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    font-weight: 700;
+    text-decoration: underline 3px;
+    text-underline-offset: 0.25em;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-width: 3px;
+    border-color: var(--foreground);
+    background: var(--accent);
+    color: var(--foreground);
+}
+
+/* ── 9 · Empty state: a framed notice ────────────────────────────────────
+   Solid, not dashed (a dashed edge is a soft edge), 2px, with a 3px rule
+   across the top. The title is large and bold, and the body is full
+   black: no grey text anywhere. */
+
+[data-theme='high-contrast'] .sx-sig .kp-empty {
+    padding: 1.25rem 1.25rem 1.1rem;
+    border: 2px solid var(--foreground);
+    border-block-start-width: 0.5rem;
+    border-radius: 0.25rem;
+    color: var(--foreground);
+    text-align: start;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-empty__title {
+    margin-block-end: 0.35rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the highlighter ────────────────────────────────────
+   Always underlined, 2px. Under the pointer the signal lands behind the
+   words as a flat fill and the underline thickens to 3px: the convention
+   every accessibility guide reaches for. Paint only. */
+
+[data-theme='high-contrast'] .sx-sig .sx-links a {
+    font-weight: 700;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='high-contrast'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background: var(--accent);
+    color: var(--foreground);
+    text-decoration-thickness: 3px;
+}
+
+/* ── Motion: every one plays once ─────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='high-contrast'] .sx-sig .kp-spinner {
+        animation: sx-hc-set var(--sx-dur) steps(3, jump-start) both;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-skeleton {
+        animation: sx-hc-wipe-x var(--sx-dur) var(--sx-hc-ease) both;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-skeleton:nth-child(2) {
+        animation-delay: 90ms;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-skeleton:nth-child(3) {
+        animation-delay: 180ms;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-switch__input::before {
+        transition: transform 120ms var(--sx-hc-ease);
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-hc-wipe-x var(--sx-dur) var(--sx-hc-ease) both;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-toast {
+        animation: sx-hc-wipe-x var(--sx-dur) var(--sx-hc-ease) backwards;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-dialog {
+        animation: sx-hc-wipe-y var(--sx-dur) var(--sx-hc-ease) backwards;
+    }
+
+    [data-theme='high-contrast'] .sx-sig .kp-tooltip {
+        animation: sx-hc-hold var(--sx-dur) step-end;
+    }
+}
+
+@keyframes sx-hc-set {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-hc-wipe-x {
+    from {
+        clip-path: inset(-4px 100% -4px -4px);
+    }
+
+    to {
+        clip-path: inset(-4px -4px -4px -4px);
+    }
+}
+
+@keyframes sx-hc-wipe-y {
+    from {
+        clip-path: inset(-4px -4px 100% -4px);
+    }
+
+    to {
+        clip-path: inset(-4px);
+    }
+}
+
+@keyframes sx-hc-hold {
+    0%,
+    100% {
+        opacity: 0;
+    }
+}

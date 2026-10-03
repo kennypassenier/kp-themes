@@ -1,0 +1,482 @@
+/* synthwave: the signature elements, written by the design pass.
+
+   Outrun Horizon. Cyberpunk is diagonal and day; synthwave is horizontal
+   and night: the void, a tape-grey card, hot pink that signals, cyan that
+   labels, laser yellow that warns, lavender text. A neon element has a
+   near-white core and its colour in the glow (--kp-tube-pink/cyan), and a
+   glow never carries contrast. Every cut is horizontal. Three motifs:
+     - the horizon: a cyan line things rise over, as the sun does;
+     - the sun: the register's ramp (--kp-sun-top to --kp-sun-bottom) with
+       static horizontal stripe cuts, which never scroll;
+     - the tube switching on: two short dips, once (1.8/s, in DI5's table).
+   Nothing flickers, no glow alternates, no scanline scrolls. */
+
+[data-theme='synthwave'] .sx-sig {
+    --sx-sw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --sx-sw-sun: linear-gradient(var(--kp-sun-top), var(--kp-sun-bottom));
+    /* The sun's stripe cuts: opaque, then horizontal gaps that widen
+       towards the horizon. Used as a mask, so only their alpha counts. */
+    --sx-sw-cuts: linear-gradient(
+        to bottom,
+        var(--foreground) 0 52%,
+        transparent 52% 58%,
+        var(--foreground) 58% 68%,
+        transparent 68% 76%,
+        var(--foreground) 76% 84%,
+        transparent 84% 93%,
+        var(--foreground) 93%
+    );
+}
+
+/* ── 1 · Spinner: a sunset in one cell ───────────────────────────────────
+   The striped sun over a cyan horizon, slowly sinking behind it and
+   rising again: a transform, never a change of light. Still, it is the
+   sun half-risen, which is the theme's own picture. */
+
+[data-theme='synthwave'] .sx-sig .kp-spinner {
+    --sx-dur: 2800ms;
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 2px;
+    background: none;
+    animation: none;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset-inline: 8%;
+    inset-block-start: 10%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--sx-sw-sun);
+    -webkit-mask: var(--sx-sw-cuts);
+    mask: var(--sx-sw-cuts);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block: 66% 0;
+    border-block-start: 1.5px solid var(--accent);
+    background: var(--background);
+    box-shadow: 0 -1px 4px hsl(from var(--accent) h s l / 0.6);
+}
+
+/* ── 2 · Skeleton: tape on the shelf ─────────────────────────────────────
+   Tape-grey slots with the '84 stripe (pink into cyan) along their foot.
+   A soft pink sheen passes over each one left to right, as light runs
+   along chrome; it changes no luminance faster than a slow breath. */
+
+[data-theme='synthwave'] .sx-sig .kp-skeleton {
+    --sx-dur: 2600ms;
+    position: relative;
+    overflow: hidden;
+    block-size: 0.9rem;
+    border-radius: 2px;
+    background:
+        var(--kp-stripe) left bottom / 100% 2px no-repeat,
+        var(--card);
+    animation: none;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.55rem;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: 0 2px;
+    inset-inline-start: 0;
+    inline-size: 40%;
+    background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.22), transparent);
+    transform: translateX(-100%);
+}
+
+/* ── 3 · Switch: a neon tube in a tape slot ──────────────────────────────
+   Off: a dark slot with a lavender pip. On: the slot carries the '84
+   stripe and the thumb becomes a neon point, near-white core and pink
+   glow, sliding along the horizontal. */
+
+[data-theme='synthwave'] .sx-sig .kp-switch {
+    --kp-switch-radius: 2px;
+    --kp-switch-thumb-radius: 1px;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-switch__input {
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.55), hsl(from var(--accent) h s l / 0.55)), var(--card);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--kp-core);
+    box-shadow: var(--kp-tube-pink);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: tubes switching on ──────────────────────────
+   Ticked, the box becomes a pink plate with a void tick and its glow
+   comes on with two dips, once, like a tube striking. The chosen radio is
+   a neon point, near-white core in a pink halo. */
+
+[data-theme='synthwave'] .sx-sig .kp-field__check {
+    --sx-dur: 620ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    background: var(--card);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+    box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.6);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    border-radius: 50%;
+    background: var(--kp-core);
+    box-shadow: var(--kp-tube-pink);
+}
+
+/* ── 5 · Toast: over the horizon ─────────────────────────────────────────
+   The tape card with the '84 stripe along its top. Its horizon line
+   draws out from the centre, and the toast rises over it, revealed from
+   its foot upwards, as the sun comes up. */
+
+[data-theme='synthwave'] .sx-sig .kp-toast {
+    --sx-dur: 620ms;
+    position: relative;
+    border-radius: 2px;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: -1px;
+    block-size: 2px;
+    background: var(--kp-stripe);
+    pointer-events: none;
+}
+
+/* ── 6 · Dialog: sunrise ─────────────────────────────────────────────────
+   A cyan horizon is drawn across the backdrop first, from the centre
+   out; then the dialog rises over it, uncovered from its foot upwards,
+   on the register's own wipe length. The '84 stripe runs along its top. */
+
+[data-theme='synthwave'] .sx-sig .sx-backdrop {
+    position: relative;
+    background:
+        linear-gradient(to bottom, transparent calc(50% - 1px), hsl(from var(--accent) h s l / 0.5) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+        hsl(from var(--sidebar-background) h s l / 0.7);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-dialog {
+    --sx-dur: var(--kp-wipe, 720ms);
+    border-radius: 2px;
+    box-shadow:
+        inset 0 2px 0 var(--primary),
+        0 0 24px hsl(from var(--primary) h s l / 0.25);
+}
+
+/* ── 7 · Tooltip: the VCR's on-screen display ────────────────────────────
+   The OSD face, uppercase, cyan with a cyan tube glow (cyan labels), on
+   the void with a pink hairline. It is printed left to right in eight
+   steps, as a recorder's display writes. */
+
+[data-theme='synthwave'] .sx-sig .kp-tooltip {
+    --sx-dur: 280ms;
+    margin-inline-start: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--kp-hairline);
+    border-radius: 2px;
+    background: var(--background);
+    color: var(--accent);
+    box-shadow: none;
+    font-family: var(--kp-osd);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-shadow: var(--kp-tube-cyan);
+    text-transform: uppercase;
+}
+
+/* ── 8 · Wizard steps: a road to the sun ─────────────────────────────────
+   Steps strung on the '84 stripe. Done steps are cyan rings with a cyan
+   glow; the current step's marker is the striped sun itself with void
+   figures, its name in the text pink. */
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.25rem;
+    block-size: 2px;
+    margin-inline: 0.2rem 0.45rem;
+    background: var(--kp-stripe);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--muted-foreground);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    color: var(--foreground);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--kp-pink-text);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border: 0;
+    background:
+        linear-gradient(to bottom, transparent 62%, hsl(from var(--sidebar-background) h s l / 0.55) 62% 68%, transparent 68% 78%, hsl(from var(--sidebar-background) h s l / 0.55) 78% 84%, transparent 84%),
+        var(--sx-sw-sun);
+    box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
+    color: var(--sidebar-background);
+    font-weight: 700;
+}
+
+/* ── 9 · Empty state: a horizon with nothing on the road ─────────────────
+   No box: the striped sun half-set on a cyan horizon, and the title in
+   lavender under it. The road is empty. */
+
+[data-theme='synthwave'] .sx-sig .kp-empty {
+    position: relative;
+    padding: 3.75rem 1.5rem 1.25rem;
+    border: 0;
+    border-radius: 2px;
+}
+
+[data-theme='synthwave'] .sx-sig .kp-empty::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.6rem;
+    inset-inline-start: calc(50% - 1.6rem);
+    inline-size: 3.2rem;
+    block-size: 3.2rem;
+    border-radius: 50%;
+    background: var(--sx-sw-sun);
+    -webkit-mask: linear-gradient(to bottom, var(--foreground) 0 50%, transparent 50% 56%, var(--foreground) 56% 63%, transparent 63% 70%, var(--foreground) 70% 75%, transparent 75%);
+    mask: linear-gradient(to bottom, var(--foreground) 0 50%, transparent 50% 56%, var(--foreground) 56% 63%, transparent 63% 70%, var(--foreground) 70% 75%, transparent 75%);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-empty::after {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(0.6rem + 2.4rem);
+    inset-inline: 15%;
+    block-size: 1.5px;
+    background: linear-gradient(to right, transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+    box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+}
+
+[data-theme='synthwave'] .sx-sig .kp-empty__title {
+    color: var(--foreground);
+    letter-spacing: 0.04em;
+}
+
+/* ── 10 · Link hover: a horizon underline ────────────────────────────────
+   The '84 stripe as the underline, pink into cyan, at rest. Under the
+   pointer it thickens and the word takes the pink tube glow; the core
+   stays near-white text, so the glow never carries the contrast. The
+   stripe is a background, so forced colours falls back to an underline. */
+
+[data-theme='synthwave'] .sx-sig .sx-links a {
+    padding-block-end: 2px;
+    text-decoration: none;
+    background: var(--kp-stripe) left bottom / 100% 2px no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='synthwave'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background-size: 100% 3px;
+    text-shadow: var(--kp-tube-pink);
+}
+
+@media (forced-colors: active) {
+    [data-theme='synthwave'] .sx-sig .sx-links a {
+        text-decoration: underline;
+    }
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='synthwave'] .sx-sig .kp-spinner::before {
+        animation: sx-sw-set var(--sx-dur) ease-in-out infinite;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-skeleton::after {
+        animation: sx-sw-sheen var(--sx-dur) var(--sx-sw-ease) infinite;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-skeleton:nth-child(2)::after {
+        animation-delay: 220ms;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-skeleton:nth-child(3)::after {
+        animation-delay: 440ms;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-switch__input::before {
+        transition: transform 260ms var(--sx-sw-ease);
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-field__check:checked {
+        animation: sx-sw-tube var(--sx-dur) linear both;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-toast {
+        animation: sx-sw-rise var(--sx-dur) var(--sx-sw-ease) backwards;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-toast::before {
+        animation: sx-sw-horizon calc(var(--sx-dur) * 0.6) var(--sx-sw-ease) both;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-dialog {
+        animation: sx-sw-rise var(--sx-dur) var(--sx-sw-ease) 160ms backwards;
+    }
+
+    [data-theme='synthwave'] .sx-sig .kp-tooltip {
+        animation: sx-sw-osd var(--sx-dur) steps(8, jump-end) backwards;
+    }
+}
+
+@keyframes sx-sw-set {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(45%);
+    }
+}
+
+@keyframes sx-sw-sheen {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    65%,
+    100% {
+        transform: translateX(260%);
+    }
+}
+
+/* Two dips, once: the tube strikes, falters twice, holds. */
+@keyframes sx-sw-tube {
+    0% {
+        opacity: 0.3;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0.55;
+    }
+
+    60% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 0.75;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes sx-sw-rise {
+    from {
+        transform: translateY(8px);
+        clip-path: inset(100% -2rem -2rem -2rem);
+    }
+
+    to {
+        transform: none;
+        clip-path: inset(-2rem);
+    }
+}
+
+@keyframes sx-sw-horizon {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes sx-sw-osd {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}

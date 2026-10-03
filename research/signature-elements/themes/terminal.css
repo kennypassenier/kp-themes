@@ -1,0 +1,391 @@
+/* terminal: the signature elements, written by the design pass.
+
+   A phosphor CRT that accepts a terminal's constraints: one green hue,
+   everything monospace, square character cells (--radius: 0 is a cell, not
+   a style), a faint bloom on what is lit (--kp-bloom), and a raster that
+   never moves. So every element here is something a terminal can actually
+   draw:
+     - characters: ASCII spinners, [x] and (*), [1] > [2], a > prompt;
+     - reverse video: the one way a terminal highlights;
+     - printing: text appears left to right or row by row, in steps,
+       never faded.
+   The only loops are the sweep and the caret, as the theme allows; the
+   caret blinks five times and then stays lit (WCAG 2.2.2). No flicker. */
+
+[data-theme='terminal'] .sx-sig {
+    --sx-tm-bloom: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));
+}
+
+/* ── 1 · Spinner: | / - \ ────────────────────────────────────────────────
+   The ASCII spinner every shell has, in one character cell: four glyphs
+   stacked in the cell, stepped through by a transform. Still, it is a
+   single bar, which reads as a busy cell beside its label. */
+
+[data-theme='terminal'] .sx-sig .kp-spinner {
+    --sx-dur: 640ms;
+    inline-size: 1ch;
+    block-size: 1.2em;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    color: var(--primary);
+    font: 700 var(--kp-spinner-size, 1.25rem) / 1.2 var(--theme-font-mono);
+    text-align: center;
+    text-shadow: var(--sx-tm-bloom);
+    vertical-align: middle;
+    animation: none;
+}
+
+[data-theme='terminal'] .sx-sig .kp-spinner::before {
+    content: '|\A/\A-\A\\';
+    display: block;
+    white-space: pre;
+}
+
+/* ── 2 · Skeleton: cells being written ───────────────────────────────────
+   Each line is a row of dim character cells (a 1ch pitch with a hair of
+   gap, as block glyphs leave). The row is printed cell by cell, holds,
+   and is printed again: the sweep, one of the two loops the theme allows.
+   Still, the full dim row stands. */
+
+[data-theme='terminal'] .sx-sig .kp-skeleton {
+    --sx-dur: 2200ms;
+    block-size: 1em;
+    border-radius: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        hsl(from var(--primary) h s l / 0.3) 0 calc(0.6em - 1px),
+        transparent calc(0.6em - 1px) 0.6em
+    );
+    font-family: var(--theme-font-mono);
+    animation: none;
+}
+
+[data-theme='terminal'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.35em;
+}
+
+/* ── 3 · Switch: [█   ] ───────────────────────────────────────────────────
+   A bracketed cell drawn with the brackets' corners, and a block cursor
+   that steps across it in four character moves. Off it is a dim block at
+   the left; on it is the lit block at the right. */
+
+[data-theme='terminal'] .sx-sig .kp-switch {
+    --kp-switch-border: 0px;
+    --kp-switch-inset: 4px;
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input,
+[data-theme='terminal'] .sx-sig .kp-switch__input:checked {
+    border: 0;
+    background:
+        linear-gradient(var(--primary), var(--primary)) left / 2px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right / 2px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) left top / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) left bottom / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right top / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right bottom / 7px 2px no-repeat;
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input::before {
+    inline-size: 0.6rem;
+    background: hsl(from var(--primary) h s l / 0.3);
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: 4px;
+    background: var(--primary);
+    box-shadow: var(--sx-tm-bloom);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - 8px - 0.6rem));
+}
+
+/* ── 4 · Checkbox and radio: [x] and (*) ─────────────────────────────────
+   Text controls, the brackets of a curses form. They stay native inputs
+   (appearance: none keeps role, state and keyboard); the label is part of
+   the target, which is what makes it 24px and more. */
+
+[data-theme='terminal'] .sx-sig .kp-field__check {
+    appearance: none;
+    display: inline-block;
+    inline-size: 3ch;
+    block-size: 1.25em;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--primary);
+    font: 1rem / 1.25 var(--theme-font-mono);
+    white-space: pre;
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check::before {
+    display: inline;
+    inline-size: auto;
+    block-size: auto;
+    border: 0;
+    background: none;
+    transform: none;
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']::before {
+    content: '[ ]';
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '[x]';
+    text-shadow: var(--sx-tm-bloom);
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']::before {
+    content: '( )';
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '(*)';
+    text-shadow: var(--sx-tm-bloom);
+}
+
+/* ── 5 · Toast: printed behind a prompt ──────────────────────────────────
+   A > prompt, then the line typed out left to right in character steps.
+   Printed, not animated in: nothing fades. */
+
+[data-theme='terminal'] .sx-sig .kp-toast {
+    --sx-dur: 640ms;
+    border-radius: 0;
+    font-family: var(--theme-font-mono);
+}
+
+[data-theme='terminal'] .sx-sig .kp-toast__body::before {
+    content: '> ';
+    color: var(--primary);
+}
+
+/* ── 6 · Dialog: a curses window ─────────────────────────────────────────
+   Framed with a double rule, as box-drawing characters frame a window
+   (the ═ and ║ of a text UI), its title lit with the bloom. The screen
+   draws it row by row, top to bottom, in six steps. */
+
+[data-theme='terminal'] .sx-sig .kp-dialog {
+    --sx-dur: 300ms;
+    border: 3px double var(--primary);
+    border-radius: 0;
+}
+
+[data-theme='terminal'] .sx-sig .kp-dialog__title {
+    color: var(--primary);
+    text-shadow: var(--sx-tm-bloom);
+}
+
+/* ── 7 · Tooltip: reverse video ──────────────────────────────────────────
+   The way a terminal highlights anything: green ground, near-black
+   characters, like the status line of a pager. Typed in left to right. */
+
+[data-theme='terminal'] .sx-sig .kp-tooltip {
+    --sx-dur: 240ms;
+    margin-inline-start: 0;
+    padding: 0.1rem 0.6ch;
+    border: 0;
+    border-radius: 0;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: var(--sx-tm-bloom);
+    font-family: var(--theme-font-mono);
+    font-size: 0.875rem;
+}
+
+/* ── 8 · Wizard steps: [1] > [2] > [3] ───────────────────────────────────
+   Bracketed numbers joined by > separators. Done steps print [x]; the
+   current step is in reverse video, so the state is a glyph and a
+   highlight, never colour alone. */
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps {
+    gap: 0.4rem 0;
+    font-family: var(--theme-font-mono);
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li {
+    gap: 0.6ch;
+    padding-inline: 0.5ch;
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li::before {
+    content: '[' counter(kp-step) ']';
+    inline-size: auto;
+    block-size: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '>';
+    margin-inline-start: 1ch;
+    color: var(--muted-foreground);
+    font-weight: 400;
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    color: var(--primary);
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: '[x]';
+    border: 0;
+    color: inherit;
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: var(--sx-tm-bloom);
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border: 0;
+    background: none;
+    color: inherit;
+}
+
+[data-theme='terminal'] .sx-sig .kp-wizard__steps li[data-state='current']::after {
+    color: var(--primary-foreground);
+}
+
+/* ── 9 · Empty state: an empty prompt ────────────────────────────────────
+   A > prompt before the title and a block cursor after it, which blinks
+   five times and then stays lit: nothing blinks for more than five
+   seconds, and once a second is far below DI5. */
+
+[data-theme='terminal'] .sx-sig .kp-empty {
+    padding: 0.75rem 0;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--theme-font-mono);
+    text-align: start;
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title::before {
+    content: '> ';
+    color: var(--primary);
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title::after {
+    content: '';
+    display: inline-block;
+    inline-size: 0.6em;
+    block-size: 1.1em;
+    margin-inline-start: 0.3ch;
+    vertical-align: text-bottom;
+    background: var(--primary);
+    box-shadow: var(--sx-tm-bloom);
+}
+
+/* ── 10 · Link hover: a terminal hyperlink ───────────────────────────────
+   At rest the dashed underline a terminal draws under a hyperlink it
+   knows about; under the pointer the link turns to reverse video. Paint
+   only. Forced colours keeps the underline when the ground drops. */
+
+[data-theme='terminal'] .sx-sig .sx-links a {
+    text-decoration-style: dashed;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='terminal'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    text-decoration-style: solid;
+}
+
+/* ── Motion: printed in steps ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='terminal'] .sx-sig .kp-spinner::before {
+        animation: sx-tm-ascii var(--sx-dur) steps(4, jump-end) infinite;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-skeleton {
+        animation: sx-tm-write var(--sx-dur) steps(24, jump-end) infinite;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-skeleton:nth-child(2) {
+        animation-delay: 300ms;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-skeleton:nth-child(3) {
+        animation-delay: 600ms;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-switch__input::before {
+        transition: transform 200ms steps(4, jump-end);
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-toast {
+        animation: sx-tm-type var(--sx-dur) steps(20, jump-end) backwards;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-dialog {
+        animation: sx-tm-rows var(--sx-dur) steps(6, jump-end) backwards;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-tooltip {
+        animation: sx-tm-type var(--sx-dur) steps(12, jump-end) backwards;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-empty__title::after {
+        animation: sx-tm-blink 1000ms step-end 5;
+    }
+}
+
+@keyframes sx-tm-ascii {
+    to {
+        transform: translateY(-4.8em);
+    }
+}
+
+@keyframes sx-tm-write {
+    0% {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    70%,
+    100% {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-tm-type {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-tm-rows {
+    from {
+        clip-path: inset(0 0 100% 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-tm-blink {
+    50% {
+        opacity: 0;
+    }
+}

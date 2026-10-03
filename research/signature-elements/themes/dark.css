@@ -1,0 +1,538 @@
+/* dark: the signature elements, written by the design pass.
+
+   A spectral instrument. Near-black ground, near-white ink, a near-white
+   primary that is a plate and not a hue, and one mechanism: the oxide film
+   (--kp-iris, a conic gradient through --chart-1..4 whose angle follows the
+   pointer). Colour lives only in the film and in meaning. Corners are cut,
+   never rounded. Three verbs carry every element:
+     - resolve: the headline's own move, two of the film's wavelengths out
+       of register converging into one image (skeleton, tick, radio);
+     - develop: a panel arrives with the film washed over it, and the film
+       clears to the near-black plate, as an anodised part comes out of the
+       bath (toast, dialog, tooltip);
+     - brackets that close on a label (switch, steps, empty state).
+   Nothing moves that the reader did not move, except the spinner, whose
+   job is to: it is the film's angle turning, one way only. */
+
+[data-theme='dark'] .sx-sig {
+    --sx-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    --sx-dark-c: 0.35rem;
+    --sx-dark-cut: polygon(
+        0 0,
+        calc(100% - var(--sx-dark-c)) 0,
+        100% var(--sx-dark-c),
+        100% 100%,
+        var(--sx-dark-c) 100%,
+        0 calc(100% - var(--sx-dark-c))
+    );
+    /* Four corner brackets in one ink, as background layers. */
+    --sx-dark-bk: var(--border-strong);
+    --sx-dark-arm: 0.6rem;
+    --sx-dark-brackets:
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) left top / var(--sx-dark-arm) 1px no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) left top / 1px var(--sx-dark-arm) no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) right top / var(--sx-dark-arm) 1px no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) right top / 1px var(--sx-dark-arm) no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) left bottom / var(--sx-dark-arm) 1px no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) left bottom / 1px var(--sx-dark-arm) no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) right bottom / var(--sx-dark-arm) 1px no-repeat,
+        linear-gradient(var(--sx-dark-bk), var(--sx-dark-bk)) right bottom / 1px var(--sx-dark-arm) no-repeat;
+}
+
+/* ── 1 · Spinner: the film's angle, turning ──────────────────────────────
+   A 3px ring cut out of the oxide film; it turns, so every wavelength
+   passes the top in turn. Under reduced motion it is the same ring, still:
+   a film edge, readable as busy by its label. */
+
+[data-theme='dark'] .sx-sig .kp-spinner {
+    --sx-dur: 1400ms;
+    position: relative;
+    border: 0;
+    border-radius: 50%;
+    background: var(--kp-iris);
+    -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
+    mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
+    animation: none;
+}
+
+/* ── 2 · Skeleton: resolving into register ───────────────────────────────
+   Cut slots on the accent plate with a film line along their foot (the
+   field's underline). Each arrives once as two wavelengths out of
+   register, chart-1 and chart-3, that converge and clear; then it stands. */
+
+[data-theme='dark'] .sx-sig .kp-skeleton {
+    --sx-dur: 700ms;
+    position: relative;
+    block-size: 0.9rem;
+    border-radius: 0;
+    background:
+        linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
+        var(--kp-iris);
+    clip-path: var(--sx-dark-cut);
+    animation: none;
+}
+
+[data-theme='dark'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.6rem;
+}
+
+[data-theme='dark'] .sx-sig .kp-skeleton::before,
+[data-theme='dark'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+}
+
+[data-theme='dark'] .sx-sig .kp-skeleton::before {
+    background: hsl(from var(--chart-1) h s l / 0.55);
+}
+
+[data-theme='dark'] .sx-sig .kp-skeleton::after {
+    background: hsl(from var(--chart-3) h s l / 0.55);
+}
+
+/* ── 3 · Switch: a machined slot that closes its brackets ───────────────
+   Off: the card slot with four corner brackets and a muted, cut thumb.
+   On: the near-white plate slides across (transform, on the settle curve)
+   and the film runs along the slot's foot. */
+
+[data-theme='dark'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='dark'] .sx-sig .kp-switch__input {
+    --sx-dark-bk: var(--muted-foreground);
+    --sx-dark-arm: 0.4rem;
+    border: 1px solid var(--border-strong);
+    background: var(--sx-dark-brackets), var(--card);
+}
+
+[data-theme='dark'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+
+[data-theme='dark'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background:
+        linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+        var(--kp-iris);
+}
+
+[data-theme='dark'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--primary);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: two wavelengths, one mark ───────────────────
+   On, the box becomes the near-white plate with a film foot, and its tick
+   resolves: a chart-3 ghost slides in from one side as the tick slides in
+   from the other, and the ghost clears. The radio stays round (a radio is
+   round by meaning, not by mood) and its dot resolves the same way. */
+
+[data-theme='dark'] .sx-sig .kp-field__check {
+    --sx-dur: 320ms;
+    appearance: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.1rem;
+    background: var(--card);
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check::before,
+[data-theme='dark'] .sx-sig .kp-field__check::after {
+    grid-area: 1 / 1;
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background:
+        linear-gradient(var(--primary), var(--primary)) top / 100% calc(100% - 2px) no-repeat,
+        var(--kp-iris);
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='checkbox']:checked::before,
+[data-theme='dark'] .sx-sig .kp-field__check[type='checkbox']:checked::after {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-radius: 0;
+    background: none;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='checkbox']:checked::after {
+    border-color: var(--chart-3);
+    opacity: 0;
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+    background: var(--card);
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked::before,
+[data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked::after {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+[data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked::after {
+    background: var(--chart-1);
+    opacity: 0;
+}
+
+/* ── 5 · Toast: developed ────────────────────────────────────────────────
+   The plain toast's edge becomes the film (the panels' gradient border).
+   It arrives with the film washed over the whole plate, which clears to
+   near-black as the toast settles 6px. */
+
+[data-theme='dark'] .sx-sig .kp-toast {
+    --sx-dur: 520ms;
+    position: relative;
+}
+
+[data-theme='dark'] .sx-sig .kp-toast:not([class*='kp-toast--']) {
+    border: 1px solid transparent;
+    background:
+        linear-gradient(var(--card), var(--card)) padding-box,
+        var(--kp-iris) border-box;
+}
+
+[data-theme='dark'] .sx-sig .kp-toast::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: var(--kp-iris);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── 6 · Dialog: developed, at full size ─────────────────────────────────
+   The register's cut plate and film edge stay. The film floods the plate
+   and clears while the dialog settles from 2% large. */
+
+[data-theme='dark'] .sx-sig .kp-dialog {
+    --sx-dur: 600ms;
+}
+
+[data-theme='dark'] .sx-sig .kp-dialog::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--kp-iris);
+    clip-path: var(--sx-dark-cut);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── 7 · Tooltip: a cut label, its brackets closing ──────────────────────
+   Two opposite corners cut, the film as its edge, mono figures. It opens
+   from its centre outwards, the two cut edges moving apart like brackets
+   letting the label out. Never focusable, so the clip is allowed. */
+
+[data-theme='dark'] .sx-sig .kp-tooltip {
+    --sx-dur: 260ms;
+    margin-inline-start: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0;
+    background:
+        linear-gradient(var(--card), var(--card)) padding-box,
+        var(--kp-iris) border-box;
+    box-shadow: none;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+}
+
+/* ── 8 · Wizard steps: cut plates, the current one bracketed ────────────
+   Numbers on cut plates. Done plates carry the film behind a near-black
+   tick: what is finished has been through the bath. The current step is
+   the near-white plate, and four brackets close round its whole label. */
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0.9rem;
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li {
+    gap: 0.5rem;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+    color: var(--muted-foreground);
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    color: var(--foreground);
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    background: var(--kp-iris);
+    box-shadow: none;
+    color: var(--background);
+    font-weight: 700;
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    --sx-dark-bk: var(--primary);
+    --sx-dark-arm: 0.45rem;
+    background: var(--sx-dark-brackets);
+}
+
+[data-theme='dark'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: var(--primary);
+    box-shadow: none;
+    color: var(--primary-foreground);
+}
+
+/* ── 9 · Empty state: an instrument with no signal ───────────────────────
+   No dashed box: the measuring brackets at four corners over the page's
+   faint grid, and a flat trace in the film under the words, the reading
+   of a channel with nothing on it. */
+
+[data-theme='dark'] .sx-sig .kp-empty {
+    --sx-dark-arm: 1rem;
+    position: relative;
+    padding: 1.5rem 1.5rem 2.25rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        var(--sx-dark-brackets),
+        repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+        repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem);
+}
+
+[data-theme='dark'] .sx-sig .kp-empty::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 1.1rem;
+    inset-inline: 30%;
+    block-size: 1px;
+    background: var(--kp-iris);
+}
+
+[data-theme='dark'] .sx-sig .kp-empty__title {
+    letter-spacing: 0.02em;
+}
+
+/* ── 10 · Link hover: the film under the word ────────────────────────────
+   A quiet near-white underline at rest; under the pointer it gives way to
+   a 2px line of the film, so the hovered word is the one place colour
+   appears. Paint only; forced colours keeps a plain underline. */
+
+[data-theme='dark'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+    text-underline-offset: 0.25em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='dark'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    padding-block-end: 1px;
+    background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+    text-decoration-color: transparent;
+}
+
+@media (forced-colors: active) {
+    [data-theme='dark'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+        text-decoration-color: currentColor;
+    }
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='dark'] .sx-sig .kp-spinner {
+        animation: sx-dark-turn var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-skeleton::before {
+        animation: sx-dark-ghost-l var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-skeleton::after {
+        animation: sx-dark-ghost-r var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(2)::before,
+    [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(2)::after {
+        animation-delay: 90ms;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(3)::before,
+    [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(3)::after {
+        animation-delay: 180ms;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-switch__input::before {
+        transition: transform 260ms var(--sx-dark-ease);
+    }
+
+    [data-theme='dark'] .sx-sig .kp-field__check:checked::before {
+        animation: sx-dark-resolve var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-field__check:checked::after {
+        animation: sx-dark-resolve-ghost var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation-name: sx-dark-dot;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-field__check[type='radio']:checked::after {
+        animation-name: sx-dark-dot-ghost;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-toast {
+        animation: sx-dark-settle var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-toast::after,
+    [data-theme='dark'] .sx-sig .kp-dialog::after {
+        animation: sx-dark-develop var(--sx-dur) ease-out both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-dialog {
+        animation: sx-dark-settle-in var(--sx-dur) var(--sx-dark-ease) both;
+    }
+
+    [data-theme='dark'] .sx-sig .kp-tooltip {
+        animation: sx-dark-brackets-open var(--sx-dur) var(--sx-dark-ease) backwards;
+    }
+}
+
+@keyframes sx-dark-turn {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes sx-dark-ghost-l {
+    from {
+        opacity: 1;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+@keyframes sx-dark-ghost-r {
+    from {
+        opacity: 1;
+        transform: translateX(10px);
+    }
+
+    to {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+/* The ticks are rotated -45deg; translate first so the slide is level. */
+@keyframes sx-dark-resolve {
+    from {
+        opacity: 0;
+        transform: translateX(-4px) translateY(-1px) rotate(-45deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+}
+
+@keyframes sx-dark-resolve-ghost {
+    from {
+        opacity: 0.9;
+        transform: translateX(4px) translateY(-1px) rotate(-45deg);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+}
+
+@keyframes sx-dark-dot {
+    from {
+        opacity: 0;
+        transform: translateX(-4px);
+    }
+}
+
+@keyframes sx-dark-dot-ghost {
+    from {
+        opacity: 0.9;
+        transform: translateX(4px);
+    }
+
+    to {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+@keyframes sx-dark-settle {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+@keyframes sx-dark-settle-in {
+    from {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes sx-dark-develop {
+    0% {
+        opacity: 0.55;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes sx-dark-brackets-open {
+    from {
+        clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
+    }
+
+    to {
+        clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+    }
+}

@@ -1,0 +1,470 @@
+/* phantom: the signature elements, written by the design pass.
+
+   Cut paper, not light. Black, white and one violent red; three motifs
+   carry every element: the cut (shapes with slanted, scissored edges,
+   never a radius), the second plate (the deep red of the sidebar printed
+   a few pixels off the first, the misregistration of the reference) and
+   the halftone (a screen of dots, never a gradient glow). Words that
+   speak loud are Barlow Condensed, italic, capitals. Motion slams: it
+   arrives too big or too far, overshoots on the theme's own --fx-ease and
+   stops dead. Red is a plate under black ink, never a word. */
+
+[data-theme='phantom'] .sx-sig {
+    --sx-ph-plate: var(--sidebar-background, var(--primary));
+    --sx-ph-cut: polygon(0 6%, 100% 0, 96% 100%, 3% 92%);
+}
+
+/* ── 1 · Spinner: a star cut from paper, snapping round ───────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-spinner {
+    --sx-dur: 1200ms;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+[data-theme='phantom'] .sx-sig .kp-spinner::before,
+[data-theme='phantom'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* The second plate: the same star in deep red, off register. */
+[data-theme='phantom'] .sx-sig .kp-spinner::before {
+    background: var(--primary);
+    translate: 2px 2px;
+}
+
+[data-theme='phantom'] .sx-sig .kp-spinner::after {
+    background: var(--foreground);
+}
+
+/* ── 2 · Skeleton: halftone strips and a red slash ────────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-skeleton {
+    --sx-dur: 1600ms;
+    position: relative;
+    overflow: hidden;
+    block-size: 0.95rem;
+    border-radius: 0;
+    background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px, var(--muted);
+    clip-path: var(--sx-ph-cut);
+    animation: none;
+}
+
+[data-theme='phantom'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.55rem;
+}
+
+[data-theme='phantom'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 2.5rem;
+    background: var(--primary);
+    transform: translateX(-120%) skewX(-24deg);
+}
+
+/* ── 3 · Switch: a cut-paper tab that slams across ────────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='phantom'] .sx-sig .kp-switch__input {
+    border: 2px solid var(--foreground);
+    background: var(--background);
+}
+
+[data-theme='phantom'] .sx-sig .kp-switch__input::before {
+    inset-block: 1px;
+    inline-size: calc(var(--kp-switch-height, 1.5rem) - 2px);
+    background: var(--muted-foreground);
+    clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
+}
+
+[data-theme='phantom'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--foreground);
+    background: var(--primary);
+}
+
+[data-theme='phantom'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--foreground);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem) - 2px));
+}
+
+/* ── 4 · Checkbox and radio: a slammed tick, a red star ───────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-field__check {
+    --sx-dur: 300ms;
+    appearance: none;
+    position: relative;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.2rem;
+    block-size: 1.2rem;
+    margin: 0;
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    background: var(--background);
+}
+
+[data-theme='phantom'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    background: var(--primary);
+}
+
+/* A heavy black tick in ink on the red plate, slightly too large. */
+[data-theme='phantom'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.7rem;
+    block-size: 0.36rem;
+    border-inline-start: 3px solid var(--primary-foreground);
+    border-block-end: 3px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-48deg);
+}
+
+[data-theme='phantom'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+/* The radio's mark: a red star with its white plate peeking out. */
+[data-theme='phantom'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.85rem;
+    block-size: 0.85rem;
+    background: var(--primary);
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* ── 5 · Toast: a calling card slammed onto the screen ────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-toast {
+    --sx-dur: 380ms;
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 6px 6px 0 var(--sx-ph-plate);
+}
+
+[data-theme='phantom'] .sx-sig .kp-toast--success {
+    box-shadow: 6px 6px 0 var(--success-foreground, var(--foreground));
+}
+
+[data-theme='phantom'] .sx-sig .kp-toast__body {
+    font-family: var(--theme-font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* ── 6 · Dialog: the calling card ─────────────────────────────────────── */
+
+[data-theme='phantom'] .sx-sig .sx-backdrop {
+    background:
+        radial-gradient(circle, hsl(from var(--primary) h s l / 0.45) 1.4px, transparent 1.9px) 0 0 / 8px 8px,
+        var(--background);
+}
+
+[data-theme='phantom'] .sx-sig .kp-dialog {
+    --sx-dur: 420ms;
+    border: 3px solid var(--foreground);
+    border-radius: 0;
+    background: var(--background);
+    box-shadow: 10px 10px 0 var(--sx-ph-plate);
+    rotate: -1.5deg;
+}
+
+[data-theme='phantom'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 var(--primary);
+}
+
+/* ── 7 · Tooltip: a slanted white plate on a red one ──────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-tooltip {
+    --sx-dur: 260ms;
+    margin-block-start: 0.35rem;
+    margin-inline-start: 0.6rem;
+    padding: 0.2rem 0.75rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--foreground);
+    color: var(--background);
+    box-shadow: 4px 4px 0 var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 800;
+    text-transform: uppercase;
+    rotate: -3deg;
+}
+
+/* ── 8 · Wizard steps: a ransom note ──────────────────────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+}
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+    font-family: var(--theme-font-display);
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* Between the steps, a red slash. */
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 0.45rem;
+    block-size: 1.2rem;
+    margin-inline: 0.55rem;
+    background: var(--primary);
+    transform: skewX(-24deg);
+}
+
+/* Each numeral cut from a different sheet: white and black, tilted. */
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1rem;
+    font-weight: 900;
+    rotate: 4deg;
+}
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li:nth-child(even)::before {
+    rotate: -5deg;
+}
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    background: var(--foreground);
+    color: var(--background);
+}
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--foreground);
+    font-weight: 900;
+}
+
+[data-theme='phantom'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 1.25rem;
+    box-shadow: 3px 3px 0 var(--foreground);
+    rotate: -8deg;
+}
+
+/* ── 9 · Empty state: a halftone void ─────────────────────────────────── */
+
+[data-theme='phantom'] .sx-sig .kp-empty {
+    padding: 1.6rem 1rem 1.5rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        radial-gradient(circle, hsl(from var(--foreground) h s l / 0.25) 1.3px, transparent 1.8px) 0 0 / 7px 7px,
+        var(--card);
+    clip-path: polygon(0 4%, 100% 0, 98% 100%, 2% 94%);
+    mask: radial-gradient(ellipse 85% 120% at 50% 50%, black 45%, transparent 150%);
+}
+
+[data-theme='phantom'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.35rem;
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1.7rem;
+    font-style: italic;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0 var(--primary);
+}
+
+[data-theme='phantom'] .sx-sig .kp-empty__body {
+    display: inline-block;
+    margin: 0;
+    padding: 0.1rem 0.5rem;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* ── 10 · Link hover: the red plate under the word ────────────────────── */
+
+[data-theme='phantom'] .sx-sig .sx-links a {
+    color: var(--foreground);
+    font-weight: 600;
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Under the pointer the word sits on the red plate, ink black. */
+[data-theme='phantom'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    padding-inline: 0.15em;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    text-decoration-color: var(--primary-foreground);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='phantom'] .sx-sig .kp-spinner::before,
+    [data-theme='phantom'] .sx-sig .kp-spinner::after {
+        animation: sx-phantom-snap var(--sx-dur) infinite;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-skeleton::after {
+        animation: sx-phantom-slash var(--sx-dur) cubic-bezier(0.7, 0, 0.3, 1) infinite;
+    }
+
+    [data-theme='phantom'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 90ms;
+    }
+
+    [data-theme='phantom'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 180ms;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-switch__input::before {
+        transition: transform 200ms var(--fx-ease);
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-field__check:checked::before {
+        animation: sx-phantom-slam var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-toast {
+        animation: sx-phantom-card var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-dialog {
+        animation: sx-phantom-card-big var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-tooltip {
+        animation: sx-phantom-pop var(--sx-dur) var(--fx-ease) both;
+    }
+}
+
+/* A fifth of a turn, snapped, then held: five beats per lap. */
+@keyframes sx-phantom-snap {
+    0%,
+    12% {
+        transform: rotate(0);
+    }
+
+    20%,
+    32% {
+        transform: rotate(72deg);
+    }
+
+    40%,
+    52% {
+        transform: rotate(144deg);
+    }
+
+    60%,
+    72% {
+        transform: rotate(216deg);
+    }
+
+    80%,
+    92% {
+        transform: rotate(288deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sx-phantom-slash {
+    0% {
+        transform: translateX(-120%) skewX(-24deg);
+    }
+
+    55%,
+    100% {
+        transform: translateX(var(--sx-ph-run, 1400%)) skewX(-24deg);
+    }
+}
+
+@keyframes sx-phantom-slam {
+    from {
+        opacity: 0;
+        transform: translateY(-1px) rotate(-48deg) scale(2.2);
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* In from the side, sheared, too far; it snaps back and stops dead. */
+@keyframes sx-phantom-card {
+    from {
+        opacity: 0;
+        transform: translateX(-48px) skewX(-14deg);
+    }
+
+    40% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-phantom-card-big {
+    from {
+        opacity: 0;
+        transform: scale(1.25) rotate(-7deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-phantom-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

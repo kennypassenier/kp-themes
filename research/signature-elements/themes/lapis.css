@@ -1,0 +1,496 @@
+/* lapis: the signature elements, written by the design pass.
+
+   Tazhib, the illumination of a Persian manuscript. Lapis ground, ivory
+   text, gold that acts and rules, vermilion only as a plate. Three motifs
+   carry every element: the girih star (ten-fold for medallions, eight-fold
+   for small marks), the ruled frame (the page's concentric rings, drawn,
+   not filled) and the burnish (the headline's own verb: one clip-path
+   wipe that opens a thing left to right, once). Loaders move like a pen
+   in this script, right to left. Numerals in the steps are the
+   Persian digits; the step's name always stands beside them. */
+
+[data-theme='lapis'] .sx-sig {
+    --sx-lapis-star10: polygon(50% 0%, 61.1% 15.8%, 79.4% 9.5%, 79.1% 28.8%, 97.6% 34.5%, 86% 50%, 97.6% 65.5%, 79.1% 71.2%, 79.4% 90.5%, 61.1% 84.2%, 50% 100%, 38.9% 84.2%, 20.6% 90.5%, 20.9% 71.2%, 2.4% 65.5%, 14% 50%, 2.4% 34.5%, 20.9% 28.8%, 20.6% 9.5%, 38.9% 15.8%);
+    --sx-lapis-star8: polygon(50% 0%, 61.9% 21.4%, 85.4% 14.6%, 78.6% 38.1%, 100% 50%, 78.6% 61.9%, 85.4% 85.4%, 61.9% 78.6%, 50% 100%, 38.1% 78.6%, 14.6% 85.4%, 21.4% 61.9%, 0% 50%, 21.4% 38.1%, 14.6% 14.6%, 38.1% 21.4%);
+}
+
+/* The ruled frame: four concentric rings inside an edge, the gaps in the
+   surface's own colour (declared here so each surface resolves its own). */
+[data-theme='lapis'] .sx-sig :is(.kp-toast, .kp-dialog, .kp-empty) {
+    --sx-lapis-rings: inset 0 0 0 3px var(--sx-lapis-ground), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.55),
+        inset 0 0 0 6px var(--sx-lapis-ground), inset 0 0 0 7px hsl(from var(--primary) h s l / 0.3);
+}
+
+/* ── 1 · Spinner: a ten-fold girih star ───────────────────────────────── */
+
+[data-theme='lapis'] .sx-sig .kp-spinner {
+    --sx-dur: 2000ms;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+[data-theme='lapis'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--primary);
+    clip-path: var(--sx-lapis-star10);
+}
+
+/* Its vermilion heart, and the lapis ring that sets it in the gold. */
+[data-theme='lapis'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 32%;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 1.5px var(--background);
+}
+
+/* ── 2 · Skeleton: lines ruled for a scribe, written right to left ────── */
+
+[data-theme='lapis'] .sx-sig .kp-skeleton {
+    --sx-dur: 2600ms;
+    position: relative;
+    block-size: 0.8rem;
+    margin-inline-start: auto;
+    border-radius: 999px;
+    background: var(--muted);
+    animation: none;
+}
+
+[data-theme='lapis'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.85rem;
+}
+
+/* The ruling under each line, gold, as a manuscript page is ruled. */
+[data-theme='lapis'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: -0.35rem;
+    block-size: 1px;
+    background: hsl(from var(--primary) h s l / 0.5);
+}
+
+/* The ink, laid down from the right as the pen of this script moves. */
+[data-theme='lapis'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: hsl(from var(--primary) h s l / 0.3);
+    opacity: 0;
+}
+
+/* ── 3 · Switch: an eight-fold star in a ruled slot ───────────────────── */
+
+[data-theme='lapis'] .sx-sig .kp-switch__input {
+    --sx-lapis-ground: var(--background);
+    border-color: var(--border-strong);
+    background: var(--background);
+    box-shadow: inset 0 0 0 2px var(--background), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.35);
+}
+
+[data-theme='lapis'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+    clip-path: var(--sx-lapis-star8);
+}
+
+[data-theme='lapis'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+    box-shadow: inset 0 0 0 2px var(--primary), inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.4);
+}
+
+[data-theme='lapis'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--primary-foreground);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))) rotate(45deg);
+}
+
+/* ── 4 · Checkbox and radio: a gilded cell, a vermilion rubric dot ────── */
+
+[data-theme='lapis'] .sx-sig .kp-field__check {
+    --sx-dur: 380ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: var(--background);
+    box-shadow: inset 0 0 0 2px var(--background), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+}
+
+[data-theme='lapis'] .sx-sig .kp-field__check:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='lapis'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    background: var(--primary);
+    box-shadow: none;
+}
+
+[data-theme='lapis'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='lapis'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+/* The rubric dot a scribe marks in vermilion, set in a gold ring. */
+[data-theme='lapis'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 1.5px var(--primary);
+}
+
+/* ── 5 · Toast: an illuminated panel, burnished open ──────────────────── */
+
+[data-theme='lapis'] .sx-sig .kp-toast {
+    --sx-dur: 600ms;
+    --sx-lapis-ground: var(--popover);
+    position: relative;
+    padding-inline-start: 2.1rem;
+    border-color: var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--popover);
+    box-shadow: var(--sx-lapis-rings);
+}
+
+/* The rosette at its head: an eight-fold gold star with a vermilion heart. */
+[data-theme='lapis'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(50% - 0.5rem);
+    inset-inline-start: 0.75rem;
+    inline-size: 1rem;
+    block-size: 1rem;
+    background: radial-gradient(circle, var(--accent) 0 2.5px, transparent 3px), var(--primary);
+    clip-path: var(--sx-lapis-star8);
+}
+
+[data-theme='lapis'] .sx-sig .kp-toast--success::before {
+    background: radial-gradient(circle, var(--popover) 0 2.5px, transparent 3px), var(--success-foreground, var(--primary));
+}
+
+/* ── 6 · Dialog: a page with its shamsa ───────────────────────────────── */
+
+[data-theme='lapis'] .sx-sig .sx-backdrop {
+    background: hsl(from var(--background) h s calc(l * 0.55));
+}
+
+[data-theme='lapis'] .sx-sig .kp-dialog {
+    --sx-dur: 640ms;
+    --sx-lapis-ground: var(--popover);
+    border-color: var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--popover);
+    box-shadow: var(--sx-lapis-rings), 0 18px 40px -20px hsl(from var(--background) h s calc(l * 0.3));
+    text-align: center;
+}
+
+/* The shamsa, the sun medallion that heads an illuminated page. */
+[data-theme='lapis'] .sx-sig .kp-dialog::before {
+    content: '';
+    display: block;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    margin: 0 auto 0.4rem;
+    background: radial-gradient(circle, var(--accent) 0 3px, var(--popover) 3.5px 5px, transparent 5.5px), var(--primary);
+    clip-path: var(--sx-lapis-star10);
+}
+
+[data-theme='lapis'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+[data-theme='lapis'] .sx-sig .kp-dialog__actions {
+    justify-content: center;
+}
+
+/* ── 7 · Tooltip: a gold cartouche ────────────────────────────────────── */
+
+[data-theme='lapis'] .sx-sig .kp-tooltip {
+    --sx-dur: 420ms;
+    margin-block-start: 0.3rem;
+    margin-inline-start: 0.4rem;
+    padding: 0.3rem 1.3rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: none;
+    font-weight: 600;
+    /* The toranj's pointed ends; never focusable, so it may be clipped. */
+    clip-path: polygon(0.7rem 0, calc(100% - 0.7rem) 0, 100% 50%, calc(100% - 0.7rem) 100%, 0.7rem 100%, 0 50%);
+}
+
+/* A ruling inside the cartouche, one step in from its edge. */
+[data-theme='lapis'] .sx-sig .kp-tooltip::after {
+    content: '';
+    position: absolute;
+    inset-block: 3px;
+    inset-inline: 0.7rem;
+    border-block: 1px solid hsl(from var(--primary-foreground) h s l / 0.45);
+}
+
+/* ── 8 · Wizard steps: verse markers ──────────────────────────────────── */
+
+[data-theme='lapis'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+}
+
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+/* Between markers, a gold rule with a dot at its middle. */
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.5rem;
+    block-size: 5px;
+    margin-inline: 0.35rem;
+    background:
+        radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+        linear-gradient(hsl(from var(--primary) h s l / 0.5), hsl(from var(--primary) h s l / 0.5)) 0 50% / 100% 1px no-repeat;
+}
+
+/* The ayah rosette: a ring of gold with a petalled edge, the numeral in
+   the Persian digits inside. */
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li::before {
+    content: counter(kp-step, persian);
+    inline-size: 1.8rem;
+    block-size: 1.8rem;
+    border: 1px solid var(--border-strong);
+    background: var(--background);
+    color: var(--primary);
+    /* Vazirmatn draws the Persian digits at a readable size. */
+    font-family: var(--theme-font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow:
+        inset 0 0 0 2px var(--background),
+        inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+}
+
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: none;
+}
+
+/* Where the reader is: a vermilion plate ringed in gold. */
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-color: var(--primary);
+    background: var(--accent);
+    color: var(--background);
+    font-weight: 700;
+    box-shadow:
+        0 0 0 2px var(--background),
+        0 0 0 3px var(--primary);
+}
+
+[data-theme='lapis'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* ── 9 · Empty state: an unwritten page under its medallion ───────────── */
+
+[data-theme='lapis'] .sx-sig .kp-empty {
+    --sx-lapis-ground: var(--card);
+    padding: 1.4rem 1rem 1.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-shadow: var(--sx-lapis-rings);
+}
+
+/* An outlined girih star, gold and empty: the medallion waiting for its text. */
+[data-theme='lapis'] .sx-sig .kp-empty::before {
+    content: '';
+    display: block;
+    inline-size: 3rem;
+    block-size: 3rem;
+    margin: 0 auto 0.6rem;
+    background:
+        radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px),
+        var(--primary);
+    clip-path: var(--sx-lapis-star10);
+    mask: radial-gradient(circle, black 0 4px, transparent 4px 9px, black 9px 11px, transparent 11px 13.5px, black 13.5px);
+}
+
+[data-theme='lapis'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 1.35rem;
+}
+
+[data-theme='lapis'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the nuqta underline ─────────────────────────────── */
+
+[data-theme='lapis'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--primary);
+    text-underline-offset: 0.25em;
+}
+
+/* Under the pointer the rule becomes a row of vermilion dots, the
+   nuqta of the script. */
+[data-theme='lapis'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    text-decoration-style: dotted;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='lapis'] .sx-sig .kp-spinner::before {
+        animation: sx-lapis-turn var(--sx-dur) var(--fx-ease) infinite;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-skeleton::after {
+        animation: sx-lapis-write var(--sx-dur) var(--fx-ease) infinite;
+    }
+
+    [data-theme='lapis'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 300ms;
+    }
+
+    [data-theme='lapis'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 600ms;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-switch__input::before {
+        transition: transform 300ms var(--fx-ease);
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-lapis-burnish var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-lapis-dot var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-toast {
+        animation: sx-lapis-burnish-wide var(--sx-dur) var(--fx-ease) backwards;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-dialog {
+        animation:
+            sx-lapis-burnish-wide var(--sx-dur) var(--fx-ease) backwards,
+            sx-lapis-rise var(--sx-dur) var(--fx-ease) backwards;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-dialog::before {
+        animation: sx-lapis-medallion calc(var(--sx-dur) * 1.4) var(--fx-ease) both;
+    }
+
+    [data-theme='lapis'] .sx-sig .kp-tooltip {
+        animation: sx-lapis-burnish var(--sx-dur) var(--fx-ease) backwards;
+    }
+}
+
+/* A tenth of a turn, eased, then still: the star's own symmetry. */
+@keyframes sx-lapis-turn {
+    0%,
+    40% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(36deg);
+    }
+}
+
+@keyframes sx-lapis-write {
+    0% {
+        opacity: 1;
+        clip-path: inset(0 0 0 100%);
+    }
+
+    50%,
+    75% {
+        opacity: 1;
+        clip-path: inset(0);
+    }
+
+    100% {
+        opacity: 0;
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-lapis-burnish {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+/* The same wipe for a framed surface; the frame's rings sit inside it. */
+@keyframes sx-lapis-burnish-wide {
+    from {
+        clip-path: inset(-20px 100% -40px -20px);
+    }
+
+    to {
+        clip-path: inset(-20px -20px -40px -20px);
+    }
+}
+
+@keyframes sx-lapis-rise {
+    from {
+        transform: translateY(10px);
+    }
+}
+
+@keyframes sx-lapis-dot {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+@keyframes sx-lapis-medallion {
+    from {
+        opacity: 0;
+        transform: rotate(-36deg) scale(0.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

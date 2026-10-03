@@ -1,0 +1,476 @@
+/* brutalism: the signature elements, written by the design pass.
+
+   Neo-brutalism, the 2021 kind. One line weight, one line colour (ink),
+   flat sweet-shop plates (yellow, lavender, sky, mint) and the hard shadow
+   that sits exactly where the box would fall. The theme's own verb is the
+   drop: a box is lifted off its shadow and dropped back onto it. Every
+   motion below is that verb, on --fx-ease; nothing is blurred, nothing is
+   translucent, no corner is rounded. */
+
+[data-theme='brutalism'] .sx-sig {
+    --sx-br-drop: var(--kp-drop, 6px);
+}
+
+/* ── 1 · Spinner: a box picked up, turned and dropped ─────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-spinner {
+    --sx-dur: 1400ms;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+/* Its shadow, where it will land. */
+[data-theme='brutalism'] .sx-sig .kp-spinner::before,
+[data-theme='brutalism'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 2px 4px 4px 2px;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-spinner::before {
+    background: var(--border-strong);
+    translate: 3px 3px;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-spinner::after {
+    border: 2px solid var(--border-strong);
+    background: var(--secondary);
+}
+
+/* ── 2 · Skeleton: plates pressed one after another ───────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton {
+    --sx-dur: 1500ms;
+    position: relative;
+    block-size: 1rem;
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.75rem;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton::before,
+[data-theme='brutalism'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0 4px 4px 0;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton::before {
+    background: var(--border-strong);
+    translate: 4px 4px;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton::after {
+    border: 2px solid var(--border-strong);
+    background: var(--secondary);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton:nth-child(3n + 2)::after {
+    background: var(--accent);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-skeleton:nth-child(3n)::after {
+    background: var(--info);
+}
+
+/* ── 3 · Switch: a chunky slider on its shadow ────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-switch {
+    --kp-switch-border: 2px;
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+    --kp-switch-inset: 3px;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--card);
+    box-shadow: 3px 3px 0 var(--border-strong);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-switch__input::before {
+    border: 2px solid var(--border-strong);
+    background: var(--muted);
+    box-sizing: border-box;
+}
+
+/* On: the ink track, the yellow block. */
+[data-theme='brutalism'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--border-strong);
+    background: var(--primary);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    border-color: var(--primary-foreground);
+    background: var(--primary-foreground);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: a stamped tick, a plate dot ──────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-field__check {
+    --sx-dur: 260ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    margin: 0;
+    border: 2px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: 2px 2px 0 var(--border-strong);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-field__check:checked {
+    background: var(--secondary);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.7rem;
+    block-size: 0.36rem;
+    border-inline-start: 3px solid var(--border-strong);
+    border-block-end: 3px solid var(--border-strong);
+    transform: translateY(-2px) rotate(-45deg);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-field__check[type='radio']:checked {
+    background: var(--accent);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--border-strong);
+}
+
+/* ── 5 · Toast: a plate dropped onto the page ─────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-toast {
+    --sx-dur: 420ms;
+    border: 2px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    box-shadow: var(--sx-br-drop) var(--sx-br-drop) 0 var(--border-strong);
+    font-weight: 700;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-toast--success {
+    background: var(--success);
+    color: var(--success-foreground);
+}
+
+/* ── 6 · Dialog: a slab on a lavender table ───────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .sx-backdrop {
+    background: var(--accent);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-dialog {
+    --sx-dur: 380ms;
+    padding-block-start: 0;
+    border: 3px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: calc(var(--sx-br-drop) + 4px) calc(var(--sx-br-drop) + 4px) 0 var(--border-strong);
+}
+
+/* The title rides a yellow bar across the top, ruled off in ink. */
+[data-theme='brutalism'] .sx-sig .kp-dialog__title {
+    margin-inline: calc(-1 * var(--kp-dialog-padding, 1.25rem));
+    padding: 0.55rem var(--kp-dialog-padding, 1.25rem);
+    border-block-end: 3px solid var(--border-strong);
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+/* ── 7 · Tooltip: a sticker with a hard edge ──────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-tooltip {
+    --sx-dur: 240ms;
+    margin-block-start: 0.6rem;
+    margin-inline-start: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border: 2px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--info);
+    color: var(--border-strong);
+    box-shadow: 3px 3px 0 var(--border-strong);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 0.8rem;
+    inline-size: 12px;
+    block-size: 8px;
+    background: var(--border-strong);
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+/* ── 8 · Wizard steps: numbered blocks ────────────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps {
+    gap: 0.75rem 0;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li {
+    gap: 0.5rem;
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.1rem;
+    block-size: 3px;
+    margin-inline: 0.35rem;
+    background: var(--border-strong);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 2px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--card);
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 0.85rem;
+    box-shadow: 3px 3px 0 var(--border-strong);
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* The current step is lifted off its shadow: a bigger drop, yellow. */
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    box-shadow: 5px 5px 0 var(--border-strong);
+    translate: -2px -2px;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    font-family: var(--theme-font-display);
+    text-transform: uppercase;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-wizard__steps li[data-state='todo'] {
+    color: var(--muted-foreground);
+}
+
+/* ── 9 · Empty state: an empty crate ──────────────────────────────────── */
+
+[data-theme='brutalism'] .sx-sig .kp-empty {
+    padding: 1.25rem 1rem 1.4rem;
+    border: 3px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: var(--sx-br-drop) var(--sx-br-drop) 0 var(--border-strong);
+}
+
+/* A big zero on a lavender disc, stuck on like a price sticker. */
+[data-theme='brutalism'] .sx-sig .kp-empty::before {
+    content: '0';
+    display: grid;
+    place-content: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    margin: 0 auto 0.7rem;
+    border: 3px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--border-strong);
+    font-family: var(--theme-font-display);
+    font-size: 1.4rem;
+    line-height: 1;
+    box-shadow: 3px 3px 0 var(--border-strong);
+    rotate: -8deg;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.3rem;
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1.15rem;
+    text-transform: uppercase;
+}
+
+[data-theme='brutalism'] .sx-sig .kp-empty__body {
+    margin: 0;
+    color: var(--foreground);
+}
+
+/* ── 10 · Link hover: the yellow plate under the word ─────────────────── */
+
+[data-theme='brutalism'] .sx-sig .sx-links a {
+    color: var(--foreground);
+    font-weight: 700;
+    text-decoration-color: var(--border-strong);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.18em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='brutalism'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    padding-inline: 0.15em;
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    box-shadow: 0 0 0 2px var(--border-strong), 3px 3px 0 2px var(--border-strong);
+    text-decoration-color: var(--border-strong);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='brutalism'] .sx-sig .kp-spinner::after {
+        animation: sx-brutalism-turn var(--sx-dur) var(--fx-ease) infinite;
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-skeleton::after {
+        animation: sx-brutalism-press var(--sx-dur) var(--fx-ease) infinite;
+    }
+
+    [data-theme='brutalism'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 200ms;
+    }
+
+    [data-theme='brutalism'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 400ms;
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-switch__input::before {
+        transition: transform 160ms var(--fx-ease);
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-field__check:checked::before {
+        animation: sx-brutalism-stamp var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-toast {
+        animation: sx-brutalism-drop var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-dialog {
+        animation: sx-brutalism-drop-big var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='brutalism'] .sx-sig .kp-tooltip {
+        animation: sx-brutalism-drop var(--sx-dur) var(--fx-ease) both;
+    }
+}
+
+/* Lifted off its shadow, a quarter turn in the air, dropped back. */
+@keyframes sx-brutalism-turn {
+    0% {
+        transform: none;
+    }
+
+    25% {
+        transform: translate(-3px, -3px);
+    }
+
+    65% {
+        transform: translate(-3px, -3px) rotate(90deg);
+    }
+
+    85%,
+    100% {
+        transform: rotate(90deg);
+    }
+}
+
+@keyframes sx-brutalism-press {
+    0%,
+    40%,
+    100% {
+        transform: none;
+    }
+
+    15%,
+    25% {
+        transform: translate(4px, 4px);
+    }
+}
+
+@keyframes sx-brutalism-stamp {
+    from {
+        opacity: 0;
+        scale: 1.8;
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+/* Held up and askew, then dropped flat onto where its shadow lies. */
+@keyframes sx-brutalism-drop {
+    0% {
+        opacity: 0;
+        transform: translate(-10px, -18px) rotate(-3deg);
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    70% {
+        transform: translate(-4px, -4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-brutalism-drop-big {
+    0% {
+        opacity: 0;
+        transform: translate(-14px, -40px) rotate(-2deg);
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    70% {
+        transform: translate(-6px, -6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}

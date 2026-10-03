@@ -1,0 +1,12 @@
+{
+    "spinner": "Nothing loops in this theme, so the busy sign is three 2px-framed blocks, two black and the last in the signal yellow, set down once and left standing.",
+    "skeleton": "Each line is a 2px black frame with a 45 degree hatch, the form's mark for 'not yet', wiped in once from the left with no pulse and no grey.",
+    "switch": "A nearly square slot with a 2px black frame; on, it fills signal yellow and the white block goes solid black in one short move.",
+    "check": "A 2px black box that fills the signal with a heavy black tick wiped in; the chosen radio is a black dot inside a yellow ring, never a box.",
+    "toast": "A 2px frame with a thick black rule down its leading edge, wiped onto the page from that edge: no float and no fade.",
+    "dialog": "The register's 3px frame and a 3px rule under the title, wiped in from the top like a sheet put in front of you.",
+    "tooltip": "The one inverted surface: bold white words on black with a black pointer, appearing whole after the delay instead of fading.",
+    "steps": "Square markers joined by 2px rules; done ones solid black, the current one a signal-yellow block with its name bold and underlined.",
+    "empty": "A solid 2px frame with a heavy rule across the top, a large bold title and a body in full black: no dashed edge, no grey.",
+    "link": "Always underlined at 2px; under the pointer the signal yellow lands behind the words and the underline thickens to 3px."
+}

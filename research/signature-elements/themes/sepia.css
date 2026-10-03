@@ -1,0 +1,484 @@
+/* sepia: the signature elements, written by the design pass.
+
+   A well-aged printed book. Three motifs carry every element: the page
+   (cream sheets, a spine, a page that turns), the printer's ornament (the
+   fleuron ❦ and the hairline rules a book sets around it) and the serif
+   italic, which is this theme's whole accent. Sepia is unhurried on
+   purpose: every entrance is one slow settle, nothing stutters, and the
+   only loops are the two loaders, which move like paper, not like a
+   machine. No cool hue appears anywhere below. */
+
+/* ── 1 · Spinner: a page turning ──────────────────────────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-spinner {
+    --sx-dur: 1600ms;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    /* An open book from above: the spine down the middle. */
+    background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.5px 80% no-repeat;
+    animation: none;
+}
+
+/* The left-hand page lies still; the right-hand leaf turns on the spine. */
+[data-theme='sepia'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset-block: 15% 10%;
+    inset-inline: 0 50%;
+    border: 1px solid var(--border-strong);
+    border-inline-end: 0;
+    background: var(--card);
+}
+
+[data-theme='sepia'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-block: 15% 10%;
+    inset-inline: 50% 0;
+    border: 1px solid var(--primary);
+    border-inline-start: 0;
+    background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.25), var(--card) 60%);
+    transform-origin: 0 50%;
+}
+
+/* ── 2 · Skeleton: a paragraph waiting under its drop cap ─────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-skeleton {
+    --sx-dur: 3200ms;
+    position: relative;
+    block-size: 0.7rem;
+    border-radius: 1px;
+    background: var(--muted);
+    background-clip: content-box;
+    animation: none;
+}
+
+[data-theme='sepia'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.7rem;
+}
+
+/* The first two lines stand aside for the drop cap. */
+[data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:nth-child(-n + 2) {
+    padding-inline-start: 2.3rem;
+}
+
+[data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:first-child::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 1.75rem;
+    block-size: 2.1rem;
+    border: 1px solid hsl(from var(--primary) h s l / 0.45);
+    background: hsl(from var(--primary) h s l / 0.14);
+}
+
+/* The ink settling into the paper: a sienna wash that soaks in and dries. */
+[data-theme='sepia'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: hsl(from var(--primary) h s l / 0.14);
+    background-clip: content-box;
+    padding: inherit;
+    opacity: 0;
+}
+
+/* ── 3 · Switch: a slot with a fleuron button ─────────────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--muted);
+    box-shadow: inset 0 1px 2px hsl(from var(--foreground) h s l / 0.18);
+}
+
+[data-theme='sepia'] .sx-sig .kp-switch__input::before {
+    display: grid;
+    place-content: center;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 0.8rem;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+[data-theme='sepia'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+/* On, the paper button carries the printer's flower. */
+[data-theme='sepia'] .sx-sig .kp-switch__input:checked::before {
+    content: '❦';
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    border-color: var(--primary-foreground);
+    background: var(--card);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: a hand tick, a wax seal ──────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-field__check {
+    --sx-dur: 420ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 1px;
+    background: var(--card);
+}
+
+[data-theme='sepia'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+}
+
+/* The tick a reader makes in a margin: ink, larger than its box, leaning,
+   its long stroke running out past the frame. */
+[data-theme='sepia'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.55rem;
+    block-size: 1.05rem;
+    border-inline-end: 2.5px solid var(--foreground);
+    border-block-end: 2px solid var(--foreground);
+    border-end-end-radius: 2px;
+    transform: translate(1px, -0.3rem) rotate(38deg);
+}
+
+[data-theme='sepia'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='sepia'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+/* A wax seal: a sienna disc with the ring of its stamp pressed into it. */
+[data-theme='sepia'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.7rem;
+    block-size: 0.7rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow:
+        inset 0 0 0 1.5px var(--primary),
+        inset 0 0 0 2.5px hsl(from var(--primary-foreground) h s l / 0.55);
+}
+
+/* ── 5 · Toast: a slip laid in the book ───────────────────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-toast {
+    --sx-dur: 520ms;
+    border-color: var(--border);
+    border-radius: 2px;
+    background: var(--popover);
+    /* Set like a printed slip: a hairline above, a double rule below. */
+    box-shadow:
+        inset 0 2px 0 -1px var(--border-strong),
+        inset 0 -4px 0 -1px var(--popover),
+        inset 0 -5px 0 -1px var(--border-strong),
+        0 10px 18px -14px hsl(from var(--foreground) h s l / 0.45);
+}
+
+[data-theme='sepia'] .sx-sig .kp-toast__body {
+    font-family: var(--theme-font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+}
+
+/* ── 6 · Dialog: a page with its ornament ─────────────────────────────── */
+
+[data-theme='sepia'] .sx-sig .sx-backdrop {
+    background: color-mix(in oklab, var(--foreground) 22%, var(--background));
+}
+
+[data-theme='sepia'] .sx-sig .kp-dialog {
+    --sx-dur: 440ms;
+    border-color: var(--border);
+    border-radius: 2px;
+    box-shadow:
+        inset 0 0 0 6px var(--popover),
+        inset 0 0 0 7px hsl(from var(--primary) h s l / 0.3),
+        0 18px 36px -22px hsl(from var(--foreground) h s l / 0.6);
+    text-align: center;
+}
+
+/* The fleuron between two hairlines, set above the title. */
+[data-theme='sepia'] .sx-sig .kp-dialog::before {
+    content: '❦';
+    display: block;
+    margin-block-end: 0.15rem;
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 1.1rem;
+    line-height: 1;
+    background:
+        linear-gradient(var(--border-strong), var(--border-strong)) 18% 55% / 26% 1px no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 82% 55% / 26% 1px no-repeat;
+}
+
+[data-theme='sepia'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-style: italic;
+    font-weight: 400;
+}
+
+[data-theme='sepia'] .sx-sig .kp-dialog__actions {
+    justify-content: center;
+}
+
+/* ── 7 · Tooltip: a gloss in the margin ───────────────────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-tooltip {
+    --sx-dur: 320ms;
+    margin-inline-start: 0.4rem;
+    padding: 0.15rem 0.6rem 0.2rem 0.65rem;
+    border: 0;
+    border-inline-start: 2px solid var(--primary);
+    border-radius: 0;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 6px 14px -10px hsl(from var(--foreground) h s l / 0.45);
+    font-family: var(--theme-font-display);
+    font-size: 1rem;
+    font-style: italic;
+}
+
+/* ── 8 · Wizard steps: the sections of a chapter ──────────────────────── */
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li {
+    gap: 0.3rem;
+    font-family: var(--theme-font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+}
+
+/* Between sections, the printer's middle dot. */
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '·';
+    margin-inline: 0.55rem;
+    color: var(--border-strong);
+    font-style: normal;
+}
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li::before {
+    content: '§\2009' counter(kp-step);
+    inline-size: auto;
+    block-size: auto;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--theme-font-display);
+    font-size: 1.05rem;
+    font-style: normal;
+}
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    color: var(--foreground);
+}
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+    color: var(--primary);
+}
+
+/* The section being read: sienna, its sign underlined with a double rule. */
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--primary);
+    text-decoration: underline double;
+    text-decoration-color: hsl(from var(--primary) h s l / 0.6);
+    text-underline-offset: 0.25em;
+}
+
+[data-theme='sepia'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: none;
+    color: var(--primary);
+}
+
+/* ── 9 · Empty state: the blank page after the last chapter ───────────── */
+
+[data-theme='sepia'] .sx-sig .kp-empty {
+    padding: 1.1rem 1rem 1.35rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--card);
+    box-shadow:
+        inset 0 0 0 5px var(--card),
+        inset 0 0 0 6px var(--border);
+}
+
+[data-theme='sepia'] .sx-sig .kp-empty::before {
+    content: '❦';
+    display: block;
+    margin-block-end: 0.3rem;
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+[data-theme='sepia'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.2rem;
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1.25rem;
+    font-style: italic;
+}
+
+[data-theme='sepia'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: a pencil mark under the line ────────────────────── */
+
+[data-theme='sepia'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: hsl(from var(--primary) h s l / 0.6);
+    text-underline-offset: 0.22em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Under the pointer the reader marks the phrase: a warm wash along the
+   lower half of the words, the underline darkened to ink. */
+[data-theme='sepia'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background: linear-gradient(var(--accent), var(--accent)) 0 85% / 100% 45% no-repeat;
+    text-decoration-color: var(--primary);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='sepia'] .sx-sig .kp-spinner::after {
+        animation: sx-sepia-leaf var(--sx-dur) cubic-bezier(0.45, 0, 0.3, 1) infinite;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-skeleton::after {
+        animation: sx-sepia-soak var(--sx-dur) ease-in-out infinite;
+    }
+
+    [data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 400ms;
+    }
+
+    [data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 800ms;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-switch__input::before {
+        transition: transform 320ms var(--fx-ease);
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-sepia-tick var(--sx-dur) cubic-bezier(0.5, 0, 0.3, 1) both;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-sepia-seal var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-toast {
+        animation: sx-sepia-slip var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-dialog {
+        animation: sx-sepia-page var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='sepia'] .sx-sig .kp-tooltip {
+        animation: sx-sepia-gloss var(--sx-dur) var(--fx-ease) both;
+    }
+}
+
+/* The leaf lifts, crosses the spine and lies down on the left. */
+@keyframes sx-sepia-leaf {
+    0%,
+    15% {
+        transform: scaleX(1);
+    }
+
+    75%,
+    100% {
+        transform: scaleX(-1);
+    }
+}
+
+@keyframes sx-sepia-soak {
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* The pen goes down, then sweeps up: the short stroke first, bottom up. */
+@keyframes sx-sepia-tick {
+    from {
+        clip-path: inset(100% 0 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-sepia-seal {
+    from {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* A sheet of paper settling: a little high, a little turned, then flat. */
+@keyframes sx-sepia-slip {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) rotate(-1.2deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-sepia-page {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-sepia-gloss {
+    from {
+        opacity: 0;
+        transform: translateX(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

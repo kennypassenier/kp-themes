@@ -1,0 +1,12 @@
+{
+    "spinner": "A rotary indexing head: a chamfered plate with eight engraved ticks and an oxide index that clicks round in eight hard steps.",
+    "skeleton": "Chamfered slots of carbon weave with a bright tool edge, and a thin oxide cutter traversing each one at constant speed like a machine finishing a pass.",
+    "switch": "A carbon slot with a chamfered grey block knurled for grip, moving across in 60ms with no easing while the film runs along the slot's foot.",
+    "check": "Square sockets with a tool edge; ticked, the socket becomes the grey plate with the tick stamped in two hard steps, and the chosen radio holds an oxide pellet.",
+    "toast": "It runs in along a rail at constant speed and stops dead, and an oxide line is cut along its foot behind it.",
+    "dialog": "Cut from the stock: the panel is revealed top to bottom by a linear cut, with the oxide cutter line riding the cut's edge down.",
+    "tooltip": "A stamped readout in Martian Mono, small and tracked, one corner cut and a film foot, appearing in the theme's 60ms.",
+    "steps": "Two-digit part numbers on chamfered plates; finished ones carry an oxide foot and the current one is machined grey with the tool edge.",
+    "empty": "Bare stock: an uncut chamfered blank of carbon weave with the tool edge on top and the film along its foot.",
+    "link": "A dashed scribe line at rest, the mark a machinist leaves before cutting; under the pointer the cut is made as a solid oxide line."
+}

@@ -1,0 +1,12 @@
+{
+    "spinner": "No wheel, since nothing in this case loops: the BUSY lamp, an orange LED lens in a dark bezel that strikes once and stays lit while the work goes on.",
+    "skeleton": "Long rounded vent slots pressed into the beige plastic, moulded in once one after another and then left standing.",
+    "switch": "A ribbed plastic slider in a pressed slot, with an indicator lamp at the end that is a dark dot when off and a lit lens when on.",
+    "check": "The checkbox is a well that takes the deep orange plate with a light tick punched in; the chosen radio is the panel's lamp, a lit LED lens in a dark bezel.",
+    "toast": "A moulded panel with a lit LED at its leading edge that pops down into place once, its lamp striking as it lands.",
+    "dialog": "A hatch screwed down at four corners with its title on the Michroma case-label face, popping down into the console once.",
+    "tooltip": "A strip of embossed label tape: raised light letters in tracked uppercase mono on dark tape, stamped on once.",
+    "steps": "A row of moulded plastic keys with numbers; done keys carry a deep orange tick and the current key is pressed in with its lamp lit beside it.",
+    "empty": "An empty bay in the console: a pressed-in panel with a vent grille and the title on a strip of label tape.",
+    "link": "Ink with a faint orange underline; under the pointer the underline lights in the deep orange at full weight, an indicator coming on."
+}

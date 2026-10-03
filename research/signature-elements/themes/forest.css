@@ -1,0 +1,501 @@
+/* forest: the signature elements, written by the design pass.
+
+   A topographic map on kraft paper. Three motifs carry every element: the
+   compass (a two-tone needle, forest north and clay south), the contour
+   ring (concentric hairlines around a summit) and the trail (the clay
+   dashed line a map prints for a footpath). Forest's own motion verb is
+   "draw": a line drawn in once, on the theme's own --fx-ease. Nothing
+   flickers and nothing reverses its own direction quickly; the two loaders
+   are the only loops, and both stay far under DI5. */
+
+/* ── 1 · Spinner: a compass needle finding north ──────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-spinner {
+    --sx-dur: 1800ms;
+    position: relative;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    /* The four cardinal ticks, inside the bezel. */
+    background:
+        linear-gradient(var(--border-strong), var(--border-strong)) 50% 0 / 1px 18% no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 50% 100% / 1px 18% no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / 18% 1px no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 100% 50% / 18% 1px no-repeat;
+    animation: none;
+}
+
+/* The needle: a lozenge, forest ink to the north, clay to the south. */
+[data-theme='forest'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 8%;
+    background: linear-gradient(to bottom, var(--primary) 50%, var(--accent-foreground) 50%);
+    clip-path: polygon(50% 0, 64% 50%, 50% 100%, 36% 50%);
+}
+
+/* ── 2 · Skeleton: lines surveyed one after another ───────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-skeleton {
+    --sx-dur: 2600ms;
+    position: relative;
+    block-size: 0.85rem;
+    border-radius: 999px;
+    background: var(--muted);
+    animation: none;
+}
+
+[data-theme='forest'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.95rem;
+}
+
+/* The footpath under each line: the map's clay dashed trail. */
+[data-theme='forest'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.4rem;
+    inset-block-end: -0.4rem;
+    block-size: 2px;
+    background: repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.45) 0 6px, transparent 6px 10px);
+}
+
+/* The survey: a lake-blue band drawn along the line, left to right. */
+[data-theme='forest'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: hsl(from var(--info-foreground) h s l / 0.16);
+    opacity: 0;
+}
+
+/* ── 3 · Switch: a trail marker on a footpath ─────────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background:
+        repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.5) 0 4px, transparent 4px 7px) 50% 50% / calc(100% - 12px) 2px no-repeat,
+        var(--background);
+}
+
+[data-theme='forest'] .sx-sig .kp-switch__input::before {
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    box-sizing: border-box;
+}
+
+[data-theme='forest'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background:
+        linear-gradient(hsl(from var(--primary-foreground) h s l / 0.45), hsl(from var(--primary-foreground) h s l / 0.45)) 50% 50% / calc(100% - 12px) 2px no-repeat,
+        var(--primary);
+}
+
+/* On, the marker shows a summit: a forest peak on the kraft disc. */
+[data-theme='forest'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    border-color: var(--primary-foreground);
+    background: conic-gradient(from 150deg at 50% 28%, var(--primary) 0 60deg, transparent 0), var(--primary-foreground);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: a drawn trail tick, a summit ─────────────── */
+
+[data-theme='forest'] .sx-sig .kp-field__check {
+    --sx-dur: 380ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: var(--card);
+}
+
+[data-theme='forest'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='forest'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.62rem;
+    block-size: 0.32rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    border-end-start-radius: 1px;
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='forest'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='forest'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+/* The summit on a contour map: a dot inside its own contour ring. */
+[data-theme='forest'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle closest-side,
+        var(--primary) 0 40%,
+        transparent 40% 72%,
+        hsl(from var(--primary) h s l / 0.6) 72% calc(72% + 1.25px),
+        transparent calc(72% + 1.25px)
+    );
+}
+
+/* ── 5 · Toast: a field note with a trail blaze ───────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-toast {
+    --sx-dur: 520ms;
+    position: relative;
+    padding-inline-start: 1.15rem;
+    background: var(--card);
+}
+
+/* The blaze: the painted mark on a tree that says "this way". */
+[data-theme='forest'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.55rem;
+    inset-inline-start: 0.5rem;
+    inline-size: 3px;
+    border-radius: 2px;
+    background: var(--accent-foreground);
+    transform-origin: 50% 0;
+}
+
+[data-theme='forest'] .sx-sig .kp-toast--success::before {
+    background: var(--success-foreground);
+}
+
+/* ── 6 · Dialog: a map unfolded over the contours ─────────────────────── */
+
+[data-theme='forest'] .sx-sig .sx-backdrop {
+    background:
+        repeating-radial-gradient(ellipse 120% 90% at 30% 110%, transparent 0 22px, hsl(from var(--foreground) h s l / 0.07) 22px 23px),
+        color-mix(in oklab, var(--foreground) 18%, var(--background));
+}
+
+[data-theme='forest'] .sx-sig .kp-dialog {
+    --sx-dur: 520ms;
+    border-color: var(--border-strong);
+    /* The map's neat line: a hairline frame just inside the sheet edge. */
+    box-shadow:
+        inset 0 0 0 5px var(--popover),
+        inset 0 0 0 6px hsl(from var(--primary) h s l / 0.35),
+        0 16px 34px -22px hsl(from var(--foreground) h s l / 0.55);
+}
+
+/* ── 7 · Tooltip: a park sign ─────────────────────────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-tooltip {
+    --sx-dur: 280ms;
+    margin-block-start: 0.4rem;
+    margin-inline-start: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    border: 0;
+    border-radius: 4px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    /* The routed groove a carved trail sign has, one step inside its edge. */
+    box-shadow:
+        inset 0 0 0 2px var(--primary),
+        inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.5);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+[data-theme='forest'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 1rem;
+    inline-size: 10px;
+    block-size: 6px;
+    background: var(--primary);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+/* ── 8 · Wizard steps: markers on a trail ─────────────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+}
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.4rem;
+    block-size: 2px;
+    margin-inline: 0.3rem;
+    background: repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.55) 0 4px, transparent 4px 7px);
+}
+
+/* The walked part of the trail is drawn solid. */
+[data-theme='forest'] .sx-sig .kp-wizard__steps li[data-state='done']::after {
+    background: var(--primary);
+}
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    box-sizing: border-box;
+}
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* "You are here": the current marker inside two contour rings. */
+[data-theme='forest'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    margin-inline: 4px;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-weight: 700;
+    box-shadow:
+        0 0 0 2px var(--card),
+        0 0 0 3px hsl(from var(--primary) h s l / 0.55);
+}
+
+[data-theme='forest'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* ── 9 · Empty state: an unmarked summit ──────────────────────────────── */
+
+[data-theme='forest'] .sx-sig .kp-empty {
+    padding: 1.25rem 1rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+}
+
+/* Contour rings round a hill no trail has reached yet: two centres a
+   little apart, so the rings wander the way real contours do. */
+[data-theme='forest'] .sx-sig .kp-empty::before {
+    content: '';
+    display: block;
+    inline-size: 4.5rem;
+    block-size: 3.25rem;
+    margin: 0 auto 0.6rem;
+    border-radius: 50%;
+    background:
+        repeating-radial-gradient(ellipse at 46% 54%, transparent 0 5px, hsl(from var(--primary) h s l / 0.5) 5px 6px),
+        radial-gradient(circle at 46% 54%, var(--accent-foreground) 0 2.5px, transparent 3px);
+    mask: radial-gradient(ellipse closest-side, black 70%, transparent 100%);
+}
+
+[data-theme='forest'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+[data-theme='forest'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: a footpath that becomes a mapped road ───────────── */
+
+[data-theme='forest'] .sx-sig .sx-links a {
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--accent-foreground);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.24em;
+}
+
+[data-theme='forest'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    text-decoration-style: solid;
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 2px;
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='forest'] .sx-sig .kp-spinner::after {
+        animation: sx-forest-needle var(--sx-dur) infinite;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-skeleton::before {
+        animation: sx-forest-survey var(--sx-dur) var(--fx-ease) infinite;
+    }
+
+    [data-theme='forest'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::before {
+        animation-delay: 300ms;
+    }
+
+    [data-theme='forest'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::before {
+        animation-delay: 600ms;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-switch__input::before {
+        transition: transform 260ms var(--fx-ease);
+    }
+
+    [data-theme='forest'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-forest-draw var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-forest-ring var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-toast {
+        animation: sx-forest-note var(--sx-dur) var(--fx-ease) backwards;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-toast::before {
+        animation: sx-forest-blaze var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-dialog {
+        animation: sx-forest-unfold var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='forest'] .sx-sig .kp-tooltip {
+        animation: sx-forest-sign var(--sx-dur) var(--fx-ease) both;
+    }
+}
+
+/* Half a turn at a time: swing past, swing back, settle. */
+@keyframes sx-forest-needle {
+    0% {
+        transform: rotate(0);
+    }
+
+    30% {
+        transform: rotate(205deg);
+    }
+
+    42% {
+        transform: rotate(172deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    80% {
+        transform: rotate(385deg);
+    }
+
+    92% {
+        transform: rotate(352deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sx-forest-survey {
+    0% {
+        opacity: 1;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    45% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+    }
+
+    70%,
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes sx-forest-draw {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-forest-ring {
+    from {
+        opacity: 0;
+        transform: scale(1.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-forest-note {
+    from {
+        clip-path: inset(0 100% 0 0 round var(--radius));
+    }
+
+    to {
+        clip-path: inset(0 0 0 0 round var(--radius));
+    }
+}
+
+@keyframes sx-forest-blaze {
+    0%,
+    40% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: none;
+    }
+}
+
+/* Folded in three, then in two: it opens sideways first, then down. */
+@keyframes sx-forest-unfold {
+    0% {
+        opacity: 0;
+        transform: scale(0.5, 0.34);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1, 0.34);
+    }
+
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes sx-forest-sign {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

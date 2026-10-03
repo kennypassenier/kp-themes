@@ -1,0 +1,12 @@
+{
+    "spinner": "The light half's sundial turned inside out: a pale wedge of lamplight, fading behind itself, sweeps round a card-tone dial with a blue centre.",
+    "skeleton": "Lines one step up the tone ladder with ends that fade like the seam, coming up out of the dark once, slowly, and then resting.",
+    "switch": "No shadows on this half: a thumb a step lighter than its slot with a thin catch-light along its top; on, the slot becomes the blue plate.",
+    "check": "Boxes on the card's tone that become the blue plate with a pencilled tick; the chosen radio holds a blue pebble with a catch-light.",
+    "toast": "Lifted out of shade rather than casting one: the toast rises 2px on the popover's tone while a pale patch of light comes up on its leading corner.",
+    "dialog": "A page held under the lamp, a pool of light on its upper edge, rising out of a backdrop that is deepest at the edges.",
+    "tooltip": "A margin note by lamplight: a slip on the lightest tone with a hairline edge and an italic serif note, coming up slowly.",
+    "steps": "A table of contents: serif numerals joined by rules that fade at both ends, with the current step as the blue plate.",
+    "empty": "No box, just a pool of the popover's tone like the divider's, with the title in italic serif standing in it.",
+    "link": "A faint underline at rest; under the pointer a pale patch of light lands on the word and the underline comes to full strength."
+}

@@ -1,0 +1,12 @@
+{
+    "spinner": "A 2px black square with a red quarter disc in one corner that snaps round the square in four quarter turns: geometry, not a ring.",
+    "skeleton": "Grey bars set flush left with the twelve-column grid showing through, and a red column marker stepping across each bar a twelfth at a time.",
+    "switch": "A lever: the thumb is a narrow black bar, a rule on end, and on, the square slot fills red while the bar snaps to the other end in white.",
+    "check": "The two primary forms kept apart: a black square that fills red with a white tick cut in as a rule, and a black circle that takes a large red disc.",
+    "toast": "A poster band: a heavy red rule draws across the top from the left while the flush-left message is cut in behind it.",
+    "dialog": "An asymmetric sheet: a square black frame, a red rule over a third of the width, the title in Archivo 900, cut in from the left edge.",
+    "tooltip": "A caption block: white type on black with a red rule down its leading edge, square, cut in from the left in one short wipe.",
+    "steps": "Each step stands on a black rule like a column head with its number set large in Archivo 900; the current step's rule and number are red.",
+    "empty": "A poster with nothing on it: the twelve columns showing, a black rule on top, a flush-left heavy title and one red circle set off-centre.",
+    "link": "Red with a hairline red underline at rest; under the pointer the type turns black and the underline becomes a heavy red baseline rule."
+}

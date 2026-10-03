@@ -1,0 +1,12 @@
+{
+    "spinner": "The ASCII spinner every shell has, | / - \\ in one character cell, four glyphs stepped through with a bloom on the lit stroke.",
+    "skeleton": "Rows of dim character cells printed cell by cell, held, and printed again: the sweep, one of the two loops the theme allows.",
+    "switch": "A bracketed cell [█   ]: the block cursor steps across it in four character moves, dim at the left when off and lit at the right when on.",
+    "check": "Text controls, the brackets of a curses form: [ ] and [x], ( ) and (*), still native inputs with the label as part of the target.",
+    "toast": "Printed, not animated in: a > prompt, then the line typed out left to right in character steps.",
+    "dialog": "A curses window framed with a double rule like box-drawing characters, its title lit with the bloom, drawn row by row from the top.",
+    "tooltip": "Reverse video, the way a terminal highlights anything: near-black characters on green, like a pager's status line, typed in from the left.",
+    "steps": "Bracketed numbers joined by > separators; finished steps print [x] and the current step is shown in reverse video.",
+    "empty": "An empty prompt: > before the title and a block cursor after it that blinks five times and then stays lit.",
+    "link": "The dashed underline a terminal draws under a hyperlink it knows about; under the pointer the link turns to reverse video."
+}

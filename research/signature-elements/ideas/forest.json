@@ -1,0 +1,12 @@
+{
+    "spinner": "A compass needle, forest north and clay south, swings half a turn, overshoots, swings back and settles, inside a bezel with four cardinal ticks.",
+    "skeleton": "Pale bands each with a clay dashed footpath under them, surveyed one after another as a lake-blue band is drawn along each line.",
+    "switch": "A trail marker on a dashed footpath; on, the path turns forest green and the marker shows a summit peak.",
+    "check": "The tick is drawn like a trail on the map, and the radio's dot is a summit inside its own contour ring that tightens into place.",
+    "toast": "A field note that unrolls left to right while the clay trail blaze on its edge is painted top to bottom.",
+    "dialog": "A folded map opened over a contour backdrop: first sideways, then down, with a neat line framing the sheet.",
+    "tooltip": "A carved park sign: forest green with a routed groove inside its edge, pointing up at the button.",
+    "steps": "Markers on a trail: the walked part is drawn solid, the rest is a dashed footpath, and the current step sits inside two contour rings.",
+    "empty": "An unmarked summit: wandering contour rings round a clay point that no trail has reached yet.",
+    "link": "A dashed clay footpath at rest that becomes a solid forest road under the pointer."
+}

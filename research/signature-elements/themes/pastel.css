@@ -1,0 +1,554 @@
+/* pastel: the signature elements, written by the design pass.
+
+   Risograph on lavender milk. Three motifs carry every element: the
+   pearls on a thread (the theme's divider), the sticker (a hard, unblurred
+   plum offset beside a white shape, lifting askew and pressed flat) and
+   the second pass (a duplicate layer held 2px down and right, the
+   overprint). Every move eases on the theme's own overshoot (--fx-ease).
+
+   Loops: pastel says "nothing loops, nothing opposes its own direction".
+   The skeleton therefore arrives once and stands; the spinner is the one
+   element whose job is to keep moving, so it only ever turns one way and
+   changes no luminance. */
+
+[data-theme='pastel'] .sx-sig {
+    /* The sticker's hard shadow: plum, darkened, as a relative colour of
+       the token (the register mixes it with black; no literal here). */
+    --sx-pastel-peel: hsl(from var(--primary) h s calc(l * 0.55));
+}
+
+/* ── 1 · Spinner: three pearls hop along a thread ─────────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-spinner {
+    --sx-dur: 1500ms;
+    --sx-s: var(--kp-spinner-size, 1.25rem);
+    position: relative;
+    border: 0;
+    border-radius: 50%;
+    /* The thread: a 2px ring at three eighths of the size. */
+    background: radial-gradient(
+        circle closest-side,
+        transparent calc(75% - 1px),
+        var(--border-strong) calc(75% - 1px) calc(75% + 1px),
+        transparent calc(75% + 1px)
+    );
+    animation: none;
+}
+
+/* Three pearls, large to small, a third of a turn apart on the thread. */
+[data-theme='pastel'] .sx-sig .kp-spinner::before,
+[data-theme='pastel'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 12.5%, var(--sx-ink) 0 calc(var(--sx-s) * 0.15), transparent calc(var(--sx-s) * 0.15 + 0.5px)),
+        radial-gradient(circle at 82.5% 68.75%, var(--sx-ink) 0 calc(var(--sx-s) * 0.11), transparent calc(var(--sx-s) * 0.11 + 0.5px)),
+        radial-gradient(circle at 17.5% 68.75%, var(--sx-ink) 0 calc(var(--sx-s) * 0.075), transparent calc(var(--sx-s) * 0.075 + 0.5px));
+}
+
+[data-theme='pastel'] .sx-sig .kp-spinner::before {
+    --sx-ink: var(--info-foreground);
+    /* The second pass: the same pearls 2px down and right, multiplied. */
+    translate: 2px 2px;
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+}
+
+[data-theme='pastel'] .sx-sig .kp-spinner::after {
+    --sx-ink: var(--primary);
+}
+
+/* ── 2 · Skeleton: plates printed in two passes ───────────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-skeleton {
+    --sx-dur: 900ms;
+    position: relative;
+    block-size: 0.95rem;
+    border-radius: 999px;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    animation: none;
+}
+
+[data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2) {
+    background: var(--info);
+}
+
+[data-theme='pastel'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.6rem;
+}
+
+/* The key line, printed on the second drum: a plum outline that never
+   quite lines up with its fill, held 2px down and right. */
+[data-theme='pastel'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid hsl(from var(--primary) h s l / 0.55);
+    border-radius: inherit;
+    translate: 2px 2px;
+}
+
+/* ── 3 · Switch: a sticker thumb that springs across ──────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-switch {
+    --kp-switch-inset: 3px;
+}
+
+[data-theme='pastel'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--background);
+}
+
+[data-theme='pastel'] .sx-sig .kp-switch__input::before {
+    inset-block: 2px 3px;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    box-shadow: 0 2px 0 var(--border-strong);
+    box-sizing: border-box;
+}
+
+[data-theme='pastel'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='pastel'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset);
+    border-color: var(--sx-pastel-peel);
+    /* On, the sticker carries a mint pearl. */
+    background: radial-gradient(circle, var(--accent-foreground) 0 2.5px, transparent 3px), var(--card);
+    box-shadow: 0 2px 0 var(--sx-pastel-peel);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))) rotate(-14deg);
+}
+
+/* ── 4 · Checkbox and radio: an overprinted tick, a pearl ─────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-field__check {
+    --sx-dur: 420ms;
+    appearance: none;
+    position: relative;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.2rem;
+    block-size: 1.2rem;
+    margin: 0;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 0.4rem;
+    background: var(--card);
+}
+
+[data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+/* Two ticks, two drums: the mint one 2px off register under the paper one. */
+[data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::before,
+[data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::after {
+    content: '';
+    grid-area: 1 / 1;
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    border-end-start-radius: 2px;
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    color: var(--accent);
+    translate: 1.5px 1.5px;
+}
+
+[data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::after {
+    color: var(--primary-foreground);
+}
+
+[data-theme='pastel'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='pastel'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+/* The radio's pearl, with its sky second pass beside it. */
+[data-theme='pastel'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 1.5px 1.5px 0 hsl(from var(--info-foreground) h s l / 0.5);
+}
+
+/* ── 5 · Toast: a sticker slapped on ──────────────────────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-toast {
+    --sx-dur: 560ms;
+    border-color: var(--border-strong);
+    border-radius: 1.1rem;
+    box-shadow:
+        0 3px 0 var(--sx-pastel-peel),
+        0 16px 28px -14px hsl(from var(--foreground) h s l / 0.35);
+}
+
+[data-theme='pastel'] .sx-sig .kp-toast--success {
+    border-color: var(--success-foreground);
+    box-shadow:
+        0 3px 0 var(--success-foreground),
+        0 16px 28px -14px hsl(from var(--foreground) h s l / 0.35);
+}
+
+/* ── 6 · Dialog: a sheet laid on its mint second sheet ────────────────── */
+
+[data-theme='pastel'] .sx-sig .sx-backdrop {
+    background: hsl(from var(--foreground) h 30% 12% / 0.2);
+}
+
+[data-theme='pastel'] .sx-sig .kp-dialog {
+    --sx-dur: 640ms;
+    border-color: var(--border-strong);
+    border-radius: 1.2rem;
+    /* The second sheet in mint, off register, and the sticker's peel. */
+    box-shadow:
+        7px 8px 0 -1px var(--accent),
+        7px 8px 0 0 hsl(from var(--accent-foreground) h s l / 0.35),
+        0 3px 0 var(--sx-pastel-peel);
+}
+
+/* ── 7 · Tooltip: a thought bubble on two pearls ──────────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-tooltip {
+    --sx-dur: 420ms;
+    margin-block-start: 0.85rem;
+    margin-inline-start: 0.9rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: 0 2px 0 var(--sx-pastel-peel);
+    transform-origin: 0.4rem -0.8rem;
+}
+
+[data-theme='pastel'] .sx-sig .kp-tooltip::before,
+[data-theme='pastel'] .sx-sig .kp-tooltip::after {
+    content: '';
+    position: absolute;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--card);
+    box-sizing: border-box;
+}
+
+[data-theme='pastel'] .sx-sig .kp-tooltip::before {
+    inset-block-start: -9px;
+    inset-inline-start: 0.55rem;
+    inline-size: 9px;
+    block-size: 9px;
+}
+
+[data-theme='pastel'] .sx-sig .kp-tooltip::after {
+    inset-block-start: -15px;
+    inset-inline-start: 0.2rem;
+    inline-size: 5px;
+    block-size: 5px;
+}
+
+/* ── 8 · Wizard steps: pearls on a thread ─────────────────────────────── */
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+}
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.25rem;
+    block-size: 2px;
+    margin-inline: 0.3rem;
+    border-radius: 2px;
+    background: var(--border-strong);
+}
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li[data-state='done']::after {
+    background: var(--primary);
+}
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.65rem;
+    block-size: 1.65rem;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--card);
+    color: var(--muted-foreground);
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--accent-foreground);
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+/* The current bead is the sticker: plum, peeled askew, its hard shadow beside it. */
+[data-theme='pastel'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 2px 0 var(--sx-pastel-peel);
+    rotate: -10deg;
+}
+
+/* ── 9 · Empty state: a blank sticker sheet, one corner lifting ───────── */
+
+[data-theme='pastel'] .sx-sig .kp-empty {
+    position: relative;
+    padding: 1.25rem 1.5rem 1.6rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 1.2rem;
+    background: var(--card);
+    color: var(--muted-foreground);
+    box-shadow: 0 3px 0 var(--border-strong);
+}
+
+/* A halftone disc printed in two drums, the violet one 2px off register. */
+[data-theme='pastel'] .sx-sig .kp-empty::before {
+    content: '';
+    display: block;
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    margin: 0 auto 0.75rem;
+    background:
+        radial-gradient(circle, var(--primary) 1.3px, transparent 1.7px) 0 0 / 6px 6px,
+        radial-gradient(circle, hsl(from var(--info-foreground) h s l / 0.6) 1.3px, transparent 1.7px) 2px 2px / 6px 6px;
+    mask: radial-gradient(circle closest-side, black 0 calc(100% - 1px), transparent 100%);
+}
+
+/* The corner that lifts: milk showing where the sticker has come away. */
+[data-theme='pastel'] .sx-sig .kp-empty::after {
+    content: '';
+    position: absolute;
+    inset-block-end: -1px;
+    inset-inline-end: -1px;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border-start-start-radius: 0.7rem;
+    border-end-end-radius: 1.2rem;
+    background: linear-gradient(315deg, var(--background) 0 50%, var(--muted) 50% 100%);
+    box-shadow: -2px -2px 0 -1px hsl(from var(--border-strong) h s l / 0.5);
+}
+
+[data-theme='pastel'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+    font-weight: 700;
+}
+
+[data-theme='pastel'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: a mint plate fills in behind the word ───────────── */
+
+[data-theme='pastel'] .sx-sig .sx-links a {
+    position: relative;
+    isolation: isolate;
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
+}
+
+[data-theme='pastel'] .sx-sig .sx-links a::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -0.05em -0.25em;
+    border-radius: 0.4em;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+}
+
+[data-theme='pastel'] .sx-sig .sx-links a:is(:hover, .is-hover)::before {
+    transform: none;
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* The pearls hop a third of a turn at a time, each hop springing. */
+    [data-theme='pastel'] .sx-sig .kp-spinner::before,
+    [data-theme='pastel'] .sx-sig .kp-spinner::after {
+        animation: sx-pastel-hop var(--sx-dur) infinite;
+    }
+
+    /* Once: each plate springs out from the left, its key line springing
+       into register after it. Then they stand. */
+    [data-theme='pastel'] .sx-sig .kp-skeleton {
+        animation: sx-pastel-plate var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-skeleton::after {
+        animation: sx-pastel-register var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2),
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 120ms;
+    }
+
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3),
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 240ms;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-switch__input::before {
+        transition: transform 320ms var(--fx-ease);
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::after {
+        animation: sx-pastel-pop var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-pastel-register-sm var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-pastel-pop var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-toast {
+        animation: sx-pastel-slap var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-dialog {
+        animation: sx-pastel-sheet var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .kp-tooltip {
+        animation: sx-pastel-bubble var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='pastel'] .sx-sig .sx-links a::before {
+        transition: transform 380ms var(--fx-ease);
+    }
+}
+
+@keyframes sx-pastel-hop {
+    0% {
+        transform: rotate(0);
+        animation-timing-function: var(--fx-ease);
+    }
+
+    33.333% {
+        transform: rotate(120deg);
+        animation-timing-function: var(--fx-ease);
+    }
+
+    66.667% {
+        transform: rotate(240deg);
+        animation-timing-function: var(--fx-ease);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sx-pastel-plate {
+    from {
+        transform: scaleX(0.04);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes sx-pastel-register {
+    0%,
+    30% {
+        opacity: 0;
+        translate: 9px 7px;
+    }
+
+    100% {
+        opacity: 1;
+        translate: 2px 2px;
+    }
+}
+
+@keyframes sx-pastel-register-sm {
+    0%,
+    30% {
+        opacity: 0;
+        translate: 5px 5px;
+    }
+
+    100% {
+        opacity: 1;
+        translate: 1.5px 1.5px;
+    }
+}
+
+@keyframes sx-pastel-pop {
+    from {
+        opacity: 0;
+        scale: 0.3;
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes sx-pastel-slap {
+    from {
+        opacity: 0;
+        transform: translateY(12px) rotate(-4deg) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-pastel-sheet {
+    from {
+        opacity: 0;
+        transform: translateY(18px) rotate(-2.5deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-pastel-bubble {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    40% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

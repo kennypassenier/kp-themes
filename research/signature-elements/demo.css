@@ -352,27 +352,6 @@
     transform: scaleY(0);
 }
 
-/* terminal: | / - \ in one character cell. */
-[data-theme='terminal'] .sx-sig .kp-spinner {
-    --sx-dur: 640ms;
-    inline-size: 1ch;
-    block-size: 1.2em;
-    overflow: hidden;
-    border: 0;
-    border-radius: 0;
-    color: var(--primary);
-    font: 700 var(--kp-spinner-size, 1.25rem) / 1.2 var(--theme-font-mono);
-    text-align: center;
-    vertical-align: middle;
-    animation: none;
-}
-
-[data-theme='terminal'] .sx-sig .kp-spinner::before {
-    content: '|\A/\A-\A\\';
-    display: block;
-    white-space: pre;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-spinner::after {
         animation: sx-orbit var(--sx-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
@@ -396,10 +375,6 @@
 
     [data-theme='retro'] .sx-sig .kp-spinner::after {
         animation: sx-sand-bottom var(--sx-dur) steps(5, jump-end) infinite;
-    }
-
-    [data-theme='terminal'] .sx-sig .kp-spinner::before {
-        animation: sx-ascii var(--sx-dur) steps(4, jump-end) infinite;
     }
 }
 
@@ -455,12 +430,6 @@
     80%,
     100% {
         transform: scaleY(1);
-    }
-}
-
-@keyframes sx-ascii {
-    to {
-        transform: translateY(-4.8em);
     }
 }
 
@@ -538,39 +507,6 @@
     opacity: 0.45;
 }
 
-/* blueprint: a section hatch between dimension ticks. */
-[data-theme='blueprint'] .sx-sig .kp-skeleton {
-    --sx-dur: 2400ms;
-    position: relative;
-    block-size: 0.9rem;
-    margin-inline: 4px;
-    border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
-    border-radius: 0;
-    background: repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.25) 0 1px, transparent 1px 6px);
-    animation: none;
-}
-
-[data-theme='blueprint'] .sx-sig .kp-skeleton + .kp-skeleton {
-    margin-block-start: 0.7rem;
-}
-
-[data-theme='blueprint'] .sx-sig .kp-skeleton::before,
-[data-theme='blueprint'] .sx-sig .kp-skeleton::after {
-    content: '';
-    position: absolute;
-    inset-block: -5px;
-    inline-size: 1px;
-    background: var(--foreground);
-}
-
-[data-theme='blueprint'] .sx-sig .kp-skeleton::before {
-    inset-inline-start: -1px;
-}
-
-[data-theme='blueprint'] .sx-sig .kp-skeleton::after {
-    inset-inline-end: -1px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-skeleton::before {
         animation: sx-breathe var(--sx-dur) ease-in-out infinite;
@@ -590,10 +526,6 @@
 
     [data-theme='retro'] .sx-sig .kp-skeleton::after {
         animation: sx-dither var(--sx-dur) steps(4, jump-none) infinite alternate;
-    }
-
-    [data-theme='blueprint'] .sx-sig .kp-skeleton {
-        animation: sx-breathe var(--sx-dur) ease-in-out infinite;
     }
 }
 
@@ -716,37 +648,6 @@
     box-shadow: var(--kp-raised);
 }
 
-/* terminal: [█   ] — a block cursor in a bracketed cell. */
-[data-theme='terminal'] .sx-sig .kp-switch {
-    --kp-switch-border: 0px;
-    --kp-switch-inset: 4px;
-    --kp-switch-radius: 0;
-    --kp-switch-thumb-radius: 0;
-}
-
-[data-theme='terminal'] .sx-sig .kp-switch__input,
-[data-theme='terminal'] .sx-sig .kp-switch__input:checked {
-    border: 0;
-    background:
-        linear-gradient(var(--primary), var(--primary)) left / 2px 100% no-repeat,
-        linear-gradient(var(--primary), var(--primary)) right / 2px 100% no-repeat,
-        linear-gradient(var(--primary), var(--primary)) left top / 7px 2px no-repeat,
-        linear-gradient(var(--primary), var(--primary)) left bottom / 7px 2px no-repeat,
-        linear-gradient(var(--primary), var(--primary)) right top / 7px 2px no-repeat,
-        linear-gradient(var(--primary), var(--primary)) right bottom / 7px 2px no-repeat;
-}
-
-[data-theme='terminal'] .sx-sig .kp-switch__input::before {
-    inline-size: 0.6rem;
-    background: hsl(from var(--primary) h s l / 0.3);
-}
-
-[data-theme='terminal'] .sx-sig .kp-switch__input:checked::before {
-    inset-inline-start: 4px;
-    background: var(--primary);
-    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - 8px - 0.6rem));
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-switch__input::before {
         transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
@@ -759,10 +660,6 @@
     [data-theme='retro'] .sx-sig .kp-switch__input,
     [data-theme='retro'] .sx-sig .kp-switch__input::before {
         transition: none;
-    }
-
-    [data-theme='terminal'] .sx-sig .kp-switch__input::before {
-        transition: transform 200ms steps(4, jump-end);
     }
 }
 
@@ -856,36 +753,6 @@
     background: var(--foreground);
 }
 
-/* terminal: [x] and (*). */
-[data-theme='terminal'] .sx-sig .kp-field__check {
-    appearance: none;
-    inline-size: 3ch;
-    block-size: 1.25em;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    color: var(--primary);
-    font: 1rem / 1.25 var(--theme-font-mono);
-    white-space: pre;
-}
-
-[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']::before {
-    content: '[ ]';
-}
-
-[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
-    content: '[x]';
-}
-
-[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']::before {
-    content: '( )';
-}
-
-[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']:checked::before {
-    content: '(*)';
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
         animation: sx-pen var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -969,16 +836,6 @@
     background: var(--kp-ramp);
 }
 
-/* terminal: printed behind a prompt. */
-[data-theme='terminal'] .sx-sig .kp-toast {
-    --sx-dur: 640ms;
-    font-family: var(--theme-font-mono);
-}
-
-[data-theme='terminal'] .sx-sig .kp-toast__body::before {
-    content: '> ';
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-toast {
         animation: sx-rise 280ms cubic-bezier(0.2, 0, 0, 1) both;
@@ -994,10 +851,6 @@
 
     [data-theme='retro'] .sx-sig .kp-toast {
         animation: sx-drop var(--sx-dur) steps(3, jump-end) both;
-    }
-
-    [data-theme='terminal'] .sx-sig .kp-toast {
-        animation: sx-type var(--sx-dur) steps(20, jump-end) backwards;
     }
 }
 
@@ -1063,16 +916,6 @@
     }
 }
 
-@keyframes sx-type {
-    from {
-        clip-path: inset(0 100% 0 0);
-    }
-
-    to {
-        clip-path: inset(0);
-    }
-}
-
 /* ── 6 · Dialog ───────────────────────────────────────────────────────── */
 
 /* formal: a sheet laid on the desk, framed twice, over a paper backdrop. */
@@ -1120,12 +963,6 @@
     --sx-dur: 280ms;
 }
 
-/* deco: a sunburst opens from the top centre inside a gold double frame. */
-[data-theme='deco'] .sx-sig .kp-dialog {
-    --sx-dur: 560ms;
-    border: 4px double var(--primary);
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-dialog {
         animation: sx-sheet var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
@@ -1141,10 +978,6 @@
 
     [data-theme='retro'] .sx-sig .kp-dialog {
         animation: sx-zoom var(--sx-dur) steps(4, jump-end) both;
-    }
-
-    [data-theme='deco'] .sx-sig .kp-dialog {
-        animation: sx-fan var(--sx-dur) cubic-bezier(0.3, 0, 0.2, 1) backwards;
     }
 }
 
@@ -1190,16 +1023,6 @@
 
     to {
         transform: none;
-    }
-}
-
-@keyframes sx-fan {
-    from {
-        clip-path: circle(0 at 50% 0);
-    }
-
-    to {
-        clip-path: circle(150% at 50% 0);
     }
 }
 
@@ -1261,44 +1084,6 @@
     line-height: 1.3;
 }
 
-/* blueprint: an annotation with a leader line. */
-[data-theme='blueprint'] .sx-sig .kp-tooltip {
-    --sx-dur: 360ms;
-    margin-block-start: 1rem;
-    margin-inline-start: 1rem;
-    border: 1px solid var(--foreground);
-    border-radius: 0;
-    background: var(--popover);
-    font-family: var(--theme-font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-[data-theme='blueprint'] .sx-sig .kp-tooltip::before {
-    content: '';
-    position: absolute;
-    inset-block-end: 100%;
-    inset-inline-start: 0.75rem;
-    inline-size: 1px;
-    block-size: 1.05rem;
-    background: var(--foreground);
-    transform-origin: 50% 100%;
-}
-
-[data-theme='blueprint'] .sx-sig .kp-tooltip::after {
-    content: '';
-    position: absolute;
-    inset-block-end: calc(100% + 1.05rem - 3px);
-    inset-inline-start: calc(0.75rem - 3px);
-    inline-size: 7px;
-    block-size: 7px;
-    border: 1px solid var(--foreground);
-    border-radius: 50%;
-    background: var(--popover);
-    box-sizing: border-box;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-tooltip {
         animation: sx-tip-drop var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
@@ -1310,14 +1095,6 @@
 
     [data-theme='retro'] .sx-sig .kp-tooltip {
         animation: sx-hold var(--sx-dur) step-end;
-    }
-
-    [data-theme='blueprint'] .sx-sig .kp-tooltip {
-        animation: sx-callout var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) backwards;
-    }
-
-    [data-theme='blueprint'] .sx-sig .kp-tooltip::before {
-        animation: sx-leader var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) backwards;
     }
 }
 
@@ -1342,28 +1119,6 @@
     0%,
     100% {
         opacity: 0;
-    }
-}
-
-@keyframes sx-callout {
-    0%,
-    45% {
-        clip-path: inset(-1.5rem 100% 0 0);
-    }
-
-    100% {
-        clip-path: inset(-1.5rem 0 0 0);
-    }
-}
-
-@keyframes sx-leader {
-    0% {
-        transform: scaleY(0);
-    }
-
-    45%,
-    100% {
-        transform: scaleY(1);
     }
 }
 
@@ -1484,38 +1239,6 @@
     color: var(--primary);
 }
 
-/* deco: diamonds on a gold double rule. */
-[data-theme='deco'] .sx-sig .kp-wizard__steps {
-    gap: 0.5rem 0;
-}
-
-[data-theme='deco'] .sx-sig .kp-wizard__steps li {
-    gap: 0.5rem;
-}
-
-[data-theme='deco'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
-    content: '';
-    inline-size: 1.5rem;
-    block-size: 4px;
-    margin-inline: 0.5rem;
-    border-block: 1px solid var(--primary);
-}
-
-[data-theme='deco'] .sx-sig .kp-wizard__steps li::before {
-    inline-size: 1.9rem;
-    block-size: 1.9rem;
-    border: 0;
-    border-radius: 0;
-    background: hsl(from var(--primary) h s l / 0.25);
-    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-    color: var(--foreground);
-}
-
-[data-theme='deco'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
-    background: var(--primary);
-    color: var(--primary-foreground);
-}
-
 /* ── 9 · Empty state ──────────────────────────────────────────────────── */
 
 /* formal: a blank ledger page. */
@@ -1604,49 +1327,6 @@
     margin: 0;
 }
 
-/* terminal: an empty prompt with a cursor. */
-[data-theme='terminal'] .sx-sig .kp-empty {
-    padding: 0.75rem 0;
-    border: 0;
-    border-radius: 0;
-    font-family: var(--theme-font-mono);
-    text-align: start;
-}
-
-[data-theme='terminal'] .sx-sig .kp-empty__title {
-    margin: 0 0 0.25rem;
-    color: var(--foreground);
-}
-
-[data-theme='terminal'] .sx-sig .kp-empty__title::before {
-    content: '> ';
-    color: var(--primary);
-}
-
-[data-theme='terminal'] .sx-sig .kp-empty__title::after {
-    content: '';
-    display: inline-block;
-    inline-size: 0.6em;
-    block-size: 1.1em;
-    margin-inline-start: 0.3ch;
-    vertical-align: text-bottom;
-    background: var(--primary);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    /* Five blinks and it stays lit: nothing blinks for more than five
-       seconds (WCAG 2.2.2), and once a second is far below DI5. */
-    [data-theme='terminal'] .sx-sig .kp-empty__title::after {
-        animation: sx-blink 1000ms step-end 5;
-    }
-}
-
-@keyframes sx-blink {
-    50% {
-        opacity: 0;
-    }
-}
-
 /* ── 10 · Link hover ──────────────────────────────────────────────────── */
 
 /* formal: the underline doubles under the pointer. */
@@ -1694,26 +1374,6 @@
     color: var(--primary-foreground);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-}
-
-/* synthwave: a horizon underline that glows. */
-[data-theme='synthwave'] .sx-sig .sx-links a {
-    padding-block-end: 2px;
-    text-decoration: none;
-    background: linear-gradient(90deg, var(--primary), var(--accent)) left bottom / 100% 2px no-repeat;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-}
-
-[data-theme='synthwave'] .sx-sig .sx-links a:is(:hover, .is-hover) {
-    background-size: 100% 3px;
-    text-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.75);
-}
-
-@media (forced-colors: active) {
-    [data-theme='synthwave'] .sx-sig .sx-links a {
-        text-decoration: underline;
-    }
 }
 
 @media (prefers-reduced-motion: no-preference) {

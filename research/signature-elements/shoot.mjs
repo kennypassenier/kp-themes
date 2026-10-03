@@ -7,7 +7,7 @@ import { mkdirSync } from 'node:fs';
 const out = new URL('./out/', import.meta.url).pathname;
 mkdirSync(out, { recursive: true });
 const full = process.argv.slice(2).length ? process.argv.slice(2) : ['formal', 'cyberpunk', 'retro'];
-const closeUps = ['formal', 'cyberpunk'];
+const closeUps = full; // every theme asked for gets its close-ups
 const sections = ['spinner', 'skeleton', 'switch', 'check', 'toast', 'dialog', 'tooltip', 'steps', 'empty', 'link'];
 const url = (t) => `http://127.0.0.1:8735/research/signature-elements/demo.html?theme=${t}`;
 

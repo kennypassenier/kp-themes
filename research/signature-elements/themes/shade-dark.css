@@ -1,0 +1,435 @@
+/* shade-dark: the signature elements, written by the design pass.
+
+   The dark half of the shade pair: the same Solarized scheme mirrored, a
+   deep blue-black ground, a lifted grey-cyan ink that stops far short of
+   white, accents as plates. It shares the light half's ideas (the seam
+   that fades instead of ending, the sundial, the table of contents) but
+   answers depth the other way, as its anatomy requires: no elevation
+   shadow on a surface. Depth is the tone ladder (ground 11%, card 14%,
+   popover 17%), and what the light half does with shade this half does
+   with light: a thing is lifted out of the dark by a pale patch of the
+   pointer's light, never cast down by a shadow.
+   No flicker; every arrival runs once. The spinner's turn is the one
+   loop, a luminance-free transform, as the pair allows for its band. */
+
+[data-theme='shade-dark'] .sx-sig {
+    --sx-sh-ease: var(--kp-ease-reveal, cubic-bezier(0.2, 0.75, 0.35, 1));
+    --sx-sh-shade: hsl(from var(--foreground) h s l / 0.45);
+    --sx-sh-seam: linear-gradient(to right, transparent, var(--border-strong) 22%, var(--border-strong) 78%, transparent);
+}
+
+/* ── 1 · Spinner: a reading lamp going round ─────────────────────────────
+   The light half's sundial turned inside out: the dial is a card-tone
+   disc, and what sweeps round it is not a shade but a pale wedge of
+   light, fading behind itself, round a blue centre. */
+
+[data-theme='shade-dark'] .sx-sig .kp-spinner {
+    --sx-dur: 2400ms;
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--card);
+    animation: none;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--sx-sh-shade), transparent 28%, transparent);
+    transform: rotate(-20deg);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: calc(50% - 2px);
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+/* ── 2 · Skeleton: lines on the tone ladder ──────────────────────────────
+   A paragraph not yet written, drawn one step up the tone ladder (the
+   popover's tone) with ends that fade like the seam, the first line
+   indented. They come up out of the dark once, slowly, and rest. */
+
+[data-theme='shade-dark'] .sx-sig .kp-skeleton {
+    --sx-dur: 700ms;
+    block-size: 0.7rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: linear-gradient(to right, var(--popover) 65%, transparent);
+    animation: none;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.75rem;
+}
+
+[data-theme='shade-dark'] .sx-sig .sx-skel .kp-skeleton:first-child {
+    margin-inline-start: 1.5em;
+}
+
+/* ── 3 · Switch: a disc lifted by the light ──────────────────────────────
+   No shadows on this half: the slot sits on the card's tone, and the
+   thumb is a step lighter with a thin catch-light along its top, lifted
+   out of shade rather than casting one. On, the slot is the blue plate. */
+
+[data-theme='shade-dark'] .sx-sig .kp-switch {
+    --kp-switch-radius: var(--kp-radius-pill, 999px);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--card);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+    box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.5);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--primary-foreground);
+    box-shadow: none;
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: plates in the lamplight ─────────────────────
+   Unticked boxes sit on the card's tone. Ticked, the box becomes the blue
+   plate and its tick is drawn in like a pencil stroke. The chosen radio
+   holds a blue pebble with a catch-light, lifted rather than shaded. */
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check {
+    --sx-dur: 340ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.25rem;
+    background: var(--card);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.32rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.45);
+}
+
+/* ── 5 · Toast: lifted out of shade ──────────────────────────────────────
+   No elevation shadow on this half; depth is the tone ladder. The toast
+   is the popover's tone, and as it rises 2px a pale patch of light (the
+   pointer's light, fixed at the top left) comes up on its leading
+   corner, on a pseudo-element so only its opacity moves. */
+
+[data-theme='shade-dark'] .sx-sig .kp-toast {
+    --sx-dur: 520ms;
+    position: relative;
+    border-color: var(--border);
+    box-shadow: none;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-toast:not([class*='kp-toast--']) {
+    background: var(--popover);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-toast::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse 60% 140% at 0 0, hsl(from var(--foreground) h s l / 0.1), transparent 70%);
+    pointer-events: none;
+}
+
+/* ── 6 · Dialog: a page held under the lamp ──────────────────────────────
+   The top of the tone ladder with a pool of light on its upper edge, and
+   a serif title. The backdrop is the night around the lamp, deepest at
+   the edges. The sheet rises 10px out of it and settles. */
+
+[data-theme='shade-dark'] .sx-sig .sx-backdrop {
+    background: radial-gradient(ellipse 80% 90% at 50% 45%, hsl(from var(--background) h s l / 0.35), hsl(from var(--background) h s 4% / 0.85));
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-dialog {
+    --sx-dur: 480ms;
+    border-color: var(--border);
+    background:
+        radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--foreground) h s l / 0.07), transparent 75%),
+        var(--popover);
+    box-shadow: none;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-weight: 600;
+}
+
+/* ── 7 · Tooltip: a note in the margin, by lamplight ─────────────────────
+   A slip on the lightest tone with a hairline edge instead of a shadow,
+   and an italic serif note, as a reader pencils beside a line. It comes
+   up slowly, without a jump. */
+
+[data-theme='shade-dark'] .sx-sig .kp-tooltip {
+    --sx-dur: 320ms;
+    margin-inline-start: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    background: var(--popover);
+    color: var(--foreground);
+    box-shadow: none;
+    font-family: var(--theme-font-display);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* ── 8 · Wizard steps: a table of contents ───────────────────────────────
+   Serif numerals, steps joined by seam rules that fade at both ends. Done
+   steps carry a tick in the ink; the current step is the blue plate, its
+   paper ink the only light text on the page. */
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 2.25rem;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li {
+    position: relative;
+    gap: 0.45rem;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: calc(100% + 0.25rem);
+    inline-size: 1.75rem;
+    block-size: 1px;
+    background: var(--sx-sh-seam);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li::before {
+    border-color: var(--border-strong);
+    background: var(--card);
+    font-family: var(--theme-font-display);
+    font-size: 0.9rem;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--border-strong);
+    color: var(--foreground);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    padding: 0.2rem 0.8rem 0.2rem 0.2rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-color: var(--primary-foreground);
+    background: var(--primary-foreground);
+    color: var(--primary);
+}
+
+/* ── 9 · Empty state: a pool of lamplight ────────────────────────────────
+   No box at all: the divider's own pool of the popover's tone, brightest
+   at its centre and fading to the ground, with the title in italic serif
+   standing in it and a seam rule below. */
+
+[data-theme='shade-dark'] .sx-sig .kp-empty {
+    padding: 2rem 1.5rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        radial-gradient(ellipse 62% 90% at 50% 50%, hsl(from var(--popover) h s l / 0.6), hsl(from var(--popover) h s l / 0.18) 45%, transparent 75%);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-empty::after {
+    content: '';
+    display: block;
+    block-size: 1px;
+    margin: 1rem auto 0;
+    inline-size: 50%;
+    background: var(--sx-sh-seam);
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-empty__title {
+    font-family: var(--theme-font-display);
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 500;
+}
+
+[data-theme='shade-dark'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the word under the lamp ────────────────────────────
+   A faint underline at rest; under the pointer a pale patch of light
+   lands on the word and the underline comes to full strength. A patch,
+   not a glow: nothing spills past the word. Paint only. */
+
+[data-theme='shade-dark'] .sx-sig .sx-links a {
+    border-radius: 0.2em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: hsl(from var(--primary) h s l / 0.45);
+    text-underline-offset: 0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='shade-dark'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background: hsl(from var(--foreground) h s l / 0.1);
+    text-decoration-color: var(--primary);
+}
+
+/* ── Motion: once, and slowly ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='shade-dark'] .sx-sig .kp-spinner::before {
+        animation: sx-shdk-sweep var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-skeleton {
+        animation: sx-shdk-surface var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-skeleton:nth-child(2) {
+        animation-delay: 160ms;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-skeleton:nth-child(3) {
+        animation-delay: 320ms;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-switch__input::before {
+        transition: transform 320ms var(--sx-sh-ease);
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-shdk-pencil var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-shdk-pebble var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-toast {
+        animation: sx-shdk-lift var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-toast::after {
+        animation: sx-shdk-grow var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-dialog {
+        animation: sx-shdk-rise var(--sx-dur) var(--sx-sh-ease) both;
+    }
+
+    [data-theme='shade-dark'] .sx-sig .kp-tooltip {
+        animation: sx-shdk-surface var(--sx-dur) var(--sx-sh-ease) both;
+    }
+}
+
+@keyframes sx-shdk-sweep {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes sx-shdk-surface {
+    from {
+        opacity: 0;
+        transform: translateY(3px);
+    }
+}
+
+@keyframes sx-shdk-pencil {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-shdk-pebble {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+}
+
+@keyframes sx-shdk-lift {
+    from {
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 1;
+        transform: none;
+    }
+
+    to {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes sx-shdk-grow {
+    0%,
+    40% {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes sx-shdk-rise {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}

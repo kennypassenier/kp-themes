@@ -1,0 +1,446 @@
+/* nostromo: the signature elements, written by the design pass.
+
+   Cassette futurism: the beige moulded plastic of 1979 hardware, orange
+   indicator LEDs, label tape, vent slots, Michroma on the case labels. The
+   case, not the screen (the screen inside it is terminal, so no
+   scanlines, phosphor or blinking cursor here). Ink acts; orange only
+   indicates, as a lamp or a dot, never as text. Three parts of the case
+   carry every element:
+     - the LED: lit by shape as well as colour (a filled lens in a bezel),
+       never blinking;
+     - the label tape: dark embossed tape with tracked uppercase mono;
+     - the moulding: matte plastic, a highlight on the top edge, a shadow
+       under, slots and wells pressed into it.
+   Nothing loops, not even the busy sign: every element here plays once
+   (the register's own popdown and stamp) and then stands, as the theme
+   requires. A machine says it is busy with a lamp that is on. */
+
+[data-theme='nostromo'] .sx-sig {
+    --sx-no-led: var(--sidebar-primary);
+    --sx-no-ease: cubic-bezier(0.2, 0, 0, 1);
+    /* Moulded: a highlight along the top edge and a shadow under. */
+    --sx-no-raised:
+        inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+        0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+        0 2px 3px hsl(from var(--foreground) h s l / 0.15);
+    /* Pressed in: a shadow inside the top edge, a highlight under. */
+    --sx-no-well:
+        inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
+        0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
+    /* A lit LED: a bright lens with a hot centre, in a dark bezel ring. */
+    --sx-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--sx-no-led) 30%, var(--accent) 70%);
+}
+
+/* ── 1 · Spinner: the BUSY lamp ──────────────────────────────────────────
+   No wheel: a 1979 panel says it is busy with a lamp that is on. An
+   orange LED lens in a dark bezel, which strikes once (a short stamp)
+   and then stays lit while the work goes on. The role="status" label
+   carries "Loading"; the lamp is the case's way of showing it. */
+
+[data-theme='nostromo'] .sx-sig .kp-spinner {
+    --sx-dur: 260ms;
+    position: relative;
+    border: 0;
+    border-radius: 50%;
+    background: var(--foreground);
+    box-shadow: var(--sx-no-well);
+    animation: none;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 22%;
+    border-radius: 50%;
+    background: var(--sx-no-lens);
+    box-shadow: 0 0 6px hsl(from var(--sx-no-led) h s l / 0.6);
+}
+
+/* ── 2 · Skeleton: vent slots ────────────────────────────────────────────
+   Long rounded slots pressed into the plastic, the shape of the case's
+   vents. They are moulded in once, one after another, popping down into
+   the panel, and then they stand. */
+
+[data-theme='nostromo'] .sx-sig .kp-skeleton {
+    --sx-dur: 280ms;
+    block-size: 0.75rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: hsl(from var(--foreground) h s l / 0.14);
+    box-shadow: var(--sx-no-well);
+    animation: none;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.65rem;
+}
+
+/* ── 3 · Switch: a slide switch with a lamp ──────────────────────────────
+   A slot pressed into the case, a ribbed plastic slider in it, and an
+   indicator lamp at the slot's far end that is dark when off and lit
+   when on, a filled lens and not just a colour. The slider clacks across
+   once; no ease worth watching. */
+
+[data-theme='nostromo'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0.3rem;
+    --kp-switch-thumb-radius: 0.2rem;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-switch__input {
+    border: 1px solid var(--border-strong);
+    background:
+        radial-gradient(circle at calc(100% - 0.6rem) 50%, hsl(from var(--foreground) h s l / 0.35) 0 0.24rem, transparent 0.26rem),
+        hsl(from var(--foreground) h s l / 0.1);
+    box-shadow: var(--sx-no-well);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-switch__input::before {
+    background:
+        repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+        var(--card);
+    box-shadow: var(--sx-no-raised);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--border-strong);
+    background:
+        radial-gradient(circle at 0.6rem 50%, var(--primary-foreground) 0 0.06rem, var(--sx-no-led) 0.12rem 0.24rem, transparent 0.26rem),
+        hsl(from var(--foreground) h s l / 0.1);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background:
+        repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+        var(--card);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: a key and a lamp ────────────────────────────
+   The checkbox is a well that takes the deep orange signal plate with a
+   light tick, stamped in. The radio is the panel's lamp: a dark round
+   bezel that, chosen, holds a lit LED lens. A lamp is never a box. */
+
+[data-theme='nostromo'] .sx-sig .kp-field__check {
+    --sx-dur: 160ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.2rem;
+    background: var(--card);
+    box-shadow: var(--sx-no-well);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--selected);
+    background: var(--selected);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+    background: hsl(from var(--foreground) h s l / 0.12);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--foreground);
+    background: var(--foreground);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: 50%;
+    background: var(--sx-no-lens);
+    box-shadow: 0 0 5px hsl(from var(--sx-no-led) h s l / 0.6);
+}
+
+/* ── 5 · Toast: a panel with its lamp ────────────────────────────────────
+   A moulded panel with a lit LED at its leading edge, the case telling
+   you something happened. It pops down into place once, the register's
+   headline verb, and the lamp strikes as it lands. */
+
+[data-theme='nostromo'] .sx-sig .kp-toast {
+    --sx-dur: 240ms;
+    position: relative;
+    padding-inline-start: 2rem;
+    box-shadow: var(--sx-no-raised);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0.75rem;
+    inset-block-start: calc(50% - 0.3rem);
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: 50%;
+    background: var(--sx-no-lens);
+    box-shadow:
+        0 0 0 2px var(--foreground),
+        0 0 6px 2px hsl(from var(--sx-no-led) h s l / 0.45);
+}
+
+/* ── 6 · Dialog: a hatch, screwed down ───────────────────────────────────
+   A moulded hatch with a screw in each corner and its title on the case
+   label face (Michroma, tracked, uppercase). It pops down into place
+   once, a panel set into the console. */
+
+[data-theme='nostromo'] .sx-sig .kp-dialog {
+    --sx-dur: 260ms;
+    --sx-no-screw: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.45) 0 1.5px, hsl(from var(--foreground) h s l / 0.2) 2px 3px, transparent 3.5px);
+    background:
+        var(--sx-no-screw) 6px 6px / 8px 8px no-repeat,
+        var(--sx-no-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
+        var(--sx-no-screw) 6px calc(100% - 6px) / 8px 8px no-repeat,
+        var(--sx-no-screw) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat,
+        var(--card);
+    box-shadow:
+        var(--sx-no-raised),
+        0 12px 28px -14px hsl(from var(--foreground) h s l / 0.5);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ── 7 · Tooltip: label tape ─────────────────────────────────────────────
+   A strip of embossed tape: dark tape, raised light letters in the mono
+   stack, tracked and uppercase, as a Dymo gun punched it. It is stamped
+   on, once. */
+
+[data-theme='nostromo'] .sx-sig .kp-tooltip {
+    --sx-dur: 160ms;
+    margin-inline-start: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    border: 0;
+    border-radius: 2px;
+    background: var(--foreground);
+    color: var(--primary-foreground);
+    box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
+    font-family: var(--theme-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.9);
+    text-transform: uppercase;
+}
+
+/* ── 8 · Wizard steps: a row of keys ─────────────────────────────────────
+   Each step a moulded plastic key with its number. Done keys carry a
+   tick in the deep orange; the current key is pressed in, with its lamp
+   lit beside it, so the state is a shape and a glyph, never colour alone. */
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 1rem;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps li {
+    gap: 0.5rem;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.7rem;
+    block-size: 1.6rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.25rem;
+    background: var(--card);
+    box-shadow: var(--sx-no-raised);
+    color: var(--foreground);
+    font-family: var(--theme-font-mono);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--border-strong);
+    color: var(--selected);
+    font-weight: 700;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-color: var(--border-strong);
+    background: var(--background);
+    box-shadow: var(--sx-no-well);
+    color: var(--foreground);
+    transform: translateY(1px);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-wizard__steps li[data-state='current']::after {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--sx-no-lens);
+    box-shadow:
+        0 0 0 2px var(--foreground),
+        0 0 5px 2px hsl(from var(--sx-no-led) h s l / 0.45);
+}
+
+/* ── 9 · Empty state: an empty bay ───────────────────────────────────────
+   A bay in the console with nothing fitted: a moulded panel with a vent
+   grille and the title on a strip of label tape, as a technician marks
+   an empty slot. */
+
+[data-theme='nostromo'] .sx-sig .kp-empty {
+    position: relative;
+    padding: 2.4rem 1.25rem 1.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.3rem;
+    background: var(--card);
+    box-shadow: var(--sx-no-well);
+    color: var(--muted-foreground);
+}
+
+[data-theme='nostromo'] .sx-sig .kp-empty::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.8rem;
+    inset-inline: calc(50% - 3rem);
+    block-size: 0.9rem;
+    background: repeating-linear-gradient(
+        to bottom,
+        hsl(from var(--foreground) h s l / 0.3) 0 2px,
+        transparent 2px 4.5px
+    );
+    border-radius: 1px;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-empty__title {
+    display: inline-block;
+    margin-block-end: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 2px;
+    background: var(--foreground);
+    color: var(--primary-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+[data-theme='nostromo'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the indicator lights ───────────────────────────────
+   Ink acts, orange indicates: the link is ink with a faint orange
+   underline, and under the pointer the underline lights in the deep
+   orange at full weight, an indicator coming on. Paint only. */
+
+[data-theme='nostromo'] .sx-sig .sx-links a {
+    color: var(--primary);
+    text-decoration-color: var(--kp-underline, hsl(from var(--selected) h s l / 0.28));
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
+}
+
+[data-theme='nostromo'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    text-decoration-color: var(--selected);
+    text-decoration-thickness: 3px;
+}
+
+/* ── Motion: once, as the register's popdown and stamp ────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='nostromo'] .sx-sig .kp-spinner::after,
+    [data-theme='nostromo'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-no-strike var(--sx-dur) var(--sx-no-ease) both;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-no-punch var(--sx-dur) var(--sx-no-ease) both;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-skeleton {
+        animation: sx-no-mould var(--sx-dur) var(--sx-no-ease) both;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-skeleton:nth-child(2) {
+        animation-delay: 90ms;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-skeleton:nth-child(3) {
+        animation-delay: 180ms;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-switch__input::before {
+        transition: transform 110ms var(--sx-no-ease);
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-toast,
+    [data-theme='nostromo'] .sx-sig .kp-dialog {
+        animation: sx-no-popdown var(--sx-dur) var(--sx-no-ease) both;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-toast::before {
+        animation: sx-no-strike 200ms var(--sx-no-ease) var(--sx-dur) both;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-tooltip {
+        animation: sx-no-stamp var(--sx-dur) var(--sx-no-ease) both;
+    }
+}
+
+/* The lamp strikes: from dark to lit with a short stamp in size. Once. */
+@keyframes sx-no-strike {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.12);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-no-punch {
+    from {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        opacity: 1;
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-no-mould {
+    from {
+        opacity: 0;
+        transform: scaleY(0.2);
+    }
+}
+
+@keyframes sx-no-popdown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes sx-no-stamp {
+    from {
+        opacity: 0;
+        transform: scale(1.08);
+    }
+}

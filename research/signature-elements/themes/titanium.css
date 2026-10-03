@@ -1,0 +1,492 @@
+/* titanium: the signature elements, written by the design pass.
+
+   A material, not a place: anodised titanium over carbon weave. The metal
+   is neutral (hue 206-216, low saturation); only the oxide film has hue
+   (--kp-iris, blue-violet, its angle following the pointer). Corners are
+   machined: two cut at forty-five degrees, a bright tool edge along the
+   top (--kp-tool-edge). Three rules of the material carry every element:
+     - metal does not ease: every move is linear and short (the theme's
+       60ms), or it clicks in steps like an indexing head;
+     - machining: a cutter passes, a chamfer is cut, a knurl gives grip;
+     - no glow: the film is interference, never emission, so nothing here
+       blooms or fades through a halo.
+   Its sibling dark shares the film but develops and resolves softly;
+   titanium cuts. */
+
+[data-theme='titanium'] .sx-sig {
+    --sx-ti-fast: var(--fx-duration, 60ms);
+    --sx-ti-c: 0.35rem;
+    --sx-ti-cut: polygon(
+        0 0,
+        calc(100% - var(--sx-ti-c)) 0,
+        100% var(--sx-ti-c),
+        100% 100%,
+        var(--sx-ti-c) 100%,
+        0 calc(100% - var(--sx-ti-c))
+    );
+    --sx-ti-weave:
+        repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px),
+        repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px);
+    --sx-ti-edge: var(--kp-tool-edge, inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14));
+}
+
+/* ── 1 · Spinner: an indexing head ───────────────────────────────────────
+   A chamfered plate with eight engraved ticks and an oxide index that
+   clicks round in eight hard steps: a rotary indexer, not a wheel. */
+
+[data-theme='titanium'] .sx-sig .kp-spinner {
+    --sx-dur: 1600ms;
+    --sx-ti-c: 4px;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: var(--sx-ti-edge);
+    clip-path: var(--sx-ti-cut);
+    animation: none;
+}
+
+[data-theme='titanium'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from -4deg, var(--border-strong) 0 8deg, transparent 8deg 45deg);
+    -webkit-mask: radial-gradient(closest-side, transparent 62%, var(--foreground) 64%);
+    mask: radial-gradient(closest-side, transparent 62%, var(--foreground) 64%);
+}
+
+[data-theme='titanium'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-block: 14% 50%;
+    inset-inline-start: calc(50% - 1.5px);
+    inline-size: 3px;
+    background: var(--kp-iris);
+    transform-origin: 50% 100%;
+}
+
+/* ── 2 · Skeleton: a cutter's pass over carbon ───────────────────────────
+   Chamfered slots of carbon weave with the tool edge along their top. A
+   thin oxide cutter traverses each one at constant speed, then rests: a
+   machine finishing a pass, one line after the next. */
+
+[data-theme='titanium'] .sx-sig .kp-skeleton {
+    --sx-dur: 1800ms;
+    --sx-ti-c: 5px;
+    position: relative;
+    overflow: hidden;
+    block-size: 0.95rem;
+    border-radius: 0;
+    background: var(--sx-ti-weave), var(--card);
+    box-shadow: var(--sx-ti-edge);
+    clip-path: var(--sx-ti-cut);
+    animation: none;
+}
+
+[data-theme='titanium'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.55rem;
+}
+
+[data-theme='titanium'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    background: var(--kp-iris) right / 2px 100% no-repeat;
+    transform: translateX(-100%);
+}
+
+/* ── 3 · Switch: a knurled slide ─────────────────────────────────────────
+   A square slot of carbon with the tool edge; the thumb is a chamfered
+   grey block with a knurl cut across it for grip. On, the film runs along
+   the slot's foot and the block moves across in the theme's 60ms,
+   linear: metal does not ease. */
+
+[data-theme='titanium'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='titanium'] .sx-sig .kp-switch__input {
+    border: 1px solid var(--border-strong);
+    background: var(--sx-ti-weave), var(--background);
+    box-shadow: var(--sx-ti-edge);
+}
+
+[data-theme='titanium'] .sx-sig .kp-switch__input::before {
+    background:
+        repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+        var(--muted-foreground);
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+
+[data-theme='titanium'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background:
+        linear-gradient(var(--background), var(--background)) top / 100% calc(100% - 2px) no-repeat,
+        var(--kp-iris);
+}
+
+[data-theme='titanium'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background:
+        repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+        var(--primary);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: stamped, and oxidised ───────────────────────
+   Square sockets with the tool edge. Ticked, the socket is the machined
+   grey plate and the tick is stamped in two hard steps. The chosen radio
+   is the one round part: an oxide pellet in a round socket. */
+
+[data-theme='titanium'] .sx-sig .kp-field__check {
+    --sx-dur: 120ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--background);
+    box-shadow: var(--sx-ti-edge);
+}
+
+[data-theme='titanium'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='titanium'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-radius: 0;
+    background: none;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='titanium'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='titanium'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='titanium'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background: var(--kp-iris);
+}
+
+/* ── 5 · Toast: run in on a rail ─────────────────────────────────────────
+   The tool edge on top, the film along the foot. It runs in 16px along
+   its rail at constant speed and stops dead; the film edge is cut along
+   its foot behind it, also linear. */
+
+[data-theme='titanium'] .sx-sig .kp-toast {
+    --sx-dur: 160ms;
+    position: relative;
+    box-shadow: var(--sx-ti-edge);
+}
+
+[data-theme='titanium'] .sx-sig .kp-toast::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: -1px;
+    block-size: 2px;
+    background: var(--kp-iris);
+    transform-origin: 0 50%;
+    pointer-events: none;
+}
+
+/* ── 6 · Dialog: cut from the stock ──────────────────────────────────────
+   The panel is revealed top to bottom by a linear cut, with the oxide
+   cutter line riding the cut's edge down and stopping at the foot. The
+   clip runs only during the entrance, so the register's chamfer returns. */
+
+[data-theme='titanium'] .sx-sig .kp-dialog {
+    --sx-dur: 240ms;
+}
+
+[data-theme='titanium'] .sx-sig .kp-dialog::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-block-end: 2px solid var(--chart-2);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── 7 · Tooltip: a stamped readout ──────────────────────────────────────
+   Martian Mono, small and tracked, on carbon, one corner cut, a 1px film
+   foot. It appears in the theme's 60ms: no drift, no fade worth seeing. */
+
+[data-theme='titanium'] .sx-sig .kp-tooltip {
+    --sx-dur: var(--sx-ti-fast);
+    --sx-ti-c: 0.4rem;
+    margin-inline-start: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 1px) no-repeat,
+        var(--kp-iris);
+    color: var(--foreground);
+    box-shadow: var(--sx-ti-edge);
+    font-family: var(--theme-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, calc(100% - var(--sx-ti-c)) 0, 100% var(--sx-ti-c), 100% 100%, 0 100%);
+}
+
+/* ── 8 · Wizard steps: part numbers ──────────────────────────────────────
+   Two-digit mono part numbers on chamfered plates. Done plates carry an
+   oxide foot; the current plate is machined grey with dark figures and
+   the tool edge. Linked by a plain 1px line: a parts list, not a path. */
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1rem;
+    block-size: 1px;
+    margin-inline: 0.3rem 0.45rem;
+    background: var(--border-strong);
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li::before {
+    content: counter(kp-step, decimal-leading-zero);
+    inline-size: auto;
+    min-inline-size: 1.9rem;
+    block-size: 1.5rem;
+    padding-inline: 0.3rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--card);
+    box-shadow:
+        var(--sx-ti-edge),
+        inset 0 0 0 1px var(--border-strong);
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.72rem;
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    color: var(--foreground);
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+    background:
+        linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+        var(--kp-iris);
+    color: var(--foreground);
+}
+
+[data-theme='titanium'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: var(--primary);
+    box-shadow: var(--sx-ti-edge);
+    color: var(--primary-foreground);
+    font-weight: 700;
+}
+
+/* ── 9 · Empty state: bare stock ─────────────────────────────────────────
+   An uncut blank: a chamfered plate of carbon weave with the tool edge
+   along the top and the film along the foot. Nothing has been machined
+   from it yet. The weave is at 5%, under DI9's texture ceiling. */
+
+[data-theme='titanium'] .sx-sig .kp-empty {
+    --sx-ti-c: 1rem;
+    padding: 1.5rem 1.25rem 1.6rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        var(--sx-ti-weave),
+        linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+        var(--kp-iris);
+    box-shadow: var(--sx-ti-edge);
+    clip-path: var(--sx-ti-cut);
+    text-align: start;
+}
+
+[data-theme='titanium'] .sx-sig .kp-empty__title {
+    font-family: var(--theme-font-display);
+    letter-spacing: -0.01em;
+}
+
+[data-theme='titanium'] .sx-sig .kp-empty__body {
+    margin: 0;
+    font-family: var(--theme-font-mono);
+    font-size: 0.78rem;
+}
+
+/* ── 10 · Link hover: a scribed line, cut ────────────────────────────────
+   At rest the underline is a dashed scribe line, the mark a machinist
+   leaves before cutting. Under the pointer the cut is made: a solid 2px
+   oxide line. Paint only; forced colours keeps a plain underline. */
+
+[data-theme='titanium'] .sx-sig .sx-links a {
+    text-decoration-style: dashed;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 0.3em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='titanium'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    padding-block-end: 1px;
+    background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+    text-decoration-color: transparent;
+}
+
+@media (forced-colors: active) {
+    [data-theme='titanium'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+        text-decoration-color: currentColor;
+    }
+}
+
+/* ── Motion: linear, short, or stepped ────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='titanium'] .sx-sig .kp-spinner::after {
+        animation: sx-ti-index var(--sx-dur) steps(8, jump-end) infinite;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-skeleton::after {
+        animation: sx-ti-pass var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-skeleton:nth-child(2)::after {
+        animation-delay: 300ms;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-skeleton:nth-child(3)::after {
+        animation-delay: 600ms;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-switch__input::before {
+        transition: transform var(--sx-ti-fast) linear;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-field__check:checked::before {
+        animation: sx-ti-stamp var(--sx-dur) steps(2, jump-end) both;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-toast {
+        animation: sx-ti-rail var(--sx-dur) linear both;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-toast::after {
+        animation: sx-ti-scribe calc(var(--sx-dur) * 1.5) linear both;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-dialog {
+        animation: sx-ti-cut var(--sx-dur) linear backwards;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-dialog::after {
+        animation: sx-ti-cutter var(--sx-dur) linear;
+    }
+
+    [data-theme='titanium'] .sx-sig .kp-tooltip {
+        animation: sx-ti-appear var(--sx-dur) linear both;
+    }
+}
+
+@keyframes sx-ti-index {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes sx-ti-pass {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    60%,
+    100% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes sx-ti-stamp {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-ti-rail {
+    from {
+        opacity: 0;
+        transform: translateX(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-ti-scribe {
+    0%,
+    33% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes sx-ti-cut {
+    from {
+        clip-path: inset(0 0 100% 0);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes sx-ti-cutter {
+    from {
+        opacity: 1;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-ti-appear {
+    from {
+        opacity: 0;
+    }
+}

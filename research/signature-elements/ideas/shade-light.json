@@ -1,0 +1,12 @@
+{
+    "spinner": "A sundial: a paper dial with a blue gnomon in the middle, whose soft tapering shade is swept round by the light.",
+    "skeleton": "A paragraph not yet written: soft ink lines whose ends fade out like the seam, surfacing slowly one after another and then resting.",
+    "switch": "A slot pressed into the paper with a paper disc that casts its own small shade; on, the slot becomes the blue plate.",
+    "check": "Shallow wells pressed into the paper; ticked, the well turns into the blue plate and a paper tick is pencilled in, and the chosen radio holds a blue pebble with its own shade.",
+    "toast": "It lands flat on the paper and then lifts off it, rising 2px while its shade grows in underneath.",
+    "dialog": "A page lifted into the light on the deepest shade, over a backdrop that darkens towards the edges like the corners of a reading room.",
+    "tooltip": "A slip of paper in the margin with a soft shade under it and an italic serif note, surfacing slowly.",
+    "steps": "A table of contents: serif numerals joined by rules that fade at both ends, with the current step as the blue plate.",
+    "empty": "No box, just the divider's soft patch of shade with the title set in italic serif inside it and a fading rule below.",
+    "link": "A light underline at rest; under the pointer the word lies in a patch of the blue's own shade and the underline comes to full ink."
+}

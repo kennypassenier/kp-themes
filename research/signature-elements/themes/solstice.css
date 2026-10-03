@@ -1,0 +1,444 @@
+/* solstice: the signature elements, written by the design pass.
+
+   Firelight, not screenlight. Three motifs carry every element: the low
+   sun (an amber disc on its arc over a horizon line), the dusk band (rust
+   into amber, the theme's neighbouring pair) and the warm halo (a soft,
+   unsaturated spread of amber, never a neon edge). Solstice is the
+   slowest theme in the set: every entrance is one long, eased rise, the
+   way the sun comes up, and the corners stay soft. */
+
+/* ── 1 · Spinner: the sun on its day arc ──────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-spinner {
+    --sx-dur: 2400ms;
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    /* Nothing below the horizon is drawn. */
+    clip-path: inset(0 0 calc(20% - 2px) 0);
+    /* The horizon, and the faint arc the sun travels. */
+    background:
+        linear-gradient(var(--border-strong), var(--border-strong)) 50% 80% / 100% 1.5px no-repeat,
+        radial-gradient(circle 0.5rem at 50% 80%, transparent calc(100% - 1px), hsl(from var(--primary) h s l / 0.3) calc(100% - 1px) 100%, transparent 100%);
+    animation: none;
+}
+
+/* The sun: hinged on the horizon's centre, it rises in the east, crosses
+   the top and sets in the west. Below the horizon it is clipped away. */
+[data-theme='solstice'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: calc(50% - 0.2rem);
+    inset-block-start: calc(80% - 0.2rem);
+    inline-size: 0.4rem;
+    block-size: 0.4rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 2px hsl(from var(--primary) h s l / 0.25);
+    transform: translateY(-0.5rem);
+}
+
+/* ── 2 · Skeleton: low light moving across a wall ─────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-skeleton {
+    --sx-dur: 3600ms;
+    position: relative;
+    overflow: hidden;
+    block-size: 0.9rem;
+    border-radius: 999px;
+    background: var(--muted);
+    animation: none;
+}
+
+[data-theme='solstice'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.65rem;
+}
+
+[data-theme='solstice'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 60%;
+    background: radial-gradient(ellipse closest-side, hsl(from var(--primary) h s l / 0.32), transparent);
+    transform: translateX(-100%);
+}
+
+/* The dusk band: rust at the start of each line, warming to amber. */
+[data-theme='solstice'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 0.9rem;
+    border-radius: inherit;
+    background: hsl(from var(--accent) h s l / 0.55);
+}
+
+/* ── 3 · Switch: moon off, sun on ─────────────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--background);
+}
+
+/* Off: a pale moon, its crescent shadow cut by an inset. */
+[data-theme='solstice'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+    box-shadow: inset -4px -1px 0 0 hsl(from var(--background) h s l / 0.85);
+}
+
+[data-theme='solstice'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+}
+
+/* On: the sun, with its soft halo. */
+[data-theme='solstice'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    background: var(--primary-foreground);
+    box-shadow: 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.25);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: an ember tick, a sun ─────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-field__check {
+    --sx-dur: 360ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 0.35rem;
+    background: var(--background);
+}
+
+[data-theme='solstice'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+    box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.2);
+}
+
+[data-theme='solstice'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    border-end-start-radius: 2px;
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='solstice'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='solstice'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+/* The radio's sun: an amber disc with its halo. */
+[data-theme='solstice'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 2.5px hsl(from var(--primary) h s l / 0.3);
+}
+
+/* ── 5 · Toast: it rises over the horizon ─────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-toast {
+    --sx-dur: 640ms;
+    position: relative;
+    border-color: var(--border);
+    border-radius: var(--radius);
+    box-shadow:
+        inset 0 1px 0 hsl(from var(--primary) h s l / 0.35),
+        0 -10px 24px -18px hsl(from var(--primary) h s l / 0.6);
+}
+
+/* The horizon it rises over: a dusk line along its foot. */
+[data-theme='solstice'] .sx-sig .kp-toast::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--radius);
+    inset-block-end: -1px;
+    block-size: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--primary), transparent);
+}
+
+[data-theme='solstice'] .sx-sig .kp-toast--success::after {
+    background: linear-gradient(90deg, transparent, var(--success-foreground), transparent);
+}
+
+/* ── 6 · Dialog: sunrise ──────────────────────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .sx-backdrop {
+    background:
+        radial-gradient(ellipse 80% 55% at 50% 100%, hsl(from var(--primary) h s l / 0.22), transparent 70%),
+        hsl(from var(--background) h s calc(l * 0.6) / 0.9);
+}
+
+[data-theme='solstice'] .sx-sig .kp-dialog {
+    --sx-dur: 560ms;
+    border-color: var(--border);
+    border-block-start: 2px solid var(--primary);
+    border-radius: var(--radius);
+    box-shadow: 0 -12px 40px -24px hsl(from var(--primary) h s l / 0.7), 0 24px 40px -24px hsl(from var(--background) h s calc(l * 0.3));
+}
+
+[data-theme='solstice'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+    font-weight: 400;
+    font-size: 1.35rem;
+}
+
+/* ── 7 · Tooltip: an ember in the dark ────────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-tooltip {
+    --sx-dur: 360ms;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-inline-start: 0.4rem;
+    padding: 0.3rem 0.8rem 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 8px 20px -12px hsl(from var(--primary) h s l / 0.45);
+}
+
+[data-theme='solstice'] .sx-sig .kp-tooltip::before {
+    content: '';
+    flex: none;
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.22);
+}
+
+/* ── 8 · Wizard steps: the hours of the day ───────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+}
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li {
+    gap: 0.45rem;
+}
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.4rem;
+    block-size: 2px;
+    margin-inline: 0.35rem;
+    border-radius: 2px;
+    background: var(--border);
+}
+
+/* The hours that have passed glow from rust into amber. */
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li[data-state='done']::after {
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+}
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1.5px solid var(--border-strong);
+    background: none;
+    color: var(--muted-foreground);
+    box-sizing: border-box;
+}
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+/* Now: the sun itself, with its halo. */
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: 700;
+    box-shadow: 0 0 0 4px hsl(from var(--primary) h s l / 0.22);
+}
+
+[data-theme='solstice'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--foreground);
+}
+
+/* ── 9 · Empty state: the sun has set ─────────────────────────────────── */
+
+[data-theme='solstice'] .sx-sig .kp-empty {
+    padding: 1.25rem 1rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--primary) h s l / 0.08), transparent 70%), var(--card);
+}
+
+/* Half a sun on the horizon line, its last light spreading up. */
+[data-theme='solstice'] .sx-sig .kp-empty::before {
+    content: '';
+    display: block;
+    inline-size: 6rem;
+    block-size: 1.6rem;
+    margin: 0 auto 0.75rem;
+    background:
+        linear-gradient(var(--border-strong), var(--border-strong)) 50% 100% / 100% 1px no-repeat,
+        radial-gradient(circle at 50% 100%, var(--primary) 0 0.95rem, hsl(from var(--primary) h s l / 0.25) 0.95rem 1.05rem, transparent 1.6rem);
+    mask: linear-gradient(90deg, transparent, black 25% 75%, transparent);
+}
+
+[data-theme='solstice'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+    font-family: var(--theme-font-display);
+    font-size: 1.3rem;
+}
+
+[data-theme='solstice'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the line catches the light ──────────────────────── */
+
+[data-theme='solstice'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.24em;
+}
+
+[data-theme='solstice'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    color: var(--primary);
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 2px;
+    text-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.35);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='solstice'] .sx-sig .kp-spinner::after {
+        animation: sx-solstice-arc var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-skeleton::after {
+        animation: sx-solstice-light var(--sx-dur) ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 240ms;
+    }
+
+    [data-theme='solstice'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 480ms;
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-switch__input::before {
+        transition: transform 360ms var(--fx-ease);
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-field__check:checked::before {
+        animation: sx-solstice-warm var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-toast {
+        animation: sx-solstice-rise var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) backwards;
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-dialog {
+        animation: sx-solstice-dawn var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
+    [data-theme='solstice'] .sx-sig .kp-tooltip {
+        animation: sx-solstice-ember var(--sx-dur) var(--fx-ease) both;
+    }
+}
+
+/* East to west over the top; under the horizon it fades out. */
+@keyframes sx-solstice-arc {
+    0% {
+        opacity: 0;
+        transform: rotate(-100deg) translateY(-0.5rem);
+    }
+
+    10%,
+    80% {
+        opacity: 1;
+    }
+
+    90%,
+    100% {
+        opacity: 0;
+        transform: rotate(100deg) translateY(-0.5rem);
+    }
+}
+
+@keyframes sx-solstice-light {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(270%);
+    }
+}
+
+@keyframes sx-solstice-warm {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Up from behind its own horizon line: clipped at the foot as it rises. */
+@keyframes sx-solstice-rise {
+    from {
+        transform: translateY(14px);
+        clip-path: inset(-30px -30px 100% -30px);
+    }
+
+    to {
+        transform: none;
+        clip-path: inset(-30px -30px 0 -30px);
+    }
+}
+
+@keyframes sx-solstice-dawn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes sx-solstice-ember {
+    from {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

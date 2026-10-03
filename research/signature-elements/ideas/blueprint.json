@@ -1,0 +1,12 @@
+{
+    "spinner": "A drafting compass at work: around a centre mark and a faint dashed construction circle, the cyan line is drawn once round at constant speed, lifted off and drawn again.",
+    "skeleton": "A section hatch between two dimension ticks, drawn left to right at the pen's constant speed, line after line: the drawing of a line that is not there yet.",
+    "switch": "An outline drawing: a hollow square thumb with its centre lines; on, the slot is section-hatched and the thumb is filled cyan.",
+    "check": "The tick is drawn at the pen's constant speed; the radio becomes a registration mark, a dot crossed by centre lines that run past the circle.",
+    "toast": "A mono note whose width is dimensioned above it: the outline is drawn left to right, then the dimension line spans out to its two end ticks.",
+    "dialog": "A sheet on grid paper with registration crosses at two corners, its outline drawn along the top edge first and then down.",
+    "tooltip": "A drawing annotation in the red-pencil amber: the leader line with its node runs up to the button first, then the label is drawn out.",
+    "steps": "A chain of dimensions: numbered 01 to 04 in mono, joined by tick-ended dimension lines, done ones cyan, the current one ringed in amber.",
+    "empty": "A blank sheet of grid paper with a dashed outline and only the centre mark of a part not drawn yet.",
+    "link": "A hairline underline; under the pointer it gains end ticks and the word becomes a measured length."
+}

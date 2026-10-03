@@ -1,0 +1,576 @@
+/* blueprint: the signature elements, written by the design pass.
+
+   A technical drawing of a thing that does not exist yet. Cyan-white
+   hairlines on Prussian blue, amber only where a drawing would use the red
+   pencil (annotation, "you are here"). Three motifs carry every element:
+   the drawn line (an outline that is drawn rather than filled), the
+   dimension line (a hairline with end ticks) and the registration mark (a
+   circle crossed by its centre lines). The theme's --fx-ease is linear and
+   so is every motion here: a pen moving at constant speed along a ruler.
+   Fine lines only; nothing bulky, no frame for its own sake. */
+
+/* ── 1 · Spinner: a compass drawing its circle ────────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-spinner {
+    --sx-dur: 1600ms;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    /* The centre mark, where the compass point stands. */
+    background:
+        linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 1px 40% no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 40% 1px no-repeat;
+    animation: none;
+}
+
+/* The construction circle, faint; then the pen's line drawn over it. */
+[data-theme='blueprint'] .sx-sig .kp-spinner::before,
+[data-theme='blueprint'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-spinner::before {
+    border: 1px dashed hsl(from var(--foreground) h s l / 0.3);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-spinner::after {
+    border: 1.5px solid var(--primary);
+}
+
+/* ── 2 · Skeleton: a section hatch between dimension ticks ────────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton {
+    --sx-dur: 2800ms;
+    position: relative;
+    block-size: 0.9rem;
+    margin-inline: 4px;
+    border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.7rem;
+}
+
+/* The section hatch, drawn left to right at the pen's speed. */
+[data-theme='blueprint'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 6px);
+}
+
+/* The two dimension ticks, standing past the lines at both ends. */
+[data-theme='blueprint'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset-block: -5px;
+    inset-inline: -1px;
+    background:
+        linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 100% no-repeat,
+        linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 100% no-repeat;
+}
+
+/* ── 3 · Switch: an outline drawing; on, the section is hatched ───────── */
+
+[data-theme='blueprint'] .sx-sig .kp-switch {
+    --kp-switch-radius: 2px;
+    --kp-switch-thumb-radius: 1px;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-switch__input {
+    border-color: hsl(from var(--foreground) h s l / 0.6);
+    background: var(--background);
+}
+
+/* The thumb: a hollow square with its centre lines. */
+[data-theme='blueprint'] .sx-sig .kp-switch__input::before {
+    border: 1px solid var(--foreground);
+    background:
+        linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 100% no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 100% 1px no-repeat,
+        var(--background);
+    box-sizing: border-box;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 5px), var(--background);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    border-color: var(--primary);
+    background: var(--primary);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* ── 4 · Checkbox and radio: a drawn tick, a registration mark ────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-field__check {
+    --sx-dur: 300ms;
+    appearance: none;
+    position: relative;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    margin: 0;
+    border: 1px solid hsl(from var(--foreground) h s l / 0.7);
+    border-radius: 1px;
+    background: var(--background);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-field__check:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.62rem;
+    block-size: 0.3rem;
+    border-inline-start: 1.5px solid var(--primary);
+    border-block-end: 1.5px solid var(--primary);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+/* A registration mark: the dot crossed by centre lines that run past
+   the circle, the way a drafter marks a centre. */
+[data-theme='blueprint'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    background:
+        radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px),
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+    mask: radial-gradient(circle, black 0 4px, transparent 4px 6.5px, black 6.5px);
+}
+
+/* ── 5 · Toast: a note with its dimension line ────────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-toast {
+    --sx-dur: 420ms;
+    position: relative;
+    margin-block-start: 0.5rem;
+    border: 1px solid hsl(from var(--foreground) h s l / 0.6);
+    border-radius: 2px;
+    background: var(--popover);
+    font-family: var(--theme-font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-toast--success {
+    border-color: var(--success-foreground, var(--primary));
+}
+
+/* Its width, dimensioned above it: a hairline with two end ticks. */
+[data-theme='blueprint'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(100% + 3px);
+    block-size: 7px;
+    background:
+        linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 0 50% / 100% 1px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 100% 0 / 1px 100% no-repeat;
+}
+
+/* ── 6 · Dialog: a sheet drawn on the grid ────────────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .sx-backdrop {
+    background:
+        linear-gradient(hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+        hsl(from var(--background) h s calc(l * 0.7));
+}
+
+[data-theme='blueprint'] .sx-sig .kp-dialog {
+    --sx-dur: 420ms;
+    border: 1px solid var(--primary);
+    border-radius: 2px;
+    background: var(--popover);
+    box-shadow: none;
+}
+
+/* Registration crosses at two corners, standing outside the sheet. */
+[data-theme='blueprint'] .sx-sig .kp-dialog::before,
+[data-theme='blueprint'] .sx-sig .kp-dialog::after {
+    content: '';
+    position: absolute;
+    inline-size: 15px;
+    block-size: 15px;
+    background:
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-dialog::before {
+    inset-block-start: -8px;
+    inset-inline-start: -8px;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-dialog::after {
+    inset-block-end: -8px;
+    inset-inline-end: -8px;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ── 7 · Tooltip: an annotation with a leader line ────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-tooltip {
+    --sx-dur: 360ms;
+    margin-block-start: 1rem;
+    margin-inline-start: 1rem;
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* The leader runs up from the label to a node on the thing it names. */
+[data-theme='blueprint'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 0.75rem;
+    inline-size: 1px;
+    block-size: 1.05rem;
+    background: var(--accent);
+    transform-origin: 50% 100%;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-tooltip::after {
+    content: '';
+    position: absolute;
+    inset-block-end: calc(100% + 1.05rem - 3px);
+    inset-inline-start: calc(0.75rem - 3px);
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+/* ── 8 · Wizard steps: a chain of dimensions ──────────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps {
+    gap: 0.6rem 0;
+    font-family: var(--theme-font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li {
+    gap: 0.4rem;
+}
+
+/* Between steps a dimension: a hairline with a tick at each end. */
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.5rem;
+    block-size: 9px;
+    margin-inline: 0.35rem;
+    background:
+        linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 50% / 100% 1px no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 0 / 1px 100% no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 100% 0 / 1px 100% no-repeat;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li[data-state='done']::after {
+    background:
+        linear-gradient(var(--primary), var(--primary)) 0 50% / 100% 1px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 100% 0 / 1px 100% no-repeat;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li::before {
+    content: counter(kp-step, decimal-leading-zero);
+    inline-size: 1.7rem;
+    block-size: 1.7rem;
+    border: 1px solid hsl(from var(--foreground) h s l / 0.6);
+    background: none;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.7rem;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* "You are here", in the red pencil: the amber annotation colour. */
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    border: 1px solid var(--accent);
+    background: none;
+    color: var(--accent);
+    box-shadow: 0 0 0 3px var(--background), 0 0 0 4px hsl(from var(--accent) h s l / 0.6);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    color: var(--accent);
+}
+
+/* ── 9 · Empty state: a blank sheet with only its centre marked ───────── */
+
+[data-theme='blueprint'] .sx-sig .kp-empty {
+    padding: 1.25rem 1rem 1.4rem;
+    border: 1px dashed hsl(from var(--foreground) h s l / 0.45);
+    border-radius: 2px;
+    background:
+        linear-gradient(hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px,
+        linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px;
+}
+
+/* The centre mark of a part not drawn yet. */
+[data-theme='blueprint'] .sx-sig .kp-empty::before {
+    content: '';
+    display: block;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    margin: 0 auto 0.7rem;
+    background:
+        radial-gradient(circle closest-side, transparent calc(55% - 1px), var(--primary) calc(55% - 1px) 55%, transparent 55%),
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.3rem;
+    color: var(--foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* ── 10 · Link hover: the word is dimensioned ─────────────────────────── */
+
+[data-theme='blueprint'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Under the pointer the underline gets its end ticks: the word becomes a
+   measured length. Background, not pseudo-elements, so it wraps. */
+[data-theme='blueprint'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background:
+        linear-gradient(var(--primary), var(--primary)) 0 100% / 1px 0.55em no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 100% 100% / 1px 0.55em no-repeat;
+    text-decoration-color: var(--primary);
+}
+
+@media (forced-colors: active) {
+    [data-theme='blueprint'] .sx-sig .sx-links a {
+        background: none;
+    }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='blueprint'] .sx-sig .kp-spinner::after {
+        animation: sx-blueprint-compass var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-skeleton::after {
+        animation: sx-blueprint-hatch var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='blueprint'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 250ms;
+    }
+
+    [data-theme='blueprint'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 500ms;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-switch__input::before {
+        transition: transform 200ms linear;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-blueprint-draw var(--sx-dur) linear both;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-blueprint-mark var(--sx-dur) linear both;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-toast {
+        animation: sx-blueprint-draw var(--sx-dur) linear backwards;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-toast::before {
+        animation: sx-blueprint-span var(--sx-dur) linear both;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-dialog {
+        animation: sx-blueprint-sheet var(--sx-dur) linear backwards;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-tooltip {
+        animation: sx-blueprint-callout var(--sx-dur) linear backwards;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-tooltip::before {
+        animation: sx-blueprint-leader var(--sx-dur) linear backwards;
+    }
+}
+
+/* The pen goes round once, the line is lifted off, and it starts again.
+   Seven points: the centre, the start at twelve, four corners, the end. */
+@keyframes sx-blueprint-compass {
+    0% {
+        opacity: 1;
+        clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0);
+    }
+
+    8% {
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0);
+    }
+
+    24% {
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 100% 100%, 100% 100%, 100% 100%);
+    }
+
+    40% {
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 100%, 0 100%);
+    }
+
+    56% {
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 0 0);
+    }
+
+    64%,
+    82% {
+        opacity: 1;
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+    }
+
+    100% {
+        opacity: 0;
+        clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+    }
+}
+
+@keyframes sx-blueprint-hatch {
+    0% {
+        opacity: 1;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    50%,
+    80% {
+        opacity: 1;
+        clip-path: inset(0);
+    }
+
+    100% {
+        opacity: 0;
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-blueprint-draw {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-blueprint-mark {
+    from {
+        opacity: 0;
+        transform: scale(0.4) rotate(-90deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* The dimension spans out from its middle to both ticks. */
+@keyframes sx-blueprint-span {
+    0%,
+    40% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: none;
+    }
+}
+
+/* The sheet's outline is drawn from its top-left corner out. */
+@keyframes sx-blueprint-sheet {
+    from {
+        clip-path: inset(-10px 100% calc(100% - 2px) -10px);
+    }
+
+    40% {
+        clip-path: inset(-10px -10px calc(100% - 2px) -10px);
+    }
+
+    to {
+        clip-path: inset(-10px);
+    }
+}
+
+@keyframes sx-blueprint-callout {
+    0%,
+    45% {
+        clip-path: inset(-1.5rem 100% 0 0);
+    }
+
+    100% {
+        clip-path: inset(-1.5rem 0 0 0);
+    }
+}
+
+@keyframes sx-blueprint-leader {
+    0% {
+        transform: scaleY(0);
+    }
+
+    45%,
+    100% {
+        transform: scaleY(1);
+    }
+}
