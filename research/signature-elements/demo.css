@@ -1,0 +1,1732 @@
+/* Signature elements, research round (Kenny, 2026-10-03: "en zoek uit voor
+   welke andere elementen/effecten dit ook kan").
+
+   Rules of the round, the same for every candidate:
+     - The markup in the "Signature" column is byte-for-byte the markup in
+       the "Package today" column. A signature is CSS on the package's own
+       classes, scoped to [data-theme='<theme>'] .sx-sig, so the element's
+       API and ARIA are identical in every theme.
+     - Colour comes only from theme custom properties (tokens and the
+       register's own --kp-* stacks), never a literal.
+     - Motion animates transform, opacity and clip-path only, and lives
+       inside prefers-reduced-motion: no-preference; the rest state is the
+       readable state.
+     - clip-path never lands on a focusable element: it would clip the
+       focus ring (DI2). Notches and shears go on pseudo-elements.
+     - The "frames" strip is the same animation paused at four moments:
+       --f is the quarter, --sx-dur the animation's length. */
+
+/* ── The page ─────────────────────────────────────────────────────────── */
+
+.sx-page {
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: 2rem 16px 4rem;
+}
+
+.sx-intro h1 {
+    margin: 0 0 0.5rem;
+}
+
+.sx-intro p {
+    max-inline-size: 72ch;
+}
+
+.sx-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.875rem;
+    margin-block: 1rem;
+    font-size: 0.875rem;
+}
+
+.sx-themes a[aria-current] {
+    font-weight: 700;
+}
+
+.sx-replay-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+}
+
+.sx-current {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+.sx-sec {
+    margin-block: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sx-sec__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+}
+
+.sx-sec h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.sx-count {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.sx-ideas p {
+    margin: 0.5rem 0 0;
+    max-inline-size: 75ch;
+}
+
+.sx-ideas .sx-none {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
+.sx-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-block-start: 1rem;
+}
+
+@media (max-width: 48rem) {
+    .sx-cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sx-col {
+    display: grid;
+    align-content: start;
+    gap: 0.875rem;
+    min-inline-size: 0;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) / 2);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.sx-col__label {
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sx-stage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    min-block-size: 3rem;
+}
+
+.sx-stage--spin {
+    --kp-spinner-size: 2rem;
+}
+
+.sx-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    justify-items: start;
+}
+
+.sx-stack > .kp-toast {
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 26rem;
+}
+
+.sx-checks {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.sx-frames {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding-block-start: 0.75rem;
+    border-block-start: 1px dashed var(--border);
+}
+
+.sx-frames::before {
+    content: 'frames';
+    inline-size: 100%;
+    color: var(--muted-foreground);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sx-frames--wide > * {
+    flex: 1 1 6rem;
+    min-inline-size: 0;
+}
+
+.sx-backdrop {
+    display: grid;
+    place-items: center;
+    min-block-size: 12rem;
+    padding: 1.25rem;
+    border-radius: calc(var(--radius) / 2);
+    background: hsl(from var(--foreground) h s l / 0.16);
+}
+
+.sx-backdrop--mini {
+    min-block-size: 4.5rem;
+    padding: 0.5rem;
+}
+
+/* A dialog in the flow of the page, so two can stand side by side. */
+.sx-col dialog.kp-dialog {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    max-inline-size: 100%;
+}
+
+.sx-backdrop--mini .kp-dialog {
+    position: relative;
+    inline-size: 100%;
+    padding: 0.5rem 0.75rem;
+}
+
+.sx-backdrop--mini .kp-dialog__title {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.sx-tipstage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-block-size: 6rem;
+}
+
+/* A tooltip in the flow, under its button, in both columns. */
+.sx-col .kp-tooltip {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    overflow: visible;
+    max-block-size: none;
+}
+
+.sx-links {
+    margin: 0;
+    line-height: 1.8;
+}
+
+/* The base a:hover rule, for the link drawn hovered. */
+.sx-col a.is-hover {
+    text-decoration-thickness: 2px;
+}
+
+/* The frames: one animation, four moments. */
+.sx-sig .sx-frame,
+.sx-sig .sx-frame::before,
+.sx-sig .sx-frame::after {
+    animation-play-state: paused !important;
+    animation-delay: calc(var(--sx-dur, 1000ms) * var(--f, 0) / -4) !important;
+}
+
+.sx-frame--check {
+    pointer-events: none;
+}
+
+/* ── 1 · Spinner ──────────────────────────────────────────────────────── */
+
+/* formal: a watch dial. Hairline ring, a tick at twelve, one hand. */
+[data-theme='formal'] .sx-sig .kp-spinner {
+    --sx-dur: 1600ms;
+    position: relative;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: none;
+    animation: none;
+}
+
+[data-theme='formal'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(50% - 0.5px);
+    inline-size: 1px;
+    block-size: 16%;
+    background: var(--border-strong);
+}
+
+[data-theme='formal'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 50%, var(--primary) 0 1.75px, transparent 2.25px),
+        radial-gradient(circle at 50% 17%, var(--primary) 0 2.25px, transparent 2.75px),
+        linear-gradient(var(--primary), var(--primary)) 50% 30% / 1.5px 36% no-repeat;
+}
+
+/* cyberpunk: a notched sensor window, a scan line, a breathing core. */
+[data-theme='cyberpunk'] .sx-sig .kp-spinner {
+    --sx-dur: 1200ms;
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: hsl(from var(--primary) h s l / 0.1);
+    box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.6);
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+    animation: none;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-spinner::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 45%;
+    background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.35) calc(100% - 2px), var(--primary) calc(100% - 2px));
+    transform: translateY(-100%);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 36%;
+    background: var(--accent);
+    transform: scale(0.6);
+}
+
+/* retro: the hourglass. Sand in navy runs down in five snaps, then the
+   glass turns over in two. */
+[data-theme='retro'] .sx-sig .kp-spinner {
+    --sx-dur: 2000ms;
+    position: relative;
+    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.75);
+    border: 0;
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 10%, 62% 50%, 100% 90%, 100% 100%, 0 100%, 0 90%, 38% 50%, 0 10%);
+    background:
+        linear-gradient(var(--foreground), var(--foreground)) top / 100% 10% no-repeat,
+        linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 10% no-repeat,
+        var(--popover);
+    animation: none;
+}
+
+[data-theme='retro'] .sx-sig .kp-spinner::before,
+[data-theme='retro'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    block-size: 40%;
+    background: var(--primary);
+    transform-origin: 50% 100%;
+}
+
+[data-theme='retro'] .sx-sig .kp-spinner::before {
+    inset-block-start: 10%;
+}
+
+[data-theme='retro'] .sx-sig .kp-spinner::after {
+    inset-block-end: 10%;
+    transform: scaleY(0);
+}
+
+/* terminal: | / - \ in one character cell. */
+[data-theme='terminal'] .sx-sig .kp-spinner {
+    --sx-dur: 640ms;
+    inline-size: 1ch;
+    block-size: 1.2em;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    color: var(--primary);
+    font: 700 var(--kp-spinner-size, 1.25rem) / 1.2 var(--theme-font-mono);
+    text-align: center;
+    vertical-align: middle;
+    animation: none;
+}
+
+[data-theme='terminal'] .sx-sig .kp-spinner::before {
+    content: '|\A/\A-\A\\';
+    display: block;
+    white-space: pre;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-spinner::after {
+        animation: sx-orbit var(--sx-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-spinner::before {
+        animation: sx-scan-down var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-spinner::after {
+        animation: sx-core calc(var(--sx-dur) / 2) ease-in-out infinite alternate;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-spinner {
+        animation: sx-turn var(--sx-dur) step-start infinite;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-spinner::before {
+        animation: sx-sand-top var(--sx-dur) steps(5, jump-end) infinite;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-spinner::after {
+        animation: sx-sand-bottom var(--sx-dur) steps(5, jump-end) infinite;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-spinner::before {
+        animation: sx-ascii var(--sx-dur) steps(4, jump-end) infinite;
+    }
+}
+
+@keyframes sx-orbit {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes sx-scan-down {
+    to {
+        transform: translateY(225%);
+    }
+}
+
+@keyframes sx-core {
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes sx-turn {
+    0%,
+    80% {
+        transform: rotate(0);
+    }
+
+    90% {
+        transform: rotate(90deg);
+    }
+
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes sx-sand-top {
+    0% {
+        transform: scaleY(1);
+    }
+
+    80%,
+    100% {
+        transform: scaleY(0);
+    }
+}
+
+@keyframes sx-sand-bottom {
+    0% {
+        transform: scaleY(0);
+    }
+
+    80%,
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes sx-ascii {
+    to {
+        transform: translateY(-4.8em);
+    }
+}
+
+/* ── 2 · Skeleton ─────────────────────────────────────────────────────── */
+
+/* formal: ruled ledger lines waiting for ink. */
+[data-theme='formal'] .sx-sig .kp-skeleton {
+    --sx-dur: 2400ms;
+    position: relative;
+    block-size: 1.5rem;
+    border-block-end: 1px solid var(--border);
+    border-radius: 0;
+    background: none;
+    animation: none;
+}
+
+[data-theme='formal'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0;
+}
+
+[data-theme='formal'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block: 0.5rem 0.3rem;
+    border-radius: 2px;
+    background: var(--muted);
+}
+
+[data-theme='formal'] .sx-sig .kp-skeleton:first-child::before {
+    inset-inline-start: 2em;
+}
+
+/* cyberpunk: notched data slots, a scan head. */
+[data-theme='cyberpunk'] .sx-sig .kp-skeleton {
+    --sx-dur: 1800ms;
+    position: relative;
+    overflow: hidden;
+    block-size: 1.1rem;
+    border-radius: 0;
+    background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.08) 0 3px, transparent 3px 7px), var(--card);
+    box-shadow: inset 2px 0 0 hsl(from var(--accent) h s l / 0.7);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+    animation: none;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 35%;
+    background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.28) 93%, var(--primary) 93%);
+    transform: translateX(-100%);
+}
+
+/* retro: sunken wells of dither. */
+[data-theme='retro'] .sx-sig .kp-skeleton {
+    --sx-dur: 1600ms;
+    position: relative;
+    block-size: 1.1rem;
+    border-radius: 0;
+    background: var(--popover);
+    box-shadow: var(--kp-sunken);
+    animation: none;
+}
+
+[data-theme='retro'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background-image: var(--kp-brush);
+    background-size: 2px 2px;
+    image-rendering: pixelated;
+    opacity: 0.45;
+}
+
+/* blueprint: a section hatch between dimension ticks. */
+[data-theme='blueprint'] .sx-sig .kp-skeleton {
+    --sx-dur: 2400ms;
+    position: relative;
+    block-size: 0.9rem;
+    margin-inline: 4px;
+    border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
+    border-radius: 0;
+    background: repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.25) 0 1px, transparent 1px 6px);
+    animation: none;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton + .kp-skeleton {
+    margin-block-start: 0.7rem;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton::before,
+[data-theme='blueprint'] .sx-sig .kp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset-block: -5px;
+    inline-size: 1px;
+    background: var(--foreground);
+}
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton::before {
+    inset-inline-start: -1px;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-skeleton::after {
+    inset-inline-end: -1px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-skeleton::before {
+        animation: sx-breathe var(--sx-dur) ease-in-out infinite;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-skeleton::after {
+        animation: sx-sweep var(--sx-dur) cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-skeleton:nth-child(2)::after {
+        animation-delay: 160ms;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-skeleton:nth-child(3)::after {
+        animation-delay: 320ms;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-skeleton::after {
+        animation: sx-dither var(--sx-dur) steps(4, jump-none) infinite alternate;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-skeleton {
+        animation: sx-breathe var(--sx-dur) ease-in-out infinite;
+    }
+}
+
+@keyframes sx-breathe {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.55;
+    }
+}
+
+@keyframes sx-sweep {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    70%,
+    100% {
+        transform: translateX(290%);
+    }
+}
+
+@keyframes sx-dither {
+    from {
+        opacity: 0.15;
+    }
+
+    to {
+        opacity: 0.6;
+    }
+}
+
+/* ── 3 · Switch ───────────────────────────────────────────────────────── */
+
+/* Every signature moves the thumb with transform, not inset-inline-start:
+   the package's thumb animates a layout property. */
+:is([data-theme='formal'], [data-theme='cyberpunk'], [data-theme='retro']) .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: var(--kp-switch-inset, 0.125rem);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+}
+
+/* formal: a double-ruled slot; on, an ink dot on the paper thumb. */
+[data-theme='formal'] .sx-sig .kp-switch__input {
+    border-color: var(--border-strong);
+    background: var(--background);
+    box-shadow:
+        inset 0 0 0 2px var(--background),
+        inset 0 0 0 3px var(--border);
+}
+
+[data-theme='formal'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+}
+
+[data-theme='formal'] .sx-sig .kp-switch__input:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+    box-shadow:
+        inset 0 0 0 2px var(--primary),
+        inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.45);
+}
+
+[data-theme='formal'] .sx-sig .kp-switch__input:checked::before {
+    background:
+        radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+        var(--primary-foreground);
+}
+
+/* cyberpunk: a sheared plate; on, the track charges with hazard stripes. */
+[data-theme='cyberpunk'] .sx-sig .kp-switch {
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-switch__input {
+    border: 1px solid var(--primary);
+    background: var(--card);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-switch__input::before {
+    background: var(--muted-foreground);
+    clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-switch__input:checked {
+    /* The stripes stop short of the thumb, so the yellow plate never sits on yellow. */
+    background:
+        repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.5) 0 3px, transparent 3px 7px) left / calc(100% - var(--kp-switch-height, 1.5rem)) 100% no-repeat,
+        var(--card);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-switch__input:checked::before {
+    background: var(--primary);
+}
+
+/* retro: a raised button in a sunken slot. */
+[data-theme='retro'] .sx-sig .kp-switch {
+    --kp-switch-border: 0px;
+    --kp-switch-inset: 3px;
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='retro'] .sx-sig .kp-switch__input {
+    border: 0;
+    background: var(--popover);
+    box-shadow: var(--kp-sunken);
+}
+
+[data-theme='retro'] .sx-sig .kp-switch__input:checked {
+    background: var(--primary);
+    box-shadow: var(--kp-sunken);
+}
+
+[data-theme='retro'] .sx-sig .kp-switch__input::before,
+[data-theme='retro'] .sx-sig .kp-switch__input:checked::before {
+    background: var(--card);
+    box-shadow: var(--kp-raised);
+}
+
+/* terminal: [█   ] — a block cursor in a bracketed cell. */
+[data-theme='terminal'] .sx-sig .kp-switch {
+    --kp-switch-border: 0px;
+    --kp-switch-inset: 4px;
+    --kp-switch-radius: 0;
+    --kp-switch-thumb-radius: 0;
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input,
+[data-theme='terminal'] .sx-sig .kp-switch__input:checked {
+    border: 0;
+    background:
+        linear-gradient(var(--primary), var(--primary)) left / 2px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right / 2px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) left top / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) left bottom / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right top / 7px 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) right bottom / 7px 2px no-repeat;
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input::before {
+    inline-size: 0.6rem;
+    background: hsl(from var(--primary) h s l / 0.3);
+}
+
+[data-theme='terminal'] .sx-sig .kp-switch__input:checked::before {
+    inset-inline-start: 4px;
+    background: var(--primary);
+    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - 8px - 0.6rem));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-switch__input::before {
+        transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-switch__input::before {
+        transition: transform 150ms steps(3, jump-end);
+    }
+
+    [data-theme='retro'] .sx-sig .kp-switch__input,
+    [data-theme='retro'] .sx-sig .kp-switch__input::before {
+        transition: none;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-switch__input::before {
+        transition: transform 200ms steps(4, jump-end);
+    }
+}
+
+/* ── 4 · Checkbox and radio ───────────────────────────────────────────── */
+
+/* formal: the tick is a pen stroke; the radio's ink dot grows. */
+[data-theme='formal'] .sx-sig .kp-field__check {
+    --sx-dur: 260ms;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: var(--background);
+}
+
+[data-theme='formal'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+[data-theme='formal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '';
+    inline-size: 0.62rem;
+    block-size: 0.32rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='formal'] .sx-sig .kp-field__check[type='radio'] {
+    border-radius: 50%;
+}
+
+[data-theme='formal'] .sx-sig .kp-field__check[type='radio']:checked {
+    border-color: var(--primary);
+}
+
+[data-theme='formal'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '';
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+/* cyberpunk: a lit cell with a sliced tick; the radio is a diamond. */
+[data-theme='cyberpunk'] .sx-sig .kp-field__check {
+    --sx-dur: 180ms;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-field__check[type='checkbox']:checked {
+    background: var(--primary);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    inline-size: 0.6rem;
+    block-size: 0.3rem;
+    border-inline-start: 2px solid var(--primary-foreground);
+    border-block-end: 2px solid var(--primary-foreground);
+    background: none;
+    clip-path: none;
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-field__check[type='radio'] {
+    transform: rotate(45deg) scale(0.8);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    clip-path: none;
+}
+
+/* retro: the register's pixel tick stays; the radio gets its round well. */
+[data-theme='retro'] .sx-sig .kp-field__check[type='radio'] {
+    inline-size: 14px;
+    block-size: 14px;
+    border: 0;
+    border-radius: 50%;
+}
+
+[data-theme='retro'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: 50%;
+    background: var(--foreground);
+}
+
+/* terminal: [x] and (*). */
+[data-theme='terminal'] .sx-sig .kp-field__check {
+    appearance: none;
+    inline-size: 3ch;
+    block-size: 1.25em;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--primary);
+    font: 1rem / 1.25 var(--theme-font-mono);
+    white-space: pre;
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']::before {
+    content: '[ ]';
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+    content: '[x]';
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']::before {
+    content: '( )';
+}
+
+[data-theme='terminal'] .sx-sig .kp-field__check[type='radio']:checked::before {
+    content: '(*)';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-pen var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    [data-theme='formal'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-dot var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-pen var(--sx-dur) steps(3, jump-end) both;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-field__check[type='radio']:checked::before {
+        animation: sx-dot var(--sx-dur) steps(2, jump-end) both;
+    }
+}
+
+@keyframes sx-pen {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-dot {
+    from {
+        transform: scale(0);
+    }
+}
+
+/* ── 5 · Toast ────────────────────────────────────────────────────────── */
+
+/* formal: rises into place; a rule draws once across its top. */
+[data-theme='formal'] .sx-sig .kp-toast {
+    --sx-dur: 560ms;
+    position: relative;
+}
+
+[data-theme='formal'] .sx-sig .kp-toast::after {
+    content: '';
+    position: absolute;
+    inset-block-start: -1px;
+    inset-inline: var(--radius);
+    block-size: 2px;
+    background: var(--primary);
+    transform-origin: 0 50%;
+}
+
+[data-theme='formal'] .sx-sig .kp-toast--success::after {
+    background: var(--success-foreground);
+    inset-block-start: 3px;
+    opacity: 0.6;
+}
+
+/* cyberpunk: one slice burst, then it settles (the register's notch and
+   cyan edge stay). */
+[data-theme='cyberpunk'] .sx-sig .kp-toast {
+    --sx-dur: 360ms;
+}
+
+/* retro: a little window — raised bevel, a title-bar ramp. */
+[data-theme='retro'] .sx-sig .kp-toast {
+    --sx-dur: 240ms;
+    position: relative;
+    padding-block-start: calc(0.625rem + 7px);
+    border: 0;
+    border-radius: 0;
+    box-shadow: var(--kp-raised);
+}
+
+[data-theme='retro'] .sx-sig .kp-toast::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 3px;
+    inset-inline: 3px;
+    block-size: 6px;
+    background: var(--kp-ramp);
+}
+
+/* terminal: printed behind a prompt. */
+[data-theme='terminal'] .sx-sig .kp-toast {
+    --sx-dur: 640ms;
+    font-family: var(--theme-font-mono);
+}
+
+[data-theme='terminal'] .sx-sig .kp-toast__body::before {
+    content: '> ';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-toast {
+        animation: sx-rise 280ms cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
+    [data-theme='formal'] .sx-sig .kp-toast::after {
+        animation: sx-rule var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-toast {
+        animation: sx-slice var(--sx-dur) step-end backwards;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-toast {
+        animation: sx-drop var(--sx-dur) steps(3, jump-end) both;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-toast {
+        animation: sx-type var(--sx-dur) steps(20, jump-end) backwards;
+    }
+}
+
+@keyframes sx-rise {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+@keyframes sx-rule {
+    0%,
+    35% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes sx-slice {
+    0% {
+        opacity: 0;
+        transform: translateX(10px);
+        clip-path: inset(0 0 100% 0);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translateX(-6px);
+        clip-path: inset(0 0 55% 0);
+    }
+
+    35% {
+        transform: translateX(5px);
+        clip-path: inset(40% 0 15% 0);
+    }
+
+    55% {
+        transform: translateX(-3px);
+        clip-path: inset(60% 0 0 0);
+    }
+
+    75% {
+        transform: translateX(1px);
+        clip-path: inset(0);
+    }
+
+    100% {
+        transform: none;
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-drop {
+    from {
+        transform: translateY(-12px);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes sx-type {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+/* ── 6 · Dialog ───────────────────────────────────────────────────────── */
+
+/* formal: a sheet laid on the desk, framed twice, over a paper backdrop. */
+[data-theme='formal'] .sx-sig .sx-backdrop {
+    background: color-mix(in oklab, var(--foreground) 20%, var(--background));
+}
+
+[data-theme='formal'] .sx-sig .kp-dialog {
+    --sx-dur: 300ms;
+    box-shadow:
+        0 0 0 4px var(--popover),
+        0 0 0 5px var(--border-strong),
+        0 18px 40px -24px hsl(from var(--foreground) h s l / 0.5);
+}
+
+[data-theme='formal'] .sx-sig .kp-dialog__title {
+    font-family: var(--theme-font-display);
+}
+
+/* cyberpunk: CRT power-on — a line, full width, then full height. */
+[data-theme='cyberpunk'] .sx-sig .kp-dialog {
+    --sx-dur: 380ms;
+    box-shadow: inset 0 3px 0 var(--primary);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-dialog::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: calc(50% - 1px);
+    block-size: 2px;
+    background: var(--primary);
+    opacity: 0;
+    pointer-events: none;
+}
+
+[data-theme='cyberpunk'] .sx-sig .sx-backdrop {
+    background: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px), hsl(from var(--foreground) h s l / 0.1);
+}
+
+/* retro: the zoom — four hard frames from a quarter size. */
+[data-theme='retro'] .sx-sig .kp-dialog {
+    --sx-dur: 280ms;
+}
+
+/* deco: a sunburst opens from the top centre inside a gold double frame. */
+[data-theme='deco'] .sx-sig .kp-dialog {
+    --sx-dur: 560ms;
+    border: 4px double var(--primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-dialog {
+        animation: sx-sheet var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-dialog {
+        animation: sx-crt var(--sx-dur) cubic-bezier(0.3, 0, 0.2, 1) backwards;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-dialog::after {
+        animation: sx-crt-line var(--sx-dur) cubic-bezier(0.3, 0, 0.2, 1);
+    }
+
+    [data-theme='retro'] .sx-sig .kp-dialog {
+        animation: sx-zoom var(--sx-dur) steps(4, jump-end) both;
+    }
+
+    [data-theme='deco'] .sx-sig .kp-dialog {
+        animation: sx-fan var(--sx-dur) cubic-bezier(0.3, 0, 0.2, 1) backwards;
+    }
+}
+
+@keyframes sx-sheet {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+    }
+}
+
+@keyframes sx-crt {
+    0%,
+    45% {
+        clip-path: inset(calc(50% - 1px) 0);
+    }
+
+    100% {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes sx-crt-line {
+    0% {
+        opacity: 1;
+        transform: scaleX(0.1);
+    }
+
+    45% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes sx-zoom {
+    from {
+        transform: scale(0.25);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes sx-fan {
+    from {
+        clip-path: circle(0 at 50% 0);
+    }
+
+    to {
+        clip-path: circle(150% at 50% 0);
+    }
+}
+
+/* ── 7 · Tooltip ──────────────────────────────────────────────────────── */
+
+/* formal: a marginal note — small caps, hairline, a pointer. */
+[data-theme='formal'] .sx-sig .kp-tooltip {
+    --sx-dur: 200ms;
+    margin-inline-start: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--border-strong);
+    border-radius: calc(var(--radius) / 2);
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 6px 16px -10px hsl(from var(--foreground) h s l / 0.4);
+    font-size: 0.875rem;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.05em;
+}
+
+[data-theme='formal'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-start: -5px;
+    inset-inline-start: 1rem;
+    inline-size: 8px;
+    block-size: 8px;
+    border-block-start: 1px solid var(--border-strong);
+    border-inline-start: 1px solid var(--border-strong);
+    background: var(--popover);
+    transform: rotate(45deg);
+}
+
+/* cyberpunk: a machine readout, wiped in. */
+[data-theme='cyberpunk'] .sx-sig .kp-tooltip {
+    --sx-dur: 220ms;
+    padding: 0.35rem 0.75rem 0.35rem 0.6rem;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-tooltip::before {
+    content: '>';
+    margin-inline-end: 0.6ch;
+    color: var(--accent);
+}
+
+/* retro: the 1995 balloon, no fade. */
+[data-theme='retro'] .sx-sig .kp-tooltip {
+    --sx-dur: 500ms;
+    padding: 0 0.35rem;
+    border: 1px solid var(--foreground);
+    border-radius: 0;
+    background: color-mix(in oklab, var(--warning) 30%, var(--popover));
+    color: var(--foreground);
+    box-shadow: none;
+    font-family: var(--kp-dos);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+/* blueprint: an annotation with a leader line. */
+[data-theme='blueprint'] .sx-sig .kp-tooltip {
+    --sx-dur: 360ms;
+    margin-block-start: 1rem;
+    margin-inline-start: 1rem;
+    border: 1px solid var(--foreground);
+    border-radius: 0;
+    background: var(--popover);
+    font-family: var(--theme-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-tooltip::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 0.75rem;
+    inline-size: 1px;
+    block-size: 1.05rem;
+    background: var(--foreground);
+    transform-origin: 50% 100%;
+}
+
+[data-theme='blueprint'] .sx-sig .kp-tooltip::after {
+    content: '';
+    position: absolute;
+    inset-block-end: calc(100% + 1.05rem - 3px);
+    inset-inline-start: calc(0.75rem - 3px);
+    inline-size: 7px;
+    block-size: 7px;
+    border: 1px solid var(--foreground);
+    border-radius: 50%;
+    background: var(--popover);
+    box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] .sx-sig .kp-tooltip {
+        animation: sx-tip-drop var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
+    [data-theme='cyberpunk'] .sx-sig .kp-tooltip {
+        animation: sx-wipe var(--sx-dur) steps(4, jump-end) backwards;
+    }
+
+    [data-theme='retro'] .sx-sig .kp-tooltip {
+        animation: sx-hold var(--sx-dur) step-end;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-tooltip {
+        animation: sx-callout var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    [data-theme='blueprint'] .sx-sig .kp-tooltip::before {
+        animation: sx-leader var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+}
+
+@keyframes sx-tip-drop {
+    from {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes sx-wipe {
+    from {
+        clip-path: polygon(0 0, 0 0, 0 calc(100% - 7px), 0 100%, 0 100%);
+    }
+
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+    }
+}
+
+@keyframes sx-hold {
+    0%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes sx-callout {
+    0%,
+    45% {
+        clip-path: inset(-1.5rem 100% 0 0);
+    }
+
+    100% {
+        clip-path: inset(-1.5rem 0 0 0);
+    }
+}
+
+@keyframes sx-leader {
+    0% {
+        transform: scaleY(0);
+    }
+
+    45%,
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+/* ── 8 · Wizard steps ─────────────────────────────────────────────────── */
+
+/* formal: roman numerals in the display face, joined by a rule. */
+[data-theme='formal'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='formal'] .sx-sig .kp-wizard__steps li {
+    gap: 0.5rem;
+}
+
+[data-theme='formal'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1rem;
+    block-size: 1px;
+    margin-inline: 0.25rem;
+    background: var(--border-strong);
+}
+
+[data-theme='formal'] .sx-sig .kp-wizard__steps li::before {
+    content: counter(kp-step, upper-roman);
+    inline-size: auto;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    padding-inline: 0.3rem;
+    font-family: var(--theme-font-display);
+    font-size: 0.875rem;
+}
+
+[data-theme='formal'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+}
+
+/* cyberpunk: a chevron run of plates. */
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps {
+    gap: 3px;
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li {
+    gap: 0.6rem;
+    padding: 0.45rem 1.2rem 0.45rem 1.1rem;
+    background: var(--card);
+    color: var(--muted-foreground);
+    clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%, 0.6rem 50%);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li:first-child {
+    padding-inline-start: 0.7rem;
+    clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li::before {
+    content: counter(kp-step, decimal-leading-zero);
+    inline-size: auto;
+    block-size: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    background: hsl(from var(--accent) h s l / 0.14);
+    color: var(--accent);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li[data-state='done']::before {
+    content: var(--kp-glyph-check, '✓');
+    color: inherit;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* retro: an installer's panels — done sunken, current a title-bar plate. */
+[data-theme='retro'] .sx-sig .kp-wizard__steps {
+    gap: 0.4rem;
+}
+
+[data-theme='retro'] .sx-sig .kp-wizard__steps li {
+    padding: 3px 0.6rem 3px 3px;
+    background: var(--background);
+    box-shadow: var(--kp-raised);
+}
+
+[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='done'] {
+    background: var(--card);
+    box-shadow: var(--kp-sunken);
+}
+
+[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='current'] {
+    background: var(--kp-ramp);
+    color: var(--primary-foreground);
+}
+
+[data-theme='retro'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.4rem;
+    block-size: 1.4rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--popover);
+    box-shadow: var(--kp-sunken);
+    color: var(--foreground);
+}
+
+[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: var(--popover);
+    color: var(--primary);
+}
+
+/* deco: diamonds on a gold double rule. */
+[data-theme='deco'] .sx-sig .kp-wizard__steps {
+    gap: 0.5rem 0;
+}
+
+[data-theme='deco'] .sx-sig .kp-wizard__steps li {
+    gap: 0.5rem;
+}
+
+[data-theme='deco'] .sx-sig .kp-wizard__steps li:not(:last-child)::after {
+    content: '';
+    inline-size: 1.5rem;
+    block-size: 4px;
+    margin-inline: 0.5rem;
+    border-block: 1px solid var(--primary);
+}
+
+[data-theme='deco'] .sx-sig .kp-wizard__steps li::before {
+    inline-size: 1.9rem;
+    block-size: 1.9rem;
+    border: 0;
+    border-radius: 0;
+    background: hsl(from var(--primary) h s l / 0.25);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    color: var(--foreground);
+}
+
+[data-theme='deco'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* ── 9 · Empty state ──────────────────────────────────────────────────── */
+
+/* formal: a blank ledger page. */
+[data-theme='formal'] .sx-sig .kp-empty {
+    padding: 1.25rem 1rem 4.25rem;
+    border: 0;
+    border-block-start: 3px double var(--border-strong);
+    border-radius: 0;
+    background: repeating-linear-gradient(to bottom, transparent 0 calc(1.2rem - 1px), var(--border) calc(1.2rem - 1px) 1.2rem) center bottom 1rem / calc(100% - 4rem) 3.6rem no-repeat;
+}
+
+[data-theme='formal'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    font-family: var(--theme-font-display);
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+[data-theme='formal'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* cyberpunk: a dead channel. */
+[data-theme='cyberpunk'] .sx-sig .kp-empty {
+    padding: 1.25rem;
+    border: 1px solid hsl(from var(--primary) h s l / 0.45);
+    border-radius: 0;
+    background: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px), var(--card);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    text-align: start;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.35rem;
+    color: var(--accent);
+    font-family: var(--kp-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-empty__title::before {
+    content: '/// ';
+    color: var(--primary);
+}
+
+[data-theme='cyberpunk'] .sx-sig .kp-empty__body {
+    margin: 0;
+    font-family: var(--kp-mono);
+    font-size: 0.8rem;
+}
+
+/* retro: an empty list view. */
+[data-theme='retro'] .sx-sig .kp-empty {
+    position: relative;
+    padding: 1rem 1rem 1rem 3.5rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--popover);
+    box-shadow: var(--kp-sunken);
+    text-align: start;
+}
+
+[data-theme='retro'] .sx-sig .kp-empty::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-start: 1rem;
+    inline-size: 24px;
+    block-size: 24px;
+    background-image: var(--kp-brush);
+    background-size: 2px 2px;
+    image-rendering: pixelated;
+    box-shadow: var(--kp-raised);
+    opacity: 0.6;
+}
+
+[data-theme='retro'] .sx-sig .kp-empty__title {
+    margin: 0;
+    font-family: var(--kp-dos);
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+[data-theme='retro'] .sx-sig .kp-empty__body {
+    margin: 0;
+}
+
+/* terminal: an empty prompt with a cursor. */
+[data-theme='terminal'] .sx-sig .kp-empty {
+    padding: 0.75rem 0;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--theme-font-mono);
+    text-align: start;
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title {
+    margin: 0 0 0.25rem;
+    color: var(--foreground);
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title::before {
+    content: '> ';
+    color: var(--primary);
+}
+
+[data-theme='terminal'] .sx-sig .kp-empty__title::after {
+    content: '';
+    display: inline-block;
+    inline-size: 0.6em;
+    block-size: 1.1em;
+    margin-inline-start: 0.3ch;
+    vertical-align: text-bottom;
+    background: var(--primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    /* Five blinks and it stays lit: nothing blinks for more than five
+       seconds (WCAG 2.2.2), and once a second is far below DI5. */
+    [data-theme='terminal'] .sx-sig .kp-empty__title::after {
+        animation: sx-blink 1000ms step-end 5;
+    }
+}
+
+@keyframes sx-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ── 10 · Link hover ──────────────────────────────────────────────────── */
+
+/* formal: the underline doubles under the pointer. */
+[data-theme='formal'] .sx-sig .sx-links a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+    text-underline-offset: 0.2em;
+}
+
+[data-theme='formal'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    text-decoration-style: double;
+    text-decoration-thickness: 1px;
+    text-decoration-color: currentColor;
+}
+
+/* cyberpunk: dotted cyan at rest, a yellow bar sweeps in under the pointer. */
+[data-theme='cyberpunk'] .sx-sig .sx-links a {
+    position: relative;
+    text-decoration: underline dotted var(--accent);
+    text-underline-offset: 0.3em;
+}
+
+[data-theme='cyberpunk'] .sx-sig .sx-links a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: -0.1em;
+    block-size: 2px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+}
+
+[data-theme='cyberpunk'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    text-decoration-color: transparent;
+}
+
+[data-theme='cyberpunk'] .sx-sig .sx-links a:is(:hover, .is-hover)::after {
+    transform: scaleX(1);
+}
+
+/* retro: the link becomes the selection bar. */
+[data-theme='retro'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* synthwave: a horizon underline that glows. */
+[data-theme='synthwave'] .sx-sig .sx-links a {
+    padding-block-end: 2px;
+    text-decoration: none;
+    background: linear-gradient(90deg, var(--primary), var(--accent)) left bottom / 100% 2px no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+[data-theme='synthwave'] .sx-sig .sx-links a:is(:hover, .is-hover) {
+    background-size: 100% 3px;
+    text-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.75);
+}
+
+@media (forced-colors: active) {
+    [data-theme='synthwave'] .sx-sig .sx-links a {
+        text-decoration: underline;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='cyberpunk'] .sx-sig .sx-links a::after {
+        transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+}
+
+/* Skeleton frames sit side by side, so the gap rule between lines does not apply. */
+.sx-frames > .kp-skeleton {
+    margin-block-start: 0 !important;
+}
+
+@media (max-width: 48rem) {
+    .sx-backdrop {
+        padding: 0.5rem;
+    }
+}

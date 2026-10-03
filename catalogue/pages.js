@@ -93,6 +93,8 @@ export const PAGES = [
             { href: 'research/review-dialog/demo.html', label: 'Review dialog' },
             { href: 'research/dividers/demo.html', label: 'Softer dividers and a shape knob' },
             { href: 'research/alarm/demo.html', label: 'The alarm: a full-screen dramatic alert' },
+            { href: 'research/progress-signature/demo.html', label: 'A progress bar of its own, per theme' },
+            { href: 'research/signature-elements/demo.html', label: 'Other elements with a signature per theme' },
             { href: 'research/cyberpunk-dividers/demo.html', label: 'A new divider for cyberpunk, six options' },
             { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
             { href: 'research/scope25-gestures/demo.html', label: 'The scope-25 gestures beside what ships' },

@@ -1,0 +1,71 @@
+/* dark: a spectral readout. The bar is a machined scale (a channel with two
+   corners cut at forty-five degrees and a tick every --kp-steps) and what
+   fills it is the oxide film itself, cyan to violet to magenta to lime laid
+   along the whole scale, so progress uncovers the spectrum and a full bar
+   shows every wavelength; the leading edge is the near-white "]" bracket
+   dark closes on a button's label. Busy is the film hatched at the chamfer's
+   angle across the whole scale, still; only the reader's pointer turns it.
+   From the signature: the oxide film (--chart-1..4, following --kp-px), the
+   chamfer, the ruler divider's ticks, the closing brackets, and "move
+   nothing the reader did not move" (no keyframes at all). */
+
+[data-theme='dark'] .kp-progressbar {
+    --kp-progressbar-height: 0.75rem;
+    --kp-ps-cut: 4px;
+    /* The film along the scale. --kp-px is the pointer's share across the
+       page (0.5 at rest, written by js/effects.js); it slides the film by
+       up to a fifth of the scale, the way the anodised edge turns with the
+       angle you look from. */
+    --kp-ps-film: linear-gradient(90deg, var(--chart-1), var(--chart-2) 36%, var(--chart-3) 68%, var(--chart-4));
+}
+
+/* The channel: the muted ground, cut on two opposite corners like every
+   control of this theme, with a hairline tick every tenth in the boundary
+   colour along its lower half. */
+[data-theme='dark'] .kp-progressbar__track {
+    border-radius: 0;
+    background:
+        linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / calc(100% / var(--kp-steps)) 45% repeat-x,
+        var(--muted);
+    box-shadow: inset 0 0 0 1px var(--border);
+    clip-path: polygon(
+        var(--kp-ps-cut) 0,
+        100% 0,
+        100% calc(100% - var(--kp-ps-cut)),
+        calc(100% - var(--kp-ps-cut)) 100%,
+        0 100%,
+        0 var(--kp-ps-cut)
+    );
+}
+
+/* The film, spanning the scale and uncovered to the value; a 1px rule of the
+   ground under its top edge keeps it a plate in a channel. */
+[data-theme='dark'] .kp-progressbar__fill {
+    inset-block: 2px;
+    background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
+    transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* The bracket: a near-white "]" closing on the filled part, a 2px upright
+   with a 4px serif top and bottom pointing back over the film. Hidden past
+   the left edge at nothing. */
+[data-theme='dark'] .kp-progressbar__head {
+    inline-size: 6px;
+    translate: -100% 0;
+    background:
+        linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 2px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat;
+    transition: transform 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* Busy: the film across the whole scale, hatched at the chamfer's angle,
+   two pixels lit in six. It stands; the pointer turns its colours. */
+[data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+    mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+}

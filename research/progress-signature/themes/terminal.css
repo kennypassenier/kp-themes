@@ -1,0 +1,126 @@
+/* terminal: the bar is one line of a terminal, [#########-------------],
+   one character cell per step: '#' in phosphor for what is done, '-' in the
+   dim phosphor for what is left, and the block caret standing in the next
+   cell; busy is wget's [      <=>      ] walking cell by cell. From the
+   signature: everything is mono, a character cell has no rounded corners,
+   the hover is inverse video, and the caret is one of the two loops the
+   theme allows (one change a second). */
+
+[data-theme='terminal'] .kp-progressbar {
+    --kp-progressbar-height: 1.25rem;
+    /* The run between the brackets, a whole number of cells, so the last
+       cell is never cut and 100% is exactly every cell. */
+    --kp-tp-run: round(down, 100% - 2ch, 1ch);
+    font-family: var(--theme-font-mono);
+    font-size: 1rem;
+    line-height: var(--kp-progressbar-height);
+    white-space: nowrap;
+    color: var(--foreground);
+    text-shadow: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));
+}
+
+/* The brackets: the frame of the line, in the ink. */
+[data-theme='terminal'] .kp-progressbar::before,
+[data-theme='terminal'] .kp-progressbar::after {
+    position: absolute;
+    inset-block: 0;
+    inline-size: 1ch;
+    color: var(--foreground);
+}
+
+[data-theme='terminal'] .kp-progressbar::before {
+    content: '[';
+    inset-inline-start: 0;
+}
+
+[data-theme='terminal'] .kp-progressbar::after {
+    content: ']';
+    inset-inline-start: calc(1ch + var(--kp-tp-run));
+}
+
+[data-theme='terminal'] .kp-progressbar__track {
+    inset-inline: 1ch auto;
+    inline-size: var(--kp-tp-run);
+    border-radius: 0;
+    background: transparent;
+}
+
+/* What is left: a run of dashes in the dim phosphor, uncovered from the
+   value on, so done and left never overlap. */
+[data-theme='terminal'] .kp-progressbar__track::after {
+    content: '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------';
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    color: var(--border-strong);
+    text-shadow: none;
+    clip-path: inset(0 0 0 round(down, var(--kp-value) * 100% + 0.5px, 1ch));
+}
+
+/* What is done: hashes in the phosphor, revealed a whole cell at a time. A
+   terminal repaints a cell; it never eases. */
+[data-theme='terminal'] .kp-progressbar__fill {
+    overflow: hidden;
+    background: none;
+    color: var(--primary);
+    clip-path: inset(0 calc(100% - round(down, var(--kp-value) * 100% + 0.5px, 1ch)) 0 0);
+    transition: none;
+}
+
+[data-theme='terminal'] .kp-progressbar__fill::before {
+    content: '################################################################################################################################################################################################';
+}
+
+/* The caret: one block cell in the ink, standing in the next cell to be
+   written. Past the last cell it leaves the run and is clipped away. */
+[data-theme='terminal'] .kp-progressbar__head {
+    inset-block: 0.1875rem;
+    inline-size: 1ch;
+    background: var(--foreground);
+    box-shadow: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));
+    transform: translateX(round(down, var(--kp-value) * 100cqi + 0.5px, 1ch));
+    transition: none;
+}
+
+/* Busy: wget's walker. No hashes, no dashes, just <=> stepping across the
+   run and back. */
+[data-theme='terminal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+    content: none;
+}
+
+[data-theme='terminal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inline-size: 3ch;
+    color: var(--foreground);
+    clip-path: none;
+    animation: none;
+    transform: translateX(calc(50cqi - 1.5ch));
+}
+
+[data-theme='terminal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '<=>';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='terminal'] .kp-progressbar__head {
+        animation: kp-tp-caret 1000ms steps(1, end) infinite;
+    }
+
+    [data-theme='terminal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        animation: kp-tp-walk 2400ms steps(24, jump-none) infinite alternate;
+    }
+}
+
+@keyframes kp-tp-caret {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes kp-tp-walk {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100cqi - 3ch));
+    }
+}

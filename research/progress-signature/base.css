@@ -1,0 +1,96 @@
+/* The signature progress bar, research round (Kenny, 2026-10-03: "een nieuwe
+   vorm van progressbar voor alle thema's … iets dat niet-standaard is zoals
+   de progressbar bij garuda en pacman, lijkt wel op een klassieke
+   progressbar, maar heeft zijn eigen identiteit").
+
+   The contract every theme's file in themes/ builds on:
+
+     <div class="kp-progressbar" role="progressbar" aria-label="…"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"
+          style="--kp-value: 0.35">
+       <span class="kp-progressbar__track" aria-hidden="true">
+         <span class="kp-progressbar__fill"></span>
+         <span class="kp-progressbar__head"></span>
+       </span>
+     </div>
+
+   --kp-value is the share done, 0 to 1. data-kp-indeterminate (and no
+   aria-valuenow) is "busy, no idea how far". --kp-steps is how many
+   segments a segmented look draws (10 by default). The box is one line
+   high whatever happens inside it, never wraps, and keeps its width from
+   the first frame; the fill moves inside it. Every theme file may restyle
+   the track, the fill, the head and their pseudo-elements, and nothing
+   outside the bar. */
+
+.kp-progressbar {
+    --kp-value: 0;
+    --kp-steps: 10;
+    --kp-progressbar-height: 0.75rem;
+    position: relative;
+    display: block;
+    inline-size: 100%;
+    max-inline-size: var(--kp-progressbar-max-width, 32rem);
+    block-size: var(--kp-progressbar-height);
+    contain: layout paint;
+}
+
+.kp-progressbar__track {
+    container-type: inline-size;
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    background: var(--muted);
+}
+
+/* The fill spans the track and is clipped to the value, so a pattern in it
+   never stretches and nothing is laid out again as the value moves: only
+   clip-path and transform change [world-class bar: compositor-only motion]. */
+.kp-progressbar__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--primary);
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+    transition: clip-path 240ms ease-out;
+}
+
+/* The head rides on the fill's leading edge; a theme gives it a shape or
+   leaves it empty. */
+.kp-progressbar__head {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    transform: translateX(calc(var(--kp-value) * 100cqi));
+    transition: transform 240ms ease-out;
+}
+
+.kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline-end: auto;
+    inline-size: 30%;
+    clip-path: none;
+    animation: kp-progressbar-sweep 1400ms ease-in-out infinite;
+}
+
+.kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+    display: none;
+}
+
+@keyframes kp-progressbar-sweep {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(340%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kp-progressbar *,
+    .kp-progressbar *::before,
+    .kp-progressbar *::after {
+        animation-duration: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+    }
+}

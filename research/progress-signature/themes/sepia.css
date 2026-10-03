@@ -1,0 +1,102 @@
+/* sepia: a line in a book's table of contents. What is still to come is the
+   dotted leader; what is read is a sienna Oxford rule, thick over thin, and
+   the head is the lozenge from the theme's ornamental divider. Busy is a
+   dinkus, three lozenges, the printer's mark for a pause, crossing the
+   leader once per breath; without motion it rests in the middle. From
+   paper, brown ink and the alt divider's diamond. */
+
+[data-theme='sepia'] .kp-progressbar {
+    --kp-progressbar-height: 0.875rem;
+    --kp-ps-head: 0.75rem;
+}
+
+/* The leader: a row of small ink dots, spaced so none is ever cut. */
+[data-theme='sepia'] .kp-progressbar__track {
+    border-radius: 0;
+    background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center / 0.4375rem 0.1875rem space no-repeat;
+}
+
+/* The Oxford rule: a 3px stroke over a 1px hairline, ending under the
+   lozenge's centre. */
+[data-theme='sepia'] .kp-progressbar__fill {
+    background:
+        linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px) / 100% 3px no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px) / 100% 1px no-repeat,
+        linear-gradient(var(--card), var(--card)) center / 100% 0.5rem no-repeat;
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+/* The lozenge, drawn rather than typed so it never depends on a font. */
+[data-theme='sepia'] .kp-progressbar__head {
+    inline-size: var(--kp-ps-head);
+    background: var(--primary);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
+    transition: transform var(--fx-duration) var(--fx-ease);
+}
+
+/* Busy: the dinkus on its own paper plate, so the leader stops under it. */
+[data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    --kp-ps-dinkus: 3.25rem;
+    inset-inline: 0;
+    inline-size: auto;
+    background: none;
+    animation: kp-progressbar-sepia-dinkus 2600ms var(--fx-ease) infinite;
+}
+
+[data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+[data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--kp-ps-dinkus);
+}
+
+[data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    background: var(--card);
+}
+
+/* Three lozenges in one polygon, joined along the midline by edges of no
+   area. */
+[data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+    --d: 0.3125rem;
+    --g: 0.5rem;
+    --o: 0.3125rem;
+    background: var(--primary);
+    clip-path: polygon(
+        var(--o) 50%,
+        calc(var(--o) + var(--d)) 10%,
+        calc(var(--o) + var(--d) * 2) 50%,
+        calc(var(--o) + var(--d) * 2 + var(--g)) 50%,
+        calc(var(--o) + var(--d) * 3 + var(--g)) 10%,
+        calc(var(--o) + var(--d) * 4 + var(--g)) 50%,
+        calc(var(--o) + var(--d) * 4 + var(--g) * 2) 50%,
+        calc(var(--o) + var(--d) * 5 + var(--g) * 2) 10%,
+        calc(var(--o) + var(--d) * 6 + var(--g) * 2) 50%,
+        calc(var(--o) + var(--d) * 5 + var(--g) * 2) 90%,
+        calc(var(--o) + var(--d) * 4 + var(--g) * 2) 50%,
+        calc(var(--o) + var(--d) * 4 + var(--g)) 50%,
+        calc(var(--o) + var(--d) * 3 + var(--g)) 90%,
+        calc(var(--o) + var(--d) * 2 + var(--g)) 50%,
+        calc(var(--o) + var(--d) * 2) 50%,
+        calc(var(--o) + var(--d)) 90%
+    );
+}
+
+@keyframes kp-progressbar-sepia-dinkus {
+    from {
+        transform: translateX(calc(var(--kp-ps-dinkus) * -1));
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        animation: none;
+        transform: translateX(calc(50% - var(--kp-ps-dinkus) / 2));
+    }
+}

@@ -31,3 +31,7 @@ tokens.tar
 
 # What a dry run of scripts/release.sh builds, for inspection.
 .build/
+
+# Screenshots of the signature research rounds (2026-10-03): made on demand, not kept.
+research/progress-signature/out/
+research/signature-elements/out/

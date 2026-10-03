@@ -1,0 +1,72 @@
+/* grotesk — the bar is set on the twelve-column grid: column hairlines
+   over a black baseline rule, the done share a flat signal-red block,
+   closed by a black rule standing flush on the value. Busy is one column
+   of red cutting from column to column (steps, never a glide). From the
+   signature's twelve columns, the one red and black-is-structure. */
+
+[data-theme='grotesk'] .kp-progressbar {
+    --kp-progressbar-height: 1rem;
+    --gr-ink: var(--border-strong);
+    --gr-red: var(--primary);
+    --gr-base: 2px;
+    --gr-col: calc(100% / 12);
+}
+
+/* The grid: twelve column hairlines (the last one drawn on its own), and
+   the baseline rule the type would stand on. */
+[data-theme='grotesk'] .kp-progressbar__track {
+    border-radius: 0;
+    background:
+        linear-gradient(var(--gr-ink), var(--gr-ink)) left bottom / 100% var(--gr-base) no-repeat,
+        linear-gradient(color-mix(in oklab, var(--gr-ink) 28%, transparent), color-mix(in oklab, var(--gr-ink) 28%, transparent)) right top / 1px 100% no-repeat,
+        linear-gradient(90deg, color-mix(in oklab, var(--gr-ink) 28%, transparent) 0 1px, transparent 1px) 0 0 / var(--gr-col) 100% repeat-x,
+        var(--card);
+}
+
+/* The block: flat red, standing on the baseline. */
+[data-theme='grotesk'] .kp-progressbar__fill {
+    inset-block-end: var(--gr-base);
+    background: var(--gr-red);
+    transition: clip-path var(--fx-duration, 120ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* The rule that closes the block: black, the full height. Its travel is
+   the track less its own width, so at nothing done it stands at the margin
+   where the grid starts, and at all done it closes the box. */
+[data-theme='grotesk'] .kp-progressbar__head {
+    inline-size: 3px;
+    background: var(--gr-ink);
+    transform: translateX(calc(var(--kp-value) * (100cqi - 3px)));
+    transition: transform var(--fx-duration, 120ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Busy without motion: every other column holds a red block half the
+   height — a rhythm across the whole grid, never a contiguous length. */
+[data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-block: 45% calc(var(--gr-base) + 2px);
+    inset-inline: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: linear-gradient(90deg, var(--gr-red) 0 50%, transparent 50%) 0 0 / calc(var(--gr-col) * 2) 100% repeat-x;
+}
+
+/* Busy with motion: one column of red, cut from column to column. */
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-block: 0 var(--gr-base);
+        inset-inline-end: auto;
+        inline-size: var(--gr-col);
+        background: var(--gr-red);
+        animation: kp-progressbar-grotesk-cut 1440ms steps(12, jump-none) infinite;
+    }
+}
+
+@keyframes kp-progressbar-grotesk-cut {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(1100%);
+    }
+}

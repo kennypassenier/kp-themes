@@ -1,0 +1,62 @@
+/* light: the hairline seam with its circle. Light's divider (a 1px line with
+   a small circle resting on it) becomes the bar: a thin seam, an indigo pill
+   thread laid over it, and the circle, tinted with the one place light lets
+   its saturated cyan signal appear, riding the leading edge. Busy is three
+   of those circles resting at the middle of the seam, an ellipsis, still.
+   From the signature: the divider circle, indigo as the one chosen colour,
+   the pill radius vocabulary, --fx-signal as decoration only, and "nothing
+   loops" (no keyframes at all). */
+
+[data-theme='light'] .kp-progressbar {
+    --kp-progressbar-height: 0.75rem;
+    --kp-ps-bead: 0.75rem;
+}
+
+/* The seam: a 2px hairline in --border across the middle, no box. */
+[data-theme='light'] .kp-progressbar__track {
+    border-radius: 0;
+    background: linear-gradient(var(--border), var(--border)) 0 50% / 100% 2px no-repeat;
+}
+
+/* The thread: a 4px indigo pill on the seam. The pill's rounded end comes
+   from the clip-path's own round, so the leading edge is never square. */
+[data-theme='light'] .kp-progressbar__fill {
+    inset-block: calc(50% - 2px);
+    block-size: 4px;
+    background: var(--primary);
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round var(--kp-radius-pill, 999px));
+    transition: clip-path 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+/* The circle: the divider's signal dot, ringed in the page's own white so it
+   sits on the thread rather than in it. It rides from flush-left at 0 to
+   flush-right at 100%, so it is never cut by the track. */
+[data-theme='light'] .kp-progressbar__head {
+    inset-block: calc(50% - var(--kp-ps-bead) / 2);
+    inline-size: var(--kp-ps-bead);
+    block-size: var(--kp-ps-bead);
+    border-radius: 50%;
+    background: var(--fx-signal);
+    box-shadow: inset 0 0 0 2px var(--background);
+    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-bead))));
+    transition: transform 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+/* Done: the circle takes the indigo, the thread is whole. */
+[data-theme='light'] .kp-progressbar[aria-valuenow='100'] .kp-progressbar__head {
+    background: var(--primary);
+}
+
+/* Busy: three circles resting at the middle of the seam, an ellipsis. Two
+   indigo, the last the cyan signal, each ringed in white. Nothing moves. */
+[data-theme='light'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 0;
+    inline-size: auto;
+    block-size: auto;
+    clip-path: none;
+    animation: none;
+    background:
+        radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% - 1rem) 50% / 0.75rem 0.75rem no-repeat,
+        radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) 50% 50% / 0.75rem 0.75rem no-repeat,
+        radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem no-repeat;
+}

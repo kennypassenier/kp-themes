@@ -1,0 +1,127 @@
+/* lapis — the bar is a gilded rule in a manuscript margin: a gold-ruled
+   band whose empty part is a chain of gold beads waiting to be gilded,
+   the done part solid gold leaf punched with lapis dots, and riding its
+   leading edge the rub el hizb, the eight-pointed star a scribe set in the
+   margin to mark how far the reading had come. Busy is the star walking
+   the bead chain. From the signature's gold that acts, vermilion as a
+   plate, the ruled frame and the girih star. */
+
+[data-theme='lapis'] .kp-progressbar {
+    --kp-progressbar-height: 1.375rem;
+    --lp-gold: var(--primary);
+    --lp-star: 0.95rem;
+    --lp-band: 0.75rem;
+    --lp-bead: 0.5rem;
+}
+
+/* The ruled band, narrower than the star and inset by half a star at each
+   end so the medallion never leaves the bar's box. */
+[data-theme='lapis'] .kp-progressbar__track {
+    inset-block: calc((var(--kp-progressbar-height) - var(--lp-band)) / 2);
+    inset-inline: calc(var(--lp-star) * 0.72);
+    overflow: visible;
+    border-radius: var(--kp-radius-pill, 999px);
+    background:
+        radial-gradient(circle, color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 1.4px, transparent 1.9px) 0 50% / var(--lp-bead) 100% repeat-x,
+        var(--background);
+    box-shadow:
+        0 0 0 1px var(--border-strong),
+        inset 0 0 0 1px var(--background);
+}
+
+/* The gold leaf: punched with lapis dots on the same pitch as the beads,
+   so a bead becomes a punch as the gold reaches it. The clip keeps the
+   pill's round end on the leading edge. */
+[data-theme='lapis'] .kp-progressbar__fill {
+    inset: 2px;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle, var(--primary-foreground) 0 1.1px, transparent 1.6px) calc(-2px) 50% / var(--lp-bead) 100% repeat-x,
+        var(--lp-gold);
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round 999px);
+    transition: clip-path var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* The star: two vermilion squares, one turned an eighth, each ruled in
+   gold, so the outline interlaces the way the manuscript draws it; a gold
+   boss at its heart. */
+[data-theme='lapis'] .kp-progressbar__head {
+    inset-block: 50% auto;
+    inline-size: 0;
+    block-size: 0;
+    transition: transform var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+[data-theme='lapis'] .kp-progressbar__head::before,
+[data-theme='lapis'] .kp-progressbar__head::after {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(var(--lp-star) / -2);
+    inset-inline-start: calc(var(--lp-star) / -2);
+    inline-size: var(--lp-star);
+    block-size: var(--lp-star);
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--lp-gold);
+}
+
+[data-theme='lapis'] .kp-progressbar__head::after {
+    transform: rotate(45deg);
+    background:
+        radial-gradient(circle, var(--lp-gold) 0 1.6px, var(--accent) 2.1px 3.2px, color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px, transparent 4.6px),
+        var(--accent);
+}
+
+/* Busy: no leaf; the bead chain brightened, and the star resting at its
+   middle. Under motion the star walks the chain and turns as it goes. */
+[data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+    background:
+        radial-gradient(circle, var(--lp-gold) 0 1.6px, transparent 2.1px) 0 50% / var(--lp-bead) 100% repeat-x,
+        var(--background);
+}
+
+[data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    display: none;
+}
+
+[data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+    display: block;
+    transform: translateX(50cqi);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        animation: kp-progressbar-lapis-walk 2400ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1)) infinite alternate;
+    }
+
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::before {
+        animation: kp-progressbar-lapis-turn 2400ms linear infinite;
+    }
+
+    [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::after {
+        animation: kp-progressbar-lapis-turn-45 2400ms linear infinite;
+    }
+}
+
+@keyframes kp-progressbar-lapis-walk {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100cqi);
+    }
+}
+
+@keyframes kp-progressbar-lapis-turn {
+    to {
+        transform: rotate(90deg);
+    }
+}
+
+@keyframes kp-progressbar-lapis-turn-45 {
+    from {
+        transform: rotate(45deg);
+    }
+    to {
+        transform: rotate(135deg);
+    }
+}

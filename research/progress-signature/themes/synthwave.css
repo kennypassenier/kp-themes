@@ -1,0 +1,116 @@
+/* synthwave: the bar is the sun on its side: the fill is the sun's ramp laid
+   along the track, magenta at the start warming to laser yellow at the end,
+   cut by the sun's horizontal stripes, over the floor's grid, with a neon
+   tube (near-white core, pink glow) on the leading edge; busy is the road's
+   centre line rolling under you. From the signature: a horizon, not a
+   palette; every cut is horizontal; the core is light and the colour lives
+   in the glow; nothing flickers. */
+
+[data-theme='synthwave'] .kp-progressbar {
+    --kp-progressbar-height: 1.125rem;
+    --kp-sw-void: var(--sidebar-background);
+    --kp-sw-core: var(--kp-core, hsl(from var(--foreground) h 20% 98%));
+}
+
+[data-theme='synthwave'] .kp-progressbar__track {
+    border-radius: var(--radius);
+    background: var(--kp-sw-void);
+}
+
+/* The floor: a vertical grid line every cell and the horizon along the
+   middle, in the dim magenta, so what is left still reads as road ahead. */
+[data-theme='synthwave'] .kp-progressbar__track::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(hsl(from var(--border-strong) h s l / 0.5) 0 0) 0 50% / 100% 1px no-repeat,
+        repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.38) 0 1px, transparent 1px 1.5rem);
+}
+
+/* The frame: the magenta hairline, over everything, square but for the
+   theme's 2px. */
+[data-theme='synthwave'] .kp-progressbar__track::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--border-strong);
+    pointer-events: none;
+}
+
+/* The sun: its ramp spans the whole track, so the colour says how far as
+   well as the length does, and its stripes widen toward the bottom edge,
+   the way the sun's do toward the horizon. */
+[data-theme='synthwave'] .kp-progressbar__fill {
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 0 48%,
+            var(--kp-sw-void) 48% 54%,
+            transparent 54% 64%,
+            var(--kp-sw-void) 64% 73%,
+            transparent 73% 81%,
+            var(--kp-sw-void) 81% 92%,
+            transparent 92%
+        ),
+        linear-gradient(
+            90deg,
+            var(--kp-sun-bottom, hsl(from var(--primary) calc(h - 34) s l)),
+            var(--primary) 45%,
+            var(--kp-sun-top, var(--warning-foreground))
+        );
+    transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+/* The tube on the leading edge: a 2px near-white core, the pink in its
+   glow. */
+[data-theme='synthwave'] .kp-progressbar__head {
+    inset-inline-start: -2px;
+    inline-size: 2px;
+    z-index: 1;
+    background: var(--kp-sw-core);
+    box-shadow:
+        0 0 3px hsl(from var(--primary) h s l / 0.9),
+        0 0 8px hsl(from var(--primary) h s l / 0.7),
+        0 0 16px hsl(from var(--primary) h s l / 0.45);
+    transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+/* Busy: the road's centre line, neon dashes rolling toward the end of the
+   bar one dash per 600ms (1.7 changes a second at any point, no flicker);
+   at rest it is the road standing still. */
+[data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline-end: 0;
+    inline-size: auto;
+    overflow: hidden;
+    clip-path: none;
+    animation: none;
+    background: none;
+}
+
+[data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -2.25rem;
+    inline-size: calc(100% + 4.5rem);
+    background: linear-gradient(90deg, var(--kp-sw-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 3px repeat-x;
+    filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        animation: kp-sw-road 600ms linear infinite;
+    }
+}
+
+@keyframes kp-sw-road {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(2.25rem);
+    }
+}

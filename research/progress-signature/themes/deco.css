@@ -1,0 +1,98 @@
+/* deco — the bar is a lobby frieze: a double-ruled gold frame (Le
+   Bathyscaphe's double rule) holding a fluted gold column laid on its side
+   that ends in the Empire State's chevron, an emerald lozenge set in its
+   point. Busy is a row of gold chevrons, the ascent with no top yet. From
+   the signature's flat gold, double rule, chevron cut, lozenge and jewel
+   accents; no metallic gradient. */
+
+[data-theme='deco'] .kp-progressbar {
+    --kp-progressbar-height: 1.125rem;
+    --dc-gold: var(--primary);
+    --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
+    --dc-tip: 0.45rem;
+    --dc-jewel: 0.4rem;
+    --dc-chevron: 0.8rem;
+}
+
+/* The frame: a double rule in the quiet gold, the ground inside it. */
+[data-theme='deco'] .kp-progressbar__track {
+    border: 3px double var(--border-strong);
+    border-radius: 0;
+    background: var(--background);
+}
+
+/* The fluted column, inset one hair from the frame, cut to a chevron at
+   both ends: notched at the origin, pointed at the value. The polygon has
+   the same six points at every value, so the cut travels with it. */
+[data-theme='deco'] .kp-progressbar__fill {
+    --dc-at: calc(var(--kp-value) * 100%);
+    inset: 1px;
+    background: linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x, var(--dc-gold);
+    clip-path: polygon(
+        0 0,
+        max(0px, calc(var(--dc-at) - var(--dc-tip))) 0,
+        var(--dc-at) 50%,
+        max(0px, calc(var(--dc-at) - var(--dc-tip))) 100%,
+        0 100%,
+        min(calc(var(--dc-tip) * 0.6), calc(var(--dc-at) * 0.5)) 50%
+    );
+    transition: clip-path 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* The jewel: an emerald lozenge ringed in gold, set just inside the
+   point; before the column is long enough to hold it, the track hides it. */
+[data-theme='deco'] .kp-progressbar__head {
+    inline-size: 0;
+    transition: transform 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+[data-theme='deco'] .kp-progressbar__head::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: calc(-1 * var(--dc-tip) - var(--dc-jewel) * 0.9);
+    inline-size: var(--dc-jewel);
+    block-size: var(--dc-jewel);
+    background: var(--accent);
+    box-shadow:
+        0 0 0 1px var(--background),
+        0 0 0 2px var(--dc-gold);
+    transform: translateY(-50%) rotate(45deg);
+}
+
+/* Busy: a row of gold chevrons, the frame unchanged. Static under reduced
+   motion; under motion the row climbs one chevron at a time. */
+[data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 1px;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: none;
+    overflow: hidden;
+}
+
+[data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block: 1px;
+    inset-inline-start: calc(-1 * var(--dc-chevron));
+    inline-size: calc(100% + var(--dc-chevron));
+    background:
+        linear-gradient(to bottom left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px)) left top / var(--dc-chevron) 50% repeat-x,
+        linear-gradient(to top left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px)) left bottom / var(--dc-chevron) 50% repeat-x;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        animation: kp-progressbar-deco-ascent 900ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+    }
+}
+
+@keyframes kp-progressbar-deco-ascent {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(var(--dc-chevron));
+    }
+}

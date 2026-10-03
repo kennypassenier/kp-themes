@@ -1,0 +1,104 @@
+/* phantom: a calling card cut from paper. The track is a slanted slab of
+   void under the halftone screen; what is done is the red plate with its
+   leading edge cut on the slash, the deep red second plate printed a few
+   pixels off register behind it, and the head is a white shard of paper
+   just ahead of the cut. Busy is a red slab shoved across; without motion,
+   red and void slabs at the same slant. From the red plate, the
+   misregistration, the halftone and the -8deg skew. */
+
+[data-theme='phantom'] .kp-progressbar {
+    --kp-progressbar-height: 1rem;
+    --kp-ps-slant: 0.375rem;
+    --kp-ps-shard: 0.3125rem;
+    --kp-ps-gap: 3px;
+    --kp-ps-edge: calc(var(--kp-value) * (100% - var(--kp-ps-slant)));
+    /* The cut's slant, full from the first two percent, none at zero, so an
+       empty card shows no red at all. */
+    --kp-ps-cut: calc(var(--kp-ps-slant) * min(1, var(--kp-value) * 50));
+}
+
+/* The slab: a border-strong frame clipped to a parallelogram, the void and
+   the screen inside it on the track's ::before. */
+[data-theme='phantom'] .kp-progressbar__track {
+    border-radius: 0;
+    background: var(--border-strong);
+    clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, calc(100% - var(--kp-ps-slant)) 100%, 0 100%);
+}
+
+[data-theme='phantom'] .kp-progressbar__track::before {
+    content: '';
+    position: absolute;
+    inset: 2px 2px 2px 2px;
+    background:
+        radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 28%, transparent) 0.9px, transparent 1px) 0 0 / 5px 5px,
+        var(--background);
+    clip-path: polygon(calc(var(--kp-ps-slant) - 1px) 0, 100% 0, calc(100% - var(--kp-ps-slant) + 1px) 100%, 0 100%);
+}
+
+/* The second plate, deep red, a few pixels ahead of the red one. */
+[data-theme='phantom'] .kp-progressbar__track::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--kp-red-deep, var(--sidebar-background));
+    clip-path: polygon(0 0, calc(var(--kp-ps-edge) + var(--kp-ps-cut) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 0, calc(var(--kp-ps-edge) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 100%, 0 100%);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+/* The red plate, its leading edge cut on the slant. */
+[data-theme='phantom'] .kp-progressbar__fill {
+    z-index: 2;
+    clip-path: polygon(0 0, calc(var(--kp-ps-edge) + var(--kp-ps-cut)) 0, var(--kp-ps-edge) 100%, 0 100%);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+/* The shard: a white sliver of paper at the same slant, just ahead; at
+   the end it has run off the card and the track clips it away. */
+[data-theme='phantom'] .kp-progressbar__head {
+    z-index: 3;
+    inline-size: calc(var(--kp-ps-slant) + var(--kp-ps-shard));
+    background: var(--foreground);
+    clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, var(--kp-ps-shard) 100%, 0 100%);
+    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-slant)) + var(--kp-ps-gap) * 2 + 1px));
+    transition: transform var(--fx-duration) var(--fx-ease);
+}
+
+/* Busy: one red slab, both ends cut, shoved across on the theme's easing. */
+[data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+    display: none;
+}
+
+[data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inline-size: 34%;
+    clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, calc(100% - var(--kp-ps-slant)) 100%, 0 100%);
+    box-shadow: none;
+    animation: kp-progressbar-phantom-shove 1500ms var(--kp-shove, cubic-bezier(0.81, -0.01, 0, 1)) infinite;
+}
+
+/* Shoved in, held a beat mid-card, shoved out: each leg on the shove
+   curve, so the slab spends its pauses where it can be seen. */
+@keyframes kp-progressbar-phantom-shove {
+    0% {
+        transform: translateX(-105%);
+    }
+    40%,
+    55% {
+        transform: translateX(97%);
+    }
+    100% {
+        transform: translateX(300%);
+    }
+}
+
+/* Busy without motion: red and void slabs, alternating at the slant. */
+@media (prefers-reduced-motion: reduce) {
+    [data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        animation: none;
+        transform: none;
+        clip-path: none;
+        background: repeating-linear-gradient(-69deg, var(--primary) 0 6px, transparent 6px 13px);
+    }
+}

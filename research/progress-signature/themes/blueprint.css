@@ -1,0 +1,132 @@
+/* blueprint — the bar is a dimension line on a working drawing: a scale of
+   ticks (--kp-steps of them) on the centre line, the measured length drawn
+   as a hatched section between two arrowheads, a witness line where the
+   measurement stops. Busy is the draughtsman's chain line (long dash, short
+   dash): a line whose length is not yet known. From the signature's
+   measurement lines, cyan drawing line and near-square radius. */
+
+[data-theme='blueprint'] .kp-progressbar {
+    --kp-progressbar-height: 1.125rem;
+    --bp-line: var(--primary);
+    --bp-scale: var(--border-strong);
+    --bp-arrow: 0.45rem;
+    --bp-chain: 22px;
+}
+
+/* The sheet: a hairline centre line, a scale of major ticks every step and
+   minor ticks between, and a witness line at either end. */
+[data-theme='blueprint'] .kp-progressbar__track {
+    border-radius: 0;
+    background:
+        linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
+        linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
+        repeating-linear-gradient(90deg, var(--bp-scale) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px, transparent 1px calc(100% / (var(--kp-steps) * 2))) center / 100% 28% no-repeat,
+        linear-gradient(var(--bp-scale), var(--bp-scale)) center / 100% 1px no-repeat,
+        transparent;
+}
+
+/* The measured length: a 45° section hatch between two solid rules, the
+   way a cut face is drawn, with an arrowhead at the origin. */
+[data-theme='blueprint'] .kp-progressbar__fill {
+    inset-block: 18%;
+    background:
+        linear-gradient(var(--bp-line), var(--bp-line)) top / 100% 2px no-repeat,
+        linear-gradient(var(--bp-line), var(--bp-line)) bottom / 100% 2px no-repeat,
+        repeating-linear-gradient(-45deg, var(--bp-line) 0 1.5px, transparent 1.5px 4.5px),
+        var(--background);
+    transition: clip-path var(--fx-duration, 160ms) linear;
+}
+
+/* The head is the end of the measurement: a full-height witness line with
+   an arrowhead landing on it. */
+[data-theme='blueprint'] .kp-progressbar__head {
+    inline-size: 0;
+    transition: transform var(--fx-duration, 160ms) linear;
+}
+
+[data-theme='blueprint'] .kp-progressbar__head::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -1px;
+    inline-size: 2px;
+    background: var(--bp-line);
+}
+
+[data-theme='blueprint'] .kp-progressbar__head::after {
+    content: '';
+    position: absolute;
+    inset-block: 4%;
+    inset-inline-end: 0;
+    inline-size: calc(var(--bp-arrow) * 1.3);
+    background: var(--bp-line);
+    clip-path: polygon(0 0, 100% 50%, 0 100%, 28% 50%);
+}
+
+/* The origin's own arrowhead, pointing back at the start; it lives in the
+   fill, so the clip reveals it with the first step. */
+[data-theme='blueprint'] .kp-progressbar__fill::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--bp-arrow);
+    background: var(--bp-line);
+    clip-path: polygon(100% 0, 0 50%, 100% 100%, 72% 50%);
+}
+
+/* Busy: the chain line, long dash short dash, along the centre — a
+   dimension that has not been taken. Static under reduced motion; under
+   motion it runs, one pitch at a time, on transform only. */
+[data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: none;
+    overflow: hidden;
+}
+
+[data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+    content: none;
+}
+
+[data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(50% - 1.5px);
+    inset-inline-start: 0;
+    block-size: 3px;
+    inline-size: calc(100% + var(--bp-chain));
+    background: repeating-linear-gradient(
+        90deg,
+        var(--bp-line) 0 13px,
+        transparent 13px 16px,
+        var(--bp-line) 16px 19px,
+        transparent 19px var(--bp-chain)
+    );
+}
+
+[data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+    background:
+        linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
+        linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+        transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        animation: kp-progressbar-blueprint-chain 700ms linear infinite;
+    }
+}
+
+@keyframes kp-progressbar-blueprint-chain {
+    from {
+        transform: translateX(calc(-1 * var(--bp-chain)));
+    }
+    to {
+        transform: translateX(0);
+    }
+}

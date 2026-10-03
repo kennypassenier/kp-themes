@@ -1,0 +1,91 @@
+/* nostromo: a tape deck's LED level meter set into the beige case, a dark
+   recessed window with a ladder of rectangular LEDs that light in the
+   indicator orange, one whole LED per step, the next one warming in
+   proportion to how far into it the value is; busy is the alternate LEDs of
+   a standby pattern. From the signature: the case, not the screen; the LED
+   orange is a plate and a glow, never text; nothing blinks and nothing
+   loops. */
+
+[data-theme='nostromo'] .kp-progressbar {
+    --kp-progressbar-height: 1rem;
+    --kp-np-lit: var(--sidebar-primary);
+    --kp-np-unlit: var(--sidebar-accent);
+    --kp-np-glow: hsl(from var(--sidebar-primary) h s l / 0.55);
+    /* One LED: a rounded-off lens inside its pitch, 2px of window between
+       neighbours and 2px above and below. */
+    --kp-np-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+    border-radius: 0.3rem;
+    background: var(--secondary);
+    /* The moulded bezel: the 3:1 boundary, the lit top edge of the plastic. */
+    box-shadow:
+        inset 0 0 0 1px var(--border-strong),
+        inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
+}
+
+/* The window: the dark plate, recessed. */
+[data-theme='nostromo'] .kp-progressbar__track {
+    inset: 3px;
+    border-radius: 0.15rem;
+    background: var(--sidebar-background);
+    box-shadow: inset 0 1px 2px hsl(from var(--sidebar-background) h s 4% / 0.9);
+}
+
+/* The unlit LEDs, every one of them, under the lit ones. */
+[data-theme='nostromo'] .kp-progressbar__track::before {
+    content: '';
+    position: absolute;
+    inset: 2px 1px;
+    background: var(--kp-np-unlit);
+    mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+}
+
+/* The lit LEDs: whole LEDs only, each with its lens highlight and its glow. */
+[data-theme='nostromo'] .kp-progressbar__fill {
+    inset: 2px 1px;
+    background: none;
+    filter: drop-shadow(0 0 3px var(--kp-np-glow));
+    clip-path: inset(-4px calc((1 - round(down, var(--kp-value) * var(--kp-steps), 1) / var(--kp-steps)) * 100%) -4px 0);
+    transition: none;
+}
+
+[data-theme='nostromo'] .kp-progressbar__fill::before,
+[data-theme='nostromo'] .kp-progressbar__head::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        hsl(from var(--kp-np-lit) h s calc(l + 18)) 0 30%,
+        var(--kp-np-lit) 30% 100%
+    );
+    mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+}
+
+/* The next LED, warming: lit as far as the value has got into it. It only
+   ever changes in opacity. */
+[data-theme='nostromo'] .kp-progressbar__head {
+    inset-block: 2px;
+    inset-inline-start: 1px;
+    inline-size: calc((100cqi - 2px) / var(--kp-steps));
+    opacity: calc(mod(var(--kp-value) * var(--kp-steps), 1) * 0.9);
+    transform: translateX(calc(round(down, var(--kp-value) * var(--kp-steps), 1) * (100cqi - 2px) / var(--kp-steps)));
+    transition: opacity 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme='nostromo'] .kp-progressbar__head::before {
+    mask-size: 100% 100%;
+}
+
+/* Busy: the standby pattern, every other LED lit. It stands still: this
+   theme never blinks and never loops. */
+[data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline-end: 1px;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+}
+
+[data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    mask: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(50% - 1px), transparent 0) 0 0 / calc(200% / var(--kp-steps)) 100%
+        repeat-x;
+}

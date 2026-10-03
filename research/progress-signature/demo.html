@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — signature progress bar research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var v = new URLSearchParams(location.search).get('variant');
+                if (v) d.setAttribute('data-ps-variant', v);
+                document.write('<link rel="stylesheet" href="../../css/' + (d.getAttribute('data-theme') || 'formal') + '-register.css" data-kp-register="' + (d.getAttribute('data-theme') || 'formal') + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="base.css" />
+        <link rel="stylesheet" href="themes/formal.css" />
+        <link rel="stylesheet" href="themes/light.css" />
+        <link rel="stylesheet" href="themes/dark.css" />
+        <link rel="stylesheet" href="themes/cyberpunk.css" />
+        <link rel="stylesheet" href="themes/synthwave.css" />
+        <link rel="stylesheet" href="themes/pastel.css" />
+        <link rel="stylesheet" href="themes/terminal.css" />
+        <link rel="stylesheet" href="themes/forest.css" />
+        <link rel="stylesheet" href="themes/high-contrast.css" />
+        <link rel="stylesheet" href="themes/sepia.css" />
+        <link rel="stylesheet" href="themes/blueprint.css" />
+        <link rel="stylesheet" href="themes/solstice.css" />
+        <link rel="stylesheet" href="themes/brutalism.css" />
+        <link rel="stylesheet" href="themes/deco.css" />
+        <link rel="stylesheet" href="themes/phantom.css" />
+        <link rel="stylesheet" href="themes/shade-light.css" />
+        <link rel="stylesheet" href="themes/shade-dark.css" />
+        <link rel="stylesheet" href="themes/retro.css" />
+        <link rel="stylesheet" href="themes/grotesk.css" />
+        <link rel="stylesheet" href="themes/lapis.css" />
+        <link rel="stylesheet" href="themes/nostromo.css" />
+        <link rel="stylesheet" href="themes/titanium.css" />
+        <link rel="stylesheet" href="variants/retro-pacman.css" />
+        <style>
+            .ps-row {
+                display: grid;
+                grid-template-columns: 8rem minmax(0, 1fr) 3.5rem;
+                align-items: center;
+                gap: var(--kp-space-md, 1rem);
+            }
+            .ps-value {
+                font-variant-numeric: tabular-nums;
+                text-align: end;
+            }
+            .ps-label {
+                color: var(--muted-foreground);
+                white-space: nowrap;
+            }
+            @media (max-width: 30rem) {
+                .ps-row {
+                    grid-template-columns: minmax(0, 1fr) 3rem;
+                }
+                .ps-label {
+                    grid-column: 1 / -1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main id="main" class="kp-page kp-stack" data-kp-surface="app">
+            <header class="kp-stack">
+                <h1>A progress bar of its own, per theme</h1>
+                <p class="kp-prose">Each theme draws the same bar its own way. The rows below are fixed values; the last one runs from empty to full and starts again, and the busy bar has no idea how far it is.</p>
+            </header>
+            <section class="kp-card kp-stack" data-ps="values">
+                <h2>Fixed values</h2>
+                <div class="ps-row">
+                    <span class="ps-label">Nothing yet</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="Nothing yet" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="--kp-value: 0">
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value">0%</span>
+                </div>
+                <div class="ps-row">
+                    <span class="ps-label">A third</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="A third" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35" style="--kp-value: 0.35">
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value">35%</span>
+                </div>
+                <div class="ps-row">
+                    <span class="ps-label">Nearly there</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="Nearly there" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" style="--kp-value: 0.72">
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value">72%</span>
+                </div>
+                <div class="ps-row">
+                    <span class="ps-label">Done</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="Done" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" style="--kp-value: 1">
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value">100%</span>
+                </div>
+            </section>
+            <section class="kp-card kp-stack" data-ps="live">
+                <h2>Running</h2>
+                <div class="ps-row">
+                    <span class="ps-label">Step <span data-ps-step>1</span> of 8</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="Installing" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="--kp-value: 0" data-ps-live>
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value" data-ps-percent>0%</span>
+                </div>
+                <div class="ps-row">
+                    <span class="ps-label">Busy</span>
+                    <div class="kp-progressbar" role="progressbar" aria-label="Asking the host" data-kp-indeterminate>
+                        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+                    </div>
+                    <span class="ps-value">…</span>
+                </div>
+            </section>
+            <section class="kp-card kp-stack" data-ps="picker">
+                <h2>Theme</h2>
+                <div class="kp-row"><button type="button" class="kp-button kp-button--sm" data-kp-theme="formal">formal</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="light">light</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="dark">dark</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="cyberpunk">cyberpunk</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="synthwave">synthwave</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="pastel">pastel</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="terminal">terminal</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="forest">forest</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="high-contrast">high-contrast</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="sepia">sepia</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="blueprint">blueprint</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="solstice">solstice</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="brutalism">brutalism</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="deco">deco</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="phantom">phantom</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="shade-light">shade-light</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="shade-dark">shade-dark</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="retro">retro</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="grotesk">grotesk</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="lapis">lapis</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="nostromo">nostromo</button><button type="button" class="kp-button kp-button--sm" data-kp-theme="titanium">titanium</button></div>
+            </section>
+        </main>
+        <script type="module">
+            for (const button of document.querySelectorAll('[data-kp-theme]')) button.addEventListener('click', () => {
+                const url = new URL(location.href); url.searchParams.set('theme', button.dataset.kpTheme); location.href = url.href;
+            });
+            // The running bar: eight steps, the total known from the first frame.
+            const live = document.querySelector('[data-ps-live]');
+            const percent = document.querySelector('[data-ps-percent]');
+            const step = document.querySelector('[data-ps-step]');
+            let at = 0;
+            const tick = () => {
+                at = at >= 100 ? 0 : at + 2;
+                live.style.setProperty('--kp-value', String(at / 100));
+                live.setAttribute('aria-valuenow', String(at));
+                percent.textContent = `${at}%`;
+                step.textContent = String(Math.min(8, Math.floor(at / 12.5) + 1));
+            };
+            // ?still holds the running bar at half way, for screenshots.
+            if (new URLSearchParams(location.search).has('still')) {
+                at = 48;
+                tick();
+            } else setInterval(tick, 120);
+        </script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

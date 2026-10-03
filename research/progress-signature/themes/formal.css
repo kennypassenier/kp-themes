@@ -1,0 +1,82 @@
+/* formal: the docket cut, filled in. The bar is formal's own section mark (a
+   hairline, a 3px gap, a 4px navy band) whose band is entered across the
+   column the way a ledger line is, a navy tick marking where the entry
+   stands; at 100% the account is closed with the bookkeeper's double rule.
+   Busy is a leader line of navy dots, "to be entered", set once and still.
+   From the signature: the docket cut ornament, "one colour acts" (navy),
+   no ornament or glow, and motion that commits once (no keyframes at all:
+   the only motion is a transition, and the leader draws in through
+   @starting-style). */
+
+[data-theme='formal'] .kp-progressbar {
+    --kp-progressbar-height: 0.75rem;
+    /* 1 when the value has reached the end, 0 below it: closes the account. */
+    --kp-ps-closed: clamp(0, (var(--kp-value) - 0.999) * 1000, 1);
+    /* 1 once anything is entered, 0 at nothing. */
+    --kp-ps-entered: clamp(0, var(--kp-value) * 1000, 1);
+}
+
+/* The column: the hairline along the top, and a short rule at each end so
+   the reader sees where the column starts and closes. No ground, no radius:
+   it is ruled on the paper, not a box laid on it. */
+[data-theme='formal'] .kp-progressbar__track {
+    border-radius: 0;
+    background:
+        linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 100% 1px no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 8px no-repeat,
+        linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 8px no-repeat;
+}
+
+/* The entry: the docket's 4px navy band, three pixels under the hairline. */
+[data-theme='formal'] .kp-progressbar__fill {
+    inset-block: 4px auto;
+    block-size: 4px;
+    background: var(--primary);
+    transition: clip-path 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* The closing rule: a navy hairline under the band, shown only at 100%,
+   which together with the band makes the double rule under a total. */
+[data-theme='formal'] .kp-progressbar__track::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 10px;
+    block-size: 1px;
+    background: var(--primary);
+    opacity: var(--kp-ps-closed);
+    transition: opacity 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* The mark: a 2px navy tick from the hairline through the band, standing at
+   the end of what is entered. Hidden at nothing and once the account is
+   closed, where the double rule says it instead. */
+[data-theme='formal'] .kp-progressbar__head {
+    inline-size: 2px;
+    translate: -100% 0;
+    inset-block: 0 2px;
+    background: var(--primary);
+    opacity: calc(var(--kp-ps-entered) - var(--kp-ps-closed));
+    transition:
+        transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)),
+        opacity 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Busy: the leader line of a ledger, navy dots across the whole column,
+   "to be entered". It draws itself once from the leading edge and then
+   stands; nothing loops. Under reduced motion it simply stands. */
+[data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: radial-gradient(circle, var(--primary) 0 1.4px, transparent 1.9px) 0 50% / 7px 4px repeat-x;
+    transform-origin: left center;
+    transition: transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@starting-style {
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        transform: scaleX(0);
+    }
+}

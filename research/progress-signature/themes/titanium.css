@@ -1,0 +1,90 @@
+/* titanium — the bar is a machined part being anodised: a chamfered slot
+   milled into carbon weave, the done share the oxide film whose colour is
+   fixed by where it stands (blue, violet, cyan, the way film thickness
+   picks the surviving wavelength), and the cutting edge at the value is
+   bare bright metal. Busy is a milled slug of oxide crossing the slot at
+   constant speed. From the signature's interference iris, machined
+   chamfer, carbon weave, and "metal does not ease". */
+
+[data-theme='titanium'] .kp-progressbar {
+    --kp-progressbar-height: 0.875rem;
+    --ti-cut: 0.4rem;
+    --ti-edge: var(--border-strong);
+    --ti-iris: linear-gradient(90deg, var(--chart-1), var(--chart-2) 55%, var(--chart-3));
+    --ti-slug: 0.35rem;
+    --ti-weave: color-mix(in oklab, var(--foreground) 9%, transparent);
+}
+
+/* The slot: chamfered on the leading-top and trailing-bottom corners (the
+   register's own diagonal), the edge drawn along all six sides so the cut
+   never removes it, the weave under it. */
+[data-theme='titanium'] .kp-progressbar__track {
+    border-radius: 0;
+    clip-path: polygon(var(--ti-cut) 0, 100% 0, 100% calc(100% - var(--ti-cut)), calc(100% - var(--ti-cut)) 100%, 0 100%, 0 var(--ti-cut));
+    background:
+        linear-gradient(to bottom right, transparent calc(50% - 0.8px), var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px)) left top / var(--ti-cut) var(--ti-cut) no-repeat,
+        linear-gradient(to bottom right, transparent calc(50% - 0.8px), var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px)) right bottom / var(--ti-cut) var(--ti-cut) no-repeat,
+        linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 100% 1px no-repeat,
+        linear-gradient(var(--ti-edge), var(--ti-edge)) left bottom / 100% 1px no-repeat,
+        linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 1px 100% no-repeat,
+        linear-gradient(var(--ti-edge), var(--ti-edge)) right top / 1px 100% no-repeat,
+        linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0 0 / 5px 5px,
+        linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0 0 / 5px 5px,
+        var(--muted);
+}
+
+/* The film: one iris across the whole slot, revealed by the clip, with
+   the line the tool left along the top face. */
+[data-theme='titanium'] .kp-progressbar__fill {
+    inset: 1px;
+    background:
+        linear-gradient(color-mix(in oklab, var(--foreground) 45%, transparent), color-mix(in oklab, var(--foreground) 45%, transparent)) left top / 100% 1px no-repeat,
+        linear-gradient(color-mix(in oklab, var(--background) 35%, transparent), color-mix(in oklab, var(--background) 35%, transparent)) left bottom / 100% 1px no-repeat,
+        var(--ti-iris);
+    transition: clip-path var(--fx-duration, 60ms) linear;
+}
+
+/* The cutting edge: bare machined metal where the film stops, a dark
+   relief line ahead of it so it reads against the weave. */
+[data-theme='titanium'] .kp-progressbar__head {
+    inline-size: 2px;
+    margin-inline-start: -2px;
+    background: var(--primary);
+    box-shadow: 1px 0 0 var(--background);
+    transition: transform var(--fx-duration, 60ms) linear;
+}
+
+/* Busy without motion: the film lies in milled slots the length of the
+   part, at half strength, so it reads as work and never as a length. */
+[data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 1px;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    opacity: 0.7;
+    -webkit-mask: repeating-linear-gradient(110deg, #000 0 0.6rem, transparent 0.6rem 0.95rem);
+    mask: repeating-linear-gradient(110deg, #000 0 0.6rem, transparent 0.6rem 0.95rem);
+}
+
+/* Busy with motion: one slug of film, its ends cut on the chamfer's
+   diagonal, crossing at constant speed. */
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: auto;
+        inline-size: 28%;
+        opacity: 1;
+        -webkit-mask: none;
+        mask: none;
+        clip-path: polygon(var(--ti-slug) 0, 100% 0, calc(100% - var(--ti-slug)) 100%, 0 100%);
+        animation: kp-progressbar-titanium-slug 1100ms linear infinite;
+    }
+}
+
+@keyframes kp-progressbar-titanium-slug {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(360%);
+    }
+}

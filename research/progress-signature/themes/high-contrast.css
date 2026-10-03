@@ -1,0 +1,69 @@
+/* high-contrast: a gauge drawn in line weight. A 2px ink frame, solid ink
+   filling white, and a tick every tenth notched into the edge (ink on the
+   paper, paper on the ink) so the amount reads from position and count, not
+   colour; the leading edge is the "razor tear", a flat signal-yellow strip
+   between two hard ink edges. Busy is the ink-and-signal hazard stripe,
+   still. From the signature: 21:1 ink on paper, line weight as the whole
+   vocabulary (2px control edge), the two-tone hard-edged razor tear,
+   yellow only as a flat fill beside ink, and "no animation loops, ever"
+   (no keyframes at all). */
+
+[data-theme='high-contrast'] .kp-progressbar {
+    --kp-progressbar-height: 1rem;
+}
+
+/* The tick: 2px of ink on every boundary between two of --kp-steps cells
+   (1px from each side), tiled across the width. Declared on the track and
+   the fill, where its ink is known: a custom property resolves its var()
+   where it is declared. */
+[data-theme='high-contrast'] .kp-progressbar__track,
+[data-theme='high-contrast'] .kp-progressbar__fill {
+    --kp-ps-tick: linear-gradient(
+        90deg,
+        var(--kp-ps-tick-ink) 0 1px,
+        transparent 1px calc(100% - 1px),
+        var(--kp-ps-tick-ink) calc(100% - 1px)
+    );
+}
+
+/* The frame: 2px of ink on paper, the control edge of this theme. The ticks
+   stand up 40% from the lower edge, in ink. */
+[data-theme='high-contrast'] .kp-progressbar__track {
+    --kp-ps-tick-ink: var(--foreground);
+    box-sizing: border-box;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius, 0.25rem);
+    background:
+        var(--kp-ps-tick) 0 100% / calc(100% / var(--kp-steps)) 40% repeat-x,
+        var(--background);
+}
+
+/* The fill: solid ink, carrying the same ticks in paper so the count stays
+   readable under it. It spans the frame and is clipped to the value. */
+[data-theme='high-contrast'] .kp-progressbar__fill {
+    --kp-ps-tick-ink: var(--background);
+    background:
+        var(--kp-ps-tick) 0 100% / calc(100% / var(--kp-steps)) 40% repeat-x,
+        var(--foreground);
+    transition: clip-path 120ms linear;
+}
+
+/* The razor tear: 6px of signal yellow then 2px of ink, set inside the end
+   of the fill, so the edge reads ink | yellow | ink | paper and stays a hard
+   edge on both sides. Hidden left of the frame at nothing. */
+[data-theme='high-contrast'] .kp-progressbar__head {
+    inline-size: 8px;
+    translate: -100% 0;
+    background: linear-gradient(90deg, var(--accent) 0 6px, var(--foreground) 6px);
+    transition: transform 120ms linear;
+}
+
+/* Busy: the hazard stripe, ink and signal at 45 degrees across the whole
+   frame. It means "working" by pattern alone and stands still. */
+[data-theme='high-contrast'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+}

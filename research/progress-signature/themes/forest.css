@@ -1,0 +1,79 @@
+/* forest: the map's scale bar. The track is a surveyed ruler with a tick at
+   every step; what is done fills in as the two-row checkered scale bar of
+   a field map, in forest ink, and the head is a trig point, the triangle
+   with its dot. Busy is unsurveyed ground: the cartographer's hatching,
+   drifting one way, standing still without motion. From the printed map on
+   kraft, forest green as the one ink and clay as the map's own marker. */
+
+[data-theme='forest'] .kp-progressbar {
+    --kp-progressbar-height: 0.875rem;
+    --kp-ps-head: 0.875rem;
+    --kp-ps-seg: calc(100% / var(--kp-steps));
+    --kp-ps-light: color-mix(in oklab, var(--primary) 58%, var(--card));
+}
+
+[data-theme='forest'] .kp-progressbar__track {
+    border-radius: 2px;
+    background:
+        repeating-linear-gradient(90deg, transparent 0 calc(var(--kp-ps-seg) - 1px), var(--border-strong) 0 var(--kp-ps-seg)) top / 100% 30% no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 calc(var(--kp-ps-seg) - 1px), var(--border-strong) 0 var(--kp-ps-seg)) bottom / 100% 30% no-repeat,
+        var(--card);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+/* The scale bar: forest and its lighter tone alternating per step, the
+   bottom row a step out of phase with the top. */
+[data-theme='forest'] .kp-progressbar__fill {
+    background:
+        linear-gradient(90deg, var(--primary) 50%, var(--kp-ps-light) 0) 0 0 / calc(var(--kp-ps-seg) * 2) 50% repeat-x,
+        linear-gradient(90deg, var(--kp-ps-light) 50%, var(--primary) 0) 0 100% / calc(var(--kp-ps-seg) * 2) 50% repeat-x;
+    box-shadow: inset 0 0 0 1px var(--primary);
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+/* The trig point: a clay-ink triangle with its survey dot, the map's own
+   marker; clay is decorative here, never an action. */
+[data-theme='forest'] .kp-progressbar__head {
+    inline-size: var(--kp-ps-head);
+    background: radial-gradient(circle at 50% 66%, var(--card) 0 1.5px, var(--accent-foreground) 2px);
+    clip-path: polygon(50% 4%, 96% 96%, 4% 96%);
+    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
+    transition: transform var(--fx-duration) var(--fx-ease);
+}
+
+/* Busy: hatching over the whole ruler, drifting one period at a time. Only
+   the hatch layer moves, and only by transform. */
+[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-inline: 0;
+    inline-size: auto;
+    background: none;
+    box-shadow: none;
+    animation: none;
+    overflow: hidden;
+}
+
+[data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: -12px 0;
+    background: repeating-linear-gradient(-45deg, var(--primary) 0 2px, transparent 2px 6px);
+    animation: kp-progressbar-forest-hatch 900ms linear infinite;
+}
+
+@keyframes kp-progressbar-forest-hatch {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(8.485px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        animation: none;
+        transform: none;
+    }
+}

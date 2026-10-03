@@ -1,0 +1,87 @@
+/* solstice: the low sun crossing the horizon. A charcoal band split by a
+   faint horizon line; what is done warms from rust to amber to a pale gold
+   along the whole track, so the light grows as the work does, and the head
+   is the sun itself, a flat gold disc cut out of the band. No glow: firelight,
+   not neon. Busy is the sun travelling its arc with a warm wake; without
+   motion it stands at noon over a dashed horizon. From the amber-rust
+   neighbours, the horizon seam and the softest radius in the set. */
+
+[data-theme='solstice'] .kp-progressbar {
+    --kp-progressbar-height: 0.875rem;
+    --kp-ps-head: 0.875rem;
+    --kp-ps-gold: color-mix(in oklab, var(--primary) 55%, var(--foreground));
+}
+
+[data-theme='solstice'] .kp-progressbar__track {
+    border-radius: var(--radius);
+    background:
+        linear-gradient(color-mix(in srgb, var(--border-strong) 45%, transparent), color-mix(in srgb, var(--border-strong) 45%, transparent)) center / 100% 1px
+            no-repeat,
+        var(--muted);
+}
+
+/* The light: one gradient over the whole track, so a third done is still
+   mostly rust and only the finish reaches gold. */
+[data-theme='solstice'] .kp-progressbar__fill {
+    inset-block: 2px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, var(--accent), var(--primary) 62%, var(--kp-ps-gold));
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0 round 0 var(--radius) var(--radius) 0);
+    transition: clip-path var(--fx-duration) var(--fx-ease);
+}
+
+/* The sun: a pale gold disc with a ring of the card's charcoal round it,
+   so it reads as cut out of the band rather than glowing on it. */
+[data-theme='solstice'] .kp-progressbar__head {
+    inline-size: var(--kp-ps-head);
+    border-radius: 50%;
+    background: radial-gradient(circle closest-side, var(--kp-ps-gold) calc(100% - 2.5px), var(--card) calc(100% - 2px));
+    transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
+    transition: transform var(--fx-duration) var(--fx-ease);
+}
+
+/* Busy: the sun with its wake, crossing slowly, unhurried. */
+[data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset-block: 0;
+    inline-size: 32%;
+    border-radius: 0;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 70%, transparent) 55%, var(--primary) calc(100% - var(--kp-ps-head) / 2), transparent 0) center / 100%
+        calc(100% - 4px) no-repeat;
+    animation: kp-progressbar-solstice-arc 2400ms var(--fx-ease) infinite;
+}
+
+[data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: var(--kp-ps-head);
+    border-radius: 50%;
+    background: radial-gradient(circle closest-side, var(--kp-ps-gold) calc(100% - 2.5px), var(--card) calc(100% - 2px));
+}
+
+@keyframes kp-progressbar-solstice-arc {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(315%);
+    }
+}
+
+/* Busy without motion: the sun at noon over a dashed rust horizon. */
+@media (prefers-reduced-motion: reduce) {
+    [data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        animation: none;
+        transform: none;
+        background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px) center / 100% 3px no-repeat;
+    }
+
+    [data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+        inset-inline-end: auto;
+        inset-inline-start: calc(50% - var(--kp-ps-head) / 2);
+        box-shadow: 0 0 0 4px var(--muted);
+    }
+}

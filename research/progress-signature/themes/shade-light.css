@@ -1,0 +1,75 @@
+/* shade-light: a plate that throws its shade. The track is a groove pressed
+   into the paper, the fill a blue plate raised in it with a lit top edge,
+   and its leading edge throws a soft shade forward onto the unread paper,
+   away from the light (the pointer, or the top left without one). Busy is
+   the groove shaded with pencil hatching in the ink, laid in once. From
+   the signature: "shadow doing the work colour usually does", one shadow
+   in the ink at low alpha, accents as plates never words, the pointer as
+   the light (--kp-light-x), and every reveal running once. */
+
+[data-theme='shade-light'] .kp-progressbar {
+    --kp-progressbar-height: 0.75rem;
+}
+
+/* The groove: the muted paper, shaded along its top edge where the lip
+   hides the light, with the hairline boundary around it. */
+[data-theme='shade-light'] .kp-progressbar__track {
+    border-radius: var(--radius, 0.25rem);
+    background: var(--muted);
+    box-shadow:
+        inset 0 0 0 1px var(--border),
+        inset 0 2px 3px hsl(from var(--foreground) h s l / 0.22);
+}
+
+/* The plate: the primary, one pixel proud of the groove on every side, its
+   top edge caught by the light and its lower edge in its own shade. */
+[data-theme='shade-light'] .kp-progressbar__fill {
+    inset: 1px;
+    border-radius: calc(var(--radius, 0.25rem) - 1px);
+    background:
+        linear-gradient(hsl(from var(--card) h s l / 0.55), hsl(from var(--card) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.25), hsl(from var(--foreground) h s l / 0.25)) 0 100% / 100% 1px no-repeat,
+        var(--primary);
+    clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 1px));
+    transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* The shade: a soft fall-off in the ink, cast from the plate's edge onto the
+   paper ahead of it. It leans with the light: --kp-light-x is -1 when the
+   pointer stands to the right, and the shade then falls back over the
+   plate's own end instead. */
+[data-theme='shade-light'] .kp-progressbar__head {
+    inline-size: 1.25rem;
+    inset-block: 1px;
+    background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.16) 40%, transparent);
+    /* Nothing entered, nothing to throw a shade. */
+    opacity: clamp(0, var(--kp-value) * 1000, 1);
+    transform-origin: left center;
+    transform: translateX(calc(var(--kp-value) * 100cqi)) scaleX(var(--kp-light-x, 1));
+    transition:
+        transform 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)),
+        opacity 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Busy: the groove shaded, pencil hatching in the ink at sixty degrees
+   across its whole length. It is laid once from the left, the way the
+   theme's ink-fill sweeps a mark in, then stands. Under reduced motion it
+   stands at once. */
+[data-theme='shade-light'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 1px;
+    inline-size: auto;
+    clip-path: none;
+    background: repeating-linear-gradient(-60deg, hsl(from var(--foreground) h s l / 0.7) 0 1.5px, transparent 1.5px 5px);
+    animation: kp-ps-shade-light-hatch 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
+}
+
+@keyframes kp-ps-shade-light-hatch {
+    from {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+    }
+}

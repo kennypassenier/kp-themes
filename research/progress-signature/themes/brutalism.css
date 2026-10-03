@@ -1,0 +1,98 @@
+/* brutalism — the bar is a white box with the one 3px line and the hard
+   drop shadow, filled with the marquee's tape (yellow plate hatched on the
+   ink) and pushed along by a yellow plate block. Busy is the same box with
+   bare ink hatch on the paper: under construction, length unknown. From the
+   signature's shadow knob, black-is-structure, the yellow plate and the
+   divider marquee's hatch. */
+
+[data-theme='brutalism'] .kp-progressbar {
+    --kp-progressbar-height: 1.375rem;
+    --br-line: var(--kp-line, 3px);
+    --br-drop: 4px;
+    --br-ink: var(--border-strong);
+    --br-block: 1.375rem;
+    --br-pitch: 20px; /* horizontal repeat of a 45° stripe at 14.142px */
+}
+
+/* The box sits up and left inside the bar so the hard shadow lands inside
+   it too: nothing paints outside the bar's own size. */
+[data-theme='brutalism'] .kp-progressbar__track {
+    inset: 0 var(--br-drop) var(--br-drop) 0;
+    border: var(--br-line) solid var(--br-ink);
+    border-radius: 0;
+    background: var(--card);
+    box-shadow: var(--br-drop) var(--br-drop) 0 0 var(--br-ink);
+}
+
+/* The tape: the ink, with the plate hatched across it. */
+[data-theme='brutalism'] .kp-progressbar__fill {
+    background:
+        repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px),
+        var(--primary);
+    transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* The plate block that pushes the tape: yellow, ruled off with the line on
+   both sides, its leading edge exactly on the value. */
+[data-theme='brutalism'] .kp-progressbar__head {
+    box-sizing: border-box;
+    inline-size: var(--br-block);
+    margin-inline-start: calc(-1 * var(--br-block));
+    background: var(--secondary);
+    border-inline: var(--br-line) solid var(--br-ink);
+    transition: transform var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Busy: the ink hatch bare on the paper, and the plate block parked in the
+   middle. Under motion the hatch runs (transform) and the block shuttles. */
+[data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+    inset: 0;
+    inline-size: auto;
+    clip-path: none;
+    animation: none;
+    background: none;
+    overflow: hidden;
+}
+
+[data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(-1 * var(--br-pitch));
+    inline-size: calc(100% + var(--br-pitch));
+    background: repeating-linear-gradient(-45deg, var(--br-ink) 0 3px, transparent 3px 14.1421px);
+}
+
+[data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+    display: block;
+    margin-inline-start: 0;
+    transform: translateX(calc(50cqi - 50%));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        animation: kp-progressbar-brutalism-tape 600ms linear infinite;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        animation: kp-progressbar-brutalism-shuttle 1600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) infinite alternate;
+    }
+}
+
+@keyframes kp-progressbar-brutalism-tape {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(var(--br-pitch));
+    }
+}
+
+@keyframes kp-progressbar-brutalism-shuttle {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100cqi - 100%));
+    }
+}
