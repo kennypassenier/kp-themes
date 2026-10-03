@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 9.0.0 — 2026-10-03
 
-**Breaking** [scope-140] — 9.0.0.
+**Breaking** [scope-140].
 
 - **The progress bar is `.kp-progressbar`**, replacing `<progress class="kp-progress">`:
   one element whose track, fill and head every theme draws its own way, one
@@ -16,8 +16,20 @@
   `--kp-progress-stripe` are gone. `.kp-progress-group`, `.kp-progress__wrap`,
   `.kp-progress__label` and `.kp-progress__value` stay. MIGRATION.md has the
   before and after.
+- **A new cascade layer, `kp.signature`**, right after `kp.register`:
+  `@layer kp.base, kp.components, kp.register, kp.signature, kp.layout, kp.utilities`.
+  A page that declares its own layer order adds it there.
 
 **Added** [scope-140].
+
+- **Every theme draws its own signature** for the progress bar, spinner,
+  skeleton, switch, checkbox and radio, toast, dialog (with its entrance and
+  backdrop), tooltip, wizard steps, empty state and link hover, as Kenny
+  approved them in three review rounds on 2026-10-03, at the end of each
+  register file in `kp.signature`. Busy indicators move in a seamless loop;
+  every skeleton line starts at the inline-start edge; the dialog titles keep
+  the package's metrics (scope-87); nothing a theme draws on a focusable
+  control covers its focus ring (DI2).
 
 - **`js/progressbar.js`** (`@kp-soft/themes/js/progressbar`, loaded by
   `js/auto.js`): keeps `--kp-value` in step with `aria-valuenow`,

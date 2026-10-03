@@ -7,7 +7,7 @@ points at so his apps look like one family. Twenty-two themes
 the components on them, a layout layer, a utility API, and the fonts. Web
 today; GUI (Avalonia) and TUI (Ratatui) later.
 
-**State:** `v8.1.0` is the latest release (2026-09-30): `.kp-page` at 80% of the window, the data table's busy overlay, fix-86. `v8.0.1` (2026-09-29): the site's theme menu and the pixel review tools. `v7.3.0` was published (2026-09-29) at
+**State:** `v9.0.0` is being released (2026-10-03): the signature progress bar `.kp-progressbar` in place of `.kp-progress`, the ten signature elements in every register in the new layer `kp.signature`, and the release-suite fixes. `v8.1.0` was the previous release (2026-09-30): `.kp-page` at 80% of the window, the data table's busy overlay, fix-86. `v8.0.1` (2026-09-29): the site's theme menu and the pixel review tools. `v7.3.0` was published (2026-09-29) at
 <https://github.com/kennypassenier/kp-themes/releases/tag/v7.3.0>, the latest
 release — twelve assets, 268 of 268 checksums verified against the tagged tree. `v7.2.0` was published (2026-09-27). `v7.0.0` was published (2026-09-19) at
 <https://github.com/kennypassenier/kp-themes/releases/tag/v7.0.0>, then the latest
