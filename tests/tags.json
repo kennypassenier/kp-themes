@@ -115,6 +115,7 @@
 
         { "path": "js/datatable.js", "tags": ["@component:datatable"] },
         { "path": "js/log.js", "tags": ["@component:data"] },
+        { "path": "js/progressbar.js", "tags": ["@component:feedback"] },
         { "path": "js/tables.js", "tags": ["@component:table", "@component:datatable"] },
         { "path": "js/datepicker.js", "tags": ["@component:datepicker", "@component:datatable"] },
         { "path": "js/locale.js", "tags": ["@component:datepicker", "@component:datatable", "@component:upload"] },
@@ -236,6 +237,7 @@
         "kp-toast": ["@component:feedback"],
         "kp-toasts": ["@component:feedback"],
         "kp-progress": ["@component:feedback"],
+        "kp-progressbar": ["@component:feedback"],
         "kp-spinner": ["@component:feedback"],
         "kp-skeleton": ["@component:feedback"],
         "kp-field": ["@component:field"],

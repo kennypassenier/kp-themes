@@ -151,6 +151,7 @@ export const FILES = [
     'js/alarm.js',
     'js/palette.js',
     'js/patterns.js',
+    'js/progressbar.js',
     'js/remember.js',
     'js/sidenav.js',
     'js/strings.js',

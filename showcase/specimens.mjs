@@ -232,7 +232,8 @@ export const SPECIMENS = [
             `<li><a href="#status">Applications</a></li><li><span aria-current="page">Detail</span></li></ol></nav>` +
             `<nav class="kp-pagination" aria-label="Pagination"><ul><li><a href="#surfaces">1</a></li>` +
             `<li><a href="#surfaces" aria-current="page">2</a></li><li><a href="#surfaces">3</a></li></ul></nav>` +
-            `<progress class="kp-progress" value="40" max="100" aria-label="Progress"></progress>` +
+            `<div class="kp-progressbar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">` +
+            `<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>` +
             `<div class="sc-row"><span class="kp-spinner" role="status" aria-label="Busy"></span>` +
             `<span aria-hidden="true"><span class="kp-skeleton" style="width: 12rem"></span></span></div>`,
     },

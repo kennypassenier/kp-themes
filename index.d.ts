@@ -33,6 +33,7 @@ export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, attachRememb
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
 export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
 export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
+export { attachProgressbars, buildProgressbar, setIndeterminate as setProgressbarIndeterminate, setProgress as setProgressbar, syncProgressbar, } from './js/progressbar.js';
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

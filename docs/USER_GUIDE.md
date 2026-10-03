@@ -402,6 +402,69 @@ retro does, the 1995 bar disabled until the box scrolls — and declares
 `--kp-scrollbar-size`, `--kp-scrollbar-inset` and `--kp-scrollbar-button`
 so a press on the drawn arrows, track and thumb scrolls the box.
 
+## The progress bar [scope-140]
+
+Since 9.0.0 the bar is `.kp-progressbar`, one element with three parts every
+register draws its own way: a track, a fill clipped to the value, and a head
+on the fill's leading edge. It is one line high whatever a theme draws inside
+it and keeps its width from the first frame; only the fill moves.
+
+```html
+<div
+    class="kp-progressbar"
+    role="progressbar"
+    aria-label="Export"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="35"
+    style="--kp-value: 0.35"
+>
+    <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+    ></span>
+</div>
+```
+
+`--kp-value` is the share done, 0 to 1, and is what the stylesheet paints;
+`aria-valuenow` against `aria-valuemin` and `aria-valuemax` (0 and 100 when
+absent) is what a screen reader reads. With `js/progressbar.js` on the page
+(`js/auto.js` loads it wherever a `.kp-progressbar` is) the ARIA is the
+source: set `aria-valuenow` and the paint follows, and the outer element
+alone is enough, because the track, the fill and the head are written in:
+
+```html
+<div class="kp-progressbar" role="progressbar" aria-label="Export" aria-valuenow="35"></div>
+```
+
+Busy with no idea how far is `data-kp-indeterminate` and no `aria-valuenow`.
+It moves while it waits; for a reader who asked for less motion nothing in
+the bar moves, in any theme, and the busy bar stands as diagonal stripes so
+it still reads as busy and never as a share.
+
+From script, the module's own names:
+
+```js
+import { setProgress, setIndeterminate } from '@kp-soft/themes/js/progressbar';
+
+setIndeterminate(bar, true); // busy: data-kp-indeterminate on, aria-valuenow off
+setProgress(bar, 40); // 40 in the bar's own range; busy off, --kp-value 0.4
+```
+
+The package root re-exports them as `setProgressbar` and
+`setProgressbarIndeterminate` (its `setProgress` is the upload row's), beside
+`attachProgressbars(root)`, `buildProgressbar(el)` and `syncProgressbar(el)`.
+In React, `<Progress value={40} label="Export" />` renders the same markup, and
+leaving `value` out renders the busy bar.
+
+Beside a reading, a bar goes in `.kp-progress__wrap` with a
+`.kp-progress__value`; several labelled bars go in `.kp-progress-group`, which
+gives the labels one column as wide as the longest of them so every track
+begins and ends in the same place [fix-64]. The wrap is a `div` now, because
+the bar is one. Knobs: `--kp-progressbar-height` (0.75rem),
+`--kp-progressbar-max-width` (32rem, none inside a group),
+`--kp-progressbar-duration` (240ms), `--kp-progressbar-ease` (ease-out) and
+`--kp-progress-group-gap`.
+
 ## The alarm [scope-94]
 
 Bigger than a toast: a full-screen dramatic alert with a code line, one huge
@@ -1941,7 +2004,7 @@ the flash threshold, so they are literals rather than knobs:
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
-| `--kp-control-accent` | what the browser paints a check, a radio dot and the progress bar in — `--primary` by default; brutalism and mono set it because their primary is the ink (3.1.0) |
+| `--kp-control-accent` | what the browser paints a check and a radio dot in — `--primary` by default (the progress bar stopped reading it in 9.0.0: each register draws its own); brutalism and mono set it because their primary is the ink (3.1.0) |
 
 A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+); Firefox and older browsers draw that list themselves, in the platform's highlight colour. So the package draws it: every single `<select class="kp-field__input">` gets a listbox in the combobox's look laid over it by `attachSelects` (which `auto.js` runs) and by the React `Field`, `FormField` and `DataTable`, without asking. The native select stays the control — it holds the value, submits with the form, fires `change` and is what a screen reader reads. To keep the browser's own list on one select, write `data-kp-select="native"` (React: `drawn={false}`); a `multiple` select always keeps it. A bare `data-kp-select` still asks for the drawn list on a select without the class.
 

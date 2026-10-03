@@ -518,7 +518,7 @@
             "situation": "Wait for something",
             "verb": "load",
             "answer": "A square spinner in yellow and cyan and a skeleton sweeping card to secondary; the package's own spin and pulse drive them.",
-            "components": ["kp-spinner", "kp-skeleton", "kp-progress"],
+            "components": ["kp-spinner", "kp-skeleton", "kp-progressbar"],
             "open": false,
             "proof": [
                 { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-spinner" },

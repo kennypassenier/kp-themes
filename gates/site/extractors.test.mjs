@@ -236,7 +236,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-78 added one (2026-09-29), --kp-picker-max-width, the select's
     // open list's inline limit: 237 + 1. fix-82 added --kp-nav-ink, the ink
     // a bar's hover veil is made of: 238 + 1.
-    assert.equal(result.expected, 245, 'AR21 counted the --kp-* properties in css/components.css');
+    // scope-140 (9.0.0) replaced the native progress bar: --kp-progress-max-width
+    // and --kp-progress-stripe left, and the signature bar brought six —
+    // --kp-value, --kp-steps, --kp-progressbar-height, -max-width, -duration
+    // and -ease: 245 - 2 + 6.
+    assert.equal(result.expected, 249, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -274,8 +278,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-64's --kp-progress-group-gap, the log's four, fix-70's one and
     // the submenu mark's three, fix-78's --kp-picker-max-width and fix-82's
     // --kp-nav-ink.
-    assert.equal(result.readCount, 245);
-    assert.deepEqual(result.unread, []);
+    // One is declared and not read here, on purpose: --kp-steps is the
+    // progress bar contract's segment count (scope-140), declared on the bar
+    // so every register that draws segments reads one value; the plain bar
+    // the package draws has no segments to count.
+    assert.equal(result.readCount, 248);
+    assert.deepEqual(result.unread, ['--kp-steps']);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {

@@ -60,6 +60,7 @@ js/datepicker.js     a calendar                 │
 js/colorpicker.js    a colour field             │
 js/gridlayout.js     a resizable grid           │
 js/log.js            a name's own colour        │
+js/progressbar.js    a bar's value from its ARIA│
 js/structure.js      tree, reorder, split       │
 js/wizard.js         a stepped flow             │
 js/upload.js         a file field               │

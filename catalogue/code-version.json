@@ -16,6 +16,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/patterns.js": { "digest": "2b6eeed7f66b345b", "when": "[data-kp-copy], [data-kp-undo-action]" },
+        "js/progressbar.js": { "digest": "6d0f772e21c2b243", "when": ".kp-progressbar" },
         "js/sidenav.js": { "digest": "020968565fbde59b", "when": ".kp-sidenav" },
         "js/structure.js": { "digest": "0cb73c5934c62ba1", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/tables.js": { "digest": "66d205c2f610c15a", "when": ".kp-table-wrap" },
@@ -4488,7 +4489,8 @@
         "||@media (prefers-reduced-motion: no-preference)||.kp-combobox__input": "57d61d542cb61fc2",
         "||@media (prefers-reduced-motion: no-preference)||.kp-nav": "49179d8792382dc8",
         "||@media (prefers-reduced-motion: no-preference)||.kp-nav__menu": "689305cf66faddc3",
-        "||@media (prefers-reduced-motion: no-preference)||.kp-progress": "d230be5ad6ba794d",
+        "||@media (prefers-reduced-motion: no-preference)||.kp-progressbar__fill": "f8e4d044b4ef3772",
+        "||@media (prefers-reduced-motion: no-preference)||.kp-progressbar__head": "e91752c16c73cd8e",
         "||@media (prefers-reduced-motion: no-preference)||.kp-sidenav": "7ce03cec76489710",
         "||@media (prefers-reduced-motion: no-preference)||.kp-sidenav[data-kp-sidenav-slim]": "243468c0617d7ab8",
         "||@media (prefers-reduced-motion: no-preference)||.kp-sidenav__backdrop": "e0498a27deff1746",
@@ -4500,6 +4502,7 @@
         "||@media (prefers-reduced-motion: no-preference)||.kp-to-top": "884bc6dbcfdebd12",
         "||@media (prefers-reduced-motion: no-preference)||[data-kp-marquee-track]": "7f0165c287b1b9bf",
         "||@media (prefers-reduced-motion: no-preference)||[data-kp-theme]": "d8b721463dfbcad0",
+        "||@media (prefers-reduced-motion: reduce)||.kp-progressbar": "823abe6d3af6ad29",
         "||@supports (appearance: base-select)||option": "82d28b4ef54d0cdf",
         "||@supports (appearance: base-select)||option-visible": "57b03dfc6f04c966",
         "||@supports (appearance: base-select)||option::checkmark": "19eac26ac1a35b87",
@@ -4850,11 +4853,14 @@
         "||||.kp-palette__status": "d4c44d3f56932a45",
         "||||.kp-platforms": "b722995fc0b30d0c",
         "||||.kp-popover": "501dabe6d5234644",
-        "||||.kp-progress": "6a5238aa05352278",
         "||||.kp-progress-group": "46d963ceda51b2b5",
         "||||.kp-progress__label": "d3ba511902708b6e",
         "||||.kp-progress__value": "0bf2dbd0885f166c",
         "||||.kp-progress__wrap": "a62117ea8977c3a8",
+        "||||.kp-progressbar": "0bf123f32496008d",
+        "||||.kp-progressbar__fill": "acc81415e8611080",
+        "||||.kp-progressbar__head": "705ceb46504a1c0c",
+        "||||.kp-progressbar__track": "4737a50ba0090df2",
         "||||.kp-prose": "bc93550ceff83aa5",
         "||||.kp-px-0": "da591129e00fc1ed",
         "||||.kp-px-2xl": "2868edd0926101d7",
@@ -5440,7 +5446,7 @@
             ]
         },
         "feedback": {
-            "modules": "2738d9d74126d24a",
+            "modules": "f0626ba8078b0b1c",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
@@ -5460,6 +5466,7 @@
                 "data-kp-dialog-close",
                 "data-kp-dialog-mode",
                 "data-kp-dismiss-owner",
+                "data-kp-indeterminate",
                 "data-kp-loop",
                 "data-kp-open-delay",
                 "data-kp-orientation",
@@ -5476,6 +5483,7 @@
                 "kp-card",
                 "kp-contract-violation",
                 "kp-progress",
+                "kp-progressbar",
                 "kp-skeleton",
                 "kp-spinner",
                 "kp-themes",
@@ -5551,7 +5559,7 @@
             ]
         },
         "media": {
-            "modules": "46ede5fba4c1ad19",
+            "modules": "8ba94b8060dbb4ec",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -5669,7 +5677,7 @@
             ]
         },
         "navigation": {
-            "modules": "d05620d18f6e10b5",
+            "modules": "2636daa55b7e7d26",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -5699,6 +5707,7 @@
                 "data-kp-dialog-mode",
                 "data-kp-dismiss-owner",
                 "data-kp-grid",
+                "data-kp-indeterminate",
                 "data-kp-loop",
                 "data-kp-menu-label",
                 "data-kp-nav-compact",
@@ -5782,7 +5791,7 @@
             ]
         },
         "overlays": {
-            "modules": "fc13fb912b42c9e7",
+            "modules": "144649972cd1f1c1",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
@@ -5802,6 +5811,7 @@
                 "data-kp-dialog-close",
                 "data-kp-dialog-mode",
                 "data-kp-dismiss-owner",
+                "data-kp-indeterminate",
                 "data-kp-loop",
                 "data-kp-open-delay",
                 "data-kp-orientation",
@@ -5868,7 +5878,7 @@
             ]
         },
         "page-effects": {
-            "modules": "1d56e200c003fac7",
+            "modules": "fabac2f22f5862f8",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",
@@ -6164,6 +6174,7 @@
         "kp-toast": ["@component:feedback"],
         "kp-toasts": ["@component:feedback"],
         "kp-progress": ["@component:feedback"],
+        "kp-progressbar": ["@component:feedback"],
         "kp-spinner": ["@component:feedback"],
         "kp-skeleton": ["@component:feedback"],
         "kp-field": ["@component:field"],

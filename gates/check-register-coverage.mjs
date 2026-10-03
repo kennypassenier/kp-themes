@@ -170,9 +170,16 @@ export function audit(componentsCss, registerCss, helpers, pending) {
 if (import.meta.url === `file://${process.argv[1]}`) {
     const components = readFileSync(new URL('css/components.css', root), 'utf8');
     let failed = 0;
+    // A pending root is reached one register at a time when a new component
+    // lands in all of them [scope-140], so its entry is stale once EVERY
+    // register covers it, not as soon as the first one does — otherwise each
+    // register but the last would be refused for doing the work.
+    const coveredBy = REGISTERS.map((file) => new Set(audit(components, readFileSync(new URL(file, root), 'utf8'), HELPERS, PENDING).covered));
+    const coveredEverywhere = (/** @type {string} */ name) => coveredBy.every((covered) => covered.has(name));
     for (const REGISTER of REGISTERS) {
         const register = readFileSync(new URL(REGISTER, root), 'utf8');
-        const { declared, covered, uncovered, stale } = audit(components, register, HELPERS, PENDING);
+        const { declared, covered, uncovered, stale: staleHere } = audit(components, register, HELPERS, PENDING);
+        const stale = staleHere.filter((name) => PENDING[name] === undefined || !declared.includes(name) || coveredEverywhere(name));
         for (const name of uncovered) {
             failed++;
             console.error(`.kp-${name} has no rule in ${REGISTER} and no exception with a reason (HELPERS or gates/register-pending.json).`);

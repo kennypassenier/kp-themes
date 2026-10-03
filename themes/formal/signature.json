@@ -538,7 +538,7 @@
             "situation": "Wait for something",
             "verb": "load",
             "answer": "A hairline spinner with a navy head, a half-radius skeleton, a progress track on the muted stock.",
-            "components": ["kp-spinner", "kp-skeleton", "kp-progress"],
+            "components": ["kp-spinner", "kp-skeleton", "kp-progressbar"],
             "open": false,
             "proof": [
                 { "file": "css/formal-register.css", "selector": "[data-theme='formal'] .kp-spinner" },

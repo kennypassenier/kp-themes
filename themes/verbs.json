@@ -20,7 +20,7 @@
         "kp-alert": ["attention"],
         "kp-badge": ["attention"],
         "kp-alarm": ["enter", "leave", "attention"],
-        "kp-progress": ["load"],
+        "kp-progressbar": ["load"],
         "kp-spinner": ["load"],
         "kp-skeleton": ["load"]
     }

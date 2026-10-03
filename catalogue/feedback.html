@@ -18,7 +18,7 @@
             <h1>Feedback</h1>
             <p class="cat-intro">
                 Everything that tells a person what happened or what is happening: <code>.kp-alert</code>, <code>.kp-toast</code> in its
-                <code>.kp-toasts</code> stack, <code>.kp-badge</code>, <code>.kp-tag</code>, <code>.kp-progress</code>, <code>.kp-spinner</code>,
+                <code>.kp-toasts</code> stack, <code>.kp-badge</code>, <code>.kp-tag</code>, <code>.kp-progressbar</code>, <code>.kp-spinner</code>,
                 <code>.kp-skeleton</code> and <code>.kp-empty</code>. Each in every variant the package has, and each at the length that breaks it.
             </p>
             <ul class="cat-toc">
@@ -246,43 +246,118 @@
             <section class="cat-block" id="progress">
                 <h2>Progress</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> four native <code>&lt;progress&gt;</code> bars painted by the theme: empty, a third, full, and indeterminate (no
-                    value). The track must be the theme's muted ground with a hairline, and the fill the theme's accent — never the browser's own grey
-                    track or blue fill, which is the fault that shows first in a dark theme. The empty bar must still show its track, so an empty bar
-                    is not an invisible one. The indeterminate bar wears diagonal stripes in the accent on the muted track, so it can never be
-                    mistaken for the full one above it — "done" and "no idea yet" must look different in every browser. Without a reduced-motion
-                    preference the stripes drift slowly; with one they stand still and still read as stripes. The percentage beside the second bar
-                    sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. The filled
-                    part of each bar follows the shape of its track: square in a square track, rounded in a rounded one. Under them stands a group of
-                    three labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of
-                    them is called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is
-                    the fault this group exists to prevent [fix-64].
+                    <b>Look at:</b> four signature bars, each drawn the theme's own way: empty, a third, full, and busy without an amount. Every bar
+                    is one line high and keeps its width from the first frame; only the fill moves inside it. The empty bar must still show its track,
+                    so an empty bar is not an invisible one, and the full one must read as finished. The busy bar must never be mistaken for the full
+                    one above it — "done" and "no idea yet" must look different in every theme. With a reduced-motion preference nothing in any bar
+                    moves, and the busy bar still reads as busy while standing still. The percentage beside the second bar sits on its centre line, in
+                    the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. Under them stands a group of three
+                    labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of them is
+                    called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is the fault
+                    this group exists to prevent [fix-64].
                 </div>
                 <div class="cat-stage cat-stage--block">
-                    <p><progress class="kp-progress" value="0" max="100" aria-label="Export not started"></progress></p>
-                    <p>
-                        <span class="kp-progress__wrap"
-                            ><progress class="kp-progress" value="35" max="100" aria-label="Export progress"></progress
-                            ><span class="kp-progress__value">35%</span></span
+                    <div class="kp-stack">
+                        <div
+                            class="kp-progressbar"
+                            role="progressbar"
+                            aria-label="Export not started"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                            style="--kp-value: 0"
                         >
-                    </p>
-                    <p><progress class="kp-progress" value="100" max="100" aria-label="Export finished"></progress></p>
-                    <p style="margin-block-end: 0"><progress class="kp-progress" aria-label="Waiting for the export service"></progress></p>
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="kp-progress__wrap">
+                            <div
+                                class="kp-progressbar"
+                                role="progressbar"
+                                aria-label="Export progress"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="35"
+                                style="--kp-value: 0.35"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <span class="kp-progress__value">35%</span>
+                        </div>
+                        <div
+                            class="kp-progressbar"
+                            role="progressbar"
+                            aria-label="Export finished"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="100"
+                            style="--kp-value: 1"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service" data-kp-indeterminate>
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                    </div>
                     <div class="kp-progress-group" style="margin-block-start: 1rem">
-                        <span class="kp-progress__wrap"
-                            ><span class="kp-progress__label">CPU</span><progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress
-                            ><span class="kp-progress__value">22%</span></span
-                        >
-                        <span class="kp-progress__wrap"
-                            ><span class="kp-progress__label">Memory</span
-                            ><progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress
-                            ><span class="kp-progress__value">64%</span></span
-                        >
-                        <span class="kp-progress__wrap"
-                            ><span class="kp-progress__label">Disk</span
-                            ><progress class="kp-progress" value="61" max="100" aria-label="Disk"></progress
-                            ><span class="kp-progress__value">61%</span></span
-                        >
+                        <div class="kp-progress__wrap">
+                            <span class="kp-progress__label">CPU</span>
+                            <div
+                                class="kp-progressbar"
+                                role="progressbar"
+                                aria-label="CPU"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="22"
+                                style="--kp-value: 0.22"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <span class="kp-progress__value">22%</span>
+                        </div>
+                        <div class="kp-progress__wrap">
+                            <span class="kp-progress__label">Memory</span>
+                            <div
+                                class="kp-progressbar"
+                                role="progressbar"
+                                aria-label="Memory"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="64"
+                                style="--kp-value: 0.64"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <span class="kp-progress__value">64%</span>
+                        </div>
+                        <div class="kp-progress__wrap">
+                            <span class="kp-progress__label">Disk</span>
+                            <div
+                                class="kp-progressbar"
+                                role="progressbar"
+                                aria-label="Disk"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="61"
+                                style="--kp-value: 0.61"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <span class="kp-progress__value">61%</span>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -32,7 +32,12 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 const ROOT = new URL('../', import.meta.url);
-const EAGER = readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8');
+// A module born after 6.1.0 that writes markup is attached on the eager side
+// too, or the comparison would read its own additions as a missing `when`:
+// js/progressbar.js writes the track, fill and head into a one-line bar
+// [scope-140]. (js/log.js, also later, writes only `style`, which is volatile.)
+const EAGER =
+    readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8') + "\nimport('./progressbar.js').then((m) => m.attachProgressbars());\n";
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
 

@@ -128,6 +128,10 @@
             "types": "./js/upload.d.ts",
             "default": "./js/upload.js"
         },
+        "./js/progressbar": {
+            "types": "./js/progressbar.d.ts",
+            "default": "./js/progressbar.js"
+        },
         "./js/wizard": {
             "types": "./js/wizard.d.ts",
             "default": "./js/wizard.js"

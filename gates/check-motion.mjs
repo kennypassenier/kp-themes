@@ -66,9 +66,9 @@ const OUT_OF_SCOPE = {
     'kp-settle': 'a scale from 0.92 to 1 on a badge, once',
     'kp-slide-in': 'a 6px translate on a badge, once; nothing changes luminance [TH70]',
     'kp-drift': 'a background-position slide over 40 seconds; the texture keeps its colours, only their position moves',
-    // The indeterminate progress bar [gap-11].
-    'kp-progress-stripes':
-        'a background-position slide of diagonal stripes by one 1rem period every 1.2 seconds, on a bar 0.5rem tall; the stripes keep their colours, only their position moves',
+    // The busy progress bar [scope-140].
+    'kp-progressbar-sweep':
+        'a band a third of the track wide translating across a bar 0.75rem tall every 1.4 seconds; a transform, the band keeps its colour, only its position moves, and it stands still under reduced motion',
     // Cyberpunk's section divider [scope-96].
     'kp-stream-144':
         'a mask-position slide of a 144px dash tile by one tile every 8 seconds, on a 28px divider; the dashes keep their colours, only their position moves',

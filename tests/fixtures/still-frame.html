@@ -25,7 +25,11 @@
 
         <!-- A second infinite animation of another kind, so the claim is
              about infinite animations and not about the marquee alone. -->
-        <progress class="kp-progress" data-test="progress" aria-label="Loading"></progress>
+        <div class="kp-progressbar" role="progressbar" data-test="progress" aria-label="Loading" data-kp-indeterminate>
+            <span class="kp-progressbar__track" aria-hidden="true"
+                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+        </div>
 
         <script type="module" src="/js/auto.js"></script>
     </body>

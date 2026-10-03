@@ -316,7 +316,7 @@ export type ProgressProps = {
     className?: string;
     style?: import('react').CSSProperties;
 };
-export declare const Progress: import("react").ForwardRefExoticComponent<ProgressProps & import("react").RefAttributes<HTMLProgressElement>>;
+export declare const Progress: import("react").ForwardRefExoticComponent<ProgressProps & import("react").RefAttributes<HTMLDivElement>>;
 export declare const Spinner: import("react").ForwardRefExoticComponent<{
     label?: string;
     size?: string;

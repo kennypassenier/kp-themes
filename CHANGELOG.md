@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+**Breaking** [scope-140] — 9.0.0.
+
+- **The progress bar is `.kp-progressbar`**, replacing `<progress class="kp-progress">`:
+  one element whose track, fill and head every theme draws its own way, one
+  line high and as wide from the first frame, the fill clipped to
+  `--kp-value` (0 to 1) so only `clip-path` and `transform` move.
+  `data-kp-indeterminate` without `aria-valuenow` is busy with no amount;
+  under reduced motion nothing in the bar moves and the busy bar stands as
+  stripes. Knobs: `--kp-progressbar-height`, `--kp-progressbar-max-width`,
+  `--kp-progressbar-duration`, `--kp-progressbar-ease`. The keyframes
+  `kp-progress-stripes` and the knobs `--kp-progress-max-width` and
+  `--kp-progress-stripe` are gone. `.kp-progress-group`, `.kp-progress__wrap`,
+  `.kp-progress__label` and `.kp-progress__value` stay. MIGRATION.md has the
+  before and after.
+
+**Added** [scope-140].
+
+- **`js/progressbar.js`** (`@kp-soft/themes/js/progressbar`, loaded by
+  `js/auto.js`): keeps `--kp-value` in step with `aria-valuenow`,
+  `aria-valuemin` and `aria-valuemax`, writes the track, fill and head into a
+  bar that carries only the outer element, and exports `setProgress(el,
+value)`, `setIndeterminate(el, on)`, `attachProgressbars(root)`,
+  `buildProgressbar(el)` and `syncProgressbar(el)`; the package root
+  re-exports the two setters as `setProgressbar` and
+  `setProgressbarIndeterminate`.
+
 **Fixed** [fix-88].
 
 - **A radio is round in retro and cyberpunk**: both registers drew every

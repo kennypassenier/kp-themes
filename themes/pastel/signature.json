@@ -547,7 +547,7 @@
             "situation": "Wait for something",
             "verb": "load",
             "answer": "A pill progress bar on the muted ground, a rounded skeleton, a spinner with a plum head.",
-            "components": ["kp-progress", "kp-skeleton", "kp-spinner"],
+            "components": ["kp-progressbar", "kp-skeleton", "kp-spinner"],
             "open": false,
             "proof": [
                 { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progress" },

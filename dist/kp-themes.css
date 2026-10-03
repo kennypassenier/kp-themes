@@ -7414,6 +7414,15 @@
         gap: var(--kp-space-sm);
     }
 
+    /* A lone bar beside its reading. The bar has no content of its own to
+ * size by (its parts are positioned), so inside a shrink-to-fit row it
+ * asks for its full width and gives way on a narrow screen, rather than
+ * collapsing to nothing. */
+    .kp-progress__wrap > .kp-progressbar {
+        flex: 0 1 auto;
+        inline-size: var(--kp-progressbar-max-width, 32rem);
+    }
+
     /* A group of bars reads as a group [fix-64]. Kenny, 2026-09-20:
  * "Elementen beginnen op vaste punten, niet afhankelijk van de lengte van
  * andere elementen … of beginnen allemaal op hetzelfde punt als ze
@@ -7439,9 +7448,11 @@
         display: contents;
     }
 
-    .kp-progress-group .kp-progress {
+    .kp-progress-group .kp-progress__wrap > .kp-progressbar,
+    .kp-progress-group > .kp-progressbar {
         /* In a group the track takes the column it was given, rather than
      * the width a lone bar defaults to. */
+        inline-size: 100%;
         max-inline-size: none;
     }
 
@@ -7475,73 +7486,131 @@
         margin-block-start: var(--kp-skeleton-gap, 0.375rem);
     }
 
-    .kp-progress {
+    /* The progress bar [scope-140]. It replaced `<progress class="kp-progress">`
+ * in 9.0.0, because a native <progress> has two pseudo-elements in one
+ * engine, one in the other, and nothing a theme can give a shape: every
+ * register drew the same rounded strip. This is one box with three parts
+ * every register may draw its own way — the track, the fill and the head on
+ * the fill's leading edge — and nothing outside the bar:
+ *
+ *   <div class="kp-progressbar" role="progressbar" aria-label="…"
+ *        aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"
+ *        style="--kp-value: 0.35">
+ *     <span class="kp-progressbar__track" aria-hidden="true">
+ *       <span class="kp-progressbar__fill"></span>
+ *       <span class="kp-progressbar__head"></span>
+ *     </span>
+ *   </div>
+ *
+ * --kp-value is the share done, 0 to 1; js/progressbar.js keeps it in step
+ * with aria-valuenow, so a consumer may set either. `data-kp-indeterminate`
+ * (and no aria-valuenow) is "busy, no idea how far". --kp-steps is how many
+ * segments a segmented register draws. The box is one line high whatever
+ * happens inside it, never wraps, and keeps its width from the first frame;
+ * the fill moves inside it.
+ *
+ * Knobs: --kp-progressbar-height (0.75rem), --kp-progressbar-max-width
+ * (32rem; none inside a group), --kp-progressbar-duration (240ms) and
+ * --kp-progressbar-ease (ease-out), the values the approved research round
+ * used (research/progress-signature/base.css). */
+    .kp-progressbar {
+        --kp-value: 0;
+        --kp-steps: 10;
+        --kp-progressbar-height: 0.75rem;
+        position: relative;
+        display: block;
         inline-size: 100%;
-        max-inline-size: var(--kp-progress-max-width, 20rem);
-        block-size: 0.5rem;
-        accent-color: var(--kp-control-accent, var(--primary));
-        /* The track and the bar in the theme's colours rather than the
-     * browser's grey and its border — found by the foreign-colour test in
-     * both browsers [KT8]. accent-color stays for the browsers that read it. */
-        appearance: none;
-        border: 1px solid var(--border);
+        max-inline-size: var(--kp-progressbar-max-width, 32rem);
+        block-size: var(--kp-progressbar-height);
+        contain: layout paint;
+    }
+
+    .kp-progressbar__track {
+        container-type: inline-size;
+        position: absolute;
+        inset: 0;
+        display: block;
+        overflow: hidden;
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--muted);
-        overflow: hidden;
     }
 
-    .kp-progress::-webkit-progress-bar {
-        background: var(--muted);
+    /* The fill spans the track and is clipped to the value, so a pattern in
+ * it never stretches and nothing is laid out again as the value moves:
+ * only clip-path and transform change [compositor-only motion]. */
+    .kp-progressbar__fill {
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
     }
 
-    /* The fill follows the holder's shape [scope-60]: square in every theme
- * before, under holders rounded up to a pill. `inherit` takes the holder's
- * own radius, whatever a register set it to. */
-    .kp-progress::-webkit-progress-value {
-        background: var(--kp-control-accent, var(--primary));
-        border-radius: inherit;
+    /* The head rides on the fill's leading edge; a register gives it a shape
+ * or leaves it empty. 100cqi is the track's width, the track being the
+ * inline-size container. */
+    .kp-progressbar__head {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        transform: translateX(calc(var(--kp-value) * 100cqi));
     }
 
-    .kp-progress::-moz-progress-bar {
-        background: var(--kp-control-accent, var(--primary));
-        border-radius: inherit;
+    /* Busy, standing still: diagonal stripes in the accent across the whole
+ * track, so a reader who asked for less motion sees "working" and never a
+ * share that is not there [gap-11 — a still fill at 30% would read as 30%
+ * done]. Without that preference the guard below turns it into the sweep. */
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        clip-path: none;
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-progressbar-height) var(--kp-progressbar-height);
     }
 
-    /* An indeterminate bar is not a full one [gap-11]. With the theme's own
- * appearance Firefox drew the bar across the whole track and stopped
- * animating it, so "no idea yet" looked exactly like "done". The track
- * wears diagonal stripes in the accent instead, and the bar itself steps
- * aside; under no reduced-motion preference the stripes drift, slowly
- * and without any change of light [DI5]. */
-    .kp-progress:indeterminate {
-        background-color: var(--muted);
-        background-image: linear-gradient(
-            -45deg,
-            var(--kp-control-accent, var(--primary)) 25%,
-            transparent 25% 50%,
-            var(--kp-control-accent, var(--primary)) 50% 75%,
-            transparent 75%
-        );
-        background-size: var(--kp-progress-stripe, 1rem) var(--kp-progress-stripe, 1rem);
-    }
-
-    .kp-progress:indeterminate::-moz-progress-bar {
-        background: transparent;
-    }
-
-    .kp-progress:indeterminate::-webkit-progress-bar {
-        background: transparent;
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .kp-progress:indeterminate {
-            animation: kp-progress-stripes 1200ms linear infinite;
+        .kp-progressbar__fill {
+            transition: clip-path var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        .kp-progressbar__head {
+            transition: transform var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        /* A solid band a third of the track wide, sweeping across it: a
+     * transform only, so it runs on the compositor. */
+        .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline-end: auto;
+            inline-size: 30%;
+            background: var(--primary);
+            animation: kp-progressbar-sweep 1400ms ease-in-out infinite;
         }
     }
 
-    @keyframes kp-progress-stripes {
+    @keyframes kp-progressbar-sweep {
+        from {
+            transform: translateX(-100%);
+        }
         to {
-            background-position: var(--kp-progress-stripe, 1rem) 0;
+            transform: translateX(340%);
+        }
+    }
+
+    /* A register draws its own motion inside the bar, and a reader who asked
+ * for less of it gets none, whichever register drew it: every animation
+ * inside the bar ends on its first frame and nothing transitions. The
+ * `!important` is what reaches into kp.register from this earlier layer
+ * (an important declaration in an earlier layer wins over every later
+ * one), and it is the research round's own rule, kept as approved. */
+    @media (prefers-reduced-motion: reduce) {
+        .kp-progressbar *,
+        .kp-progressbar *::before,
+        .kp-progressbar *::after {
+            animation-duration: 0s !important;
+            animation-iteration-count: 1 !important;
+            transition: none !important;
         }
     }
 

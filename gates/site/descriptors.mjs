@@ -1588,55 +1588,76 @@ export const DESCRIPTORS = [
         id: 'progress',
         title: 'Progress',
         group: 'Feedback',
-        classes: ['kp-progress', 'kp-progress-group'],
+        classes: ['kp-progressbar', 'kp-progress', 'kp-progress-group'],
+        // The busy state is `data-kp-indeterminate`, a name no class slug derives.
+        aliases: ['indeterminate'],
         exports: ['Progress'],
-        intro: 'A determinate bar for work whose end is known, painted in the theme’s own colours rather than the browser’s grey — the one control the package did not paint was the one that looked wrong in every theme.',
+        intro: 'A bar for work whose end is known, drawn by each theme in its own hand — a track, a fill clipped to the value and a head on its leading edge — and one line high whatever the theme draws inside it.',
         whenToUse:
-            'When you can say how far along something is: an upload, an import, a step count. Not for waiting on a server that will answer when it answers — that is the spinner. Not as a rating or a gauge: a progress element means work in flight.',
+            'When you can say how far along something is: an upload, an import, a step count. Not for waiting on a server that will answer when it answers — that is the spinner, or the busy bar when the wait belongs to a task with a place on the page. Not as a rating or a gauge: a progress bar means work in flight.',
         examples: [
             {
                 title: 'Three bars that begin in the same column',
                 why: 'A set of bars is read against each other, so the tracks have to start and end together — a bar behind “Memory” may not begin later than the one behind “CPU” because the word is longer. The group gives the labels one column, as wide as the longest of them [fix-64].',
                 markup: `
 <div class="kp-progress-group">
-<span class="kp-progress__wrap">
+<div class="kp-progress__wrap">
 <span class="kp-progress__label">CPU</span>
-<progress class="kp-progress" value="22" max="100" aria-label="CPU"></progress>
+<div class="kp-progressbar" role="progressbar" aria-label="CPU" aria-valuemin="0" aria-valuemax="100" aria-valuenow="22" style="--kp-value: 0.22">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
 <span class="kp-progress__value">22%</span>
-</span>
-<span class="kp-progress__wrap">
+</div>
+<div class="kp-progress__wrap">
 <span class="kp-progress__label">Memory</span>
-<progress class="kp-progress" value="64" max="100" aria-label="Memory"></progress>
+<div class="kp-progressbar" role="progressbar" aria-label="Memory" aria-valuemin="0" aria-valuemax="100" aria-valuenow="64" style="--kp-value: 0.64">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
 <span class="kp-progress__value">64%</span>
-</span>
+</div>
 </div>
 `,
             },
             {
                 title: 'A bar, and a bar with its number',
-                why: 'The value belongs on the element, where the browser reports it, rather than in a width. The percentage beside it is for the reader who wants the number.',
+                why: 'The value is the share done on `--kp-value` (0 to 1) and the amount a screen reader reads on `aria-valuenow`. With js/progressbar.js loaded (js/auto.js loads it), setting `aria-valuenow` moves the paint too, and the outer element alone is enough: the track, the fill and the head are written in.',
                 markup: `
-<progress class="kp-progress" value="40" max="100" aria-label="Import"></progress>
-<span class="kp-progress__wrap">
-<progress class="kp-progress" value="40" max="100" aria-label="Import"></progress>
+<div class="kp-progressbar" role="progressbar" aria-label="Import" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"></div>
+<div class="kp-progress__wrap">
+<div class="kp-progressbar" role="progressbar" aria-label="Import" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
 <span class="kp-progress__value">40%</span>
-</span>
+</div>
+`,
+            },
+            {
+                title: 'Busy, with no idea how far',
+                why: 'Without an amount the bar says so twice: `data-kp-indeterminate` for the eye and no `aria-valuenow` for a screen reader. It moves while it waits, and stands still, still reading as busy, for a reader who asked for less motion.',
+                markup: `
+<div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service" data-kp-indeterminate>
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
 `,
             },
         ],
         variants: [
-            { name: '.kp-progress', what: 'The bar: the quiet ground as a track, the accent as a fill, a boundary and a rounded end in all three engines.' },
-            { name: '.kp-progress__wrap', what: 'The bar with something beside it, on one baseline.' },
+            { name: '.kp-progressbar', what: 'The bar: one line high, as wide as its place up to a maximum, painting the share done from 0 to 1.' },
+            { name: '.kp-progressbar__track', what: 'The ground the value is measured against; the theme draws it.' },
+            { name: '.kp-progressbar__fill', what: 'The share done, clipped to the value, so a pattern in it never stretches and only the clip moves.' },
+            { name: '.kp-progressbar__head', what: 'The mark on the fill’s leading edge; a theme gives it a shape or leaves it empty.' },
+            { name: '[data-kp-indeterminate]', what: 'Busy without an amount: a moving band, and diagonal stripes standing still under reduced motion.' },
+            { name: '.kp-progress__wrap', what: 'The bar with something beside it, on one centre line.' },
             { name: '.kp-progress__value', what: 'The number, quiet and small, after the bar.' },
             { name: '.kp-progress-group', what: 'A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].' },
             { name: '.kp-progress__label', what: 'The word in front of a bar inside a group.' },
-            { name: 'indeterminate', what: 'A progress element with no value is the browser’s own indeterminate bar; for waiting with no end in sight the spinner says it better.' },
         ],
         accessibility: [
-            'Built in — this is the browser’s own progress element, so its value is reported without a hand-written role.',
-            'Built in — the track and the fill are theme colours in every engine, including the two that need their own vendor rules.',
+            'Built in — `role="progressbar"` with `aria-valuenow` against `aria-valuemin` and `aria-valuemax`; js/progressbar.js keeps the paint in step with them, so the number read and the bar drawn cannot drift apart.',
+            'Built in — the busy bar carries no `aria-valuenow`, which is how a screen reader learns the amount is unknown.',
+            'Built in — with reduced motion asked for nothing inside the bar moves, in any theme, and the busy bar still reads as busy.',
             'Yours — give it a name. A bar with no label is progress on something unspecified.',
-            'Yours — add a value text where a percentage is not the useful number (“3 of 12 files”).',
+            'Yours — add `aria-valuetext` where a percentage is not the useful number (“3 of 12 files”).',
             'Yours — say when it is finished; a full bar is silent.',
         ],
     },

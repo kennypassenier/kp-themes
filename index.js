@@ -75,6 +75,15 @@ export {
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
 export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
 export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
+// The root already exports upload's `setProgress` (a file row), so the bar's
+// two setters are named for the bar here; js/progressbar.js keeps the short names.
+export {
+    attachProgressbars,
+    buildProgressbar,
+    setIndeterminate as setProgressbarIndeterminate,
+    setProgress as setProgressbar,
+    syncProgressbar,
+} from './js/progressbar.js';
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

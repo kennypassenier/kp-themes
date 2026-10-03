@@ -115,14 +115,14 @@ test.describe('the still frame lets motion go again', { tag: ['@component:media'
     test('a second kind of infinite animation survives the same hold [fix-31]', async ({ page }) => {
         // Not the marquee alone: the claim is about every infinite animation
         // the hash holds. The indeterminate progress bar is the other one on
-        // the package's own pages.
+        // the package's own pages; its sweep runs on the fill [scope-140].
         await page.goto(PAGE);
-        const progress = '[data-test="progress"]';
+        const progress = '[data-test="progress"] .kp-progressbar__fill';
         await expect.poll(() => advance(page, progress), { timeout: 10_000 }).toBeGreaterThan(0);
         await page.evaluate(async () => {
             const { stillAnimations } = await import('/catalogue/block-hash.js');
             stillAnimations()();
         });
-        expect(await advance(page, progress), 'the stripes stand still after the release').toBeGreaterThan(0);
+        expect(await advance(page, progress), 'the busy sweep runs again after the release').toBeGreaterThan(0);
     });
 });

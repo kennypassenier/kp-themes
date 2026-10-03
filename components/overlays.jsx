@@ -868,27 +868,39 @@ export const Pagination = forwardRef(PaginationInner);
  * @property {string} [className]
  * @property {import('react').CSSProperties} [style]
  */
-/** @param {ProgressProps} props @param {import('react').ForwardedRef<HTMLProgressElement>} ref */
+/** @param {ProgressProps} props @param {import('react').ForwardedRef<HTMLDivElement>} ref */
 function ProgressInner({ value, max = 100, label, valueText, showValue = false, className = '', style, ...rest }, ref) {
-    // No value means indeterminate, and <progress> already says so; the
-    // label is what makes it mean anything to a screen reader.
+    // No value means busy without an amount [scope-140]: the bar says so with
+    // data-kp-indeterminate and by leaving aria-valuenow out, which is how a
+    // screen reader learns the amount is unknown. The label is what makes it
+    // mean anything to one at all.
+    const busy = value === undefined;
+    const share = busy || !(max > 0) ? 0 : Math.min(1, Math.max(0, value / max));
     const bar = (
-        <progress
+        <div
             ref={ref}
-            className={`kp-progress ${className}`.trim()}
-            style={style}
-            value={value}
-            max={max}
+            className={`kp-progressbar ${className}`.trim()}
+            role="progressbar"
+            style={/** @type {import('react').CSSProperties} */ ({ ...style, '--kp-value': String(share) })}
             aria-label={label}
+            aria-valuemin={0}
+            aria-valuemax={max}
+            aria-valuenow={busy ? undefined : value}
             aria-valuetext={valueText}
+            data-kp-indeterminate={busy ? '' : undefined}
             {...rest}
-        />
+        >
+            <span className="kp-progressbar__track" aria-hidden="true">
+                <span className="kp-progressbar__fill" />
+                <span className="kp-progressbar__head" />
+            </span>
+        </div>
     );
-    if (!showValue || value === undefined) return bar;
+    if (!showValue || busy) return bar;
     return (
         <span className="kp-progress__wrap">
             {bar}
-            <span className="kp-progress__value">{valueText ?? `${Math.round((value / max) * 100)}%`}</span>
+            <span className="kp-progress__value">{valueText ?? `${Math.round(share * 100)}%`}</span>
         </span>
     );
 }

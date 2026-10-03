@@ -5,6 +5,76 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
+## Coming from 8.x to 9.0.0: the progress bar is `.kp-progressbar`
+
+The native `<progress class="kp-progress">` is gone [scope-140]. Every theme
+now draws a progress bar of its own, and a native `<progress>` has nothing a
+theme can give a shape, so the bar is an element with three parts. A page
+that still writes `<progress class="kp-progress">` gets the browser's own
+unstyled bar.
+
+Before (8.x):
+
+```html
+<progress class="kp-progress" value="35" max="100" aria-label="Export"></progress>
+<progress class="kp-progress" aria-label="Waiting for the export service"></progress>
+```
+
+After (9.0.0):
+
+```html
+<div class="kp-progressbar" role="progressbar" aria-label="Export" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35" style="--kp-value: 0.35">
+    <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service" data-kp-indeterminate>
+    <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+```
+
+`--kp-value` is the share done, 0 to 1 (`value / max` of the old element);
+`aria-valuenow` with `aria-valuemin` and `aria-valuemax` replaces `value` and
+`max`. Busy, which was a `<progress>` with no `value`, is
+`data-kp-indeterminate` and no `aria-valuenow`.
+
+With `js/progressbar.js` on the page — `js/auto.js` loads it wherever a
+`.kp-progressbar` is — the ARIA is the source, so a consumer that only moves
+`aria-valuenow` keeps working as `value` did, and the one-line form is enough:
+the track, the fill and the head are written in.
+
+```html
+<div class="kp-progressbar" role="progressbar" aria-label="Export" aria-valuenow="35"></div>
+```
+
+Code that set `bar.value = n` calls the module instead:
+
+```js
+import { setProgress, setIndeterminate } from '@kp-soft/themes/js/progressbar';
+
+setProgress(bar, 40); // was: bar.value = 40
+setIndeterminate(bar, true); // was: bar.removeAttribute('value')
+```
+
+From the package root these are `setProgressbar` and
+`setProgressbarIndeterminate`; the root's `setProgress` is still the upload
+row's. The React `Progress` keeps its props (`value`, `max`, `label`,
+`valueText`, `showValue`) and renders the new markup; its ref is now an
+`HTMLDivElement`, not an `HTMLProgressElement`.
+
+What else moved:
+
+- `.kp-progress__wrap`, `.kp-progress__value`, `.kp-progress-group` and
+  `.kp-progress__label` stay, with the new bar inside them. Write the wrap as
+  a `div`: a `div` inside a `span` is not valid HTML.
+- `--kp-progress-max-width` is now `--kp-progressbar-max-width` (32rem, was
+  20rem); the bar is 0.75rem high (`--kp-progressbar-height`, was 0.5rem).
+- `--kp-progress-stripe` and the `kp-progress-stripes` keyframes are gone;
+  the busy bar's motion is `kp-progressbar-sweep`, and each theme may draw
+  its own.
+- The fill reads `--primary`, no longer `--kp-control-accent`.
+- A page's own rule on the `kp-progress` class, or on `::-webkit-progress-value`
+  and `::-moz-progress-bar`, targets `.kp-progressbar__track`,
+  `.kp-progressbar__fill` and `.kp-progressbar__head` instead.
+
 ## Coming from 7.x to 8.0.0: the non-web themes live in their own repositories
 
 The package now holds the web themes only [scope-139]. What left, and where
