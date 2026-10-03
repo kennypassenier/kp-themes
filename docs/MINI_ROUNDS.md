@@ -239,4 +239,9 @@ register's colours are.
 | fix-86-M1 | Does the homelab dashboard drop its stripes shim for `.kp-progress:indeterminate` once it takes the kp-themes that carries fix-86, with the bar still striped and moving? | open |
 | fix-87-M1 | Does the next release refuse while a block/theme pair is open, and pass once all are approved? Measured at the fix (2026-09-30): the rehearsal of 8.1.0 refused with 18 open. | open |
 | fix-88-M1 | Does tests/signature-faults.spec.mjs fail on the commit before fix-88 and pass after, in both engines, at the next release's suite run? | open |
+| fix-89-M1 | Does the release script refuse on nothing the preflight did not list? At the next release: the output of `npm run release:preflight -- X.Y.Z` is quoted in the release form, and `scripts/release.sh` then refuses on nothing beyond it. Approved by Kenny 2026-10-03 (form v8). | open |
+| fix-90-M1 | Does a demo put to Kenny show every variant the catalogue has of its component? At the next research demo listed under "Research to look at": `npm run check:demo-variants` runs on it at the commit that lists it. Approved by Kenny 2026-10-03 (form v8). | open |
+| fix-91-M1 | Does a pasted catalogue prompt record with no hand edit? At Kenny's next pasted prompt: `node gates/verdicts.mjs record` takes it whole, END line and count matching. Approved by Kenny 2026-10-03 (form v8). | open |
+| fix-92-M1 | Does a modal dialog open centred under a CSS reset? At the next release suite: tests/dialog-under-reset.spec.mjs passes in all 22 themes; at JobTracker's next kp-themes upgrade its dialog opens in the middle with no workaround. | open |
+| fix-93-M1 | Does every row of the theme menu stay on one line? At the next release suite: tests/theme-menu-nowrap.spec.mjs passes in all 22 themes; at JobTracker's next upgrade high-contrast, shade-light and shade-dark show the selected row on one line. | open |
 

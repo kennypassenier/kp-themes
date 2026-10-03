@@ -120,6 +120,12 @@ The bridge only aliases tokens; it does not carry kp-soft's shadcn base
 layer (`* { @apply border-border }`). Add that in your app if you use
 shadcn.
 
+Keep `tailwindcss` first, as above. Its preflight sets `margin: 0` on every
+element, which takes the browser's centring away from a `<dialog>`; the
+package puts it back on `.kp-dialog` in its own layers, and those win only
+when they are declared after Tailwind's. Imported the other way round, a
+modal dialog opens in the top-left corner (JobTracker, 2026-10-03).
+
 ### Fonts
 
 Since 5.0.0 the package ships the faces its themes name [T19]: load

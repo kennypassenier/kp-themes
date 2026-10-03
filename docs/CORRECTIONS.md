@@ -5388,3 +5388,72 @@ instead of text to paste.
 
 **9 · When we review the measure.** After the next five prompts.
 
+
+## fix-92 · A modal dialog opened in the top-left corner under Tailwind (2026-10-03)
+
+**1 · What went wrong.** In JobTracker a `.kp-dialog` opened with
+`showModal()` sat in the top-left corner of the window instead of its middle.
+
+**2 · Which gate let it through.** None could see it: every fixture and
+catalogue page loads the package without a CSS reset, and the browser's own
+sheet centres a dialog with `margin: auto`. Tailwind's preflight sets
+`margin: 0` on every element and took that away.
+
+**3 · Where else the same fault sits.** Searched for: every rule that leaves
+a box's place to the browser's own margin or inset (`grep -n ":popover-open\|kp-popover {" css/components.css`).
+The combobox list, the date panel and the theme picker's popover each set
+their own margin and inset already; only the dialog leaned on the browser.
+
+**4 · How we prevent recurrence.** `.kp-dialog` sets `margin: auto` and a
+modal one `inset: 0` in kp.components, which Tailwind's layers precede in the
+README's import order. `tests/fixtures/dialog-under-reset.html` loads the part
+of preflight that reaches a dialog, and `tests/dialog-under-reset.spec.mjs`
+checks in all 22 themes that the dialog sits in the middle of the window.
+
+**5 · What the remedy costs.** Two declarations; one test of about two seconds.
+
+**6 · Who enforces it.** Code: the test, at the release suite.
+
+**7 · How we measure that it works, and when.** At the next release suite the
+test passes; at JobTracker's next kp-themes upgrade its own dialog workaround,
+if it has one, goes and the dialog still opens centred. Queued as fix-92-M1.
+
+**8 · If the measurement fails.** The fixture takes the whole of preflight
+instead of the excerpt.
+
+**9 · When we review the measure.** At the next consumer that brings its own
+reset.
+
+## fix-93 · The selected theme in the theme menu broke onto two lines (2026-10-03)
+
+**1 · What went wrong.** In JobTracker's theme menu (the package's React
+switcher) the selected row, set bold, wrapped onto two lines in
+high-contrast, shade-light and shade-dark.
+
+**2 · Which gate let it through.** No test opened the menu in every theme and
+read its rows; the screenshot approval saw the menu in one selected state.
+
+**3 · Where else the same fault sits.** Searched for: lists placed absolutely
+against a small trigger with only a minimum width
+(`awk` over css/components.css for `position: absolute` with `min-width`):
+`.kp-theme-menu__list` and `.kp-nav__menu`, the navigation's dropdown. The
+dropdown is not changed here: its mega-menu variant stretches by its insets
+and the phone drawer lays it in the flow, so `max-content` would break both.
+
+**4 · How we prevent recurrence.** The list is `max-content` wide, capped at
+the window, and a row does not wrap. `tests/theme-menu-nowrap.spec.mjs` opens
+the menu in all 22 themes and refuses any row on two lines.
+
+**5 · What the remedy costs.** Three declarations; one test of about a minute.
+
+**6 · Who enforces it.** Code: the test, at the release suite.
+
+**7 · How we measure that it works, and when.** At the next release suite the
+test passes; at JobTracker's next kp-themes upgrade the three themes show one
+line. Queued as fix-93-M1.
+
+**8 · If the measurement fails.** The test widens to every width the site
+uses.
+
+**9 · When we review the measure.** At the next component that lists names in
+a menu.

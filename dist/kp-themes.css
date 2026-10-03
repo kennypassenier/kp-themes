@@ -6868,7 +6868,13 @@
 
     /* --- Dialog ---------------------------------------------------------- */
 
+    /* The browser centres a dialog with `margin: auto` from its own sheet;
+       a reset that zeroes every margin (Tailwind's preflight) takes that
+       away, and a modal dialog lands in the top-left corner (found live in
+       JobTracker, 2026-10-03; fix-92). The dialog says it itself, so a reset in an
+       earlier layer cannot undo it. */
     .kp-dialog {
+        margin: auto;
         max-width: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2rem)));
         padding: 1.25rem;
         border: 1px solid var(--border-strong);
@@ -6884,6 +6890,10 @@
  * the title, the description and the actions keep their size, and the
  * body takes what is left and scrolls inside it. A dialog without a
  * `.kp-dialog__body` keeps its block flow and only gains the cap. */
+    .kp-dialog:modal {
+        inset: 0;
+    }
+
     .kp-dialog[open] {
         max-block-size: var(--kp-dialog-max-height, calc(100dvh - 2rem));
         box-sizing: border-box;
@@ -7762,6 +7772,12 @@
         inset-block-start: 100%;
         margin-block-start: var(--kp-menu-offset, 0.25rem);
         min-inline-size: var(--kp-menu-min-width, 11rem);
+        /* As wide as its longest row: placed against the button, the list
+           otherwise takes the button's width as the room it has, and the
+           selected row, set bold, broke onto two lines in high-contrast,
+           shade-light and shade-dark (JobTracker, 2026-10-03; fix-93). */
+        inline-size: max-content;
+        max-inline-size: calc(100vw - 2rem);
         z-index: var(--kp-z-popover, 20);
     }
 
@@ -7810,6 +7826,9 @@
         color: inherit;
         font: inherit;
         text-align: start;
+        /* A theme's name is one line in every theme, the bold selected one
+           too. */
+        white-space: nowrap;
         cursor: pointer;
         /* Border-box, or `100%` plus the padding overflows the popover by the
      * padding — 20px wider than the menu on CI's scrollbar-bearing

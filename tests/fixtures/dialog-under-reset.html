@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Dialog under a CSS reset — where a modal dialog opens</title>
+        <!-- The reset of Tailwind v4's preflight that reaches a dialog, copied
+             from tailwindcss/preflight.css and declared in the order the README
+             gives a Tailwind consumer: Tailwind's layers first, the package's
+             after. JobTracker, 2026-10-03: under this reset a modal dialog
+             opened in the top-left corner. -->
+        <style>
+            @layer theme, base, components, utilities;
+            @layer base {
+                *,
+                ::after,
+                ::before,
+                ::backdrop,
+                ::file-selector-button {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    border: 0 solid;
+                }
+            }
+        </style>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+        <link rel="stylesheet" href="/css/light-register.css" />
+        <link rel="stylesheet" href="/css/dark-register.css" />
+        <link rel="stylesheet" href="/css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="/css/synthwave-register.css" />
+        <link rel="stylesheet" href="/css/pastel-register.css" />
+        <link rel="stylesheet" href="/css/terminal-register.css" />
+        <link rel="stylesheet" href="/css/forest-register.css" />
+        <link rel="stylesheet" href="/css/high-contrast-register.css" />
+        <link rel="stylesheet" href="/css/sepia-register.css" />
+        <link rel="stylesheet" href="/css/blueprint-register.css" />
+        <link rel="stylesheet" href="/css/solstice-register.css" />
+        <link rel="stylesheet" href="/css/brutalism-register.css" />
+        <link rel="stylesheet" href="/css/deco-register.css" />
+        <link rel="stylesheet" href="/css/phantom-register.css" />
+        <link rel="stylesheet" href="/css/shade-light-register.css" />
+        <link rel="stylesheet" href="/css/shade-dark-register.css" />
+        <link rel="stylesheet" href="/css/retro-register.css" />
+        <link rel="stylesheet" href="/css/grotesk-register.css" />
+        <link rel="stylesheet" href="/css/lapis-register.css" />
+        <link rel="stylesheet" href="/css/nostromo-register.css" />
+        <link rel="stylesheet" href="/css/titanium-register.css" />
+    </head>
+    <body>
+        <button type="button" class="kp-button" data-test="open">Open</button>
+        <dialog class="kp-dialog" aria-labelledby="dialog-title" data-test="dialog">
+            <h2 class="kp-dialog__title" id="dialog-title">Delete this application?</h2>
+            <p class="kp-dialog__description">The notes and the attachments go with it.</p>
+            <div class="kp-dialog__actions">
+                <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                <button type="button" class="kp-button kp-button--destructive">Delete</button>
+            </div>
+        </dialog>
+    </body>
+</html>

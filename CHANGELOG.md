@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **A modal dialog opens centred under a CSS reset.** Tailwind's preflight
+  sets `margin: 0` on every element, which took the browser's centring away
+  from `<dialog>`, and a `.kp-dialog` opened with `showModal()` landed in the
+  top-left corner (found in JobTracker, 2026-10-03). `.kp-dialog` now carries
+  `margin: auto` and a modal one `inset: 0` itself; keep `tailwindcss`
+  imported before the package (README).
+- **The theme menu keeps every row on one line.** The React switcher's list
+  is as wide as its longest row (`inline-size: max-content`, capped at the
+  window), and a row does not wrap: the bold selected row broke onto two
+  lines in high-contrast, shade-light and shade-dark (JobTracker,
+  2026-10-03).
+
 ## 9.0.0 — 2026-10-03
 
 **Breaking** [scope-140].
