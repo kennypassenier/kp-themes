@@ -43,10 +43,18 @@
     background: var(--foreground);
 }
 
-/* ── 2 · Skeleton: halftone strips and a red slash ────────────────────── */
+/* ── 2 · Skeleton: halftone strips and a red slash ──────────────────────
+   Kenny, 2026-10-03, on the first draft: only the third line was right,
+   because its slash ran off the end; on the wider lines a run counted in
+   slash widths stopped short. The slash now rides a full-width layer, so
+   its run is measured in the line's own width: every line is crossed end
+   to end. A busy indicator loops continuously (Kenny, 2026-10-03, which
+   overrides the earlier "then pauses"): the slash leaves past the right
+   edge and re-enters from the left, both off the strip, so the seam is
+   invisible. */
 
 [data-theme='phantom'] .sx-sig .kp-skeleton {
-    --sx-dur: 1600ms;
+    --sx-dur: 1400ms;
     position: relative;
     overflow: hidden;
     block-size: 0.95rem;
@@ -60,14 +68,15 @@
     margin-block-start: 0.55rem;
 }
 
+/* The layer is as wide as the line; the slash is cut into its leading
+   2.6rem, so translateX(100%) carries it clean past the far edge. */
 [data-theme='phantom'] .sx-sig .kp-skeleton::after {
     content: '';
     position: absolute;
-    inset-block: 0;
-    inset-inline-start: 0;
-    inline-size: 2.5rem;
+    inset: 0;
     background: var(--primary);
-    transform: translateX(-120%) skewX(-24deg);
+    clip-path: polygon(0.8rem 0, 2.6rem 0, 1.8rem 100%, 0 100%);
+    transform: translateX(-2.8rem);
 }
 
 /* ── 3 · Switch: a cut-paper tab that slams across ────────────────────── */
@@ -100,7 +109,15 @@
     transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem) - 2px));
 }
 
-/* ── 4 · Checkbox and radio: a slammed tick, a red star ───────────────── */
+/* ── 4 · Checkbox and radio: a sticker slapped on a cut-paper box ──────
+   Kenny, 2026-10-03, on the red square with a black tick: "find something
+   else". The box is now the register's own sheared square, a hole cut in
+   the page with a white frame and the deep red second plate printed off
+   register behind it. Checked, the hole is pasted over with white paper
+   and a red tick cut from a sheet with scissors (a polygon, not two
+   borders) is slapped on, too big, breaking out past the top-right of
+   the frame, with its black plate a hair off register. The radio keeps
+   its red star, now on the same white paper, so the pair reads as one. */
 
 [data-theme='phantom'] .sx-sig .kp-field__check {
     --sx-dur: 300ms;
@@ -108,33 +125,44 @@
     position: relative;
     display: inline-grid;
     place-content: center;
-    inline-size: 1.2rem;
-    block-size: 1.2rem;
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
     margin: 0;
     border: 2px solid var(--foreground);
     border-radius: 0;
     background: var(--background);
+    box-shadow: 3px 3px 0 var(--sx-ph-plate);
+    transform: skewX(var(--kp-skew, -8deg));
 }
 
-[data-theme='phantom'] .sx-sig .kp-field__check[type='checkbox']:checked {
-    background: var(--primary);
+[data-theme='phantom'] .sx-sig .kp-field__check:checked {
+    border-color: var(--foreground);
+    background: var(--foreground);
+    box-shadow: 3px 3px 0 var(--sx-ph-plate);
 }
 
-/* A heavy black tick in ink on the red plate, slightly too large. */
+/* The cut tick: thick, with slanted scissor ends, larger than the box and
+   set high and right so its long arm leaves the frame. drop-shadow is the
+   black plate, following the cut shape. */
 [data-theme='phantom'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
     content: '';
-    inline-size: 0.7rem;
-    block-size: 0.36rem;
-    border-inline-start: 3px solid var(--primary-foreground);
-    border-block-end: 3px solid var(--primary-foreground);
-    transform: translateY(-1px) rotate(-48deg);
+    position: absolute;
+    inset-block-start: -0.42rem;
+    inset-inline-start: 0.02rem;
+    inline-size: 1.25rem;
+    block-size: 1.05rem;
+    background: var(--primary);
+    clip-path: polygon(0 52%, 22% 38%, 40% 66%, 82% 0, 100% 14%, 42% 100%);
+    filter: drop-shadow(1px 1px 0 var(--primary-foreground));
+    transform: skewX(calc(var(--kp-skew, -8deg) * -1));
 }
 
 [data-theme='phantom'] .sx-sig .kp-field__check[type='radio'] {
     border-radius: 50%;
+    transform: none;
 }
 
-/* The radio's mark: a red star with its white plate peeking out. */
+/* The radio's mark: a red star on the white paper. */
 [data-theme='phantom'] .sx-sig .kp-field__check[type='radio']:checked::before {
     content: '';
     inline-size: 0.85rem;
@@ -154,8 +182,37 @@
     box-shadow: 6px 6px 0 var(--sx-ph-plate);
 }
 
+/* A toast with a meaning keeps the card's shape but is printed on its
+   severity plate (Kenny, 2026-10-03: "there is no color in the success
+   one"): the plate and its ink are the alert's token pair, the frame is
+   the ink, and the offset plate is the same hue a step lighter so it
+   still reads on the black page. The words still say the meaning [DI4]. */
 [data-theme='phantom'] .sx-sig .kp-toast--success {
-    box-shadow: 6px 6px 0 var(--success-foreground, var(--foreground));
+    border-color: var(--success-foreground);
+    background: var(--success);
+    color: var(--success-foreground);
+    box-shadow: 6px 6px 0 hsl(from var(--success) h s calc(l + 16));
+}
+
+[data-theme='phantom'] .sx-sig .kp-toast--info {
+    border-color: var(--info-foreground);
+    background: var(--info);
+    color: var(--info-foreground);
+    box-shadow: 6px 6px 0 hsl(from var(--info) h s calc(l + 16));
+}
+
+[data-theme='phantom'] .sx-sig .kp-toast--warning {
+    border-color: var(--warning-foreground);
+    background: var(--warning);
+    color: var(--warning-foreground);
+    box-shadow: 6px 6px 0 hsl(from var(--warning) h s calc(l + 16));
+}
+
+[data-theme='phantom'] .sx-sig :is(.kp-toast--destructive, .kp-toast--error) {
+    border-color: var(--foreground);
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+    box-shadow: 6px 6px 0 var(--sx-ph-plate);
 }
 
 [data-theme='phantom'] .sx-sig .kp-toast__body {
@@ -342,7 +399,7 @@
     }
 
     [data-theme='phantom'] .sx-sig .kp-skeleton::after {
-        animation: sx-phantom-slash var(--sx-dur) cubic-bezier(0.7, 0, 0.3, 1) infinite;
+        animation: sx-phantom-slash var(--sx-dur) cubic-bezier(0.6, 0, 0.4, 1) infinite;
     }
 
     [data-theme='phantom'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
@@ -359,6 +416,10 @@
 
     [data-theme='phantom'] .sx-sig .kp-field__check:checked::before {
         animation: sx-phantom-slam var(--sx-dur) var(--fx-ease) both;
+    }
+
+    [data-theme='phantom'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
+        animation: sx-phantom-stick var(--sx-dur) linear both;
     }
 
     [data-theme='phantom'] .sx-sig .kp-toast {
@@ -406,25 +467,53 @@
     }
 }
 
+/* Off the left edge to off the right edge: both ends are invisible, so
+   the loop has no seam, whatever the line's width. */
 @keyframes sx-phantom-slash {
-    0% {
-        transform: translateX(-120%) skewX(-24deg);
+    from {
+        transform: translateX(-2.8rem);
     }
 
-    55%,
-    100% {
-        transform: translateX(var(--sx-ph-run, 1400%)) skewX(-24deg);
+    to {
+        transform: translateX(100%);
     }
 }
 
 @keyframes sx-phantom-slam {
     from {
         opacity: 0;
-        transform: translateY(-1px) rotate(-48deg) scale(2.2);
+        transform: scale(2.2) rotate(-12deg);
     }
 
     to {
         opacity: 1;
+    }
+}
+
+/* The sticker: thrown at the box too big and tilted, it lands a touch
+   small on the first third, kicks back and sticks. Linear between the
+   keyframes, each leg eased on its own, so the frames strip shows the
+   throw, the hit, the kick and the rest. */
+@keyframes sx-phantom-stick {
+    from {
+        opacity: 0;
+        transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(2.6) rotate(-18deg);
+        animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+    }
+
+    35% {
+        opacity: 1;
+        transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(0.86) rotate(2deg);
+        animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+    }
+
+    65% {
+        transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(1.08) rotate(-1deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: skewX(calc(var(--kp-skew, -8deg) * -1));
     }
 }
 

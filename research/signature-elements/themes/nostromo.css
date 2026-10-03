@@ -11,9 +11,12 @@
      - the label tape: dark embossed tape with tracked uppercase mono;
      - the moulding: matte plastic, a highlight on the top edge, a shadow
        under, slots and wells pressed into it.
-   Nothing loops, not even the busy sign: every element here plays once
-   (the register's own popdown and stamp) and then stands, as the theme
-   requires. A machine says it is busy with a lamp that is on. */
+   Nothing loops but the two busy indicators: every other element plays
+   once (the register's own popdown and stamp) and then stands. Kenny's
+   review (2026-10-03) overrides "nothing loops" for the spinner and the
+   skeleton only: a busy sign must keep moving while the work goes on. So
+   they move the way the case's own mechanics do, a tape reel turning and
+   a lamp scanning behind the vents, and the LED still never blinks. */
 
 [data-theme='nostromo'] .sx-sig {
     --sx-no-led: var(--sidebar-primary);
@@ -31,43 +34,84 @@
     --sx-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--sx-no-led) 30%, var(--accent) 70%);
 }
 
-/* ── 1 · Spinner: the BUSY lamp ──────────────────────────────────────────
-   No wheel: a 1979 panel says it is busy with a lamp that is on. An
-   orange LED lens in a dark bezel, which strikes once (a short stamp)
-   and then stays lit while the work goes on. The role="status" label
-   carries "Loading"; the lamp is the case's way of showing it. */
+/* ── 1 · Spinner: a tape reel turning ────────────────────────────────────
+   The cassette deck's own busy sign: a reel in a well pressed into the
+   case. The dark pack of tape, a beige plastic hub with three drive
+   notches that turns steadily, and the BUSY lamp set in the spindle, a lit
+   orange LED that stays on (it never blinks). The hub is three-fold, so a
+   linear turn loops with no seam. The role="status" label carries
+   "Loading". */
 
 [data-theme='nostromo'] .sx-sig .kp-spinner {
-    --sx-dur: 260ms;
+    --sx-dur: 1800ms;
     position: relative;
     border: 0;
     border-radius: 50%;
-    background: var(--foreground);
+    /* The tape pack: dark, with a faint wound ring. */
+    background:
+        radial-gradient(circle, transparent 0 62%, hsl(from var(--card) h s l / 0.18) 63% 64%, transparent 65%),
+        var(--foreground);
     box-shadow: var(--sx-no-well);
     animation: none;
 }
 
-[data-theme='nostromo'] .sx-sig .kp-spinner::after {
+/* The hub: beige moulding with three notches cut to the tape behind. */
+[data-theme='nostromo'] .sx-sig .kp-spinner::before {
     content: '';
     position: absolute;
-    inset: 22%;
+    inset: 18%;
     border-radius: 50%;
-    background: var(--sx-no-lens);
-    box-shadow: 0 0 6px hsl(from var(--sx-no-led) h s l / 0.6);
+    background: repeating-conic-gradient(from -15deg, var(--card) 0 90deg, transparent 90deg 120deg);
+    box-shadow: inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9);
 }
 
-/* ── 2 · Skeleton: vent slots ────────────────────────────────────────────
+/* The spindle: the BUSY lamp, lit and still at the centre of the turn. */
+[data-theme='nostromo'] .sx-sig .kp-spinner::after {
+    --sx-dur: 260ms;
+    content: '';
+    position: absolute;
+    inset: 36%;
+    border-radius: 50%;
+    background: var(--sx-no-lens);
+    box-shadow:
+        0 0 0 1.5px var(--foreground),
+        0 0 6px hsl(from var(--sx-no-led) h s l / 0.6);
+}
+
+/* ── 2 · Skeleton: vent slots with a lamp scanning behind ────────────────
    Long rounded slots pressed into the plastic, the shape of the case's
-   vents. They are moulded in once, one after another, popping down into
-   the panel, and then they stand. */
+   vents. They are moulded in once, one after another, and then a soft
+   orange lamp sweeps along behind each slot, left to right, the slots a
+   beat apart, like a deck's scanning indicator. The lamp enters and
+   leaves out of sight past the slot's ends, so the loop has no seam. */
 
 [data-theme='nostromo'] .sx-sig .kp-skeleton {
     --sx-dur: 280ms;
+    position: relative;
+    overflow: hidden;
     block-size: 0.75rem;
     border-radius: var(--kp-radius-pill, 999px);
     background: hsl(from var(--foreground) h s l / 0.14);
     box-shadow: var(--sx-no-well);
     animation: none;
+}
+
+/* The lamp: a quarter of the slot wide, a hot centre in an orange glow. */
+[data-theme='nostromo'] .sx-sig .kp-skeleton::after {
+    --sx-dur: 2200ms;
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 25%;
+    border-radius: inherit;
+    background: radial-gradient(
+        ellipse 50% 70% at 50% 50%,
+        hsl(from var(--sx-no-led) h s calc(l + 12)) 0 18%,
+        hsl(from var(--sx-no-led) h s l / 0.75) 40%,
+        transparent 100%
+    );
+    transform: translateX(-100%);
 }
 
 [data-theme='nostromo'] .sx-sig .kp-skeleton + .kp-skeleton {
@@ -355,7 +399,24 @@
 /* ── Motion: once, as the register's popdown and stamp ────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-theme='nostromo'] .sx-sig .kp-spinner::after,
+    /* The two busy indicators loop (Kenny, 2026-10-03); see the header. */
+    [data-theme='nostromo'] .sx-sig .kp-spinner::before {
+        animation: sx-no-reel var(--sx-dur) linear infinite;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-skeleton::after {
+        animation: sx-no-scan var(--sx-dur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+
+    [data-theme='nostromo'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
+        animation-delay: 160ms;
+    }
+
+    [data-theme='nostromo'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
+        animation-delay: 320ms;
+    }
+
+    [data-theme='nostromo'] .sx-sig .kp-spinner:not(.sx-frame)::after,
     [data-theme='nostromo'] .sx-sig .kp-field__check[type='radio']:checked::before {
         animation: sx-no-strike var(--sx-dur) var(--sx-no-ease) both;
     }
@@ -364,7 +425,8 @@
         animation: sx-no-punch var(--sx-dur) var(--sx-no-ease) both;
     }
 
-    [data-theme='nostromo'] .sx-sig .kp-skeleton {
+    /* The moulding plays once; the frames strip shows the scan instead. */
+    [data-theme='nostromo'] .sx-sig .kp-skeleton:not(.sx-frame) {
         animation: sx-no-mould var(--sx-dur) var(--sx-no-ease) both;
     }
 
@@ -409,6 +471,27 @@
     to {
         opacity: 1;
         transform: none;
+    }
+}
+
+/* The reel: a steady linear turn; three-fold, so any whole turn is seamless. */
+@keyframes sx-no-reel {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* The lamp crosses the slot from out of sight on the left to out of sight
+   on the right (its own width is a quarter of the slot), then waits a
+   moment dark before the next pass. */
+@keyframes sx-no-scan {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    75%,
+    100% {
+        transform: translateX(400%);
     }
 }
 

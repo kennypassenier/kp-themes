@@ -176,8 +176,22 @@
     text-transform: uppercase;
 }
 
+/* The wide strips keep their frames on one row at every width: as a wrapping
+   flex row the fourth skeleton frame fell onto a line of its own. */
+.sx-frames--wide {
+    display: grid;
+    grid-template-columns: repeat(var(--sx-n, 4), minmax(0, 1fr));
+}
+
+.sx-frames--wide:has(> :nth-child(3):last-child) {
+    --sx-n: 3;
+}
+
+.sx-frames--wide::before {
+    grid-column: 1 / -1;
+}
+
 .sx-frames--wide > * {
-    flex: 1 1 6rem;
     min-inline-size: 0;
 }
 
@@ -317,39 +331,54 @@
     transform: scale(0.6);
 }
 
-/* retro: the hourglass. Sand in navy runs down in five snaps, then the
-   glass turns over in two. */
+/* retro: the Windows 95 wait cursor, drawn as the cursor was. Two solid
+   black caps wider than the glass, a straight-sided glass with a one-pixel
+   black outline and a white inside, and the sand in the 50% checkerboard
+   dither the cursor's 16 colours forced. Busy means it moves (Kenny,
+   2026-10-03), so this is the animated cursor of the Windows 98 scheme:
+   the sand runs out of the top bulb through the neck as one body and piles
+   up in the bottom, then the glass turns over. Turned over, a full bottom
+   bulb is a full top bulb, so the last frame is the first and the loop has
+   no seam. This overrides the register's "nothing loops" for the spinner
+   only; the sand runs at a constant rate and the glass turns at a constant
+   speed, because nothing on this desktop eases. */
 [data-theme='retro'] .sx-sig .kp-spinner {
-    --sx-dur: 2000ms;
+    --sx-dur: 2600ms;
     position: relative;
-    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.75);
+    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.7);
     border: 0;
     border-radius: 0;
-    clip-path: polygon(0 0, 100% 0, 100% 10%, 62% 50%, 100% 90%, 100% 100%, 0 100%, 0 90%, 38% 50%, 0 10%);
     background:
-        linear-gradient(var(--foreground), var(--foreground)) top / 100% 10% no-repeat,
-        linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 10% no-repeat,
-        var(--popover);
+        linear-gradient(var(--foreground), var(--foreground)) top / 100% 11% no-repeat,
+        linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 11% no-repeat;
+    /* The one-pixel outline of the glass, the cursor's black edge. */
+    filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground))
+        drop-shadow(0 -1px 0 var(--foreground));
     animation: none;
 }
 
+/* The glass and the sand share one box and one outline: two bulbs meeting
+   at a neck 12% wide. */
 [data-theme='retro'] .sx-sig .kp-spinner::before,
 [data-theme='retro'] .sx-sig .kp-spinner::after {
     content: '';
     position: absolute;
-    inset-inline: 0;
-    block-size: 40%;
-    background: var(--primary);
-    transform-origin: 50% 100%;
+    inset-block: 11%;
+    inset-inline: 14%;
+    clip-path: polygon(0 0, 100% 0, 56% 48%, 56% 52%, 100% 100%, 0 100%, 44% 52%, 44% 48%);
 }
 
 [data-theme='retro'] .sx-sig .kp-spinner::before {
-    inset-block-start: 10%;
+    background: var(--popover);
 }
 
+/* At rest the top bulb is a third run out and the bottom one holds the
+   rest: the still cursor reads as an hourglass mid-run. */
 [data-theme='retro'] .sx-sig .kp-spinner::after {
-    inset-block-end: 10%;
-    transform: scaleY(0);
+    background-image: var(--kp-brush);
+    background-size: 2px 2px;
+    image-rendering: pixelated;
+    clip-path: polygon(13.72% 14.96%, 86.28% 14.96%, 56% 48%, 53% 52%, 53% 80.47%, 88.5% 87.45%, 100% 100%, 0% 100%, 11.5% 87.45%, 47% 80.47%, 47% 52%, 44% 48%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -366,15 +395,11 @@
     }
 
     [data-theme='retro'] .sx-sig .kp-spinner {
-        animation: sx-turn var(--sx-dur) step-start infinite;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-spinner::before {
-        animation: sx-sand-top var(--sx-dur) steps(5, jump-end) infinite;
+        animation: sx-turn var(--sx-dur) linear infinite;
     }
 
     [data-theme='retro'] .sx-sig .kp-spinner::after {
-        animation: sx-sand-bottom var(--sx-dur) steps(5, jump-end) infinite;
+        animation: sx-sand var(--sx-dur) linear infinite;
     }
 }
 
@@ -396,14 +421,12 @@
     }
 }
 
+/* The sand runs for 76% of the turn, the glass stands for a beat, then turns
+   over at a constant speed. */
 @keyframes sx-turn {
     0%,
     80% {
         transform: rotate(0);
-    }
-
-    90% {
-        transform: rotate(90deg);
     }
 
     100% {
@@ -411,38 +434,89 @@
     }
 }
 
-@keyframes sx-sand-top {
+/* The sand as one body: the top bulb's surface sinks, the stream falls
+   through the neck, the heap rises in the bottom bulb and flattens as it
+   fills. Twelve points throughout, so every frame between is a straight
+   blend; the level follows the bulb's area, so the sand runs at an even
+   rate and the level moves faster as a bulb narrows. */
+@keyframes sx-sand {
     0% {
-        transform: scaleY(1);
+        clip-path: polygon(0% 0%, 100% 0%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 56% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
     }
 
-    80%,
+    6% {
+        clip-path: polygon(1.77% 1.93%, 98.23% 1.93%, 56% 48%, 53% 52%, 53% 100%, 53% 100%, 53% 100%, 47% 100%, 47% 100%, 47% 100%, 47% 52%, 44% 48%);
+    }
+
+    10% {
+        clip-path: polygon(3% 3.27%, 97% 3.27%, 56% 48%, 53% 52%, 53% 100%, 100% 100%, 100% 100%, 0% 100%, 0% 100%, 47% 100%, 47% 52%, 44% 48%);
+    }
+
+    20% {
+        clip-path: polygon(6.23% 6.8%, 93.77% 6.8%, 56% 48%, 53% 52%, 53% 92.57%, 96.53% 96.21%, 100% 100%, 0% 100%, 3.47% 96.21%, 47% 92.57%, 47% 52%, 44% 48%);
+    }
+
+    30% {
+        clip-path: polygon(9.77% 10.66%, 90.23% 10.66%, 56% 48%, 53% 52%, 53% 85.85%, 92.73% 92.07%, 100% 100%, 0% 100%, 7.27% 92.07%, 47% 85.85%, 47% 52%, 44% 48%);
+    }
+
+    40% {
+        clip-path: polygon(13.72% 14.96%, 86.28% 14.96%, 56% 48%, 53% 52%, 53% 80.47%, 88.5% 87.45%, 100% 100%, 0% 100%, 11.5% 87.45%, 47% 80.47%, 47% 52%, 44% 48%);
+    }
+
+    50% {
+        clip-path: polygon(18.26% 19.92%, 81.74% 19.92%, 56% 48%, 53% 52%, 53% 76.42%, 83.62% 82.13%, 100% 100%, 0% 100%, 16.38% 82.13%, 47% 76.42%, 47% 52%, 44% 48%);
+    }
+
+    60% {
+        clip-path: polygon(23.81% 25.98%, 76.19% 25.98%, 56% 48%, 53% 52%, 53% 72.88%, 77.66% 75.63%, 100% 100%, 0% 100%, 22.34% 75.63%, 47% 72.88%, 47% 52%, 44% 48%);
+    }
+
+    70% {
+        clip-path: polygon(31.64% 34.51%, 68.36% 34.51%, 56% 48%, 53% 52%, 53% 66.47%, 69.27% 66.47%, 100% 100%, 0% 100%, 30.73% 66.47%, 47% 66.47%, 47% 52%, 44% 48%);
+    }
+
+    76% {
+        clip-path: polygon(44% 48%, 56% 48%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 100% 100%, 0% 100%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+    }
+
     100% {
-        transform: scaleY(0);
+        clip-path: polygon(44% 48%, 56% 48%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 100% 100%, 0% 100%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
     }
 }
 
-@keyframes sx-sand-bottom {
-    0% {
-        transform: scaleY(0);
-    }
-
-    80%,
-    100% {
-        transform: scaleY(1);
-    }
-}
 
 /* ── 2 · Skeleton ─────────────────────────────────────────────────────── */
 
-/* formal: ruled ledger lines waiting for ink. */
+/* formal: a fair copy being written out. Each line is a ruled baseline with
+   greeked words set above it in faint ink, the first indented like a
+   paragraph under formal's double rule. While it waits, a navy pen writes
+   the words in, line by line in reading order, and blots each line away
+   behind it, so the ink is always moving somewhere on the page. Busy means
+   it moves (Kenny, 2026-10-03): this overrides the register's "nothing
+   loops" for the skeleton only. Each line starts and ends un-inked, so the
+   loop has no seam. */
 [data-theme='formal'] .sx-sig .kp-skeleton {
-    --sx-dur: 2400ms;
+    --sx-dur: 3000ms;
+    --sx-fm-words: repeating-linear-gradient(
+        90deg,
+        currentColor 0 3.25em,
+        transparent 0 3.7em,
+        currentColor 0 5.4em,
+        transparent 0 5.85em,
+        currentColor 0 9.6em,
+        transparent 0 10.05em,
+        currentColor 0 11.4em,
+        transparent 0 11.85em,
+        currentColor 0 15.2em,
+        transparent 0 15.65em
+    );
     position: relative;
     block-size: 1.5rem;
-    border-block-end: 1px solid var(--border);
+    border-block-end: 1px solid var(--border-strong);
     border-radius: 0;
     background: none;
+    color: hsl(from var(--foreground) h s l / 0.12);
     animation: none;
 }
 
@@ -450,17 +524,39 @@
     margin-block-start: 0;
 }
 
-[data-theme='formal'] .sx-sig .kp-skeleton::before {
+/* The double rule formal frames what matters with, above the first line. */
+[data-theme='formal'] .sx-sig .kp-skeleton:first-child {
+    border-block-start: 3px double var(--border-strong);
+}
+
+[data-theme='formal'] .sx-sig .kp-skeleton::before,
+[data-theme='formal'] .sx-sig .kp-skeleton::after {
     content: '';
     position: absolute;
     inset-inline: 0;
-    inset-block: 0.5rem 0.3rem;
-    border-radius: 2px;
-    background: var(--muted);
+    inset-block: 0.6rem 0.4rem;
+    background: var(--sx-fm-words);
 }
 
-[data-theme='formal'] .sx-sig .kp-skeleton:first-child::before {
+[data-theme='formal'] .sx-sig .kp-skeleton:first-child::before,
+[data-theme='formal'] .sx-sig .kp-skeleton:first-child::after {
     inset-inline-start: 2em;
+}
+
+/* The ink: the same words in navy, hidden until the pen passes. */
+[data-theme='formal'] .sx-sig .kp-skeleton::after {
+    color: var(--primary);
+    clip-path: inset(0 100% 0 0);
+}
+
+/* In the frames strip every frame is one line on its own: no indent, no rule. */
+[data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child {
+    border-block-start: 0;
+}
+
+[data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child::before,
+[data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child::after {
+    inset-inline-start: 0;
 }
 
 /* cyberpunk: notched data slots, a scan head. */
@@ -508,8 +604,16 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-theme='formal'] .sx-sig .kp-skeleton::before {
-        animation: sx-breathe var(--sx-dur) ease-in-out infinite;
+    [data-theme='formal'] .sx-sig .kp-skeleton::after {
+        animation: sx-ink var(--sx-dur) linear infinite backwards;
+    }
+
+    [data-theme='formal'] .sx-sig .kp-skeleton:nth-child(2)::after {
+        animation-delay: calc(var(--sx-dur) / 3);
+    }
+
+    [data-theme='formal'] .sx-sig .kp-skeleton:nth-child(3)::after {
+        animation-delay: calc(var(--sx-dur) * 2 / 3);
     }
 
     [data-theme='cyberpunk'] .sx-sig .kp-skeleton::after {
@@ -529,14 +633,20 @@
     }
 }
 
-@keyframes sx-breathe {
-    0%,
-    100% {
-        opacity: 1;
+/* Written in at the pen's steady pace, held a beat, blotted from the left. */
+@keyframes sx-ink {
+    0% {
+        clip-path: inset(0 100% 0 0);
     }
 
-    50% {
-        opacity: 0.55;
+    40%,
+    55% {
+        clip-path: inset(0 0 0 0);
+    }
+
+    85%,
+    100% {
+        clip-path: inset(0 0 0 100%);
     }
 }
 

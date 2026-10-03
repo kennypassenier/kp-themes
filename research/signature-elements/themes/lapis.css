@@ -24,7 +24,9 @@
 /* ── 1 · Spinner: a ten-fold girih star ───────────────────────────────── */
 
 [data-theme='lapis'] .sx-sig .kp-spinner {
-    --sx-dur: 2000ms;
+    /* 2000ms before Kenny's review (2026-10-03): "could move slightly
+       faster". A third faster, the same eased tenth of a turn. */
+    --sx-dur: 1300ms;
     position: relative;
     border: 0;
     border-radius: 0;
@@ -51,12 +53,15 @@
 }
 
 /* ── 2 · Skeleton: lines ruled for a scribe, written right to left ────── */
+/* The lines stand flush at the start edge; the ink still runs from each
+   line's right end to its left, as the pen of this script moves. */
 
 [data-theme='lapis'] .sx-sig .kp-skeleton {
     --sx-dur: 2600ms;
     position: relative;
     block-size: 0.8rem;
-    margin-inline-start: auto;
+    /* Lines start at the inline-start edge (Kenny, 2026-10-03: "it should
+       be left aligned"); the short line ends early on the right. */
     border-radius: 999px;
     background: var(--muted);
     animation: none;

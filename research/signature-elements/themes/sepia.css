@@ -10,35 +10,47 @@
 
 /* ── 1 · Spinner: a page turning ──────────────────────────────────────── */
 
+/* An open book from above. The two pages lie still underneath (one box,
+   the gutter shaded on both sides of the spine) and one leaf turns on the
+   spine from the right to the left. The leaf is drawn exactly like a page
+   on either side, its shade at the spine and half the spine's line on its
+   spine edge, so where it lies down on the left it is the left page, and
+   the leaf that starts again on the right is the right page: the loop has
+   no seam. */
 [data-theme='sepia'] .sx-sig .kp-spinner {
     --sx-dur: 1600ms;
+    --sx-sepia-gutter: hsl(from var(--primary) h s l / 0.22);
     position: relative;
     border: 0;
     border-radius: 0;
-    /* An open book from above: the spine down the middle. */
-    background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.5px 80% no-repeat;
+    background: none;
     animation: none;
 }
 
-/* The left-hand page lies still; the right-hand leaf turns on the spine. */
 [data-theme='sepia'] .sx-sig .kp-spinner::before {
     content: '';
     position: absolute;
     inset-block: 15% 10%;
-    inset-inline: 0 50%;
+    inset-inline: 0;
     border: 1px solid var(--border-strong);
-    border-inline-end: 0;
-    background: var(--card);
+    background:
+        linear-gradient(var(--primary), var(--primary)) 50% 0 / 2px 100% no-repeat,
+        linear-gradient(to right, transparent 20%, var(--sx-sepia-gutter) 50%, transparent 80%),
+        var(--card);
 }
 
+/* The leaf: the right-hand page, turning on the spine. */
 [data-theme='sepia'] .sx-sig .kp-spinner::after {
     content: '';
     position: absolute;
     inset-block: 15% 10%;
     inset-inline: 50% 0;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--border-strong);
     border-inline-start: 0;
-    background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.25), var(--card) 60%);
+    background:
+        linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+        linear-gradient(to right, var(--sx-sepia-gutter), transparent 60%),
+        var(--card);
     transform-origin: 0 50%;
 }
 
@@ -399,7 +411,8 @@
     }
 }
 
-/* The leaf lifts, crosses the spine and lies down on the left. */
+/* The leaf lifts, crosses the spine and lies down on the left, where it
+   matches the left page exactly; the restart is invisible. */
 @keyframes sx-sepia-leaf {
     0%,
     15% {

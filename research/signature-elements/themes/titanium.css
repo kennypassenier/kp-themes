@@ -30,40 +30,83 @@
     --sx-ti-edge: var(--kp-tool-edge, inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14));
 }
 
-/* ── 1 · Spinner: an indexing head ───────────────────────────────────────
-   A chamfered plate with eight engraved ticks and an oxide index that
-   clicks round in eight hard steps: a rotary indexer, not a wheel. */
+/* ── 1 · Spinner: an end mill turning ────────────────────────────────────
+   Busy, in a machine shop, is a cutter turning in the spindle. Seen from
+   the side: a plain shank with its chamfered end and an oxide ring (the
+   anodised band a tool rack colour-codes by), then the fluted body, then
+   the chamfered tip. The helical flutes run along the body at a constant
+   rate, which is how a turning end mill looks; the round of the metal is a
+   still shading over them, so only the flutes move. Metal does not ease:
+   the run is linear, and one flute pitch is the loop, so it has no seam.
+   Busy means it moves (Kenny, 2026-10-03): this replaces the stepped
+   indexing head, which read as a clock rather than as a tool. Still, the
+   cutter stands with its flutes where they are. No glow anywhere. */
 
 [data-theme='titanium'] .sx-sig .kp-spinner {
-    --sx-dur: 1600ms;
-    --sx-ti-c: 4px;
+    --sx-dur: 480ms;
+    /* One flute pitch along the body: the gradient's 8px period at 53.13deg
+       (sin = 0.8) repeats every 10px horizontally. */
+    --sx-ti-pitch: 10px;
+    --sx-ti-shade: linear-gradient(
+        to bottom,
+        hsl(from var(--background) h s l / 0.75) 0%,
+        transparent 30%,
+        hsl(from var(--foreground) h s l / 0.22) 42%,
+        transparent 55%,
+        hsl(from var(--background) h s l / 0.85) 100%
+    );
     position: relative;
+    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 1.6);
+    block-size: calc(var(--kp-spinner-size, 1.25rem) * 0.6);
     border: 0;
     border-radius: 0;
-    background: var(--card);
-    box-shadow: var(--sx-ti-edge);
-    clip-path: var(--sx-ti-cut);
+    background: none;
+    box-shadow: none;
+    /* The silhouette: the chamfered shank end and the chamfered tip. */
+    clip-path: polygon(
+        0 22%,
+        3% 0,
+        93% 0,
+        100% 30%,
+        100% 70%,
+        93% 100%,
+        3% 100%,
+        0 78%
+    );
+    vertical-align: middle;
     animation: none;
 }
 
+/* The flutes: dark helical gullets between bright lands, running along
+   the body. One pitch longer than the body, starting under the shank, so
+   the run never shows an end. */
 [data-theme='titanium'] .sx-sig .kp-spinner::before {
     content: '';
     position: absolute;
-    inset: 2px;
-    border-radius: 50%;
-    background: repeating-conic-gradient(from -4deg, var(--border-strong) 0 8deg, transparent 8deg 45deg);
-    -webkit-mask: radial-gradient(closest-side, transparent 62%, var(--foreground) 64%);
-    mask: radial-gradient(closest-side, transparent 62%, var(--foreground) 64%);
+    inset-block: 0;
+    inset-inline-start: calc(40% - var(--sx-ti-pitch));
+    inline-size: calc(60% + var(--sx-ti-pitch));
+    background: repeating-linear-gradient(
+        53.13deg,
+        var(--primary) 0 3px,
+        hsl(from var(--primary) h s calc(l - 22)) 3px 4px,
+        var(--muted) 4px 7px,
+        hsl(from var(--primary) h s calc(l - 30)) 7px 8px
+    );
 }
 
+/* Everything that stands still, over the flutes: the solid shank (which
+   also hides the run's spare pitch), its oxide ring, the round of the
+   metal, and the oxide line of the cutting edge along the tip. */
 [data-theme='titanium'] .sx-sig .kp-spinner::after {
     content: '';
     position: absolute;
-    inset-block: 14% 50%;
-    inset-inline-start: calc(50% - 1.5px);
-    inline-size: 3px;
-    background: var(--kp-iris);
-    transform-origin: 50% 100%;
+    inset: 0;
+    background:
+        var(--sx-ti-shade),
+        var(--kp-iris) 9% 0 / 6% 100% no-repeat,
+        var(--kp-iris) 100% 0 / 3px 100% no-repeat,
+        linear-gradient(var(--primary), var(--primary)) 0 0 / 40% 100% no-repeat;
 }
 
 /* ── 2 · Skeleton: a cutter's pass over carbon ───────────────────────────
@@ -368,8 +411,8 @@
 /* ── Motion: linear, short, or stepped ────────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-theme='titanium'] .sx-sig .kp-spinner::after {
-        animation: sx-ti-index var(--sx-dur) steps(8, jump-end) infinite;
+    [data-theme='titanium'] .sx-sig .kp-spinner::before {
+        animation: sx-ti-flutes var(--sx-dur) linear infinite;
     }
 
     [data-theme='titanium'] .sx-sig .kp-skeleton::after {
@@ -413,9 +456,13 @@
     }
 }
 
-@keyframes sx-ti-index {
+@keyframes sx-ti-flutes {
+    from {
+        transform: translateX(0);
+    }
+
     to {
-        transform: rotate(1turn);
+        transform: translateX(var(--sx-ti-pitch));
     }
 }
 

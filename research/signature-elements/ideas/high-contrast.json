@@ -1,6 +1,6 @@
 {
-    "spinner": "Nothing loops in this theme, so the busy sign is three 2px-framed blocks, two black and the last in the signal yellow, set down once and left standing.",
-    "skeleton": "Each line is a 2px black frame with a 45 degree hatch, the form's mark for 'not yet', wiped in once from the left with no pulse and no grey.",
+    "spinner": "Three 2px-framed white cells in a row; a signal-yellow block in a black frame walks from cell to cell and back, resting a beat in each, hard-edged and never fading.",
+    "skeleton": "Each line is a 2px black frame with a bold 45 degree hatch, the form's mark for 'not yet', wiped in once and then marching steadily to the right while it waits, with no pulse and no grey.",
     "switch": "A nearly square slot with a 2px black frame; on, it fills signal yellow and the white block goes solid black in one short move.",
     "check": "A 2px black box that fills the signal with a heavy black tick wiped in; the chosen radio is a black dot inside a yellow ring, never a box.",
     "toast": "A 2px frame with a thick black rule down its leading edge, wiped onto the page from that edge: no float and no fade.",

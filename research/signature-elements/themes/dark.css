@@ -11,8 +11,10 @@
        clears to the near-black plate, as an anodised part comes out of the
        bath (toast, dialog, tooltip);
      - brackets that close on a label (switch, steps, empty state).
-   Nothing moves that the reader did not move, except the spinner, whose
-   job is to: it is the film's angle turning, one way only. */
+   Nothing moves that the reader did not move, except the two busy
+   indicators, whose job is to (Kenny, 2026-10-03: a busy indicator keeps
+   moving): the spinner is the film's angle turning, one way only, and the
+   skeleton breathes in and out of register. */
 
 [data-theme='dark'] .sx-sig {
     --sx-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
@@ -55,13 +57,17 @@
     animation: none;
 }
 
-/* ── 2 · Skeleton: resolving into register ───────────────────────────────
+/* ── 2 · Skeleton: breathing in and out of register ─────────────────────
    Cut slots on the accent plate with a film line along their foot (the
-   field's underline). Each arrives once as two wavelengths out of
-   register, chart-1 and chart-3, that converge and clear; then it stands. */
+   field's underline). While busy, two of the film's wavelengths, chart-1
+   and chart-3, breathe out of register over each slot and converge back
+   into one image, line after line, as a slow continuous pulse. This is
+   the one loop besides the spinner: Kenny's review (2026-10-03) asks a
+   busy indicator to keep moving, which overrides "nothing moves" here.
+   Under reduced motion the slots stand, resolved. */
 
 [data-theme='dark'] .sx-sig .kp-skeleton {
-    --sx-dur: 700ms;
+    --sx-dur: 1800ms;
     position: relative;
     block-size: 0.9rem;
     border-radius: 0;
@@ -374,21 +380,23 @@
     }
 
     [data-theme='dark'] .sx-sig .kp-skeleton::before {
-        animation: sx-dark-ghost-l var(--sx-dur) var(--sx-dark-ease) both;
+        animation: sx-dark-ghost-l var(--sx-dur) ease-in-out infinite;
     }
 
     [data-theme='dark'] .sx-sig .kp-skeleton::after {
-        animation: sx-dark-ghost-r var(--sx-dur) var(--sx-dark-ease) both;
+        animation: sx-dark-ghost-r var(--sx-dur) ease-in-out infinite;
     }
 
+    /* Negative delays: the lines are already mid-breath on arrival, a
+       sixth of a cycle apart, so the pulse runs down the paragraph. */
     [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(2)::before,
     [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(2)::after {
-        animation-delay: 90ms;
+        animation-delay: calc(var(--sx-dur) * -5 / 6);
     }
 
     [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(3)::before,
     [data-theme='dark'] .sx-sig .kp-skeleton:nth-child(3)::after {
-        animation-delay: 180ms;
+        animation-delay: calc(var(--sx-dur) * -2 / 3);
     }
 
     [data-theme='dark'] .sx-sig .kp-switch__input::before {
@@ -436,26 +444,28 @@
 }
 
 @keyframes sx-dark-ghost-l {
-    from {
-        opacity: 1;
-        transform: translateX(-10px);
-    }
-
-    to {
+    0%,
+    100% {
         opacity: 0;
         transform: none;
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translateX(-8px);
     }
 }
 
 @keyframes sx-dark-ghost-r {
-    from {
-        opacity: 1;
-        transform: translateX(10px);
-    }
-
-    to {
+    0%,
+    100% {
         opacity: 0;
         transform: none;
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translateX(8px);
     }
 }
 

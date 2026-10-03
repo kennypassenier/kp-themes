@@ -42,37 +42,52 @@
     background: radial-gradient(circle at 100% 100%, var(--primary) 0 70%, transparent calc(70% + 0.5px)) 0 0 / 50% 50% no-repeat;
 }
 
-/* ── 2 · Skeleton: the grid, counted ─────────────────────────────────────
-   Grey bars set flush left on the twelve-column grid, the grid's
-   hairlines visible through them. A red column marker steps across each
-   bar a twelfth at a time, as a compositor counts columns. */
+/* ── 2 · Skeleton: lines of type set on their baselines ──────────────────
+   Kenny, 2026-10-03, on the first draft (grey bars, a red marker stepping
+   a column at a time): "chunky", and the form did not land either. Now
+   the placeholder is the type it stands for, set as a compositor greeks
+   a layout: each line is a pale x-height block standing on a 2px black
+   baseline, flush left with a ragged right; the first line is a heading,
+   taller, on a heavier rule. A red rule draws along every baseline from
+   the left and runs out at the right, line after line, continuously and
+   on one smooth ease: the register's rule-draw, kept going while busy.
+   A busy indicator loops (Kenny, 2026-10-03, which overrides the round's
+   "nothing loops" for spinner and skeleton): the rule starts wholly off
+   the left end and finishes wholly off the right, so the seam is never
+   seen. */
 
 [data-theme='grotesk'] .sx-sig .kp-skeleton {
-    --sx-dur: 2400ms;
+    --sx-dur: 1800ms;
+    --sx-gr-base: 2px;
     position: relative;
     overflow: hidden;
-    block-size: 0.85rem;
+    block-size: 0.75rem;
     border-radius: 0;
-    background: var(--sx-gr-cols), var(--muted);
+    background:
+        linear-gradient(var(--foreground), var(--foreground)) bottom / 100% var(--sx-gr-base) no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s l / 0.09), hsl(from var(--foreground) h s l / 0.09)) top / 100% calc(100% - var(--sx-gr-base) - 3px) no-repeat;
     animation: none;
 }
 
 [data-theme='grotesk'] .sx-sig .sx-skel .kp-skeleton:first-child {
+    --sx-gr-base: 4px;
     block-size: 1.5rem;
-    margin-block-end: 0.4rem;
+    margin-block-end: 0.5rem;
 }
 
 [data-theme='grotesk'] .sx-sig .kp-skeleton + .kp-skeleton {
-    margin-block-start: 0.45rem;
+    margin-block-start: 0.7rem;
 }
 
+/* The red rule, laid over the baseline, as long as the line. */
 [data-theme='grotesk'] .sx-sig .kp-skeleton::after {
     content: '';
     position: absolute;
-    inset-block: 0;
-    inset-inline-start: 0;
-    inline-size: calc(100% / 12);
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--sx-gr-base);
     background: var(--primary);
+    transform: translateX(-100%);
 }
 
 /* ── 3 · Switch: a lever ─────────────────────────────────────────────────
@@ -353,15 +368,15 @@
     }
 
     [data-theme='grotesk'] .sx-sig .kp-skeleton::after {
-        animation: sx-gr-count var(--sx-dur) steps(12, jump-end) infinite;
+        animation: sx-gr-baseline var(--sx-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
     }
 
     [data-theme='grotesk'] .sx-sig .kp-skeleton:nth-child(2)::after {
-        animation-delay: 200ms;
+        animation-delay: 180ms;
     }
 
     [data-theme='grotesk'] .sx-sig .kp-skeleton:nth-child(3)::after {
-        animation-delay: 400ms;
+        animation-delay: 360ms;
     }
 
     [data-theme='grotesk'] .sx-sig .kp-switch__input::before {
@@ -424,13 +439,15 @@
     }
 }
 
-@keyframes sx-gr-count {
+/* Draws in from the left until it spans the line, then runs out at the
+   right: off the strip at both ends, so the loop has no seam. */
+@keyframes sx-gr-baseline {
     from {
-        transform: translateX(0);
+        transform: translateX(-100%);
     }
 
     to {
-        transform: translateX(1200%);
+        transform: translateX(100%);
     }
 }
 

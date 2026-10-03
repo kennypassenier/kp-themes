@@ -7,9 +7,10 @@
    overprint). Every move eases on the theme's own overshoot (--fx-ease).
 
    Loops: pastel says "nothing loops, nothing opposes its own direction".
-   The skeleton therefore arrives once and stands; the spinner is the one
-   element whose job is to keep moving, so it only ever turns one way and
-   changes no luminance. */
+   The two busy indicators are the exception (Kenny, 2026-10-03: a busy
+   indicator must keep moving), and they keep the second half of the
+   rule: the spinner only ever turns one way, and the skeleton's roller
+   only ever runs left to right. */
 
 [data-theme='pastel'] .sx-sig {
     /* The sticker's hard shadow: plum, darkened, as a relative colour of
@@ -60,10 +61,14 @@
     --sx-ink: var(--primary);
 }
 
-/* ── 2 · Skeleton: plates printed in two passes ───────────────────────── */
+/* ── 2 · Skeleton: plates under a passing roller ──────────────────────────
+   Pill plates printed in two passes (the plum key line held 2px off its
+   fill). While busy, the ink roller keeps passing over them: a soft band
+   of bare paper runs along each plate, left to right only, fading in at
+   the start and out at the end so every pass flows into the next. */
 
 [data-theme='pastel'] .sx-sig .kp-skeleton {
-    --sx-dur: 900ms;
+    --sx-dur: 1700ms;
     position: relative;
     block-size: 0.95rem;
     border-radius: 999px;
@@ -78,6 +83,17 @@
 
 [data-theme='pastel'] .sx-sig .kp-skeleton + .kp-skeleton {
     margin-block-start: 0.6rem;
+}
+
+/* The roller: a band of paper a third of the plate wide. */
+[data-theme='pastel'] .sx-sig .kp-skeleton::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 35%;
+    background: linear-gradient(to right, transparent, hsl(from var(--card) h s l / 0.8), transparent);
+    opacity: 0;
 }
 
 /* The key line, printed on the second drum: a plum outline that never
@@ -391,24 +407,19 @@
         animation: sx-pastel-hop var(--sx-dur) infinite;
     }
 
-    /* Once: each plate springs out from the left, its key line springing
-       into register after it. Then they stand. */
-    [data-theme='pastel'] .sx-sig .kp-skeleton {
-        animation: sx-pastel-plate var(--sx-dur) var(--fx-ease) both;
+    /* The roller passes over every plate, left to right, without end;
+       the lines run a fifth of a pass apart (negative delays, so the
+       cascade is already running when the page appears). */
+    [data-theme='pastel'] .sx-sig .kp-skeleton::before {
+        animation: sx-pastel-roll var(--sx-dur) cubic-bezier(0.45, 0, 0.3, 1) infinite;
     }
 
-    [data-theme='pastel'] .sx-sig .kp-skeleton::after {
-        animation: sx-pastel-register var(--sx-dur) var(--fx-ease) both;
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::before {
+        animation-delay: calc(var(--sx-dur) * -4 / 5);
     }
 
-    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2),
-    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::after {
-        animation-delay: 120ms;
-    }
-
-    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3),
-    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::after {
-        animation-delay: 240ms;
+    [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::before {
+        animation-delay: calc(var(--sx-dur) * -3 / 5);
     }
 
     [data-theme='pastel'] .sx-sig .kp-switch__input::before {
@@ -465,26 +476,22 @@
     }
 }
 
-@keyframes sx-pastel-plate {
-    from {
-        transform: scaleX(0.04);
-    }
-
-    to {
+/* Travel: the band is 35% of the plate, so 65% of the plate is 186% of
+   the band. Invisible at both ends, so the jump back is never seen. */
+@keyframes sx-pastel-roll {
+    0% {
+        opacity: 0;
         transform: none;
     }
-}
 
-@keyframes sx-pastel-register {
-    0%,
-    30% {
-        opacity: 0;
-        translate: 9px 7px;
+    22%,
+    78% {
+        opacity: 1;
     }
 
     100% {
-        opacity: 1;
-        translate: 2px 2px;
+        opacity: 0;
+        transform: translateX(186%);
     }
 }
 

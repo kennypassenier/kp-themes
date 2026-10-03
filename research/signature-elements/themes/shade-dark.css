@@ -9,8 +9,10 @@
    popover 17%), and what the light half does with shade this half does
    with light: a thing is lifted out of the dark by a pale patch of the
    pointer's light, never cast down by a shadow.
-   No flicker; every arrival runs once. The spinner's turn is the one
-   loop, a luminance-free transform, as the pair allows for its band. */
+   No flicker; every arrival runs once. The two busy indicators are the
+   loops (Kenny, 2026-10-03: a busy indicator keeps moving): the
+   spinner's turn, a luminance-free transform, and the skeleton's slow
+   breath, far below any flash threshold. */
 
 [data-theme='shade-dark'] .sx-sig {
     --sx-sh-ease: var(--kp-ease-reveal, cubic-bezier(0.2, 0.75, 0.35, 1));
@@ -20,11 +22,11 @@
 
 /* ── 1 · Spinner: a reading lamp going round ─────────────────────────────
    The light half's sundial turned inside out: the dial is a card-tone
-   disc, and what sweeps round it is not a shade but a pale wedge of
-   light, fading behind itself, round a blue centre. */
+   disc, and what sweeps round it behind the blue hand is not a shade but
+   a pale trail of light, fading behind itself, rim to rim with no gap. */
 
 [data-theme='shade-dark'] .sx-sig .kp-spinner {
-    --sx-dur: 2400ms;
+    --sx-dur: 1500ms;
     position: relative;
     border: 1px solid var(--border);
     border-radius: 50%;
@@ -35,27 +37,31 @@
 [data-theme='shade-dark'] .sx-sig .kp-spinner::before {
     content: '';
     position: absolute;
-    inset: 1px;
+    inset: 0;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--sx-sh-shade), transparent 28%, transparent);
-    transform: rotate(-20deg);
+    background: conic-gradient(from 0deg, transparent 0 40%, var(--sx-sh-shade) 85%, hsl(from var(--primary) h s l / 0.5));
 }
 
+/* The gnomon: a primary hand from the centre to the rim, at the trail's
+   leading edge, turning with it. */
 [data-theme='shade-dark'] .sx-sig .kp-spinner::after {
     content: '';
     position: absolute;
-    inset: calc(50% - 2px);
+    inset: 0;
     border-radius: 50%;
-    background: var(--primary);
+    background:
+        radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
+        linear-gradient(var(--primary), var(--primary)) 50% 1px / 1.5px calc(50% - 1px) no-repeat;
 }
 
 /* ── 2 · Skeleton: lines on the tone ladder ──────────────────────────────
    A paragraph not yet written, drawn one step up the tone ladder (the
-   popover's tone) with ends that fade like the seam, the first line
-   indented. They come up out of the dark once, slowly, and rest. */
+   popover's tone), all flush left, with ends that fade like the seam.
+   While busy they breathe, one after another, so a slow pulse runs down
+   the paragraph, as on the light half. */
 
 [data-theme='shade-dark'] .sx-sig .kp-skeleton {
-    --sx-dur: 700ms;
+    --sx-dur: 2200ms;
     block-size: 0.7rem;
     border-radius: var(--kp-radius-pill, 999px);
     background: linear-gradient(to right, var(--popover) 65%, transparent);
@@ -64,10 +70,6 @@
 
 [data-theme='shade-dark'] .sx-sig .kp-skeleton + .kp-skeleton {
     margin-block-start: 0.75rem;
-}
-
-[data-theme='shade-dark'] .sx-sig .sx-skel .kp-skeleton:first-child {
-    margin-inline-start: 1.5em;
 }
 
 /* ── 3 · Switch: a disc lifted by the light ──────────────────────────────
@@ -319,23 +321,29 @@
     text-decoration-color: var(--primary);
 }
 
-/* ── Motion: once, and slowly ─────────────────────────────────────────── */
+/* ── Motion: arrivals once and slowly; the busy pair loops ───────────── */
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-theme='shade-dark'] .sx-sig .kp-spinner::before {
+    /* The busy pair loops (Kenny, 2026-10-03: a busy indicator keeps
+       moving): trail and hand turn together, one way, without end. */
+    [data-theme='shade-dark'] .sx-sig .kp-spinner::before,
+    [data-theme='shade-dark'] .sx-sig .kp-spinner::after {
         animation: sx-shdk-sweep var(--sx-dur) linear infinite;
     }
 
+    /* The lines breathe, slowly and softly, a sixth of a breath apart so
+       the pulse runs down the paragraph (negative delays: already moving
+       when the page appears). */
     [data-theme='shade-dark'] .sx-sig .kp-skeleton {
-        animation: sx-shdk-surface var(--sx-dur) var(--sx-sh-ease) both;
+        animation: sx-shdk-breathe var(--sx-dur) ease-in-out infinite;
     }
 
     [data-theme='shade-dark'] .sx-sig .kp-skeleton:nth-child(2) {
-        animation-delay: 160ms;
+        animation-delay: calc(var(--sx-dur) * -5 / 6);
     }
 
     [data-theme='shade-dark'] .sx-sig .kp-skeleton:nth-child(3) {
-        animation-delay: 320ms;
+        animation-delay: calc(var(--sx-dur) * -2 / 3);
     }
 
     [data-theme='shade-dark'] .sx-sig .kp-switch__input::before {
@@ -374,6 +382,17 @@
 
     to {
         transform: rotate(1turn);
+    }
+}
+
+@keyframes sx-shdk-breathe {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.55;
     }
 }
 

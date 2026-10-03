@@ -1,6 +1,6 @@
 {
     "spinner": "A 2px black square with a red quarter disc in one corner that snaps round the square in four quarter turns: geometry, not a ring.",
-    "skeleton": "Grey bars set flush left with the twelve-column grid showing through, and a red column marker stepping across each bar a twelfth at a time.",
+    "skeleton": "Lines of type greeked on their baselines: pale x-height blocks on black rules, the heading on a heavier one, and a red rule drawing along each baseline in turn, smooth and continuous.",
     "switch": "A lever: the thumb is a narrow black bar, a rule on end, and on, the square slot fills red while the bar snaps to the other end in white.",
     "check": "The two primary forms kept apart: a black square that fills red with a white tick cut in as a rule, and a black circle that takes a large red disc.",
     "toast": "A poster band: a heavy red rule draws across the top from the left while the flush-left message is cut in behind it.",

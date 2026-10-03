@@ -1,9 +1,9 @@
 {
     "spinner": "A white star cut from paper with its red plate printed off register, snapping round a fifth of a turn at a time and holding each beat.",
-    "skeleton": "Halftone strips with scissored edges; a red slash cuts across all three lines in quick succession, then pauses.",
+    "skeleton": "Halftone strips with scissored edges; a red slash cuts across every line end to end, one after another, looping without a pause.",
     "switch": "A slanted cut-paper tab in a hard black frame; on, the track becomes the red plate and the white tab slams across.",
-    "check": "A heavy black tick slammed onto a red plate, arriving too big; the radio's mark is a red star.",
-    "toast": "A calling card: condensed italic capitals in a black frame on a deep red second plate, slammed in sheared from the side.",
+    "check": "A sheared cut-paper box on its red second plate; checked, it is pasted over with white and a red scissor-cut tick is slapped on too big, breaking out of the frame; the radio's mark is a red star on the same white.",
+    "toast": "A calling card: condensed italic capitals in a black frame on a deep red second plate, slammed in sheared from the side; a success, info or warning card is printed on its own severity plate.",
     "dialog": "The calling card itself: tilted, hard red offset plate, the title in heavy condensed italic capitals over a red halftone backdrop, slamming in too big.",
     "tooltip": "A tilted white plate on a red one, black condensed italic capitals, popping out of nothing.",
     "steps": "A ransom note: each numeral cut from a different sheet and tilted, red slashes between them, the current one a larger red plate.",

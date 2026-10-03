@@ -5,7 +5,7 @@
    a style), a faint bloom on what is lit (--kp-bloom), and a raster that
    never moves. So every element here is something a terminal can actually
    draw:
-     - characters: ASCII spinners, [x] and (*), [1] > [2], a > prompt;
+     - characters: a braille spinner cell, [x] and (*), [1] > [2], a > prompt;
      - reverse video: the one way a terminal highlights;
      - printing: text appears left to right or row by row, in steps,
        never faded.
@@ -16,30 +16,50 @@
     --sx-tm-bloom: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));
 }
 
-/* ── 1 · Spinner: | / - \ ────────────────────────────────────────────────
-   The ASCII spinner every shell has, in one character cell: four glyphs
-   stacked in the cell, stepped through by a transform. Still, it is a
-   single bar, which reads as a busy cell beside its label. */
+/* ── 1 · Spinner: a braille dot cell ──────────────────────────────────────
+   The busy sign of a modern CLI: one braille character cell, its eight
+   dots in two columns of four, the cell npm, cargo and every spinner
+   library tick through (⠋⠙⠹⠸⠼⠴⠦⠧). A lit dot runs round the cell's edge
+   one dot per tick, and the dot it just left is still glowing and decays
+   the way phosphor does before the next tick. The dots are a mask on the
+   cell, so every dot is either lit or not, never half. Eight ticks are the
+   loop and the last tick hands on to the first, so it has no seam. Busy
+   means it moves (Kenny, 2026-10-03), which overrides "the only loops are
+   the sweep and the caret" for the spinner; it ticks in steps, as a
+   terminal redraws a character. Still, the cell shows its dim dots with
+   the head lit at the top left: a busy cell beside its label. */
 
 [data-theme='terminal'] .sx-sig .kp-spinner {
-    --sx-dur: 640ms;
-    inline-size: 1ch;
-    block-size: 1.2em;
-    overflow: hidden;
+    --sx-dur: 800ms;
+    position: relative;
+    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.55);
+    block-size: var(--kp-spinner-size, 1.25rem);
     border: 0;
     border-radius: 0;
-    color: var(--primary);
-    font: 700 var(--kp-spinner-size, 1.25rem) / 1.2 var(--theme-font-mono);
-    text-align: center;
-    text-shadow: var(--sx-tm-bloom);
+    /* The unlit dots: phosphor that is off still shows faintly. */
+    background: hsl(from var(--primary) h s l / 0.24);
     vertical-align: middle;
+    -webkit-mask: radial-gradient(circle closest-side, var(--foreground) 64%, transparent 72%) 0 0 / 50% 25%;
+    mask: radial-gradient(circle closest-side, var(--foreground) 64%, transparent 72%) 0 0 / 50% 25%;
     animation: none;
 }
 
-[data-theme='terminal'] .sx-sig .kp-spinner::before {
-    content: '|\A/\A-\A\\';
-    display: block;
-    white-space: pre;
+/* The head (::before) and the decaying dot behind it (::after): each is
+   one dot's cell, moved round the edge a whole cell at a time. */
+[data-theme='terminal'] .sx-sig .kp-spinner::before,
+[data-theme='terminal'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 50%;
+    block-size: 25%;
+    background: var(--primary);
+}
+
+[data-theme='terminal'] .sx-sig .kp-spinner::after {
+    opacity: 0.5;
+    transform: translate(0, 100%);
 }
 
 /* ── 2 · Skeleton: cells being written ───────────────────────────────────
@@ -311,7 +331,13 @@
 
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='terminal'] .sx-sig .kp-spinner::before {
-        animation: sx-tm-ascii var(--sx-dur) steps(4, jump-end) infinite;
+        animation: sx-tm-dot var(--sx-dur) step-end infinite;
+    }
+
+    [data-theme='terminal'] .sx-sig .kp-spinner::after {
+        animation:
+            sx-tm-trail var(--sx-dur) step-end infinite,
+            sx-tm-decay calc(var(--sx-dur) / 8) linear infinite;
     }
 
     [data-theme='terminal'] .sx-sig .kp-skeleton {
@@ -347,9 +373,93 @@
     }
 }
 
-@keyframes sx-tm-ascii {
+/* The head's round: along the top, down the right column, along the
+   bottom, up the left. */
+@keyframes sx-tm-dot {
+    0% {
+        transform: translate(0%, 0%);
+    }
+
+    12.5% {
+        transform: translate(100%, 0%);
+    }
+
+    25% {
+        transform: translate(100%, 100%);
+    }
+
+    37.5% {
+        transform: translate(100%, 200%);
+    }
+
+    50% {
+        transform: translate(100%, 300%);
+    }
+
+    62.5% {
+        transform: translate(0%, 300%);
+    }
+
+    75% {
+        transform: translate(0%, 200%);
+    }
+
+    87.5% {
+        transform: translate(0%, 100%);
+    }
+
+    100% {
+        transform: translate(0%, 0%);
+    }
+}
+
+/* The same round one tick behind. */
+@keyframes sx-tm-trail {
+    0% {
+        transform: translate(0%, 100%);
+    }
+
+    12.5% {
+        transform: translate(0%, 0%);
+    }
+
+    25% {
+        transform: translate(100%, 0%);
+    }
+
+    37.5% {
+        transform: translate(100%, 100%);
+    }
+
+    50% {
+        transform: translate(100%, 200%);
+    }
+
+    62.5% {
+        transform: translate(100%, 300%);
+    }
+
+    75% {
+        transform: translate(0%, 300%);
+    }
+
+    87.5% {
+        transform: translate(0%, 200%);
+    }
+
+    100% {
+        transform: translate(0%, 100%);
+    }
+}
+
+/* Phosphor decay: the dot left behind dims through each tick. */
+@keyframes sx-tm-decay {
+    from {
+        opacity: 0.6;
+    }
+
     to {
-        transform: translateY(-4.8em);
+        opacity: 0.15;
     }
 }
 

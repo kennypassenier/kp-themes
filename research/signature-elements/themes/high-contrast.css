@@ -4,9 +4,12 @@
    a flat fill with black ink on it, and a vocabulary of line weight: 1px
    for decoration, 2px for every control edge, 3px for structure. Two rules
    of the theme shape every element here:
-     - Nothing loops, ever (the register has no infinite animation). So
-       even the spinner plays once and then stands as a readable busy sign;
-       its role="status" label says "Loading" whatever it shows.
+     - Nothing loops, with one exception: the two busy indicators. Kenny's
+       review (2026-10-03) overrides the theme's "nothing loops" for the
+       spinner and the skeleton only: a busy sign must keep moving while
+       the work goes on. They move hard-edged and full-contrast (a framed
+       block that walks, a hatch that marches), never a fade or a pulse,
+       and nothing blinks. Everything else still plays once.
      - Panels do not float and do not fade. Every entrance is a wipe, the
        register's own headline verb (--kp-headline-wipe), on a hard edge.
    Selected things wear the signal: a ticked box, a chosen radio, the
@@ -17,45 +20,95 @@
     --sx-hc-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* ── 1 · Spinner: three blocks, set once ─────────────────────────────────
+/* ── 1 · Spinner: the signal walks three blocks ──────────────────────────
    The typographic sign for "more to come", drawn as three 2px-framed
-   blocks in one cell: two black, the last in the signal. They are set
-   down one at a time, once, and then stay. Same footprint as the ring. */
+   white cells in one row. A solid block in the signal, framed in black,
+   walks from cell to cell and back (left, middle, right, middle), resting
+   a beat in each: a hard-edged move at full contrast, no fade and no
+   blink, and the ping-pong path makes the loop seamless. At rest (reduced
+   motion) the signal stands in the last cell, the original busy sign.
+   Same footprint as the ring. */
 
 [data-theme='high-contrast'] .sx-sig .kp-spinner {
-    --sx-dur: 900ms;
+    --sx-dur: 1400ms;
     --sx-b: calc(var(--kp-spinner-size, 1.25rem) * 0.28);
+    /* One step between two cell centres. */
+    --sx-hc-step: calc((var(--kp-spinner-size, 1.25rem) - var(--sx-b)) / 2);
+    position: relative;
     border: 0;
     border-radius: 0;
+    /* Three white cells, each a 2px black frame: a black square with a
+       white square 4px smaller laid on it. */
     background:
+        linear-gradient(var(--background), var(--background)) left 2px center / calc(var(--sx-b) - 4px) calc(var(--sx-b) - 4px) no-repeat,
+        linear-gradient(var(--background), var(--background)) center / calc(var(--sx-b) - 4px) calc(var(--sx-b) - 4px) no-repeat,
+        linear-gradient(var(--background), var(--background)) right 2px center / calc(var(--sx-b) - 4px) calc(var(--sx-b) - 4px) no-repeat,
         linear-gradient(var(--foreground), var(--foreground)) left center / var(--sx-b) var(--sx-b) no-repeat,
         linear-gradient(var(--foreground), var(--foreground)) center / var(--sx-b) var(--sx-b) no-repeat,
-        linear-gradient(var(--accent), var(--accent)) right center / calc(var(--sx-b) - 4px) calc(var(--sx-b) - 4px) no-repeat,
         linear-gradient(var(--foreground), var(--foreground)) right center / var(--sx-b) var(--sx-b) no-repeat;
-    background-position:
-        left center,
-        center,
-        right 2px center,
-        right center;
     animation: none;
 }
 
-/* ── 2 · Skeleton: a hatched form, waiting ───────────────────────────────
+/* The signal: a yellow block in a 2px black frame, a cell's exact size. */
+[data-theme='high-contrast'] .sx-sig .kp-spinner::after {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(50% - var(--sx-b) / 2);
+    inset-inline-end: 0;
+    box-sizing: border-box;
+    inline-size: var(--sx-b);
+    block-size: var(--sx-b);
+    border: 2px solid var(--foreground);
+    background: var(--accent);
+}
+
+/* ── 2 · Skeleton: a hatched form, marching ──────────────────────────────
    Each line is a 2px black frame with a 45° hatch in it, the mark a form
-   uses for "not yet". It is wiped in once, left to right, and stands. No
-   pulse, no grey. */
+   uses for "not yet". It is wiped in once, left to right, and then the
+   hatch marches steadily to the right inside its frame for as long as
+   the work goes on: black 2px strokes on white, so the motion reads at
+   full contrast; no pulse, no grey. The hatch moves exactly one period
+   per cycle, so the loop has no seam. */
 
 [data-theme='high-contrast'] .sx-sig .kp-skeleton {
     --sx-dur: var(--sx-hc-wipe);
+    /* The hatch repeats every 8px along the line: an 8px tile holding
+       two 45° strokes about 2px thick, so a whole-pixel move is seamless. */
+    --sx-hc-hatch: 8px;
+    position: relative;
+    overflow: hidden;
     block-size: 1rem;
     border: 2px solid var(--foreground);
     border-radius: 0.25rem;
-    background: repeating-linear-gradient(-45deg, var(--foreground) 0 1px, var(--background) 1px 7px);
+    background: var(--background);
     animation: none;
+}
+
+[data-theme='high-contrast'] .sx-sig .kp-skeleton::before {
+    --sx-dur: 520ms;
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(var(--sx-hc-hatch) * -1);
+    inset-inline-end: 0;
+    background: linear-gradient(
+            45deg,
+            var(--foreground) 0 17.7%,
+            transparent 17.7% 50%,
+            var(--foreground) 50% 67.7%,
+            transparent 67.7%
+        )
+        0 0 / var(--sx-hc-hatch) var(--sx-hc-hatch);
 }
 
 [data-theme='high-contrast'] .sx-sig .kp-skeleton + .kp-skeleton {
     margin-block-start: 0.5rem;
+}
+
+/* The package dims anything aria-busy to 0.7; a skeleton is busy by
+   definition, and in this theme its black stays black at full contrast. */
+[data-theme='high-contrast'] .sx-sig .sx-skel {
+    --kp-busy-opacity: 1;
 }
 
 /* ── 3 · Switch: a square slot that lights the signal ────────────────────
@@ -286,11 +339,17 @@
 /* ── Motion: every one plays once ─────────────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-theme='high-contrast'] .sx-sig .kp-spinner {
-        animation: sx-hc-set var(--sx-dur) steps(3, jump-start) both;
+    /* The two busy indicators loop (Kenny, 2026-10-03); see the header. */
+    [data-theme='high-contrast'] .sx-sig .kp-spinner::after {
+        animation: sx-hc-walk var(--sx-dur) cubic-bezier(0.5, 0, 0.2, 1) infinite;
     }
 
-    [data-theme='high-contrast'] .sx-sig .kp-skeleton {
+    [data-theme='high-contrast'] .sx-sig .kp-skeleton::before {
+        animation: sx-hc-march var(--sx-dur) linear infinite;
+    }
+
+    /* The entrance wipe, once; the frames strip shows the march instead. */
+    [data-theme='high-contrast'] .sx-sig .kp-skeleton:not(.sx-frame) {
         animation: sx-hc-wipe-x var(--sx-dur) var(--sx-hc-ease) both;
     }
 
@@ -323,13 +382,39 @@
     }
 }
 
-@keyframes sx-hc-set {
-    from {
-        clip-path: inset(0 100% 0 0);
+/* Left, middle, right, middle, left: a beat of rest in each cell and a
+   short, firm move between them. Positions count back from the last cell,
+   where the block stands at rest. */
+@keyframes sx-hc-walk {
+    0%,
+    10% {
+        transform: translateX(calc(var(--sx-hc-step) * -2));
     }
 
+    25%,
+    35% {
+        transform: translateX(calc(var(--sx-hc-step) * -1));
+    }
+
+    50%,
+    60% {
+        transform: none;
+    }
+
+    75%,
+    85% {
+        transform: translateX(calc(var(--sx-hc-step) * -1));
+    }
+
+    100% {
+        transform: translateX(calc(var(--sx-hc-step) * -2));
+    }
+}
+
+/* One hatch period to the right, linear: the end frame is the start frame. */
+@keyframes sx-hc-march {
     to {
-        clip-path: inset(0);
+        transform: translateX(var(--sx-hc-hatch));
     }
 }
 

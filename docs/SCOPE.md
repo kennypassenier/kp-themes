@@ -2365,3 +2365,11 @@ clicks. It switches the theme itself, can carry catalogue blocks as a last
 step (`data-review-extra`), keeps verdicts and notes in the browser, and
 builds one answer ("Demo review · <demo> · …") to paste into the
 conversation. The researcher agent builds it into every new demo.
+The review of the ten elements, the same day, through that dialog: 209 of 228
+pairs approved, the eight fix-88 catalogue pairs among them (recorded in
+catalogue/verdicts.json); 19 not approved, each with Kenny's note, and redrawn
+for round two (research/signature-elements/demo.html, `data-review-round`),
+with one rule from the notes for every theme: a busy indicator (spinner,
+skeleton) visibly moves, in a seamless loop. The dialog-open element lost its
+approval in every theme ("dat heb ik niet kunnen zien") and is judged again in
+research/signature-dialog/.

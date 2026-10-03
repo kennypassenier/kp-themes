@@ -1,5 +1,5 @@
 {
-    "spinner": "The ASCII spinner every shell has, | / - \\ in one character cell, four glyphs stepped through with a bloom on the lit stroke.",
+    "spinner": "A braille spinner cell, eight dots in two columns of four: a lit dot ticks round the edge and the dot it left decays behind it like phosphor.",
     "skeleton": "Rows of dim character cells printed cell by cell, held, and printed again: the sweep, one of the two loops the theme allows.",
     "switch": "A bracketed cell [█   ]: the block cursor steps across it in four character moves, dim at the left when off and lit at the right when on.",
     "check": "Text controls, the brackets of a curses form: [ ] and [x], ( ) and (*), still native inputs with the label as part of the target.",
