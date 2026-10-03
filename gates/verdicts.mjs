@@ -667,9 +667,14 @@ async function pixels(args) {
         // rule that changed, in its theme or in every theme, is asked about
         // [scope-116's map, used as Chromatic's TurboSnap uses its graph].
         const narrow = narrowing(commit, head, moved);
-        const touches = (/** @type {{ key: string, theme: string }} */ r) => {
+        // The review shell's own code (catalogue/*.css, *.js) is read in the
+        // browser instead: a block whose shell print is the same at both
+        // commits is not reached by it (printShell).
+        const shell = moved.filter((file) => /^catalogue\/[^/]+\.(css|js)$/.test(file));
+        const touchesPackage = (/** @type {{ key: string, theme: string }} */ r) => {
             const page = /** @type {any} */ (knownNow.get(r.key))?.page ?? '';
             return moved.some((file) => {
+                if (shell.includes(file)) return false;
                 const register = /^css\/(.+)-register\.css$/.exec(file) ?? /^themes\/([^/]+)\//.exec(file);
                 if (register && register[1] !== r.theme) return false;
                 if (/^catalogue\/[^/]+\.html$/.test(file)) return file === page;
@@ -678,6 +683,23 @@ async function pixels(args) {
                 return true;
             });
         };
+        /** @type {Set<string>} */
+        const shellReached = new Set();
+        const rest = here.filter((r) => !touchesPackage(r));
+        if (shell.length && rest.length) {
+            const printed = Date.now();
+            const before = await shootAt({ commit, engine, ratio, width, requests: rest, print: true });
+            const after = await shootAt({ root: ROOT, engine, ratio, width, requests: rest, print: true });
+            for (const r of rest) {
+                const a = before.get(r.key)?.first;
+                if (!a || a !== after.get(r.key)?.first) shellReached.add(r.key);
+            }
+            const reached = rest.filter((r) => shellReached.has(r.key)).length;
+            console.log(
+                `  shell (${shell.join(', ')}): ${reached} of ${rest.length} pair(s) reached, read in ${Math.round((Date.now() - printed) / 1000)} s`,
+            );
+        }
+        const touches = (/** @type {{ key: string, theme: string }} */ r) => touchesPackage(r) || shellReached.has(r.key);
         const still = here.filter((r) => !touches(r));
         // Left where they are: nothing they draw with moved, so the next run
         // reads the same from the same commit, and a run that finds only
@@ -846,11 +868,14 @@ function narrowing(from, to, moved) {
 
 /**
  * Photograph blocks at a commit (a temporary worktree) or in a directory.
- * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean, parallel?: number }} options
+ * With `print`, no photograph: each page once, in the first theme asked of
+ * it, read for what the review shell does to its blocks (printShell), keyed
+ * by block alone.
+ * @param {{ commit?: string, root?: string, engine: string, ratio: number, width: number, requests: { key: string, theme: string }[], repeat?: boolean, parallel?: number, print?: boolean }} options
  * @returns {Promise<Map<string, { first: string, second: string }>>}
  */
-async function shootAt({ commit, root, engine, ratio, width, requests, repeat = true, parallel = 0 }) {
-    const { serve, shootPlaywright } = await import('./verdict-hashes.mjs');
+async function shootAt({ commit, root, engine, ratio, width, requests, repeat = true, parallel = 0, print = false }) {
+    const { serve, shootPlaywright, printShell } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     /** @type {Record<string, import('@playwright/test').BrowserType>} */
     const engines = { firefox: playwright.firefox, chromium: playwright.chromium, webkit: playwright.webkit };
@@ -900,7 +925,8 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
         // 145 s while the others waited.
         /** @type {[string, { themes: Set<string>, keys: Set<string> }][]} */
         const queue = [];
-        for (const [href, wanted] of byPage) for (const theme of wanted.themes) queue.push([href, { themes: new Set([theme]), keys: wanted.keys }]);
+        for (const [href, wanted] of byPage)
+            for (const theme of print ? [[...wanted.themes].sort()[0]] : wanted.themes) queue.push([href, { themes: new Set([theme]), keys: wanted.keys }]);
         const units = queue.length;
         const where = commit ? String(commit).slice(0, 12) : 'HEAD';
         const base = server.base;
@@ -913,8 +939,13 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
                 const [href, wanted] = next;
                 const started = Date.now();
                 try {
-                    const shots = await shootPlaywright(page, { base, href, themes: [...wanted.themes], width, only: [...wanted.keys], repeat });
-                    for (const [k, v] of shots) out.set(k, v);
+                    if (print) {
+                        const prints = await printShell(page, { base, href, theme: [...wanted.themes][0], width, only: [...wanted.keys] });
+                        for (const [k, v] of prints) out.set(k, { first: v, second: v });
+                    } else {
+                        const shots = await shootPlaywright(page, { base, href, themes: [...wanted.themes], width, only: [...wanted.keys], repeat });
+                        for (const [k, v] of shots) out.set(k, v);
+                    }
                 } catch (error) {
                     console.error(`  ${href} at ${where}: ${String(error).split('\n')[0]}`);
                 }

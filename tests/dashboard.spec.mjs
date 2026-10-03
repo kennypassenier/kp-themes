@@ -46,6 +46,10 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { paintedFocusDelta, tabTo, wearTheme, wholeRing } from './ring.mjs';
 
+// Motion stays on here: this file reads animations or transitions, and the
+// suite runs with reduced motion otherwise (playwright.config.mjs).
+test.use({ reducedMotion: 'no-preference' });
+
 const PAGE = '/tests/fixtures/dashboard.html';
 
 /** @type {string[]} */

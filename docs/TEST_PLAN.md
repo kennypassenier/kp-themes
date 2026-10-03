@@ -45,7 +45,7 @@ lands. He removed the CI entirely. Nothing runs on a server any more, and
 | --- | --- | --- |
 | `npm run gates` | the blocking checks, seconds [scope-76] | every commit, by the hook |
 | `npm run test:tags` | the tests tagged with what a change touches (building), plus every `@sweep` test (commit), Firefox only | during work, and once before a commit |
-| `npm run test:browser` | the whole suite; Firefox only since 2026-10-03 (Kenny: "doe ook het chrome gedeelte tijdelijk weg, tot ik het terugwil"), Chromium again with `KP_TEST_CHROMIUM=1`; every run writes its per-test durations to `test-timings/last.json` (gitignored) | when Kenny asks for it |
+| `npm run test:browser` | the whole suite; Firefox only since 2026-10-03 (Kenny: "doe ook het chrome gedeelte tijdelijk weg, tot ik het terugwil"), Chromium again with `KP_TEST_CHROMIUM=1`; every run writes its per-test durations to `test-timings/last.json` (gitignored); the suite runs with reduced motion since 2026-10-03 (the speed plan Kenny approved), and a file that reads animations or transitions sets `test.use({ reducedMotion: 'no-preference' })` | when Kenny asks for it |
 | `npm run advice` | contrast, invariants, motion, texture, and since scope-76 variant grounds, the compliance table, the baseline checksums and prettier — a reading, never a verdict | when Kenny wants the reading |
 | `npm run verify` | gates, then the whole suite, then the advice | before a release, on Kenny's own command |
 

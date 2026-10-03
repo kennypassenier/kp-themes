@@ -25,6 +25,10 @@
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
+// Motion stays on here: this file reads animations or transitions, and the
+// suite runs with reduced motion otherwise (playwright.config.mjs).
+test.use({ reducedMotion: 'no-preference' });
+
 const FIXTURE = '/tests/fixtures/remember.html';
 
 /** @param {import('@playwright/test').Page} page @param {string} name */

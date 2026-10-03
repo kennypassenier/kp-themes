@@ -25,6 +25,10 @@ import { HASH_VERSION } from '../catalogue/block-hash.js';
 import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 
+// Motion stays on here: this file reads animations or transitions, and the
+// suite runs with reduced motion otherwise (playwright.config.mjs).
+test.use({ reducedMotion: 'no-preference' });
+
 test.describe.configure({ timeout: 180_000 });
 
 const JUDGEMENTS = 'kp-catalogue-judgements:v3';

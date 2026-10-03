@@ -13,6 +13,10 @@ import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { contrast } from '../js/contrast.js';
 
+// Motion stays on here: this file reads animations or transitions, and the
+// suite runs with reduced motion otherwise (playwright.config.mjs).
+test.use({ reducedMotion: 'no-preference' });
+
 const FIXTURE = '/tests/fixtures/nav-ghost.html';
 
 /** An opaque colour as sRGB in 0..1; `color(srgb …)` and `rgb(…)` both occur. @param {string} css */

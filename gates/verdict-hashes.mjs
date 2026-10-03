@@ -271,6 +271,100 @@ export async function shootPlaywright(page, { base, href, themes, width, height 
 }
 
 /**
+ * What the review shell (catalogue/*.css and *.js, the frame every block sits
+ * in) does to each block, as one digest per block: the block's markup once
+ * its page's scripts ran, its size, and every rule of a shell stylesheet that
+ * matches the block, anything inside it, or any element around it, with the
+ * at-rules it sits in. Rules that match no element (keyframes, faces) count
+ * for every block. A shell file that moved without changing a block's print
+ * cannot have changed its pixels, so the block is not photographed for it
+ * (Kenny, 2026-10-03: a release photographed every pair, 12 min 42 s,
+ * because the navigation list and the review dialog moved).
+ * @param {import('@playwright/test').Page} page
+ * @param {{ base: string, href: string, theme: string, width: number, height?: number, only?: string[] | null }} options
+ * @returns {Promise<Map<string, string>>} block key -> digest
+ */
+export async function printShell(page, { base, href, theme, width, height = 1000, only = null }) {
+    const { createHash } = await import('node:crypto');
+    await page.setViewportSize({ width, height });
+    await page.goto(new URL(href, base).href, { waitUntil: 'load' });
+    const blocks = await page.evaluate(PREPARE, { base, theme, only });
+    const prints = await page.evaluate(
+        ({ ids }) => {
+            const isShell = (/** @type {CSSStyleSheet} */ sheet) => !!sheet.href && /\/catalogue\/[^/]+\.css$/.test(new URL(sheet.href).pathname);
+            /** @type {{ text: string, test: string[] | null }[]} */
+            const rules = [];
+            const grouping = (/** @type {CSSRule} */ rule) =>
+                rule instanceof CSSMediaRule || rule instanceof CSSSupportsRule || rule instanceof CSSLayerBlockRule || rule instanceof CSSContainerRule;
+            // A selector made testable: pseudo-elements dropped (a rule on
+            // ::before reaches the element that carries it). State
+            // pseudo-classes stay: the photograph is taken at rest.
+            const testable = (/** @type {string} */ selector) =>
+                selector
+                    .split(/,(?![^(]*\))/)
+                    .map((one) => one.replace(/::?(before|after|marker|placeholder|backdrop|selection|first-line|first-letter|file-selector-button|-[a-z-]+)(\([^)]*\))?/g, '').trim() || '*');
+            const walk = (/** @type {CSSRuleList} */ list, /** @type {string} */ around, /** @type {string} */ parent) => {
+                for (const rule of list) {
+                    if (rule instanceof CSSStyleRule) {
+                        const selector = parent ? rule.selectorText.replace(/&/g, `:is(${parent})`) : rule.selectorText;
+                        rules.push({ text: `${around}${rule.cssText}`, test: testable(selector) });
+                        if (rule.cssRules?.length) walk(rule.cssRules, `${around}${rule.selectorText}{`, selector);
+                    } else if (grouping(rule)) {
+                        const head = rule.cssText.slice(0, rule.cssText.indexOf('{'));
+                        walk(/** @type {CSSGroupingRule} */ (rule).cssRules, `${around}${head}{`, parent);
+                    } else rules.push({ text: `${around}${rule.cssText}`, test: null });
+                }
+            };
+            for (const sheet of [...document.styleSheets].filter(isShell)) walk(sheet.cssRules, '', '');
+            const everyone = rules.filter((r) => r.test === null).map((r) => r.text);
+            const matches = (/** @type {Element} */ el, /** @type {string[]} */ test) =>
+                test.some((one) => {
+                    try {
+                        return el.matches(one);
+                    } catch {
+                        return true;
+                    }
+                });
+            /** @type {Record<string, string[]>} */
+            const out = {};
+            // The reviewer's panel is hidden in the photographs (PREPARE), and
+            // it reads the verdicts, which differ between any two commits.
+            const PANEL = '.cat-look, .cat-feedback-field, .cat-approval, .cat-judge';
+            for (const id of ids) {
+                const block = document.getElementById(id);
+                if (!block) continue;
+                /** @type {Element[]} */
+                const around = [];
+                for (let up = block.parentElement; up; up = up.parentElement) around.push(up);
+                const els = [block, ...[...block.querySelectorAll('*')].filter((el) => !el.closest(PANEL)), ...around];
+                const rect = block.getBoundingClientRect();
+                const copy = /** @type {Element} */ (block.cloneNode(true));
+                for (const el of copy.querySelectorAll(PANEL)) el.remove();
+                out[id] = [
+                    copy.outerHTML,
+                    `${Math.round(rect.width * 100)}x${Math.round(rect.height * 100)}`,
+                    ...around.map((el) => `${el.tagName}${[...el.attributes].map((a) => ` ${a.name}=${a.value}`).join('')}`),
+                    ...els.map((el, i) => `${i}:${rules.filter((r) => r.test && matches(el, r.test)).map((r) => r.text).join('\n')}`),
+                    ...everyone,
+                ];
+            }
+            return out;
+        },
+        { ids: blocks.map((b) => b.id) },
+    );
+    /** @type {Map<string, string>} */
+    const out = new Map();
+    for (const block of blocks) {
+        const parts = prints[block.id];
+        if (!parts) continue;
+        const hash = createHash('sha256');
+        for (const part of parts) hash.update(`${part}\n`);
+        out.set(block.key, hash.digest('hex'));
+    }
+    return out;
+}
+
+/**
  * A Gecko build Playwright cannot drive with its own protocol (FireDragon:
  * Playwright's BiDi launcher opens a window, which the remote agent refuses
  * outside Firefox proper), driven over WebDriver BiDi directly: the tab the

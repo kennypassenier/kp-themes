@@ -127,6 +127,10 @@ for (const theme of SWEEP) {
 import { readFileSync } from 'node:fs';
 import { hsl } from '../gates/colour.mjs';
 
+// Motion stays on here: this file reads animations or transitions, and the
+// suite runs with reduced motion otherwise (playwright.config.mjs).
+test.use({ reducedMotion: 'no-preference' });
+
 const THEMES_CSS = readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8');
 /** @param {string} name @returns {number[][]} the theme's colours in 0–255 */
 const paletteOf = (name) => {
