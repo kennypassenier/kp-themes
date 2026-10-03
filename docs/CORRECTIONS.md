@@ -5450,7 +5450,13 @@ the menu in all 22 themes and refuses any row on two lines.
 
 **7 · How we measure that it works, and when.** At the next release suite the
 test passes; at JobTracker's next kp-themes upgrade the three themes show one
-line. Queued as fix-93-M1.
+line. Queued as fix-93-M1. Measured 2026-10-04: the first fixture (no reset,
+no registers) passed without the fix too; JobTracker's built stylesheet
+reproduced the wrap (the selected row 60px tall instead of 36 in shade-dark,
+Firefox and Chromium), and tests/fixtures/theme-menu-under-reset.html now
+loads preflight's reset and all 22 registers. On it the test fails without
+the fix in exactly high-contrast, shade-light and shade-dark, and passes
+with it.
 
 **8 · If the measurement fails.** The test widens to every width the site
 uses.

@@ -16,8 +16,8 @@ test.describe('the theme menu keeps every row on one line [theme-menu-nowrap]', 
     for (const width of [390, 1280])
         test(`in every theme, no row of the open menu wraps at ${width}px`, async ({ page }) => {
             await page.setViewportSize({ width, height: 900 });
-            // The React switcher, as JobTracker mounts it (tests/fixtures/react-mount.jsx).
-            await page.goto('/tests/fixtures/picker.html');
+            // The React switcher under the reset JobTracker has, in every register.
+            await page.goto('/tests/fixtures/theme-menu-under-reset.html');
             const menu = page.locator('#react-mount .kp-theme-menu');
             const trigger = menu.locator('> .kp-icon-button');
             const options = menu.locator('[role="option"]');
