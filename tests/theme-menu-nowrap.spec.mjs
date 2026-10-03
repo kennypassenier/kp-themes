@@ -12,33 +12,36 @@ import { expect, test } from '@playwright/test';
 const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8')));
 
 test.describe('the theme menu keeps every row on one line [theme-menu-nowrap]', { tag: ['@component:picker', '@sweep'] }, () => {
-    test('in every theme, no row of the open menu wraps', async ({ page }) => {
-        await page.setViewportSize({ width: 1280, height: 900 });
-        const wrapped = [];
-        for (const theme of THEMES) {
-            await page.addInitScript((name) => {
-                try {
-                    localStorage.setItem('theme', name);
-                } catch {
-                    // no storage: the theme check below reports it
-                }
-            }, theme);
-            await page.goto('/showcase/index.html');
-            await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
-            await page.locator('.kp-theme-menu > .kp-icon-button').first().click();
-            await expect(page.locator('.kp-theme-menu [role="option"]').first()).toBeVisible();
-            const rows = await page.locator('.kp-theme-menu [role="option"]').evaluateAll((options) =>
-                options.map((option) => {
-                    const label = option.querySelector('.kp-theme-option__label') ?? option;
-                    const range = document.createRange();
-                    range.selectNodeContents(label);
-                    const tops = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top)));
-                    return { name: label.textContent?.trim(), lines: tops.size, overflow: option.scrollWidth > option.clientWidth + 1 };
-                }),
-            );
-            for (const row of rows) if (row.lines > 1 || row.overflow) wrapped.push(`${theme}: ${row.name} (${row.lines} lines${row.overflow ? ', overflows' : ''})`);
-            await page.keyboard.press('Escape');
-        }
-        expect(wrapped, 'rows of the theme menu that wrap').toEqual([]);
-    });
+    // 390 is the phone width JobTracker's sweep found it at.
+    for (const width of [390, 1280])
+        test(`in every theme, no row of the open menu wraps at ${width}px`, async ({ page }) => {
+            await page.setViewportSize({ width, height: 900 });
+            // The React switcher, as JobTracker mounts it (tests/fixtures/react-mount.jsx).
+            await page.goto('/tests/fixtures/picker.html');
+            const menu = page.locator('#react-mount .kp-theme-menu');
+            const trigger = menu.locator('> .kp-icon-button');
+            const options = menu.locator('[role="option"]');
+            const wrapped = [];
+            for (const theme of THEMES) {
+                // Chosen through the menu itself, so the row under test is the
+                // selected, bold one.
+                if (!(await options.first().isVisible())) await trigger.click();
+                await options.and(page.locator(`[data-kp-theme="${theme}"]`)).click();
+                await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
+                if (!(await options.first().isVisible())) await trigger.click();
+                await expect(options.first()).toBeVisible();
+                const rows = await options.evaluateAll((all) =>
+                    all.map((option) => {
+                        const label = option.querySelector('.kp-theme-option__label') ?? option;
+                        const range = document.createRange();
+                        range.selectNodeContents(label);
+                        const tops = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top)));
+                        return { name: label.textContent?.trim(), lines: tops.size, overflow: option.scrollWidth > option.clientWidth + 1 };
+                    }),
+                );
+                for (const row of rows)
+                    if (row.lines > 1 || row.overflow) wrapped.push(`${theme}: ${row.name} (${row.lines} lines${row.overflow ? ', overflows' : ''})`);
+            }
+            expect(wrapped, 'rows of the theme menu that wrap').toEqual([]);
+        });
 });

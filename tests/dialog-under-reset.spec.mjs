@@ -25,7 +25,9 @@ test.describe('a modal dialog opens centred under a reset [dialog-under-reset]',
                 document.documentElement.setAttribute('data-theme', name);
                 const dialog = /** @type {HTMLDialogElement} */ (document.querySelector('[data-test="dialog"]'));
                 dialog.showModal();
-                await Promise.all(dialog.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})));
+                // Only an entrance ends: a register's looping motion never does.
+                const finite = dialog.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity);
+                await Promise.all(finite.map((a) => a.finished.catch(() => {})));
                 const r = dialog.getBoundingClientRect();
                 dialog.close();
                 return { left: r.left, right: innerWidth - r.right, top: r.top, bottom: innerHeight - r.bottom };
