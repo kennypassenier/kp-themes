@@ -1,5 +1,7 @@
 # The dialog title: the theme's own, or the fixed size
 
+**Decided (scope-140, 2026-10-03: the fixed size of scope-87 for all nine dialog titles; grotesk approved in round two with its rule moved clear of the letters).**
+
 Kenny, 2026-10-03, on the 9.0.0 build: nine themes' approved dialog designs set
 their title's size, line height or block padding, which scope-87 refuses
 (heading metrics are the package's, enforced by gates/box-metrics.test.mjs).

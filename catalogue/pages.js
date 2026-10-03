@@ -69,7 +69,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [{ href: 'research/dialog-title/demo.html', label: 'The dialog title: the theme\'s own or the fixed size' }],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -97,6 +97,7 @@ export const PAGES = [
             { href: 'research/queue-look/demo.html', label: 'The look-round: five measurements waiting' },
             { href: 'research/signature-elements/demo.html', label: 'Other elements with a signature per theme' },
             { href: 'research/signature-dialog/demo.html', label: 'How a dialog opens, per theme' },
+            { href: 'research/dialog-title/demo.html', label: 'The dialog title: the theme\'s own or the fixed size' },
             { href: 'research/cyberpunk-dividers/demo.html', label: 'A new divider for cyberpunk, six options' },
             { href: 'research/laurels/demo.html', label: 'Laurels and platforms, four directions' },
             { href: 'research/scope25-gestures/demo.html', label: 'The scope-25 gestures beside what ships' },

@@ -2396,4 +2396,4 @@ size for all nine ("Approved betekent vaste maat"), and grotesk's red rule
 moved into its own space above the title after "the red line above the
 title is touching the text". research/dialog-title/check-clear.mjs measures
 that no ornament touches a dialog title in any of the 22 themes.
-
+Round two of the dialog title: grotesk approved (Kenny: "the version is fixed").
