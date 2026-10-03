@@ -1,0 +1,20 @@
+/* The dialog title, side by side (Kenny, 2026-10-03). Both dialogs stand
+   still: this page is about the title, not the entrance. */
+
+.dt-cols .kp-dialog,
+.dt-cols .kp-dialog::before,
+.dt-cols .kp-dialog::after {
+    animation: none !important;
+}
+
+.dt-cols .sx-backdrop {
+    min-block-size: 14rem;
+}
+
+/* The right column: the title at the package's metrics [scope-87], whatever
+   the theme's signature sets. Face, colour, case and ornaments stay. */
+.dt-fixed .kp-dialog__title {
+    font-size: var(--kp-dialog-title-size, 1.25rem) !important;
+    line-height: var(--kp-heading-line-height, 1.1) !important;
+    padding-block: 0 !important;
+}

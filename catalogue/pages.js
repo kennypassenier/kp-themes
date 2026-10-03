@@ -69,7 +69,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [],
+        pages: [{ href: 'research/dialog-title/demo.html', label: 'The dialog title: the theme\'s own or the fixed size' }],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

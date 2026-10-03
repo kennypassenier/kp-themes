@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="dialog-title" data-review-themes="phantom,lapis,solstice,brutalism,nostromo,blueprint,grotesk,high-contrast,deco">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — the dialog title: the theme's own or the fixed size</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (['phantom','lapis','solstice','brutalism','nostromo','blueprint','grotesk','high-contrast','deco'].indexOf(t) < 0) t = 'phantom';
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <!-- The drawings are the signature-elements round's own: the same files, so what is approved here is what was drafted there. -->
+        <link rel="stylesheet" href="../signature-elements/demo.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/light.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/dark.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/synthwave.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/pastel.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/terminal.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/forest.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/high-contrast.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/sepia.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/blueprint.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/solstice.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/brutalism.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/deco.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/phantom.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/shade-light.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/shade-dark.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/grotesk.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/lapis.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/nostromo.css" />
+        <link rel="stylesheet" href="../signature-elements/themes/titanium.css" />
+                <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="sx-page">
+            <header class="sx-intro">
+                <h1>The dialog title: the theme's own, or the fixed size</h1>
+                <p>
+                    Kenny, 2026-10-03: "toon het verschil op een demopagina". Nine themes give their dialog title its own size, line height or
+                    block padding in the approved dialog designs, which scope-87 (heading metrics are the package's) refuses. Each theme below
+                    shows the same dialog twice, standing still and at the same scale: <b>left</b> as approved, <b>right</b> with the title at the
+                    package's size, line height and block padding. Everything else (face, colour, case, ornaments) is the same in both.
+                </p>
+                <nav class="sx-themes" aria-label="Theme"><a href="?theme=phantom">phantom</a><a href="?theme=lapis">lapis</a><a href="?theme=solstice">solstice</a><a href="?theme=brutalism">brutalism</a><a href="?theme=nostromo">nostromo</a><a href="?theme=blueprint">blueprint</a><a href="?theme=grotesk">grotesk</a><a href="?theme=high-contrast">high-contrast</a><a href="?theme=deco">deco</a></nav>
+            </header>
+
+            <section class="sx-sec" data-review-item="title" data-review-title="Dialog title" aria-labelledby="h-title">
+                <div class="sx-sec__head"><h2 id="h-title">Dialog title in <span data-dt-theme></span></h2></div>
+                <div class="sx-ideas" data-review-look><p data-for="phantom">Left 1.6rem at line height 1, the ransom-note title; right the package's 1.25rem at 1.1. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="lapis">Left 1.45rem; right the package's 1.25rem. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="solstice">Left 1.35rem; right the package's 1.25rem. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="brutalism">Left 1.1rem with its own block padding, the title as a band; right the package's 1.25rem and no block padding (the band keeps its side padding). Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="nostromo">Left 1rem, the label-tape title; right the package's 1.25rem. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="blueprint">Left 0.95rem, the drawing's title block; right the package's 1.25rem. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="grotesk">Left line height 1.05 and space above the title; right the package's 1.1 and no space above. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="high-contrast">Left a little space under the title for its rule; right no space under it. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p><p data-for="deco">Left 1.25rem, the same size as the package: no difference expected, shown for completeness. Approve keeps the left one, the theme's own title. Not approved, with the note "fixed size", takes the right one.</p></div>
+                <div class="sx-cols dt-cols sx-sig">
+                        <div class="sx-col"><span class="sx-col__label">The approved design: the theme sets its own title</span>
+                            <div class="sx-backdrop">
+                                <dialog class="kp-dialog" open aria-labelledby="a-t" aria-describedby="a-d">
+                                    <h2 class="kp-dialog__title" id="a-t">Close incident INC-4471?</h2>
+                                    <p class="kp-dialog__description" id="a-d">The day shift sees your note first.</p>
+                                    <div class="kp-dialog__actions">
+                                        <button type="button" class="kp-button kp-button--secondary">Cancel</button
+                                        ><button type="button" class="kp-button kp-button--primary">Close incident</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                        </div>
+                        <div class="sx-col dt-fixed"><span class="sx-col__label">The fixed size of scope-87: the package sets the title</span>
+                            <div class="sx-backdrop">
+                                <dialog class="kp-dialog" open aria-labelledby="b-t" aria-describedby="b-d">
+                                    <h2 class="kp-dialog__title" id="b-t">Close incident INC-4471?</h2>
+                                    <p class="kp-dialog__description" id="b-d">The day shift sees your note first.</p>
+                                    <div class="kp-dialog__actions">
+                                        <button type="button" class="kp-button kp-button--secondary">Cancel</button
+                                        ><button type="button" class="kp-button kp-button--primary">Close incident</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                        </div>
+                </div>
+            </section>
+        </main>
+        <script>
+            (function () {
+                function render() {
+                    var t = document.documentElement.getAttribute('data-theme');
+                    document.querySelector('[data-dt-theme]').textContent = t;
+                    document.querySelectorAll('.sx-ideas [data-for]').forEach(function (p) {
+                        p.hidden = p.getAttribute('data-for') !== t;
+                    });
+                }
+                render();
+                new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            })();
+        </script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+    </body>
+</html>
