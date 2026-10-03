@@ -2332,3 +2332,19 @@ kp-themes keeps the web themes, `fx/` and the research pages; it gains
 `gates/terminal.mjs` and `gates/palette.mjs`, shared by the generators that
 left, and `gates/tokens-tar.mjs`, which builds the `tokens.tar` asset they pin.
 Breaking, so 8.0.0.
+
+**scope-140 · A progress bar of its own in every theme, and nine more elements to follow.**
+Kenny, 2026-10-03: "een nieuwe vorm van progressbar voor alle thema's … lijkt
+wel op een klassieke progressbar, maar heeft zijn eigen identiteit", worked "vanuit
+het perspectief van een worldclass frontend engineer". The identity form of the
+same day: progress-api "In de plaats van de oude" (the signature bar replaces
+`.kp-progress`, a breaking change, so 9.0.0); 21 of the 22 designs in
+research/progress-signature/ approved as they are, forest "Herschrijven"; the
+Pac-Man was, in his words, "een voorbeeld van hoe creatief je met progressbars
+kunt omgaan en hoe een thema zijn identiteit kan tonen", so no Pac-Man variant
+ships; all ten elements of research/signature-elements/ "Onmisbaar" (spinner,
+skeleton, toast entrance, tooltip, checkbox and radio, switch, dialog open, empty
+state, wizard steps, link hover), each to be designed for all 22 themes and shown
+again; sig-faults "Herstellen" (fix-88). Contract for every one: identical markup
+and ARIA in every theme, motion only through transform, opacity and clip-path,
+a readable still state under reduced motion.
