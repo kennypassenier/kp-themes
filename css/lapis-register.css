@@ -1332,6 +1332,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='lapis'] .kp-progressbar {
         --kp-progressbar-height: 1.375rem;
         --lp-gold: var(--primary);
@@ -1541,6 +1546,9 @@
         --kp-sig-lapis-ground: var(--background);
         border-color: var(--border-strong);
         background: var(--background);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:not(:focus-visible) {
         box-shadow:
             inset 0 0 0 2px var(--background),
             inset 0 0 0 3px hsl(from var(--primary) h s l / 0.35);
@@ -1554,6 +1562,9 @@
     [data-theme='lapis'] .kp-switch__input:checked {
         border-color: var(--primary);
         background: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-switch__input:checked:not(:focus-visible) {
         box-shadow:
             inset 0 0 0 2px var(--primary),
             inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.4);
@@ -1576,6 +1587,9 @@
         border: 1px solid var(--border-strong);
         border-radius: 3px;
         background: var(--background);
+    }
+
+    [data-theme='lapis'] .kp-field__check:not(:focus-visible) {
         box-shadow:
             inset 0 0 0 2px var(--background),
             inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
@@ -1587,6 +1601,9 @@
 
     [data-theme='lapis'] .kp-field__check[type='checkbox']:checked {
         background: var(--primary);
+    }
+
+    [data-theme='lapis'] .kp-field__check[type='checkbox']:checked:not(:focus-visible) {
         box-shadow: none;
     }
 
@@ -1619,8 +1636,14 @@
         padding-inline-start: 2.1rem;
         border-color: var(--border-strong);
         border-radius: var(--radius);
-        background: var(--popover);
         box-shadow: var(--kp-sig-lapis-rings);
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='lapis'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        background: var(--popover);
     }
 
     [data-theme='lapis'] .kp-toast::before {
@@ -1788,13 +1811,13 @@
         margin: 0;
     }
 
-    [data-theme='lapis'] a:not([class]) {
+    [data-theme='lapis'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-decoration-color: var(--primary);
         text-underline-offset: 0.25em;
     }
 
-    [data-theme='lapis'] a:not([class]):hover {
+    [data-theme='lapis'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         text-decoration-style: dotted;
         text-decoration-color: var(--accent);
         text-decoration-thickness: 3px;

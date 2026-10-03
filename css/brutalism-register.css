@@ -1708,6 +1708,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='brutalism'] .kp-progressbar {
         --kp-progressbar-height: 1.375rem;
         --br-line: var(--kp-line, 3px);
@@ -1853,6 +1858,9 @@
     [data-theme='brutalism'] .kp-switch__input {
         border-color: var(--border-strong);
         background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:not(:focus-visible) {
         box-shadow: 3px 3px 0 var(--border-strong);
     }
 
@@ -1885,6 +1893,9 @@
         border: 2px solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:not(:focus-visible) {
         box-shadow: 2px 2px 0 var(--border-strong);
     }
 
@@ -1921,10 +1932,13 @@
         --kp-sig-dur: 420ms;
         border: 2px solid var(--border-strong);
         border-radius: 0;
-        background: var(--secondary);
         color: var(--secondary-foreground);
         box-shadow: var(--kp-sig-br-drop) var(--kp-sig-br-drop) 0 var(--border-strong);
         font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-toast {
+        background: var(--secondary);
     }
 
     [data-theme='brutalism'] .kp-toast--success {
@@ -2076,7 +2090,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='brutalism'] a:not([class]) {
+    [data-theme='brutalism'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         color: var(--foreground);
         font-weight: 700;
         text-decoration-color: var(--border-strong);
@@ -2086,14 +2100,19 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='brutalism'] a:not([class]):hover {
+    [data-theme='brutalism']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         padding-inline: 0.15em;
         background: var(--secondary);
         color: var(--secondary-foreground);
+        text-decoration-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover:not(:focus-visible) {
         box-shadow:
             0 0 0 2px var(--border-strong),
             3px 3px 0 2px var(--border-strong);
-        text-decoration-color: var(--border-strong);
     }
 
     @media (prefers-reduced-motion: no-preference) {

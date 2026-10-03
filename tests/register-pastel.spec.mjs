@@ -294,7 +294,8 @@ for (const [channel, url] of CHANNELS) {
             await wipe.click();
             const dialog = page.locator('dialog[open], .kp-dialog:visible, .kp-confirm:visible').first();
             await expect(dialog).toBeVisible({ timeout: 3000 });
-            await style(dialog, 'border-radius').toBe('17.6px');
+            // The approved signature dialog's radius [scope-140] (17.6px before 9.0.0).
+            await style(dialog, 'border-radius').toBe('19.2px');
             await style(dialog, 'background-color').toBe(await paint(page, '--card'));
         });
 

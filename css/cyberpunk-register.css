@@ -1986,6 +1986,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='cyberpunk'] .kp-progressbar {
         --kp-progressbar-height: 0.875rem;
         --kp-cp-void: var(--sidebar-background);
@@ -2445,13 +2448,14 @@
         font-size: 0.8rem;
     }
 
-    [data-theme='cyberpunk'] a:not([class]) {
+    [data-theme='cyberpunk'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         position: relative;
         text-decoration: underline dotted var(--accent);
         text-underline-offset: 0.3em;
     }
 
-    [data-theme='cyberpunk'] a:not([class])::after {
+    [data-theme='cyberpunk']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a)::after {
         content: '';
         position: absolute;
         inset-inline: 0;
@@ -2462,16 +2466,25 @@
         transform-origin: 0 50%;
     }
 
-    [data-theme='cyberpunk'] a:not([class]):hover {
+    [data-theme='cyberpunk']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         text-decoration-color: transparent;
     }
 
-    [data-theme='cyberpunk'] a:not([class]):hover::after {
+    [data-theme='cyberpunk']
+        a:not(
+            [class],
+            :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+        ):hover::after {
         transform: scaleX(1);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] a:not([class])::after {
+        [data-theme='cyberpunk']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            )::after {
             transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
         }
     }

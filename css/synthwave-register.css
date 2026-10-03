@@ -1904,6 +1904,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='synthwave'] .kp-progressbar {
         --kp-progressbar-height: 1.125rem;
         --kp-sw-void: var(--sidebar-background);
@@ -2111,6 +2116,9 @@
     [data-theme='synthwave'] .kp-field__check[type='checkbox']:checked {
         border-color: var(--primary);
         background: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-field__check[type='checkbox']:checked:not(:focus-visible) {
         box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.6);
     }
 
@@ -2299,7 +2307,7 @@
         letter-spacing: 0.04em;
     }
 
-    [data-theme='synthwave'] a:not([class]) {
+    [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         padding-block-end: 2px;
         text-decoration: none;
         background: var(--kp-stripe) left bottom / 100% 2px no-repeat;
@@ -2307,13 +2315,14 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='synthwave'] a:not([class]):hover {
+    [data-theme='synthwave']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background-size: 100% 3px;
         text-shadow: var(--kp-tube-pink);
     }
 
     @media (forced-colors: active) {
-        [data-theme='synthwave'] a:not([class]) {
+        [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
             text-decoration: underline;
         }
     }

@@ -11,12 +11,12 @@ import { expect, test } from '@playwright/test';
 test('a click anywhere in an expandable row toggles it, but not one on its button', { tag: ['@component:datatable'] }, async ({ page }) => {
     await page.goto('/tests/fixtures/datatable-row-expand.html');
     const table = page.locator('[data-test="table"]');
-    const row = table.locator('tbody tr', { hasText: 'Backup finished' });
+    const row = table.locator('tbody tr:not([data-kp-row-detail])', { hasText: 'Backup finished' });
     const toggle = row.locator('[data-kp-row-toggle]');
     const detail = table.locator('tbody tr[data-kp-row-detail]', { hasText: 'Details of N-101' });
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
 
-    await row.getByText('Backup finished').click();
+    await row.getByRole('cell', { name: 'Backup finished', exact: true }).click();
     await expect(toggle, 'a click on the title opens the row').toHaveAttribute('aria-expanded', 'true');
     await expect(detail).toBeVisible();
     await row.getByText('2 min ago').click();

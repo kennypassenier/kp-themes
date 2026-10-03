@@ -181,7 +181,8 @@ for (const [channel, url] of CHANNELS) {
             await trigger.click();
             const dialog = page.locator('dialog[open]').first();
             await expect(dialog).toBeVisible();
-            await style(dialog, 'animation-name').toBe('kp-dialog-in');
+            // The approved signature entrance [scope-140] (kp-dialog-in before 9.0.0).
+            await style(dialog, 'animation-name').toBe('kp-sig-shade-light-shade-rise');
             await style(dialog, 'box-shadow').not.toBe('none');
             await settled(page);
             await expect.poll(async () => await dialog.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');

@@ -1512,6 +1512,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='pastel'] .kp-progressbar {
         --kp-progressbar-height: 1.125rem;
         --kp-ps-head: 1rem;
@@ -1814,7 +1817,9 @@
 
     [data-theme='pastel'] .kp-tooltip {
         --kp-sig-dur: 420ms;
-        margin-block-start: 0.85rem;
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
         margin-inline-start: 0.9rem;
         padding: 0.35rem 0.9rem;
         border: 1px solid var(--border-strong);
@@ -1940,7 +1945,7 @@
         margin: 0;
     }
 
-    [data-theme='pastel'] a:not([class]) {
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         position: relative;
         isolation: isolate;
         text-decoration-color: var(--primary);
@@ -1948,7 +1953,7 @@
         text-underline-offset: 0.22em;
     }
 
-    [data-theme='pastel'] a:not([class])::before {
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a)::before {
         content: '';
         position: absolute;
         z-index: -1;
@@ -1959,7 +1964,11 @@
         transform-origin: 0 50%;
     }
 
-    [data-theme='pastel'] a:not([class]):hover::before {
+    [data-theme='pastel']
+        a:not(
+            [class],
+            :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+        ):hover::before {
         transform: none;
     }
 
@@ -2009,7 +2018,11 @@
             animation: kp-sig-pastel-pastel-bubble var(--kp-sig-dur) var(--fx-ease) both;
         }
 
-        [data-theme='pastel'] a:not([class])::before {
+        [data-theme='pastel']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            )::before {
             transition: transform 380ms var(--fx-ease);
         }
     }

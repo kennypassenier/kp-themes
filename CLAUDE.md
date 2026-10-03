@@ -30,6 +30,11 @@ while building, not even a tagged subset; the suite runs once, after his go for
 a release. The gates in the commit hook and the screenshot check inside
 `scripts/release.sh` stay.
 
+**Chromium is off in the test suite** (Kenny, 2026-10-03: "doe ook het chrome
+gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs
+Firefox only; `KP_TEST_CHROMIUM=1` brings the Chromium project back. Turn it
+on again only when Kenny asks.
+
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
 `npm run gates`. Two that shape every turn: a released theme never

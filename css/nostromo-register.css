@@ -1426,6 +1426,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='nostromo'] .kp-progressbar {
         --kp-progressbar-height: 1rem;
         --kp-np-lit: var(--sidebar-primary);
@@ -1588,6 +1593,9 @@
         background:
             radial-gradient(circle at calc(100% - 0.6rem) 50%, hsl(from var(--foreground) h s l / 0.35) 0 0.24rem, transparent 0.26rem),
             hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:not(:focus-visible) {
         box-shadow: var(--kp-sig-no-well);
     }
 
@@ -1624,6 +1632,9 @@
         border: 1px solid var(--border-strong);
         border-radius: 0.2rem;
         background: var(--card);
+    }
+
+    [data-theme='nostromo'] .kp-field__check:not(:focus-visible) {
         box-shadow: var(--kp-sig-no-well);
     }
 
@@ -1805,14 +1816,14 @@
         margin: 0;
     }
 
-    [data-theme='nostromo'] a:not([class]) {
+    [data-theme='nostromo'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         color: var(--primary);
         text-decoration-color: var(--kp-underline, hsl(from var(--selected) h s l / 0.28));
         text-decoration-thickness: 2px;
         text-underline-offset: 0.22em;
     }
 
-    [data-theme='nostromo'] a:not([class]):hover {
+    [data-theme='nostromo'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         text-decoration-color: var(--selected);
         text-decoration-thickness: 3px;
     }

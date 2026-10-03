@@ -1583,6 +1583,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='titanium'] .kp-progressbar {
         --kp-progressbar-height: 0.875rem;
         --ti-cut: 0.4rem;
@@ -1768,6 +1773,9 @@
     [data-theme='titanium'] .kp-switch__input {
         border: 1px solid var(--border-strong);
         background: var(--kp-sig-ti-weave), var(--background);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:not(:focus-visible) {
         box-shadow: var(--kp-sig-ti-edge);
     }
 
@@ -1804,6 +1812,9 @@
         border: 1px solid var(--border-strong);
         border-radius: 0;
         background: var(--background);
+    }
+
+    [data-theme='titanium'] .kp-field__check:not(:focus-visible) {
         box-shadow: var(--kp-sig-ti-edge);
     }
 
@@ -1980,7 +1991,7 @@
         font-size: 0.78rem;
     }
 
-    [data-theme='titanium'] a:not([class]) {
+    [data-theme='titanium'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-style: dashed;
         text-decoration-thickness: 1px;
         text-decoration-color: var(--border-strong);
@@ -1989,14 +2000,15 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='titanium'] a:not([class]):hover {
+    [data-theme='titanium'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         padding-block-end: 1px;
         background: var(--kp-iris) left bottom / 100% 2px no-repeat;
         text-decoration-color: transparent;
     }
 
     @media (forced-colors: active) {
-        [data-theme='titanium'] a:not([class]):hover {
+        [data-theme='titanium']
+            a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
             text-decoration-color: currentColor;
         }
     }

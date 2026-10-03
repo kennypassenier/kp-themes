@@ -1849,6 +1849,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='dark'] .kp-progressbar {
         --kp-progressbar-height: 0.75rem;
         --kp-ps-cut: 4px;
@@ -2182,7 +2185,7 @@
         letter-spacing: 0.02em;
     }
 
-    [data-theme='dark'] a:not([class]) {
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
         text-underline-offset: 0.25em;
@@ -2190,14 +2193,14 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='dark'] a:not([class]):hover {
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         padding-block-end: 1px;
         background: var(--kp-iris) left bottom / 100% 2px no-repeat;
         text-decoration-color: transparent;
     }
 
     @media (forced-colors: active) {
-        [data-theme='dark'] a:not([class]):hover {
+        [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
             text-decoration-color: currentColor;
         }
     }
@@ -2251,11 +2254,13 @@
 
         [data-theme='dark'] .kp-toast::after,
         [data-theme='dark'] .kp-dialog::after {
-            animation: kp-sig-dark-dark-develop var(--kp-sig-dur) ease-out both;
+            /* backwards, not both: each ends where the rest state is, so a finished
+               entrance leaves nothing pinned on the dialog (scope-100 measures it bare). */
+            animation: kp-sig-dark-dark-develop var(--kp-sig-dur) ease-out backwards;
         }
 
         [data-theme='dark'] .kp-dialog {
-            animation: kp-sig-dark-dark-settle-in var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
+            animation: kp-sig-dark-dark-settle-in var(--kp-sig-dur) var(--kp-sig-dark-ease) backwards;
         }
 
         [data-theme='dark'] .kp-tooltip {

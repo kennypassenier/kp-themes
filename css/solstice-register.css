@@ -1144,6 +1144,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='solstice'] .kp-progressbar {
         --kp-progressbar-height: 0.875rem;
         --kp-ps-head: 0.875rem;
@@ -1322,6 +1327,9 @@
     [data-theme='solstice'] .kp-field__check[type='checkbox']:checked {
         border-color: var(--primary);
         background: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='checkbox']:checked:not(:focus-visible) {
         box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.2);
     }
 
@@ -1501,13 +1509,13 @@
         margin: 0;
     }
 
-    [data-theme='solstice'] a:not([class]) {
+    [data-theme='solstice'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1.5px;
         text-decoration-color: var(--accent);
         text-underline-offset: 0.24em;
     }
 
-    [data-theme='solstice'] a:not([class]):hover {
+    [data-theme='solstice'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         color: var(--primary);
         text-decoration-color: var(--primary);
         text-decoration-thickness: 2px;

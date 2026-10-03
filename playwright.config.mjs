@@ -46,8 +46,11 @@ export default defineConfig({
     },
     // AR15's baseline is modern Chrome AND Firefox. Testing only one of
     // them makes "green" evidence about that one — standing rule 35.
+    // Chromium is off until Kenny wants it back (2026-10-03: "doe ook het chrome
+    // gedeelte tijdelijk weg, tot ik het terugwil"); KP_TEST_CHROMIUM=1 runs it
+    // again. Firefox is the engine the catalogue verdicts are given in.
     projects: [
-        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        ...(process.env.KP_TEST_CHROMIUM === '1' ? [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }] : []),
         { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
     ],
     webServer: {

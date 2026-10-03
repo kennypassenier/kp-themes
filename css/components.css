@@ -3113,6 +3113,9 @@
         display: inline-flex;
         align-items: center;
         gap: var(--kp-space-sm);
+        /* Never wider than its container: the bar inside gives way, so a
+         * phone does not scroll sideways (DI11). */
+        max-inline-size: 100%;
     }
 
     /* A lone bar beside its reading. The bar has no content of its own to

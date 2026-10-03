@@ -1286,6 +1286,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='forest'] .kp-progressbar {
         --kp-progressbar-height: 1.25rem;
         /* One planting slot: half the bar's height, so a tree keeps its shape
@@ -1539,6 +1542,12 @@
         --kp-sig-dur: 520ms;
         position: relative;
         padding-inline-start: 1.15rem;
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='forest'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
         background: var(--card);
     }
 
@@ -1681,7 +1690,7 @@
         margin: 0;
     }
 
-    [data-theme='forest'] a:not([class]) {
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-line: underline;
         text-decoration-style: dashed;
         text-decoration-color: var(--accent-foreground);
@@ -1689,7 +1698,7 @@
         text-underline-offset: 0.24em;
     }
 
-    [data-theme='forest'] a:not([class]):hover {
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         text-decoration-style: solid;
         text-decoration-color: var(--primary);
         text-decoration-thickness: 2px;
@@ -1888,6 +1897,13 @@
         to {
             transform: translateX(calc(100cqi + var(--kp-fo-grove)));
         }
+    }
+
+    /* On the paper plate the success toast keeps, a hovered button takes a shade
+       of the toast's own green rather than white on white (Kenny's second
+       nostromo pass, note 4). */
+    [data-theme='forest'] .kp-toast--success {
+        --kp-toast-button-hover: color-mix(in srgb, var(--success-foreground) 14%, transparent);
     }
 }
 /* ── End of the signature ── */

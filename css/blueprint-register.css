@@ -1477,6 +1477,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='blueprint'] .kp-progressbar {
         --kp-progressbar-height: 1.125rem;
         --bp-line: var(--primary);
@@ -1737,11 +1740,17 @@
         margin-block-start: 0.5rem;
         border: 1px solid hsl(from var(--foreground) h s l / 0.6);
         border-radius: 2px;
-        background: var(--popover);
         font-family: var(--theme-font-mono);
         font-size: 0.8rem;
         letter-spacing: 0.04em;
         text-transform: uppercase;
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='blueprint'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        background: var(--popover);
     }
 
     [data-theme='blueprint'] .kp-toast--success {
@@ -1808,7 +1817,9 @@
 
     [data-theme='blueprint'] .kp-tooltip {
         --kp-sig-dur: 360ms;
-        margin-block-start: 1rem;
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
         margin-inline-start: 1rem;
         border: 1px solid var(--accent);
         border-radius: 0;
@@ -1826,7 +1837,7 @@
         inset-block-end: 100%;
         inset-inline-start: 0.75rem;
         inline-size: 1px;
-        block-size: 1.05rem;
+        block-size: 0.75rem;
         background: var(--accent);
         transform-origin: 50% 100%;
     }
@@ -1937,14 +1948,15 @@
         margin: 0;
     }
 
-    [data-theme='blueprint'] a:not([class]) {
+    [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-underline-offset: 0.3em;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
     }
 
-    [data-theme='blueprint'] a:not([class]):hover {
+    [data-theme='blueprint']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background:
             linear-gradient(var(--primary), var(--primary)) 0 100% / 1px 0.55em no-repeat,
             linear-gradient(var(--primary), var(--primary)) 100% 100% / 1px 0.55em no-repeat;
@@ -1952,7 +1964,7 @@
     }
 
     @media (forced-colors: active) {
-        [data-theme='blueprint'] a:not([class]) {
+        [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
             background: none;
         }
     }

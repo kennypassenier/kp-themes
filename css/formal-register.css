@@ -1223,6 +1223,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='formal'] .kp-progressbar {
         --kp-progressbar-height: 0.75rem;
         /* 1 when the value has reached the end, 0 below it: closes the account. */
@@ -1383,6 +1388,9 @@
     [data-theme='formal'] .kp-switch__input {
         border-color: var(--border-strong);
         background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:focus-visible) {
         box-shadow:
             inset 0 0 0 2px var(--background),
             inset 0 0 0 3px var(--border);
@@ -1395,6 +1403,9 @@
     [data-theme='formal'] .kp-switch__input:checked {
         border-color: var(--primary);
         background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-switch__input:checked:not(:focus-visible) {
         box-shadow:
             inset 0 0 0 2px var(--primary),
             inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.45);
@@ -1599,13 +1610,13 @@
         margin: 0;
     }
 
-    [data-theme='formal'] a:not([class]) {
+    [data-theme='formal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
         text-underline-offset: 0.2em;
     }
 
-    [data-theme='formal'] a:not([class]):hover {
+    [data-theme='formal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         text-decoration-style: double;
         text-decoration-thickness: 1px;
         text-decoration-color: currentColor;

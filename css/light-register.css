@@ -1058,6 +1058,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='light'] .kp-progressbar {
         --kp-progressbar-height: 0.75rem;
         --kp-ps-bead: 0.75rem;
@@ -1333,7 +1338,7 @@
         letter-spacing: -0.01em;
     }
 
-    [data-theme='light'] a:not([class]) {
+    [data-theme='light'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         border-radius: 0.2em;
         text-decoration-thickness: 1px;
         text-decoration-color: hsl(from var(--primary) h s l / 0.45);
@@ -1342,12 +1347,16 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='light'] a:not([class]):hover {
+    [data-theme='light'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background: var(--accent);
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='light']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover:not(:focus-visible) {
         box-shadow:
             -0.15em 0 0 var(--accent),
             0.15em 0 0 var(--accent);
-        text-decoration-color: var(--primary);
     }
 
     @media (prefers-reduced-motion: no-preference) {

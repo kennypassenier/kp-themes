@@ -473,6 +473,10 @@
        row in sight) and its body never scrolled. This layer comes after the
        package's, so the properties below win over `.kp-dialog[open]`. */
     .cat-review-dialog {
+        /* The review chrome opens without the theme's dialog entrance
+         * [scope-140]: it swaps blocks in place, and its size is measured
+         * from the first frame (scope-90). */
+        animation: none;
         box-sizing: border-box;
         inline-size: 92vw;
         block-size: 90vh;

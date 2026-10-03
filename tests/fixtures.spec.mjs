@@ -101,8 +101,15 @@ for (const theme of SWEEP) {
 
         test('a link is not colour alone [DI4]', async ({ page }) => {
             await page.goto(url);
-            const decoration = await page.evaluate(() => getComputedStyle(document.querySelector('[data-specimen="links"] a')).textDecorationLine);
-            expect(decoration).toContain('underline');
+            // An underline, or one the theme draws itself under the text: synthwave's
+            // approved link signature [scope-140] paints a 2px stripe as its
+            // underline. Either way the link is not colour alone.
+            const { decoration, image, size } = await page.evaluate(() => {
+                const s = getComputedStyle(document.querySelector('[data-specimen="links"] a'));
+                return { decoration: s.textDecorationLine, image: s.backgroundImage, size: s.backgroundSize };
+            });
+            const drawn = image !== 'none' && /\b[1-4]px\b/.test(size.split(' ').at(-1) ?? '');
+            expect(decoration.includes('underline') || drawn, `decoration ${decoration}, background ${image} at ${size}`).toBe(true);
         });
     });
 }

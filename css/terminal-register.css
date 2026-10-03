@@ -1730,6 +1730,9 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='terminal'] .kp-progressbar {
         --kp-progressbar-height: 1.25rem;
         /* The run between the brackets, a whole number of cells, so the last
@@ -2065,7 +2068,7 @@
         box-shadow: var(--kp-sig-tm-bloom);
     }
 
-    [data-theme='terminal'] a:not([class]) {
+    [data-theme='terminal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-style: dashed;
         text-decoration-thickness: 1px;
         text-underline-offset: 0.2em;
@@ -2073,7 +2076,7 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='terminal'] a:not([class]):hover {
+    [data-theme='terminal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background: var(--primary);
         color: var(--primary-foreground);
         text-decoration-style: solid;

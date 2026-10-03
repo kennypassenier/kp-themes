@@ -242,13 +242,13 @@
                 "gates/check-tags.mjs",
                 "gates/verify.mjs"
             ],
-            "hash": "12548a2fd7e8930d599b40c6471a0e003e0802104e84b2c89816c1e1489ae205",
-            "doc": "ec8a5b6b00a78b5f3d190444ad4aff52bfa27a86bc5c15cab1dbee407962f5c4",
+            "hash": "e98a3a970b8ff17430ee37c2f3987cfd1dd2a35a81f4c00766a14811c6269f68",
+            "doc": "6c101bed86948a38de7e9c127a11bfa897f1f51e6c84ec625e8cae173b7eacf5",
             "files": {
                 "gates/check-tags.mjs": "423eaf3cb72a6c4b40aef48fcddbfcf81ccd10614d779fed5fc02c217fd75a10",
                 "gates/run-tags.mjs": "09422ff3e9a128ef8a3ea0737a880f4ce659ec4f9f6d7e64760a72a262aefee4",
                 "gates/verify.mjs": "750106f9102ec235ea139e324f9e7d1262f583e7fee4d56868f8a9fd656fa189",
-                "playwright.config.mjs": "ca253e84232c2ba8cb8747ceb955c1aa5f31efd572b0ce316e208bc3b6f1e818"
+                "playwright.config.mjs": "9aca9c37829a93df9e328610dd52ae1bd241c52aa28dbe1181dbf91b2f3f5fea"
             }
         },
         "docs/TROUBLESHOOTING.md": {

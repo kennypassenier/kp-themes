@@ -1475,6 +1475,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='shade-light'] .kp-progressbar {
         --kp-progressbar-height: 0.75rem;
     }
@@ -1574,6 +1579,9 @@
     [data-theme='shade-light'] .kp-switch__input {
         border-color: var(--border-strong);
         background: var(--secondary);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:not(:focus-visible) {
         box-shadow: inset 1px 1px 3px hsl(from var(--foreground) h s l / 0.18);
     }
 
@@ -1587,6 +1595,9 @@
     [data-theme='shade-light'] .kp-switch__input:checked {
         border-color: var(--primary);
         background: var(--primary);
+    }
+
+    [data-theme='shade-light'] .kp-switch__input:checked:not(:focus-visible) {
         box-shadow: inset 1px 1px 3px hsl(from var(--foreground) h s l / 0.35);
     }
 
@@ -1607,6 +1618,9 @@
         border: 1px solid var(--border-strong);
         border-radius: 0.25rem;
         background: var(--card);
+    }
+
+    [data-theme='shade-light'] .kp-field__check:not(:focus-visible) {
         box-shadow: inset 1px 1px 2px hsl(from var(--foreground) h s l / 0.16);
     }
 
@@ -1758,7 +1772,7 @@
         margin: 0;
     }
 
-    [data-theme='shade-light'] a:not([class]) {
+    [data-theme='shade-light'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         border-radius: 0.2em;
         text-decoration-thickness: 1px;
         text-decoration-color: hsl(from var(--primary) h s l / 0.45);
@@ -1767,7 +1781,8 @@
         box-decoration-break: clone;
     }
 
-    [data-theme='shade-light'] a:not([class]):hover {
+    [data-theme='shade-light']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background: hsl(from var(--primary) h s l / 0.1);
         text-decoration-color: var(--primary);
     }

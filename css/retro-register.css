@@ -2522,6 +2522,11 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
     [data-theme='retro'] .kp-progressbar {
         --kp-progressbar-height: 1.25rem;
         --kp-rp-block: 0.5rem;
@@ -2661,11 +2666,17 @@
     [data-theme='retro'] .kp-switch__input {
         border: 0;
         background: var(--popover);
+    }
+
+    [data-theme='retro'] .kp-switch__input:not(:focus-visible) {
         box-shadow: var(--kp-sunken);
     }
 
     [data-theme='retro'] .kp-switch__input:checked {
         background: var(--primary);
+    }
+
+    [data-theme='retro'] .kp-switch__input:checked:not(:focus-visible) {
         box-shadow: var(--kp-sunken);
     }
 
@@ -2819,7 +2830,7 @@
         margin: 0;
     }
 
-    [data-theme='retro'] a:not([class]):hover {
+    [data-theme='retro'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
         background: var(--primary);
         color: var(--primary-foreground);
         -webkit-box-decoration-break: clone;

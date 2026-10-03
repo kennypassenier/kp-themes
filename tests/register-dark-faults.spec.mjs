@@ -316,6 +316,16 @@ for (const ratio of [1, 2.222]) {
                 await page.evaluate(() => document.querySelector('[data-halo-probe]')?.scrollIntoView({ block: 'center' }));
                 await page.evaluate(() => document.fonts.ready);
                 await page.waitForTimeout(400);
+                // The probe's dialog plays dark's entrance (2.4 s since scope-140);
+                // its box is read once every finite animation has ended.
+                await page.evaluate(() =>
+                    Promise.all(
+                        document
+                            .getAnimations()
+                            .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+                            .map((a) => a.finished),
+                    ),
+                );
 
                 /** Every panel's border box, viewport-relative. */
                 const boxes = () =>
