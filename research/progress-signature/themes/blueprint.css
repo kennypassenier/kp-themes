@@ -21,7 +21,12 @@
         linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
         linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
         repeating-linear-gradient(90deg, var(--bp-scale) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
-        repeating-linear-gradient(90deg, color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px, transparent 1px calc(100% / (var(--kp-steps) * 2))) center / 100% 28% no-repeat,
+        repeating-linear-gradient(
+                90deg,
+                color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px,
+                transparent 1px calc(100% / (var(--kp-steps) * 2))
+            )
+            center / 100% 28% no-repeat,
         linear-gradient(var(--bp-scale), var(--bp-scale)) center / 100% 1px no-repeat,
         transparent;
 }
@@ -112,7 +117,8 @@
     background:
         linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
         linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
-        repeating-linear-gradient(90deg, color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px, transparent 1px calc(100% / var(--kp-steps)))
+            center / 100% 56% no-repeat,
         transparent;
 }
 

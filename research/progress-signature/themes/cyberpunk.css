@@ -21,8 +21,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.32) 0 6px, transparent 6px 10px) 0 50% / 100% 2px
-        no-repeat;
+    background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.32) 0 6px, transparent 6px 10px) 0 50% / 100% 2px no-repeat;
 }
 
 /* The frame: the 3:1 edge, and 2px of void that insets the face the way the
@@ -170,8 +169,8 @@
     background:
         linear-gradient(90deg, transparent 58px, var(--accent) 58px 70px, transparent 70px) 0 3px / 216px 2px repeat-x,
         linear-gradient(90deg, transparent 150px, var(--accent) 150px 166px, transparent 166px) 0 6px / 216px 2px repeat-x,
-        linear-gradient(90deg, transparent 24px, var(--accent) 24px 32px, transparent 32px 176px, var(--accent) 176px 188px, transparent 188px) 0 9px /
-            216px 2px repeat-x;
+        linear-gradient(90deg, transparent 24px, var(--accent) 24px 32px, transparent 32px 176px, var(--accent) 176px 188px, transparent 188px) 0
+            9px / 216px 2px repeat-x;
 }
 
 @media (prefers-reduced-motion: no-preference) {

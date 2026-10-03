@@ -238,4 +238,5 @@ register's colours are.
 | fix-85-M1 | Does the homelab dashboard drop its own failed and empty slots once it takes the kp-themes that carries fix-85? | open |
 | fix-86-M1 | Does the homelab dashboard drop its stripes shim for `.kp-progress:indeterminate` once it takes the kp-themes that carries fix-86, with the bar still striped and moving? | open |
 | fix-87-M1 | Does the next release refuse while a block/theme pair is open, and pass once all are approved? Measured at the fix (2026-09-30): the rehearsal of 8.1.0 refused with 18 open. | open |
+| fix-88-M1 | Does tests/signature-faults.spec.mjs fail on the commit before fix-88 and pass after, in both engines, at the next release's suite run? | open |
 

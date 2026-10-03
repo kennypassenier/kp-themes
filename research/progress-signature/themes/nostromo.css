@@ -53,11 +53,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        to bottom,
-        hsl(from var(--kp-np-lit) h s calc(l + 18)) 0 30%,
-        var(--kp-np-lit) 30% 100%
-    );
+    background: linear-gradient(to bottom, hsl(from var(--kp-np-lit) h s calc(l + 18)) 0 30%, var(--kp-np-lit) 30% 100%);
     mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
 }
 

@@ -22,14 +22,28 @@
     border-radius: 0;
     clip-path: polygon(var(--ti-cut) 0, 100% 0, 100% calc(100% - var(--ti-cut)), calc(100% - var(--ti-cut)) 100%, 0 100%, 0 var(--ti-cut));
     background:
-        linear-gradient(to bottom right, transparent calc(50% - 0.8px), var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px)) left top / var(--ti-cut) var(--ti-cut) no-repeat,
-        linear-gradient(to bottom right, transparent calc(50% - 0.8px), var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px)) right bottom / var(--ti-cut) var(--ti-cut) no-repeat,
+        linear-gradient(
+                to bottom right,
+                transparent calc(50% - 0.8px),
+                var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px),
+                transparent calc(50% + 0.8px)
+            )
+            left top / var(--ti-cut) var(--ti-cut) no-repeat,
+        linear-gradient(
+                to bottom right,
+                transparent calc(50% - 0.8px),
+                var(--ti-edge) calc(50% - 0.8px) calc(50% + 0.8px),
+                transparent calc(50% + 0.8px)
+            )
+            right bottom / var(--ti-cut) var(--ti-cut) no-repeat,
         linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 100% 1px no-repeat,
         linear-gradient(var(--ti-edge), var(--ti-edge)) left bottom / 100% 1px no-repeat,
         linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 1px 100% no-repeat,
         linear-gradient(var(--ti-edge), var(--ti-edge)) right top / 1px 100% no-repeat,
-        linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0 0 / 5px 5px,
-        linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0 0 / 5px 5px,
+        linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0
+            0 / 5px 5px,
+        linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) 0
+            0 / 5px 5px,
         var(--muted);
 }
 
@@ -38,8 +52,10 @@
 [data-theme='titanium'] .kp-progressbar__fill {
     inset: 1px;
     background:
-        linear-gradient(color-mix(in oklab, var(--foreground) 45%, transparent), color-mix(in oklab, var(--foreground) 45%, transparent)) left top / 100% 1px no-repeat,
-        linear-gradient(color-mix(in oklab, var(--background) 35%, transparent), color-mix(in oklab, var(--background) 35%, transparent)) left bottom / 100% 1px no-repeat,
+        linear-gradient(color-mix(in oklab, var(--foreground) 45%, transparent), color-mix(in oklab, var(--foreground) 45%, transparent)) left top /
+            100% 1px no-repeat,
+        linear-gradient(color-mix(in oklab, var(--background) 35%, transparent), color-mix(in oklab, var(--background) 35%, transparent)) left
+            bottom / 100% 1px no-repeat,
         var(--ti-iris);
     transition: clip-path var(--fx-duration, 60ms) linear;
 }

@@ -27,7 +27,9 @@
 [data-theme='deco'] .kp-progressbar__fill {
     --dc-at: calc(var(--kp-value) * 100%);
     inset: 1px;
-    background: linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x, var(--dc-gold);
+    background:
+        linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x,
+        var(--dc-gold);
     clip-path: polygon(
         0 0,
         max(0px, calc(var(--dc-at) - var(--dc-tip))) 0,
@@ -78,8 +80,10 @@
     inset-inline-start: calc(-1 * var(--dc-chevron));
     inline-size: calc(100% + var(--dc-chevron));
     background:
-        linear-gradient(to bottom left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px)) left top / var(--dc-chevron) 50% repeat-x,
-        linear-gradient(to top left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px)) left bottom / var(--dc-chevron) 50% repeat-x;
+        linear-gradient(to bottom left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px))
+            left top / var(--dc-chevron) 50% repeat-x,
+        linear-gradient(to top left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px))
+            left bottom / var(--dc-chevron) 50% repeat-x;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -31,11 +31,7 @@
 
 /* The blocks, revealed a whole block at a time. */
 [data-theme='retro'] .kp-progressbar__fill {
-    background: repeating-linear-gradient(
-        90deg,
-        var(--primary) 0 var(--kp-rp-block),
-        transparent var(--kp-rp-block) var(--kp-rp-pitch)
-    );
+    background: repeating-linear-gradient(90deg, var(--primary) 0 var(--kp-rp-block), transparent var(--kp-rp-block) var(--kp-rp-pitch));
     clip-path: inset(0 max(0px, 100% - round(down, var(--kp-value) * (100% + var(--kp-rp-gap)) + 0.5px, var(--kp-rp-pitch))) 0 0);
     transition: none;
 }

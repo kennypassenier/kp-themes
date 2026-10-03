@@ -4442,6 +4442,36 @@ components that page carries.
 **9 · When we review the measure.** At the retrospective of the next
 round.
 
+## fix-88 · Three faults the signature survey measured (2026-10-03)
+
+**1 · What went wrong.** research/signature-elements/README.md: retro and
+cyberpunk drew every `.kp-field__check` square (radios looked like
+checkboxes); cyberpunk styled `.kp-wizard__step`, which nothing renders; the
+switch thumb animated `inset-inline-start` in all 22 themes.
+
+**2 · Which gate let it through.** No test read a radio's shape per theme,
+whether a register selector matches rendered markup, or which property the
+switch animates.
+
+**3 · Where else the same fault sits.** Measured by the survey across all
+22 registers (its `measure.sh`, verbatim in research/signature-elements/):
+these three only.
+
+**4 · How we prevent recurrence.** The fixes above, locked by
+`tests/signature-faults.spec.mjs`, run with the suite at Kenny's release
+go (rule of 2026-09-30).
+
+**5 · What the remedy costs.** Four small rules.
+
+**6 · Who enforces it.** Code: the spec above.
+
+**7 · How we measure that it works, and when.** At the next release's
+suite: red on the commit before, green after. Queued as fix-88-M1.
+
+**8 · If the measurement fails.** The fix is reworked before the release.
+
+**9 · When we review the measure.** At the retrospective of this round.
+
 ## fix-87 · 8.1.0 was released with 18 block/theme pairs not approved (2026-09-30)
 
 Approved by Kenny on the form of 2026-09-30 ("Klopt"); 8.1.0 stays published

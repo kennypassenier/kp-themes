@@ -660,9 +660,7 @@
 }
 
 [data-theme='formal'] .sx-sig .kp-switch__input:checked::before {
-    background:
-        radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px),
-        var(--primary-foreground);
+    background: radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px), var(--primary-foreground);
 }
 
 /* cyberpunk: a sheared plate; on, the track charges with hazard stripes. */
@@ -684,7 +682,8 @@
 [data-theme='cyberpunk'] .sx-sig .kp-switch__input:checked {
     /* The stripes stop short of the thumb, so the yellow plate never sits on yellow. */
     background:
-        repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.5) 0 3px, transparent 3px 7px) left / calc(100% - var(--kp-switch-height, 1.5rem)) 100% no-repeat,
+        repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.5) 0 3px, transparent 3px 7px) left /
+            calc(100% - var(--kp-switch-height, 1.5rem)) 100% no-repeat,
         var(--card);
 }
 
@@ -1111,7 +1110,9 @@
 }
 
 [data-theme='cyberpunk'] .sx-sig .sx-backdrop {
-    background: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px), hsl(from var(--foreground) h s l / 0.1);
+    background:
+        repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px),
+        hsl(from var(--foreground) h s l / 0.1);
 }
 
 /* retro: the zoom — four hard frames from a quarter size. */
@@ -1523,7 +1524,8 @@
     border: 0;
     border-block-start: 3px double var(--border-strong);
     border-radius: 0;
-    background: repeating-linear-gradient(to bottom, transparent 0 calc(1.2rem - 1px), var(--border) calc(1.2rem - 1px) 1.2rem) center bottom 1rem / calc(100% - 4rem) 3.6rem no-repeat;
+    background: repeating-linear-gradient(to bottom, transparent 0 calc(1.2rem - 1px), var(--border) calc(1.2rem - 1px) 1.2rem) center bottom 1rem /
+        calc(100% - 4rem) 3.6rem no-repeat;
 }
 
 [data-theme='formal'] .sx-sig .kp-empty__title {

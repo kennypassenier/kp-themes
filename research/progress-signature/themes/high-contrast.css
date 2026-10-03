@@ -18,12 +18,7 @@
    where it is declared. */
 [data-theme='high-contrast'] .kp-progressbar__track,
 [data-theme='high-contrast'] .kp-progressbar__fill {
-    --kp-ps-tick: linear-gradient(
-        90deg,
-        var(--kp-ps-tick-ink) 0 1px,
-        transparent 1px calc(100% - 1px),
-        var(--kp-ps-tick-ink) calc(100% - 1px)
-    );
+    --kp-ps-tick: linear-gradient(90deg, var(--kp-ps-tick-ink) 0 1px, transparent 1px calc(100% - 1px), var(--kp-ps-tick-ink) calc(100% - 1px));
 }
 
 /* The frame: 2px of ink on paper, the control edge of this theme. The ticks

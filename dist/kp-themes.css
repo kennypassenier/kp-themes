@@ -5580,9 +5580,17 @@
         background: var(--primary);
     }
 
+    /* On, the thumb travels the track's width less its height: moved by
+ * transform, not by its inset, so a click changes no layout (the signature
+ * survey of 2026-10-03 measured inset-inline-start animating in all 22
+ * themes). The travel is negative right to left. */
     .kp-switch__input:checked::before {
-        inset-inline-start: calc(100% - var(--kp-switch-height, 1.5rem) + var(--kp-switch-inset, 0.125rem) + 2 * var(--kp-switch-border, 1px));
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
         background: var(--primary-foreground);
+    }
+
+    .kp-switch__input:checked:dir(rtl)::before {
+        transform: translateX(calc(-1 * (var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))));
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -5590,7 +5598,7 @@
         .kp-switch__input::before {
             transition:
                 background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
-                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease);
+                transform var(--fx-duration, 150ms) var(--fx-ease, ease);
         }
     }
 
@@ -11350,7 +11358,9 @@
         border-radius: 0;
     }
 
-    [data-theme='cyberpunk'] .kp-wizard__step {
+    /* The step labels; written for `.kp-wizard__step`, a class the package
+       never renders, so it matched nothing until 2026-10-03. */
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
         font-family: var(--kp-mono);
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -11572,6 +11582,19 @@
         block-size: 0.55rem;
         background: var(--primary);
         clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+    }
+
+    /* A radio is a round cell with a lit dot, never the checkbox's square:
+       one rule above made every check square (the survey of 2026-10-03). */
+    [data-theme='cyberpunk'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        clip-path: none;
     }
 
     [data-theme='cyberpunk'] .kp-field__check:focus-visible {
@@ -13036,6 +13059,19 @@
             linear-gradient(var(--foreground), var(--foreground)) 5px 3px / 2px 4px no-repeat,
             linear-gradient(var(--foreground), var(--foreground)) 7px 0 / 2px 4px no-repeat;
         image-rendering: pixelated;
+    }
+
+    /* The radio: the round well of a 1995 option button with a solid dot,
+       not the checkbox's square and pixel tick (the survey of 2026-10-03). */
+    [data-theme='retro'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='retro'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 5px;
+        block-size: 5px;
+        border-radius: 50%;
+        background: var(--foreground);
     }
 
     [data-theme='retro'] .kp-field__check:focus-visible {

@@ -17,7 +17,13 @@
                     t = t || localStorage.getItem('theme');
                 } catch (e) {}
                 if (t) d.setAttribute('data-theme', t);
-                document.write('<link rel="stylesheet" href="../../css/' + (d.getAttribute('data-theme') || 'formal') + '-register.css" data-kp-register="' + (d.getAttribute('data-theme') || 'formal') + '">');
+                document.write(
+                    '<link rel="stylesheet" href="../../css/' +
+                        (d.getAttribute('data-theme') || 'formal') +
+                        '-register.css" data-kp-register="' +
+                        (d.getAttribute('data-theme') || 'formal') +
+                        '">',
+                );
             })();
         </script>
         <link rel="stylesheet" href="demo.css" />
@@ -27,13 +33,12 @@
             <header class="sx-intro">
                 <h1>Signature elements</h1>
                 <p>
-                    Ten elements that could carry a theme's identity the way the signature progress bar does. Each section shows the
-                    package's current look on the left and a drafted signature on the right. <strong>The markup in both columns is
-                    identical</strong>: the signature is CSS on the same classes, scoped to <code>[data-theme]</code>, so the element's API
-                    and ARIA do not change per theme. Signatures are drafted for <b>formal</b>, <b>cyberpunk</b> and <b>retro</b>, plus one
-                    fourth theme per element; every other theme shows the package look in both columns. Motion uses only
-                    <code>transform</code>, <code>opacity</code> and <code>clip-path</code>, and stops under reduced motion. The strip under a
-                    signature is the same animation frozen at four moments.
+                    Ten elements that could carry a theme's identity the way the signature progress bar does. Each section shows the package's current
+                    look on the left and a drafted signature on the right. <strong>The markup in both columns is identical</strong>: the signature is
+                    CSS on the same classes, scoped to <code>[data-theme]</code>, so the element's API and ARIA do not change per theme. Signatures
+                    are drafted for <b>formal</b>, <b>cyberpunk</b> and <b>retro</b>, plus one fourth theme per element; every other theme shows the
+                    package look in both columns. Motion uses only <code>transform</code>, <code>opacity</code> and <code>clip-path</code>, and stops
+                    under reduced motion. The strip under a signature is the same animation frozen at four moments.
                 </p>
                 <nav class="sx-themes" aria-label="Theme">
                     <a href="?theme=formal">formal</a><a href="?theme=cyberpunk">cyberpunk</a><a href="?theme=retro">retro</a
@@ -58,7 +63,9 @@
                     <p class="sx-count">today: 22/22 registers tint it · <b>0/22</b> give it its own shape or motion</p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">A watch dial: a hairline ring, a tick at twelve, and one navy hand that sweeps round and settles each turn.</p>
+                    <p data-for="formal">
+                        A watch dial: a hairline ring, a tick at twelve, and one navy hand that sweeps round and settles each turn.
+                    </p>
                     <p data-for="cyberpunk">A notched sensor window: a signal-yellow scan line sweeps down through it while a cyan core breathes.</p>
                     <p data-for="retro">The 1995 hourglass: navy sand runs down in five snaps, then the glass turns over in two.</p>
                     <p data-for="terminal">The ASCII spinner every shell has: <code>| / - \</code>, one character cell, four frames.</p>
@@ -94,8 +101,13 @@
                     <p class="sx-count">today: 22/22 tint it · <b>10/22</b> give it a shape (texture), <b>0/22</b> their own motion</p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">Ruled ledger lines waiting for ink: a hairline baseline under each line, the first line indented like a paragraph, a slow breath.</p>
-                    <p data-for="cyberpunk">Notched data slots with a faint hatch; a scan head with a yellow leading edge sweeps each line, one after another.</p>
+                    <p data-for="formal">
+                        Ruled ledger lines waiting for ink: a hairline baseline under each line, the first line indented like a paragraph, a slow
+                        breath.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Notched data slots with a faint hatch; a scan head with a yellow leading edge sweeps each line, one after another.
+                    </p>
                     <p data-for="retro">Sunken wells filled with the 50% dither brush, stepping through four densities instead of fading.</p>
                     <p data-for="blueprint">A section hatch between two dimension ticks: the drawing of a line that is not there yet.</p>
                 </div>
@@ -129,27 +141,57 @@
             <section class="sx-sec" data-sx="switch" aria-labelledby="h-switch">
                 <div class="sx-sec__head">
                     <h2 id="h-switch">3 · Switch</h2>
-                    <p class="sx-count">today: 22/22 tint it · <b>8/22</b> reshape the track or thumb · thumb moves by <code>inset-inline-start</code> (layout) in all 22</p>
+                    <p class="sx-count">
+                        today: 22/22 tint it · <b>8/22</b> reshape the track or thumb · thumb moves by <code>inset-inline-start</code> (layout) in all
+                        22
+                    </p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">A double-ruled slot, the frame drawn twice as formal frames what matters; when on, the paper thumb carries a navy ink dot.</p>
-                    <p data-for="cyberpunk">The checkbox's notched block, sheared into a slanted plate; on, the track charges with hazard stripes and the plate snaps across in three frames.</p>
-                    <p data-for="retro">A sunken slot with a raised 3D button in it; on, the slot turns title-bar navy. No easing: the button is simply there.</p>
-                    <p data-for="terminal">A bracketed cell <code>[█   ]</code>: the block cursor steps across four character cells.</p>
+                    <p data-for="formal">
+                        A double-ruled slot, the frame drawn twice as formal frames what matters; when on, the paper thumb carries a navy ink dot.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The checkbox's notched block, sheared into a slanted plate; on, the track charges with hazard stripes and the plate snaps
+                        across in three frames.
+                    </p>
+                    <p data-for="retro">
+                        A sunken slot with a raised 3D button in it; on, the slot turns title-bar navy. No easing: the button is simply there.
+                    </p>
+                    <p data-for="terminal">A bracketed cell <code>[█ ]</code>: the block cursor steps across four character cells.</p>
                 </div>
                 <div class="sx-cols">
                     <div class="sx-col">
                         <span class="sx-col__label">Package today</span>
                         <div class="sx-stack">
-                            <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Night alerts</span></label>
-                            <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Lock-out on fault</span></label>
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Night alerts</span></label
+                            >
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" checked /><span
+                                    class="kp-switch__state"
+                                    aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Lock-out on fault</span></label
+                            >
                         </div>
                     </div>
                     <div class="sx-col sx-sig">
                         <span class="sx-col__label">Signature</span>
                         <div class="sx-stack">
-                            <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Night alerts</span></label>
-                            <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Lock-out on fault</span></label>
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Night alerts</span></label
+                            >
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" checked /><span
+                                    class="kp-switch__state"
+                                    aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Lock-out on fault</span></label
+                            >
                         </div>
                     </div>
                 </div>
@@ -159,21 +201,38 @@
             <section class="sx-sec" data-sx="check" aria-labelledby="h-check">
                 <div class="sx-sec__head">
                     <h2 id="h-check">4 · Checkbox tick and radio</h2>
-                    <p class="sx-count">today: 18/22 style <code>.kp-field__check</code> · <b>7/22</b> draw their own tick · <b>0/22</b> have a radio rule, so retro and cyberpunk draw a radio as a square</p>
+                    <p class="sx-count">
+                        today: 18/22 style <code>.kp-field__check</code> · <b>7/22</b> draw their own tick · <b>0/22</b> have a radio rule, so retro
+                        and cyberpunk draw a radio as a square
+                    </p>
                 </div>
                 <div class="sx-ideas">
                     <p data-for="formal">The tick is a pen stroke that draws itself left to right; the radio's ink dot grows from nothing.</p>
-                    <p data-for="cyberpunk">A notched cell lit signal-yellow, the tick sliced in over three frames; the radio becomes a diamond, still unmistakably not a box.</p>
-                    <p data-for="retro">Keeps the register's pixel tick and gives the radio what it lacks: a round sunken well with an ink pip, as Windows 95 drew it.</p>
+                    <p data-for="cyberpunk">
+                        A notched cell lit signal-yellow, the tick sliced in over three frames; the radio becomes a diamond, still unmistakably not a
+                        box.
+                    </p>
+                    <p data-for="retro">
+                        Keeps the register's pixel tick and gives the radio what it lacks: a round sunken well with an ink pip, as Windows 95 drew it.
+                    </p>
                     <p data-for="terminal">Text controls: <code>[x]</code> and <code>( )</code>, the brackets of a curses form.</p>
                 </div>
                 <div class="sx-cols">
                     <div class="sx-col">
                         <span class="sx-col__label">Package today</span>
                         <div class="sx-checks">
-                            <div class="kp-field kp-field--check"><input class="kp-field__check" type="checkbox" id="c-a1" checked /><label class="kp-field__label" for="c-a1">Tell the day shift</label></div>
-                            <div class="kp-field kp-field--check"><input class="kp-field__check" type="checkbox" id="c-a2" /><label class="kp-field__label" for="c-a2">Attach the readings</label></div>
-                            <fieldset class="kp-fieldset"><legend class="kp-field__label">Shift</legend>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" type="checkbox" id="c-a1" checked /><label class="kp-field__label" for="c-a1"
+                                    >Tell the day shift</label
+                                >
+                            </div>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" type="checkbox" id="c-a2" /><label class="kp-field__label" for="c-a2"
+                                    >Attach the readings</label
+                                >
+                            </div>
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Shift</legend>
                                 <label class="kp-field__option"><input class="kp-field__check" type="radio" name="r-a" checked /> Early</label>
                                 <label class="kp-field__option"><input class="kp-field__check" type="radio" name="r-a" /> Late</label>
                             </fieldset>
@@ -182,9 +241,18 @@
                     <div class="sx-col sx-sig">
                         <span class="sx-col__label">Signature</span>
                         <div class="sx-checks">
-                            <div class="kp-field kp-field--check"><input class="kp-field__check" type="checkbox" id="c-b1" checked /><label class="kp-field__label" for="c-b1">Tell the day shift</label></div>
-                            <div class="kp-field kp-field--check"><input class="kp-field__check" type="checkbox" id="c-b2" /><label class="kp-field__label" for="c-b2">Attach the readings</label></div>
-                            <fieldset class="kp-fieldset"><legend class="kp-field__label">Shift</legend>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" type="checkbox" id="c-b1" checked /><label class="kp-field__label" for="c-b1"
+                                    >Tell the day shift</label
+                                >
+                            </div>
+                            <div class="kp-field kp-field--check">
+                                <input class="kp-field__check" type="checkbox" id="c-b2" /><label class="kp-field__label" for="c-b2"
+                                    >Attach the readings</label
+                                >
+                            </div>
+                            <fieldset class="kp-fieldset">
+                                <legend class="kp-field__label">Shift</legend>
                                 <label class="kp-field__option"><input class="kp-field__check" type="radio" name="r-b" checked /> Early</label>
                                 <label class="kp-field__option"><input class="kp-field__check" type="radio" name="r-b" /> Late</label>
                             </fieldset>
@@ -206,7 +274,9 @@
                     <p class="sx-count">today: 22/22 restyle it · <b>3/22</b> give it a shape · <b>1/22</b> any entrance motion</p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">It rises a few pixels into place and a navy rule draws once across its top: a note slid onto the desk and initialled.</p>
+                    <p data-for="formal">
+                        It rises a few pixels into place and a navy rule draws once across its top: a note slid onto the desk and initialled.
+                    </p>
                     <p data-for="cyberpunk">A slice burst, once: three horizontal cuts land out of register and settle in a third of a second.</p>
                     <p data-for="retro">A little window: raised bevel, a title-bar ramp along its top edge, dropping into place in three snaps.</p>
                     <p data-for="terminal">Printed, not animated: the line is typed out left to right behind a <code>&gt;</code> prompt.</p>
@@ -215,15 +285,27 @@
                     <div class="sx-col">
                         <span class="sx-col__label">Package today</span>
                         <div class="sx-stack sx-replay">
-                            <div class="kp-toast" role="status"><div class="kp-toast__body">Readings exported: 1,240 rows.</div><button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
-                            <div class="kp-toast kp-toast--success" role="status"><div class="kp-toast__body">Success: handover sent.</div><button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
+                            <div class="kp-toast" role="status">
+                                <div class="kp-toast__body">Readings exported: 1,240 rows.</div>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button>
+                            </div>
+                            <div class="kp-toast kp-toast--success" role="status">
+                                <div class="kp-toast__body">Success: handover sent.</div>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button>
+                            </div>
                         </div>
                     </div>
                     <div class="sx-col sx-sig">
                         <span class="sx-col__label">Signature</span>
                         <div class="sx-stack sx-replay">
-                            <div class="kp-toast" role="status"><div class="kp-toast__body">Readings exported: 1,240 rows.</div><button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
-                            <div class="kp-toast kp-toast--success" role="status"><div class="kp-toast__body">Success: handover sent.</div><button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button></div>
+                            <div class="kp-toast" role="status">
+                                <div class="kp-toast__body">Readings exported: 1,240 rows.</div>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button>
+                            </div>
+                            <div class="kp-toast kp-toast--success" role="status">
+                                <div class="kp-toast__body">Success: handover sent.</div>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Dismiss">×</button>
+                            </div>
                         </div>
                         <div class="sx-frames sx-frames--wide" aria-hidden="true">
                             <div class="kp-toast sx-frame" style="--f: 1"><div class="kp-toast__body">Exported</div></div>
@@ -238,12 +320,19 @@
             <section class="sx-sec" data-sx="dialog" aria-labelledby="h-dialog">
                 <div class="sx-sec__head">
                     <h2 id="h-dialog">6 · Dialog open</h2>
-                    <p class="sx-count">today: 22/22 restyle it · <b>11/22</b> give it a shape · <b>6/22</b> an entrance (all a fade or rise) · <b>8/22</b> touch <code>::backdrop</code></p>
+                    <p class="sx-count">
+                        today: 22/22 restyle it · <b>11/22</b> give it a shape · <b>6/22</b> an entrance (all a fade or rise) · <b>8/22</b> touch
+                        <code>::backdrop</code>
+                    </p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">A sheet laid on the desk: it rises 14px and settles, framed twice (a rule inside a rule) over a warm, paper-tinted backdrop.</p>
+                    <p data-for="formal">
+                        A sheet laid on the desk: it rises 14px and settles, framed twice (a rule inside a rule) over a warm, paper-tinted backdrop.
+                    </p>
                     <p data-for="cyberpunk">CRT power-on: a signal-yellow line appears, stretches to full width, then opens to full height.</p>
-                    <p data-for="retro">The Windows 3.1 zoom: the window grows from a quarter of its size to full in four hard frames, title bar and all.</p>
+                    <p data-for="retro">
+                        The Windows 3.1 zoom: the window grows from a quarter of its size to full in four hard frames, title bar and all.
+                    </p>
                     <p data-for="deco">A sunburst opens from the top centre, inside a gold double frame.</p>
                 </div>
                 <div class="sx-cols">
@@ -253,7 +342,10 @@
                             <dialog class="kp-dialog" open aria-labelledby="d-a-t" aria-describedby="d-a-d">
                                 <h2 class="kp-dialog__title" id="d-a-t">Close incident INC-4471?</h2>
                                 <p class="kp-dialog__description" id="d-a-d">The day shift sees your note first.</p>
-                                <div class="kp-dialog__actions"><button type="button" class="kp-button kp-button--secondary">Cancel</button><button type="button" class="kp-button kp-button--primary">Close incident</button></div>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--secondary">Cancel</button
+                                    ><button type="button" class="kp-button kp-button--primary">Close incident</button>
+                                </div>
                             </dialog>
                         </div>
                     </div>
@@ -263,13 +355,22 @@
                             <dialog class="kp-dialog" open aria-labelledby="d-b-t" aria-describedby="d-b-d">
                                 <h2 class="kp-dialog__title" id="d-b-t">Close incident INC-4471?</h2>
                                 <p class="kp-dialog__description" id="d-b-d">The day shift sees your note first.</p>
-                                <div class="kp-dialog__actions"><button type="button" class="kp-button kp-button--secondary">Cancel</button><button type="button" class="kp-button kp-button--primary">Close incident</button></div>
+                                <div class="kp-dialog__actions">
+                                    <button type="button" class="kp-button kp-button--secondary">Cancel</button
+                                    ><button type="button" class="kp-button kp-button--primary">Close incident</button>
+                                </div>
                             </dialog>
                         </div>
                         <div class="sx-frames sx-frames--wide" aria-hidden="true">
-                            <div class="sx-backdrop sx-backdrop--mini"><div class="kp-dialog sx-frame" style="--f: 1"><p class="kp-dialog__title">Close?</p></div></div>
-                            <div class="sx-backdrop sx-backdrop--mini"><div class="kp-dialog sx-frame" style="--f: 2"><p class="kp-dialog__title">Close?</p></div></div>
-                            <div class="sx-backdrop sx-backdrop--mini"><div class="kp-dialog sx-frame" style="--f: 3"><p class="kp-dialog__title">Close?</p></div></div>
+                            <div class="sx-backdrop sx-backdrop--mini">
+                                <div class="kp-dialog sx-frame" style="--f: 1"><p class="kp-dialog__title">Close?</p></div>
+                            </div>
+                            <div class="sx-backdrop sx-backdrop--mini">
+                                <div class="kp-dialog sx-frame" style="--f: 2"><p class="kp-dialog__title">Close?</p></div>
+                            </div>
+                            <div class="sx-backdrop sx-backdrop--mini">
+                                <div class="kp-dialog sx-frame" style="--f: 3"><p class="kp-dialog__title">Close?</p></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -279,12 +380,19 @@
             <section class="sx-sec" data-sx="tooltip" aria-labelledby="h-tooltip">
                 <div class="sx-sec__head">
                     <h2 id="h-tooltip">7 · Tooltip</h2>
-                    <p class="sx-count">today: 22/22 style it, almost all as one line in a shared popover list · <b>2/22</b> give it a shape · <b>0/22</b> an entrance</p>
+                    <p class="sx-count">
+                        today: 22/22 style it, almost all as one line in a shared popover list · <b>2/22</b> give it a shape · <b>0/22</b> an entrance
+                    </p>
                 </div>
                 <div class="sx-ideas">
                     <p data-for="formal">A small-caps label on a hairline card with a pointer, fading in with a 3px drop: a marginal note.</p>
-                    <p data-for="cyberpunk">A machine readout: mono, uppercase, a cyan <code>&gt;</code> prompt, a notched corner, wiped in left to right in four frames.</p>
-                    <p data-for="retro">The 1995 balloon: a pale yellow box with a 1px ink border in the DOS face, appearing after the hover delay with no fade at all.</p>
+                    <p data-for="cyberpunk">
+                        A machine readout: mono, uppercase, a cyan <code>&gt;</code> prompt, a notched corner, wiped in left to right in four frames.
+                    </p>
+                    <p data-for="retro">
+                        The 1995 balloon: a pale yellow box with a 1px ink border in the DOS face, appearing after the hover delay with no fade at
+                        all.
+                    </p>
                     <p data-for="blueprint">A drawing annotation: a leader line with a node runs out to the label and draws itself first.</p>
                 </div>
                 <div class="sx-cols">
@@ -309,11 +417,18 @@
             <section class="sx-sec" data-sx="steps" aria-labelledby="h-steps">
                 <div class="sx-sec__head">
                     <h2 id="h-steps">8 · Wizard steps</h2>
-                    <p class="sx-count">today: 22/22 style the wizard · <b>7/22</b> reshape the step markers · cyberpunk's step rule targets <code>.kp-wizard__step</code>, a class nothing renders</p>
+                    <p class="sx-count">
+                        today: 22/22 style the wizard · <b>7/22</b> reshape the step markers · cyberpunk's step rule targets
+                        <code>.kp-wizard__step</code>, a class nothing renders
+                    </p>
                 </div>
                 <div class="sx-ideas">
-                    <p data-for="formal">Editorial numbering: roman numerals in the display face, the steps joined by a hairline rule like a table of contents.</p>
-                    <p data-for="cyberpunk">A chevron run of plates: <code>01 ▸ 02 ▸ 03</code>, the current one signal-yellow, the done ones cyan-edged.</p>
+                    <p data-for="formal">
+                        Editorial numbering: roman numerals in the display face, the steps joined by a hairline rule like a table of contents.
+                    </p>
+                    <p data-for="cyberpunk">
+                        A chevron run of plates: <code>01 ▸ 02 ▸ 03</code>, the current one signal-yellow, the done ones cyan-edged.
+                    </p>
                     <p data-for="retro">An installer's numbered panels: done ones sunken, the current one a raised navy title-bar plate.</p>
                     <p data-for="deco">Faceted diamonds strung on a gold double rule, the current one filled.</p>
                 </div>
@@ -349,16 +464,24 @@
                     <p data-for="formal">A blank ledger page: a double rule above, three faint ruled lines, the title set in italic display type.</p>
                     <p data-for="cyberpunk">A dead channel: notched frame, faint scanlines, the title as a <code>///</code>-prefixed readout.</p>
                     <p data-for="retro">An empty list view: a white sunken well, dither in the corner, the title in the DOS face.</p>
-                    <p data-for="terminal">An empty prompt: <code>&gt;</code> before the title and a block cursor after it, blinking once a second.</p>
+                    <p data-for="terminal">
+                        An empty prompt: <code>&gt;</code> before the title and a block cursor after it, blinking once a second.
+                    </p>
                 </div>
                 <div class="sx-cols">
                     <div class="sx-col">
                         <span class="sx-col__label">Package today</span>
-                        <div class="kp-empty"><p class="kp-empty__title">No incidents this shift</p><p class="kp-empty__body">New incidents appear here as they are logged.</p></div>
+                        <div class="kp-empty">
+                            <p class="kp-empty__title">No incidents this shift</p>
+                            <p class="kp-empty__body">New incidents appear here as they are logged.</p>
+                        </div>
                     </div>
                     <div class="sx-col sx-sig">
                         <span class="sx-col__label">Signature</span>
-                        <div class="kp-empty"><p class="kp-empty__title">No incidents this shift</p><p class="kp-empty__body">New incidents appear here as they are logged.</p></div>
+                        <div class="kp-empty">
+                            <p class="kp-empty__title">No incidents this shift</p>
+                            <p class="kp-empty__body">New incidents appear here as they are logged.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -367,7 +490,9 @@
             <section class="sx-sec" data-sx="link" aria-labelledby="h-link">
                 <div class="sx-sec__head">
                     <h2 id="h-link">10 · Link hover</h2>
-                    <p class="sx-count">today: one base rule (underline, 2px on hover) for all · <b>8/22</b> registers add a shape · <b>4/22</b> motion</p>
+                    <p class="sx-count">
+                        today: one base rule (underline, 2px on hover) for all · <b>8/22</b> registers add a shape · <b>4/22</b> motion
+                    </p>
                 </div>
                 <div class="sx-ideas">
                     <p data-for="formal">The underline doubles under the pointer: the same double rule formal uses to frame what matters.</p>
@@ -378,11 +503,17 @@
                 <div class="sx-cols">
                     <div class="sx-col">
                         <span class="sx-col__label">Package today</span>
-                        <p class="sx-links">Read the <a href="#link">handover guide</a> before the shift. Hovered: <a href="#link" class="is-hover">lock-out procedure</a>.</p>
+                        <p class="sx-links">
+                            Read the <a href="#link">handover guide</a> before the shift. Hovered:
+                            <a href="#link" class="is-hover">lock-out procedure</a>.
+                        </p>
                     </div>
                     <div class="sx-col sx-sig">
                         <span class="sx-col__label">Signature</span>
-                        <p class="sx-links">Read the <a href="#link">handover guide</a> before the shift. Hovered: <a href="#link" class="is-hover">lock-out procedure</a>.</p>
+                        <p class="sx-links">
+                            Read the <a href="#link">handover guide</a> before the shift. Hovered:
+                            <a href="#link" class="is-hover">lock-out procedure</a>.
+                        </p>
                     </div>
                 </div>
             </section>

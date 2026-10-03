@@ -36,15 +36,15 @@
 /* The pellets: square pixel dots on the field, from just past Pac-Man's
    mouth at 0% to the end of the run. */
 [data-theme='retro'][data-ps-variant='pacman'] .kp-progressbar__track {
-    background-image: repeating-linear-gradient(
-        90deg,
-        var(--primary) 0 var(--kp-pm-dot),
-        transparent var(--kp-pm-dot) var(--kp-pm-pitch)
-    );
+    background-image: repeating-linear-gradient(90deg, var(--primary) 0 var(--kp-pm-dot), transparent var(--kp-pm-dot) var(--kp-pm-pitch));
     background-repeat: no-repeat;
     background-position: calc(var(--kp-pm-size) + 3px) 50%;
     /* A whole number of pellets: the row ends on a whole dot, never a sliver. */
-    background-size: calc(round(down, 100% - var(--kp-pm-size) - 3px + var(--kp-pm-pitch) - var(--kp-pm-dot), var(--kp-pm-pitch)) - var(--kp-pm-pitch) + var(--kp-pm-dot)) var(--kp-pm-dot);
+    background-size: calc(
+            round(down, 100% - var(--kp-pm-size) - 3px + var(--kp-pm-pitch) - var(--kp-pm-dot), var(--kp-pm-pitch)) - var(--kp-pm-pitch) +
+                var(--kp-pm-dot)
+        )
+        var(--kp-pm-dot);
 }
 
 /* The eaten part: the field itself, painted over the pellets up to the
@@ -62,7 +62,8 @@
     inline-size: var(--kp-pm-size);
     transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-pm-size))));
     transition: transform 240ms linear;
-    filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground)) drop-shadow(0 -1px 0 var(--foreground));
+    filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground))
+        drop-shadow(0 -1px 0 var(--foreground));
 }
 
 [data-theme='retro'][data-ps-variant='pacman'] .kp-progressbar__head::before {

@@ -1125,7 +1125,9 @@
         border-radius: 0;
     }
 
-    [data-theme='cyberpunk'] .kp-wizard__step {
+    /* The step labels; written for `.kp-wizard__step`, a class the package
+       never renders, so it matched nothing until 2026-10-03. */
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
         font-family: var(--kp-mono);
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -1347,6 +1349,19 @@
         block-size: 0.55rem;
         background: var(--primary);
         clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+    }
+
+    /* A radio is a round cell with a lit dot, never the checkbox's square:
+       one rule above made every check square (the survey of 2026-10-03). */
+    [data-theme='cyberpunk'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        clip-path: none;
     }
 
     [data-theme='cyberpunk'] .kp-field__check:focus-visible {

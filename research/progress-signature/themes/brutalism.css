@@ -26,9 +26,7 @@
 
 /* The tape: the ink, with the plate hatched across it. */
 [data-theme='brutalism'] .kp-progressbar__fill {
-    background:
-        repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px),
-        var(--primary);
+    background: repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px), var(--primary);
     transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
 }
 

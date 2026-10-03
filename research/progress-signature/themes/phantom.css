@@ -42,7 +42,12 @@
     inset: 0;
     z-index: 1;
     background: var(--kp-red-deep, var(--sidebar-background));
-    clip-path: polygon(0 0, calc(var(--kp-ps-edge) + var(--kp-ps-cut) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 0, calc(var(--kp-ps-edge) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 100%, 0 100%);
+    clip-path: polygon(
+        0 0,
+        calc(var(--kp-ps-edge) + var(--kp-ps-cut) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 0,
+        calc(var(--kp-ps-edge) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 100%,
+        0 100%
+    );
     transition: clip-path var(--fx-duration) var(--fx-ease);
 }
 

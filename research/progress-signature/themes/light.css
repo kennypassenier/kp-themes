@@ -58,5 +58,6 @@
     background:
         radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% - 1rem) 50% / 0.75rem 0.75rem no-repeat,
         radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) 50% 50% / 0.75rem 0.75rem no-repeat,
-        radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem no-repeat;
+        radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem
+            no-repeat;
 }

@@ -13,7 +13,8 @@
 /* The leader: a row of small ink dots, spaced so none is ever cut. */
 [data-theme='sepia'] .kp-progressbar__track {
     border-radius: 0;
-    background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center / 0.4375rem 0.1875rem space no-repeat;
+    background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center / 0.4375rem 0.1875rem space
+        no-repeat;
 }
 
 /* The Oxford rule: a 3px stroke over a 1px hairline, ending under the

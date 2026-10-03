@@ -792,6 +792,19 @@
         image-rendering: pixelated;
     }
 
+    /* The radio: the round well of a 1995 option button with a solid dot,
+       not the checkbox's square and pixel tick (the survey of 2026-10-03). */
+    [data-theme='retro'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='retro'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 5px;
+        block-size: 5px;
+        border-radius: 50%;
+        background: var(--foreground);
+    }
+
     [data-theme='retro'] .kp-field__check:focus-visible {
         box-shadow:
             0 0 0 2px var(--focus-ring-contrast),

@@ -67,7 +67,13 @@
 [data-theme='lapis'] .kp-progressbar__head::after {
     transform: rotate(45deg);
     background:
-        radial-gradient(circle, var(--lp-gold) 0 1.6px, var(--accent) 2.1px 3.2px, color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px, transparent 4.6px),
+        radial-gradient(
+            circle,
+            var(--lp-gold) 0 1.6px,
+            var(--accent) 2.1px 3.2px,
+            color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px,
+            transparent 4.6px
+        ),
         var(--accent);
 }
 

@@ -46,37 +46,37 @@ command grep -E '<pattern>' css/<theme>-register.css | command grep -cE '[{,][[:
 node research/signature-elements/measure.mjs
 ```
 
-| element | any | shape | motion | reading |
-| --- | --- | --- | --- | --- |
-| spinner | 22/22 | **0/22** | 0/22 | every theme recolours the same rotating ring |
-| progress (native) | 22/22 | 1/22 | 0/22 | in hand: research/progress-signature |
-| tooltip | 22/22 | **2/22** | 0/22 | mostly one line in a shared popover selector list |
-| toast | 22/22 | 3/22 | 1/22 | restyled, but nothing arrives in a theme's own way |
-| empty state | 22/22 | 4/22 | 0/22 | nearly all a dashed box |
-| pagination | 22/22 | 4/22 | 0/22 | |
-| breadcrumb | 22/22 | 4/22 | 0/22 | |
-| timeline | 22/22 | 3/22 | 0/22 | |
-| back-to-top | 22/22 | 1/22 | 0/22 | |
-| wizard steps | 22/22 | 7/22 | 0/22 | cyberpunk's rule targets `.kp-wizard__step`, which nothing renders |
-| tabs / accordion / tag | 22/22 | 7/22 | 0-1/22 | the same seven loud themes each time |
-| checkbox / radio | 18/22 | 7/22 | 0/22 | **0/22 have a radio rule** |
-| switch | 22/22 | 8/22 | 1/22 | the thumb moves by `inset-inline-start` (layout) in all 22 |
-| link (`a`) | 22/22 | 8/22 | 4/22 | one base rule: underline, 2px on hover |
-| badge | 22/22 | 9/22 | 0/22 | |
-| alert | 22/22 | 9/22 | 0/22 | |
-| skeleton | 22/22 | 10/22 | **0/22** | a texture in 10, its own motion in none |
-| dialog | 22/22 | 11/22 | 6/22 | the six entrances are all a fade or a rise |
-| dialog `::backdrop` | 8/22 | 2/22 | 3/22 | |
-| `::selection` | 2/22 | 0/22 | 0/22 | the base layer already paints it in the primary pair for all |
-| caret | 5/22 | 2/22 | 0/22 | |
-| cursor | 5/22 | 1/22 | 0/22 | |
-| scrollbar | 16/22 | 1/22 | 0/22 | coloured in 16, shaped only in retro |
-| table row hover | 17/22 | 0/22 | 0/22 | |
-| card hover | 1/22 | 1/22 | 0/22 | |
-| range slider | 0/22 | 0/22 | 0/22 | no general component; only inside the colour picker |
-| divider (`data-kp-divider`) | 22/22 | 21/22 | 2/22 | already a signature in every theme |
-| `<mark>` / reveals | 22/22 | 19/22 | 22/22 | already a signature (the hook vocabulary, S45) |
-| focus ring | 22/22 | n/a | n/a | out of bounds: DI2 |
+| element                     | any   | shape    | motion   | reading                                                            |
+| --------------------------- | ----- | -------- | -------- | ------------------------------------------------------------------ |
+| spinner                     | 22/22 | **0/22** | 0/22     | every theme recolours the same rotating ring                       |
+| progress (native)           | 22/22 | 1/22     | 0/22     | in hand: research/progress-signature                               |
+| tooltip                     | 22/22 | **2/22** | 0/22     | mostly one line in a shared popover selector list                  |
+| toast                       | 22/22 | 3/22     | 1/22     | restyled, but nothing arrives in a theme's own way                 |
+| empty state                 | 22/22 | 4/22     | 0/22     | nearly all a dashed box                                            |
+| pagination                  | 22/22 | 4/22     | 0/22     |                                                                    |
+| breadcrumb                  | 22/22 | 4/22     | 0/22     |                                                                    |
+| timeline                    | 22/22 | 3/22     | 0/22     |                                                                    |
+| back-to-top                 | 22/22 | 1/22     | 0/22     |                                                                    |
+| wizard steps                | 22/22 | 7/22     | 0/22     | cyberpunk's rule targets `.kp-wizard__step`, which nothing renders |
+| tabs / accordion / tag      | 22/22 | 7/22     | 0-1/22   | the same seven loud themes each time                               |
+| checkbox / radio            | 18/22 | 7/22     | 0/22     | **0/22 have a radio rule**                                         |
+| switch                      | 22/22 | 8/22     | 1/22     | the thumb moves by `inset-inline-start` (layout) in all 22         |
+| link (`a`)                  | 22/22 | 8/22     | 4/22     | one base rule: underline, 2px on hover                             |
+| badge                       | 22/22 | 9/22     | 0/22     |                                                                    |
+| alert                       | 22/22 | 9/22     | 0/22     |                                                                    |
+| skeleton                    | 22/22 | 10/22    | **0/22** | a texture in 10, its own motion in none                            |
+| dialog                      | 22/22 | 11/22    | 6/22     | the six entrances are all a fade or a rise                         |
+| dialog `::backdrop`         | 8/22  | 2/22     | 3/22     |                                                                    |
+| `::selection`               | 2/22  | 0/22     | 0/22     | the base layer already paints it in the primary pair for all       |
+| caret                       | 5/22  | 2/22     | 0/22     |                                                                    |
+| cursor                      | 5/22  | 1/22     | 0/22     |                                                                    |
+| scrollbar                   | 16/22 | 1/22     | 0/22     | coloured in 16, shaped only in retro                               |
+| table row hover             | 17/22 | 0/22     | 0/22     |                                                                    |
+| card hover                  | 1/22  | 1/22     | 0/22     |                                                                    |
+| range slider                | 0/22  | 0/22     | 0/22     | no general component; only inside the colour picker                |
+| divider (`data-kp-divider`) | 22/22 | 21/22    | 2/22     | already a signature in every theme                                 |
+| `<mark>` / reveals          | 22/22 | 19/22    | 22/22    | already a signature (the hook vocabulary, S45)                     |
+| focus ring                  | 22/22 | n/a      | n/a      | out of bounds: DI2                                                 |
 
 The pattern is clear. The places with a per-theme identity are the hook
 vocabulary (divider, mark, reveals), and that is because each theme was asked

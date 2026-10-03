@@ -39,7 +39,8 @@
     inline-size: 3.5rem;
     translate: -50% 0;
     background:
-        linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px calc(100% - 4px) no-repeat,
+        linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px calc(100% - 4px)
+            no-repeat,
         radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.14) 55%, transparent);
     opacity: clamp(0, var(--kp-value) * 1000, 1);
     transition:
@@ -57,9 +58,11 @@
     clip-path: none;
     border-radius: 0;
     background:
-        radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% - 1rem) 50% / 1rem 100% no-repeat,
+        radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% - 1rem) 50% / 1rem
+            100% no-repeat,
         radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) 50% 50% / 1rem 100% no-repeat,
-        radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% + 1rem) 50% / 1rem 100% no-repeat;
+        radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% + 1rem) 50% / 1rem
+            100% no-repeat;
     animation: kp-ps-shade-dark-focus 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
 }
 

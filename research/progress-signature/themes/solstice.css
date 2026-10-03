@@ -15,8 +15,8 @@
 [data-theme='solstice'] .kp-progressbar__track {
     border-radius: var(--radius);
     background:
-        linear-gradient(color-mix(in srgb, var(--border-strong) 45%, transparent), color-mix(in srgb, var(--border-strong) 45%, transparent)) center / 100% 1px
-            no-repeat,
+        linear-gradient(color-mix(in srgb, var(--border-strong) 45%, transparent), color-mix(in srgb, var(--border-strong) 45%, transparent)) center /
+            100% 1px no-repeat,
         var(--muted);
 }
 
@@ -45,8 +45,14 @@
     inset-block: 0;
     inline-size: 32%;
     border-radius: 0;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 70%, transparent) 55%, var(--primary) calc(100% - var(--kp-ps-head) / 2), transparent 0) center / 100%
-        calc(100% - 4px) no-repeat;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--accent) 70%, transparent) 55%,
+            var(--primary) calc(100% - var(--kp-ps-head) / 2),
+            transparent 0
+        )
+        center / 100% calc(100% - 4px) no-repeat;
     animation: kp-progressbar-solstice-arc 2400ms var(--fx-ease) infinite;
 }
 
