@@ -2373,3 +2373,12 @@ with one rule from the notes for every theme: a busy indicator (spinner,
 skeleton) visibly moves, in a seamless loop. The dialog-open element lost its
 approval in every theme ("dat heb ik niet kunnen zien") and is judged again in
 research/signature-dialog/.
+Round two came back the same day: 195 of 198 approved; formal's skeleton
+("waarom die witruimte? … moet in elke skeleton links beginnen"), pastel's
+skeleton and lapis's spinner ("ik zei snellere animatie") redrawn. Every
+skeleton line now starts at the inline-start edge, measured in all 22 themes by
+research/signature-elements/check-flush.mjs (sepia's drop cap became a one-line
+initial, blueprint's ticks moved 3px). The dialog entrances: 14 approved;
+light, dark, cyberpunk, synthwave and brutalism at a quarter of their speed,
+blueprint and deco at half, titanium's corners cut from the first frame.
+

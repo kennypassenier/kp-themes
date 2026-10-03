@@ -54,7 +54,7 @@
     transform-origin: 0 50%;
 }
 
-/* ── 2 · Skeleton: a paragraph waiting under its drop cap ─────────────── */
+/* ── 2 · Skeleton: a paragraph waiting behind its initial ────────────── */
 
 [data-theme='sepia'] .sx-sig .kp-skeleton {
     --sx-dur: 3200ms;
@@ -70,18 +70,17 @@
     margin-block-start: 0.7rem;
 }
 
-/* The first two lines stand aside for the drop cap. */
-[data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:nth-child(-n + 2) {
-    padding-inline-start: 2.3rem;
-}
-
+/* The initial is the first line's first letter: it stands on the line's own
+   start, one line high, and no line steps aside for it (Kenny, 2026-10-03:
+   "moet in elke skeleton links beginnen"; the two-line drop cap used to
+   push the first two lines in). */
 [data-theme='sepia'] .sx-sig .sx-skel .kp-skeleton:first-child::before {
     content: '';
     position: absolute;
-    inset-block-start: 0;
+    inset-block-start: -0.35rem;
     inset-inline-start: 0;
-    inline-size: 1.75rem;
-    block-size: 2.1rem;
+    inline-size: 1.4rem;
+    block-size: 1.4rem;
     border: 1px solid hsl(from var(--primary) h s l / 0.45);
     background: hsl(from var(--primary) h s l / 0.14);
 }

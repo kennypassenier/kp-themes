@@ -167,7 +167,8 @@
    large shadow step. */
 
 [data-theme='light'] .sx-sig .kp-dialog {
-    --sx-dur: 560ms;
+    /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+    --sx-dur: 2240ms;
     border-color: var(--border);
     box-shadow: var(--kp-shadow-lg);
 }

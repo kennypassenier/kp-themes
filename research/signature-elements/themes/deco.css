@@ -175,7 +175,8 @@
 /* ── 6 · Dialog: a sunburst inside a gold double frame ────────────────── */
 
 [data-theme='deco'] .sx-sig .kp-dialog {
-    --sx-dur: 560ms;
+    /* Kenny, 2026-10-03: the entrance at ½ of its first speed ("I prefer this at half speed"). */
+    --sx-dur: 1120ms;
     position: relative;
     isolation: isolate;
     border: 4px double var(--primary);

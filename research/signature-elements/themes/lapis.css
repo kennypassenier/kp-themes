@@ -24,9 +24,11 @@
 /* ── 1 · Spinner: a ten-fold girih star ───────────────────────────────── */
 
 [data-theme='lapis'] .sx-sig .kp-spinner {
-    /* 2000ms before Kenny's review (2026-10-03): "could move slightly
-       faster". A third faster, the same eased tenth of a turn. */
-    --sx-dur: 1300ms;
+    /* A tenth of a turn per tick. 2000ms per tick at first (18 deg/s),
+       1300ms after Kenny's first note (28 deg/s), which he could not tell
+       from the first ("ik zei snellere animatie, dit lijkt bijna hetzelfde",
+       2026-10-03); now 450ms (80 deg/s, four and a half times the first). */
+    --sx-dur: 450ms;
     position: relative;
     border: 0;
     border-radius: 0;
@@ -427,7 +429,7 @@
 /* A tenth of a turn, eased, then still: the star's own symmetry. */
 @keyframes sx-lapis-turn {
     0%,
-    40% {
+    25% {
         transform: rotate(0);
     }
 

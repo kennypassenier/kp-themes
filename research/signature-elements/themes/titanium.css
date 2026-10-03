@@ -256,10 +256,26 @@
 /* ── 6 · Dialog: cut from the stock ──────────────────────────────────────
    The panel is revealed top to bottom by a linear cut, with the oxide
    cutter line riding the cut's edge down and stopping at the foot. The
-   clip runs only during the entrance, so the register's chamfer returns. */
+   cut line is a registered length the clip reads, so the panel's chamfered
+   corners stand from the first frame (Kenny, 2026-10-03: "de hoeken … moeten
+   er altijd al af zijn"); at rest it is 100% and the clip is the register's. */
+
+@property --sx-ti-cut {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 100%;
+}
 
 [data-theme='titanium'] .sx-sig .kp-dialog {
     --sx-dur: 240ms;
+    clip-path: polygon(
+        var(--kp-chamfer-panel) 0,
+        100% 0,
+        100% min(var(--sx-ti-cut), 100% - var(--kp-chamfer-panel)),
+        calc(100% - var(--kp-chamfer-panel)) var(--sx-ti-cut),
+        0 var(--sx-ti-cut),
+        0 min(var(--kp-chamfer-panel), var(--sx-ti-cut))
+    );
 }
 
 [data-theme='titanium'] .sx-sig .kp-dialog::after {
@@ -512,11 +528,11 @@
 
 @keyframes sx-ti-cut {
     from {
-        clip-path: inset(0 0 100% 0);
+        --sx-ti-cut: 0%;
     }
 
     to {
-        clip-path: inset(0 0 0 0);
+        --sx-ti-cut: 100%;
     }
 }
 

@@ -46,7 +46,10 @@
     --sx-dur: 2800ms;
     position: relative;
     block-size: 0.9rem;
-    margin-inline: 4px;
+    /* 1px at the start, so the dimension tick (inset -1px) stands on the box
+       edge and the line starts there (Kenny, 2026-10-03: every skeleton line
+       starts at the left edge). */
+    margin-inline: 1px 4px;
     border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
     border-radius: 0;
     background: none;
@@ -198,7 +201,8 @@
 }
 
 [data-theme='blueprint'] .sx-sig .kp-dialog {
-    --sx-dur: 420ms;
+    /* Kenny, 2026-10-03: the entrance at ½ of its first speed ("I prefer this at 1/2 speed"). */
+    --sx-dur: 840ms;
     border: 1px solid var(--primary);
     border-radius: 2px;
     background: var(--popover);

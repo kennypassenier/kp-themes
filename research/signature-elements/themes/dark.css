@@ -236,7 +236,8 @@
    and clears while the dialog settles from 2% large. */
 
 [data-theme='dark'] .sx-sig .kp-dialog {
-    --sx-dur: 600ms;
+    /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+    --sx-dur: 2400ms;
 }
 
 [data-theme='dark'] .sx-sig .kp-dialog::after {

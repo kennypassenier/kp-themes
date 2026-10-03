@@ -28,6 +28,13 @@ themes (formal, cyberpunk, retro) plus one more theme each.
 - **No `clip-path` on a focusable element.** It clips the focus ring that DI2
   makes a system constant. Notches and shears go on pseudo-elements, or on
   elements that never take focus (a tooltip, a skeleton, an empty state).
+- **Every skeleton line starts at the inline-start edge**, in every theme: no
+  indent, no drop cap that pushes lines in, no right alignment (Kenny,
+  2026-10-03, twice). `check-flush.mjs` measures it in all 22 themes and must
+  pass before a skeleton is shown; the package's skeleton takes the same check
+  as a test when it ships.
+- **A busy indicator moves.** Spinner and skeleton loop seamlessly while busy
+  (Kenny, 2026-10-03), whatever a theme's "nothing loops" note says.
 - **The focus ring is left alone.** DI2: "the one thing a theme may not express
   differently". It was on the brief's list. It is measured below and ruled out.
 

@@ -211,7 +211,8 @@
 }
 
 [data-theme='synthwave'] .sx-sig .kp-dialog {
-    --sx-dur: var(--kp-wipe, 720ms);
+    /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+    --sx-dur: calc(4 * var(--kp-wipe, 720ms));
     border-radius: 2px;
     box-shadow:
         inset 0 2px 0 var(--primary),
@@ -392,7 +393,7 @@
     }
 
     [data-theme='synthwave'] .sx-sig .kp-dialog {
-        animation: sx-sw-rise var(--sx-dur) var(--sx-sw-ease) 160ms backwards;
+        animation: sx-sw-rise var(--sx-dur) var(--sx-sw-ease) 640ms backwards;
     }
 
     [data-theme='synthwave'] .sx-sig .kp-tooltip {

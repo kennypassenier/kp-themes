@@ -183,7 +183,8 @@
 }
 
 [data-theme='brutalism'] .sx-sig .kp-dialog {
-    --sx-dur: 380ms;
+    /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+    --sx-dur: 1520ms;
     padding-block-start: 0;
     border: 3px solid var(--border-strong);
     border-radius: 0;

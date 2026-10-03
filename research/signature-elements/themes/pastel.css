@@ -9,7 +9,7 @@
    Loops: pastel says "nothing loops, nothing opposes its own direction".
    The two busy indicators are the exception (Kenny, 2026-10-03: a busy
    indicator must keep moving), and they keep the second half of the
-   rule: the spinner only ever turns one way, and the skeleton's roller
+   rule: the spinner only ever turns one way, and the skeleton's sherbet
    only ever runs left to right. */
 
 [data-theme='pastel'] .sx-sig {
@@ -61,50 +61,68 @@
     --sx-ink: var(--primary);
 }
 
-/* ── 2 · Skeleton: plates under a passing roller ──────────────────────────
-   Pill plates printed in two passes (the plum key line held 2px off its
-   fill). While busy, the ink roller keeps passing over them: a soft band
-   of bare paper runs along each plate, left to right only, fading in at
-   the start and out at the end so every pass flows into the next. */
+/* ── 2 · Skeleton: sherbet flowing through sugar pills ────────────────────
+   Soft candy pills, every line flush at the left edge, filled with a
+   sherbet ribbon of the theme's own pastels (rose, peach, mint, sky,
+   lavender, all read from tokens). While busy the ribbon keeps flowing
+   through the pills, left to right only, one colour period per loop, so
+   the last frame is the first frame again. The lines share one period and
+   run a beat apart, so the colours ripple down the block like a wave. A
+   sugar gloss along the top of each pill keeps it soft and sweet. */
 
 [data-theme='pastel'] .sx-sig .kp-skeleton {
-    --sx-dur: 1700ms;
+    --sx-dur: 4000ms;
+    /* One colour period of the ribbon: the loop moves exactly this far. */
+    --sx-period: 20rem;
+    /* The five sherbet scoops: each a pastel token, its saturation lifted
+       a step so the colours read as candy rather than as grey milk. */
+    --sx-rose: hsl(from var(--primary) h calc(s * 1.15) 86%);
+    --sx-peach: hsl(from var(--warning) h calc(s * 1.3) 84%);
+    --sx-mint: hsl(from var(--accent) h calc(s * 1.25) 83%);
+    --sx-sky: hsl(from var(--secondary) h calc(s * 1.5) 85%);
+    --sx-lilac: hsl(from var(--info) h calc(s * 1.2) 85%);
     position: relative;
+    overflow: hidden;
     block-size: 0.95rem;
+    margin-inline: 0;
     border-radius: 999px;
     background: var(--accent);
-    transform-origin: 0 50%;
     animation: none;
-}
-
-[data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2) {
-    background: var(--info);
 }
 
 [data-theme='pastel'] .sx-sig .kp-skeleton + .kp-skeleton {
     margin-block-start: 0.6rem;
 }
 
-/* The roller: a band of paper a third of the plate wide. */
+/* The sherbet ribbon: one period wider than the pill, starting one period
+   to its left, so a translation of exactly one period lands on a frame
+   identical to the start. */
 [data-theme='pastel'] .sx-sig .kp-skeleton::before {
     content: '';
     position: absolute;
     inset-block: 0;
-    inset-inline-start: 0;
-    inline-size: 35%;
-    background: linear-gradient(to right, transparent, hsl(from var(--card) h s l / 0.8), transparent);
-    opacity: 0;
+    inset-inline-start: calc(var(--sx-period) * -1);
+    inline-size: calc(100% + var(--sx-period) * 2);
+    background: repeating-linear-gradient(
+        to right,
+        var(--sx-rose) 0,
+        var(--sx-peach) calc(var(--sx-period) * 0.2),
+        var(--sx-mint) calc(var(--sx-period) * 0.4),
+        var(--sx-sky) calc(var(--sx-period) * 0.6),
+        var(--sx-lilac) calc(var(--sx-period) * 0.8),
+        var(--sx-rose) var(--sx-period)
+    );
 }
 
-/* The key line, printed on the second drum: a plum outline that never
-   quite lines up with its fill, held 2px down and right. */
+/* The sugar gloss: a soft white highlight along the top of the pill. */
 [data-theme='pastel'] .sx-sig .kp-skeleton::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border: 1.5px solid hsl(from var(--primary) h s l / 0.55);
-    border-radius: inherit;
-    translate: 2px 2px;
+    inset-block-start: 20%;
+    inset-inline: 0.45rem;
+    block-size: 22%;
+    border-radius: 999px;
+    background: hsl(from var(--card) h s l / 0.6);
 }
 
 /* ── 3 · Switch: a sticker thumb that springs across ──────────────────── */
@@ -407,19 +425,20 @@
         animation: sx-pastel-hop var(--sx-dur) infinite;
     }
 
-    /* The roller passes over every plate, left to right, without end;
-       the lines run a fifth of a pass apart (negative delays, so the
-       cascade is already running when the page appears). */
+    /* The sherbet flows through every pill, left to right, without end:
+       one period per loop at a constant speed, so the loop has no seam.
+       The lines run a sixth of a loop apart (negative delays, so the
+       ripple is already running when the page appears). */
     [data-theme='pastel'] .sx-sig .kp-skeleton::before {
-        animation: sx-pastel-roll var(--sx-dur) cubic-bezier(0.45, 0, 0.3, 1) infinite;
+        animation: sx-pastel-flow var(--sx-dur) linear infinite;
     }
 
     [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(2)::before {
-        animation-delay: calc(var(--sx-dur) * -4 / 5);
+        animation-delay: calc(var(--sx-dur) * -1 / 6);
     }
 
     [data-theme='pastel'] .sx-sig .sx-skel .kp-skeleton:nth-child(3)::before {
-        animation-delay: calc(var(--sx-dur) * -3 / 5);
+        animation-delay: calc(var(--sx-dur) * -2 / 6);
     }
 
     [data-theme='pastel'] .sx-sig .kp-switch__input::before {
@@ -478,20 +497,13 @@
 
 /* Travel: the band is 35% of the plate, so 65% of the plate is 186% of
    the band. Invisible at both ends, so the jump back is never seen. */
-@keyframes sx-pastel-roll {
-    0% {
-        opacity: 0;
+@keyframes sx-pastel-flow {
+    from {
         transform: none;
     }
 
-    22%,
-    78% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateX(186%);
+    to {
+        transform: translateX(var(--sx-period));
     }
 }
 

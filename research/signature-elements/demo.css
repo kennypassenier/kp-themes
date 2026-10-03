@@ -538,25 +538,15 @@
     background: var(--sx-fm-words);
 }
 
-[data-theme='formal'] .sx-sig .kp-skeleton:first-child::before,
-[data-theme='formal'] .sx-sig .kp-skeleton:first-child::after {
-    inset-inline-start: 2em;
-}
-
 /* The ink: the same words in navy, hidden until the pen passes. */
 [data-theme='formal'] .sx-sig .kp-skeleton::after {
     color: var(--primary);
     clip-path: inset(0 100% 0 0);
 }
 
-/* In the frames strip every frame is one line on its own: no indent, no rule. */
+/* In the frames strip every frame is one line on its own: no rule. */
 [data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child {
     border-block-start: 0;
-}
-
-[data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child::before,
-[data-theme='formal'] .sx-sig .sx-frames > .kp-skeleton:first-child::after {
-    inset-inline-start: 0;
 }
 
 /* cyberpunk: notched data slots, a scan head. */
@@ -1047,7 +1037,8 @@
 
 /* cyberpunk: CRT power-on — a line, full width, then full height. */
 [data-theme='cyberpunk'] .sx-sig .kp-dialog {
-    --sx-dur: 380ms;
+    /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
+    --sx-dur: 1520ms;
     box-shadow: inset 0 3px 0 var(--primary);
 }
 
