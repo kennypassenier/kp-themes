@@ -5463,3 +5463,54 @@ uses.
 
 **9 · When we review the measure.** At the next component that lists names in
 a menu.
+
+## fix-95 · A close button on a coloured plate drew a plate of its own (2026-10-04)
+
+**1 · What went wrong.** Thirteen registers give `.kp-icon-button` a plate
+of its own (the card colour and a border). On the error toast that plate
+sat under the toast's dark ink, and the close button read 1.01:1 in dark,
+1.03 in forest, 1.57 in blueprint, 1.13 in deco and 1.20 in titanium
+(tests/nostromo-notes.spec.mjs, "every word on a severity toast reads at
+4.5:1", the 9.2.0 release suite at 21:14). Measured in Firefox: in dark
+the button's background was `rgb(17, 19, 23)` under ink `rgb(33, 11, 8)`.
+
+**2 · Which gate let it through.** The toast test runs only at the release
+suite, and the pixel check never saw the button: the block with the error
+toast was new and not yet approved.
+
+**3 · Where else the same fault sits.** The property: an icon button inside
+a coloured plate that keeps a plate, or ink, of its own. Searched with
+`flock /tmp/kp-themes-shot.lock node alertpaint.mjs` (Firefox,
+catalogue/feedback.html #alerts and #alert-long, 22 themes, the ink of
+`.kp-alert .kp-icon-button` against its own plate or else the alert's):
+11 close buttons in 7 themes read under 4.5:1 — forest and brutalism with
+a plate of their own (1.03), synthwave 2.61, terminal 2.49, sepia 1.92 and
+lapis 2.20 on the destructive alert, and nostromo on all four kinds
+(1.55 to 2.50). Dialog close buttons sit on the dialog's own surface and
+were not in the search.
+
+**4 · How we prevent recurrence.** The rule 9.2.0 gave the toast — on a
+plate the icon button takes the plate's background and ink
+(`background: transparent; border-color: transparent; color: inherit`) —
+goes to the alert too, in css/components.css and in the thirteen registers,
+in 9.2.1.
+
+**5 · What the remedy costs.** One rule per register and one in
+components.css; one more loop in the existing toast test.
+
+**6 · Who enforces it.** Code: tests/nostromo-notes.spec.mjs, "every word
+on a severity toast reads at 4.5:1", extended to the alerts; it fails on
+the eleven cases first (rule 8).
+
+**7 · How we measure that it works, and when.** At the 9.2.1 release
+suite the extended test is green in 22 themes. Queued as fix-95-M1.
+
+**8 · If the measurement fails.** The buttons on every coloured plate get
+`background: transparent; color: inherit` from components.css in a layer
+that wins over the registers, the way the progress bar's reduced-motion
+rule already does.
+
+**9 · When we review the measure.** At the round that gives the registers
+their own look for the twelve new classes (gates/register-pending.json):
+whether "a button on a plate inherits the plate" can be a rule of
+components.css alone.
