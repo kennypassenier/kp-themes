@@ -822,6 +822,10 @@ function narrowing(from, to, moved) {
         if (a?.digest === b?.digest) continue;
         changed.push({ theme: '', families: familiesIn(`${a?.when ?? ''} ${b?.when ?? ''}`) });
     }
+    // A theme's own page-wide CSS (its tokens on its root, its faces) reaches
+    // every block in that theme.
+    for (const theme of new Set([...Object.keys(before.themes ?? {}), ...Object.keys(after.themes ?? {})]))
+        if (before.themes?.[theme] !== after.themes?.[theme]) changed.push({ theme, families: [] });
     const modules = new Set([...Object.keys(before.modules ?? {}), ...Object.keys(after.modules ?? {})]);
     // A rule keyed by something other than a theme (a stylesheet of its own)
     // reaches every theme.
@@ -851,7 +855,10 @@ function narrowing(from, to, moved) {
     };
     return {
         /** A file the map describes rule by rule. */
-        covers: (/** @type {string} */ file) => file === 'css/components.css' || /^css\/.+-register\.css$/.test(file) || modules.has(file),
+        // Every stylesheet the map is built from: css/themes.css too, whose
+        // version header the map masks (Kenny, 2026-10-04: the 9.0.1 bump
+        // alone photographed all 3031 pairs again).
+        covers: (/** @type {string} */ file) => /^css\/[^/]+\.css$/.test(file) || modules.has(file),
         /** Whether a changed rule or module can reach this block in this theme. */
         touches: (/** @type {string} */ key, /** @type {string} */ theme, /** @type {string} */ page) => {
             const own = new Set(familiesOf(page, key));
