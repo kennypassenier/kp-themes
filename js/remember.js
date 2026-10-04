@@ -21,7 +21,8 @@
 //                consumer can park everything this package writes under a
 //                namespace of their own.
 //   · component  the package's name for the KIND of thing — `sidenav`,
-//                `disclosure`, `tree`, `split`, `datatable`. The module
+//                `disclosure`, `tree`, `split`, `datatable`, `tour`
+//                (js/tour.js: a tour that ended, under its name). The module
 //                supplies it; an author never writes it. Two different
 //                components may carry the same name without colliding.
 //   · name       the value of `data-kp-remember` on the element, verbatim.
@@ -85,7 +86,7 @@ export const REMEMBER_PREFIX = 'kp-remember';
 /**
  * The kinds of state this package remembers.
  *
- * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable'} Remembered
+ * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour'} Remembered
  */
 
 /**
@@ -379,6 +380,8 @@ const PAINTERS = {
     tree: paintTree,
     split: paintSplit,
     datatable: paintDatatable,
+    // A tour has no markup to paint: js/tour.js reads its memory itself.
+    tour: () => {},
 };
 
 /**
@@ -459,7 +462,10 @@ export function attachRemembered(root = document) {
     const wired = new Map();
     /** @param {ParentNode} scope */
     const wire = (scope) => {
-        const found = [...(scope instanceof Element && scope.matches(`details[${REMEMBER_ATTRIBUTE}]`) ? [scope] : []), ...scope.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)];
+        const found = [
+            ...(scope instanceof Element && scope.matches(`details[${REMEMBER_ATTRIBUTE}]`) ? [scope] : []),
+            ...scope.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`),
+        ];
         for (const element of found) {
             const details = /** @type {HTMLDetailsElement} */ (element);
             if (wiredDisclosures.has(details)) continue;
@@ -500,7 +506,8 @@ export function attachRemembered(root = document) {
                 // A hold that went: paint what was stored back on what it held.
                 const target = /** @type {Element} */ (record.target);
                 if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
-                for (const [details, { memory }] of wired) if ((details === target || target.contains(details)) && !held(details)) paintDisclosure(details, memory);
+                for (const [details, { memory }] of wired)
+                    if ((details === target || target.contains(details)) && !held(details)) paintDisclosure(details, memory);
                 continue;
             }
             for (const node of record.addedNodes) if (node instanceof view.Element) wire(node);

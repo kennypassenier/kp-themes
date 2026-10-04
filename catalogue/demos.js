@@ -8,6 +8,8 @@ import { THEME_EVENT } from '../js/theme-core.js';
 import { attachAttention, setAttention } from '../js/attention.js';
 import { setAgo } from '../js/freshness.js';
 import { forgetRememberedExcept } from '../js/remember.js';
+import { attachCalendars, CALENDAR_PICK_EVENT, dayKey, formatDayKey, setCalendarDays, setCalendarLegend, setCalendarState } from '../js/calendar.js';
+import { numericTime } from '../js/chart.js';
 
 const WORDS = {
     '': 'Saved. The handover note is visible to the day shift.',
@@ -341,6 +343,235 @@ document.addEventListener('kp-kpi-toggle', (event) => {
     line.textContent = `kp-kpi-toggle: pressed ${pressed}. ${on.length ? `Filtering the list: ${[...new Set(on)].join(' and ')} only.` : 'No filter on.'}`;
 });
 
+// catalogue/data.html#meter: Book more and Loading drive the meters through
+// setMeter(); the phone pane is a copy of the tiles. The table's meters are
+// written in the markup the way setMeter() writes them, so the page reads
+// the same before the script, and after Loading is pressed twice.
+if (document.getElementById('meter')) {
+    import('../js/kpi.js').then(({ setMeter }) => {
+        const block = /** @type {HTMLElement} */ (document.getElementById('meter'));
+        const phone = block.querySelector('[data-cat-meter-phone]');
+        const tiles = block.querySelector('[data-cat-meter-tiles]');
+        if (phone && tiles) {
+            const copy = /** @type {HTMLElement} */ (tiles.cloneNode(true));
+            copy.removeAttribute('data-cat-meter-tiles');
+            copy.setAttribute('aria-label', 'Storage and capacity, phone width');
+            phone.append(copy);
+        }
+        /** The table's rows, in order, as setMeter() takes them. @type {import('../js/kpi.js').Meter[]} */
+        const ROWS = [
+            { value: 0.62, mark: 0.8, label: 'full', markLabel: 'the target level' },
+            { value: 0.58, mark: 1.3, label: 'running now', markLabel: 'booked for tonight' },
+            { value: 0, mark: 0.5, label: 'used', markLabel: 'the weekly limit' },
+            { value: 1, mark: 0.9, label: 'full', markLabel: 'the target level' },
+            { value: 1.12, label: 'of the plan used' },
+            { value: 0.3, mark: 0, label: 'used', markLabel: 'the floor' },
+            { value: 0.3, mark: 1, label: 'used', markLabel: 'the ceiling' },
+            { value: 0.78, mark: 0.8, tone: 'warning', label: 'full', markLabel: 'the overflow alarm' },
+            { value: 0.93, mark: 0.8, tone: 'destructive', label: 'full', markLabel: 'the overflow alarm' },
+            { value: null },
+            { loading: true },
+        ];
+        let booked = false;
+        let loading = false;
+        const paint = () => {
+            block.querySelectorAll('[data-cat-meter-rows] tr').forEach((row, i) => {
+                const meter = /** @type {HTMLElement | null} */ (row.querySelector('.kp-meter'));
+                if (!meter || !ROWS[i]) return;
+                setMeter(meter, loading ? { loading: true } : ROWS[i]);
+                const words = row.lastElementChild;
+                if (words) words.textContent = meter.getAttribute('aria-valuetext') ?? '';
+            });
+            for (const meter of /** @type {NodeListOf<HTMLElement>} */ (block.querySelectorAll('[data-cat-meter-of]'))) {
+                const which = meter.getAttribute('data-cat-meter-of');
+                if (loading) setMeter(meter, { loading: true });
+                else if (which === 'reservoir') setMeter(meter, { value: 0.62, mark: 0.8, label: 'full', markLabel: 'the target level' });
+                else if (which === 'booked')
+                    setMeter(meter, { value: 0.93, mark: booked ? 1.3 : 0.8, label: 'running', markLabel: 'booked for tonight' });
+                else if (which === 'plant') setMeter(meter, { value: 0.41, mark: 0.55, label: "of today's plan", markLabel: 'planned by now' });
+            }
+            for (const words of block.querySelectorAll('[data-cat-meter-words]'))
+                words.textContent = booked ? 'running · 130 % of it booked tonight' : 'running · the mark is what is booked tonight';
+        };
+        block.addEventListener('click', (event) => {
+            const button = event.target instanceof Element ? event.target.closest('button[data-cat-meter]') : null;
+            if (!button) return;
+            const on = button.getAttribute('aria-pressed') !== 'true';
+            button.setAttribute('aria-pressed', String(on));
+            if (button.getAttribute('data-cat-meter') === 'book') booked = on;
+            else loading = on;
+            paint();
+        });
+    });
+}
+
+// catalogue/data.html#kpi-columns: how many tiles and how wide the strip is;
+// the line says what attachKpiStrips() chose.
+if (document.getElementById('kpi-columns')) {
+    const block = /** @type {HTMLElement} */ (document.getElementById('kpi-columns'));
+    const strip = /** @type {HTMLElement | null} */ (block.querySelector('[data-cat-kpis-strip]'));
+    const stage = /** @type {HTMLElement | null} */ (block.querySelector('[data-cat-kpis-stage]'));
+    const more = /** @type {HTMLTemplateElement | null} */ (block.querySelector('template[data-cat-kpis-more]'));
+    const log = block.querySelector('[data-cat-kpis-log]');
+    const all = strip ? [...strip.children, ...(more ? [...more.content.children] : [])].map((tile) => tile.cloneNode(true)) : [];
+    let count = strip?.children.length ?? 0;
+    const describe = () =>
+        requestAnimationFrame(() => {
+            if (!strip || !log) return;
+            const columns = Number(strip.style.getPropertyValue('--kp-kpis-columns')) || 1;
+            const rows = [];
+            for (let left = count; left > 0; left -= columns) rows.push(Math.min(columns, left));
+            const width = Math.round(strip.getBoundingClientRect().width);
+            log.textContent =
+                `${count} ${count === 1 ? 'tile' : 'tiles'} in ${width} px: ${columns} ${columns === 1 ? 'column' : 'columns'}, ` +
+                `${rows.length === 1 ? 'one row' : `rows ${rows.join(' + ')}`}` +
+                (strip.hasAttribute('data-kp-kpis-span-last')
+                    ? '; no allowed count avoids a lone tile, so the last one spans its row.'
+                    : ', no tile alone.');
+        });
+    if (strip) new ResizeObserver(describe).observe(strip);
+    block.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-value]') : null;
+        const group = button?.parentElement;
+        if (!button || !group) return;
+        for (const sibling of group.querySelectorAll('[aria-pressed]')) sibling.setAttribute('aria-pressed', String(sibling === button));
+        const value = button.getAttribute('data-value') ?? '';
+        if (group.hasAttribute('data-cat-kpis-count')) {
+            count = Number(value);
+            strip?.replaceChildren(...all.slice(0, count).map((tile) => tile.cloneNode(true)));
+        } else stage?.style.setProperty('max-inline-size', value === 'full' ? 'none' : `${value}px`);
+        describe();
+    });
+}
+
+// catalogue/data.html#kpi-trend: 24 hours of readings every ten minutes up
+// to the page's now, the same line at every look of the same moment; the
+// tiles' numbers and words come from them. Ten minutes later moves now on;
+// Loading empties the filled tiles; the links say where they would go.
+if (document.getElementById('kpi-trend')) {
+    const block = /** @type {HTMLElement} */ (document.getElementById('kpi-trend'));
+    const MINUTE = 60_000;
+    const STEP = 10 * MINUTE;
+    const DAY = 24 * 60 * MINUTE;
+    /** Noise from the time alone. @param {number} t @param {number} k */
+    const noise = (t, k) => {
+        const v = Math.sin((t / MINUTE) * 12.9898 + k * 78.233) * 43758.5453;
+        return v - Math.floor(v) - 0.5;
+    };
+    /** The network's demand at `t` on the Brussels clock (summer time): a morning and an evening peak. @param {number} t */
+    const demand = (t) => {
+        const h = (((t / 3_600_000 + 2) % 24) + 24) % 24;
+        return 0.55 + 0.4 * Math.exp(-((h - 7.5) ** 2) / 3) + 0.3 * Math.exp(-((h - 19) ** 2) / 4) - 0.25 * Math.exp(-((h - 3.5) ** 2) / 5);
+    };
+    let clock = Math.floor(Date.now() / STEP) * STEP;
+    /**
+     * @typedef {{ unit?: string, unitKind?: import('../js/chart.js').ChartUnitKind, digits: number, context: string,
+     *   at: (t: number) => number, from?: () => number, until?: () => number, state?: 'loading' | 'none' | 'one' }} Figure
+     */
+    /** @type {Record<string, Figure>} */
+    const FIGURES = {
+        pressure: { unit: 'bar', digits: 2, context: 'two pumps', at: (t) => 3.6 - 0.6 * demand(t) + 0.04 * noise(t, 1) },
+        flow: {
+            unit: 'm³/h',
+            digits: 0,
+            context: 'into the ring main',
+            at: (t) => 420 * demand(t) + 12 * noise(t, 2),
+            until: () => clock - 40 * MINUTE,
+        },
+        north: { unitKind: 'percent', digits: 0, context: 'of its height', at: (t) => 72 - 9 * demand(t) + noise(t, 3) },
+        temp: { unitKind: 'celsius', digits: 0, context: 'hottest pump', at: (t) => 41 + 9 * demand(t) + noise(t, 4) },
+    };
+    FIGURES.loading = { ...FIGURES.pressure, state: 'loading' };
+    FIGURES.none = { ...FIGURES.pressure, state: 'none' };
+    FIGURES.one = { ...FIGURES.north, context: 'measured since ten minutes ago', state: 'one' };
+    // Seven hours and forty minutes of readings: from 07:00 when the page's now is 14:40.
+    FIGURES.south = { ...FIGURES.north, context: 'measured since this morning', from: () => clock - 460 * MINUTE };
+    /** @param {Figure} f @returns {[number, number][]} */
+    const pointsOf = (f) => {
+        const end = Math.min(clock, f.until?.() ?? Infinity);
+        const start = f.from?.() ?? clock - DAY;
+        /** @type {[number, number][]} */
+        const points = [];
+        for (let t = start; t <= end; t += STEP) points.push([t, Number(f.at(t).toFixed(f.digits))]);
+        return points;
+    };
+    /** @param {Figure} f @param {number} v */
+    const print = (f, v) =>
+        f.unitKind === 'percent'
+            ? `${v.toFixed(f.digits)}%`
+            : f.unitKind === 'celsius'
+              ? `${v.toFixed(f.digits)} °C`
+              : `${v.toFixed(f.digits)} ${f.unit}`;
+    let loading = false;
+    import('../js/chart.js').then(({ setTrendData }) => {
+        const paint = () => {
+            for (const tile of /** @type {NodeListOf<HTMLElement>} */ (block.querySelectorAll('[data-cat-trend]'))) {
+                const f = FIGURES[tile.getAttribute('data-cat-trend') ?? ''];
+                const figure = tile.querySelector('.kp-kpi__chart');
+                const value = tile.querySelector('.kp-kpi__value');
+                const words = tile.querySelector('.kp-kpi__trend');
+                if (!f || !figure || !value || !words) continue;
+                const points =
+                    f.state === 'loading' || (loading && !f.state)
+                        ? null
+                        : f.state === 'none'
+                          ? []
+                          : f.state === 'one'
+                            ? [[clock - STEP, 71]]
+                            : pointsOf(f);
+                if (!points) {
+                    value.innerHTML = '<span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span>';
+                    words.innerHTML = '<span class="kp-skeleton" style="inline-size: 80%"></span>';
+                } else if (!points.length) {
+                    value.textContent = '—';
+                    words.textContent = 'no trend: the readings store did not answer';
+                } else {
+                    const recent = points.slice(-2).map((p) => p[1]);
+                    const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+                    const peak = Math.max(...points.map((p) => p[1]));
+                    value.textContent = avg.toFixed(f.digits);
+                    const unit = f.unitKind === 'percent' ? '%' : f.unitKind === 'celsius' ? '°C' : (f.unit ?? '');
+                    if (unit) value.append(Object.assign(document.createElement('small'), { textContent: unit }));
+                    const now = document.createElement('b');
+                    now.textContent = print(f, points[points.length - 1][1]);
+                    words.replaceChildren('now ', now, ` · peak ${print(f, peak)} · ${f.context}`);
+                }
+                setTrendData(
+                    figure,
+                    points && {
+                        points: /** @type {[number, number][]} */ (points),
+                        step: STEP,
+                        unit: f.unit,
+                        unitKind: f.unitKind,
+                        digits: f.digits,
+                    },
+                );
+            }
+        };
+        paint();
+        block.addEventListener('click', (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const link = target?.closest('.kp-kpi__link');
+            const log = block.querySelector('[data-cat-trend-log]');
+            if (link) {
+                // The sample's links go nowhere: say where they would go.
+                event.preventDefault();
+                if (log) log.textContent = `Opened: ${link.getAttribute('title')}.`;
+                return;
+            }
+            if (target?.closest('[data-cat-trend-live]')) {
+                clock += STEP;
+                paint();
+            }
+            const button = target?.closest('[data-cat-trend-loading]');
+            if (button) {
+                loading = button.getAttribute('aria-pressed') !== 'true';
+                button.setAttribute('aria-pressed', String(loading));
+                paint();
+            }
+        });
+    });
+}
 // catalogue/data.html#state-word: every state word in the block moves on a
 // step every 1.2 s while the button is pressed; the plain words are set as
 // text, the .kp-state-word ones through setStateWord().
@@ -437,9 +668,24 @@ document.addEventListener('kp-chart-range', (event) => {
 // nothing).
 /** @type {Record<string, { severity: 'critical' | 'warning' | 'info', title: string, text: string, fix: string }>} */
 const LIVE_PROBLEMS = {
-    'inc-4471': { severity: 'critical', title: 'Pump house 3 is below 2.1 bar', text: 'For forty minutes; the ring main loses pressure first.', fix: 'Open the incident' },
-    'ph-7': { severity: 'warning', title: 'Pump house 7 has sent no reading since 06:00', text: 'The unit answers a ping; its modem may need a restart.', fix: 'Restart the modem' },
-    'fw-4.2': { severity: 'info', title: 'Firmware 4.2 is out for six field units', text: "It fixes the flow meter's drift after a power cut.", fix: 'Plan the update' },
+    'inc-4471': {
+        severity: 'critical',
+        title: 'Pump house 3 is below 2.1 bar',
+        text: 'For forty minutes; the ring main loses pressure first.',
+        fix: 'Open the incident',
+    },
+    'ph-7': {
+        severity: 'warning',
+        title: 'Pump house 7 has sent no reading since 06:00',
+        text: 'The unit answers a ping; its modem may need a restart.',
+        fix: 'Restart the modem',
+    },
+    'fw-4.2': {
+        severity: 'info',
+        title: 'Firmware 4.2 is out for six field units',
+        text: "It fixes the flow meter's drift after a power cut.",
+        fix: 'Plan the update',
+    },
 };
 /** @type {WeakMap<Element, { keys: string[], polls: ReturnType<typeof setInterval> | null }>} */
 const liveBands = new WeakMap();
@@ -476,7 +722,8 @@ document.addEventListener('click', (event) => {
         let inserted = 0;
         const count = block.querySelector('[data-cat-attention-live-count]');
         new MutationObserver((records) => {
-            for (const record of records) for (const node of record.addedNodes) if (node instanceof Element && node.getAttribute('role') === 'alert') inserted += 1;
+            for (const record of records)
+                for (const node of record.addedNodes) if (node instanceof Element && node.getAttribute('role') === 'alert') inserted += 1;
             if (count) count.textContent = `Alerts put into the page: ${inserted}`;
         }).observe(band, { childList: true });
         // On the component page attachAttention() already watches the
@@ -493,7 +740,10 @@ document.addEventListener('click', (event) => {
         state.polls = /** @type {HTMLInputElement} */ (control).checked ? setInterval(() => paintLive(/** @type {Element} */ (band)), 2000) : null;
         return;
     }
-    if (what === 'reword') LIVE_PROBLEMS['ph-7'].text = LIVE_PROBLEMS['ph-7'].text.endsWith('restart.') ? 'Still no reading; the modem was restarted at 09:10.' : 'The unit answers a ping; its modem may need a restart.';
+    if (what === 'reword')
+        LIVE_PROBLEMS['ph-7'].text = LIVE_PROBLEMS['ph-7'].text.endsWith('restart.')
+            ? 'Still no reading; the modem was restarted at 09:10.'
+            : 'The unit answers a ping; its modem may need a restart.';
     if (what === 'raise') LIVE_PROBLEMS['ph-7'].severity = LIVE_PROBLEMS['ph-7'].severity === 'warning' ? 'critical' : 'warning';
     if (what === 'resolve') state.keys = state.keys.includes('fw-4.2') ? state.keys.filter((k) => k !== 'fw-4.2') : [...state.keys, 'fw-4.2'];
     paintLive(band);
@@ -556,3 +806,505 @@ document.addEventListener('click', (event) => {
         console.info(`Forgot ${forgetRememberedExcept('disclosure', 'cat-apps-', names)} stored groups that are no longer on the board.`);
     }
 });
+
+/* ------------------------------------------------ the network graph [scope-143] */
+
+// catalogue/chart.html#graph: the try buttons hand every graph of the block
+// new data (fifteen long names, nodes sized by flow, a live update) or a
+// state (loading, nothing to draw, could not read), and the line under the
+// stage says what the first graph's `kp-graph-change` reported. The markup's
+// JSON child is `catalogueNetwork()` as the page first draws it.
+
+/** @type {import('../js/graph.js').GraphKind[]} */
+const GRAPH_KINDS = [
+    { kind: 'telemetry', label: 'Telemetry', hint: 'Readings sent to the control centre every minute', style: 'solid', colour: 'var(--chart-1)' },
+    { kind: 'control', label: 'Remote control', hint: 'Commands from the control centre to the site', style: 'dash', colour: 'var(--chart-2)' },
+    { kind: 'radio', label: 'Radio link', hint: 'A spare path over radio for when the line is down', style: 'dot', colour: 'var(--chart-4)' },
+    { kind: 'planned', label: 'Planned', hint: 'A link that is ordered but not live yet', style: 'long-dash', colour: 'var(--muted-foreground)' },
+    {
+        kind: 'unused',
+        label: 'Not used here',
+        hint: 'A kind no link on this network has; the list leaves it out',
+        style: 'solid',
+        colour: 'var(--chart-5)',
+    },
+];
+
+/**
+ * The northern network: a control centre, six pump houses, two reservoirs, a
+ * treatment plant and two addresses outside it.
+ * @param {{ weights?: boolean, tick?: number }} [options]
+ * @returns {import('../js/graph.js').GraphData}
+ */
+function catalogueNetwork({ weights = false, tick = 0 } = {}) {
+    const sites = [
+        ['ph1', 'Pump house 1', 'two pumps, ring main west'],
+        ['ph2', 'Pump house 2', 'one pump, the old town'],
+        ['ph3', 'Pump house 3', 'two pumps, ring main north'],
+        ['ph4', 'Pump house 4', 'two pumps, the harbour'],
+        ['ph5', 'Pump house 5', 'one pump, the hills'],
+        ['ph6', 'Pump house 6', 'being built, live in November'],
+        ['north', 'Reservoir North', 'level sensor and an inlet valve'],
+        ['south', 'Reservoir South', 'level sensor and an inlet valve'],
+        ['plant', 'Treatment plant', 'where the water comes from'],
+    ];
+    return {
+        nodes: [
+            { id: 'centre', label: 'Control centre', description: 'where every reading arrives', weight: weights ? 1 : null },
+            ...sites.map(([id, label, description], i) => ({
+                id,
+                label,
+                description: id === 'ph5' ? `${description}; its settings on site differ from the plan` : description,
+                flag: id === 'ph5' ? /** @type {const} */ ('mismatch') : null,
+                weight: weights ? ((i * 37 + tick * 13) % 100) / 100 : null,
+            })),
+            { id: 'weather', label: 'Weather service', description: 'an address outside the network', external: true },
+            { id: 'energy', label: 'Energy supplier', description: 'an address outside the network', external: true },
+        ],
+        edges: [
+            ...sites.filter(([id]) => id !== 'ph6').map(([id]) => ({ from: id, to: 'centre', kind: 'telemetry', detail: 'readings every minute' })),
+            { from: 'centre', to: 'ph1', kind: 'control', detail: 'pump start and stop' },
+            { from: 'centre', to: 'ph3', kind: 'control', detail: 'pump start and stop, valve' },
+            { from: 'centre', to: 'plant', kind: 'control', detail: 'intake rate' },
+            { from: 'ph3', to: 'ph4', kind: 'radio', detail: 'spare path' },
+            { from: 'ph4', to: 'centre', kind: 'radio', detail: 'spare path' },
+            { from: 'centre', to: 'ph6', kind: 'planned', detail: 'fibre ordered' },
+            { from: 'centre', to: 'energy', kind: 'planned', detail: 'tariff feed ordered' },
+            { from: 'weather', to: 'centre', kind: 'telemetry', detail: tick % 2 ? 'rain radar every 5 min' : 'rain radar every 10 min' },
+        ],
+        kinds: GRAPH_KINDS,
+        hub: 'centre',
+    };
+}
+
+/**
+ * Fifteen nodes, most with fourteen-letter names, some longer: at phone
+ * width the side labels are shortened, never overlapping.
+ * @param {{ weights?: boolean }} [options]
+ * @returns {import('../js/graph.js').GraphData}
+ */
+function catalogueLongNetwork({ weights = false } = {}) {
+    const names = [
+        'Booster site A',
+        'Booster site B',
+        'Booster site C',
+        'Reservoir North-East high zone',
+        'Booster site E',
+        'Booster site F',
+        'Treatment plant on the river',
+        'Booster site H',
+        'Booster site I',
+        'Booster site J',
+        'Booster site K',
+        'Pumping station by the harbour',
+        'Booster site M',
+        'Booster site N',
+    ];
+    const edges = names.map((_, i) => ({ from: `n${i}`, to: 'hub', kind: i % 4 === 3 ? 'radio' : 'telemetry' }));
+    edges.push({ from: 'hub', to: 'n2', kind: 'control' }, { from: 'hub', to: 'n2', kind: 'planned' });
+    return {
+        nodes: [
+            { id: 'hub', label: 'Control centre', description: 'where every reading arrives' },
+            ...names.map((label, i) => ({ id: `n${i}`, label, description: `site ${i + 1}`, weight: weights ? (i % 5) / 4 : null })),
+        ],
+        edges,
+        kinds: GRAPH_KINDS,
+        hub: 'hub',
+    };
+}
+
+/** What each block's try buttons have set. @type {WeakMap<Element, { long: boolean, weights: boolean, tick: number }>} */
+const graphTries = new WeakMap();
+/** @param {Element} block */
+const graphTry = (block) => {
+    let state = graphTries.get(block);
+    if (!state) {
+        state = { long: false, weights: false, tick: 0 };
+        graphTries.set(block, state);
+    }
+    return state;
+};
+/** @param {{ long: boolean, weights: boolean, tick: number }} state */
+const graphData = (state) => (state.long ? catalogueLongNetwork(state) : catalogueNetwork(state));
+
+const GRAPH_WORDS = {
+    empty: 'Nothing to draw yet: no site has reported to the control centre.',
+    error: 'The network could not be read: the control centre did not answer.',
+};
+
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-graph]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const what = button.getAttribute('data-cat-graph') ?? '';
+    const state = graphTry(block);
+    if (what === 'long' || what === 'weights') {
+        const on = button.getAttribute('aria-pressed') !== 'true';
+        button.setAttribute('aria-pressed', String(on));
+        state[what] = on;
+    } else if (what === 'live') state.tick += 1;
+    import('../js/graph.js').then(({ setGraphData, setGraphState }) => {
+        for (const graph of block.querySelectorAll('.kp-graph')) {
+            if (what === 'loading') setGraphState(graph, 'loading');
+            else if (what === 'empty' || what === 'error') setGraphState(graph, what, GRAPH_WORDS[what]);
+            else setGraphData(graph, graphData(state));
+        }
+    });
+});
+
+document.addEventListener('kp-graph-change', (event) => {
+    const graph = event.target instanceof Element ? event.target : null;
+    const block = graph?.closest('.cat-block');
+    const line = block?.querySelector('[data-cat-graph-log]');
+    if (!block || !line || block.querySelector('.kp-graph') !== graph) return;
+    const { selected, hiddenKinds } = /** @type {CustomEvent<{ selected: string[], hiddenKinds: string[] }>} */ (event).detail;
+    const data = graphData(graphTry(block));
+    const name = (/** @type {string} */ id) => data.nodes.find((n) => n.id === id)?.label ?? id;
+    const kind = (/** @type {string} */ k) => GRAPH_KINDS.find((x) => x.kind === k)?.label ?? k;
+    line.textContent =
+        (selected.length ? `Picked: ${selected.map(name).join(', ')}.` : 'Nothing picked.') +
+        (hiddenKinds.length ? ` Hidden: ${hiddenKinds.map(kind).join(', ')}.` : ' Every kind of link is shown.');
+});
+
+/* ----------------------------------------- a month of nightly backups */
+
+// catalogue/data.html#calendar: a month heatmap of nine services' nightly
+// backups. "Now" is fixed at 04/10/2026 14:40 in Brussels, so the block reads
+// the same on every day it is opened; that is why each copy is written once
+// inside a <template> (where js/auto.js, which would attach it on the real
+// clock, cannot reach it) and stamped here with its own attach. The data is
+// made up, the same on every load; the detail beside the grid is the page's
+// own, as it would be in an app.
+const CAL_NOW = Date.parse('2026-10-04T12:40:00Z');
+const CAL_SERVICES = [
+    'Readings database',
+    'Field gateway',
+    'Reports',
+    'Maps',
+    'Alarm relay',
+    'Work orders',
+    'Invoices',
+    'Telemetry archive',
+    'Mail relay',
+];
+const CAL_OLDEST = '2026-08-10';
+const CAL_TODAY = dayKey(CAL_NOW);
+const calTime = numericTime();
+/** Has the block's "The late copies arrive" been pressed? @type {WeakSet<Element>} */
+const calLate = new WeakSet();
+/** The night each calendar has picked. @type {WeakMap<Element, string>} */
+const calPicked = new WeakMap();
+
+/** Was `service` backed up the night of `iso`? The same answer on every load. @param {string} iso @param {number} service @param {boolean} late */
+const calBackedUp = (iso, service, late) => {
+    if (iso === '2026-09-17') return false; // the night of the power cut
+    if (iso === CAL_TODAY && !late && service >= 7) return false; // two copies still running
+    const h = Math.sin(Number(iso.replaceAll('-', '')) * 0.731 + service * 12.17) * 9999;
+    return h - Math.floor(h) > 0.04;
+};
+
+/** @param {boolean} late @returns {Record<string, import('../js/calendar.js').CalendarDay>} */
+const calHistory = (late) => {
+    /** @type {Record<string, import('../js/calendar.js').CalendarDay>} */
+    const days = {};
+    for (let t = Date.parse('2026-06-01T12:00:00Z'); dayKey(t) <= CAL_TODAY; t += 86_400_000) {
+        const iso = dayKey(t);
+        if (iso < CAL_OLDEST) {
+            days[iso] = { tone: 'before', label: 'before the first backup was kept' };
+            continue;
+        }
+        const missing = CAL_SERVICES.filter((_, i) => !calBackedUp(iso, i, late));
+        const done = CAL_SERVICES.length - missing.length;
+        days[iso] = {
+            tone: done === CAL_SERVICES.length ? 'ok' : done === 0 ? 'bad' : 'warn',
+            count: `${done}/${CAL_SERVICES.length}`,
+            label: `${done} of ${CAL_SERVICES.length} services backed up${missing.length && done ? `; missing: ${missing.join(', ')}` : ''}`,
+        };
+    }
+    return days;
+};
+
+/** @type {{ tone: import('../js/calendar.js').CalendarTone, label: string }[]} */
+const CAL_LEGEND = [
+    { tone: 'ok', label: 'Every service backed up' },
+    { tone: 'warn', label: 'Some missing' },
+    { tone: 'bad', label: 'None backed up' },
+    { tone: 'muted', label: 'Nothing to back up' },
+    { tone: 'future', label: 'Still to come' },
+    { tone: 'before', label: 'Before the first backup' },
+];
+
+/** The page's own detail of a picked night. @param {Element} aside @param {string | null} iso @param {boolean} late */
+const calDetail = (aside, iso, late) => {
+    if (!iso) {
+        const p = document.createElement('p');
+        p.textContent = "Pick a day to see every service's own state that night.";
+        aside.replaceChildren(p);
+        return;
+    }
+    const heading = document.createElement('h3');
+    heading.textContent = formatDayKey(iso);
+    const list = document.createElement('ul');
+    /** @param {string} text */
+    const line = (text) => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        list.append(li);
+    };
+    if (iso > CAL_TODAY) line('A night still to come.');
+    else if (iso < CAL_OLDEST) line('Before the first backup was kept.');
+    else
+        CAL_SERVICES.forEach((name, i) => {
+            const li = document.createElement('li');
+            const b = document.createElement('b');
+            b.textContent = name;
+            const span = document.createElement('span');
+            const ok = calBackedUp(iso, i, late);
+            // The night's snapshot: 00:00 UTC and three minutes per service.
+            span.textContent = ok ? `backed up ${calTime(Date.parse(`${iso}T00:00:00Z`) + i * 180_000, 'full', {})}` : 'no backup that night';
+            if (!ok) li.setAttribute('data-cat-missing', '');
+            li.append(b, span);
+            list.append(li);
+        });
+    aside.replaceChildren(heading, list);
+};
+
+/** @param {Element} host */
+function stampCalendar(host) {
+    const template = host.querySelector(':scope > template');
+    if (!(template instanceof HTMLTemplateElement)) return;
+    host.setAttribute('data-cat-calendar-ready', '');
+    const copy = document.createElement('div');
+    copy.setAttribute('data-cat-copy', '');
+    copy.append(template.content.cloneNode(true));
+    template.after(copy);
+    attachCalendars(copy, { now: () => CAL_NOW });
+    const late = calLate.has(host.closest('.cat-block') ?? host);
+    for (const calendar of copy.querySelectorAll('[data-kp-calendar]')) {
+        setCalendarLegend(calendar, CAL_LEGEND);
+        setCalendarDays(calendar, calHistory(late));
+    }
+    for (const aside of copy.querySelectorAll('[data-cat-calendar-detail]')) calDetail(aside, null, late);
+}
+
+function settleCalendars() {
+    for (const host of document.querySelectorAll('[data-cat-calendar]:not([data-cat-calendar-ready])')) stampCalendar(host);
+}
+settleCalendars();
+new MutationObserver(() => settleCalendars()).observe(document.documentElement, { childList: true, subtree: true });
+
+document.addEventListener(CALENDAR_PICK_EVENT, (event) => {
+    const calendar = event.target instanceof Element ? event.target : null;
+    const block = calendar?.closest('.cat-block');
+    if (!calendar || !block?.querySelector('[data-cat-calendar]')) return;
+    const { date, source } = /** @type {CustomEvent<{ date: string, source: string }>} */ (event).detail;
+    calPicked.set(calendar, date);
+    const aside = calendar.closest('.kp-calendar-layout')?.querySelector('[data-cat-calendar-detail]');
+    if (aside) calDetail(aside, date, calLate.has(block));
+    const log = block.querySelector('[data-cat-calendar-log]');
+    if (log) log.textContent = `kp-calendar-pick: ${formatDayKey(date)}, by ${source}.`;
+});
+
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-calendar-state]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const what = button.getAttribute('data-cat-calendar-state');
+    const calendars = block.querySelectorAll('[data-cat-calendar] [data-kp-calendar]');
+    const n = CAL_SERVICES.length;
+    if (what === 'live') {
+        // A live update: today's two late copies arrive; the focus and the pick stay.
+        calLate.add(block);
+        for (const calendar of calendars) {
+            setCalendarDays(calendar, calHistory(true));
+            const aside = calendar.closest('.kp-calendar-layout')?.querySelector('[data-cat-calendar-detail]');
+            if (aside) calDetail(aside, calPicked.get(calendar) ?? null, true);
+        }
+        return;
+    }
+    for (const other of block.querySelectorAll('[data-cat-calendar-state]:not([data-cat-calendar-state="live"])'))
+        other.setAttribute('aria-pressed', String(other === button));
+    const late = calLate.has(block);
+    for (const calendar of calendars) {
+        if (what === 'loading') setCalendarState(calendar, 'loading', `Reading the backups of ${n} services: 4 of ${n} read.`);
+        else if (what === 'empty') setCalendarState(calendar, 'empty', 'No service keeps data, so there is nothing to check.');
+        else if (what === 'error') setCalendarState(calendar, 'error', `None of the ${n} services could be read: the backup store did not answer.`);
+        else {
+            setCalendarState(calendar, 'ready');
+            setCalendarDays(calendar, calHistory(late));
+        }
+    }
+});
+
+/* ------------------------------------- the menu button and the tour [scope-143] */
+
+/** @type {import('../js/menu-button.js').MenuGroup[]} */
+const CAT_MENU = [
+    {
+        group: 'Run',
+        items: [
+            { label: 'Restart the pumps', hint: 'Stop and start both pumps, one after the other', value: 'restart' },
+            { label: 'Switch to the spare pump', hint: 'Run on pump 2 while pump 1 rests', value: 'spare' },
+            {
+                label: 'Run a pressure test',
+                hint: 'Close the ring main valve and measure for ten minutes',
+                disabled: 'Not while a field engineer is on site',
+                value: 'test',
+            },
+        ],
+    },
+    {
+        group: 'Readings',
+        items: [
+            { label: 'Open the readings on Charts', hint: 'Pressure and flow for the last 24 hours', href: './chart.html', value: 'charts' },
+            { label: 'Recalibrate the sensors…', hint: 'Set the pressure sensors to the reference gauge', value: 'recalibrate' },
+        ],
+    },
+    {
+        group: 'Records',
+        items: [
+            { label: 'Print the site sheet', hint: 'One page with the pumps, the valves and the contacts', value: 'print' },
+            { label: 'Archive this pump house…', hint: 'Take it off the network; its readings are kept', danger: true, value: 'archive' },
+        ],
+    },
+];
+/** The refill: the test may run now, and a new action joined. @type {import('../js/menu-button.js').MenuGroup[]} */
+const CAT_MENU_REFILLED = [
+    {
+        group: 'Run',
+        items: [
+            CAT_MENU[0].items[0],
+            CAT_MENU[0].items[1],
+            { label: 'Run a pressure test', hint: 'Close the ring main valve and measure for ten minutes', value: 'test' },
+            { label: 'Silence the door alarm', hint: 'For one hour; it sounds again if the door stays open', value: 'silence' },
+        ],
+    },
+    CAT_MENU[1],
+    CAT_MENU[2],
+];
+/** Twenty-four actions in four groups: the menu scrolls inside itself. @type {import('../js/menu-button.js').MenuGroup[]} */
+const CAT_MENU_MANY = ['Run', 'Readings', 'Records', 'People'].map((group, g) => ({
+    group,
+    items: Array.from({ length: 6 }, (_, i) => ({
+        label: `${group} action ${i + 1}`,
+        hint: `What ${group.toLowerCase()} action ${i + 1} does, in one line`,
+        value: `${g}-${i}`,
+        ...(i === 3 ? { disabled: 'Only for the shift lead' } : {}),
+    })),
+}));
+/** The last fill per block, so a refill swaps between the two. @type {WeakMap<Element, unknown>} */
+const menuFills = new WeakMap();
+/** A block's pending refill. @type {WeakMap<Element, number>} */
+const menuRefills = new WeakMap();
+/** How often the page's own Escape listener heard a press. */
+let catEscapes = 0;
+/** @param {Element} block @param {string} said */
+const sayMenu = (block, said) => {
+    const line = block.querySelector('[data-cat-menu-log]');
+    if (line) line.textContent = `${said} The page's own Escape listener heard ${catEscapes} ${catEscapes === 1 ? 'press' : 'presses'}.`;
+};
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    catEscapes += 1;
+    for (const block of document.querySelectorAll('.cat-block:has([data-cat-menu-log])')) sayMenu(block, 'Escape heard.');
+});
+document.addEventListener('kp-menu-select', (event) => {
+    const block = event.target instanceof Element ? event.target.closest('.cat-block') : null;
+    if (!block) return;
+    const { item, value } = /** @type {CustomEvent<{ item: HTMLElement, value: string }>} */ (event).detail;
+    sayMenu(block, `Picked: ${item.querySelector('.kp-menu__label')?.textContent} (${value}).`);
+});
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-menu]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const what = button.getAttribute('data-cat-menu');
+    import('../js/menu-button.js').then(({ setMenu }) => {
+        /** @param {import('../js/menu-button.js').MenuGroup[] | 'loading'} groups */
+        const fill = (groups) => {
+            menuFills.set(block, groups);
+            for (const wrapper of block.querySelectorAll('[data-cat-menu-target]')) setMenu(wrapper, groups);
+        };
+        clearTimeout(menuRefills.get(block));
+        if (what === 'refill') {
+            sayMenu(block, 'A refill comes in 3 s: open a menu and wait; it shows once the menu closes.');
+            menuRefills.set(
+                block,
+                window.setTimeout(() => {
+                    fill(menuFills.get(block) === CAT_MENU_REFILLED ? CAT_MENU : CAT_MENU_REFILLED);
+                    sayMenu(block, 'Refilled (an open menu keeps its entries until it closes).');
+                }, 3000),
+            );
+            return;
+        }
+        fill(what === 'loading' ? 'loading' : what === 'many' ? CAT_MENU_MANY : what === 'empty' ? [] : CAT_MENU);
+    });
+});
+
+const CAT_TOUR = 'catalogue';
+/** @param {(name: string) => string} at */
+const catTourSteps = (at) => [
+    {
+        target: at('areas'),
+        title: 'The areas',
+        text: 'Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.',
+    },
+    { target: at('search'), title: 'Search', text: 'Find a pump house by its name or its number; Ctrl K does the same from anywhere.' },
+    { target: at('readings'), title: 'Readings today', text: 'How the network did since midnight; a dip in pressure shows here first.' },
+    {
+        target: at('map'),
+        title: 'The map',
+        text: 'Which site talks to which. (This page has no map, so this step is left out and the count says five.)',
+    },
+    { target: at('incidents'), title: 'Open incidents', text: 'What needs someone, and who is on it.' },
+    { target: at('help'), title: 'Help', text: 'Everything here again, with the words this site uses. The tour starts from Help too.' },
+];
+/** The button that opened the Help drawer last, for the tour Help starts. @type {HTMLElement | null} */
+let helpOpener = null;
+document.addEventListener('kp-dialog-open', (event) => {
+    if (event.target instanceof Element && event.target.id === 'ov-dr-help') helpOpener = /** @type {CustomEvent} */ (event).detail.trigger;
+});
+/** @param {string} said */
+const sayTour = (said) =>
+    import('../js/tour.js').then(({ shouldStartTour, tourRemembered }) => {
+        const line = document.querySelector('[data-cat-tour-log]');
+        if (!line) return;
+        const remembered = tourRemembered(CAT_TOUR);
+        const automated = navigator.webdriver;
+        const auto = shouldStartTour({ search: location.search, remembered, automated });
+        line.textContent =
+            `${said} Taken before: ${remembered ? 'yes' : 'no'}. On a visit like this one it would start by itself: ` +
+            `${auto == null ? (automated ? 'no, this browser is driven by a script' : 'no, it was taken before') : 'yes (this page waits for a button instead)'}.`;
+    });
+/** @param {'wide' | 'phone'} where @param {HTMLElement | null} returnFocus */
+const runCatTour = (where, returnFocus) =>
+    import('../js/tour.js').then(({ startTour }) => {
+        const tour = startTour(
+            catTourSteps((name) => (where === 'phone' ? `[data-cat-tour-phone="${name}"]` : `[data-cat-tour-step="${name}"]`)),
+            {
+                remember: CAT_TOUR,
+                returnFocus,
+                onEnd: (finished) => sayTour(finished ? 'The tour ran to the end.' : 'The tour was ended early.'),
+            },
+        );
+        if (!tour) sayTour('No step had its part on the page, so the tour did not start.');
+    });
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-tour]') : null;
+    if (!button) return;
+    const what = button.getAttribute('data-cat-tour');
+    if (what === 'forget') {
+        import('../js/tour.js').then(({ forgetTour }) => {
+            forgetTour(CAT_TOUR);
+            sayTour('Forgotten.');
+        });
+    } else if (what === 'help') {
+        /** @type {HTMLDialogElement | null} */ (button.closest('dialog'))?.close();
+        runCatTour('wide', helpOpener);
+    } else runCatTour(what === 'phone' ? 'phone' : 'wide', /** @type {HTMLElement} */ (button));
+});
+if (document.querySelector('[data-cat-tour-log]')) {
+    sayTour('No tour yet.');
+    // `?tour` starts it, as a consumer's first visit would.
+    if (new URLSearchParams(location.search).has('tour')) runCatTour('wide', null);
+}

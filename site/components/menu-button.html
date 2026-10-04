@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Menu button — kp-themes</title>
+        <meta name="description" content="A button that opens every other action of a page or a thing, grouped under small muted capitals, each entry its label over a one-line hint. It is the package’s `.kp-menu` with `.kp-menu__item` entries, made rich (`.kp-menu--rich`) and wired by js/menu-button.js: the keys of a menu, a fill that waits while the menu is open, and an action that cannot be used now that stays in the list and says why." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html" aria-current="page">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Menu button</h1>
+                    <p class="kp-prose">A button that opens every other action of a page or a thing, grouped under small muted capitals, each entry its label over a one-line hint. It is the package’s `.kp-menu` with `.kp-menu__item` entries, made rich (`.kp-menu--rich`) and wired by js/menu-button.js: the keys of a menu, a fill that waits while the menu is open, and an action that cannot be used now that stays in the list and says why.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For the rare actions on a page or a record, behind a “More ▾” at the end of its header, when each needs a word of explanation. Not for the one or two actions used every day, which are buttons; not for navigation, which reads better as links; and not for a plain list of short commands, which the dropdown menu does with less.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">More ▾ with groups, hints and an action that cannot be used now</figcaption>
+                        <p class="kp-text-muted">The entries are markup here; `setMenu(wrapper, groups)` writes the same from a script, and a live page refills it the same way. ↓ on the button opens it on the first entry; the grey entry takes the focus, keeps its hint and says why under it, and Enter does nothing there.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-menu-button" data-kp-menu-button data-kp-key="doc-pump-more">
+    <button type="button" class="kp-button">More ▾</button>
+    <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" hidden>
+        <div class="kp-menu__group" role="group" aria-labelledby="doc-mb-g1">
+            <p class="kp-menu__heading" id="doc-mb-g1" role="presentation">Run</p>
+            <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="doc-mb-l1" aria-describedby="doc-mb-h1" data-kp-value="restart"><span class="kp-menu__label" id="doc-mb-l1">Restart the pumps</span><span class="kp-menu__hint" id="doc-mb-h1">Stop and start both pumps, one after the other</span></button>
+            <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-disabled="true" aria-labelledby="doc-mb-l2" aria-describedby="doc-mb-h2 doc-mb-r2" data-kp-value="test"><span class="kp-menu__label" id="doc-mb-l2">Run a pressure test</span><span class="kp-menu__hint" id="doc-mb-h2">Close the ring main valve and measure for ten minutes</span><span class="kp-menu__hint kp-menu__reason" id="doc-mb-r2">Not while a field engineer is on site</span></button>
+        </div>
+        <div class="kp-menu__group" role="group" aria-labelledby="doc-mb-g2">
+            <p class="kp-menu__heading" id="doc-mb-g2" role="presentation">Records</p>
+            <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="doc-mb-l3" aria-describedby="doc-mb-h3" data-kp-value="print"><span class="kp-menu__label" id="doc-mb-l3">Print the site sheet</span><span class="kp-menu__hint" id="doc-mb-h3">One page with the pumps, the valves and the contacts</span></button>
+            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive" tabindex="-1" aria-labelledby="doc-mb-l4" aria-describedby="doc-mb-h4" data-kp-value="archive"><span class="kp-menu__label" id="doc-mb-l4">Archive this pump house…</span><span class="kp-menu__hint" id="doc-mb-h4">Take it off the network; its readings are kept</span></button>
+        </div>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span> <span class="kp-code__keyword">data-kp-menu-button</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;doc-pump-more&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;More ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every other action on this pump house&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-g1&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-g1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Run&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-l1&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-mb-h1&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;restart&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-l1&quot;</span>&gt;Restart the pumps&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-h1&quot;</span>&gt;Stop and start both pumps, one after the other&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-l2&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-mb-h2 doc-mb-r2&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;test&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-l2&quot;</span>&gt;Run a pressure test&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-h2&quot;</span>&gt;Close the ring main valve and measure for ten minutes&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint kp-menu__reason&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-r2&quot;</span>&gt;Not while a field engineer is on site&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-g2&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-g2&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Records&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-l3&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-mb-h3&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;print&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-l3&quot;</span>&gt;Print the site sheet&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-h3&quot;</span>&gt;One page with the pumps, the valves and the contacts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-mb-l4&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-mb-h4&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;archive&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-l4&quot;</span>&gt;Archive this pump house…&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-mb-h4&quot;</span>&gt;Take it off the network; its readings are kept&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-overlays-menu-button">
+                        <figcaption class="kp-fw-semibold">A menu of every other action</figcaption>
+                        <p class="kp-text-muted"><code>.kp-menu-button</code> with a <code>.kp-menu--rich</code> (js/menu-button.js), on the package's own <code>.kp-menu</code>: open <b>More ▾</b>. The groups have headings in small muted capitals, every label and every hint start at one edge, and <b>Run a pressure test</b> is grey: it keeps its hint, and says why it cannot run on a third line in italics. Press ↓ on the button: the menu opens on the first entry; ↓ ↑ wrap, Home and End go to the ends, <kbd>r</kbd> jumps from <i>Restart</i> to <i>Run</i>. The focus stops on the grey entry and Enter does nothing there. Esc closes and puts the focus back on the button, and the line under the menus shows the page's own Escape listener heard nothing; Tab closes and moves on. Press <b>Refill in 3 s</b>, open a menu and wait: nothing moves until it closes. <b>Loading</b> shows one grey entry at the height of a real one; <b>Twenty-four actions</b> scrolls inside the menu with the focus kept in view; <b>No actions</b> greys the wide button (its title says why) and takes the phone one away (<code>data-kp-menu-empty="hide"</code>). The menu of one action has no heading. In the phone pane the open menu spans the header's buttons, inside the pane.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-row kp-row--start">
+    <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-own" data-cat-menu-target>
+        <button type="button" class="kp-button">More ▾</button>
+        <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" id="ov-mb-own" hidden>
+            <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g0">
+                <p class="kp-menu__heading" id="ov-mb-own-g0" role="presentation">Run</p>
+                <button
+                type="button"
+                role="menuitem"
+                class="kp-menu__item"
+                tabindex="-1"
+                aria-labelledby="ov-mb-own-l1"
+                aria-describedby="ov-mb-own-h1"
+                title="Stop and start both pumps, one after the other"
+                data-kp-value="restart"
+                >
+                <span class="kp-menu__label" id="ov-mb-own-l1">Restart the pumps</span>
+                <span class="kp-menu__hint" id="ov-mb-own-h1">Stop and start both pumps, one after the other</span>
+            </button>
+            <button
+            type="button"
+            role="menuitem"
+            class="kp-menu__item"
+            tabindex="-1"
+            aria-labelledby="ov-mb-own-l2"
+            aria-describedby="ov-mb-own-h2"
+            title="Run on pump 2 while pump 1 rests"
+            data-kp-value="spare"
+            >
+            <span class="kp-menu__label" id="ov-mb-own-l2">Switch to the spare pump</span>
+            <span class="kp-menu__hint" id="ov-mb-own-h2">Run on pump 2 while pump 1 rests</span>
+        </button>
+        <button
+        type="button"
+        role="menuitem"
+        class="kp-menu__item"
+        tabindex="-1"
+        aria-disabled="true"
+        aria-labelledby="ov-mb-own-l3"
+        aria-describedby="ov-mb-own-h3 ov-mb-own-r3"
+        title="Not while a field engineer is on site"
+        data-kp-value="test"
+        data-kp-reason="Not while a field engineer is on site"
+        >
+        <span class="kp-menu__label" id="ov-mb-own-l3">Run a pressure test</span>
+        <span class="kp-menu__hint" id="ov-mb-own-h3">Close the ring main valve and measure for ten minutes</span>
+        <span class="kp-menu__hint kp-menu__reason" id="ov-mb-own-r3">Not while a field engineer is on site</span>
+    </button>
+</div>
+<div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g1">
+    <p class="kp-menu__heading" id="ov-mb-own-g1" role="presentation">Readings</p>
+    <a
+    href="./chart.html"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-own-l4"
+    aria-describedby="ov-mb-own-h4"
+    title="Pressure and flow for the last 24 hours"
+    data-kp-value="charts"
+    >
+    <span class="kp-menu__label" id="ov-mb-own-l4">Open the readings on Charts</span>
+    <span class="kp-menu__hint" id="ov-mb-own-h4">Pressure and flow for the last 24 hours</span>
+</a>
+<button
+type="button"
+role="menuitem"
+class="kp-menu__item"
+tabindex="-1"
+aria-labelledby="ov-mb-own-l5"
+aria-describedby="ov-mb-own-h5"
+title="Set the pressure sensors to the reference gauge"
+data-kp-value="recalibrate"
+>
+<span class="kp-menu__label" id="ov-mb-own-l5">Recalibrate the sensors…</span>
+<span class="kp-menu__hint" id="ov-mb-own-h5">Set the pressure sensors to the reference gauge</span>
+</button>
+</div>
+<div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g2">
+    <p class="kp-menu__heading" id="ov-mb-own-g2" role="presentation">Records</p>
+    <button
+    type="button"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-own-l6"
+    aria-describedby="ov-mb-own-h6"
+    title="One page with the pumps, the valves and the contacts"
+    data-kp-value="print"
+    >
+    <span class="kp-menu__label" id="ov-mb-own-l6">Print the site sheet</span>
+    <span class="kp-menu__hint" id="ov-mb-own-h6">One page with the pumps, the valves and the contacts</span>
+</button>
+<button
+type="button"
+role="menuitem"
+class="kp-menu__item kp-menu__item--destructive"
+tabindex="-1"
+aria-labelledby="ov-mb-own-l7"
+aria-describedby="ov-mb-own-h7"
+title="Take it off the network; its readings are kept"
+data-kp-value="archive"
+>
+<span class="kp-menu__label" id="ov-mb-own-l7">Archive this pump house…</span>
+<span class="kp-menu__hint" id="ov-mb-own-h7">Take it off the network; its readings are kept</span>
+</button>
+</div>
+</div>
+</div>
+<div class="kp-menu-button" data-kp-menu-button data-kp-key="reservoir-more">
+    <button type="button" class="kp-button kp-button--sm">More ▾</button>
+    <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this reservoir" id="ov-mb-one" hidden>
+        <div class="kp-menu__group" role="none">
+            <button
+            type="button"
+            role="menuitem"
+            class="kp-menu__item"
+            tabindex="-1"
+            aria-labelledby="ov-mb-one-l1"
+            aria-describedby="ov-mb-one-h1"
+            title="Ask the sensor for a reading outside its minute"
+            data-kp-value="read"
+            >
+            <span class="kp-menu__label" id="ov-mb-one-l1">Read the level now</span>
+            <span class="kp-menu__hint" id="ov-mb-one-h1">Ask the sensor for a reading outside its minute</span>
+        </button>
+    </div>
+</div>
+</div>
+</div>
+<div class="kp-row" role="group" aria-label="Try the menus" style="margin-block-start: 1rem">
+    <button type="button" class="kp-button kp-button--sm" data-cat-menu="refill">Refill in 3 s</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-menu="loading">Loading</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-menu="many">Twenty-four actions</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-menu="empty">No actions</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-menu="normal">Back to normal</button>
+</div>
+<p class="kp-text-muted" data-cat-menu-log role="status">Nothing picked yet. The page's own Escape listener heard 0 presses.</p>
+</div>
+<div class="sc-example__stage">
+<header class="kp-page-header">
+    <div class="kp-page-header__inner">
+        <div>
+            <h3 class="kp-page-header__title">Pump house 3</h3>
+            <p class="kp-page-header__description">
+                Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+            </p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button">Export readings</button>
+            <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+            <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-more" data-cat-menu-target>
+                <button type="button" class="kp-button">More ▾</button>
+                <div
+                class="kp-menu kp-menu--rich"
+                role="menu"
+                aria-label="Every other action on this pump house"
+                id="ov-mb-wide"
+                hidden
+                >
+                <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g0">
+                    <p class="kp-menu__heading" id="ov-mb-wide-g0" role="presentation">Run</p>
+                    <button
+                    type="button"
+                    role="menuitem"
+                    class="kp-menu__item"
+                    tabindex="-1"
+                    aria-labelledby="ov-mb-wide-l1"
+                    aria-describedby="ov-mb-wide-h1"
+                    title="Stop and start both pumps, one after the other"
+                    data-kp-value="restart"
+                    >
+                    <span class="kp-menu__label" id="ov-mb-wide-l1">Restart the pumps</span>
+                    <span class="kp-menu__hint" id="ov-mb-wide-h1">Stop and start both pumps, one after the other</span>
+                </button>
+                <button
+                type="button"
+                role="menuitem"
+                class="kp-menu__item"
+                tabindex="-1"
+                aria-labelledby="ov-mb-wide-l2"
+                aria-describedby="ov-mb-wide-h2"
+                title="Run on pump 2 while pump 1 rests"
+                data-kp-value="spare"
+                >
+                <span class="kp-menu__label" id="ov-mb-wide-l2">Switch to the spare pump</span>
+                <span class="kp-menu__hint" id="ov-mb-wide-h2">Run on pump 2 while pump 1 rests</span>
+            </button>
+            <button
+            type="button"
+            role="menuitem"
+            class="kp-menu__item"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-labelledby="ov-mb-wide-l3"
+            aria-describedby="ov-mb-wide-h3 ov-mb-wide-r3"
+            title="Not while a field engineer is on site"
+            data-kp-value="test"
+            data-kp-reason="Not while a field engineer is on site"
+            >
+            <span class="kp-menu__label" id="ov-mb-wide-l3">Run a pressure test</span>
+            <span class="kp-menu__hint" id="ov-mb-wide-h3"
+            >Close the ring main valve and measure for ten minutes</span
+            >
+            <span class="kp-menu__hint kp-menu__reason" id="ov-mb-wide-r3"
+            >Not while a field engineer is on site</span
+            >
+        </button>
+    </div>
+    <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g1">
+        <p class="kp-menu__heading" id="ov-mb-wide-g1" role="presentation">Readings</p>
+        <a
+        href="./chart.html"
+        role="menuitem"
+        class="kp-menu__item"
+        tabindex="-1"
+        aria-labelledby="ov-mb-wide-l4"
+        aria-describedby="ov-mb-wide-h4"
+        title="Pressure and flow for the last 24 hours"
+        data-kp-value="charts"
+        >
+        <span class="kp-menu__label" id="ov-mb-wide-l4">Open the readings on Charts</span>
+        <span class="kp-menu__hint" id="ov-mb-wide-h4">Pressure and flow for the last 24 hours</span>
+    </a>
+    <button
+    type="button"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-wide-l5"
+    aria-describedby="ov-mb-wide-h5"
+    title="Set the pressure sensors to the reference gauge"
+    data-kp-value="recalibrate"
+    >
+    <span class="kp-menu__label" id="ov-mb-wide-l5">Recalibrate the sensors…</span>
+    <span class="kp-menu__hint" id="ov-mb-wide-h5">Set the pressure sensors to the reference gauge</span>
+</button>
+</div>
+<div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g2">
+    <p class="kp-menu__heading" id="ov-mb-wide-g2" role="presentation">Records</p>
+    <button
+    type="button"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-wide-l6"
+    aria-describedby="ov-mb-wide-h6"
+    title="One page with the pumps, the valves and the contacts"
+    data-kp-value="print"
+    >
+    <span class="kp-menu__label" id="ov-mb-wide-l6">Print the site sheet</span>
+    <span class="kp-menu__hint" id="ov-mb-wide-h6"
+    >One page with the pumps, the valves and the contacts</span
+    >
+</button>
+<button
+type="button"
+role="menuitem"
+class="kp-menu__item kp-menu__item--destructive"
+tabindex="-1"
+aria-labelledby="ov-mb-wide-l7"
+aria-describedby="ov-mb-wide-h7"
+title="Take it off the network; its readings are kept"
+data-kp-value="archive"
+>
+<span class="kp-menu__label" id="ov-mb-wide-l7">Archive this pump house…</span>
+<span class="kp-menu__hint" id="ov-mb-wide-h7">Take it off the network; its readings are kept</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem; overflow: visible; resize: none">
+    <header class="kp-page-header">
+        <div class="kp-page-header__inner">
+            <div>
+                <h3 class="kp-page-header__title">Pump house 3</h3>
+                <p class="kp-page-header__description">
+                    Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                </p>
+            </div>
+            <div class="kp-page-header__actions">
+                <button type="button" class="kp-button">Export readings</button>
+                <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+                <div
+                class="kp-menu-button"
+                data-kp-menu-button
+                data-kp-key="pump-house-more-phone"
+                data-kp-menu-empty="hide"
+                data-cat-menu-target
+                >
+                <button type="button" class="kp-button">More ▾</button>
+                <div
+                class="kp-menu kp-menu--rich"
+                role="menu"
+                aria-label="Every other action on this pump house"
+                id="ov-mb-phone"
+                hidden
+                >
+                <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g0">
+                    <p class="kp-menu__heading" id="ov-mb-phone-g0" role="presentation">Run</p>
+                    <button
+                    type="button"
+                    role="menuitem"
+                    class="kp-menu__item"
+                    tabindex="-1"
+                    aria-labelledby="ov-mb-phone-l1"
+                    aria-describedby="ov-mb-phone-h1"
+                    title="Stop and start both pumps, one after the other"
+                    data-kp-value="restart"
+                    >
+                    <span class="kp-menu__label" id="ov-mb-phone-l1">Restart the pumps</span>
+                    <span class="kp-menu__hint" id="ov-mb-phone-h1"
+                    >Stop and start both pumps, one after the other</span
+                    >
+                </button>
+                <button
+                type="button"
+                role="menuitem"
+                class="kp-menu__item"
+                tabindex="-1"
+                aria-labelledby="ov-mb-phone-l2"
+                aria-describedby="ov-mb-phone-h2"
+                title="Run on pump 2 while pump 1 rests"
+                data-kp-value="spare"
+                >
+                <span class="kp-menu__label" id="ov-mb-phone-l2">Switch to the spare pump</span>
+                <span class="kp-menu__hint" id="ov-mb-phone-h2">Run on pump 2 while pump 1 rests</span>
+            </button>
+            <button
+            type="button"
+            role="menuitem"
+            class="kp-menu__item"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-labelledby="ov-mb-phone-l3"
+            aria-describedby="ov-mb-phone-h3 ov-mb-phone-r3"
+            title="Not while a field engineer is on site"
+            data-kp-value="test"
+            data-kp-reason="Not while a field engineer is on site"
+            >
+            <span class="kp-menu__label" id="ov-mb-phone-l3">Run a pressure test</span>
+            <span class="kp-menu__hint" id="ov-mb-phone-h3"
+            >Close the ring main valve and measure for ten minutes</span
+            >
+            <span class="kp-menu__hint kp-menu__reason" id="ov-mb-phone-r3"
+            >Not while a field engineer is on site</span
+            >
+        </button>
+    </div>
+    <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g1">
+        <p class="kp-menu__heading" id="ov-mb-phone-g1" role="presentation">Readings</p>
+        <a
+        href="./chart.html"
+        role="menuitem"
+        class="kp-menu__item"
+        tabindex="-1"
+        aria-labelledby="ov-mb-phone-l4"
+        aria-describedby="ov-mb-phone-h4"
+        title="Pressure and flow for the last 24 hours"
+        data-kp-value="charts"
+        >
+        <span class="kp-menu__label" id="ov-mb-phone-l4">Open the readings on Charts</span>
+        <span class="kp-menu__hint" id="ov-mb-phone-h4">Pressure and flow for the last 24 hours</span>
+    </a>
+    <button
+    type="button"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-phone-l5"
+    aria-describedby="ov-mb-phone-h5"
+    title="Set the pressure sensors to the reference gauge"
+    data-kp-value="recalibrate"
+    >
+    <span class="kp-menu__label" id="ov-mb-phone-l5">Recalibrate the sensors…</span>
+    <span class="kp-menu__hint" id="ov-mb-phone-h5"
+    >Set the pressure sensors to the reference gauge</span
+    >
+</button>
+</div>
+<div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g2">
+    <p class="kp-menu__heading" id="ov-mb-phone-g2" role="presentation">Records</p>
+    <button
+    type="button"
+    role="menuitem"
+    class="kp-menu__item"
+    tabindex="-1"
+    aria-labelledby="ov-mb-phone-l6"
+    aria-describedby="ov-mb-phone-h6"
+    title="One page with the pumps, the valves and the contacts"
+    data-kp-value="print"
+    >
+    <span class="kp-menu__label" id="ov-mb-phone-l6">Print the site sheet</span>
+    <span class="kp-menu__hint" id="ov-mb-phone-h6"
+    >One page with the pumps, the valves and the contacts</span
+    >
+</button>
+<button
+type="button"
+role="menuitem"
+class="kp-menu__item kp-menu__item--destructive"
+tabindex="-1"
+aria-labelledby="ov-mb-phone-l7"
+aria-describedby="ov-mb-phone-h7"
+title="Take it off the network; its readings are kept"
+data-kp-value="archive"
+>
+<span class="kp-menu__label" id="ov-mb-phone-l7">Archive this pump house…</span>
+<span class="kp-menu__hint" id="ov-mb-phone-h7"
+>Take it off the network; its readings are kept</span
+>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--start&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span> <span class="kp-code__keyword">data-kp-menu-button</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;pump-house-own&quot;</span> <span class="kp-code__keyword">data-cat-menu-target</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;More ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every other action on this pump house&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-g0&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-g0&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Run&lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span>
+                <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+                <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+                <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l1&quot;</span>
+                <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h1&quot;</span>
+                <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Stop and start both pumps, one after the other&quot;</span>
+                <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;restart&quot;</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l1&quot;</span>&gt;Restart the pumps&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h1&quot;</span>&gt;Stop and start both pumps, one after the other&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span>
+            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+            <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l2&quot;</span>
+            <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h2&quot;</span>
+            <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Run on pump 2 while pump 1 rests&quot;</span>
+            <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;spare&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l2&quot;</span>&gt;Switch to the spare pump&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h2&quot;</span>&gt;Run on pump 2 while pump 1 rests&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span>
+        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+        <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span>
+        <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l3&quot;</span>
+        <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h3 ov-mb-own-r3&quot;</span>
+        <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+        <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;test&quot;</span>
+        <span class="kp-code__keyword">data-kp-reason</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l3&quot;</span>&gt;Run a pressure test&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h3&quot;</span>&gt;Close the ring main valve and measure for ten minutes&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint kp-menu__reason&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-r3&quot;</span>&gt;Not while a field engineer is on site&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-g1&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-g1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span>
+    <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;./chart.html&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l4&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h4&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Pressure and flow for the last 24 hours&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;charts&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l4&quot;</span>&gt;Open the readings on Charts&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h4&quot;</span>&gt;Pressure and flow for the last 24 hours&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+<span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l5&quot;</span>
+<span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h5&quot;</span>
+<span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Set the pressure sensors to the reference gauge&quot;</span>
+<span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l5&quot;</span>&gt;Recalibrate the sensors…&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h5&quot;</span>&gt;Set the pressure sensors to the reference gauge&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-g2&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-g2&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Records&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l6&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h6&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;One page with the pumps, the valves and the contacts&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;print&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l6&quot;</span>&gt;Print the site sheet&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h6&quot;</span>&gt;One page with the pumps, the valves and the contacts&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+<span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-own-l7&quot;</span>
+<span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-own-h7&quot;</span>
+<span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Take it off the network; its readings are kept&quot;</span>
+<span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;archive&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-l7&quot;</span>&gt;Archive this pump house…&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-own-h7&quot;</span>&gt;Take it off the network; its readings are kept&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span> <span class="kp-code__keyword">data-kp-menu-button</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;reservoir-more&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;More ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every other action on this reservoir&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-one&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span>
+            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+            <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-one-l1&quot;</span>
+            <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-one-h1&quot;</span>
+            <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Ask the sensor for a reading outside its minute&quot;</span>
+            <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;read&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-one-l1&quot;</span>&gt;Read the level now&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-one-h1&quot;</span>&gt;Ask the sensor for a reading outside its minute&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Try the menus&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-menu</span><span class="kp-code__string">=&quot;refill&quot;</span>&gt;Refill in 3 s&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-menu</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-menu</span><span class="kp-code__string">=&quot;many&quot;</span>&gt;Twenty-four actions&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-menu</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;No actions&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-menu</span><span class="kp-code__string">=&quot;normal&quot;</span>&gt;Back to normal&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-cat-menu-log</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing picked yet. The page's own Escape listener heard 0 presses.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__inner&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__title&quot;</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__description&quot;</span>&gt;
+                Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+            &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export readings&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Schedule a visit&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span> <span class="kp-code__keyword">data-kp-menu-button</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;pump-house-more&quot;</span> <span class="kp-code__keyword">data-cat-menu-target</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;More ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>
+                <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every other action on this pump house&quot;</span>
+                <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide&quot;</span>
+                <span class="kp-code__keyword">hidden</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-g0&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-g0&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Run&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">button</span>
+                    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+                    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+                    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+                    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l1&quot;</span>
+                    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h1&quot;</span>
+                    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Stop and start both pumps, one after the other&quot;</span>
+                    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;restart&quot;</span>
+                    &gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l1&quot;</span>&gt;Restart the pumps&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h1&quot;</span>&gt;Stop and start both pumps, one after the other&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span>
+                <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+                <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+                <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l2&quot;</span>
+                <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h2&quot;</span>
+                <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Run on pump 2 while pump 1 rests&quot;</span>
+                <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;spare&quot;</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l2&quot;</span>&gt;Switch to the spare pump&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h2&quot;</span>&gt;Run on pump 2 while pump 1 rests&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span>
+            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+            <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span>
+            <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l3&quot;</span>
+            <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h3 ov-mb-wide-r3&quot;</span>
+            <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+            <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;test&quot;</span>
+            <span class="kp-code__keyword">data-kp-reason</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l3&quot;</span>&gt;Run a pressure test&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h3&quot;</span>
+            &gt;Close the ring main valve and measure for ten minutes&lt;/<span class="kp-code__keyword">span</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint kp-menu__reason&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-r3&quot;</span>
+            &gt;Not while a field engineer is on site&lt;/<span class="kp-code__keyword">span</span>
+            &gt;
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-g1&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-g1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span>
+        <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;./chart.html&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+        <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l4&quot;</span>
+        <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h4&quot;</span>
+        <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Pressure and flow for the last 24 hours&quot;</span>
+        <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;charts&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l4&quot;</span>&gt;Open the readings on Charts&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h4&quot;</span>&gt;Pressure and flow for the last 24 hours&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l5&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h5&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Set the pressure sensors to the reference gauge&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l5&quot;</span>&gt;Recalibrate the sensors…&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h5&quot;</span>&gt;Set the pressure sensors to the reference gauge&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-g2&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-g2&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Records&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l6&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h6&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;One page with the pumps, the valves and the contacts&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;print&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l6&quot;</span>&gt;Print the site sheet&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h6&quot;</span>
+    &gt;One page with the pumps, the valves and the contacts&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+<span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-wide-l7&quot;</span>
+<span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-wide-h7&quot;</span>
+<span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Take it off the network; its readings are kept&quot;</span>
+<span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;archive&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-l7&quot;</span>&gt;Archive this pump house…&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-wide-h7&quot;</span>&gt;Take it off the network; its readings are kept&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">header</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem; overflow: visible; resize: none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__inner&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__title&quot;</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__description&quot;</span>&gt;
+                    Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                &lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export readings&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Schedule a visit&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span>
+                <span class="kp-code__keyword">data-kp-menu-button</span>
+                <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;pump-house-more-phone&quot;</span>
+                <span class="kp-code__keyword">data-kp-menu-empty</span><span class="kp-code__string">=&quot;hide&quot;</span>
+                <span class="kp-code__keyword">data-cat-menu-target</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;More ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span>
+                <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Every other action on this pump house&quot;</span>
+                <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone&quot;</span>
+                <span class="kp-code__keyword">hidden</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-g0&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-g0&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Run&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">button</span>
+                    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+                    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+                    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+                    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l1&quot;</span>
+                    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h1&quot;</span>
+                    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Stop and start both pumps, one after the other&quot;</span>
+                    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;restart&quot;</span>
+                    &gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l1&quot;</span>&gt;Restart the pumps&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h1&quot;</span>
+                    &gt;Stop and start both pumps, one after the other&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span>
+                <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+                <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+                <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l2&quot;</span>
+                <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h2&quot;</span>
+                <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Run on pump 2 while pump 1 rests&quot;</span>
+                <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;spare&quot;</span>
+                &gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l2&quot;</span>&gt;Switch to the spare pump&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h2&quot;</span>&gt;Run on pump 2 while pump 1 rests&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span>
+            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+            <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+            <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span>
+            <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l3&quot;</span>
+            <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h3 ov-mb-phone-r3&quot;</span>
+            <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+            <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;test&quot;</span>
+            <span class="kp-code__keyword">data-kp-reason</span><span class="kp-code__string">=&quot;Not while a field engineer is on site&quot;</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l3&quot;</span>&gt;Run a pressure test&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h3&quot;</span>
+            &gt;Close the ring main valve and measure for ten minutes&lt;/<span class="kp-code__keyword">span</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint kp-menu__reason&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-r3&quot;</span>
+            &gt;Not while a field engineer is on site&lt;/<span class="kp-code__keyword">span</span>
+            &gt;
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-g1&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-g1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span>
+        <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;./chart.html&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+        <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l4&quot;</span>
+        <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h4&quot;</span>
+        <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Pressure and flow for the last 24 hours&quot;</span>
+        <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;charts&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l4&quot;</span>&gt;Open the readings on Charts&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h4&quot;</span>&gt;Pressure and flow for the last 24 hours&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l5&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h5&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Set the pressure sensors to the reference gauge&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l5&quot;</span>&gt;Recalibrate the sensors…&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h5&quot;</span>
+    &gt;Set the pressure sensors to the reference gauge&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-g2&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__heading&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-g2&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span>&gt;Records&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span>
+    <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+    <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l6&quot;</span>
+    <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h6&quot;</span>
+    <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;One page with the pumps, the valves and the contacts&quot;</span>
+    <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;print&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l6&quot;</span>&gt;Print the site sheet&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h6&quot;</span>
+    &gt;One page with the pumps, the valves and the contacts&lt;/<span class="kp-code__keyword">span</span>
+    &gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item kp-menu__item--destructive&quot;</span>
+<span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span>
+<span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-mb-phone-l7&quot;</span>
+<span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;ov-mb-phone-h7&quot;</span>
+<span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Take it off the network; its readings are kept&quot;</span>
+<span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;archive&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-l7&quot;</span>&gt;Archive this pump house…&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-mb-phone-h7&quot;</span>
+&gt;Take it off the network; its readings are kept&lt;/<span class="kp-code__keyword">span</span>
+&gt;
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">header</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-loading</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-menu-button</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-menu-empty</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-reason</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-value</code></td><td>read, written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-menu-open</code></td><td>Fired on the wrapper, bubbling, when the menu opened.</td></tr>
+                            <tr><td><code>kp-menu-close</code></td><td>Fired on the wrapper, bubbling, when the menu closed.</td></tr>
+                            <tr><td><code>kp-menu-select</code></td><td>Fired on the wrapper, bubbling, when an entry was picked: `{ item, value }`. Cancelable: preventing it keeps the menu open.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
+                            <tr><td><code>--kp-menu-max-height</code></td><td><code>calc(100dvh - 12rem)</code></td></tr>
+                            <tr><td><code>--kp-menu-min-width</code></td><td><code>10rem</code></td></tr>
+                            <tr><td><code>--kp-menu-rich-max</code></td><td><code>min(26rem, 100vw - 2rem)</code></td></tr>
+                            <tr><td><code>--kp-menu-rich-min</code></td><td><code>19rem</code></td></tr>
+                            <tr><td><code>--kp-picker-gap</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-picker-group-pad</code></td><td><code>0.375rem 0.625rem 0.125rem</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the APG menu button: `aria-haspopup`, `aria-expanded` and `aria-controls` on the button; ↓ or ↑ opens it on the first or last entry; ↓ ↑ wrap, Home and End, and a letter jumps to the next entry that starts with it.</li>
+                        <li>Built in — Esc closes it and puts the focus back on the button, and the page’s own Escape listeners hear nothing; Tab closes it and moves on; a click outside closes it.</li>
+                        <li>Built in — an entry that cannot be used stays focusable with `aria-disabled`, and its hint and reason are its description, so a keyboard reader learns why.</li>
+                        <li>Built in — every word the menu says is in the dictionary (`menuLoading`, `menuEmpty`); `attachMenuButtons(root, { strings })` overrides them.</li>
+                        <li>Yours — name the menu (`aria-label`) and say in the button that it opens one (“More ▾”).</li>
+                        <li>Yours — put a destructive entry behind the same confirmation you would give a destructive button.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-menu-button</code></td><td>The wrapper, `[data-kp-menu-button]`: a button, then its `[role=&quot;menu&quot;]`. The menu hangs under the button at its end edge.</td></tr>
+                            <tr><td><code>.kp-menu--rich</code></td><td>The menu itself, a `.kp-menu`: wide enough for a label over a hint, and past its maximum height it scrolls inside itself.</td></tr>
+                            <tr><td><code>.kp-menu__group, __heading</code></td><td>A group of entries and its heading in small muted capitals, which names the `role=&quot;group&quot;`. A menu of one entry, or a nameless group, has no heading.</td></tr>
+                            <tr><td><code>.kp-menu__label, __hint</code></td><td>An entry’s label over its one-line hint; every label and every hint start at one edge.</td></tr>
+                            <tr><td><code>.kp-menu__reason</code></td><td>Under the hint of an entry that cannot be used now (`aria-disabled`), in italics: why. The entry keeps its focus and does nothing.</td></tr>
+                            <tr><td><code>.kp-menu__item--destructive</code></td><td>A destructive entry: its label in the destructive colour.</td></tr>
+                            <tr><td><code>loading</code></td><td>`setMenu(wrapper, &quot;loading&quot;)`: one grey entry at the height of a real one, the menu `aria-busy`.</td></tr>
+                            <tr><td><code>empty</code></td><td>No entries: the button stays, grey, and its title says why; `data-kp-menu-empty=&quot;hide&quot;` takes it away instead.</td></tr>
+                            <tr><td><code>in a page header</code></td><td>In a `.kp-page-header` 40rem wide or narrower, the open menu spans the header’s buttons, inside the screen.</td></tr>
+                            <tr><td><code>a refill while open</code></td><td>Waits until the menu closes, so a live update never moves an entry under the pointer or the focus; a fill that shows the same is skipped.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
+    </body>
+</html>

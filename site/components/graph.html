@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Network graph — kp-themes</title>
+        <meta name="description" content="A picture of a network: one node in the middle, the rest on a ring around it from the top, clockwise, A to Z and then the nodes outside the network, the links drawn by kind (a colour and a dash each, listed above the picture with Show all). Hover or focus a node to see only its links; click it, or press Enter, to keep it picked, several at once; Esc or Show all clears. Each node takes its own hue at the theme’s chart lightness. A label points away from the middle and is shortened, with an ellipsis, where it would touch another or leave the picture; the full name stays in its title and its accessible name. js/graph.js builds it from the page’s data." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html" aria-current="page">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Network graph</h1>
+                    <p class="kp-prose">A picture of a network: one node in the middle, the rest on a ring around it from the top, clockwise, A to Z and then the nodes outside the network, the links drawn by kind (a colour and a dash each, listed above the picture with Show all). Hover or focus a node to see only its links; click it, or press Enter, to keep it picked, several at once; Esc or Show all clears. Each node takes its own hue at the theme’s chart lightness. A label points away from the middle and is shortened, with an ellipsis, where it would touch another or leave the picture; the full name stays in its title and its accessible name. js/graph.js builds it from the page’s data.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For a network with one centre that everything reports to or is reached from: a control centre and its sites, a server and the services it talks to. Not for a network without a centre, not for a flow with a direction that matters more than the links, and not past a few dozen nodes, where the ring’s labels shrink to a letter.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A control centre, its sites and two kinds of link</figcaption>
+                        <p class="kp-text-muted">The data is the page’s, here as a JSON child (`setGraphData()` does the same from a script). The hub is the node named in `hub`, else the one with the most links. A kind the links do not use is left out of the list; a node marked `external` has a dashed grey ring and sits at the end of the ring.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<figure class="kp-graph" data-kp-graph aria-label="The northern network">
+    <script type="application/json" data-kp-graph-data>{"hub":"centre","nodes":[{"id":"centre","label":"Control centre","description":"where every reading arrives"},{"id":"ph1","label":"Pump house 1","description":"two pumps, ring main west"},{"id":"ph2","label":"Pump house 2","description":"one pump, the old town"},{"id":"ph3","label":"Pump house 3","description":"two pumps, ring main north","flag":"mismatch"},{"id":"north","label":"Reservoir North","description":"level sensor and an inlet valve"},{"id":"weather","label":"Weather service","description":"an address outside the network","external":true}],"edges":[{"from":"ph1","to":"centre","kind":"telemetry"},{"from":"ph2","to":"centre","kind":"telemetry"},{"from":"ph3","to":"centre","kind":"telemetry"},{"from":"north","to":"centre","kind":"telemetry"},{"from":"centre","to":"ph1","kind":"control","detail":"pump start and stop"},{"from":"weather","to":"centre","kind":"telemetry","detail":"rain radar every 10 min"}],"kinds":[{"kind":"telemetry","label":"Telemetry","hint":"Readings sent every minute","style":"solid","colour":"var(--chart-1)"},{"kind":"control","label":"Remote control","hint":"Commands to the site","style":"dash","colour":"var(--chart-2)"},{"kind":"radio","label":"Radio link","hint":"A spare path over radio","style":"dot","colour":"var(--chart-4)"}]}</script>
+</figure>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-graph&quot;</span> <span class="kp-code__keyword">data-kp-graph</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The northern network&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-graph-data</span>&gt;{&quot;hub&quot;:&quot;centre&quot;,&quot;nodes&quot;:[{&quot;id&quot;:&quot;centre&quot;,&quot;label&quot;:&quot;Control centre&quot;,&quot;description&quot;:&quot;where every reading arrives&quot;},{&quot;id&quot;:&quot;ph1&quot;,&quot;label&quot;:&quot;Pump house 1&quot;,&quot;description&quot;:&quot;two pumps, ring main west&quot;},{&quot;id&quot;:&quot;ph2&quot;,&quot;label&quot;:&quot;Pump house 2&quot;,&quot;description&quot;:&quot;one pump, the old town&quot;},{&quot;id&quot;:&quot;ph3&quot;,&quot;label&quot;:&quot;Pump house 3&quot;,&quot;description&quot;:&quot;two pumps, ring main north&quot;,&quot;flag&quot;:&quot;mismatch&quot;},{&quot;id&quot;:&quot;north&quot;,&quot;label&quot;:&quot;Reservoir North&quot;,&quot;description&quot;:&quot;level sensor and an inlet valve&quot;},{&quot;id&quot;:&quot;weather&quot;,&quot;label&quot;:&quot;Weather service&quot;,&quot;description&quot;:&quot;an address outside the network&quot;,&quot;external&quot;:true}],&quot;edges&quot;:[{&quot;from&quot;:&quot;ph1&quot;,&quot;to&quot;:&quot;centre&quot;,&quot;kind&quot;:&quot;telemetry&quot;},{&quot;from&quot;:&quot;ph2&quot;,&quot;to&quot;:&quot;centre&quot;,&quot;kind&quot;:&quot;telemetry&quot;},{&quot;from&quot;:&quot;ph3&quot;,&quot;to&quot;:&quot;centre&quot;,&quot;kind&quot;:&quot;telemetry&quot;},{&quot;from&quot;:&quot;north&quot;,&quot;to&quot;:&quot;centre&quot;,&quot;kind&quot;:&quot;telemetry&quot;},{&quot;from&quot;:&quot;centre&quot;,&quot;to&quot;:&quot;ph1&quot;,&quot;kind&quot;:&quot;control&quot;,&quot;detail&quot;:&quot;pump start and stop&quot;},{&quot;from&quot;:&quot;weather&quot;,&quot;to&quot;:&quot;centre&quot;,&quot;kind&quot;:&quot;telemetry&quot;,&quot;detail&quot;:&quot;rain radar every 10 min&quot;}],&quot;kinds&quot;:[{&quot;kind&quot;:&quot;telemetry&quot;,&quot;label&quot;:&quot;Telemetry&quot;,&quot;hint&quot;:&quot;Readings sent every minute&quot;,&quot;style&quot;:&quot;solid&quot;,&quot;colour&quot;:&quot;var(--chart-1)&quot;},{&quot;kind&quot;:&quot;control&quot;,&quot;label&quot;:&quot;Remote control&quot;,&quot;hint&quot;:&quot;Commands to the site&quot;,&quot;style&quot;:&quot;dash&quot;,&quot;colour&quot;:&quot;var(--chart-2)&quot;},{&quot;kind&quot;:&quot;radio&quot;,&quot;label&quot;:&quot;Radio link&quot;,&quot;hint&quot;:&quot;A spare path over radio&quot;,&quot;style&quot;:&quot;dot&quot;,&quot;colour&quot;:&quot;var(--chart-4)&quot;}]}&lt;/<span class="kp-code__keyword">script</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-chart-graph">
+                        <figcaption class="kp-fw-semibold">Network graph</figcaption>
+                        <p class="kp-text-muted"><code>.kp-graph</code> (<code>js/graph.js</code>): the control centre in the middle, the other sites on a ring around it from the top, clockwise, A to Z and then the two addresses outside the network (a dashed grey ring). Each node has its own colour; <b>Pump house 5</b> carries a dotted ring (its settings differ from the plan). Over the picture the kinds of link, each a colour and a dash: four are listed, the four the links use (the fifth kind the page gives is left out). Hover <b>Pump house 3</b>: only its links stay, the rest fades; two kinds between one pair (telemetry and remote control) bend apart. Click two nodes: both stay picked, and <b>Show all</b> appears in its place on the right. Turn a kind off in the list. Tab once: the focus lands on the hub, → walks the ring, Enter picks, Esc shows all; the graph is one tab stop. Press <b>Fifteen long names</b>: in the phone pane no two labels touch and none is cut off at the edge; a shortened one ends in … and shows the full name on hover. <b>Size by flow</b> sizes the nodes by their weight, <b>Live update</b> changes the data and keeps the focus and the picks, and the three states keep the picture's height. The hint sits under the picture, never over it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<figure class="kp-graph" data-kp-graph data-kp-key="network" aria-label="The northern network">
+    <script type="application/json" data-kp-graph-data>
+        {
+        "nodes": [
+        { "id": "centre", "label": "Control centre", "description": "where every reading arrives" },
+        { "id": "ph1", "label": "Pump house 1", "description": "two pumps, ring main west" },
+        { "id": "ph2", "label": "Pump house 2", "description": "one pump, the old town" },
+        { "id": "ph3", "label": "Pump house 3", "description": "two pumps, ring main north" },
+        { "id": "ph4", "label": "Pump house 4", "description": "two pumps, the harbour" },
+        {
+        "id": "ph5",
+        "label": "Pump house 5",
+        "description": "one pump, the hills; its settings on site differ from the plan",
+        "flag": "mismatch"
+        },
+        { "id": "ph6", "label": "Pump house 6", "description": "being built, live in November" },
+        { "id": "north", "label": "Reservoir North", "description": "level sensor and an inlet valve" },
+        { "id": "south", "label": "Reservoir South", "description": "level sensor and an inlet valve" },
+        { "id": "plant", "label": "Treatment plant", "description": "where the water comes from" },
+        {
+        "id": "weather",
+        "label": "Weather service",
+        "description": "an address outside the network",
+        "external": true
+        },
+        { "id": "energy", "label": "Energy supplier", "description": "an address outside the network", "external": true }
+        ],
+        "edges": [
+        { "from": "ph1", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "ph2", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "ph3", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "ph4", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "ph5", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "north", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "south", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "plant", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+        { "from": "centre", "to": "ph1", "kind": "control", "detail": "pump start and stop" },
+        { "from": "centre", "to": "ph3", "kind": "control", "detail": "pump start and stop, valve" },
+        { "from": "centre", "to": "plant", "kind": "control", "detail": "intake rate" },
+        { "from": "ph3", "to": "ph4", "kind": "radio", "detail": "spare path" },
+        { "from": "ph4", "to": "centre", "kind": "radio", "detail": "spare path" },
+        { "from": "centre", "to": "ph6", "kind": "planned", "detail": "fibre ordered" },
+        { "from": "centre", "to": "energy", "kind": "planned", "detail": "tariff feed ordered" },
+        { "from": "weather", "to": "centre", "kind": "telemetry", "detail": "rain radar every 10 min" }
+        ],
+        "kinds": [
+        {
+        "kind": "telemetry",
+        "label": "Telemetry",
+        "hint": "Readings sent to the control centre every minute",
+        "style": "solid",
+        "colour": "var(--chart-1)"
+        },
+        {
+        "kind": "control",
+        "label": "Remote control",
+        "hint": "Commands from the control centre to the site",
+        "style": "dash",
+        "colour": "var(--chart-2)"
+        },
+        {
+        "kind": "radio",
+        "label": "Radio link",
+        "hint": "A spare path over radio for when the line is down",
+        "style": "dot",
+        "colour": "var(--chart-4)"
+        },
+        {
+        "kind": "planned",
+        "label": "Planned",
+        "hint": "A link that is ordered but not live yet",
+        "style": "long-dash",
+        "colour": "var(--muted-foreground)"
+        },
+        {
+        "kind": "unused",
+        "label": "Not used here",
+        "hint": "A kind no link on this network has; the list leaves it out",
+        "style": "solid",
+        "colour": "var(--chart-5)"
+        }
+        ],
+        "hub": "centre"
+        }
+    </script>
+</figure>
+<p class="cat-note">Phone width</p>
+<div class="cat-resize" style="inline-size: 22.5rem; box-sizing: border-box">
+    <figure class="kp-graph" data-kp-graph data-kp-key="network-phone" aria-label="The northern network, phone width">
+        <script type="application/json" data-kp-graph-data>
+            {
+            "nodes": [
+            { "id": "centre", "label": "Control centre", "description": "where every reading arrives" },
+            { "id": "ph1", "label": "Pump house 1", "description": "two pumps, ring main west" },
+            { "id": "ph2", "label": "Pump house 2", "description": "one pump, the old town" },
+            { "id": "ph3", "label": "Pump house 3", "description": "two pumps, ring main north" },
+            { "id": "ph4", "label": "Pump house 4", "description": "two pumps, the harbour" },
+            {
+            "id": "ph5",
+            "label": "Pump house 5",
+            "description": "one pump, the hills; its settings on site differ from the plan",
+            "flag": "mismatch"
+            },
+            { "id": "ph6", "label": "Pump house 6", "description": "being built, live in November" },
+            { "id": "north", "label": "Reservoir North", "description": "level sensor and an inlet valve" },
+            { "id": "south", "label": "Reservoir South", "description": "level sensor and an inlet valve" },
+            { "id": "plant", "label": "Treatment plant", "description": "where the water comes from" },
+            {
+            "id": "weather",
+            "label": "Weather service",
+            "description": "an address outside the network",
+            "external": true
+            },
+            {
+            "id": "energy",
+            "label": "Energy supplier",
+            "description": "an address outside the network",
+            "external": true
+            }
+            ],
+            "edges": [
+            { "from": "ph1", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "ph2", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "ph3", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "ph4", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "ph5", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "north", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "south", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "plant", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+            { "from": "centre", "to": "ph1", "kind": "control", "detail": "pump start and stop" },
+            { "from": "centre", "to": "ph3", "kind": "control", "detail": "pump start and stop, valve" },
+            { "from": "centre", "to": "plant", "kind": "control", "detail": "intake rate" },
+            { "from": "ph3", "to": "ph4", "kind": "radio", "detail": "spare path" },
+            { "from": "ph4", "to": "centre", "kind": "radio", "detail": "spare path" },
+            { "from": "centre", "to": "ph6", "kind": "planned", "detail": "fibre ordered" },
+            { "from": "centre", "to": "energy", "kind": "planned", "detail": "tariff feed ordered" },
+            { "from": "weather", "to": "centre", "kind": "telemetry", "detail": "rain radar every 10 min" }
+            ],
+            "kinds": [
+            {
+            "kind": "telemetry",
+            "label": "Telemetry",
+            "hint": "Readings sent to the control centre every minute",
+            "style": "solid",
+            "colour": "var(--chart-1)"
+            },
+            {
+            "kind": "control",
+            "label": "Remote control",
+            "hint": "Commands from the control centre to the site",
+            "style": "dash",
+            "colour": "var(--chart-2)"
+            },
+            {
+            "kind": "radio",
+            "label": "Radio link",
+            "hint": "A spare path over radio for when the line is down",
+            "style": "dot",
+            "colour": "var(--chart-4)"
+            },
+            {
+            "kind": "planned",
+            "label": "Planned",
+            "hint": "A link that is ordered but not live yet",
+            "style": "long-dash",
+            "colour": "var(--muted-foreground)"
+            },
+            {
+            "kind": "unused",
+            "label": "Not used here",
+            "hint": "A kind no link on this network has; the list leaves it out",
+            "style": "solid",
+            "colour": "var(--chart-5)"
+            }
+            ],
+            "hub": "centre"
+            }
+        </script>
+    </figure>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-graph&quot;</span> <span class="kp-code__keyword">data-kp-graph</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;network&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The northern network&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-graph-data</span>&gt;
+        {
+        &quot;nodes&quot;: [
+        { &quot;id&quot;: &quot;centre&quot;, &quot;label&quot;: &quot;Control centre&quot;, &quot;description&quot;: &quot;where every reading arrives&quot; },
+        { &quot;id&quot;: &quot;ph1&quot;, &quot;label&quot;: &quot;Pump house 1&quot;, &quot;description&quot;: &quot;two pumps, ring main west&quot; },
+        { &quot;id&quot;: &quot;ph2&quot;, &quot;label&quot;: &quot;Pump house 2&quot;, &quot;description&quot;: &quot;one pump, the old town&quot; },
+        { &quot;id&quot;: &quot;ph3&quot;, &quot;label&quot;: &quot;Pump house 3&quot;, &quot;description&quot;: &quot;two pumps, ring main north&quot; },
+        { &quot;id&quot;: &quot;ph4&quot;, &quot;label&quot;: &quot;Pump house 4&quot;, &quot;description&quot;: &quot;two pumps, the harbour&quot; },
+        {
+        &quot;id&quot;: &quot;ph5&quot;,
+        &quot;label&quot;: &quot;Pump house 5&quot;,
+        &quot;description&quot;: &quot;one pump, the hills; its settings on site differ from the plan&quot;,
+        &quot;flag&quot;: &quot;mismatch&quot;
+        },
+        { &quot;id&quot;: &quot;ph6&quot;, &quot;label&quot;: &quot;Pump house 6&quot;, &quot;description&quot;: &quot;being built, live in November&quot; },
+        { &quot;id&quot;: &quot;north&quot;, &quot;label&quot;: &quot;Reservoir North&quot;, &quot;description&quot;: &quot;level sensor and an inlet valve&quot; },
+        { &quot;id&quot;: &quot;south&quot;, &quot;label&quot;: &quot;Reservoir South&quot;, &quot;description&quot;: &quot;level sensor and an inlet valve&quot; },
+        { &quot;id&quot;: &quot;plant&quot;, &quot;label&quot;: &quot;Treatment plant&quot;, &quot;description&quot;: &quot;where the water comes from&quot; },
+        {
+        &quot;id&quot;: &quot;weather&quot;,
+        &quot;label&quot;: &quot;Weather service&quot;,
+        &quot;description&quot;: &quot;an address outside the network&quot;,
+        &quot;external&quot;: true
+        },
+        { &quot;id&quot;: &quot;energy&quot;, &quot;label&quot;: &quot;Energy supplier&quot;, &quot;description&quot;: &quot;an address outside the network&quot;, &quot;external&quot;: true }
+        ],
+        &quot;edges&quot;: [
+        { &quot;from&quot;: &quot;ph1&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;ph2&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;ph3&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;ph4&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;ph5&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;north&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;south&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;plant&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+        { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph1&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;pump start and stop&quot; },
+        { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph3&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;pump start and stop, valve&quot; },
+        { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;plant&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;intake rate&quot; },
+        { &quot;from&quot;: &quot;ph3&quot;, &quot;to&quot;: &quot;ph4&quot;, &quot;kind&quot;: &quot;radio&quot;, &quot;detail&quot;: &quot;spare path&quot; },
+        { &quot;from&quot;: &quot;ph4&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;radio&quot;, &quot;detail&quot;: &quot;spare path&quot; },
+        { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph6&quot;, &quot;kind&quot;: &quot;planned&quot;, &quot;detail&quot;: &quot;fibre ordered&quot; },
+        { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;energy&quot;, &quot;kind&quot;: &quot;planned&quot;, &quot;detail&quot;: &quot;tariff feed ordered&quot; },
+        { &quot;from&quot;: &quot;weather&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;rain radar every 10 min&quot; }
+        ],
+        &quot;kinds&quot;: [
+        {
+        &quot;kind&quot;: &quot;telemetry&quot;,
+        &quot;label&quot;: &quot;Telemetry&quot;,
+        &quot;hint&quot;: &quot;Readings sent to the control centre every minute&quot;,
+        &quot;style&quot;: &quot;solid&quot;,
+        &quot;colour&quot;: &quot;var(--chart-1)&quot;
+        },
+        {
+        &quot;kind&quot;: &quot;control&quot;,
+        &quot;label&quot;: &quot;Remote control&quot;,
+        &quot;hint&quot;: &quot;Commands from the control centre to the site&quot;,
+        &quot;style&quot;: &quot;dash&quot;,
+        &quot;colour&quot;: &quot;var(--chart-2)&quot;
+        },
+        {
+        &quot;kind&quot;: &quot;radio&quot;,
+        &quot;label&quot;: &quot;Radio link&quot;,
+        &quot;hint&quot;: &quot;A spare path over radio for when the line is down&quot;,
+        &quot;style&quot;: &quot;dot&quot;,
+        &quot;colour&quot;: &quot;var(--chart-4)&quot;
+        },
+        {
+        &quot;kind&quot;: &quot;planned&quot;,
+        &quot;label&quot;: &quot;Planned&quot;,
+        &quot;hint&quot;: &quot;A link that is ordered but not live yet&quot;,
+        &quot;style&quot;: &quot;long-dash&quot;,
+        &quot;colour&quot;: &quot;var(--muted-foreground)&quot;
+        },
+        {
+        &quot;kind&quot;: &quot;unused&quot;,
+        &quot;label&quot;: &quot;Not used here&quot;,
+        &quot;hint&quot;: &quot;A kind no link on this network has; the list leaves it out&quot;,
+        &quot;style&quot;: &quot;solid&quot;,
+        &quot;colour&quot;: &quot;var(--chart-5)&quot;
+        }
+        ],
+        &quot;hub&quot;: &quot;centre&quot;
+        }
+    &lt;/<span class="kp-code__keyword">script</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-note&quot;</span>&gt;Phone width&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem; box-sizing: border-box&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-graph&quot;</span> <span class="kp-code__keyword">data-kp-graph</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;network-phone&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The northern network, phone width&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-graph-data</span>&gt;
+            {
+            &quot;nodes&quot;: [
+            { &quot;id&quot;: &quot;centre&quot;, &quot;label&quot;: &quot;Control centre&quot;, &quot;description&quot;: &quot;where every reading arrives&quot; },
+            { &quot;id&quot;: &quot;ph1&quot;, &quot;label&quot;: &quot;Pump house 1&quot;, &quot;description&quot;: &quot;two pumps, ring main west&quot; },
+            { &quot;id&quot;: &quot;ph2&quot;, &quot;label&quot;: &quot;Pump house 2&quot;, &quot;description&quot;: &quot;one pump, the old town&quot; },
+            { &quot;id&quot;: &quot;ph3&quot;, &quot;label&quot;: &quot;Pump house 3&quot;, &quot;description&quot;: &quot;two pumps, ring main north&quot; },
+            { &quot;id&quot;: &quot;ph4&quot;, &quot;label&quot;: &quot;Pump house 4&quot;, &quot;description&quot;: &quot;two pumps, the harbour&quot; },
+            {
+            &quot;id&quot;: &quot;ph5&quot;,
+            &quot;label&quot;: &quot;Pump house 5&quot;,
+            &quot;description&quot;: &quot;one pump, the hills; its settings on site differ from the plan&quot;,
+            &quot;flag&quot;: &quot;mismatch&quot;
+            },
+            { &quot;id&quot;: &quot;ph6&quot;, &quot;label&quot;: &quot;Pump house 6&quot;, &quot;description&quot;: &quot;being built, live in November&quot; },
+            { &quot;id&quot;: &quot;north&quot;, &quot;label&quot;: &quot;Reservoir North&quot;, &quot;description&quot;: &quot;level sensor and an inlet valve&quot; },
+            { &quot;id&quot;: &quot;south&quot;, &quot;label&quot;: &quot;Reservoir South&quot;, &quot;description&quot;: &quot;level sensor and an inlet valve&quot; },
+            { &quot;id&quot;: &quot;plant&quot;, &quot;label&quot;: &quot;Treatment plant&quot;, &quot;description&quot;: &quot;where the water comes from&quot; },
+            {
+            &quot;id&quot;: &quot;weather&quot;,
+            &quot;label&quot;: &quot;Weather service&quot;,
+            &quot;description&quot;: &quot;an address outside the network&quot;,
+            &quot;external&quot;: true
+            },
+            {
+            &quot;id&quot;: &quot;energy&quot;,
+            &quot;label&quot;: &quot;Energy supplier&quot;,
+            &quot;description&quot;: &quot;an address outside the network&quot;,
+            &quot;external&quot;: true
+            }
+            ],
+            &quot;edges&quot;: [
+            { &quot;from&quot;: &quot;ph1&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;ph2&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;ph3&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;ph4&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;ph5&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;north&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;south&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;plant&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;readings every minute&quot; },
+            { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph1&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;pump start and stop&quot; },
+            { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph3&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;pump start and stop, valve&quot; },
+            { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;plant&quot;, &quot;kind&quot;: &quot;control&quot;, &quot;detail&quot;: &quot;intake rate&quot; },
+            { &quot;from&quot;: &quot;ph3&quot;, &quot;to&quot;: &quot;ph4&quot;, &quot;kind&quot;: &quot;radio&quot;, &quot;detail&quot;: &quot;spare path&quot; },
+            { &quot;from&quot;: &quot;ph4&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;radio&quot;, &quot;detail&quot;: &quot;spare path&quot; },
+            { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;ph6&quot;, &quot;kind&quot;: &quot;planned&quot;, &quot;detail&quot;: &quot;fibre ordered&quot; },
+            { &quot;from&quot;: &quot;centre&quot;, &quot;to&quot;: &quot;energy&quot;, &quot;kind&quot;: &quot;planned&quot;, &quot;detail&quot;: &quot;tariff feed ordered&quot; },
+            { &quot;from&quot;: &quot;weather&quot;, &quot;to&quot;: &quot;centre&quot;, &quot;kind&quot;: &quot;telemetry&quot;, &quot;detail&quot;: &quot;rain radar every 10 min&quot; }
+            ],
+            &quot;kinds&quot;: [
+            {
+            &quot;kind&quot;: &quot;telemetry&quot;,
+            &quot;label&quot;: &quot;Telemetry&quot;,
+            &quot;hint&quot;: &quot;Readings sent to the control centre every minute&quot;,
+            &quot;style&quot;: &quot;solid&quot;,
+            &quot;colour&quot;: &quot;var(--chart-1)&quot;
+            },
+            {
+            &quot;kind&quot;: &quot;control&quot;,
+            &quot;label&quot;: &quot;Remote control&quot;,
+            &quot;hint&quot;: &quot;Commands from the control centre to the site&quot;,
+            &quot;style&quot;: &quot;dash&quot;,
+            &quot;colour&quot;: &quot;var(--chart-2)&quot;
+            },
+            {
+            &quot;kind&quot;: &quot;radio&quot;,
+            &quot;label&quot;: &quot;Radio link&quot;,
+            &quot;hint&quot;: &quot;A spare path over radio for when the line is down&quot;,
+            &quot;style&quot;: &quot;dot&quot;,
+            &quot;colour&quot;: &quot;var(--chart-4)&quot;
+            },
+            {
+            &quot;kind&quot;: &quot;planned&quot;,
+            &quot;label&quot;: &quot;Planned&quot;,
+            &quot;hint&quot;: &quot;A link that is ordered but not live yet&quot;,
+            &quot;style&quot;: &quot;long-dash&quot;,
+            &quot;colour&quot;: &quot;var(--muted-foreground)&quot;
+            },
+            {
+            &quot;kind&quot;: &quot;unused&quot;,
+            &quot;label&quot;: &quot;Not used here&quot;,
+            &quot;hint&quot;: &quot;A kind no link on this network has; the list leaves it out&quot;,
+            &quot;style&quot;: &quot;solid&quot;,
+            &quot;colour&quot;: &quot;var(--chart-5)&quot;
+            }
+            ],
+            &quot;hub&quot;: &quot;centre&quot;
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-focus</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-from</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-graph</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-graph-data</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-id</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-idle</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-key</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-kind</code></td><td>selector, read, written</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-style</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-to</code></td><td>read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-graph-change</code></td><td>Fired on the graph, bubbling, when its selection, hover or hidden kinds change: `detail` `{ selected, hover, hiddenKinds }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-glyph-to-top</code></td><td><code>'↑'</code></td></tr>
+                            <tr><td><code>--kp-graph-dim</code></td><td><code>0.08</code></td></tr>
+                            <tr><td><code>--kp-graph-edge-colour</code></td><td><code>var(--chart-3)</code></td></tr>
+                            <tr><td><code>--kp-graph-h</code></td><td><code>480px</code></td></tr>
+                            <tr><td><code>--kp-graph-hue</code></td><td><code>210</code></td></tr>
+                            <tr><td><code>--kp-graph-label-size</code></td><td><code>12px</code></td></tr>
+                            <tr><td><code>--kp-graph-node-colour</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-to-top-layer</code></td><td><code>50</code></td></tr>
+                            <tr><td><code>--kp-to-top-offset</code></td><td><code>1.5rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the picture is one tab stop: Tab lands on the hub (or the node last focused), the arrow keys walk the ring, Home and End jump, Enter or Space picks, Esc shows all again.</li>
+                        <li>Built in — every node is a `role=&quot;button&quot;` with `aria-pressed` and the accessible name “label, description”; the picture is a named group whose name ends with the hint.</li>
+                        <li>Built in — a shortened label keeps the full name in the node’s title and accessible name; the labels are fitted again when a web font arrives.</li>
+                        <li>Built in — a kind toggle is a real button with `aria-pressed` and the kind’s hint as its title; a kind turned off is crossed out as well as faded.</li>
+                        <li>Built in — a live update keeps the focus and the picks by id; a hover or a pick changes classes only, so the node under the pointer is never rebuilt.</li>
+                        <li>Yours — name the graph (`aria-label`), give every node a `description` worth hearing, and say in text near it what a reader must not miss; the picture is the overview.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>[data-kp-graph]</code></td><td>A graph; usually a `figure.kp-graph` with an `aria-label`. Its data comes from a `script[type=&quot;application/json&quot;][data-kp-graph-data]` child or from `setGraphData(el, data)` after the attach; until then it shows loading.</td></tr>
+                            <tr><td><code>.kp-graph__bar</code></td><td>Over the picture: the kinds of link (`.kp-graph__kinds`, one `.kp-graph__kind` toggle each, the ones the links use) and Show all, which keeps its place while there is nothing to show again (`data-kp-idle`).</td></tr>
+                            <tr><td><code>.kp-graph__box</code></td><td>The picture (`.kp-graph__svg`) at the height it is drawn at (see the knobs), in every state, with `.kp-graph__note` for the state’s sentence.</td></tr>
+                            <tr><td><code>.kp-graph__hint</code></td><td>What a pointer, a click and the keys do, under the picture in the page’s flow.</td></tr>
+                            <tr><td><code>.kp-graph__edge</code></td><td>A link: its kind’s colour (the kind’s `colour`, a token such as `var(--chart-2)`) and dash (`data-kp-style=&quot;solid|dash|dot|long-dash&quot;`). Two links between one pair bend apart, 26 px a step.</td></tr>
+                            <tr><td><code>.kp-graph__node</code></td><td>A node: a ring (`__ring`), a core (`__core`) in its own hue (spread over the nodes A to Z unless a node gives its own `hue`), and its label (`__label`). A `weight` from 0 to 1 sizes it.</td></tr>
+                            <tr><td><code>.kp-graph__node--hub</code></td><td>The node in the middle; its label sits under it.</td></tr>
+                            <tr><td><code>.kp-graph__node--external</code></td><td>A node outside the network (`external: true`): a dashed grey ring, no core, at the end of the ring.</td></tr>
+                            <tr><td><code>.kp-graph__flag</code></td><td>A dotted ring around a node whose `flag` is `mismatch`: its settings differ from the plan.</td></tr>
+                            <tr><td><code>lit, dim, picked</code></td><td>While a node is hovered, focused or picked, its links are `is-on`, the rest `is-dim`, and the nodes they do not reach fade; a picked node has a thicker ring. A kind turned off is `is-hidden`.</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>Written by the script: `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot before the page’s sentence), each at the picture’s full height; `ready` once it has nodes.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
+    </body>
+</html>

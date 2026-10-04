@@ -22,7 +22,8 @@
                 <code>.kp-url</code>), masked values, timestamps and truncation, the keyboard shortcut sheet (<code>.kp-shortcuts</code>), and the
                 table column that gives way first (<code>.kp-col-low</code>). The extremes are the ones that push pages sideways: a 90-character URL,
                 a 70-character id, and a diff of forty lines. At the end, three a dashboard needs: tiles of one height (<code>.kp-tiles</code>), key
-                figures (<code>.kp-kpis</code>) and a state word that keeps its width (<code>.kp-state-word</code>).
+                figures (<code>.kp-kpis</code>) with their meters, column counts and 24-hour trends, and a state word that keeps its width
+                (<code>.kp-state-word</code>).
             </p>
             <ul class="cat-toc">
                 <li><a href="#health">Health</a></li>
@@ -38,7 +39,11 @@
                 <li><a href="#tiles">Tiles of one height</a></li>
                 <li><a href="#tiles-set">Tiles of one height across a board</a></li>
                 <li><a href="#kpis">Key figures</a></li>
+                <li><a href="#meter">A meter with a mark</a></li>
+                <li><a href="#kpi-columns">Key figures that never leave one alone</a></li>
+                <li><a href="#kpi-trend">A key figure with its 24-hour trend</a></li>
                 <li><a href="#state-word">A state word that keeps its width</a></li>
+                <li><a href="#calendar">A month of nightly backups</a></li>
             </ul>
 
             <section class="cat-block" id="health">
@@ -536,10 +541,11 @@
                 <h2>Tiles of one height across a board</h2>
                 <div class="cat-look">
                     <b>Look at:</b> two groups of tiles, each its own <code>.kp-tiles</code> grid, on one board marked
-                    <code>data-kp-tiles-set="cat-board"</code>: every tile of both groups is as tall as the tallest tile of the board, so the
-                    footers of the two groups sit on one line, though the tallest tile (<b>Pump house 3</b>) is only in the second group. Fold
-                    <b>Pump houses</b> away: only visible tiles count, so the reservoirs shrink to their own height; unfold it and they grow back. <b>Grow a reservoir</b> adds a line to a reservoir: when it becomes the tallest, every tile of the
-                    board follows within one frame. The line under the board reads the height the set shares.
+                    <code>data-kp-tiles-set="cat-board"</code>: every tile of both groups is as tall as the tallest tile of the board, so the footers
+                    of the two groups sit on one line, though the tallest tile (<b>Pump house 3</b>) is only in the second group. Fold
+                    <b>Pump houses</b> away: only visible tiles count, so the reservoirs shrink to their own height; unfold it and they grow back.
+                    <b>Grow a reservoir</b> adds a line to a reservoir: when it becomes the tallest, every tile of the board follows within one frame.
+                    The line under the board reads the height the set shares.
                 </div>
                 <p class="cat-live__bar">
                     <button type="button" class="kp-button kp-button--sm" data-cat-tiles-set="grow" aria-pressed="false">Grow a reservoir</button>
@@ -580,7 +586,10 @@
                                 </li>
                                 <li class="kp-card">
                                     <h3 class="kp-card__title">Pump house 3</h3>
-                                    <p class="kp-card__body">Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way.</p>
+                                    <p class="kp-card__body">
+                                        Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the
+                                        way.
+                                    </p>
                                     <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
                                         <span class="kp-timestamp">Read 2 min ago</span
                                         ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
@@ -745,6 +754,713 @@
                 <p class="cat-note" data-cat-kpi-log>No filter on.</p>
             </section>
 
+            <section class="cat-block" id="meter">
+                <h2>A meter with a mark</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-meter</code>, a used-of-total bar that works anywhere: in a table cell, at the bottom of a key figure
+                    (<code>.kp-kpi__meter</code>), at the start of a line of words (<code>.kp-meter--inline</code>). <code>--kp-value</code> is the
+                    share and <code>--kp-mark</code> an optional tick across the bar (a target, a limit, what is booked), which sticks out a little
+                    above and below without making the meter any taller. A share past the end fills the bar and puts a small ▸ at its end
+                    (<code>data-kp-over</code>); a mark past the end stops just short of the end with the ▸ after it. The red tile's meter is red, the
+                    warning row's amber. The third column is what a screen reader hears: the real share, past 100 % too. Press <b>Book more</b>: the
+                    capacity tile's mark moves past the end and its words say 130 %, through <code>setMeter()</code>. <b>Loading</b> pulses the tracks
+                    (still under reduced motion), with no fill and no mark. The phone pane shows the same tiles two to a row.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-meter="book" aria-pressed="false">Book more</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-meter="loading" aria-pressed="false">Loading</button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <table class="kp-table">
+                        <caption class="kp-sr-only">
+                            Meters in every state
+                        </caption>
+                        <colgroup>
+                            <col />
+                            <col style="width: 40%" />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col">Case</th>
+                                <th scope="col">Meter</th>
+                                <th scope="col">What a screen reader hears</th>
+                            </tr>
+                        </thead>
+                        <tbody data-cat-meter-rows>
+                            <tr>
+                                <td>Reservoir North, against its target</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="62"
+                                        aria-valuetext="62% full; 80% the target level"
+                                        style="--kp-value: 0.62; --kp-mark: 0.8"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>62% full; 80% the target level</td>
+                            </tr>
+                            <tr>
+                                <td>Booked tonight, past the end</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="58"
+                                        aria-valuetext="58% running now; 130% booked for tonight"
+                                        style="--kp-value: 0.58; --kp-mark: 1.3"
+                                        ><span class="kp-meter__mark" aria-hidden="true" data-kp-over></span
+                                    ></span>
+                                </td>
+                                <td>58% running now; 130% booked for tonight</td>
+                            </tr>
+                            <tr>
+                                <td>Empty, with a mark</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="0"
+                                        aria-valuetext="0% used; 50% the weekly limit"
+                                        style="--kp-value: 0; --kp-mark: 0.5"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>0% used; 50% the weekly limit</td>
+                            </tr>
+                            <tr>
+                                <td>Full</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="100"
+                                        aria-valuetext="100% full; 90% the target level"
+                                        style="--kp-value: 1; --kp-mark: 0.9"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>100% full; 90% the target level</td>
+                            </tr>
+                            <tr>
+                                <td>The share past the end</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        data-kp-over
+                                        aria-valuenow="100"
+                                        aria-valuetext="112% of the plan used"
+                                        style="--kp-value: 1.12"
+                                    ></span>
+                                </td>
+                                <td>112% of the plan used</td>
+                            </tr>
+                            <tr>
+                                <td>Mark at the start</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="30"
+                                        aria-valuetext="30% used; 0% the floor"
+                                        style="--kp-value: 0.3; --kp-mark: 0"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>30% used; 0% the floor</td>
+                            </tr>
+                            <tr>
+                                <td>Mark at the end</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="30"
+                                        aria-valuetext="30% used; 100% the ceiling"
+                                        style="--kp-value: 0.3; --kp-mark: 1"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>30% used; 100% the ceiling</td>
+                            </tr>
+                            <tr>
+                                <td>Warning</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="78"
+                                        aria-valuetext="78% full; 80% the overflow alarm"
+                                        data-kp-tone="warning"
+                                        style="--kp-value: 0.78; --kp-mark: 0.8"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>78% full; 80% the overflow alarm</td>
+                            </tr>
+                            <tr>
+                                <td>Destructive</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="93"
+                                        aria-valuetext="93% full; 80% the overflow alarm"
+                                        data-kp-tone="destructive"
+                                        style="--kp-value: 0.93; --kp-mark: 0.8"
+                                        ><span class="kp-meter__mark" aria-hidden="true"></span
+                                    ></span>
+                                </td>
+                                <td>93% full; 80% the overflow alarm</td>
+                            </tr>
+                            <tr>
+                                <td>Not measured</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuetext="not measured"
+                                        style="--kp-value: 0"
+                                    ></span>
+                                </td>
+                                <td>not measured</td>
+                            </tr>
+                            <tr>
+                                <td>Loading</td>
+                                <td>
+                                    <span
+                                        class="kp-meter"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        data-kp-loading
+                                        aria-busy="true"
+                                        aria-valuetext="being measured"
+                                        style="--kp-value: 0"
+                                    ></span>
+                                </td>
+                                <td>being measured</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-kpis" data-kp-kpis-columns="all 2 1" role="group" aria-label="Storage and capacity" data-cat-meter-tiles>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Reservoir North</span>
+                            <span class="kp-kpi__value">62<small>%</small></span>
+                            <span class="kp-kpi__trend">full · the mark is the target level, 80 %</span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="62"
+                                aria-valuetext="62% full; 80% the target level"
+                                style="--kp-value: 0.62; --kp-mark: 0.8"
+                                data-cat-meter-of="reservoir"
+                                ><span class="kp-meter__mark" aria-hidden="true"></span
+                            ></span>
+                        </div>
+                        <div class="kp-kpi" data-kp-tone="destructive">
+                            <span class="kp-kpi__label">Pump capacity</span>
+                            <span class="kp-kpi__value">93<small>%</small></span>
+                            <span class="kp-kpi__trend" data-cat-meter-words>running · the mark is what is booked tonight</span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="93"
+                                aria-valuetext="93% running; 80% booked for tonight"
+                                style="--kp-value: 0.93; --kp-mark: 0.8"
+                                data-cat-meter-of="booked"
+                                ><span class="kp-meter__mark" aria-hidden="true"></span
+                            ></span>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Treatment plant</span>
+                            <span class="kp-kpi__value">4 210<small>m³</small></span>
+                            <span class="kp-kpi__trend"
+                                ><span
+                                    class="kp-meter kp-meter--inline"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="41"
+                                    aria-valuetext="41% of today's plan; 55% planned by now"
+                                    style="--kp-value: 0.41; --kp-mark: 0.55"
+                                    data-cat-meter-of="plant"
+                                    ><span class="kp-meter__mark" aria-hidden="true"></span></span
+                                >41 % of today's plan, plan to 55 % by now</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem" data-cat-meter-phone></div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="kpi-columns">
+                <h2>Key figures that never leave one alone</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which
+                    every tile is at least <code>--kp-kpi-min</code> wide, measured by the strip's own width (not the window's). If that leaves one
+                    tile alone on the last row, it steps down to a count that does not; only when none exists (seven at 700 px, five at phone width)
+                    does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the line
+                    under the buttons says what <code>attachKpiStrips()</code> chose. Before the script runs, a strip keeps the package's auto-fit.
+                    The table under the phone pane is the spec's own list of cases.
+                </div>
+                <p class="cat-live__bar" role="group" aria-label="How many tiles" data-cat-kpis-count>
+                    <span class="cat-note">Tiles:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="1" aria-pressed="false">1</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="2" aria-pressed="false">2</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="3" aria-pressed="false">3</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="4" aria-pressed="false">4</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="5" aria-pressed="true">5</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="6" aria-pressed="false">6</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="7" aria-pressed="false">7</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="8" aria-pressed="false">8</button>
+                </p>
+                <p class="cat-live__bar" role="group" aria-label="How wide the strip is" data-cat-kpis-width>
+                    <span class="cat-note">Strip width:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="full" aria-pressed="true">The full block</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="700" aria-pressed="false">700 px</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="600" aria-pressed="false">600 px</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="358" aria-pressed="false">358 px, a phone</button>
+                </p>
+                <p class="cat-note" role="status" data-cat-kpis-log>5 tiles.</p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-kpis-stage>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="all 3 2 1"
+                            role="group"
+                            aria-label="The northern network right now"
+                            data-cat-kpis-strip
+                        >
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1<small>bar</small></span
+                                ><span class="kp-kpi__trend">two pumps running</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span
+                                ><span class="kp-kpi__trend">into the ring main</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Reservoir North</span><span class="kp-kpi__value">71<small>%</small></span
+                                ><span class="kp-kpi__trend">target 80 %</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Reservoir South</span><span class="kp-kpi__value">64<small>%</small></span
+                                ><span class="kp-kpi__trend">target 80 %</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">2</span
+                                ><span class="kp-kpi__trend">one needs a visit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <template data-cat-kpis-more>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Readings late</span><span class="kp-kpi__value">1</span
+                            ><span class="kp-kpi__trend">pump house 7, since 06:00</span>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Energy today</span><span class="kp-kpi__value">1 834<small>kWh</small></span
+                            ><span class="kp-kpi__trend">night tariff from 22:00</span>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Visits planned</span><span class="kp-kpi__value">3</span
+                            ><span class="kp-kpi__trend">this week</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network, phone width">
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1<small>bar</small></span
+                                ><span class="kp-kpi__trend">two pumps running</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span
+                                ><span class="kp-kpi__trend">into the ring main</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Reservoir North</span><span class="kp-kpi__value">71<small>%</small></span
+                                ><span class="kp-kpi__trend">target 80 %</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Reservoir South</span><span class="kp-kpi__value">64<small>%</small></span
+                                ><span class="kp-kpi__trend">target 80 %</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">2</span
+                                ><span class="kp-kpi__trend">one needs a visit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <table class="kp-table">
+                        <caption>
+                            The spec's cases (gap 16 px, smallest tile 160 px, allowed "all 3 2 1"), as kpiColumns() works them out
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Tiles</th>
+                                <th scope="col">Strip width</th>
+                                <th scope="col">Columns</th>
+                                <th scope="col">Rows</th>
+                                <th scope="col">Last spans</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>5</td>
+                                <td>1400 px</td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td>no</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>600 px</td>
+                                <td>2</td>
+                                <td>2 + 2</td>
+                                <td>no</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>700 px</td>
+                                <td>3</td>
+                                <td>3 + 2</td>
+                                <td>no</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>700 px</td>
+                                <td>3</td>
+                                <td>3 + 3 + 1</td>
+                                <td>yes</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>700 px</td>
+                                <td>3</td>
+                                <td>3 + 3 + 2</td>
+                                <td>no</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>358 px</td>
+                                <td>2</td>
+                                <td>2 + 2 + 1</td>
+                                <td>yes</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>358 px</td>
+                                <td>2</td>
+                                <td>2 + 2 + 2</td>
+                                <td>no</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>500 px</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>no</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="cat-block" id="kpi-trend">
+                <h2>A key figure with its 24-hour trend</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-kpi--trend</code>, a key figure whose whole tile opens its chart (a stretched
+                    <code>.kp-kpi__link</code>, ↗ in the corner), with the 24-hour trend inside it as a second stop for the keyboard. The note
+                    <i>avg 15 min</i> sits in the label, in its capitals (<code>.kp-kpi__label-note</code>). The trend is the time chart's spark
+                    variant without its head line (<code>data-kp-spark-head="none"</code>), with the axis under it
+                    (<code>data-kp-spark-axis="relative"</code>): where it starts, as <i>14:40 yesterday</i>, and <i>now</i>. Move the pointer over a
+                    trend: a crosshair and a chip with the moment and the value, as <i>04/10/2026 02:40 · 3.40 bar</i>, kept inside the tile. Tab to a
+                    tile (the whole tile gets the ring), Tab again to its trend, then ← → (Shift: ten points), Home, End and Esc. A click on the trend
+                    opens the tile's link; a drag only reads it. <b>Flow into the network</b> stopped forty minutes ago, so its axis ends at that
+                    clock, not <i>now</i>; <b>Reservoir South</b> began this morning, so it says <i>today</i>. The second strip shows a tile loading,
+                    one with no trend and one with a single reading, each as tall as the filled one. In the phone pane the tiles are narrow: the value
+                    goes under the moment, and the corner shows only ↗. <b>Ten minutes later</b> is a live update: a reading on screen stays at its
+                    moment.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-trend-live>Ten minutes later</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-trend-loading aria-pressed="false">Loading</button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1 right now" data-cat-trend-strip="main">
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="pressure">
+                            <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pressure, last 24 hours"
+                                style="--kp-chart-series: var(--chart-1)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="flow">
+                            <span class="kp-kpi__label">Flow into the network <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Flow into the network on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Flow into the network, last 24 hours"
+                                style="--kp-chart-series: var(--chart-2)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="north">
+                            <span class="kp-kpi__label">Reservoir North <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir North on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Reservoir North, last 24 hours"
+                                style="--kp-chart-series: var(--chart-3)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="temp">
+                            <span class="kp-kpi__label">Pump temperature <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Pump temperature on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pump temperature, last 24 hours"
+                                style="--kp-chart-series: var(--chart-4)"
+                            ></figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Tiles in other states" data-cat-trend-strip="states">
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="loading">
+                            <span class="kp-kpi__label">Pressure, pump house 2 <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure, pump house 2 on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pressure, pump house 2, last 24 hours"
+                                style="--kp-chart-series: var(--chart-1)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="none">
+                            <span class="kp-kpi__label">Pressure, pump house 7 <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure, pump house 7 on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pressure, pump house 7, last 24 hours"
+                                style="--kp-chart-series: var(--chart-1)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="one">
+                            <span class="kp-kpi__label">Reservoir East <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir East on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Reservoir East, last 24 hours"
+                                style="--kp-chart-series: var(--chart-3)"
+                            ></figure>
+                        </div>
+                        <div class="kp-kpi kp-kpi--trend" data-cat-trend="south">
+                            <span class="kp-kpi__label">Reservoir South <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir South on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"
+                                ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                            ></span>
+                            <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Reservoir South, last 24 hours"
+                                style="--kp-chart-series: var(--chart-3)"
+                            ></figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="4 2 1"
+                            role="group"
+                            aria-label="Pump house 1, phone width"
+                            data-cat-trend-strip="phone"
+                        >
+                            <div class="kp-kpi kp-kpi--trend" data-cat-trend="pressure">
+                                <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+                                <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"
+                                    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                                ></span>
+                                <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Pressure, last 24 hours, phone width"
+                                    style="--kp-chart-series: var(--chart-1)"
+                                ></figure>
+                            </div>
+                            <div class="kp-kpi kp-kpi--trend" data-cat-trend="flow">
+                                <span class="kp-kpi__label">Flow into the network <span class="kp-kpi__label-note">avg 15 min</span></span>
+                                <a class="kp-kpi__link" href="#kpi-trend" title="Open Flow into the network on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"
+                                    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                                ></span>
+                                <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Flow into the network, last 24 hours, phone width"
+                                    style="--kp-chart-series: var(--chart-2)"
+                                ></figure>
+                            </div>
+                            <div class="kp-kpi kp-kpi--trend" data-cat-trend="north">
+                                <span class="kp-kpi__label">Reservoir North <span class="kp-kpi__label-note">avg 15 min</span></span>
+                                <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir North on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"
+                                    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                                ></span>
+                                <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Reservoir North, last 24 hours, phone width"
+                                    style="--kp-chart-series: var(--chart-3)"
+                                ></figure>
+                            </div>
+                            <div class="kp-kpi kp-kpi--trend" data-cat-trend="temp">
+                                <span class="kp-kpi__label">Pump temperature <span class="kp-kpi__label-note">avg 15 min</span></span>
+                                <a class="kp-kpi__link" href="#kpi-trend" title="Open Pump temperature on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"
+                                    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+                                ></span>
+                                <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Pump temperature, last 24 hours, phone width"
+                                    style="--kp-chart-series: var(--chart-4)"
+                                ></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note" role="status" data-cat-trend-log>No tile opened yet.</p>
+            </section>
+
             <section class="cat-block" id="state-word">
                 <h2>A state word that keeps its width</h2>
                 <div class="cat-look">
@@ -799,6 +1515,68 @@
                         </ul>
                     </div>
                 </div>
+            </section>
+
+            <section class="cat-block" id="calendar">
+                <h2>A month of nightly backups</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-calendar</code>, a month as a grid of days, each a plate in the colour of how its night went, with how
+                    many of the nine services were backed up under the day's number. Green nights had every service, amber some, red none (17/09, the
+                    night of the power cut: only the red plate, its count reads like every other day's); the dashed days are still to come or from
+                    before the first backup (10/08). The days of September and November show their numbers, quiet and inert, so every week reads full.
+                    Today, 04/10, has a dark inner ring (today is the day in Brussels); the picked day an outer ring, and the detail beside it lists
+                    every service's own night. The grid is always six weeks tall: press <b>‹ Prev</b> twice and back, and it keeps its height in every
+                    month. One tab stop: the arrows move a day or a week, Home and End go to the week's ends, Page Up and Page Down change the month
+                    (with Shift, the year), Enter picks. Try the states above the stage: <b>Loading</b> pulses every day in place,
+                    <b>Nothing to check</b> and <b>Could not read</b> stop the pulse and say why (the error after a red dot), and
+                    <b>The late copies arrive</b> fills in today's two missing services without moving the focus or the pick. In the phone pane the
+                    detail goes under the grid. The sample's clock stands at 04/10/2026 14:40, so the block reads the same on every day it is opened.
+                </div>
+                <div class="cat-live__bar" role="group" aria-label="The calendar's state">
+                    <span class="cat-note">State:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="ready" aria-pressed="true">Read</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="loading" aria-pressed="false">Loading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="empty" aria-pressed="false">
+                        Nothing to check
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="error" aria-pressed="false">Could not read</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="live">The late copies arrive</button>
+                </div>
+                <div class="cat-stage cat-stage--block" data-cat-calendar>
+                    <template>
+                        <div class="kp-calendar-layout">
+                            <section
+                                class="kp-calendar"
+                                data-kp-calendar
+                                data-kp-calendar-month="2026-10"
+                                data-kp-time-zone="Europe/Brussels"
+                                data-kp-key="backups"
+                                lang="en-GB"
+                                aria-label="Nightly backups"
+                            ></section>
+                            <aside class="cat-calendar-detail" aria-live="polite" data-cat-calendar-detail></aside>
+                        </div>
+                    </template>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-calendar-frame" data-cat-calendar>
+                        <template>
+                            <div class="kp-calendar-layout">
+                                <section
+                                    class="kp-calendar"
+                                    data-kp-calendar
+                                    data-kp-calendar-month="2026-10"
+                                    data-kp-time-zone="Europe/Brussels"
+                                    data-kp-key="backups-phone"
+                                    lang="en-GB"
+                                    aria-label="Nightly backups, phone width"
+                                ></section>
+                                <aside class="cat-calendar-detail" aria-live="polite" data-cat-calendar-detail></aside>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <p class="cat-note" data-cat-calendar-log>No night picked yet.</p>
             </section>
         </main>
 

@@ -64,15 +64,25 @@ js/progressbar.js    a bar's value from its ARIA│
 js/motion.js         closing, and easing a size │
 js/actions.js        row buttons on shared      │
                      columns, a table measured  │
-js/kpi.js            a tile's sparkline and its │
-                     filter toggle              │
+js/kpi.js            a tile's sparkline, filter │
+                     toggle and meter; a strip's│
+                     column count               │
 js/attention.js      a band kept worst first,   │
                      and set by key             │
 js/tiles.js          tiles of one height across │
                      a board's grids            │
 js/freshness.js      "updated 12 s ago", ticking│
 js/chart.js          the time chart; draws its  │
-                     spark with js/kpi.js       │
+                     spark and a key figure's   │
+                     trend with js/kpi.js       │
+js/graph.js          a network: a hub, a ring,  │
+                     links by kind              │
+js/calendar.js       a month heatmap: tones by  │
+                     date, Brussels's today     │
+js/menu-button.js    every other action in a    │
+                     rich menu, with its keys   │
+js/tour.js           a short tour over the page,│
+                     remembered once ended      │
 js/structure.js      tree, reorder, split       │
 js/wizard.js         a stepped flow             │
 js/upload.js         a file field               │

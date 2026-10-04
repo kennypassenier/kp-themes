@@ -182,6 +182,50 @@
         align-items: start;
     }
 
+    /* data.html#calendar: the page's own detail of the picked night, beside
+       the month heatmap (a copy of the approved demo's detail). */
+    .cat-calendar-detail {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .cat-calendar-detail h3,
+    .cat-calendar-detail p {
+        margin: 0;
+    }
+
+    .cat-calendar-detail ul {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .cat-calendar-detail li > span {
+        display: block;
+        color: var(--muted-foreground);
+    }
+
+    .cat-calendar-detail [data-cat-missing] > b {
+        color: var(--destructive);
+    }
+
+    /* data.html#calendar: the phone pane, 360 px with its edge drawn, as the
+       approved demo's frame; border-box, so on a 390 px screen it never
+       reaches past the page. */
+    .cat-calendar-frame {
+        box-sizing: border-box;
+        max-inline-size: 22.5rem;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
     .cat-width-400 {
         inline-size: 400px;
         max-inline-size: 100%;

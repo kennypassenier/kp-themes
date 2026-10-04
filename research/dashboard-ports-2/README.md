@@ -2,6 +2,17 @@
 
 **Round one open (2026-10-04).** Formal only. Seven sections in one review dialog, with thirteen choices to tick (two options each, `"once": true`). Round id `2026-10-04-r1`.
 
+**Decided (2026-10-05).** Kenny approved all seven sections in
+formal and ticked the thirteen choices once, for every theme: menu headings in
+small muted capitals; a disabled action keeps its hint with the reason under
+it; the meter's mark is a tick, and past the end a small ▸; a lone tile spans
+its row; "avg 15 min" in the label's capitals; the reading as a chip over the
+line; a night with no backup is only the red plate; the neighbouring months'
+days as quiet numbers; each node its own colour; the kinds of link above the
+picture; the tour rings its target and dims the rest; help lists side by side.
+The components move into the package with those picks as their only behaviour
+(scope-143, the 9.2.x follow-up release). Archived.
+
 The homelab admin dashboard (branch `fix-371-1`, `admin/web/`) still keeps seven
 pieces to itself after the first port round (`research/dashboard-ports/`, moved
 into the package at scope-143). The hand-off spec names them B, C, D, E and I.1 to
@@ -12,10 +23,10 @@ water company's pump houses, readings, incidents, and the nightly backups of
 services with neutral names. "Now" in the sample is 04/10/2026 14:40, and every
 date and time is written `dd/mm/yyyy HH:mm` on the Brussels clock (rule 52).
 
-| File                               | What                                                                                                                                                                                                                |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `demo.html`, `demo.css`, `demo.js` | the review page. Each component is shown at full width and in a 360 px frame, with the option buttons and the try-buttons (refill, loading, empty, error, live update, and so on)                                    |
-| `ports2.css`                       | the proposal, as one `@layer kp.components { … }` block the way it would land. Both options of each choice are in it, marked Option A and Option B; the one not picked is deleted before the move                      |
+| File                               | What                                                                                                                                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `demo.html`, `demo.css`, `demo.js` | the review page. Each component is shown at full width and in a 360 px frame, with the option buttons and the try-buttons (refill, loading, empty, error, live update, and so on)                                         |
+| `ports2.css`                       | the proposal, as one `@layer kp.components { … }` block the way it would land. Both options of each choice are in it, marked Option A and Option B; the one not picked is deleted before the move                         |
 | `ports2.js`                        | the behaviour, as pure exports: one `attachX(root, { decorate })` per component that returns a detach, JSDoc types, `data-kp-*` hooks, and words as plain English constants (`*_STRINGS`) until they join `js/strings.js` |
 
 Shared by every component: `decorate(part, info)` is the spec's R-DRIVE hook.

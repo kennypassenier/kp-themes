@@ -2,6 +2,121 @@
 
 ## Unreleased
 
+- **Menu button with a rich menu** [scope-143, port spec B]:
+  `.kp-menu-button` with a `.kp-menu.kp-menu--rich`, on the package's own
+  `.kp-menu` and `.kp-menu__item`, wired by the new `js/menu-button.js`
+  (`attachMenuButtons`, `setMenu`, `openMenu`, `closeMenu`, the pure
+  `menuSignature` and `menuKeyTarget`; events `kp-menu-open`, `kp-menu-close`
+  and the cancelable `kp-menu-select`; `decorate`). Every other action of a
+  page, grouped under small muted capitals (`.kp-menu__group`,
+  `.kp-menu__heading`, which names its `role="group"`), each a label over a
+  one-line hint; an action that cannot be used now keeps its hint, says why
+  under it in italics (`.kp-menu__reason`) and stays focusable
+  (`aria-disabled`). The keys of an APG menu button (↓ ↑ wrapping, Home,
+  End, a letter, Esc that the page does not hear, Tab); a fill that shows
+  the same is skipped and one that arrives while the menu is open waits for
+  it to close; loading, empty (`data-kp-menu-empty="hide|disable"`) and a
+  menu that scrolls past its height. In a page header of 40rem or less the
+  open menu spans the header's buttons. Words in the dictionary
+  (`menuLoading`, `menuEmpty`). Knobs: `--kp-menu-rich-min`,
+  `--kp-menu-rich-max`, `--kp-menu-max-height`. Catalogue:
+  overlays.html#menu-button.
+
+- **Help drawer and a short tour** [scope-143, port spec I.3]: `.kp-drawer`
+  (a head, a body that scrolls, a foot that stays; a `dialog.kp-drawer` at
+  the end edge at full height), `.kp-help` cards whose `.kp-help__list`
+  puts the words beside their meanings (over them in a card of 22rem or
+  less), and the new `js/tour.js`: `startTour(steps, { start, remember,
+returnFocus, onEnd, decorate, strings })` shows one non-modal card
+  (`.kp-tour`) per step, 12 px beside its part and 16 px inside the window,
+  following it on scroll, with an exact count (a step whose part is not on
+  the page is left out first); the part is ringed and the rest of the page
+  dimmed (`data-kp-tour-target`). Back, Skip, Next/Done, ← →, Esc; the focus
+  returns where it was. A tour that ended is remembered through
+  `js/remember.js` (component `tour`; `tourMemoryKey`, `tourRemembered`,
+  `forgetTour`), and `shouldStartTour()` starts it on `?tour` or a person's
+  first visit only. Words in the dictionary (`tour…`). Knobs:
+  `--kp-drawer-width`, `--kp-help-term`, `--kp-tour-width`. Catalogue:
+  overlays.html#drawer and #help-tour.
+
+- **A meter with a mark** [scope-143]: `.kp-meter` is a used-of-total bar
+  for anywhere (a table cell, a line of words with `.kp-meter--inline`), and
+  `.kp-kpi__meter` is now the same meter. `--kp-mark` puts a tick across the
+  bar that sticks out above and below without making it taller; a share or
+  a mark past the end (`data-kp-over`) shows a small ▸ at the end;
+  `data-kp-tone="warning|destructive"` colours the fill and
+  `data-kp-loading` pulses the track. `setMeter(el, { value, mark, tone,
+label, markLabel, loading })` in `js/kpi.js` writes it all with its ARIA,
+  the real share past 100 % in `aria-valuetext`; also `meterText()` and
+  `meterParts()`, and the dictionary words `meterUsed`, `meterNotMeasured`
+  and `meterMeasuring`. Knobs `--kp-meter-height`, `--kp-meter-fill`,
+  `--kp-meter-mark-colour`, `--kp-meter-mark-overhang`, `--kp-meter-halo`,
+  `--kp-meter-inline-size`. A `.kp-kpi__meter` no longer clips what sticks
+  out of it. Catalogue: data.html#meter.
+- **Key figures never leave one tile alone** [scope-143]:
+  `.kp-kpis[data-kp-kpis-columns="all 3 2 1"]` takes the first allowed column
+  count at which every tile is at least `--kp-kpi-min` wide, by the strip's
+  own width, and steps down when that would leave one tile alone on the last
+  row; when no count avoids it, the last tile spans the row
+  (`data-kp-kpis-span-last`). `attachKpiStrips()`, `fitKpiStrip()` and the
+  pure `kpiColumns()` in `js/kpi.js`; `js/auto.js` loads it for such a strip.
+  Catalogue: data.html#kpi-columns.
+- **A key figure with its 24-hour trend** [scope-143]: `.kp-kpi--trend`
+  stretches its `.kp-kpi__link` over the tile (↗ alone in a narrow tile) and
+  takes "avg 15 min" in its label (`.kp-kpi__label-note`); the label wraps
+  between words and is never cut (the note moves to the next line as one
+  unit), every state is as tall as filled (value line, two or three lines of
+  words, knob `--kp-kpi-trend-lines`, and the axis row kept), and the line
+  takes the figure's `--kp-chart-series`. The time chart's
+  spark variant gains two options: `data-kp-spark-head="none"` reads a point
+  in a chip over the line, on the trend's own crosshair, and follows the
+  tile's link on a click that was not a drag; `data-kp-spark-axis="relative"`
+  puts `14:40 yesterday` … `now` under the line. New in `js/chart.js`:
+  `setTrendData()`, `trendAxis()`, `attachTrendCharts()`, `TREND_CHART`, the
+  option `now` of `attachCharts()`, and the dictionary words `chartToday`,
+  `chartYesterday` and `chartTrendKeys`. Catalogue: data.html#kpi-trend.
+
+- **Month heatmap** [scope-143, port spec I.1]: `.kp-calendar` in a
+  `.kp-calendar-layout` (calendar | the page's own detail, one column under
+  45rem), built by the new `js/calendar.js` (`attachCalendars`,
+  `setCalendarDays`, `setCalendarState`, `setCalendarLegend`,
+  `calendarSelect`, `calendarMonth`, the pure `monthCells`, `shiftDay`,
+  `shiftMonth`, `dayKey`; events `kp-calendar-pick` and `kp-calendar-month`;
+  `decorate`). A month of days, each a plate in the colour of its state
+  (`ok`, `warn`, `bad`, `muted`, `future`/`before` dashed, `none`, `loading`
+  pulsing only without reduced motion), its count under the number; always
+  six week rows of 42 cells built once and updated in place, the neighbouring
+  months' days as quiet numbers, a night with nothing done told by its red
+  plate and its words alone. One tab stop with the keys of a date grid
+  (arrows, Home/End, Page Up/Down, Shift for a year); today is the day in
+  Europe/Brussels whatever the reader's zone, and every day reads
+  `dd/mm/yyyy: …` (rule 52). Words in the dictionary (`calendar…`). Knobs:
+  `--kp-calendar-aside`, `-gap`, `-cell-height`, `-cell-font`, `-title-size`.
+  Catalogue: data.html#calendar.
+
+- **Network graph** [scope-143]: `.kp-graph` and `js/graph.js`, a picture
+  of a network with one centre: the hub in the middle, the other nodes on a
+  ring from the top, clockwise, A to Z and then the nodes outside the
+  network, the links drawn by kind (a colour and a dash each) and listed
+  above the picture with Show all. Each node takes its own hue at the
+  theme's chart lightness (`--kp-graph-hue` over `--chart-1`, no literal
+  colour). Hover or focus a node to see only its links (classes only, no
+  node rebuilt); click or Enter keeps it picked, several at once; Esc or
+  Show all clears; the picture is one tab stop and the arrows walk the
+  ring. Two links between one pair bend apart (0, ±26). A label points
+  away from the hub and is shortened with an ellipsis where it would touch
+  another or leave the picture, fitted again when a web font arrives; the
+  full name stays in the title and the accessible name. Loading, empty and
+  error keep the picture's height. `attachGraphs(root, { decorate, strings })`,
+  `setGraphData()` (or a `script[data-kp-graph-data]` JSON child),
+  `setGraphState()`, `graphSelect()`, `graphHideKind()`, the pure
+  `graphLayout()`, `graphBends()`, `hubOf()`, `ringOf()`,
+  `graphLabelText()` and `fitGraphLabels()`, the event `kp-graph-change`,
+  the knobs `--kp-graph-h`, `--kp-graph-label-size`, `--kp-graph-dim`, and
+  the dictionary words `graph…`. Approved in formal from
+  `research/dashboard-ports-2` (each node its own colour; the kinds above
+  the picture); catalogue: chart.html#graph.
+
 - **Data table: one open row, groups that fold, Enter on a row, and
   `decorate`** [scope-143, J2]: `data-kp-expand-single` (or
   `expandSingle`) keeps one row open, and the opening's

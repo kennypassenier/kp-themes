@@ -18,7 +18,8 @@
             <h1>Overlays</h1>
             <p class="cat-intro">
                 What floats over the page: <code>.kp-dialog</code> (and the <code>.kp-confirm</code> a destructive button opens),
-                <code>.kp-popover</code> holding a <code>.kp-menu</code>, and <code>.kp-tooltip</code>. Everything that opens is shown open on the
+                <code>.kp-popover</code> holding a <code>.kp-menu</code>, a <code>.kp-menu-button</code> with its rich menu, a
+                <code>.kp-drawer</code> and the tour's <code>.kp-tour</code>, and <code>.kp-tooltip</code>. Everything that opens is shown open on the
                 page, pinned inside its stage so it can be compared across themes, and each has a live trigger that opens the real thing.
             </p>
             <ul class="cat-toc">
@@ -28,6 +29,9 @@
                 <li><a href="#dialog-long">A dialog with sixty rows</a></li>
                 <li><a href="#menu">Popover and menu</a></li>
                 <li><a href="#menu-extremes">Menu extremes</a></li>
+                <li><a href="#menu-button">A menu of every other action</a></li>
+                <li><a href="#drawer">Help in a drawer</a></li>
+                <li><a href="#help-tour">Help, and a short tour</a></li>
                 <li><a href="#tooltip">Tooltip</a></li>
             </ul>
 
@@ -947,6 +951,728 @@ Line 2 closed at the manifold. Gauge and sensor disagree by two bar.</textarea>
                 </div>
             </section>
 
+            <section class="cat-block" id="menu-button">
+                <h2>A menu of every other action</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-menu-button</code> with a <code>.kp-menu--rich</code> (js/menu-button.js), on the package's own
+                    <code>.kp-menu</code>: open <b>More ▾</b>. The groups have headings in small muted capitals, every label and every hint start at
+                    one edge, and <b>Run a pressure test</b> is grey: it keeps its hint, and says why it cannot run on a third line in italics. Press
+                    ↓ on the button: the menu opens on the first entry; ↓ ↑ wrap, Home and End go to the ends, <kbd>r</kbd> jumps from
+                    <i>Restart</i> to <i>Run</i>. The focus stops on the grey entry and Enter does nothing there. Esc closes and puts the focus back
+                    on the button, and the line under the menus shows the page's own Escape listener heard nothing; Tab closes and moves on. Press
+                    <b>Refill in 3 s</b>, open a menu and wait: nothing moves until it closes. <b>Loading</b> shows one grey entry at the height of a
+                    real one; <b>Twenty-four actions</b> scrolls inside the menu with the focus kept in view; <b>No actions</b> greys the wide button
+                    (its title says why) and takes the phone one away (<code>data-kp-menu-empty="hide"</code>). The menu of one action has no heading.
+                    In the phone pane the open menu spans the header's buttons, inside the pane.
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 31rem">
+                    <div class="kp-row kp-row--start">
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-own" data-cat-menu-target>
+                            <button type="button" class="kp-button">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" id="ov-mb-own" hidden>
+                                <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g0">
+                                    <p class="kp-menu__heading" id="ov-mb-own-g0" role="presentation">Run</p>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l1"
+                                        aria-describedby="ov-mb-own-h1"
+                                        title="Stop and start both pumps, one after the other"
+                                        data-kp-value="restart"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l1">Restart the pumps</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h1">Stop and start both pumps, one after the other</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l2"
+                                        aria-describedby="ov-mb-own-h2"
+                                        title="Run on pump 2 while pump 1 rests"
+                                        data-kp-value="spare"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l2">Switch to the spare pump</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h2">Run on pump 2 while pump 1 rests</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-disabled="true"
+                                        aria-labelledby="ov-mb-own-l3"
+                                        aria-describedby="ov-mb-own-h3 ov-mb-own-r3"
+                                        title="Not while a field engineer is on site"
+                                        data-kp-value="test"
+                                        data-kp-reason="Not while a field engineer is on site"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l3">Run a pressure test</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h3">Close the ring main valve and measure for ten minutes</span>
+                                        <span class="kp-menu__hint kp-menu__reason" id="ov-mb-own-r3">Not while a field engineer is on site</span>
+                                    </button>
+                                </div>
+                                <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g1">
+                                    <p class="kp-menu__heading" id="ov-mb-own-g1" role="presentation">Readings</p>
+                                    <a
+                                        href="./chart.html"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l4"
+                                        aria-describedby="ov-mb-own-h4"
+                                        title="Pressure and flow for the last 24 hours"
+                                        data-kp-value="charts"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l4">Open the readings on Charts</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h4">Pressure and flow for the last 24 hours</span>
+                                    </a>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l5"
+                                        aria-describedby="ov-mb-own-h5"
+                                        title="Set the pressure sensors to the reference gauge"
+                                        data-kp-value="recalibrate"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l5">Recalibrate the sensors…</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h5">Set the pressure sensors to the reference gauge</span>
+                                    </button>
+                                </div>
+                                <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-own-g2">
+                                    <p class="kp-menu__heading" id="ov-mb-own-g2" role="presentation">Records</p>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l6"
+                                        aria-describedby="ov-mb-own-h6"
+                                        title="One page with the pumps, the valves and the contacts"
+                                        data-kp-value="print"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l6">Print the site sheet</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h6">One page with the pumps, the valves and the contacts</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item kp-menu__item--destructive"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-own-l7"
+                                        aria-describedby="ov-mb-own-h7"
+                                        title="Take it off the network; its readings are kept"
+                                        data-kp-value="archive"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-own-l7">Archive this pump house…</span>
+                                        <span class="kp-menu__hint" id="ov-mb-own-h7">Take it off the network; its readings are kept</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="reservoir-more">
+                            <button type="button" class="kp-button kp-button--sm">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this reservoir" id="ov-mb-one" hidden>
+                                <div class="kp-menu__group" role="none">
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="kp-menu__item"
+                                        tabindex="-1"
+                                        aria-labelledby="ov-mb-one-l1"
+                                        aria-describedby="ov-mb-one-h1"
+                                        title="Ask the sensor for a reading outside its minute"
+                                        data-kp-value="read"
+                                    >
+                                        <span class="kp-menu__label" id="ov-mb-one-l1">Read the level now</span>
+                                        <span class="kp-menu__hint" id="ov-mb-one-h1">Ask the sensor for a reading outside its minute</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kp-row" role="group" aria-label="Try the menus" style="margin-block-start: 1rem">
+                        <button type="button" class="kp-button kp-button--sm" data-cat-menu="refill">Refill in 3 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-menu="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-menu="many">Twenty-four actions</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-menu="empty">No actions</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-menu="normal">Back to normal</button>
+                    </div>
+                    <p class="kp-text-muted" data-cat-menu-log role="status">Nothing picked yet. The page's own Escape listener heard 0 presses.</p>
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 33rem">
+                    <header class="kp-page-header">
+                        <div class="kp-page-header__inner">
+                            <div>
+                                <h3 class="kp-page-header__title">Pump house 3</h3>
+                                <p class="kp-page-header__description">
+                                    Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                                </p>
+                            </div>
+                            <div class="kp-page-header__actions">
+                                <button type="button" class="kp-button">Export readings</button>
+                                <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+                                <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-more" data-cat-menu-target>
+                                    <button type="button" class="kp-button">More ▾</button>
+                                    <div
+                                        class="kp-menu kp-menu--rich"
+                                        role="menu"
+                                        aria-label="Every other action on this pump house"
+                                        id="ov-mb-wide"
+                                        hidden
+                                    >
+                                        <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g0">
+                                            <p class="kp-menu__heading" id="ov-mb-wide-g0" role="presentation">Run</p>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l1"
+                                                aria-describedby="ov-mb-wide-h1"
+                                                title="Stop and start both pumps, one after the other"
+                                                data-kp-value="restart"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l1">Restart the pumps</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h1">Stop and start both pumps, one after the other</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l2"
+                                                aria-describedby="ov-mb-wide-h2"
+                                                title="Run on pump 2 while pump 1 rests"
+                                                data-kp-value="spare"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l2">Switch to the spare pump</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h2">Run on pump 2 while pump 1 rests</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-disabled="true"
+                                                aria-labelledby="ov-mb-wide-l3"
+                                                aria-describedby="ov-mb-wide-h3 ov-mb-wide-r3"
+                                                title="Not while a field engineer is on site"
+                                                data-kp-value="test"
+                                                data-kp-reason="Not while a field engineer is on site"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l3">Run a pressure test</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h3"
+                                                    >Close the ring main valve and measure for ten minutes</span
+                                                >
+                                                <span class="kp-menu__hint kp-menu__reason" id="ov-mb-wide-r3"
+                                                    >Not while a field engineer is on site</span
+                                                >
+                                            </button>
+                                        </div>
+                                        <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g1">
+                                            <p class="kp-menu__heading" id="ov-mb-wide-g1" role="presentation">Readings</p>
+                                            <a
+                                                href="./chart.html"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l4"
+                                                aria-describedby="ov-mb-wide-h4"
+                                                title="Pressure and flow for the last 24 hours"
+                                                data-kp-value="charts"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l4">Open the readings on Charts</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h4">Pressure and flow for the last 24 hours</span>
+                                            </a>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l5"
+                                                aria-describedby="ov-mb-wide-h5"
+                                                title="Set the pressure sensors to the reference gauge"
+                                                data-kp-value="recalibrate"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l5">Recalibrate the sensors…</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h5">Set the pressure sensors to the reference gauge</span>
+                                            </button>
+                                        </div>
+                                        <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-wide-g2">
+                                            <p class="kp-menu__heading" id="ov-mb-wide-g2" role="presentation">Records</p>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l6"
+                                                aria-describedby="ov-mb-wide-h6"
+                                                title="One page with the pumps, the valves and the contacts"
+                                                data-kp-value="print"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l6">Print the site sheet</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h6"
+                                                    >One page with the pumps, the valves and the contacts</span
+                                                >
+                                            </button>
+                                            <button
+                                                type="button"
+                                                role="menuitem"
+                                                class="kp-menu__item kp-menu__item--destructive"
+                                                tabindex="-1"
+                                                aria-labelledby="ov-mb-wide-l7"
+                                                aria-describedby="ov-mb-wide-h7"
+                                                title="Take it off the network; its readings are kept"
+                                                data-kp-value="archive"
+                                            >
+                                                <span class="kp-menu__label" id="ov-mb-wide-l7">Archive this pump house…</span>
+                                                <span class="kp-menu__hint" id="ov-mb-wide-h7">Take it off the network; its readings are kept</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="cat-stage cat-stage--block" style="min-block-size: 40rem">
+                    <div class="cat-resize" style="inline-size: 22.5rem; overflow: visible; resize: none">
+                        <header class="kp-page-header">
+                            <div class="kp-page-header__inner">
+                                <div>
+                                    <h3 class="kp-page-header__title">Pump house 3</h3>
+                                    <p class="kp-page-header__description">
+                                        Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                                    </p>
+                                </div>
+                                <div class="kp-page-header__actions">
+                                    <button type="button" class="kp-button">Export readings</button>
+                                    <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+                                    <div
+                                        class="kp-menu-button"
+                                        data-kp-menu-button
+                                        data-kp-key="pump-house-more-phone"
+                                        data-kp-menu-empty="hide"
+                                        data-cat-menu-target
+                                    >
+                                        <button type="button" class="kp-button">More ▾</button>
+                                        <div
+                                            class="kp-menu kp-menu--rich"
+                                            role="menu"
+                                            aria-label="Every other action on this pump house"
+                                            id="ov-mb-phone"
+                                            hidden
+                                        >
+                                            <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g0">
+                                                <p class="kp-menu__heading" id="ov-mb-phone-g0" role="presentation">Run</p>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l1"
+                                                    aria-describedby="ov-mb-phone-h1"
+                                                    title="Stop and start both pumps, one after the other"
+                                                    data-kp-value="restart"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l1">Restart the pumps</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h1"
+                                                        >Stop and start both pumps, one after the other</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l2"
+                                                    aria-describedby="ov-mb-phone-h2"
+                                                    title="Run on pump 2 while pump 1 rests"
+                                                    data-kp-value="spare"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l2">Switch to the spare pump</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h2">Run on pump 2 while pump 1 rests</span>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-disabled="true"
+                                                    aria-labelledby="ov-mb-phone-l3"
+                                                    aria-describedby="ov-mb-phone-h3 ov-mb-phone-r3"
+                                                    title="Not while a field engineer is on site"
+                                                    data-kp-value="test"
+                                                    data-kp-reason="Not while a field engineer is on site"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l3">Run a pressure test</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h3"
+                                                        >Close the ring main valve and measure for ten minutes</span
+                                                    >
+                                                    <span class="kp-menu__hint kp-menu__reason" id="ov-mb-phone-r3"
+                                                        >Not while a field engineer is on site</span
+                                                    >
+                                                </button>
+                                            </div>
+                                            <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g1">
+                                                <p class="kp-menu__heading" id="ov-mb-phone-g1" role="presentation">Readings</p>
+                                                <a
+                                                    href="./chart.html"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l4"
+                                                    aria-describedby="ov-mb-phone-h4"
+                                                    title="Pressure and flow for the last 24 hours"
+                                                    data-kp-value="charts"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l4">Open the readings on Charts</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h4">Pressure and flow for the last 24 hours</span>
+                                                </a>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l5"
+                                                    aria-describedby="ov-mb-phone-h5"
+                                                    title="Set the pressure sensors to the reference gauge"
+                                                    data-kp-value="recalibrate"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l5">Recalibrate the sensors…</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h5"
+                                                        >Set the pressure sensors to the reference gauge</span
+                                                    >
+                                                </button>
+                                            </div>
+                                            <div class="kp-menu__group" role="group" aria-labelledby="ov-mb-phone-g2">
+                                                <p class="kp-menu__heading" id="ov-mb-phone-g2" role="presentation">Records</p>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l6"
+                                                    aria-describedby="ov-mb-phone-h6"
+                                                    title="One page with the pumps, the valves and the contacts"
+                                                    data-kp-value="print"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l6">Print the site sheet</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h6"
+                                                        >One page with the pumps, the valves and the contacts</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    class="kp-menu__item kp-menu__item--destructive"
+                                                    tabindex="-1"
+                                                    aria-labelledby="ov-mb-phone-l7"
+                                                    aria-describedby="ov-mb-phone-h7"
+                                                    title="Take it off the network; its readings are kept"
+                                                    data-kp-value="archive"
+                                                >
+                                                    <span class="kp-menu__label" id="ov-mb-phone-l7">Archive this pump house…</span>
+                                                    <span class="kp-menu__hint" id="ov-mb-phone-h7"
+                                                        >Take it off the network; its readings are kept</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="drawer">
+                <h2>Help in a drawer</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-drawer</code>: a head (the title, the close button, one sentence), a body that scrolls, and a foot that
+                    stays. The frozen copy is the drawer as a phone shows it, in a pane 360 px wide: scroll its body and the head and the foot stay.
+                    Its cards are <code>.kp-help</code>s, each a <code>.kp-help__list</code> of words beside their meaning, the meanings starting at
+                    one edge across every card; in a card of 22rem or less the word goes over its meaning. Press <b>Open Help</b>: the real one is a
+                    <code>dialog.kp-drawer</code>, which comes in from the end edge at the full height of the window, with its foot at the bottom; Esc
+                    or ✕ closes it and the focus goes back to the button. Its <b>Take the 1-minute tour</b> closes it and starts the tour of the next
+                    block; when the tour ends the focus comes back to <b>Open Help</b>.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div
+                        class="kp-drawer"
+                        role="region"
+                        aria-label="Help, as a phone shows it"
+                        style="
+                            inline-size: min(22.5rem, 100%);
+                            block-size: 36rem;
+                            border: 1px dashed var(--border-strong);
+                            background: var(--popover);
+                            color: var(--popover-foreground);
+                        "
+                    >
+                        <header class="kp-drawer__head">
+                            <h2 class="kp-dialog__title">Help</h2>
+                            <p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
+                        </header>
+                        <div class="kp-drawer__body">
+                            <section class="kp-help kp-card">
+                                <h3>Where things live</h3>
+                                <p>Six areas, one line each.</p>
+                                <dl class="kp-help__list">
+                                    <dt>Overview</dt>
+                                    <dd>The network at a glance: what needs a visit, and what changed since this morning.</dd>
+                                    <dt>Pump houses</dt>
+                                    <dd>Every pump house with its pumps, its last reading and its open incidents.</dd>
+                                    <dt>Readings</dt>
+                                    <dd>Pressure, flow and levels as charts, for an hour, a day or a week.</dd>
+                                    <dt>Incidents</dt>
+                                    <dd>What went wrong, who is on it, and what was done.</dd>
+                                    <dt>Backups</dt>
+                                    <dd>Each night&#x27;s backup of every service, as a month of days.</dd>
+                                    <dt>Map</dt>
+                                    <dd>The network as a picture: which site talks to which.</dd>
+                                </dl>
+                            </section>
+                            <section class="kp-help kp-card">
+                                <h3>Words</h3>
+                                <p>The words this site uses for things.</p>
+                                <dl class="kp-help__list">
+                                    <dt>Pump house</dt>
+                                    <dd>A building with one or more pumps that keep the pressure up in a part of the network.</dd>
+                                    <dt>Reading</dt>
+                                    <dd>One measurement from a field unit, sent every minute.</dd>
+                                    <dt>Ring main</dt>
+                                    <dd>The loop of large pipes that feeds the town from two sides.</dd>
+                                    <dt>Service</dt>
+                                    <dd>A program the control room runs, such as the readings database; each is backed up every night.</dd>
+                                </dl>
+                            </section>
+                            <section class="kp-help kp-card">
+                                <h3>Keys</h3>
+                                <p>Pressed anywhere outside a field.</p>
+                                <dl class="kp-help__list">
+                                    <dt><kbd>?</kbd></dt>
+                                    <dd>Open this Help.</dd>
+                                    <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt>
+                                    <dd>Jump to a page or a pump house by its name.</dd>
+                                    <dt><kbd>.</kbd></dt>
+                                    <dd>Open the page&#x27;s More menu.</dd>
+                                    <dt><kbd>Esc</kbd></dt>
+                                    <dd>Close what is open, or show all again.</dd>
+                                </dl>
+                            </section>
+                        </div>
+                        <footer class="kp-drawer__foot">
+                            <button type="button" class="kp-button kp-button--primary" disabled>Take the 1-minute tour</button>
+                        </footer>
+                    </div>
+                </div>
+                <div class="cat-stage" style="margin-block-start: 1rem">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ov-dr-help">Open Help</button>
+                    <dialog class="kp-drawer kp-dialog" id="ov-dr-help" aria-labelledby="ov-dr-help-title">
+                        <header class="kp-drawer__head">
+                            <h2 class="kp-dialog__title" id="ov-dr-help-title">Help</h2>
+                            <button
+                                type="button"
+                                class="kp-icon-button kp-dialog__close"
+                                aria-label="Close Help"
+                                title="Close Help"
+                                data-kp-dialog-close
+                            >
+                                ✕
+                            </button>
+                            <p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
+                        </header>
+                        <div class="kp-drawer__body">
+                            <section class="kp-help kp-card">
+                                <h3>Where things live</h3>
+                                <p>Six areas, one line each.</p>
+                                <dl class="kp-help__list">
+                                    <dt>Overview</dt>
+                                    <dd>The network at a glance: what needs a visit, and what changed since this morning.</dd>
+                                    <dt>Pump houses</dt>
+                                    <dd>Every pump house with its pumps, its last reading and its open incidents.</dd>
+                                    <dt>Readings</dt>
+                                    <dd>Pressure, flow and levels as charts, for an hour, a day or a week.</dd>
+                                    <dt>Incidents</dt>
+                                    <dd>What went wrong, who is on it, and what was done.</dd>
+                                    <dt>Backups</dt>
+                                    <dd>Each night&#x27;s backup of every service, as a month of days.</dd>
+                                    <dt>Map</dt>
+                                    <dd>The network as a picture: which site talks to which.</dd>
+                                </dl>
+                            </section>
+                            <section class="kp-help kp-card">
+                                <h3>Words</h3>
+                                <p>The words this site uses for things.</p>
+                                <dl class="kp-help__list">
+                                    <dt>Pump house</dt>
+                                    <dd>A building with one or more pumps that keep the pressure up in a part of the network.</dd>
+                                    <dt>Reading</dt>
+                                    <dd>One measurement from a field unit, sent every minute.</dd>
+                                    <dt>Ring main</dt>
+                                    <dd>The loop of large pipes that feeds the town from two sides.</dd>
+                                    <dt>Service</dt>
+                                    <dd>A program the control room runs, such as the readings database; each is backed up every night.</dd>
+                                </dl>
+                            </section>
+                            <section class="kp-help kp-card">
+                                <h3>Keys</h3>
+                                <p>Pressed anywhere outside a field.</p>
+                                <dl class="kp-help__list">
+                                    <dt><kbd>?</kbd></dt>
+                                    <dd>Open this Help.</dd>
+                                    <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt>
+                                    <dd>Jump to a page or a pump house by its name.</dd>
+                                    <dt><kbd>.</kbd></dt>
+                                    <dd>Open the page&#x27;s More menu.</dd>
+                                    <dt><kbd>Esc</kbd></dt>
+                                    <dd>Close what is open, or show all again.</dd>
+                                </dl>
+                            </section>
+                        </div>
+                        <footer class="kp-drawer__foot">
+                            <button type="button" class="kp-button kp-button--primary" data-cat-tour="help">Take the 1-minute tour</button>
+                        </footer>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="help-tour">
+                <h2>Help, and a short tour</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the tour's card, <code>.kp-tour</code>, frozen beside the part it talks about: that part has a ring in the focus
+                    colour and the rest of the stage is dimmed around it. Press <b>Start the tour</b> (js/tour.js, <code>startTour()</code>): the
+                    first card says <i>1 of 5</i>, because the fourth of the six steps points at a map this page does not have, and the count leaves
+                    it out. The card sits 12 px under its part, or over it in the lower half of the window, never on it, and 16 px inside the window;
+                    scroll and it follows. Back, Skip and Next (Done on the last), ← and → on the card, and Esc anywhere work; when it ends, the focus
+                    goes back to the button that started it, and the line under the buttons says it was remembered (js/remember.js, under
+                    <code>kp-remember:tour:catalogue:done</code>). <b>Start the tour on the phone</b> runs it over the phone pane, its tab bar
+                    included. <b>Help ?</b> in the little app opens the drawer of the block above.
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout paint">
+                    <nav class="kp-row" aria-label="Areas, frozen" data-kp-tour-target style="position: relative; padding: 0.5rem">
+                        <a href="#help-tour">Overview</a>
+                        <a href="#help-tour">Pump houses</a>
+                        <a href="#help-tour">Readings</a>
+                        <a href="#help-tour">Incidents</a>
+                        <a href="#help-tour">Backups</a>
+                    </nav>
+                    <div
+                        class="kp-tour"
+                        role="dialog"
+                        aria-labelledby="ov-ht-frozen-title"
+                        style="position: relative; inline-size: min(22rem, 100%); margin-block-start: 0.75rem"
+                    >
+                        <h3 class="kp-tour__title" id="ov-ht-frozen-title">The areas</h3>
+                        <p class="kp-tour__text">
+                            Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.
+                        </p>
+                        <footer class="kp-tour__foot">
+                            <span class="kp-tour__count">1 of 5</span>
+                            <span class="kp-tour__buttons">
+                                <button type="button" class="kp-button kp-button--sm" hidden>Back</button>
+                                <button type="button" class="kp-button kp-button--sm kp-button--ghost">Skip</button>
+                                <button type="button" class="kp-button kp-button--sm kp-button--primary">Next</button>
+                            </span>
+                        </footer>
+                    </div>
+                    <p class="kp-text-muted">
+                        Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+                    </p>
+                </div>
+                <div class="cat-stage cat-stage--block" style="margin-block-start: 1rem">
+                    <div class="kp-row" role="group" aria-label="Try the tour">
+                        <button type="button" class="kp-button kp-button--sm" data-cat-tour="start">Start the tour</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-tour="phone">Start the tour on the phone</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-tour="forget">Forget that it was taken</button>
+                    </div>
+                    <p class="kp-text-muted" data-cat-tour-log role="status">No tour yet.</p>
+                    <div class="kp-stack" data-cat-tour-app="wide" style="padding: 1rem; border: 1px dashed var(--border-strong)">
+                        <div class="kp-row">
+                            <b>Northern network</b>
+                            <nav class="kp-row" aria-label="Areas" data-cat-tour-step="areas">
+                                <a href="#help-tour" aria-current="page">Overview</a>
+                                <a href="#help-tour">Pump houses</a>
+                                <a href="#help-tour">Readings</a>
+                                <a href="#help-tour">Incidents</a>
+                                <a href="#help-tour">Backups</a>
+                            </nav>
+                            <label class="kp-field" data-cat-tour-step="search" style="flex: 1 1 12rem">
+                                <span class="kp-sr-only">Search</span>
+                                <input class="kp-field__input" type="search" placeholder="Search a pump house" />
+                            </label>
+                            <button type="button" class="kp-button kp-button--sm" data-kp-dialog="ov-dr-help" data-cat-tour-step="help">
+                                Help ?
+                            </button>
+                        </div>
+                        <div class="kp-autogrid">
+                            <div class="kp-card" data-cat-tour-step="readings">
+                                <h3 class="kp-card__title">Readings today</h3>
+                                <p class="kp-card__body">
+                                    Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+                                </p>
+                            </div>
+                            <div class="kp-card" data-cat-tour-step="incidents">
+                                <h3 class="kp-card__title">Open incidents</h3>
+                                <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block" style="margin-block-start: 1rem">
+                    <div
+                        class="cat-resize"
+                        data-cat-tour-app="phone"
+                        style="
+                            inline-size: 22.5rem;
+                            block-size: 36rem;
+                            padding: 0;
+                            overflow: hidden;
+                            resize: none;
+                            display: grid;
+                            grid-template-rows: auto minmax(0, 1fr) auto;
+                        "
+                    >
+                        <div class="kp-row kp-row--between" style="padding: 0.5rem 1rem; border-block-end: 1px solid var(--border)">
+                            <b>Northern network</b>
+                            <button type="button" class="kp-button kp-button--sm" data-cat-tour-phone="help">Help ?</button>
+                        </div>
+                        <div class="kp-stack" style="padding: 1rem; overflow-y: auto; align-content: start">
+                            <div class="kp-card" data-cat-tour-phone="readings">
+                                <h3 class="kp-card__title">Readings today</h3>
+                                <p class="kp-card__body">Every pump house reported in the last ten minutes.</p>
+                            </div>
+                            <div class="kp-card" data-cat-tour-phone="incidents">
+                                <h3 class="kp-card__title">Open incidents</h3>
+                                <p class="kp-card__body">Two open.</p>
+                            </div>
+                        </div>
+                        <nav
+                            aria-label="Areas, phone"
+                            data-cat-tour-phone="areas"
+                            style="
+                                display: grid;
+                                grid-template-columns: repeat(4, 1fr);
+                                border-block-start: 1px solid var(--border);
+                                text-align: center;
+                            "
+                        >
+                            <a href="#help-tour" aria-current="page" style="padding: 0.5rem 0">Overview</a>
+                            <a href="#help-tour" style="padding: 0.5rem 0">Pumps</a>
+                            <a href="#help-tour" style="padding: 0.5rem 0">Readings</a>
+                            <a href="#help-tour" data-cat-tour-phone="search" style="padding: 0.5rem 0">Search</a>
+                        </nav>
+                    </div>
+                </div>
+            </section>
             <section class="cat-block" id="tooltip">
                 <h2>Tooltip</h2>
                 <div class="cat-look">

@@ -107,9 +107,14 @@
                             <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -140,6 +145,9 @@
                             <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
@@ -3582,6 +3590,512 @@
         &lt;/<span class="kp-code__keyword">table</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-data-meter">
+                        <figcaption class="kp-fw-semibold">A meter with a mark</figcaption>
+                        <p class="kp-text-muted"><code>.kp-meter</code>, a used-of-total bar that works anywhere: in a table cell, at the bottom of a key figure (<code>.kp-kpi__meter</code>), at the start of a line of words (<code>.kp-meter--inline</code>). <code>--kp-value</code> is the share and <code>--kp-mark</code> an optional tick across the bar (a target, a limit, what is booked), which sticks out a little above and below without making the meter any taller. A share past the end fills the bar and puts a small ▸ at its end (<code>data-kp-over</code>); a mark past the end stops just short of the end with the ▸ after it. The red tile's meter is red, the warning row's amber. The third column is what a screen reader hears: the real share, past 100 % too. Press <b>Book more</b>: the capacity tile's mark moves past the end and its words say 130 %, through <code>setMeter()</code>. <b>Loading</b> pulses the tracks (still under reduced motion), with no fill and no mark. The phone pane shows the same tiles two to a row.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<table class="kp-table">
+    <caption class="kp-sr-only">
+        Meters in every state
+    </caption>
+    <colgroup>
+        <col />
+        <col style="width: 40%" />
+        <col />
+    </colgroup>
+    <thead>
+        <tr>
+            <th scope="col">Case</th>
+            <th scope="col">Meter</th>
+            <th scope="col">What a screen reader hears</th>
+        </tr>
+    </thead>
+    <tbody data-cat-meter-rows>
+        <tr>
+            <td>Reservoir North, against its target</td>
+            <td>
+                <span
+                class="kp-meter"
+                role="meter"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="62"
+                aria-valuetext="62% full; 80% the target level"
+                style="--kp-value: 0.62; --kp-mark: 0.8"
+                ><span class="kp-meter__mark" aria-hidden="true"></span
+                    ></span>
+            </td>
+            <td>62% full; 80% the target level</td>
+        </tr>
+        <tr>
+            <td>Booked tonight, past the end</td>
+            <td>
+                <span
+                class="kp-meter"
+                role="meter"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="58"
+                aria-valuetext="58% running now; 130% booked for tonight"
+                style="--kp-value: 0.58; --kp-mark: 1.3"
+                ><span class="kp-meter__mark" aria-hidden="true" data-kp-over></span
+                    ></span>
+            </td>
+            <td>58% running now; 130% booked for tonight</td>
+        </tr>
+        <tr>
+            <td>Empty, with a mark</td>
+            <td>
+                <span
+                class="kp-meter"
+                role="meter"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                aria-valuetext="0% used; 50% the weekly limit"
+                style="--kp-value: 0; --kp-mark: 0.5"
+                ><span class="kp-meter__mark" aria-hidden="true"></span
+                    ></span>
+            </td>
+            <td>0% used; 50% the weekly limit</td>
+        </tr>
+        <tr>
+            <td>Full</td>
+            <td>
+                <span
+                class="kp-meter"
+                role="meter"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="100"
+                aria-valuetext="100% full; 90% the target level"
+                style="--kp-value: 1; --kp-mark: 0.9"
+                ><span class="kp-meter__mark" aria-hidden="true"></span
+                    ></span>
+            </td>
+            <td>100% full; 90% the target level</td>
+        </tr>
+        <tr>
+            <td>The share past the end</td>
+            <td>
+                <span
+                class="kp-meter"
+                role="meter"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                data-kp-over
+                aria-valuenow="100"
+                aria-valuetext="112% of the plan used"
+                style="--kp-value: 1.12"
+                ></span>
+        </td>
+        <td>112% of the plan used</td>
+    </tr>
+    <tr>
+        <td>Mark at the start</td>
+        <td>
+            <span
+            class="kp-meter"
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="30"
+            aria-valuetext="30% used; 0% the floor"
+            style="--kp-value: 0.3; --kp-mark: 0"
+            ><span class="kp-meter__mark" aria-hidden="true"></span
+                ></span>
+        </td>
+        <td>30% used; 0% the floor</td>
+    </tr>
+    <tr>
+        <td>Mark at the end</td>
+        <td>
+            <span
+            class="kp-meter"
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="30"
+            aria-valuetext="30% used; 100% the ceiling"
+            style="--kp-value: 0.3; --kp-mark: 1"
+            ><span class="kp-meter__mark" aria-hidden="true"></span
+                ></span>
+        </td>
+        <td>30% used; 100% the ceiling</td>
+    </tr>
+    <tr>
+        <td>Warning</td>
+        <td>
+            <span
+            class="kp-meter"
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="78"
+            aria-valuetext="78% full; 80% the overflow alarm"
+            data-kp-tone="warning"
+            style="--kp-value: 0.78; --kp-mark: 0.8"
+            ><span class="kp-meter__mark" aria-hidden="true"></span
+                ></span>
+        </td>
+        <td>78% full; 80% the overflow alarm</td>
+    </tr>
+    <tr>
+        <td>Destructive</td>
+        <td>
+            <span
+            class="kp-meter"
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="93"
+            aria-valuetext="93% full; 80% the overflow alarm"
+            data-kp-tone="destructive"
+            style="--kp-value: 0.93; --kp-mark: 0.8"
+            ><span class="kp-meter__mark" aria-hidden="true"></span
+                ></span>
+        </td>
+        <td>93% full; 80% the overflow alarm</td>
+    </tr>
+    <tr>
+        <td>Not measured</td>
+        <td>
+            <span
+            class="kp-meter"
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuetext="not measured"
+            style="--kp-value: 0"
+            ></span>
+    </td>
+    <td>not measured</td>
+</tr>
+<tr>
+    <td>Loading</td>
+    <td>
+        <span
+        class="kp-meter"
+        role="meter"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        data-kp-loading
+        aria-busy="true"
+        aria-valuetext="being measured"
+        style="--kp-value: 0"
+        ></span>
+</td>
+<td>being measured</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sc-example__stage">
+<div class="kp-kpis" data-kp-kpis-columns="all 2 1" role="group" aria-label="Storage and capacity" data-cat-meter-tiles>
+    <div class="kp-kpi">
+        <span class="kp-kpi__label">Reservoir North</span>
+        <span class="kp-kpi__value">62<small>%</small></span>
+        <span class="kp-kpi__trend">full · the mark is the target level, 80 %</span>
+        <span
+        class="kp-kpi__meter"
+        role="meter"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="62"
+        aria-valuetext="62% full; 80% the target level"
+        style="--kp-value: 0.62; --kp-mark: 0.8"
+        data-cat-meter-of="reservoir"
+        ><span class="kp-meter__mark" aria-hidden="true"></span
+            ></span>
+    </div>
+    <div class="kp-kpi" data-kp-tone="destructive">
+        <span class="kp-kpi__label">Pump capacity</span>
+        <span class="kp-kpi__value">93<small>%</small></span>
+        <span class="kp-kpi__trend" data-cat-meter-words>running · the mark is what is booked tonight</span>
+        <span
+        class="kp-kpi__meter"
+        role="meter"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="93"
+        aria-valuetext="93% running; 80% booked for tonight"
+        style="--kp-value: 0.93; --kp-mark: 0.8"
+        data-cat-meter-of="booked"
+        ><span class="kp-meter__mark" aria-hidden="true"></span
+            ></span>
+    </div>
+    <div class="kp-kpi">
+        <span class="kp-kpi__label">Treatment plant</span>
+        <span class="kp-kpi__value">4 210<small>m³</small></span>
+        <span class="kp-kpi__trend"
+        ><span
+        class="kp-meter kp-meter--inline"
+        role="meter"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="41"
+        aria-valuetext="41% of today's plan; 55% planned by now"
+        style="--kp-value: 0.41; --kp-mark: 0.55"
+        data-cat-meter-of="plant"
+        ><span class="kp-meter__mark" aria-hidden="true"></span></span
+        >41 % of today's plan, plan to 55 % by now</span
+        >
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem" data-cat-meter-phone></div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+        Meters in every state
+    &lt;/<span class="kp-code__keyword">caption</span>&gt;
+    &lt;<span class="kp-code__keyword">colgroup</span>&gt;
+        &lt;<span class="kp-code__keyword">col</span> /&gt;
+        &lt;<span class="kp-code__keyword">col</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;width: 40%&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">col</span> /&gt;
+    &lt;/<span class="kp-code__keyword">colgroup</span>&gt;
+    &lt;<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Case&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Meter&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;What a screen reader hears&lt;/<span class="kp-code__keyword">th</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;/<span class="kp-code__keyword">thead</span>&gt;
+    &lt;<span class="kp-code__keyword">tbody</span> <span class="kp-code__keyword">data-cat-meter-rows</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Reservoir North, against its target&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+                <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;62&quot;</span>
+                <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;62% full; 80% the target level&quot;</span>
+                <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.62; --kp-mark: 0.8&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;62% full; 80% the target level&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Booked tonight, past the end&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+                <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;58&quot;</span>
+                <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;58% running now; 130% booked for tonight&quot;</span>
+                <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.58; --kp-mark: 1.3&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-over</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;58% running now; 130% booked for tonight&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Empty, with a mark&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+                <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;0% used; 50% the weekly limit&quot;</span>
+                <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0; --kp-mark: 0.5&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;0% used; 50% the weekly limit&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Full&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+                <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;100% full; 90% the target level&quot;</span>
+                <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 1; --kp-mark: 0.9&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;100% full; 90% the target level&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;The share past the end&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+                <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+                <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+                <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">data-kp-over</span>
+                <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;100&quot;</span>
+                <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;112% of the plan used&quot;</span>
+                <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 1.12&quot;</span>
+                &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;112% of the plan used&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;Mark at the start&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+            <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+            <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;30&quot;</span>
+            <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;30% used; 0% the floor&quot;</span>
+            <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.3; --kp-mark: 0&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;30% used; 0% the floor&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;Mark at the end&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+            <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+            <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;30&quot;</span>
+            <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;30% used; 100% the ceiling&quot;</span>
+            <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.3; --kp-mark: 1&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;30% used; 100% the ceiling&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;Warning&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+            <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+            <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;78&quot;</span>
+            <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;78% full; 80% the overflow alarm&quot;</span>
+            <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;warning&quot;</span>
+            <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.78; --kp-mark: 0.8&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;78% full; 80% the overflow alarm&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;Destructive&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+            <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+            <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;93&quot;</span>
+            <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;93% full; 80% the overflow alarm&quot;</span>
+            <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;destructive&quot;</span>
+            <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.93; --kp-mark: 0.8&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;93% full; 80% the overflow alarm&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;Not measured&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+            <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+            <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+            <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+            <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;not measured&quot;</span>
+            <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;<span class="kp-code__keyword">td</span>&gt;not measured&lt;/<span class="kp-code__keyword">td</span>&gt;
+&lt;/<span class="kp-code__keyword">tr</span>&gt;
+&lt;<span class="kp-code__keyword">tr</span>&gt;
+    &lt;<span class="kp-code__keyword">td</span>&gt;Loading&lt;/<span class="kp-code__keyword">td</span>&gt;
+    &lt;<span class="kp-code__keyword">td</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">data-kp-loading</span>
+        <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>
+        <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;being measured&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">td</span>&gt;
+&lt;<span class="kp-code__keyword">td</span>&gt;being measured&lt;/<span class="kp-code__keyword">td</span>&gt;
+&lt;/<span class="kp-code__keyword">tr</span>&gt;
+&lt;/<span class="kp-code__keyword">tbody</span>&gt;
+&lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span> <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;all 2 1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Storage and capacity&quot;</span> <span class="kp-code__keyword">data-cat-meter-tiles</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir North&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;62&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;full · the mark is the target level, 80 %&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__meter&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;62&quot;</span>
+        <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;62% full; 80% the target level&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.62; --kp-mark: 0.8&quot;</span>
+        <span class="kp-code__keyword">data-cat-meter-of</span><span class="kp-code__string">=&quot;reservoir&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;destructive&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pump capacity&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;93&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span> <span class="kp-code__keyword">data-cat-meter-words</span>&gt;running · the mark is what is booked tonight&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__meter&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;93&quot;</span>
+        <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;93% running; 80% booked for tonight&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.93; --kp-mark: 0.8&quot;</span>
+        <span class="kp-code__keyword">data-cat-meter-of</span><span class="kp-code__string">=&quot;booked&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Treatment plant&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;4 210&lt;<span class="kp-code__keyword">small</span>&gt;m³&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter kp-meter--inline&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;meter&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;41&quot;</span>
+        <span class="kp-code__keyword">aria-valuetext</span><span class="kp-code__string">=&quot;41% of today's plan; 55% planned by now&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.41; --kp-mark: 0.55&quot;</span>
+        <span class="kp-code__keyword">data-cat-meter-of</span><span class="kp-code__string">=&quot;plant&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-meter__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;41 % of today's plan, plan to 55 % by now&lt;/<span class="kp-code__keyword">span</span>
+        &gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span> <span class="kp-code__keyword">data-cat-meter-phone</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                     <figure class="sc-example" id="more-page-effects-table-plain-narrow">
                         <figcaption class="kp-fw-semibold">Plain table in 400 px</figcaption>

@@ -17,6 +17,13 @@
 //   ranges   `[data-kp-chart-range]` buttons set the group's window
 //   spark    `data-kp-chart="spark"`: the 24 h line of a tile, drawn by
 //            drawSparkline() (js/kpi.js), on the group's crosshair
+//   trend    the spark variant in a key figure (`.kp-kpi--trend`):
+//            `data-kp-spark-head="none"` leaves out the name and value
+//            line and reads a point in a chip over the line instead, on
+//            the trend's own crosshair; `data-kp-spark-axis="relative"`
+//            puts the axis under it (`14:40 yesterday` … `now`, see
+//            trendAxis()); a click that was not a drag follows the
+//            tile's `.kp-kpi__link`
 //
 // Under the lines a soft area while one or two sources are on; with three or
 // more, the lines alone. Colours are the theme's `--chart-1..5` in order; from
@@ -86,6 +93,8 @@ export const CHART_ZOOM_EVENT = 'kp-chart-zoom';
 export const CHART_RANGE_EVENT = 'kp-chart-range';
 /** The zone a chart prints its times in and aligns its time axis to, unless attachCharts() is given another (rule 52). */
 export const CHART_TIME_ZONE = 'Europe/Brussels';
+/** A key figure's 24-hour trend: the spark variant without its head line. */
+export const TREND_CHART = '[data-kp-chart="spark"][data-kp-spark-head="none"]';
 
 /**
  * @typedef {[number, number]} ChartPoint time (ms since the epoch), value
@@ -157,6 +166,8 @@ export const CHART_TIME_ZONE = 'Europe/Brussels';
  *   string falls back to formatChartValue()
  * @property {ChartDecorate} [decorate] called with every control a chart builds, each time it builds it (a
  *   rebuilt legend included), so the page can mark it
+ * @property {() => number} [now] the moment a trend's axis counts from (`now`, `today`, `yesterday`);
+ *   `Date.now()` by default
  * @typedef {ReturnType<typeof chartWords>} ChartStrings
  * @typedef {import('./strings.js').Strings} Strings
  */
@@ -198,6 +209,9 @@ export function chartWords(overrides) {
         onePoint: s.chartOnePoint,
         loading: s.chartLoading,
         pinnedOutside: s.chartPinnedOutside,
+        today: s.chartToday,
+        yesterday: s.chartYesterday,
+        trendKeys: s.chartTrendKeys,
     };
 }
 
@@ -486,6 +500,54 @@ export function numericTime(timeZone = CHART_TIME_ZONE) {
     };
 }
 
+/** What a trend's axis says while it has no line to name: two no-break spaces keep the row. */
+const BLANK = '\u00a0';
+
+/** `YYYY-MM-DD` of a wall-clock date. @param {{ year: number, month: number, day: number }} w */
+const dayKeyOf = (w) => `${w.year}-${two(w.month)}-${two(w.day)}`;
+
+/**
+ * The words under a key figure's trend (`data-kp-spark-axis="relative"`):
+ * where it starts, as the first point's clock and its day (`14:40
+ * yesterday`, `07:00 today`, or `08:10 02/10/2026` when older), and where it
+ * ends: `now` while the last point is at most two steps old, else that
+ * point's clock (`14:00`, with its day when it is not today's). Fewer than
+ * two points: a no-break space each, so the row keeps its height. Days are
+ * the wall clock's in `timeZone` (rule 52).
+ * @param {readonly ChartPoint[]} points oldest first
+ * @param {{ now: number, step?: number, timeZone?: string, time?: ChartTimeFormat,
+ *   words?: { now: string, today: string, yesterday: string } }} context `step` is the points' spacing (10 min by
+ *   default); `time` prints the clock and an older date (`numericTime(timeZone)` by default); `words` are the
+ *   dictionary's `chartNow`, `chartToday` and `chartYesterday` unless given
+ * @returns {[string, string]}
+ */
+export function trendAxis(points, { now, step = 600_000, timeZone = CHART_TIME_ZONE, time, words }) {
+    if (points.length < 2) return [BLANK, BLANK];
+    const print = time ?? numericTime(timeZone);
+    const s = getStrings();
+    const say = words ?? { now: s.chartNow, today: s.chartToday, yesterday: s.chartYesterday };
+    const w = wallTime(now, timeZone);
+    const today = dayKeyOf(w);
+    const yesterday = dayKeyOf(wallTime(Date.UTC(w.year, w.month - 1, w.day - 1, 12), 'UTC'));
+    /** @param {number} ms */
+    const dayWord = (ms) => {
+        const day = dayKeyOf(wallTime(ms, timeZone));
+        if (day === today) return say.today;
+        if (day === yesterday) return say.yesterday;
+        return print(ms, 'tick', { stride: DAY });
+    };
+    const first = points[0][0];
+    const last = points[points.length - 1][0];
+    const left = `${print(first, 'clock', {})} ${dayWord(first)}`;
+    const right =
+        now - last <= 2 * step
+            ? say.now
+            : dayKeyOf(wallTime(last, timeZone)) === today
+              ? print(last, 'clock', {})
+              : `${print(last, 'clock', {})} ${dayWord(last)}`;
+    return [left, right];
+}
+
 /** The sub-day strides a time axis may use, each a whole divisor of a day. */
 const SUB_DAY_STRIDES = [15, 30, 60, 120, 180, 360, 720].map((m) => m * MINUTE);
 /** The strides of a day or more, in days. */
@@ -597,6 +659,7 @@ const PAGES = new WeakMap();
  * @property {string} timeZone
  * @property {ChartValueFormat | undefined} format
  * @property {ChartDecorate | undefined} decorate
+ * @property {() => number} now
  */
 
 /**
@@ -613,6 +676,33 @@ export function setChartData(el, data) {
     DATA.set(el, data);
     el.removeAttribute('data-kp-chart-loading');
     CHARTS.get(el)?.setData(data);
+}
+
+/**
+ * @typedef {object} TrendData a key figure's trend, the short way
+ * @property {ChartPoint[]} points `[[ms, value]…]`, oldest first
+ * @property {number} [step] the points' spacing, ms (the axis says `now` while the last is at most two steps old)
+ * @property {string} [unit]
+ * @property {ChartUnitKind} [unitKind]
+ * @property {number} [digits]
+ */
+
+/**
+ * Give a key figure's trend its points: setChartData() with one source, the
+ * short way. `null` is loading: the trend stays empty at its final height
+ * and the tile around it is `aria-busy` until data comes. An empty
+ * `points` is a tile with no trend.
+ * @param {Element} figure the `[data-kp-chart="spark"]` element
+ * @param {TrendData | null} data
+ */
+export function setTrendData(figure, data) {
+    if (data == null) {
+        figure.setAttribute('data-kp-chart-loading', '');
+        CHARTS.get(figure)?.draw();
+        return;
+    }
+    const { points, step, unit, unitKind, digits } = data;
+    setChartData(figure, { unit, unitKind, digits, series: [{ label: figure.getAttribute('aria-label') ?? '', points, step }] });
 }
 
 /**
@@ -935,6 +1025,29 @@ class ChartGroup {
  * @returns {() => void} detach: these charts taken away (detachChart() each)
  */
 export function attachCharts(root = document, options = {}) {
+    return attachMatching(root, options, CHART);
+}
+
+/**
+ * Draw only the key figures' trends under `root` (`TREND_CHART`), with the
+ * options attachCharts() takes; for a page that wires its trends apart from
+ * its other charts. attachCharts() draws them too.
+ * @param {ParentNode} [root]
+ * @param {ChartOptions} [options]
+ * @returns {() => void} detach
+ */
+export function attachTrendCharts(root = document, options = {}) {
+    return attachMatching(root, options, TREND_CHART);
+}
+
+/**
+ * attachCharts() over the elements `selector` finds.
+ * @param {ParentNode} root
+ * @param {ChartOptions} options
+ * @param {string} selector
+ * @returns {() => void}
+ */
+function attachMatching(root, options, selector) {
     const doc = root instanceof Document ? root : (root.ownerDocument ?? document);
     const view = doc.defaultView;
     if (!view) return () => {};
@@ -949,6 +1062,7 @@ export function attachCharts(root = document, options = {}) {
         timeZone,
         format: options.format,
         decorate: options.decorate,
+        now: options.now ?? (() => Date.now()),
     };
 
     /** @type {Set<ChartGroup>} */
@@ -958,7 +1072,7 @@ export function attachCharts(root = document, options = {}) {
     const resize = new view.ResizeObserver((entries) => {
         for (const entry of entries) CHARTS.get(entry.target)?.draw();
     });
-    for (const host of /** @type {HTMLElement[]} */ ([...root.querySelectorAll(CHART)])) {
+    for (const host of /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)])) {
         if (CHARTS.has(host)) continue;
         const groupEl = /** @type {HTMLElement | null} */ (host.closest(CHART_GROUP));
         const group = (groupEl ? GROUPS.get(groupEl) : LOOSE.get(doc)) ?? new ChartGroup(groupEl, doc, ctx);
@@ -1706,6 +1820,7 @@ function plotChart(host, group, locale, ctx) {
  * @returns {ChartState}
  */
 function sparkChart(host, group, locale, ctx) {
+    if (host.dataset.kpSparkHead === 'none') return trendChart(host, group, locale, ctx);
     const doc = host.ownerDocument;
     const { strings, time, decorate } = ctx;
     /** @type {ChartData} */
@@ -1725,7 +1840,8 @@ function sparkChart(host, group, locale, ctx) {
     const plot = h(doc, 'div', { class: 'kp-chart__plot kp-chart__spark-plot', tabindex: '0', role: 'application' });
     plot.append(svg);
     const readout = h(doc, 'p', { class: 'kp-chart__readout kp-sr-only', 'aria-live': 'polite' });
-    const parts = [head, plot, readout];
+    const axis = trendAxisRow(host);
+    const parts = [head, plot, ...(axis ? [axis.row] : []), readout];
     host.append(...parts);
     if (data.key != null) host.setAttribute('data-kp-key', data.key);
     decorateWith(decorate, plot, { kind: 'plot', host, key: data.key ?? host.getAttribute('data-kp-key') ?? undefined });
@@ -1733,6 +1849,7 @@ function sparkChart(host, group, locale, ctx) {
     function draw() {
         const series = data.series[0];
         name.textContent = label();
+        if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
         plot.setAttribute('aria-label', strings.spark(label()));
         if (!series || pts.length < 2) {
             svg.replaceChildren();
@@ -1819,6 +1936,247 @@ function sparkChart(host, group, locale, ctx) {
             if (group.owner === state) group.owner = null;
             for (const part of parts) part.remove();
             host.classList.remove('kp-chart', 'kp-chart--spark');
+        },
+        unobserve: () => {},
+    };
+    return state;
+}
+
+/**
+ * The axis row under a trend, when the spark asks for one
+ * (`data-kp-spark-axis="relative"`): where the line starts and where it ends.
+ * @param {HTMLElement} host
+ * @returns {{ row: HTMLElement, from: HTMLElement, to: HTMLElement, read: HTMLElement } | null}
+ */
+function trendAxisRow(host) {
+    if (host.dataset.kpSparkAxis !== 'relative') return null;
+    const doc = host.ownerDocument;
+    const from = h(doc, 'span', { class: 'kp-kpi__chart-from' }, BLANK);
+    const to = h(doc, 'span', { class: 'kp-kpi__chart-to' }, BLANK);
+    // The reading, here only when even a stacked chip is too wide for the trend.
+    const read = h(doc, 'span', { class: 'kp-kpi__chart-read' });
+    read.hidden = true;
+    const row = h(doc, 'span', { class: 'kp-kpi__chart-axis', 'aria-hidden': 'true' }, from, to, read);
+    return { row, from, to, read };
+}
+
+/**
+ * trendAxis() for a spark's points, in its chart context.
+ * @param {readonly ChartPoint[]} pts
+ * @param {ChartSeries | undefined} series
+ * @param {ChartContext} ctx
+ */
+function trendWords(pts, series, ctx) {
+    const step = series?.step ?? (pts.length > 1 ? pts[pts.length - 1][0] - pts[pts.length - 2][0] : undefined);
+    const { now, today, yesterday } = ctx.strings;
+    return trendAxis(pts, { now: ctx.now(), step, timeZone: ctx.timeZone, time: ctx.time, words: { now, today, yesterday } });
+}
+
+/**
+ * The spark variant as a key figure's 24-hour trend
+ * (`data-kp-spark-head="none"`): no name and value line; a pointer, a finger
+ * or the arrow keys read one point, with a crosshair and a chip over the line
+ * (its moment and value, kept inside the trend; the value under the moment
+ * when the two do not fit on one line, and in the axis row when even that
+ * does not fit). The trend keeps its own crosshair, not the group's. A click
+ * that was not a drag follows the tile's `.kp-kpi__link`. The plot is a tab
+ * stop only while there are two points or more. Loading (no data yet, or
+ * `data-kp-chart-loading`) keeps the trend empty at its height and marks the
+ * tile `aria-busy`.
+ * @param {HTMLElement} host
+ * @param {ChartGroup} group
+ * @param {string} locale
+ * @param {ChartContext} ctx
+ * @returns {ChartState}
+ */
+function trendChart(host, group, locale, ctx) {
+    const doc = host.ownerDocument;
+    const { strings, time, decorate } = ctx;
+    /** @type {ChartData | null} */
+    let data = DATA.get(host) ?? dataInMarkup(host);
+    /** @type {ChartPoint[]} */
+    let pts = [];
+    const fmt = valueFormat(locale, ctx, () => data ?? { series: [] });
+    /** The moment being read, kept across a live update; null while nothing is read. @type {number | null} */
+    let at = null;
+    /** @type {number | null} */
+    let index = null;
+    const loading = () => data == null || host.hasAttribute('data-kp-chart-loading');
+
+    const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ (s(doc, 'svg', { class: 'kp-kpi__spark' })));
+    const cross = h(doc, 'span', { class: 'kp-kpi__chart-cross' });
+    cross.hidden = true;
+    const chip = h(doc, 'span', { class: 'kp-kpi__chart-chip', 'aria-hidden': 'true' });
+    chip.hidden = true;
+    const plot = h(doc, 'span', { class: 'kp-kpi__chart-plot', role: 'application' }, svg, cross, chip);
+    const keys = h(doc, 'span', { class: 'kp-sr-only', id: `kp-trend-keys-${(clipIds += 1)}` }, strings.trendKeys);
+    plot.setAttribute('aria-describedby', keys.id);
+    const axis = trendAxisRow(host);
+    const live = h(doc, 'span', { class: 'kp-sr-only', 'aria-live': 'polite' });
+    const parts = [plot, ...(axis ? [axis.row] : []), keys, live];
+    host.append(...parts);
+    if (data?.key != null) host.setAttribute('data-kp-key', data.key);
+    decorateWith(decorate, plot, { kind: 'plot', host, key: data?.key ?? host.getAttribute('data-kp-key') ?? undefined });
+    const link = /** @type {HTMLElement | null} */ (host.closest('.kp-kpi')?.querySelector('.kp-kpi__link') ?? null);
+
+    const hide = () => {
+        at = null;
+        index = null;
+        cross.hidden = true;
+        chip.hidden = true;
+        if (axis) {
+            axis.read.hidden = true;
+            axis.from.hidden = false;
+            axis.to.hidden = false;
+        }
+    };
+
+    /**
+     * Read point `k`: the crosshair, and the chip with its moment and value
+     * over the line, inside the trend.
+     * @param {number} k
+     * @param {boolean} [announce] say it to a screen reader (keys only)
+     */
+    const show = (k, announce = false) => {
+        if (pts.length < 2) return;
+        const i = Math.max(0, Math.min(pts.length - 1, k));
+        const [ms, value] = pts[i];
+        at = ms;
+        index = i;
+        const width = plot.clientWidth;
+        const x = (i / (pts.length - 1)) * width;
+        const moment = time(ms, 'full', {});
+        const shown = fmt(value, 'spark');
+        cross.style.insetInlineStart = `${x}px`;
+        cross.hidden = false;
+        const words = () => [h(doc, 'span', { class: 'kp-kpi__chart-at' }, moment), h(doc, 'span', { class: 'kp-kpi__chart-value' }, shown)];
+        chip.replaceChildren(...words());
+        chip.hidden = false;
+        chip.removeAttribute('data-kp-stacked');
+        let chipWidth = chip.offsetWidth;
+        if (chipWidth > width) {
+            chip.setAttribute('data-kp-stacked', '');
+            chipWidth = chip.offsetWidth;
+        }
+        const toAxis = chipWidth > width && axis != null;
+        if (!toAxis) chip.style.insetInlineStart = `${Math.max(0, Math.min(width - chipWidth, x - chipWidth / 2))}px`;
+        chip.hidden = toAxis;
+        if (axis) {
+            axis.read.replaceChildren(...(toAxis ? words() : []));
+            axis.read.hidden = !toAxis;
+            axis.from.hidden = toAxis;
+            axis.to.hidden = toAxis;
+        }
+        if (announce) live.textContent = `${moment} · ${fmt(value, 'readout')}`;
+    };
+
+    function draw() {
+        const series = data?.series[0];
+        pts = !loading() && series ? pointsOf(series) : [];
+        plot.setAttribute('aria-label', data?.label ?? host.getAttribute('aria-label') ?? series?.label ?? '');
+        drawSparkline(
+            svg,
+            pts.map((p) => p[1]),
+        );
+        if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
+        const usable = pts.length >= 2;
+        if (usable) plot.tabIndex = 0;
+        else plot.removeAttribute('tabindex');
+        const tile = host.closest('.kp-kpi');
+        if (loading()) tile?.setAttribute('aria-busy', 'true');
+        else tile?.removeAttribute('aria-busy');
+        if (!usable) hide();
+        else if (at != null) show(indexAt(pts, at));
+    }
+
+    /** @param {number} clientX */
+    const indexAtX = (clientX) => {
+        const box = plot.getBoundingClientRect();
+        return Math.round(((clientX - box.left) / Math.max(1, box.width)) * (pts.length - 1));
+    };
+    /** @type {{ x: number, moved: boolean, touch: boolean } | null} */
+    let press = null;
+    /** @param {PointerEvent} event */
+    const onDown = (event) => {
+        press = { x: event.clientX, moved: false, touch: event.pointerType !== 'mouse' };
+        if (press.touch) {
+            try {
+                plot.setPointerCapture(event.pointerId);
+            } catch {
+                // A pointer the browser no longer knows (a synthetic one): read without capture.
+            }
+            show(indexAtX(event.clientX));
+        }
+    };
+    /** @param {PointerEvent} event */
+    const onMove = (event) => {
+        if (press && Math.abs(event.clientX - press.x) > 6) press.moved = true;
+        if (event.pointerType === 'mouse' || press) show(indexAtX(event.clientX));
+    };
+    /** @param {PointerEvent} event */
+    const onLeave = (event) => {
+        if (event.pointerType === 'mouse') hide();
+    };
+    const onCancel = () => {
+        press = null;
+        hide();
+    };
+    /** @param {MouseEvent} event */
+    const onClick = (event) => {
+        const dragged = press?.moved ?? false;
+        press = null;
+        // A click without a drag follows the tile's link, as a click anywhere
+        // else on the tile does; a drag only read the trend.
+        if (!dragged && link && event.button === 0) link.click();
+    };
+    /** @param {KeyboardEvent} event */
+    const onKey = (event) => {
+        const n = pts.length;
+        if (n < 2) return;
+        const shown = !cross.hidden;
+        const from = index ?? n - 1;
+        /** @type {number | null} */
+        let to = null;
+        if (event.key === 'ArrowLeft') to = shown ? from - (event.shiftKey ? 10 : 1) : n - 1;
+        else if (event.key === 'ArrowRight') to = shown ? from + (event.shiftKey ? 10 : 1) : n - 1;
+        else if (event.key === 'Home') to = 0;
+        else if (event.key === 'End') to = n - 1;
+        else if (event.key === 'Escape' && shown) {
+            event.preventDefault();
+            event.stopPropagation();
+            hide();
+            return;
+        }
+        if (to == null) return;
+        event.preventDefault();
+        show(to, true);
+    };
+    plot.addEventListener('pointerdown', onDown);
+    plot.addEventListener('pointermove', onMove);
+    plot.addEventListener('pointerleave', onLeave);
+    plot.addEventListener('pointercancel', onCancel);
+    plot.addEventListener('click', onClick);
+    plot.addEventListener('keydown', onKey);
+    plot.addEventListener('blur', hide);
+
+    /** @type {ChartState} */
+    const state = {
+        host,
+        spark: true,
+        group,
+        draw,
+        setData: (next) => {
+            data = next;
+            if (data.key != null) host.setAttribute('data-kp-key', data.key);
+            draw();
+        },
+        select: () => false,
+        // The trend reads on its own crosshair, not the group's.
+        cursorAt: () => {},
+        lastTime: () => pts[pts.length - 1]?.[0] ?? null,
+        destroy: () => {
+            for (const part of parts) part.remove();
+            host.closest('.kp-kpi')?.removeAttribute('aria-busy');
         },
         unobserve: () => {},
     };

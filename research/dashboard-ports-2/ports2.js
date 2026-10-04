@@ -144,7 +144,16 @@ export const menuSignature = (groups) =>
         : JSON.stringify(
               groups.map((g) => [
                   g.group,
-                  g.items.map((i) => [i.label, i.hint ?? '', i.href ?? '', i.download ?? '', i.disabled ?? '', !!i.danger, i.attrs ?? null, i.value ?? '']),
+                  g.items.map((i) => [
+                      i.label,
+                      i.hint ?? '',
+                      i.href ?? '',
+                      i.download ?? '',
+                      i.disabled ?? '',
+                      !!i.danger,
+                      i.attrs ?? null,
+                      i.value ?? '',
+                  ]),
               ]),
           );
 
@@ -1032,11 +1041,12 @@ function paintCalendar(c) {
     const cells = monthCells(c.year, c.month);
     const monthChanged = c.shownMonth !== ym;
     c.shownMonth = ym;
-    c.title.textContent = new Intl.DateTimeFormat(c.locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(Date.UTC(c.year, c.month - 1, 1));
+    c.title.textContent = new Intl.DateTimeFormat(c.locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+        Date.UTC(c.year, c.month - 1, 1),
+    );
     c.grid.setAttribute('aria-busy', String(c.state === 'loading'));
     const inMonth = (/** @type {string} */ iso) => iso.startsWith(ym);
-    const stop =
-        [c.focus, c.selected, today, `${ym}-01`].find((iso) => iso && inMonth(iso)) ?? `${ym}-01`;
+    const stop = [c.focus, c.selected, today, `${ym}-01`].find((iso) => iso && inMonth(iso)) ?? `${ym}-01`;
     cells.forEach((iso, i) => {
         const cell = c.cells[i];
         const mine = inMonth(iso);
@@ -1214,13 +1224,17 @@ export function attachCalendars(root = document, { timeZone, locale = 'en-GB', n
         };
         /** @param {MouseEvent} event */
         const onDay = (event) => {
-            const button = /** @type {HTMLButtonElement | null} */ (event.target instanceof Element ? event.target.closest('.kp-calendar__day') : null);
+            const button = /** @type {HTMLButtonElement | null} */ (
+                event.target instanceof Element ? event.target.closest('.kp-calendar__day') : null
+            );
             if (!button?.dataset.kpDate) return;
             pick(c, button.dataset.kpDate, event.detail === 0 ? 'keyboard' : 'pointer');
         };
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
-            const button = /** @type {HTMLButtonElement | null} */ (event.target instanceof Element ? event.target.closest('.kp-calendar__day') : null);
+            const button = /** @type {HTMLButtonElement | null} */ (
+                event.target instanceof Element ? event.target.closest('.kp-calendar__day') : null
+            );
             const iso = button?.dataset.kpDate;
             if (!iso) return;
             /** @type {string | null} */
@@ -1484,7 +1498,8 @@ function restyleGraph(g) {
         node.classList.toggle('is-picked', g.selected.has(id));
         node.setAttribute('aria-pressed', String(g.selected.has(id)));
     }
-    for (const button of g.legend.querySelectorAll('[data-kp-kind]')) button.setAttribute('aria-pressed', String(!g.hidden.has(button.getAttribute('data-kp-kind') ?? '')));
+    for (const button of g.legend.querySelectorAll('[data-kp-kind]'))
+        button.setAttribute('aria-pressed', String(!g.hidden.has(button.getAttribute('data-kp-kind') ?? '')));
     g.showAll.toggleAttribute('data-kp-idle', g.selected.size === 0 && g.hidden.size === 0);
 }
 
@@ -1555,7 +1570,15 @@ function drawGraph(g) {
     g.note.textContent = g.state === 'ready' ? '' : g.state === 'loading' ? g.words || GRAPH_STRINGS.loading : g.words;
     g.note.hidden = g.state === 'ready';
     if (g.state === 'loading') {
-        g.svg.append(svgEl(doc, 'ellipse', { class: 'kp-graph__skeleton', cx: W / 2, cy: H / 2 - 10, rx: W < 600 ? Math.min(W * 0.24, Math.min(W, H) * 0.36) : Math.min(W, H) * 0.36 * 1.35, ry: Math.min(W, H) * 0.36 }));
+        g.svg.append(
+            svgEl(doc, 'ellipse', {
+                class: 'kp-graph__skeleton',
+                cx: W / 2,
+                cy: H / 2 - 10,
+                rx: W < 600 ? Math.min(W * 0.24, Math.min(W, H) * 0.36) : Math.min(W, H) * 0.36 * 1.35,
+                ry: Math.min(W, H) * 0.36,
+            }),
+        );
     }
     if (g.state !== 'ready' || !data) {
         g.legend.replaceChildren();
@@ -1626,7 +1649,9 @@ function drawGraph(g) {
         const anchor = dx > 0.35 ? 'start' : dx < -0.35 ? 'end' : 'middle';
         const lx = p.x + dx * off;
         const ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
-        const text = /** @type {SVGTextElement} */ (svgEl(doc, 'text', { class: 'kp-graph__label', x: lx.toFixed(1), y: ly.toFixed(1), 'text-anchor': anchor }));
+        const text = /** @type {SVGTextElement} */ (
+            svgEl(doc, 'text', { class: 'kp-graph__label', x: lx.toFixed(1), y: ly.toFixed(1), 'text-anchor': anchor })
+        );
         text.textContent = n.label;
         text.setAttribute('aria-hidden', 'true');
         node.append(text);
@@ -1836,7 +1861,8 @@ export function attachGraphs(root = document, { decorate } = {}) {
             const ringCount = nodes.length - ringStart;
             /** @type {number | null} */
             let to = null;
-            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') to = at < ringStart ? ringStart : ringStart + ((at - ringStart + 1) % ringCount);
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown')
+                to = at < ringStart ? ringStart : ringStart + ((at - ringStart + 1) % ringCount);
             else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp')
                 to = at < ringStart ? nodes.length - 1 : ringStart + ((at - ringStart - 1 + ringCount) % ringCount);
             else if (event.key === 'Home') to = 0;

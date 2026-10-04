@@ -4,7 +4,7 @@ export declare const REMEMBER_ATTRIBUTE = "data-kp-remember";
 export declare const REMEMBER_CLASH_EVENT = "kp-remember-clash";
 /** The first segment of every key this package writes. */
 export declare const REMEMBER_PREFIX = "kp-remember";
-export type Remembered = 'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable';
+export type Remembered = 'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour';
 export type Memory = {
     /**
      * the name the element gave itself

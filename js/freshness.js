@@ -183,7 +183,17 @@ function reserve(el, sample) {
         return;
     }
     const style = getComputedStyle(el);
-    const key = [sample, style.fontFamily, style.fontSize, style.fontWeight, style.fontStyle, style.fontStretch, style.fontVariantNumeric, style.letterSpacing, style.textTransform].join('|');
+    const key = [
+        sample,
+        style.fontFamily,
+        style.fontSize,
+        style.fontWeight,
+        style.fontStyle,
+        style.fontStretch,
+        style.fontVariantNumeric,
+        style.letterSpacing,
+        style.textTransform,
+    ].join('|');
     let width = widths.get(key);
     if (width === undefined) {
         const kept = [...el.childNodes];
@@ -236,7 +246,8 @@ function paint(el, ctx) {
     if (stale) {
         if (!el.hasAttribute('data-kp-stale')) el.setAttribute('data-kp-stale', '');
     } else el.removeAttribute('data-kp-stale');
-    if (state.stale !== null && state.stale !== stale && el.getAttribute('data-kp-ago-announce') === 'state') announce(el, stale ? strings.agoStale(text) : strings.agoFresh(text));
+    if (state.stale !== null && state.stale !== stale && el.getAttribute('data-kp-ago-announce') === 'state')
+        announce(el, stale ? strings.agoStale(text) : strings.agoFresh(text));
     state.stale = stale;
 }
 
@@ -324,7 +335,8 @@ export function attachAgo(root = document, { timeZone = FRESHNESS_TIME_ZONE, now
     /** @type {AgoContext} */
     const ctx = { timeZone, now, overrides: strings, owner };
     /** @param {ParentNode} scope */
-    const linesIn = (scope) => /** @type {HTMLElement[]} */ ([...(scope instanceof Element && scope.matches(AGO) ? [scope] : []), ...scope.querySelectorAll(AGO)]);
+    const linesIn = (scope) =>
+        /** @type {HTMLElement[]} */ ([...(scope instanceof Element && scope.matches(AGO) ? [scope] : []), ...scope.querySelectorAll(AGO)]);
     for (const el of linesIn(root)) adopt(el, ctx);
     if (!view) return () => {};
     const watcher = new view.MutationObserver((records) => {

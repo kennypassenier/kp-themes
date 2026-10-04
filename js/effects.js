@@ -520,6 +520,10 @@ export const TIMINGS = Object.freeze({
     'kp-ember': { durationMs: 840, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     'kp-spin': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-pulse': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 0.6, 1] },
+    // The drawer and the tour card [scope-143]: each arrives once, a fade
+    // (the drawer also slides 2rem); opacity 0 to 1, no opposing change.
+    'kp-drawer-in': { durationMs: 200, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-tour-in': { durationMs: 160, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     // The busy progress bar's sweep [scope-140]: a band a third of the
     // track wide translating across it, no luminance change of its own.
     'kp-progressbar-sweep': { durationMs: 1400, cycles: Infinity, property: 'transform', luminanceSteps: [] },

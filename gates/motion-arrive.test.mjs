@@ -32,7 +32,7 @@ test('the stable id is read from data-kp-key, data-kp-row-key, then id [scope-14
     assert.deepEqual([...ARRIVE_KEYS], ['data-kp-key', 'data-kp-row-key', 'id']);
 });
 
-test('a live repaint of the same rows does not arrive again; a new row does (the dashboard\'s case) [scope-143]', () => {
+test("a live repaint of the same rows does not arrive again; a new row does (the dashboard's case) [scope-143]", () => {
     const tbody = {};
     const old = [el('TR', 'sk-row', { 'data-key': 'a' }), el('TR', 'sk-row', { 'data-key': 'b' })];
     const fresh = [el('TR', 'sk-row', { 'data-key': 'a' }), el('TR', 'sk-row', { 'data-key': 'b' }), el('TR', 'sk-row', { 'data-key': 'c' })];

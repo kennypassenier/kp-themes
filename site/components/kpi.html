@@ -107,9 +107,14 @@
                             <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html" aria-current="page">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -140,6 +145,9 @@
                             <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
@@ -501,6 +509,770 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-data-kpi-columns">
+                        <figcaption class="kp-fw-semibold">Key figures that never leave one alone</figcaption>
+                        <p class="kp-text-muted"><code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile is at least <code>--kp-kpi-min</code> wide, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it steps down to a count that does not; only when none exists (seven at 700 px, five at phone width) does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the line under the buttons says what <code>attachKpiStrips()</code> chose. Before the script runs, a strip keeps the package's auto-fit. The table under the phone pane is the spec's own list of cases.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div data-cat-kpis-stage>
+    <div
+    class="kp-kpis"
+    data-kp-kpis-columns="all 3 2 1"
+    role="group"
+    aria-label="The northern network right now"
+    data-cat-kpis-strip
+    >
+    <div class="kp-kpi">
+        <span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1<small>bar</small></span
+            ><span class="kp-kpi__trend">two pumps running</span>
+        </div>
+        <div class="kp-kpi">
+            <span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span
+                ><span class="kp-kpi__trend">into the ring main</span>
+            </div>
+            <div class="kp-kpi">
+                <span class="kp-kpi__label">Reservoir North</span><span class="kp-kpi__value">71<small>%</small></span
+                    ><span class="kp-kpi__trend">target 80 %</span>
+                </div>
+                <div class="kp-kpi">
+                    <span class="kp-kpi__label">Reservoir South</span><span class="kp-kpi__value">64<small>%</small></span
+                        ><span class="kp-kpi__trend">target 80 %</span>
+                    </div>
+                    <div class="kp-kpi">
+                        <span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">2</span
+                            ><span class="kp-kpi__trend">one needs a visit</span>
+                        </div>
+                    </div>
+                </div>
+                <template data-cat-kpis-more>
+                    <div class="kp-kpi">
+                        <span class="kp-kpi__label">Readings late</span><span class="kp-kpi__value">1</span
+                            ><span class="kp-kpi__trend">pump house 7, since 06:00</span>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Energy today</span><span class="kp-kpi__value">1 834<small>kWh</small></span
+                                ><span class="kp-kpi__trend">night tariff from 22:00</span>
+                            </div>
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Visits planned</span><span class="kp-kpi__value">3</span
+                                    ><span class="kp-kpi__trend">this week</span>
+                                </div>
+                            </template>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem">
+    <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network, phone width">
+        <div class="kp-kpi">
+            <span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1<small>bar</small></span
+                ><span class="kp-kpi__trend">two pumps running</span>
+            </div>
+            <div class="kp-kpi">
+                <span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span
+                    ><span class="kp-kpi__trend">into the ring main</span>
+                </div>
+                <div class="kp-kpi">
+                    <span class="kp-kpi__label">Reservoir North</span><span class="kp-kpi__value">71<small>%</small></span
+                        ><span class="kp-kpi__trend">target 80 %</span>
+                    </div>
+                    <div class="kp-kpi">
+                        <span class="kp-kpi__label">Reservoir South</span><span class="kp-kpi__value">64<small>%</small></span
+                            ><span class="kp-kpi__trend">target 80 %</span>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">2</span
+                                ><span class="kp-kpi__trend">one needs a visit</span>
+                            </div>
+                        </div>
+                    </div>
+</div>
+<div class="sc-example__stage">
+<table class="kp-table">
+    <caption>
+        The spec's cases (gap 16 px, smallest tile 160 px, allowed "all 3 2 1"), as kpiColumns() works them out
+    </caption>
+    <thead>
+        <tr>
+            <th scope="col">Tiles</th>
+            <th scope="col">Strip width</th>
+            <th scope="col">Columns</th>
+            <th scope="col">Rows</th>
+            <th scope="col">Last spans</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>5</td>
+            <td>1400 px</td>
+            <td>5</td>
+            <td>5</td>
+            <td>no</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>600 px</td>
+            <td>2</td>
+            <td>2 + 2</td>
+            <td>no</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>700 px</td>
+            <td>3</td>
+            <td>3 + 2</td>
+            <td>no</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>700 px</td>
+            <td>3</td>
+            <td>3 + 3 + 1</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>700 px</td>
+            <td>3</td>
+            <td>3 + 3 + 2</td>
+            <td>no</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>358 px</td>
+            <td>2</td>
+            <td>2 + 2 + 1</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>358 px</td>
+            <td>2</td>
+            <td>2 + 2 + 2</td>
+            <td>no</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>500 px</td>
+            <td>1</td>
+            <td>1</td>
+            <td>no</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-cat-kpis-stage</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span>
+    <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;all 3 2 1&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The northern network right now&quot;</span>
+    <span class="kp-code__keyword">data-cat-kpis-strip</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;3.1&lt;<span class="kp-code__keyword">small</span>&gt;bar&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;two pumps running&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Flow&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;412&lt;<span class="kp-code__keyword">small</span>&gt;m³/h&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;into the ring main&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir North&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;71&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;target 80 %&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir South&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;64&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;target 80 %&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;one needs a visit&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">template</span> <span class="kp-code__keyword">data-cat-kpis-more</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Readings late&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;1&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;pump house 7, since 06:00&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Energy today&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;1 834&lt;<span class="kp-code__keyword">small</span>&gt;kWh&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;night tariff from 22:00&lt;/<span class="kp-code__keyword">span</span>&gt;
+                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Visits planned&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;3&lt;/<span class="kp-code__keyword">span</span>
+                                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;this week&lt;/<span class="kp-code__keyword">span</span>&gt;
+                                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span> <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;all 3 2 1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The northern network, phone width&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;3.1&lt;<span class="kp-code__keyword">small</span>&gt;bar&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;two pumps running&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Flow&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;412&lt;<span class="kp-code__keyword">small</span>&gt;m³/h&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;into the ring main&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir North&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;71&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;target 80 %&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir South&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;64&lt;<span class="kp-code__keyword">small</span>&gt;%&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;target 80 %&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;one needs a visit&lt;/<span class="kp-code__keyword">span</span>&gt;
+                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">caption</span>&gt;
+        The spec's cases (gap 16 px, smallest tile 160 px, allowed &quot;all 3 2 1&quot;), as kpiColumns() works them out
+    &lt;/<span class="kp-code__keyword">caption</span>&gt;
+    &lt;<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Tiles&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Strip width&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Columns&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Rows&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Last spans&lt;/<span class="kp-code__keyword">th</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;/<span class="kp-code__keyword">thead</span>&gt;
+    &lt;<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;5&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;1400 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;5&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;5&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;4&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;600 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2 + 2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;5&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;700 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3 + 2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;7&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;700 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3 + 3 + 1&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;yes&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;8&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;700 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;3 + 3 + 2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;5&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;358 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2 + 2 + 1&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;yes&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;6&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;358 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;2 + 2 + 2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;1&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;500 px&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;1&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;1&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;no&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+&lt;/<span class="kp-code__keyword">table</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-data-kpi-trend">
+                        <figcaption class="kp-fw-semibold">A key figure with its 24-hour trend</figcaption>
+                        <p class="kp-text-muted"><code>.kp-kpi--trend</code>, a key figure whose whole tile opens its chart (a stretched <code>.kp-kpi__link</code>, ↗ in the corner), with the 24-hour trend inside it as a second stop for the keyboard. The note <i>avg 15 min</i> sits in the label, in its capitals (<code>.kp-kpi__label-note</code>). The trend is the time chart's spark variant without its head line (<code>data-kp-spark-head="none"</code>), with the axis under it (<code>data-kp-spark-axis="relative"</code>): where it starts, as <i>14:40 yesterday</i>, and <i>now</i>. Move the pointer over a trend: a crosshair and a chip with the moment and the value, as <i>04/10/2026 02:40 · 3.40 bar</i>, kept inside the tile. Tab to a tile (the whole tile gets the ring), Tab again to its trend, then ← → (Shift: ten points), Home, End and Esc. A click on the trend opens the tile's link; a drag only reads it. <b>Flow into the network</b> stopped forty minutes ago, so its axis ends at that clock, not <i>now</i>; <b>Reservoir South</b> began this morning, so it says <i>today</i>. The second strip shows a tile loading, one with no trend and one with a single reading, each as tall as the filled one. In the phone pane the tiles are narrow: the value goes under the moment, and the corner shows only ↗. <b>Ten minutes later</b> is a live update: a reading on screen stays at its moment.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1 right now" data-cat-trend-strip="main">
+    <div class="kp-kpi kp-kpi--trend" data-cat-trend="pressure">
+        <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+        <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure on Charts"
+        ><span class="kp-kpi__link-word">Charts</span> ↗</a
+        >
+        <span class="kp-kpi__value"
+        ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+            ></span>
+        <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+        <figure
+        class="kp-kpi__chart"
+        data-kp-chart="spark"
+        data-kp-spark-head="none"
+        data-kp-spark-axis="relative"
+        aria-label="Pressure, last 24 hours"
+        style="--kp-chart-series: var(--chart-1)"
+        ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="flow">
+    <span class="kp-kpi__label">Flow into the network <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Flow into the network on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Flow into the network, last 24 hours"
+    style="--kp-chart-series: var(--chart-2)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="north">
+    <span class="kp-kpi__label">Reservoir North <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir North on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Reservoir North, last 24 hours"
+    style="--kp-chart-series: var(--chart-3)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="temp">
+    <span class="kp-kpi__label">Pump temperature <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Pump temperature on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Pump temperature, last 24 hours"
+    style="--kp-chart-series: var(--chart-4)"
+    ></figure>
+</div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Tiles in other states" data-cat-trend-strip="states">
+    <div class="kp-kpi kp-kpi--trend" data-cat-trend="loading">
+        <span class="kp-kpi__label">Pressure, pump house 2 <span class="kp-kpi__label-note">avg 15 min</span></span>
+        <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure, pump house 2 on Charts"
+        ><span class="kp-kpi__link-word">Charts</span> ↗</a
+        >
+        <span class="kp-kpi__value"
+        ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+            ></span>
+        <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+        <figure
+        class="kp-kpi__chart"
+        data-kp-chart="spark"
+        data-kp-spark-head="none"
+        data-kp-spark-axis="relative"
+        aria-label="Pressure, pump house 2, last 24 hours"
+        style="--kp-chart-series: var(--chart-1)"
+        ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="none">
+    <span class="kp-kpi__label">Pressure, pump house 7 <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure, pump house 7 on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Pressure, pump house 7, last 24 hours"
+    style="--kp-chart-series: var(--chart-1)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="one">
+    <span class="kp-kpi__label">Reservoir East <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir East on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Reservoir East, last 24 hours"
+    style="--kp-chart-series: var(--chart-3)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="south">
+    <span class="kp-kpi__label">Reservoir South <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir South on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Reservoir South, last 24 hours"
+    style="--kp-chart-series: var(--chart-3)"
+    ></figure>
+</div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem">
+    <div
+    class="kp-kpis"
+    data-kp-kpis-columns="4 2 1"
+    role="group"
+    aria-label="Pump house 1, phone width"
+    data-cat-trend-strip="phone"
+    >
+    <div class="kp-kpi kp-kpi--trend" data-cat-trend="pressure">
+        <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+        <a class="kp-kpi__link" href="#kpi-trend" title="Open Pressure on Charts"
+        ><span class="kp-kpi__link-word">Charts</span> ↗</a
+        >
+        <span class="kp-kpi__value"
+        ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+            ></span>
+        <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+        <figure
+        class="kp-kpi__chart"
+        data-kp-chart="spark"
+        data-kp-spark-head="none"
+        data-kp-spark-axis="relative"
+        aria-label="Pressure, last 24 hours, phone width"
+        style="--kp-chart-series: var(--chart-1)"
+        ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="flow">
+    <span class="kp-kpi__label">Flow into the network <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Flow into the network on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Flow into the network, last 24 hours, phone width"
+    style="--kp-chart-series: var(--chart-2)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="north">
+    <span class="kp-kpi__label">Reservoir North <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Reservoir North on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Reservoir North, last 24 hours, phone width"
+    style="--kp-chart-series: var(--chart-3)"
+    ></figure>
+</div>
+<div class="kp-kpi kp-kpi--trend" data-cat-trend="temp">
+    <span class="kp-kpi__label">Pump temperature <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#kpi-trend" title="Open Pump temperature on Charts"
+    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+    >
+    <span class="kp-kpi__value"
+    ><span class="kp-skeleton" style="--kp-skeleton-height: 1.75rem; inline-size: 3ch"></span
+        ></span>
+    <span class="kp-kpi__trend"><span class="kp-skeleton" style="inline-size: 80%"></span></span>
+    <figure
+    class="kp-kpi__chart"
+    data-kp-chart="spark"
+    data-kp-spark-head="none"
+    data-kp-spark-axis="relative"
+    aria-label="Pump temperature, last 24 hours, phone width"
+    style="--kp-chart-series: var(--chart-4)"
+    ></figure>
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span> <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;4 2 1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 1 right now&quot;</span> <span class="kp-code__keyword">data-cat-trend-strip</span><span class="kp-code__string">=&quot;main&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;pressure&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pressure on Charts&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">figure</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+        <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure, last 24 hours&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-1)&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;flow&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Flow into the network &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Flow into the network on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Flow into the network, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-2)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;north&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir North &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Reservoir North on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Reservoir North, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-3)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;temp&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pump temperature &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pump temperature on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump temperature, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-4)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span> <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;4 2 1&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Tiles in other states&quot;</span> <span class="kp-code__keyword">data-cat-trend-strip</span><span class="kp-code__string">=&quot;states&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure, pump house 2 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pressure, pump house 2 on Charts&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">figure</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+        <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure, pump house 2, last 24 hours&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-1)&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure, pump house 7 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pressure, pump house 7 on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure, pump house 7, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-1)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;one&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir East &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Reservoir East on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Reservoir East, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-3)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;south&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir South &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Reservoir South on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Reservoir South, last 24 hours&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-3)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span>
+    <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;4 2 1&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 1, phone width&quot;</span>
+    <span class="kp-code__keyword">data-cat-trend-strip</span><span class="kp-code__string">=&quot;phone&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;pressure&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pressure on Charts&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">figure</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+        <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure, last 24 hours, phone width&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-1)&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;flow&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Flow into the network &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Flow into the network on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Flow into the network, last 24 hours, phone width&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-2)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;north&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Reservoir North &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Reservoir North on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Reservoir North, last 24 hours, phone width&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-3)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi kp-kpi--trend&quot;</span> <span class="kp-code__keyword">data-cat-trend</span><span class="kp-code__string">=&quot;temp&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pump temperature &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label-note&quot;</span>&gt;avg 15 min&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#kpi-trend&quot;</span> <span class="kp-code__keyword">title</span><span class="kp-code__string">=&quot;Open Pump temperature on Charts&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__link-word&quot;</span>&gt;Charts&lt;/<span class="kp-code__keyword">span</span>&gt; ↗&lt;/<span class="kp-code__keyword">a</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-skeleton-height: 1.75rem; inline-size: 3ch&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 80%&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__chart&quot;</span>
+    <span class="kp-code__keyword">data-kp-chart</span><span class="kp-code__string">=&quot;spark&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-head</span><span class="kp-code__string">=&quot;none&quot;</span>
+    <span class="kp-code__keyword">data-kp-spark-axis</span><span class="kp-code__string">=&quot;relative&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump temperature, last 24 hours, phone width&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-chart-series: var(--chart-4)&quot;</span>
+    &gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -530,17 +1302,19 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
-                            <tr><td><code>--kp-kpi-meter-fill</code></td><td><code>var(--primary)</code></td></tr>
+                            <tr><td><code>--kp-chart-series</code></td><td><code>var(--chart-1)</code></td></tr>
                             <tr><td><code>--kp-kpi-min</code></td><td><code>9rem</code></td></tr>
                             <tr><td><code>--kp-kpi-spark-height</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-kpi-trend-lines</code></td><td><code>2</code></td></tr>
                             <tr><td><code>--kp-kpi-value-size</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-kpis-columns</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-kpis-gap</code></td><td><code>var(--kp-space-md, 1rem)</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
-                            <tr><td><code>--kp-value</code></td><td><code>0</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -561,7 +1335,7 @@
                             <tr><td><code>.kp-kpi__label, __value, __note, __trend</code></td><td>The label (small capitals, one line, wrapping on a narrow tile), the number with a `&lt;small&gt;` unit, a note beside it, and the trend line.</td></tr>
                             <tr><td><code>.kp-kpi__delta</code></td><td>A change in the trend line: `data-kp-direction=&quot;up|down&quot;` puts ▲ or ▼ before it, `data-kp-tone=&quot;good|bad&quot;` colours it.</td></tr>
                             <tr><td><code>.kp-kpi__spark</code></td><td>An inline SVG with `data-kp-spark=&quot;12 14 13 …&quot;`: the script draws a line over a soft area from the numbers, and again when they change.</td></tr>
-                            <tr><td><code>.kp-kpi__meter</code></td><td>A used-of-total bar with `role=&quot;meter&quot;`; the share, 0 to 1, is a custom property on its style (see the knobs).</td></tr>
+                            <tr><td><code>.kp-kpi__meter</code></td><td>The meter at the bottom of a tile: the same rules as `.kp-meter` (its own page), with a mark, past the end and loading; the tile’s tone colours its fill.</td></tr>
                             <tr><td><code>data-kp-tone</code></td><td>On the tile, `warning` or `destructive`: a coloured edge and a coloured number (and the meter’s fill).</td></tr>
                             <tr><td><code>.kp-kpi--toggle</code></td><td>A filter tile: a click flips `aria-pressed` and fires `kp-kpi-toggle` with `detail.pressed`; the page filters. Pressed, a primary border over a faint primary background.</td></tr>
                             <tr><td><code>.kp-kpi__hint</code></td><td>What a click does, beside the label, in the page’s words: one child `data-kp-when=&quot;off&quot;`, one `data-kp-when=&quot;on&quot;`.</td></tr>

@@ -109,6 +109,18 @@ export const REQUIRED = [
         self: true,
         why: 'The band measures its own width and moves each problem’s fix under its words when narrow; the query reaches only its own items [scope-143].',
     },
+    {
+        container: 'kp-calendar-layout',
+        class: 'kp-calendar-layout',
+        self: true,
+        why: 'The layout measures its own width and puts the page’s detail under the calendar when narrow; the query reaches only its own children [scope-143].',
+    },
+    {
+        container: 'kp-help',
+        class: 'kp-help',
+        self: true,
+        why: 'A help card measures its own width and puts each word over its meaning when narrow; the query reaches only its own lists [scope-143].',
+    },
 ];
 
 /** Page sets this gate reads. The site is included because it renders the components live, not only as escaped snippets. */

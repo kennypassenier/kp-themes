@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Month heatmap — kp-themes</title>
+        <meta name="description" content="A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html" aria-current="page">Month heatmap</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Month heatmap</h1>
+                    <p class="kp-prose">A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">Where a reader looks for the bad days in a month of one daily outcome and picks one to see why. Not for picking a date in a form, which is the date picker, and not for a value over time, which is a time chart.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A month of nightly backups, with the page’s detail beside it</figcaption>
+                        <p class="kp-text-muted">The markup is the empty section; the script builds the rest and the page gives the days with `setCalendarDays(el, { &quot;2026-10-04&quot;: { tone: &quot;warn&quot;, count: &quot;7/9&quot;, label: &quot;7 of 9 services backed up&quot; } })`. A picked day fires `kp-calendar-pick`; the page fills the aside. Under 45rem the aside goes under the grid.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-calendar-layout">
+    <section class="kp-calendar" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups"></section>
+    <aside aria-live="polite"><p>Pick a day to see every service’s own state that night.</p></aside>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar-layout&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Nightly backups&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Pick a day to see every service’s own state that night.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">aside</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-data-calendar">
+                        <figcaption class="kp-fw-semibold">A month of nightly backups</figcaption>
+                        <p class="kp-text-muted"><code>.kp-calendar</code>, a month as a grid of days, each a plate in the colour of how its night went, with how many of the nine services were backed up under the day's number. Green nights had every service, amber some, red none (17/09, the night of the power cut: only the red plate, its count reads like every other day's); the dashed days are still to come or from before the first backup (10/08). The days of September and November show their numbers, quiet and inert, so every week reads full. Today, 04/10, has a dark inner ring (today is the day in Brussels); the picked day an outer ring, and the detail beside it lists every service's own night. The grid is always six weeks tall: press <b>‹ Prev</b> twice and back, and it keeps its height in every month. One tab stop: the arrows move a day or a week, Home and End go to the week's ends, Page Up and Page Down change the month (with Shift, the year), Enter picks. Try the states above the stage: <b>Loading</b> pulses every day in place, <b>Nothing to check</b> and <b>Could not read</b> stop the pulse and say why (the error after a red dot), and <b>The late copies arrive</b> fills in today's two missing services without moving the focus or the pick. In the phone pane the detail goes under the grid. The sample's clock stands at 04/10/2026 14:40, so the block reads the same on every day it is opened.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<template>
+    <div class="kp-calendar-layout">
+        <section
+        class="kp-calendar"
+        data-kp-calendar
+        data-kp-calendar-month="2026-10"
+        data-kp-time-zone="Europe/Brussels"
+        data-kp-key="backups"
+        lang="en-GB"
+        aria-label="Nightly backups"
+        ></section>
+    <aside class="cat-calendar-detail" aria-live="polite" data-cat-calendar-detail></aside>
+</div>
+</template>
+</div>
+<div class="sc-example__stage">
+<div class="cat-calendar-frame" data-cat-calendar>
+    <template>
+        <div class="kp-calendar-layout">
+            <section
+            class="kp-calendar"
+            data-kp-calendar
+            data-kp-calendar-month="2026-10"
+            data-kp-time-zone="Europe/Brussels"
+            data-kp-key="backups-phone"
+            lang="en-GB"
+            aria-label="Nightly backups, phone width"
+            ></section>
+        <aside class="cat-calendar-detail" aria-live="polite" data-cat-calendar-detail></aside>
+    </div>
+</template>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">template</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar-layout&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">section</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar&quot;</span>
+        <span class="kp-code__keyword">data-kp-calendar</span>
+        <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span>
+        <span class="kp-code__keyword">data-kp-time-zone</span><span class="kp-code__string">=&quot;Europe/Brussels&quot;</span>
+        <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;backups&quot;</span>
+        <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Nightly backups&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-calendar-detail&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span> <span class="kp-code__keyword">data-cat-calendar-detail</span>&gt;&lt;/<span class="kp-code__keyword">aside</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-calendar-frame&quot;</span> <span class="kp-code__keyword">data-cat-calendar</span>&gt;
+    &lt;<span class="kp-code__keyword">template</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar-layout&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">section</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar&quot;</span>
+            <span class="kp-code__keyword">data-kp-calendar</span>
+            <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span>
+            <span class="kp-code__keyword">data-kp-time-zone</span><span class="kp-code__string">=&quot;Europe/Brussels&quot;</span>
+            <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;backups-phone&quot;</span>
+            <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>
+            <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Nightly backups, phone width&quot;</span>
+            &gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+        &lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-calendar-detail&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span> <span class="kp-code__keyword">data-cat-calendar-detail</span>&gt;&lt;/<span class="kp-code__keyword">aside</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-calendar</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-calendar-month</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-calendar-next</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-calendar-prev</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-calendar-selected</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-calendar-today</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-date</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-date-input</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-open</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-panel</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-date-value</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-heading-level</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-key</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-pad</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-time-zone</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-tone</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-week-starts-on</code></td><td>written, read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-calendar-pick</code></td><td>Fired on the calendar, bubbling, when a day is picked: `detail` `{ date: 'YYYY-MM-DD', source: 'pointer' | 'keyboard' }`.</td></tr>
+                            <tr><td><code>kp-calendar-month</code></td><td>Fired on the calendar, bubbling, when a person moves it to another month: `detail` `{ year, month }` (month 1-12).</td></tr>
+                            <tr><td><code>kp-date-change</code></td><td>Fired when a date is chosen, typed or set. A contract value [TH26]: `{ iso, date, source }`.</td></tr>
+                            <tr><td><code>kp-date-open</code></td><td>Fired when the panel opens or closes: `{ open }`.</td></tr>
+                            <tr><td><code>kp-date-month</code></td><td>Fired when the visible month changes: `{ year, month }` (month 0-11).</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-calendar-aside</code></td><td><code>16rem</code></td></tr>
+                            <tr><td><code>--kp-calendar-cell-font</code></td><td><code>clamp(0.85rem, 1.4vw, 1.15rem)</code></td></tr>
+                            <tr><td><code>--kp-calendar-cell-height</code></td><td><code>3.25rem</code></td></tr>
+                            <tr><td><code>--kp-calendar-gap</code></td><td><code>6px</code></td></tr>
+                            <tr><td><code>--kp-calendar-title-size</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.</li>
+                        <li>Built in — every day is named by its date as dd/mm/yyyy and the page’s words for it, so the colour is never the only carrier.</li>
+                        <li>Built in — a live update repaints in place: the focus and the pick stay on the same element.</li>
+                        <li>Yours — give each day words that say what its colour says (`label`), and name the calendar (`aria-label`) when the month’s title alone does not say what it counts.</li>
+                        <li>Yours — put the detail of a picked day in a polite live region, or move the focus there, so a screen reader hears it.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>[data-kp-calendar]</code></td><td>The calendar; `data-kp-calendar-month=&quot;YYYY-MM&quot;` is the month it shows first (today’s by default) and `data-kp-calendar-selected=&quot;YYYY-MM-DD&quot;` the day picked at first.</td></tr>
+                            <tr><td><code>.kp-calendar-layout</code></td><td>The calendar beside the page’s own detail of the picked day; one column under 45rem of its own width.</td></tr>
+                            <tr><td><code>data-kp-tone=&quot;ok|warn|bad&quot;</code></td><td>A day on its status plate, the text in the plate’s own ink: all done, partly done, nothing done.</td></tr>
+                            <tr><td><code>data-kp-tone=&quot;muted|none&quot;</code></td><td>Nothing to do that day (a muted plate), or nothing known about it (an outline).</td></tr>
+                            <tr><td><code>data-kp-tone=&quot;future|before&quot;</code></td><td>A day still to come, or from before anything was kept: a dashed outline, no count.</td></tr>
+                            <tr><td><code>data-kp-tone=&quot;loading&quot;</code></td><td>Every day while `setCalendarState(el, &quot;loading&quot;, words)`: a muted plate that pulses, at rest under reduced motion.</td></tr>
+                            <tr><td><code>data-kp-today</code></td><td>Written on today’s day: an inner ring in the text colour.</td></tr>
+                            <tr><td><code>td[aria-selected=&quot;true&quot;]</code></td><td>The picked day: an outer ring in the primary colour; the focus ring sits further out.</td></tr>
+                            <tr><td><code>.kp-calendar__pad</code></td><td>The neighbouring months’ days in the first and last weeks: their numbers, quiet and inert, so every week reads full.</td></tr>
+                            <tr><td><code>.kp-calendar__state</code></td><td>The line under the month: the words of `setCalendarState()`; an error’s after a dot in the destructive colour.</td></tr>
+                            <tr><td><code>.kp-calendar__legend</code></td><td>A swatch and its words per tone, from `setCalendarLegend(el, [{ tone, label }])`; hidden until given.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
+    </body>
+</html>

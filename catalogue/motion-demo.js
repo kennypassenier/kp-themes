@@ -87,7 +87,8 @@ const countArrivals = (list) => {
     own.__catCounted = true;
     let arrived = 0;
     new MutationObserver((records) => {
-        for (const record of records) if (record.oldValue === null && /** @type {Element} */ (record.target).hasAttribute('data-kp-arriving')) arrived += 1;
+        for (const record of records)
+            if (record.oldValue === null && /** @type {Element} */ (record.target).hasAttribute('data-kp-arriving')) arrived += 1;
         const line = list.closest('.cat-block')?.querySelector('[data-cat-arrive-count]');
         if (line) line.textContent = `Arrivals so far: ${arrived}`;
     }).observe(list, { subtree: true, attributes: true, attributeFilter: ['data-kp-arriving'], attributeOldValue: true });
@@ -183,11 +184,13 @@ document.addEventListener('click', (event) => {
             requestAnimationFrame(() => {
                 grid.replaceChildren(...keep);
                 // Let go a microtask after they left; read the count after that.
-                queueMicrotask(() => queueMicrotask(() => {
-                    showCount(block);
-                    const line = block.querySelector('[data-cat-size-count]');
-                    if (line) line.textContent += ` (it was ${before} before the rebuild)`;
-                }));
+                queueMicrotask(() =>
+                    queueMicrotask(() => {
+                        showCount(block);
+                        const line = block.querySelector('[data-cat-size-count]');
+                        if (line) line.textContent += ` (it was ${before} before the rebuild)`;
+                    }),
+                );
             });
     };
     rebuild();

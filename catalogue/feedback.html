@@ -561,13 +561,13 @@
                 <h2>Attention band, live</h2>
                 <div class="cat-look">
                     <b>Look at:</b> a band the page builds after it loaded and refreshes the way a poll does, with
-                    <code>setAttention(band, items)</code>: each problem has a key, and a refresh keeps an unchanged problem as the same element. Press
-                    <b>Build the band</b>: it appears worst first, though it was built after <code>attachAttention()</code> ran. Press
+                    <code>setAttention(band, items)</code>: each problem has a key, and a refresh keeps an unchanged problem as the same element.
+                    Press <b>Build the band</b>: it appears worst first, though it was built after <code>attachAttention()</code> ran. Press
                     <b>Refresh</b> a few times: nothing moves or flickers, and the line under the band, which counts every time an alert was put into
                     the page, does not go up (a screen reader hears each problem once, not on every poll). Tick <b>Refresh every two seconds</b> and
-                    Tab to <b>Open the incident</b>: the focus stays on that button through every refresh. <b>Reword the
-                    warning</b> changes its text in place; <b>Raise the warning</b> makes it critical and it moves above the information;
-                    <b>Resolve the information</b> lets that one leave the theme's way.
+                    Tab to <b>Open the incident</b>: the focus stays on that button through every refresh. <b>Reword the warning</b> changes its text
+                    in place; <b>Raise the warning</b> makes it critical and it moves above the information; <b>Resolve the information</b> lets that
+                    one leave the theme's way.
                 </div>
                 <p class="cat-live__bar">
                     <button type="button" class="kp-button kp-button--sm" data-cat-attention-live="build">Build the band</button>
@@ -586,9 +586,7 @@
                     <div data-cat-attention-live-host></div>
                     <p class="cat-note" data-cat-attention-live-count>Alerts put into the page: 0</p>
                 </div>
-                <pre
-                    class="kp-code-block"
-                ><code>import { setAttention } from '@kp-soft/themes/js/attention';
+                <pre class="kp-code-block"><code>import { setAttention } from '@kp-soft/themes/js/attention';
 
 setAttention(band, [
     { key: 'inc-4471', severity: 'critical', title: 'Pump house 3 is below 2.1 bar', text: 'For forty minutes.', action: openButton },
@@ -599,18 +597,17 @@ setAttention(band, [
             <section class="cat-block" id="freshness">
                 <h2>How old the data is</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> freshness lines that tick by themselves (<code>data-kp-ago</code>, <code>js/freshness.js</code>), one timer for the
-                    page. The words are exact (<i>12 s</i>, <i>2 min 5 s</i>, <i>1 day 1 h</i>), and pointing at a line shows the moment itself as
-                    <i>dd/mm/yyyy HH:mm</i> in Brussels time. Watch the first line go from <i>59 s</i> to <i>1 min</i>: the words after it do not move,
-                    because the line keeps the width of the longest text its unit can reach. The second line is marked stale after 20 seconds
+                    <b>Look at:</b> freshness lines that tick by themselves (<code>data-kp-ago</code>, <code>js/freshness.js</code>), one timer for
+                    the page. The words are exact (<i>12 s</i>, <i>2 min 5 s</i>, <i>1 day 1 h</i>), and pointing at a line shows the moment itself as
+                    <i>dd/mm/yyyy HH:mm</i> in Brussels time. Watch the first line go from <i>59 s</i> to <i>1 min</i>: the words after it do not
+                    move, because the line keeps the width of the longest text its unit can reach. The second line is marked stale after 20 seconds
                     (<code>data-kp-stale-after="20"</code>): a warning plate appears around it and nothing around it moves; it also tells a screen
                     reader once, through its own status, and never ticks into one. The last line has no moment yet.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <p>
                         Pump house 3:
-                        <time class="kp-ago" data-kp-ago data-kp-ago-verb="updated" data-cat-ago="-48">updated 48 s ago</time> · 14 stations
-                        reporting
+                        <time class="kp-ago" data-kp-ago data-kp-ago-verb="updated" data-cat-ago="-48">updated 48 s ago</time> · 14 stations reporting
                     </p>
                     <p>
                         Reservoir North:

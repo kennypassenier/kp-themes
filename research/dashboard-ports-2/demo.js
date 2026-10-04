@@ -114,7 +114,8 @@ document.addEventListener('review:choice', (event) => {
 
 /** A group of try-buttons where one is on at a time. @param {HTMLElement} button */
 const pressOnly = (button) => {
-    for (const sibling of all('[aria-pressed]', /** @type {ParentNode} */ (button.parentElement))) sibling.setAttribute('aria-pressed', String(sibling === button));
+    for (const sibling of all('[aria-pressed]', /** @type {ParentNode} */ (button.parentElement)))
+        sibling.setAttribute('aria-pressed', String(sibling === button));
 };
 
 /* ===================================================== 1 · menu button */
@@ -181,7 +182,9 @@ let menuNow = MENU;
 const fillMenus = () => {
     for (const wrapper of all('[data-dp-menu-target]')) setMenu(wrapper, menuNow);
     for (const wrapper of all('[data-dp-menu-single]'))
-        setMenu(wrapper, [{ group: 'Run', items: [{ label: 'Read the level now', hint: 'Ask the sensor for a reading outside its minute', value: 'read' }] }]);
+        setMenu(wrapper, [
+            { group: 'Run', items: [{ label: 'Read the level now', hint: 'Ask the sensor for a reading outside its minute', value: 'read' }] },
+        ]);
 };
 
 attachMenuButtons(document);
@@ -315,7 +318,8 @@ for (const button of all('[data-dp-meter]')) {
         else meterLoading = on;
         paintMeters();
         // A meter rebuilt its mark: the options on view apply to it too.
-        const pressedValue = (/** @type {string} */ name) => document.querySelector(`[data-dp-preview="${name}"] [aria-pressed="true"]`)?.getAttribute('data-value') ?? '';
+        const pressedValue = (/** @type {string} */ name) =>
+            document.querySelector(`[data-dp-preview="${name}"] [aria-pressed="true"]`)?.getAttribute('data-value') ?? '';
         APPLY.mark(pressedValue('mark'));
         APPLY.over(pressedValue('over'));
     });
@@ -402,7 +406,14 @@ for (const [n, width, columns, span] of CASES) {
     for (let left = n; left > 0; left -= got.columns) rows.push(Math.min(got.columns, left));
     const tr = document.createElement('tr');
     const ok = got.columns === columns && got.spanLast === span;
-    for (const text of [String(n), `${width} px`, String(got.columns), rows.join(' + '), got.spanLast ? 'yes' : 'no', ok ? 'yes' : `no (spec: ${columns})`])
+    for (const text of [
+        String(n),
+        `${width} px`,
+        String(got.columns),
+        rows.join(' + '),
+        got.spanLast ? 'yes' : 'no',
+        ok ? 'yes' : `no (spec: ${columns})`,
+    ])
         tr.append(Object.assign(document.createElement('td'), { textContent: text }));
     caseRows?.append(tr);
 }
@@ -416,7 +427,7 @@ const noise = (t, k) => {
 };
 /** The network's demand at `t` on the Brussels clock: a morning and an evening peak. @param {number} t */
 const demand = (t) => {
-    const h = ((t / 3_600_000 + 2) % 24 + 24) % 24;
+    const h = (((t / 3_600_000 + 2) % 24) + 24) % 24;
     return 0.55 + 0.4 * Math.exp(-((h - 7.5) ** 2) / 3) + 0.3 * Math.exp(-((h - 19) ** 2) / 4) - 0.25 * Math.exp(-((h - 3.5) ** 2) / 5);
 };
 
@@ -427,7 +438,15 @@ const STEP = 10 * MINUTE;
  */
 /** @type {Figure[]} */
 const TREND_FIGURES = [
-    { key: 'pressure', label: 'Pressure', unit: 'bar', digits: 2, colour: 1, context: 'two pumps', at: (t) => 3.6 - 0.6 * demand(t) + 0.04 * noise(t, 1) },
+    {
+        key: 'pressure',
+        label: 'Pressure',
+        unit: 'bar',
+        digits: 2,
+        colour: 1,
+        context: 'two pumps',
+        at: (t) => 3.6 - 0.6 * demand(t) + 0.04 * noise(t, 1),
+    },
     {
         key: 'flow',
         label: 'Flow into the network',
@@ -438,8 +457,24 @@ const TREND_FIGURES = [
         at: (t) => 420 * demand(t) + 12 * noise(t, 2),
         until: NOW - 40 * MINUTE,
     },
-    { key: 'north', label: 'Reservoir North', unit: '%', digits: 0, colour: 3, context: 'of its height', at: (t) => 72 - 9 * demand(t) + noise(t, 3) },
-    { key: 'temp', label: 'Pump temperature', unit: '°C', digits: 0, colour: 4, context: 'hottest pump', at: (t) => 41 + 9 * demand(t) + noise(t, 4) },
+    {
+        key: 'north',
+        label: 'Reservoir North',
+        unit: '%',
+        digits: 0,
+        colour: 3,
+        context: 'of its height',
+        at: (t) => 72 - 9 * demand(t) + noise(t, 3),
+    },
+    {
+        key: 'temp',
+        label: 'Pump temperature',
+        unit: '°C',
+        digits: 0,
+        colour: 4,
+        context: 'hottest pump',
+        at: (t) => 41 + 9 * demand(t) + noise(t, 4),
+    },
 ];
 
 /** @param {Figure} f */
@@ -500,7 +535,16 @@ for (const strip of all('[data-dp-trend-strip]')) {
             [{ ...TREND_FIGURES[0], key: 'loading', label: 'Pressure, pump house 2' }, 'loading'],
             [{ ...TREND_FIGURES[0], key: 'none', label: 'Pressure, pump house 7' }, 'none'],
             [{ ...TREND_FIGURES[2], key: 'one', label: 'Reservoir East', context: 'measured since 14:30' }, 'one'],
-            [{ ...TREND_FIGURES[2], key: 'south', label: 'Reservoir South', context: 'measured since this morning', from: Date.parse('2026-10-04T05:00:00Z') }, 'filled'],
+            [
+                {
+                    ...TREND_FIGURES[2],
+                    key: 'south',
+                    label: 'Reservoir South',
+                    context: 'measured since this morning',
+                    from: Date.parse('2026-10-04T05:00:00Z'),
+                },
+                'filled',
+            ],
         ];
         strip.innerHTML = states.map(([f]) => trendTile(f, '')).join('');
         states.forEach(([f, state], i) => tiles.push({ tile: /** @type {HTMLElement} */ (strip.children[i]), f, state }));
@@ -658,9 +702,11 @@ for (const button of all('[data-dp-cal]')) {
         }
         pressOnly(button);
         for (const el of calendarEls) {
-            if (what === 'loading') setCalendarState(el, 'loading', `Reading the backups of ${SERVICES.length} services: 4 of ${SERVICES.length} read.`);
+            if (what === 'loading')
+                setCalendarState(el, 'loading', `Reading the backups of ${SERVICES.length} services: 4 of ${SERVICES.length} read.`);
             else if (what === 'empty') setCalendarState(el, 'empty', 'No service keeps data, so there is nothing to check.');
-            else if (what === 'error') setCalendarState(el, 'error', `None of the ${SERVICES.length} services could be read: the backup store did not answer.`);
+            else if (what === 'error')
+                setCalendarState(el, 'error', `None of the ${SERVICES.length} services could be read: the backup store did not answer.`);
             else {
                 setCalendarState(el, 'ready');
                 setCalendarDays(el, historyDays());
@@ -677,7 +723,13 @@ const KINDS = [
     { kind: 'control', label: 'Remote control', hint: 'Commands from the control centre to the site', style: 'dash', colour: 'var(--chart-2)' },
     { kind: 'radio', label: 'Radio link', hint: 'A spare path over radio for when the line is down', style: 'dot', colour: 'var(--chart-4)' },
     { kind: 'planned', label: 'Planned', hint: 'A link that is ordered but not live yet', style: 'long-dash', colour: 'var(--muted-foreground)' },
-    { kind: 'unused', label: 'Not used here', hint: 'A kind no link on this network has; the legend leaves it out', style: 'solid', colour: 'var(--chart-5)' },
+    {
+        kind: 'unused',
+        label: 'Not used here',
+        hint: 'A kind no link on this network has; the legend leaves it out',
+        style: 'solid',
+        colour: 'var(--chart-5)',
+    },
 ];
 
 let weights = false;
@@ -782,8 +834,10 @@ for (const button of all('[data-dp-graph]')) {
             liveTick += 1;
             fillGraphs();
         } else if (what === 'loading') graphEls.forEach((el) => setGraphState(el, 'loading'));
-        else if (what === 'empty') graphEls.forEach((el) => setGraphState(el, 'empty', 'Nothing to draw yet: no site has reported to the control centre.'));
-        else if (what === 'error') graphEls.forEach((el) => setGraphState(el, 'error', 'The network could not be read: the control centre did not answer.'));
+        else if (what === 'empty')
+            graphEls.forEach((el) => setGraphState(el, 'empty', 'Nothing to draw yet: no site has reported to the control centre.'));
+        else if (what === 'error')
+            graphEls.forEach((el) => setGraphState(el, 'error', 'The network could not be read: the control centre did not answer.'));
     });
 }
 
@@ -797,10 +851,18 @@ const tourOut = document.querySelector('[data-dp-tour-out]');
 
 /** @param {(name: string) => string} at @returns {import('./ports2.js').TourStep[]} */
 const tourSteps = (at) => [
-    { target: at('areas'), title: 'The areas', text: 'Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.' },
+    {
+        target: at('areas'),
+        title: 'The areas',
+        text: 'Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.',
+    },
     { target: at('search'), title: 'Search', text: 'Find a pump house by its name or its number; Ctrl K does the same from anywhere.' },
     { target: at('readings'), title: 'Readings today', text: 'How the network did since midnight; a dip in pressure shows here first.' },
-    { target: at('map'), title: 'The map', text: 'Which site talks to which. (This page has no map, so this step is left out and the count says five.)' },
+    {
+        target: at('map'),
+        title: 'The map',
+        text: 'Which site talks to which. (This page has no map, so this step is left out and the count says five.)',
+    },
     { target: at('incidents'), title: 'Open incidents', text: 'What needs someone, and who is on it.' },
     { target: at('help'), title: 'Help', text: 'Everything here again, with the words this site uses. The tour starts from Help too.' },
 ];

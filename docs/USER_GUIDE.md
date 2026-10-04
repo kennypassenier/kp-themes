@@ -732,9 +732,12 @@ rewrites badly:
 
 ## Dashboard components [scope-143]
 
-Eight things the homelab admin dashboard grew and any dashboard on this
-package needs, approved by Kenny in formal on 2026-10-04 from
-`research/dashboard-ports/` and moved in as approved. The registers do not
+Fifteen things the homelab admin dashboard grew and any dashboard on this
+package needs: eight approved by Kenny in formal on 2026-10-04 from
+`research/dashboard-ports/`, and seven more (the menu button, the meter with
+a mark, the strip's column count, the trend tile, the month heatmap, the
+network graph, and help with its tour) approved on 2026-10-05 from
+`research/dashboard-ports-2/`, all moved in as approved. The registers do not
 answer them yet (they are on `gates/register-pending.json`), so every theme
 draws them from the tokens alone. `js/auto.js` fetches each module only on a
 page that carries its markup; the attach functions are also exported for a
@@ -855,7 +858,7 @@ edge and a coloured number. A `.kp-kpi__delta` takes ▲ or ▼ from
 `data-kp-direction="up|down"` and its colour from `data-kp-tone="good|bad"`.
 At the bottom, a sparkline or a meter:
 `<span class="kp-kpi__meter" role="meter" … style="--kp-value: 0.71">`
-paints a used-of-total bar.
+paints a used-of-total bar (the meter below, with its mark).
 
 `js/kpi.js` brings the two behaviours. `attachSparklines(root)` draws every
 `svg[data-kp-spark]` from its numbers as a line over a soft area, and draws
@@ -871,6 +874,137 @@ itself. Knobs: `--kp-kpi-min` (9rem), `--kp-kpis-gap`,
 `--kp-kpi-value-size` (1.75rem), `--kp-kpi-spark-height` (1.75rem),
 `--kp-kpi-meter-fill`.
 
+### A meter with a mark
+
+`.kp-meter` is a used-of-total bar that works anywhere: in a table cell, at
+the bottom of a key figure (`.kp-kpi__meter`, the same rules), or at the
+start of a line of words (`.kp-meter--inline`, three rem wide, its middle on
+the line's middle):
+
+```html
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62"
+    aria-valuetext="62% full; 80% the target level" style="--kp-value: 0.62; --kp-mark: 0.8"
+    ><span class="kp-meter__mark" aria-hidden="true"></span
+></span>
+```
+
+`--kp-value` is the share, from 0 up; `--kp-mark` puts a tick across the bar
+(a target, a limit, what is booked), sticking out a little above and below
+without making the meter taller. A share above 1 fills the bar and, with
+`data-kp-over` on the meter, puts a small ▸ at its end; a mark above 1 stops
+just short of the end with the ▸ after it (`data-kp-over` on the mark).
+`data-kp-tone="warning"` or `"destructive"` colours the fill, as a tone on
+the key figure around it does; `data-kp-loading` pulses the track at its
+height with no fill and no mark.
+
+`setMeter(el, { value, mark, tone, label, markLabel, loading })`
+(`js/kpi.js`) writes all of it in one call, the ARIA included: `role="meter"`,
+`aria-valuenow` from 0 to 100, and an `aria-valuetext` that names the real
+share, past 100 % too:
+
+```js
+import { setMeter } from '@kp-soft/themes/js/kpi';
+
+setMeter(capacity, { value: 0.58, mark: 1.3, label: 'running now', markLabel: 'booked for tonight' });
+// aria-valuetext: "58% running now; 130% booked for tonight"
+```
+
+`meterText(value, mark, { label, markLabel, unit })` is those words alone
+(without a `label`, the dictionary's `meterUsed`; no number reads
+`meterNotMeasured`, loading `meterMeasuring`), and `meterParts(value, mark)`
+the arithmetic. Knobs: `--kp-meter-height` (0.375rem), `--kp-meter-fill`,
+`--kp-meter-mark-colour`, `--kp-meter-mark-overhang` (3px),
+`--kp-meter-halo` (the card colour around the tick),
+`--kp-meter-inline-size` (3rem).
+
+### Key figures on allowed column counts
+
+A strip whose number of tiles changes can leave one tile alone on its last
+row. `data-kp-kpis-columns` lists the column counts the strip may take,
+largest first, `all` meaning as many as there are tiles:
+
+```html
+<div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network right now">
+    <div class="kp-kpi">…</div>
+    <!-- … -->
+</div>
+```
+
+`attachKpiStrips(root)` (`js/kpi.js`, loaded by `js/auto.js` for such a
+strip) takes the first count at which every tile is at least
+`--kp-kpi-min` wide, by the strip's own width rather than the window's. If
+that leaves one tile alone on the last row it steps down to a count that
+does not; only when none exists does the last tile span the whole row
+(`data-kp-kpis-span-last`). It follows the strip as it resizes and as tiles
+come, go or hide. Five tiles at a desk width sit on one row; in 700 px,
+3 + 2; at a phone width, 2 + 2 and the fifth across. Before the script runs
+the strip keeps the package's auto-fit. `kpiColumns(n, width, { allowed,
+minTilePx, gapPx })` is the rule itself and `fitKpiStrip(strip)` applies it
+once.
+
+### A key figure with its 24-hour trend
+
+A key figure whose whole tile opens its chart, with its last 24 hours
+inside it:
+
+```html
+<div class="kp-kpi kp-kpi--trend">
+    <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="/charts/pressure" title="Open Pressure on Charts"><span class="kp-kpi__link-word">Charts</span> ↗</a>
+    <span class="kp-kpi__value">3.30<small>bar</small></span>
+    <span class="kp-kpi__trend">now <b>3.28 bar</b> · peak 3.62 bar · two pumps</span>
+    <figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative"
+        aria-label="Pressure, last 24 hours" style="--kp-chart-series: var(--chart-1)"></figure>
+</div>
+```
+
+The `.kp-kpi__link` is stretched over the tile, so a click anywhere opens
+it, and the whole tile takes the focus ring while the link has it. In a
+tile of 12rem or less the corner shows ↗ alone; the word stays for a screen
+reader. A note such as "avg 15 min" goes in the label, in its capitals,
+after a dot (`.kp-kpi__label-note`). The label is never cut: it wraps
+between words, its first line keeps clear of the corner, and the note moves
+to the next line as one unit when it does not fit beside the name. The line
+takes the figure's `--kp-chart-series` (`--chart-1` when unset), so a strip
+of trends can give each its own `--chart-n`.
+
+A tile is as tall loading, with no trend and with one reading as filled:
+the value line keeps its height under a skeleton, the axis row is always
+there, and the words under the number keep two lines (three in a tile of
+12rem or less; knob `--kp-kpi-trend-lines`).
+
+The trend is the time chart's spark variant (`js/chart.js`, drawn by
+`attachCharts()`) with two options. `data-kp-spark-head="none"` leaves out
+its name and value line: a pointer, a finger or the arrow keys read one
+point in a chip over the line, its moment and value, kept inside the tile;
+when the two do not fit on one line the value goes under the moment, and
+when even that does not fit the reading takes the axis row. The trend
+keeps its own crosshair, not its group's, and a click that was not a drag
+follows the tile's link. `data-kp-spark-axis="relative"` puts the axis under
+the line: where it starts, as `14:40 yesterday` or `07:00 today` (or its
+date when older), and `now` while the last point is at most two steps old,
+else that point's clock (`14:00`).
+
+The data is the page's, as for any chart, or the short way:
+
+```js
+import { setTrendData } from '@kp-soft/themes/js/chart';
+
+setTrendData(figure, { points: [[ms, 3.31], [ms + 600_000, 3.28] /* … */], step: 600_000, unit: 'bar', digits: 2 });
+setTrendData(figure, null); // loading: the trend empty at its height, the tile aria-busy
+```
+
+No points is a tile with no trend; one point keeps the axis row with two
+no-break spaces. The trend is a tab stop only with two points or more;
+there ←/→ read point by point (Shift: ten), Home and End go to the ends, and
+Esc hides the reading; a live region says what a key read. A live update
+keeps a reading on screen at its moment. Every moment is `dd/mm/yyyy HH:mm`
+on the Brussels clock (rule 52), `attachCharts(root, { timeZone, now })`
+counts from another zone or moment, and `trendAxis(points, { now, step })`
+gives the axis words alone. `attachTrendCharts(root, options)` draws only
+the trends under `root`. The words are the dictionary's `chartNow`,
+`chartToday`, `chartYesterday` and `chartTrendKeys`. Knob:
+`--kp-kpi-spark-height` (2.75rem in a trend).
 ### The page header
 
 ```html
@@ -1028,6 +1162,96 @@ over the skeleton rows, the spinner beside the words and the words kept to
 three lines, and clips the layer to the table so the status line under it
 stays free. Knob: `--kp-busy-overlay-spinner-narrow` (1.75rem).
 
+### A month heatmap
+
+A month as a grid of days, each a plate in the colour of its state, with a
+short count under the number: a month of nightly backups, of shifts
+covered, of readings received.
+
+```html
+<div class="kp-calendar-layout">
+    <section class="kp-calendar" data-kp-calendar data-kp-calendar-month="2026-10" aria-label="Nightly backups"></section>
+    <aside aria-live="polite"><p>Pick a day to see every service's own state that night.</p></aside>
+</div>
+```
+
+`js/calendar.js` (loaded by `js/auto.js` where `data-kp-calendar` is) builds
+the calendar into the section: the month's title between ‹ Prev and Next ›,
+Today, a line for the state, a six-week grid and a legend. The grid is always
+six week rows, so the page does not jump from month to month; the
+neighbouring months' days fill the first and last weeks as quiet numbers you
+cannot pick. `.kp-calendar-layout` puts the page's own detail of the picked
+day beside the calendar, and under it once the layout is narrower than 45rem.
+
+The page gives every day's state by date, the whole history at once (a month
+change needs no new call):
+
+```js
+import { attachCalendars, setCalendarDays, setCalendarLegend, setCalendarState, CALENDAR_PICK_EVENT } from '@kp-soft/themes/js/calendar';
+
+attachCalendars(document); // { timeZone, locale, weekStartsOn, now, strings, decorate }
+const calendar = document.querySelector('[data-kp-calendar]');
+setCalendarState(calendar, 'loading', 'Reading the backups of 9 services: 4 of 9 read.');
+setCalendarDays(calendar, {
+    '2026-10-03': { tone: 'ok', count: '9/9', label: '9 of 9 services backed up' },
+    '2026-10-04': { tone: 'warn', count: '7/9', label: '7 of 9 services backed up; missing: Telemetry archive, Mail relay' },
+});
+setCalendarLegend(calendar, [
+    { tone: 'ok', label: 'Every service backed up' },
+    { tone: 'warn', label: 'Some missing' },
+    { tone: 'bad', label: 'None backed up' },
+]);
+calendar.addEventListener(CALENDAR_PICK_EVENT, (event) => showNight(event.detail.date)); // 'YYYY-MM-DD'
+```
+
+- **Tones**, per day: `ok`, `warn` and `bad` are the status plates with their
+  own ink (all done, partly done, nothing done); `muted` is nothing to do;
+  `future` and `before` are a dashed outline without a count (still to come,
+  before anything was kept); `none` is an outline (nothing known). A past day
+  the page says nothing about is `none`, a later one `future`. A day's name,
+  for a screen reader and as its title, is its date and your `label`:
+  `04/10/2026: 7 of 9 services backed up; …`, so the colour is never the only
+  carrier. A night with nothing done is its red plate and its words; its count
+  reads like any other.
+- **States**, for the whole: `setCalendarState(el, 'loading' | 'ready' |
+  'empty' | 'error', words)`. While loading every day pulses at its final size
+  (at rest under reduced motion); `empty` and `error` stop the pulse and put
+  the words under the month, an error's after a red dot. `setCalendarDays()`
+  makes a loading calendar ready.
+- **Today** is the day it is in `timeZone`, Europe/Brussels unless
+  `data-kp-time-zone` or the option says otherwise, whatever zone the reader's
+  computer is in: 22:30 UTC on 4 October is already the 5th. It has an inner
+  ring; the picked day (`td[aria-selected="true"]`) an outer one.
+- **Keys**: one tab stop. The arrows move a day or a week, Home and End go to
+  the week's ends, Page Up and Page Down change the month (with Shift, the
+  year), Enter or Space picks and fires `kp-calendar-pick` with
+  `{ date, source }`. A move to another month fires `kp-calendar-month` with
+  `{ year, month }`.
+- **From the page**: `calendarSelect(el, '2026-10-07')` picks a day and shows
+  its month, `calendarMonth(el, { year: 2026, month: 9 })` shows a month;
+  neither fires an event. A live `setCalendarDays()` repaints in place: the
+  focus and the pick stay where they were.
+- **Per calendar**: `data-kp-calendar-month="YYYY-MM"` (the month shown first,
+  today's by default), `data-kp-calendar-selected`, `data-kp-locale` (the
+  month and weekday names; else the nearest `lang`), `data-kp-week-starts-on`
+  (0 = Sunday; else the locale's), `data-kp-heading-level` (the title's, 2),
+  `data-kp-key` (handed to `decorate`).
+- **Words**: the dictionary's `calendarNav`, `calendarPrev`, `calendarNext`,
+  `calendarToday`, `calendarTodayTitle`, `calendarDay`, `calendarFuture`,
+  `calendarLoading`, `calendarUnknown`, with `previousMonth`, `nextMonth`,
+  `months` and `monthTitle` shared with the date picker; `strings` overrides
+  them per call.
+- **Knobs**: `--kp-calendar-aside` (16rem, the detail's width),
+  `--kp-calendar-gap` (6px), `--kp-calendar-cell-height` (3.25rem),
+  `--kp-calendar-cell-font` (`clamp(0.85rem, 1.4vw, 1.15rem)`),
+  `--kp-calendar-title-size` (1.125rem).
+
+`decorate(part, info)` is called with the three buttons (`month-prev`,
+`month-next`, `today`) and every day (`day`, with `index` and `value`, again
+each time the month changes). Also exported:
+`monthCells(year, month, firstDay)` (the 42 dates of a month's grid),
+`shiftDay`, `shiftMonth`, `dayKey(ms, timeZone)`, `formatDayKey(iso)`,
+`calendarSelect`, `calendarMonth`, `CALENDAR`.
 ### The time chart
 
 One time chart for every page, so its controls mean the same everywhere:
@@ -1169,6 +1393,245 @@ sources reset the selection and fire `kp-chart-select` with `[]`.
 Knobs: `--kp-chart-height` (168px), `--kp-chart-tip-min` (14rem),
 `--kp-chart-tip-max` (17.5rem), `--kp-chart-tick-size` (11px).
 
+### The network graph
+
+A picture of a network with one centre: the hub in the middle, the other
+nodes on a ring around it, the links drawn by kind.
+
+```html
+<figure class="kp-graph" data-kp-graph aria-label="The northern network">
+    <script type="application/json" data-kp-graph-data>
+        {
+            "hub": "centre",
+            "nodes": [
+                { "id": "centre", "label": "Control centre", "description": "where every reading arrives" },
+                { "id": "ph1", "label": "Pump house 1", "description": "two pumps, ring main west" },
+                { "id": "ph3", "label": "Pump house 3", "description": "two pumps, ring main north", "flag": "mismatch" },
+                { "id": "weather", "label": "Weather service", "description": "an address outside the network", "external": true }
+            ],
+            "edges": [
+                { "from": "ph1", "to": "centre", "kind": "telemetry" },
+                { "from": "centre", "to": "ph1", "kind": "control", "detail": "pump start and stop" },
+                { "from": "ph3", "to": "centre", "kind": "telemetry" },
+                { "from": "weather", "to": "centre", "kind": "telemetry" }
+            ],
+            "kinds": [
+                { "kind": "telemetry", "label": "Telemetry", "hint": "Readings sent every minute", "style": "solid", "colour": "var(--chart-1)" },
+                { "kind": "control", "label": "Remote control", "hint": "Commands to the site", "style": "dash", "colour": "var(--chart-2)" }
+            ]
+        }
+    </script>
+</figure>
+```
+
+`attachGraphs(root, { decorate?, strings? })` (`js/graph.js`) builds every
+`[data-kp-graph]` under `root`: a bar over the picture with the kinds of
+link and Show all, the picture, and a hint under it in the page's flow. The
+data is the page's: a `script[type="application/json"][data-kp-graph-data]`
+child, or `setGraphData(el, data)` after the attach; until then the graph
+shows loading. The data is `{ nodes, edges, kinds, hub? }`:
+
+| Field   | What it is                                                                                                                                                                                                             |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| a node  | `{ id, label, description, hue?, weight?, flag?, external? }`: `description` follows the label in its accessible name and title; `weight` 0 to 1 sizes it; `flag: 'mismatch'` puts a dotted ring round it; `external` makes it an address outside the network (a dashed grey ring at the end of the ring) |
+| an edge | `{ from, to, kind, detail? }`: `detail` is the link's title, after its two ends                                                                                                                                        |
+| a kind  | `{ kind, label, hint, style, colour }`: `style` is `solid`, `dash`, `dot` or `long-dash`; `colour` a token such as `var(--chart-2)`; `hint` the toggle's title. A kind no edge uses is left out of the list              |
+| `hub`   | the id in the middle; without it, the node with the most links                                                                                                                                                         |
+
+The ring starts at the top and runs clockwise, A to Z by label and then the
+nodes outside the network. Each node takes its own hue, spread evenly over
+the nodes A to Z (or the node's own `hue`), at the lightness and strength of
+the theme's `--chart-1`, so it reads on every theme's ground. Two links
+between one pair bend apart, 26 px a step, so two kinds never draw on top
+of each other. Under 600 px the ring trades width for height to keep room
+for the labels at its sides. A label points away from the hub; where it
+would touch another label or leave the picture, the longer of the two loses
+a letter at a time and ends in `…`, and the full name stays in the node's
+title and accessible name. The labels are fitted again when a web font
+arrives.
+
+Hover or focus a node to see only its links (the rest dim); click it, or
+press Enter or Space, to keep it picked, several at once; Esc or Show all
+clears the picks and the kinds turned off. A toggle in the list turns a kind
+off and on. The picture is one tab stop: Tab lands on the hub (or the node
+last focused), the arrow keys walk the ring, Home and End jump to the hub
+and the last node. Every change fires `kp-graph-change` on the graph,
+`detail` `{ selected, hover, hiddenKinds }`. A hover or a pick changes
+classes only, so the node under the pointer is never rebuilt, and only a new
+width redraws the picture.
+
+| Call                                    | What it does                                                                                                                                                                                 |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setGraphData(el, data)`                | a live update: ids that stay keep their pick and the focus; picks whose node went are dropped (and `kp-graph-change` says so)                                                                |
+| `setGraphState(el, state, words?)`      | `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot), with the page's sentence in the picture at its full height; loading says `graphLoading` without one |
+| `graphSelect(el, ids)`                  | picks these nodes and only these                                                                                                                                                             |
+| `graphHideKind(el, kind, hide)`         | turns one kind of link off or on                                                                                                                                                             |
+| `decorate: (part, info) => void`        | called with every control the graph builds, each time it builds it: `info.kind` is `node` (`value` the id), `kind` (`value` the kind) or `show-all`, with `host`, `key` (`data-kp-key`), `index` and `label` |
+
+The pure halves are exported for a page that draws its own picture or wants
+to know where a node will be: `hubOf(data)`, `ringOf(data, hub)` (the ring's
+order), `graphLayout(data, W, H)` (every node's `{ x, y, angle }` in a W×H
+box), `graphBends(edges)`, `graphLabelText(full, length)` and
+`fitGraphLabels(labels, W, H, measure)`. Every word the graph says is in the
+dictionary (`graphShowAll`, `graphHint`, `graphKinds`, `graphLoading`, … in
+`js/strings.js`); `attachGraphs(root, { strings })` changes them for the
+graphs under `root`. Knobs: `--kp-graph-h` (480px; the script sets the
+height it draws at), `--kp-graph-label-size` (12px), `--kp-graph-dim`
+(0.08, a link that is not lit while a node is).
+### Every other action: the menu button
+
+The rare actions of a page or a record go behind one "More ▾" at the end of
+its header, grouped under small muted capitals, each with a one-line hint
+under its label:
+
+```html
+<div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-more">
+    <button type="button" class="kp-button">More ▾</button>
+    <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" hidden></div>
+</div>
+```
+
+The menu is the package's own `.kp-menu` of `.kp-menu__item`s, so every
+register paints it as it paints any menu; `.kp-menu--rich` gives it the
+groups, the hints and its width. `js/menu-button.js` (loaded by `js/auto.js`
+where `data-kp-menu-button` is) wires it, and `setMenu(wrapper, groups)` fills
+it:
+
+```js
+import { setMenu } from '@kp-soft/themes/js/menu-button';
+
+setMenu(wrapper, [
+    {
+        group: 'Run',
+        items: [
+            { label: 'Restart the pumps', hint: 'Stop and start both pumps, one after the other', value: 'restart' },
+            { label: 'Run a pressure test', hint: 'Close the ring main valve', disabled: 'Not while a field engineer is on site', value: 'test' },
+        ],
+    },
+    { group: 'Records', items: [{ label: 'Archive this pump house…', hint: 'Its readings are kept', danger: true, value: 'archive' }] },
+]);
+wrapper.addEventListener('kp-menu-select', (event) => run(event.detail.value));
+```
+
+An entry is a `button`, or an `a` with `href` (and `download`); `danger`
+paints its label in the destructive colour, `attrs` adds attributes, and
+`value` is what `kp-menu-select` reports (`{ item, value }`; the label when
+absent). An entry with `disabled` stays in the list and in the keyboard's
+reach: it keeps its hint, says why under it in italics
+(`.kp-menu__reason`), takes the focus (`aria-disabled`, its hint and reason
+its description), and does nothing. The entries can also be written as
+markup, in the shape `setMenu` writes (the block `menu-button` in
+`catalogue/overlays.html` shows it whole).
+
+- `setMenu(wrapper, 'loading')` shows one grey entry at the height of a real
+  one. No entries grey the button and its title says why (`menuEmpty`);
+  `data-kp-menu-empty="hide"` takes the button away instead.
+- A fill that shows the same as now is skipped (`menuSignature`), and while
+  the menu is open a new fill waits until it closes, so a live refill never
+  moves an entry under the pointer or the focus.
+- One group of one entry, or a group without a name, has no heading.
+- The keys are a menu's: ↓ or ↑ on the button opens it on the first or last
+  entry, ↓ ↑ (wrapping), Home and End move, a letter jumps to the next entry
+  that starts with it, Esc closes it and puts the focus back on the button
+  (the page's own Escape listeners hear nothing), Tab closes it and moves
+  on, and a click outside closes it. `openMenu(wrapper, { focus })` and
+  `closeMenu(wrapper, { focus })` do it from a script; `kp-menu-open` and
+  `kp-menu-close` say it happened, and a page that cancels `kp-menu-select`
+  keeps the menu open.
+- In a `.kp-page-header` of 40rem or less the open menu spans the header's
+  buttons, inside the screen.
+- `attachMenuButtons(root, { decorate, strings })`: `decorate(part, info)` is
+  handed the button (`kind: 'menu-button'`) and every entry
+  (`kind: 'menu-item'`, with its `index`, `label` and `value`), each time one
+  is built, with `key` from the wrapper's `data-kp-key`; `strings` overrides
+  `menuLoading` and `menuEmpty` for these menus.
+
+Knobs: `--kp-menu-rich-min` (19rem) and `--kp-menu-rich-max`
+(`min(26rem, 100vw - 2rem)`), the menu's width; `--kp-menu-max-height`
+(`calc(100dvh - 12rem)`), past which it scrolls inside itself.
+
+### Help, a drawer and a short tour
+
+Help is a drawer at the end edge of the window, full height: a head, a body
+that scrolls, and a foot that stays.
+
+```html
+<button type="button" class="kp-button" data-kp-dialog="help">Help ?</button>
+<dialog class="kp-drawer kp-dialog" id="help" aria-labelledby="help-title">
+    <header class="kp-drawer__head">
+        <h2 class="kp-dialog__title" id="help-title">Help</h2>
+        <button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close Help" data-kp-dialog-close>✕</button>
+        <p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
+    </header>
+    <div class="kp-drawer__body">
+        <section class="kp-help kp-card">
+            <h3>Keys</h3>
+            <p>Pressed anywhere outside a field.</p>
+            <dl class="kp-help__list">
+                <dt><kbd>?</kbd></dt>
+                <dd>Open this Help.</dd>
+                <dt><kbd>Esc</kbd></dt>
+                <dd>Close what is open, or show all again.</dd>
+            </dl>
+        </section>
+    </div>
+    <footer class="kp-drawer__foot">
+        <button type="button" class="kp-button kp-button--primary" data-help-tour>Take the 1-minute tour</button>
+    </footer>
+</dialog>
+```
+
+`.kp-drawer` lays out any element; a `dialog.kp-drawer` is placed at the
+edge and slides in (not under reduced motion), and opens and closes as any
+`.kp-dialog` does. A `.kp-help` card's `.kp-help__list` puts the words beside
+their meanings, the meanings starting at one edge across every card; in a
+card of 22rem or less each word goes over its meaning. Knobs:
+`--kp-drawer-width` (`min(28rem, 100vw)`), `--kp-help-term` (8rem, the
+words' column).
+
+The tour walks a first-time reader over the page, one card per part:
+
+```js
+import { shouldStartTour, startTour, tourRemembered } from '@kp-soft/themes/js/tour';
+
+const steps = [
+    { target: '[data-area="nav"]', title: 'The areas', text: 'Five areas, always in the same place.' },
+    { target: '#search', title: 'Search', text: 'Find a pump house by its name or its number.' },
+    { target: () => document.querySelector('.map'), title: 'The map', text: 'Which site talks to which.' },
+];
+const start = shouldStartTour({ search: location.search, remembered: tourRemembered('network'), automated: navigator.webdriver });
+if (start != null) startTour(steps, { start, remember: 'network' });
+helpTourButton.addEventListener('click', () => {
+    helpDialog.close();
+    startTour(steps, { remember: 'network', returnFocus: helpButton });
+});
+```
+
+- A step whose `target` (a selector, whose first shown match is taken, or a
+  function) is not on the page is left out before counting, so the count is
+  exact: six steps with one missing read `1 of 5` … `5 of 5`. With none on
+  the page, `startTour` returns null and nothing starts; otherwise it
+  returns `{ end, goto }`.
+- The card (`.kp-tour`) is a non-modal dialog, so the page stays usable. It
+  sits 12 px under its part, or over it when the part is in the lower half
+  of the window, never on it; 16 px inside the window's edges (on a phone
+  the window's width less those two gutters, `--kp-tour-width`); and it
+  follows its part when the page scrolls. When the part is inside an open
+  modal dialog, the card goes into that dialog.
+- The part gets `data-kp-tour-target`: a ring in the focus colour, and the
+  rest of the page dimmed around it.
+- Back, Skip and Next (Done on the last step), ← and → on the card, and Esc
+  from anywhere. When it ends the focus goes back where it was, or to
+  `returnFocus`, and `onEnd(finished)` is called once.
+- A tour that ended, finished or skipped, is remembered under `remember`
+  through `js/remember.js` (component `tour`: `kp-remember:tour:network:done`,
+  `tourMemoryKey(name)`); `tourRemembered(name)` reads it and
+  `forgetTour(name)` forgets it. `shouldStartTour()` starts it on `?tour`
+  (`?tour=3` on the third step) always, and otherwise only on a first visit
+  by a person, not a browser driven by a script.
+- `decorate(part, info)` is handed the card's three buttons
+  (`tour-next`, `tour-back`, `tour-skip`) each time a tour builds them;
+  `strings` overrides the dictionary's `tour…` words for this tour.
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

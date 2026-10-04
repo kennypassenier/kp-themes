@@ -583,6 +583,134 @@ export type Strings = {
      * A pinned tooltip's head once a live update moved the window past the pin [scope-143]
      */
     chartPinnedOutside: string;
+    /**
+     * A menu button's menu while its entries load: one disabled entry (js/menu-button.js) [scope-143]
+     */
+    menuLoading: string;
+    /**
+     * The title of a menu button with no entries, which stays and does nothing (`data-kp-menu-empty="disable"`) [scope-143]
+     */
+    menuEmpty: string;
+    /**
+     * The tour card's button to the next step (js/tour.js) [scope-143]
+     */
+    tourNext: string;
+    /**
+     * Its title [scope-143]
+     */
+    tourNextTitle: string;
+    /**
+     * The tour card's button to the step before [scope-143]
+     */
+    tourBack: string;
+    /**
+     * Its title [scope-143]
+     */
+    tourBackTitle: string;
+    /**
+     * The next button on the last step, which ends the tour [scope-143]
+     */
+    tourDone: string;
+    /**
+     * Its title [scope-143]
+     */
+    tourDoneTitle: string;
+    /**
+     * The tour card's button that ends the tour at once [scope-143]
+     */
+    tourSkip: string;
+    /**
+     * Its title [scope-143]
+     */
+    tourSkipTitle: string;
+    /**
+     * The tour card's count, "1 of 5"; `of` counts only the steps whose part is on the page [scope-143]
+     */
+    tourCount: (n: number, of: number) => string;
+    /**
+     * A key figure's trend axis: the word after the first point's clock when it is today ("07:00 today") [scope-143]
+     */
+    chartToday: string;
+    /**
+     * The same when it is yesterday ("14:40 yesterday") [scope-143]
+     */
+    chartYesterday: string;
+    /**
+     * A key figure's trend, for a screen reader: its keys [scope-143]
+     */
+    chartTrendKeys: string;
+    /**
+     * A meter's share, in the words a screen reader hears, when the page names it nothing else ("62% used") [scope-143]
+     */
+    meterUsed: string;
+    /**
+     * A meter with no share, for a screen reader [scope-143]
+     */
+    meterNotMeasured: string;
+    /**
+     * A loading meter, for a screen reader [scope-143]
+     */
+    meterMeasuring: string;
+    /**
+     * The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
+     */
+    calendarNav: string;
+    /**
+     * A month heatmap's button to the month before; its name and title are `previousMonth` [scope-143]
+     */
+    calendarPrev: string;
+    /**
+     * Its button to the month after; its name and title are `nextMonth` [scope-143]
+     */
+    calendarNext: string;
+    /**
+     * Its button back to today's month, with today picked [scope-143]
+     */
+    calendarToday: string;
+    /**
+     * That button's title [scope-143]
+     */
+    calendarTodayTitle: string;
+    /**
+     * A day's name and title: the date (dd/mm/yyyy) and what the page says about it [scope-143]
+     */
+    calendarDay: (date: string, label: string) => string;
+    /**
+     * What a day still to come is, when the page says nothing about it [scope-143]
+     */
+    calendarFuture: string;
+    /**
+     * What every day is while the calendar loads [scope-143]
+     */
+    calendarLoading: string;
+    /**
+     * What a past day is when the page says nothing about it [scope-143]
+     */
+    calendarUnknown: string;
+    /**
+     * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
+     */
+    graphShowAll: string;
+    /**
+     * Its title [scope-143]
+     */
+    graphShowAllTitle: string;
+    /**
+     * The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
+     */
+    graphHint: string;
+    /**
+     * The name of the list of kinds of link over the graph [scope-143]
+     */
+    graphKinds: string;
+    /**
+     * A loading graph's sentence when the page gives none (`setGraphState(el, 'loading')`) [scope-143]
+     */
+    graphLoading: string;
+    /**
+     * The picture's name when the graph has no `aria-label` [scope-143]
+     */
+    graphUnnamed: string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -838,6 +966,38 @@ export type Strings = {
  * @property {string} chartOnePoint  Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
  * @property {string} chartLoading  A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
  * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]
+ * @property {string} menuLoading  A menu button's menu while its entries load: one disabled entry (js/menu-button.js) [scope-143]
+ * @property {string} menuEmpty  The title of a menu button with no entries, which stays and does nothing (`data-kp-menu-empty="disable"`) [scope-143]
+ * @property {string} tourNext  The tour card's button to the next step (js/tour.js) [scope-143]
+ * @property {string} tourNextTitle  Its title [scope-143]
+ * @property {string} tourBack  The tour card's button to the step before [scope-143]
+ * @property {string} tourBackTitle  Its title [scope-143]
+ * @property {string} tourDone  The next button on the last step, which ends the tour [scope-143]
+ * @property {string} tourDoneTitle  Its title [scope-143]
+ * @property {string} tourSkip  The tour card's button that ends the tour at once [scope-143]
+ * @property {string} tourSkipTitle  Its title [scope-143]
+ * @property {(n: number, of: number) => string} tourCount  The tour card's count, "1 of 5"; `of` counts only the steps whose part is on the page [scope-143]
+ * @property {string} chartToday  A key figure's trend axis: the word after the first point's clock when it is today ("07:00 today") [scope-143]
+ * @property {string} chartYesterday  The same when it is yesterday ("14:40 yesterday") [scope-143]
+ * @property {string} chartTrendKeys  A key figure's trend, for a screen reader: its keys [scope-143]
+ * @property {string} meterUsed  A meter's share, in the words a screen reader hears, when the page names it nothing else ("62% used") [scope-143]
+ * @property {string} meterNotMeasured  A meter with no share, for a screen reader [scope-143]
+ * @property {string} meterMeasuring  A loading meter, for a screen reader [scope-143]
+ * @property {string} calendarNav  The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
+ * @property {string} calendarPrev  A month heatmap's button to the month before; its name and title are `previousMonth` [scope-143]
+ * @property {string} calendarNext  Its button to the month after; its name and title are `nextMonth` [scope-143]
+ * @property {string} calendarToday  Its button back to today's month, with today picked [scope-143]
+ * @property {string} calendarTodayTitle  That button's title [scope-143]
+ * @property {(date: string, label: string) => string} calendarDay  A day's name and title: the date (dd/mm/yyyy) and what the page says about it [scope-143]
+ * @property {string} calendarFuture  What a day still to come is, when the page says nothing about it [scope-143]
+ * @property {string} calendarLoading  What every day is while the calendar loads [scope-143]
+ * @property {string} calendarUnknown  What a past day is when the page says nothing about it [scope-143]
+ * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
+ * @property {string} graphShowAllTitle  Its title [scope-143]
+ * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
+ * @property {string} graphKinds  The name of the list of kinds of link over the graph [scope-143]
+ * @property {string} graphLoading  A loading graph's sentence when the page gives none (`setGraphState(el, 'loading')`) [scope-143]
+ * @property {string} graphUnnamed  The picture's name when the graph has no `aria-label` [scope-143]
 
  * @property {string} breadcrumb
  * @property {string} pagination

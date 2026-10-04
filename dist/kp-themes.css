@@ -5479,27 +5479,6 @@
         opacity: 0.12;
     }
 
-    /* A used-of-total bar; the share is `--kp-value`, 0 to 1. */
-    .kp-kpi__meter {
-        position: relative;
-        display: block;
-        block-size: 0.375rem;
-        margin-block-start: var(--kp-space-sm, 0.5rem);
-        overflow: hidden;
-        border-radius: 999px;
-        background: var(--muted);
-    }
-
-    .kp-kpi__meter::before {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * 100%);
-        border-radius: inherit;
-        background: var(--kp-kpi-meter-fill, var(--primary));
-    }
-
     .kp-kpi[data-kp-tone='warning'] {
         box-shadow: inset 3px 0 0 var(--warning-foreground);
     }
@@ -5579,6 +5558,365 @@
         }
     }
 
+    /* --- Meter with a mark [scope-143] ------------------------------------ */
+
+    /* A used-of-total bar anywhere: in a tile, at the start of a line of
+ * words, in a table cell. `--kp-value` is the share (0 to 1; above 1 the
+ * bar is full and `data-kp-over` puts a small ▸ at its end), `--kp-mark` an
+ * optional tick (a promise, a limit, a target) across the bar, sticking out
+ * above and below it without taking any room, so a meter is as tall with a
+ * mark as without one. `.kp-kpi__meter` is the same meter at the bottom of
+ * a key figure, whose tone (`data-kp-tone` on the tile) colours its fill.
+ * setMeter() (js/kpi.js) writes it all, with its ARIA, in one call.
+ * Knobs: `--kp-meter-height` (0.375rem), `--kp-meter-fill` (the primary
+ * colour), `--kp-meter-mark-colour` (the text colour),
+ * `--kp-meter-mark-overhang` (3px), `--kp-meter-halo` (the card colour: a
+ * 1px ring that keeps the mark apart from a dark fill),
+ * `--kp-meter-inline-size` (3rem). */
+    .kp-meter,
+    .kp-kpi__meter {
+        --kp-meter-fill-colour: var(--kp-meter-fill, var(--kp-kpi-meter-fill, var(--primary)));
+        position: relative;
+        display: block;
+        block-size: var(--kp-meter-height, 0.375rem);
+        overflow: visible;
+        border-radius: 999px;
+        background: var(--muted);
+    }
+
+    .kp-kpi__meter {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-meter::before,
+    .kp-kpi__meter::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * 100%);
+        border-radius: inherit;
+        background: var(--kp-meter-fill-colour);
+    }
+
+    /* The share itself past the end: a ▸ at the bar's end. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '▸';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: -0.0625rem;
+        translate: 0 -50%;
+        color: var(--kp-meter-mark-colour, var(--foreground));
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow:
+            0 0 1px var(--kp-meter-halo, var(--card)),
+            0 0 2px var(--kp-meter-halo, var(--card));
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--warning-foreground);
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-meter-fill-colour: var(--destructive);
+    }
+
+    /* The mark: a tick across the bar, sticking out above and below, with a
+ * halo of the surface colour so it reads on the fill and on the track. */
+    .kp-meter__mark {
+        position: absolute;
+        inset-block: calc(var(--kp-meter-mark-overhang, 3px) * -1);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - 1px);
+        inline-size: 2px;
+        border-radius: 1px;
+        background: var(--kp-meter-mark-colour, var(--foreground));
+        box-shadow: 0 0 0 1px var(--kp-meter-halo, var(--card));
+        pointer-events: none;
+    }
+
+    .kp-meter__mark[hidden] {
+        display: none;
+    }
+
+    /* A mark past the end: the tick stops short of the end and a small ▸
+ * fills the last bit, inside the bar's box. */
+    .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    .kp-meter__mark[data-kp-over]::after {
+        content: '▸';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0.1875rem;
+        translate: 0 -50%;
+        color: var(--kp-meter-mark-colour, var(--foreground));
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow:
+            0 0 1px var(--kp-meter-halo, var(--card)),
+            0 0 2px var(--kp-meter-halo, var(--card));
+    }
+
+    /* Loading (`data-kp-loading`): the track pulses at full width and its
+ * height, with no fill and no mark; still under reduced motion. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] .kp-meter__mark,
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-meter::before {
+            transition:
+                inline-size 300ms ease,
+                background-color 300ms ease;
+        }
+    }
+
+    /* A small meter at the start of a line of words: three rem wide, its
+ * middle on the first line's middle. */
+    .kp-meter--inline {
+        display: inline-block;
+        inline-size: var(--kp-meter-inline-size, 3rem);
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        vertical-align: middle;
+    }
+
+    /* --- Key-figure strip on allowed column counts [scope-143] ------------ */
+
+    /* `data-kp-kpis-columns="all 3 2 1"`: the strip takes the first count in
+ * the list at which every tile is at least `--kp-kpi-min` wide, by its own
+ * width, and steps down a count when that would leave one tile alone on
+ * the last row; when no allowed count avoids it, the lone tile spans its
+ * row. attachKpiStrips() (js/kpi.js) writes the count
+ * (`--kp-kpis-columns`) and `data-kp-kpis-span-last`; before the script
+ * runs the strip keeps the package's auto-fit. */
+    .kp-kpis[data-kp-kpis-columns][style*='--kp-kpis-columns'] {
+        grid-template-columns: repeat(var(--kp-kpis-columns), minmax(0, 1fr));
+    }
+
+    .kp-kpis[data-kp-kpis-span-last] > :last-child {
+        grid-column: 1 / -1;
+    }
+
+    /* --- A key figure with its 24-hour trend [scope-143] ------------------ */
+
+    /* `.kp-kpi--trend`: the whole tile is a link (its `.kp-kpi__link`
+ * stretched over it), and the trend inside it is a second stop for the
+ * keyboard: no control sits inside the link. The trend is the time
+ * chart's spark variant without its head line, `figure.kp-kpi__chart
+ * [data-kp-chart="spark"][data-kp-spark-head="none"]
+ * [data-kp-spark-axis="relative"]` (js/chart.js): under the line the axis,
+ * where the trend starts (a clock and a day word) and `now`. A pointer, a
+ * finger or the arrow keys read one point: a crosshair and a chip with its
+ * moment and value over the line. A note such as "avg 15 min" goes in the
+ * label, in its capitals: `.kp-kpi__label-note`. Knob:
+ * `--kp-kpi-spark-height` (2.75rem in a trend), `--kp-kpi-trend-lines`. */
+    .kp-kpi--trend {
+        position: relative;
+        grid-template-rows: auto auto 1fr auto;
+        /* The tile is the box its link stretches over (the link's ::after is
+ * fixed, and layout containment makes the tile its containing block). */
+        contain: layout;
+    }
+
+    .kp-kpi--trend:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-kpi--trend:has(.kp-kpi__link:focus-visible) {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    /* The label wraps between words and is never cut: its first line keeps
+ * clear of the link in the corner (a float as tall as one line, so the
+ * lines under it take the tile's whole width), and the note moves to the
+ * next line as one unit when it does not fit beside the name. */
+    .kp-kpi--trend > .kp-kpi__label {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+    }
+
+    .kp-kpi--trend > .kp-kpi__label::before {
+        content: '';
+        float: inline-end;
+        inline-size: 4.5rem;
+        block-size: 1lh;
+    }
+
+    /* Every state as tall as filled: the value line keeps its height under
+ * a skeleton, and the words under it keep two lines (three in a narrow
+ * tile; knob `--kp-kpi-trend-lines`), so a row of trends does not shrink
+ * while it loads. */
+    .kp-kpi--trend > .kp-kpi__value {
+        min-block-size: 1lh;
+    }
+
+    .kp-kpi--trend > .kp-kpi__trend {
+        min-block-size: calc(var(--kp-kpi-trend-lines, 2) * 1lh);
+    }
+
+    .kp-kpi__label-note {
+        font-weight: 400;
+        white-space: nowrap;
+    }
+
+    .kp-kpi__label-note::before {
+        content: '· ';
+    }
+
+    .kp-kpi__link {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        padding: 0.125rem 0.375rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        color: var(--link, var(--primary));
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-decoration: none;
+    }
+
+    .kp-kpi__link::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+    }
+
+    .kp-kpi__link:focus-visible {
+        outline: none;
+    }
+
+    .kp-kpi__link:hover {
+        text-decoration: underline;
+    }
+
+    /* A narrow tile: the corner says ↗ alone; the word stays for a screen
+ * reader. */
+    @container kp-kpi (max-width: 12rem) {
+        .kp-kpi__link-word {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+
+        .kp-kpi--trend > .kp-kpi__label::before {
+            inline-size: 1.5rem;
+        }
+
+        .kp-kpi--trend > .kp-kpi__trend {
+            min-block-size: calc(var(--kp-kpi-trend-lines, 3) * 1lh);
+        }
+    }
+
+    .kp-kpi__chart {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-rows: var(--kp-kpi-spark-height, 2.75rem) auto;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--kp-chart-series, var(--chart-1));
+    }
+
+    .kp-kpi__chart-plot {
+        position: relative;
+        display: block;
+        cursor: crosshair;
+        touch-action: pan-y;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-kpi__chart-plot:not([tabindex]) {
+        cursor: default;
+    }
+
+    .kp-kpi__chart-plot:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    /* The line takes the trend's series colour (`--kp-chart-series` on the
+ * figure, as on a plot), not the plain sparkline's `--chart-1`. */
+    .kp-kpi__chart .kp-kpi__spark {
+        block-size: 100%;
+        margin: 0;
+        color: inherit;
+    }
+
+    .kp-kpi__chart-cross {
+        position: absolute;
+        inset-block: 0;
+        inline-size: 1px;
+        background: hsl(from var(--foreground) h s l / 0.55);
+        pointer-events: none;
+    }
+
+    .kp-kpi__chart-chip {
+        position: absolute;
+        inset-block-end: calc(100% + 0.125rem);
+        display: flex;
+        column-gap: 0.25em;
+        padding: 0.0625rem var(--kp-space-xs, 0.25rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-kpi__chart-chip > .kp-kpi__chart-value::before {
+        content: '· ';
+    }
+
+    /* Too wide for the trend on one line: the value under the moment. */
+    .kp-kpi__chart-chip[data-kp-stacked] {
+        flex-direction: column;
+    }
+
+    .kp-kpi__chart-chip[data-kp-stacked] > .kp-kpi__chart-value::before {
+        content: none;
+    }
+
+    .kp-kpi__chart-cross[hidden],
+    .kp-kpi__chart-chip[hidden],
+    .kp-kpi__chart-axis > [hidden] {
+        display: none;
+    }
+
+    .kp-kpi__chart-axis {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+        white-space: nowrap;
+    }
+
+    /* The reading in the axis row, when even a stacked chip would not fit. */
+    .kp-kpi__chart-read {
+        overflow: hidden;
+        color: var(--foreground);
+        text-overflow: ellipsis;
+    }
+
+    .kp-kpi__chart-read > .kp-kpi__chart-value::before {
+        content: ' · ';
+    }
     /* --- Time chart [scope-143] ------------------------------------------- */
 
     /* One time chart for every page, so its controls mean the same
@@ -6241,6 +6579,251 @@
         flex: none;
     }
 
+    /* --- Network graph [scope-143] ---------------------------------------- */
+
+    /* One node in the middle, the rest on a ring around it, the links between
+ * them drawn by kind (a colour and a dash each, listed above the picture
+ * with Show all). A pointer or the focus on a node shows only its links; a
+ * click keeps it. Labels point away from the hub and are shortened where
+ * they would touch, so nothing overlaps or leaves the box at any width.
+ * attachGraphs() (js/graph.js) builds it. Each node takes its own hue at the
+ * lightness and strength of the theme's first chart colour; a link kind's
+ * colour is the page's (`--kp-graph-edge-colour`, a token such as
+ * `var(--chart-2)`). Knobs: `--kp-graph-h` (480px; the script sets it to
+ * the height it draws), `--kp-graph-label-size` (12px), `--kp-graph-dim`
+ * (0.08, a link that is not lit while a node is), `--kp-graph-hue` (210, a
+ * node's hue, set per node by the script). */
+    .kp-graph {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    /* The kinds of link and Show all, over the picture. */
+    .kp-graph__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-control-height, 2.25rem);
+    }
+
+    .kp-graph__show-all {
+        margin-inline-start: auto;
+    }
+
+    /* Show all keeps its place when there is nothing to show again. */
+    .kp-graph__show-all[data-kp-idle] {
+        visibility: hidden;
+    }
+
+    .kp-graph__kinds {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-graph__kinds[hidden] {
+        display: none;
+    }
+
+    .kp-graph__kind {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: 0.125rem var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-graph__kind[aria-pressed='false'] {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-graph__kind[aria-pressed='false'] .kp-graph__sample {
+        opacity: 0.35;
+    }
+
+    .kp-graph__kind:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-graph__sample {
+        inline-size: 1.5rem;
+        block-size: 0.5rem;
+        overflow: visible;
+    }
+
+    /* The picture, at the height it is drawn at in every state, so the page
+ * does not move when the data arrives. */
+    .kp-graph__box {
+        position: relative;
+        min-block-size: var(--kp-graph-h, 480px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    .kp-graph__svg {
+        display: block;
+        inline-size: 100%;
+        overflow: visible;
+    }
+
+    /* Loading, nothing to draw, or an error: the page's sentence in the
+ * picture. */
+    .kp-graph__note {
+        position: absolute;
+        inset: auto var(--kp-space-md, 1rem) 45%;
+        margin: 0;
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    .kp-graph__note[hidden] {
+        display: none;
+    }
+
+    .kp-graph[data-kp-state='error'] .kp-graph__note::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        border-radius: 50%;
+        background: var(--destructive);
+    }
+
+    .kp-graph__skeleton {
+        fill: none;
+        stroke: var(--muted);
+        stroke-width: 10;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-graph__skeleton {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-graph__edge,
+        .kp-graph__node {
+            transition:
+                opacity 150ms ease,
+                stroke-width 150ms ease;
+        }
+    }
+
+    /* What a pointer, a click and the keys do, under the picture in the
+ * page's flow (never over it). */
+    .kp-graph__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-graph__edge,
+    .kp-graph__sample line {
+        fill: none;
+        stroke: var(--kp-graph-edge-colour, var(--chart-3));
+        stroke-width: 1.6;
+    }
+
+    .kp-graph__sample line {
+        stroke-width: 2;
+    }
+
+    /* A kind's dash, on its links and on its sample in the list. */
+    .kp-graph [data-kp-style='dash'] {
+        stroke-dasharray: 6 3;
+    }
+
+    .kp-graph [data-kp-style='dot'] {
+        stroke-dasharray: 2 4;
+        stroke-linecap: round;
+    }
+
+    .kp-graph [data-kp-style='long-dash'] {
+        stroke-dasharray: 12 4;
+    }
+
+    .kp-graph__edge.is-on {
+        stroke-width: 2.6;
+    }
+
+    .kp-graph__edge.is-dim {
+        opacity: var(--kp-graph-dim, 0.08);
+    }
+
+    .kp-graph__edge.is-hidden {
+        display: none;
+    }
+
+    /* Each node its own hue, at the lightness and strength of the theme's
+ * first chart colour, so it reads on the theme's ground. */
+    .kp-graph__node {
+        --kp-graph-node-colour: oklch(from var(--chart-1) l max(c, 0.12) var(--kp-graph-hue, 210));
+        cursor: pointer;
+        outline: none;
+    }
+
+    .kp-graph__ring {
+        fill: var(--card);
+        stroke: var(--kp-graph-node-colour);
+        stroke-width: 2.5;
+    }
+
+    .kp-graph__core {
+        fill: var(--kp-graph-node-colour);
+    }
+
+    /* A node outside the network: a dashed grey ring, no core. */
+    .kp-graph__node--external .kp-graph__ring {
+        stroke: var(--muted-foreground);
+        stroke-dasharray: 3 3;
+    }
+
+    /* A node whose settings differ from the plan: a dotted ring around it. */
+    .kp-graph__flag {
+        fill: none;
+        stroke: var(--warning-foreground);
+        stroke-width: 1.5;
+        stroke-dasharray: 2 3;
+    }
+
+    .kp-graph__label {
+        fill: var(--foreground);
+        font-size: var(--kp-graph-label-size, 12px);
+        font-weight: 500;
+        paint-order: stroke;
+        stroke: var(--background);
+        stroke-width: 4px;
+        stroke-linejoin: round;
+    }
+
+    .kp-graph__node:focus-visible .kp-graph__ring {
+        stroke: var(--ring);
+        stroke-width: 4;
+    }
+
+    .kp-graph__node.is-picked .kp-graph__ring {
+        stroke-width: 5;
+    }
+
+    .kp-graph__node.is-dim {
+        opacity: 0.3;
+    }
     /* --- Freshness line [scope-143] ---------------------------------------- */
 
     /* "updated 12 s ago", ticking (js/freshness.js). Tabular digits, kept
@@ -11695,6 +12278,638 @@
         100% {
             translate: 0 680%;
         }
+    }
+
+    /* --- Month heatmap [scope-143] ---------------------------------------- */
+
+    /* A month as a grid of days, each day a plate in the colour of its state
+ * (all done, partly done, nothing done, nothing to do, still to come, before
+ * anything was kept) with its count under the number. Always six weeks
+ * tall, so the page does not jump from month to month; the neighbouring
+ * months' days show their numbers, quiet and inert. js/calendar.js builds
+ * it into `section.kp-calendar[data-kp-calendar]`. Beside it, the page's
+ * own detail of the picked day (`.kp-calendar-layout`); under it on a
+ * narrow page. Knobs: --kp-calendar-aside (16rem, the detail's width),
+ * --kp-calendar-gap (6px, between days), --kp-calendar-cell-height
+ * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)) and
+ * --kp-calendar-title-size (1.125rem). */
+    .kp-calendar-layout {
+        container: kp-calendar-layout / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-calendar-aside, 16rem);
+        align-items: start;
+        gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    @container kp-calendar-layout (max-width: 45rem) {
+        .kp-calendar-layout > * {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .kp-calendar {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-calendar__nav {
+        display: grid;
+        grid-template-columns: auto minmax(0, max-content) auto auto;
+        justify-content: start;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-calendar__title {
+        margin: 0;
+        font-size: var(--kp-calendar-title-size, 1.125rem);
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-calendar__state {
+        min-block-size: 1.5em;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__state[data-kp-state='error']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        border-radius: 50%;
+        background: var(--destructive);
+    }
+
+    /* The outer spacing reaches past the calendar's edges, so the days line
+ * up with the title and the legend. Moved there by a relative offset, not
+ * a negative margin: Firefox resolves a table's percentage width against
+ * its box less the margins, so `-gap` margins made the grid 2 × gap wider
+ * than asked and pushed a page at 390 px sideways (Chromium did not). */
+    .kp-calendar__grid {
+        position: relative;
+        inset-inline-start: calc(var(--kp-calendar-gap, 6px) * -1);
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: var(--kp-calendar-gap, 6px);
+        inline-size: calc(100% + 2 * var(--kp-calendar-gap, 6px));
+    }
+
+    .kp-calendar__grid th {
+        padding: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .kp-calendar__grid td {
+        position: relative;
+        padding: 0;
+        block-size: var(--kp-calendar-cell-height, 3.25rem);
+        vertical-align: top;
+    }
+
+    .kp-calendar__day {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        align-items: center;
+        justify-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        padding: 0.125rem;
+        border: 2px solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-calendar-cell-font, clamp(0.85rem, 1.4vw, 1.15rem));
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+        cursor: pointer;
+    }
+
+    .kp-calendar__day[hidden] {
+        display: none;
+    }
+
+    .kp-calendar__num {
+        font-weight: 600;
+    }
+
+    .kp-calendar__count {
+        font-size: 0.7em;
+        white-space: nowrap;
+    }
+
+    /* Tones: a status colour is only ever text on its own plate. A night
+ * with nothing done is told by its red plate and its words; its count
+ * reads like every other day's. */
+    .kp-calendar__day[data-kp-tone='ok'],
+    .kp-calendar__swatch[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='warn'],
+    .kp-calendar__swatch[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='bad'],
+    .kp-calendar__swatch[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='muted'],
+    .kp-calendar__swatch[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before']),
+    .kp-calendar__swatch:is([data-kp-tone='future'], [data-kp-tone='before']) {
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='none'] {
+        border-color: var(--border);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+        cursor: progress;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-calendar__day[data-kp-tone='loading'] {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    /* Today: an inner ring in the text colour. Picked: an outer ring in the
+ * primary colour. The focus: the house ring, further out. */
+    .kp-calendar__day[data-kp-today] {
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    td[aria-selected='true'] > .kp-calendar__day {
+        outline: 3px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-calendar__day:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+    }
+
+    td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: 3px solid var(--ring);
+    }
+
+    /* The days of the neighbouring months: their numbers, quiet and inert,
+ * so every week reads full. */
+    .kp-calendar__pad {
+        display: none;
+    }
+
+    .kp-calendar__grid td[data-kp-pad] > .kp-calendar__pad {
+        display: grid;
+        place-items: center;
+        block-size: 100%;
+        color: var(--muted-foreground);
+        font-size: var(--kp-calendar-cell-font, clamp(0.85rem, 1.4vw, 1.15rem));
+        opacity: 0.75;
+    }
+
+    .kp-calendar__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__legend[hidden] {
+        display: none;
+    }
+
+    .kp-calendar__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-calendar__swatch {
+        box-sizing: border-box;
+        inline-size: 1rem;
+        block-size: 1rem;
+        border: 2px solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    /* --- Menu button with a rich menu [scope-143] -------------------------- */
+
+    /* A button that opens a list of actions (js/menu-button.js), grouped
+ * under small muted capitals, each entry its label over a one-line hint.
+ * The list is a `.kp-menu` of `.kp-menu__item`s, the menu every register
+ * already paints; `.kp-menu--rich` gives it the groups, the hints and its
+ * width. An action that cannot be used now stays in the list (and in the
+ * keyboard's reach), keeps its hint, and says why under it, in italics. The
+ * menu hangs under its button at the button's end edge; in a page header
+ * on a phone it spans the header's buttons. Knobs: --kp-menu-rich-min
+ * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
+ * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
+ * scrolls inside itself. */
+    .kp-menu-button {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .kp-menu-button[hidden] {
+        display: none;
+    }
+
+    .kp-menu-button > [aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-menu-button > .kp-menu {
+        position: absolute;
+        z-index: 30;
+        inset-block-start: calc(100% + var(--kp-space-xs, 0.25rem));
+        inset-inline-end: 0;
+        box-sizing: border-box;
+        max-block-size: var(--kp-menu-max-height, calc(100dvh - 12rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-xs, 0.25rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    .kp-menu-button > .kp-menu[hidden] {
+        display: none;
+    }
+
+    .kp-menu--rich {
+        inline-size: max-content;
+        min-inline-size: var(--kp-menu-rich-min, 19rem);
+        max-inline-size: var(--kp-menu-rich-max, min(26rem, 100vw - 2rem));
+    }
+
+    .kp-menu__group {
+        display: grid;
+    }
+
+    .kp-menu__group + .kp-menu__group {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* A group's heading: small capitals, muted, with no line between the
+ * groups. It names its `role="group"`. */
+    .kp-menu__heading {
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* An entry: the label over the hint, on a one-column grid so every label
+ * and every hint start at one edge. */
+    .kp-menu--rich .kp-menu__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.0625rem;
+        inline-size: 100%;
+        padding: 0.4375rem 0.625rem;
+        text-decoration: none;
+    }
+
+    .kp-menu__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-menu__hint {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-menu__item--destructive .kp-menu__label {
+        color: var(--destructive);
+    }
+
+    .kp-menu--rich .kp-menu__item:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-menu--rich .kp-menu__item:focus {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    /* A disabled entry keeps its focus and its pointer (its reason shows on
+ * hover too), reads in the muted colour rather than faded (a faded reason
+ * fails AA in several themes), and does nothing. The plain menu's disabled
+ * item, faded and out of the pointer's reach, is undone here. */
+    .kp-menu--rich .kp-menu__item[aria-disabled='true'] {
+        opacity: 1;
+        pointer-events: auto;
+        cursor: not-allowed;
+    }
+
+    .kp-menu--rich .kp-menu__item[aria-disabled='true'] .kp-menu__label {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .kp-menu--rich .kp-menu__item[aria-disabled='true']:hover {
+        background: none;
+    }
+
+    /* Why a disabled entry cannot be used, under its hint. */
+    .kp-menu__reason {
+        font-style: italic;
+    }
+
+    .kp-menu__reason::before {
+        content: '— ';
+    }
+
+    /* In a page header on a phone the open menu spans the header's buttons,
+ * inside the screen. */
+    @container kp-page-header (max-width: 40rem) {
+        .kp-page-header__actions:has(> .kp-menu-button) {
+            position: relative;
+        }
+
+        .kp-page-header__actions > .kp-menu-button {
+            position: static;
+        }
+
+        .kp-page-header__actions > .kp-menu-button > .kp-menu {
+            inset-inline: 0;
+            inline-size: auto;
+            min-inline-size: 0;
+            max-inline-size: none;
+        }
+    }
+
+    /* An open menu lifts its header over what follows. */
+    .kp-page-header:has(.kp-menu-button > [role='menu']:not([hidden])) {
+        position: relative;
+        z-index: 20;
+    }
+
+    /* --- Drawer, help and the tour [scope-143] ----------------------------- */
+
+    /* A drawer: a head (the title, the close button, one sentence), a body
+ * that scrolls, and a foot that stays. `.kp-drawer` lays out any element;
+ * a `dialog.kp-drawer` slides in at the end edge, full height. Knob:
+ * --kp-drawer-width (min(28rem, 100vw)). */
+    .kp-drawer {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        padding: 0;
+    }
+
+    dialog.kp-drawer:not([open]) {
+        display: none;
+    }
+
+    dialog.kp-drawer,
+    dialog.kp-drawer:modal {
+        position: fixed;
+        inset-block: 0;
+        inset-inline: auto 0;
+        inline-size: var(--kp-drawer-width, min(28rem, 100vw));
+        max-inline-size: 100vw;
+        block-size: 100dvh;
+        max-block-size: 100dvh;
+        margin: 0;
+        border-block: 0;
+        border-inline-end: 0;
+        border-radius: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        dialog.kp-drawer[open] {
+            animation: kp-drawer-in 200ms ease-out;
+        }
+    }
+
+    @keyframes kp-drawer-in {
+        0% {
+            translate: 2rem 0;
+            opacity: 0;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    .kp-drawer__head {
+        position: relative;
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem) var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-drawer__head > .kp-dialog__title {
+        margin: 0;
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-drawer__desc {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-drawer__body {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-md, 1rem);
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-drawer__foot {
+        display: grid;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* A help card: a heading, a sentence, and a list of terms beside their
+ * meanings, the meanings starting at one edge across every card; in a card
+ * of 22rem or less the term goes over its meaning. Knob: --kp-help-term
+ * (8rem), the terms' column. */
+    .kp-help {
+        container: kp-help / inline-size;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-help > :is(h3, p) {
+        margin: 0;
+    }
+
+    .kp-help > p {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-help__list {
+        display: grid;
+        grid-template-columns: var(--kp-help-term, 8rem) minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-help__list > dt {
+        font-weight: 600;
+    }
+
+    .kp-help__list > dd {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    @container kp-help (max-width: 22rem) {
+        .kp-help__list {
+            grid-template-columns: minmax(0, 1fr);
+            row-gap: 0;
+        }
+
+        .kp-help__list > dd + dt {
+            margin-block-start: var(--kp-space-sm, 0.5rem);
+        }
+    }
+
+    .kp-help kbd {
+        display: inline-block;
+        min-inline-size: 1.5em;
+        padding: 0 0.3125rem;
+        border: 1px solid var(--border-strong);
+        border-block-end-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font: 600 var(--kp-text-xs, 0.75rem) / 1.5 var(--theme-font-mono, ui-monospace, monospace);
+        text-align: center;
+    }
+
+    /* The tour's card (js/tour.js): a non-modal dialog beside its target,
+ * 12px from it and 16px inside the window's edges. Knob: --kp-tour-width
+ * (min(22rem, 100vw - 2rem); on a phone the window's width less the two
+ * 16px gutters). */
+    .kp-tour {
+        position: fixed;
+        z-index: 60;
+        inset: auto;
+        box-sizing: border-box;
+        inline-size: var(--kp-tour-width, min(22rem, 100vw - 2rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    /* On a phone the card takes the width, less the gutters. */
+    @media (max-width: 30rem) {
+        .kp-tour {
+            inline-size: var(--kp-tour-width, calc(100vw - 2rem));
+        }
+    }
+
+    .kp-tour__title {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-tour__text {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    .kp-tour__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-md, 1rem);
+    }
+
+    .kp-tour__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-tour__buttons {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-tour__buttons > [hidden] {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-tour[open] {
+            animation: kp-tour-in 160ms ease-out;
+        }
+    }
+
+    @keyframes kp-tour-in {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* The part the tour talks about: a ring in the focus colour, and the rest
+ * of the page dimmed around it, so the eye goes straight to it. */
+    [data-kp-tour-target] {
+        z-index: 55;
+        outline: 3px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.72);
     }
 }
 

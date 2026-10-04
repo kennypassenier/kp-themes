@@ -32,6 +32,7 @@
                 <li><a href="#time-chart-states">States</a></li>
                 <li><a href="#time-chart-chip-elsewhere">Zoom chip outside its group</a></li>
                 <li><a href="#time-chart-no-group">Charts outside any group</a></li>
+                <li><a href="#graph">Network graph</a></li>
             </ul>
 
             <section class="cat-block" id="time-chart">
@@ -1341,6 +1342,213 @@
                         </script>
                     </figure>
                 </div>
+            </section>
+
+            <section class="cat-block" id="graph">
+                <h2>Network graph</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-graph</code> (<code>js/graph.js</code>): the control centre in the middle, the other sites on a ring
+                    around it from the top, clockwise, A to Z and then the two addresses outside the network (a dashed grey ring). Each node has its
+                    own colour; <b>Pump house 5</b> carries a dotted ring (its settings differ from the plan). Over the picture the kinds of link,
+                    each a colour and a dash: four are listed, the four the links use (the fifth kind the page gives is left out). Hover
+                    <b>Pump house 3</b>: only its links stay, the rest fades; two kinds between one pair (telemetry and remote control) bend apart.
+                    Click two nodes: both stay picked, and <b>Show all</b> appears in its place on the right. Turn a kind off in the list. Tab once:
+                    the focus lands on the hub, → walks the ring, Enter picks, Esc shows all; the graph is one tab stop. Press
+                    <b>Fifteen long names</b>: in the phone pane no two labels touch and none is cut off at the edge; a shortened one ends in … and
+                    shows the full name on hover. <b>Size by flow</b> sizes the nodes by their weight, <b>Live update</b> changes the data and keeps
+                    the focus and the picks, and the three states keep the picture's height. The hint sits under the picture, never over it.
+                </div>
+                <div class="kp-row cat-live__bar" role="group" aria-label="Try the graph">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="long" aria-pressed="false">Fifteen long names</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="weights" aria-pressed="false">Size by flow</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="live">Live update</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="loading">Loading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="empty">Nothing to draw</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-graph="error">Could not read</button>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <figure class="kp-graph" data-kp-graph data-kp-key="network" aria-label="The northern network">
+                        <script type="application/json" data-kp-graph-data>
+                            {
+                                "nodes": [
+                                    { "id": "centre", "label": "Control centre", "description": "where every reading arrives" },
+                                    { "id": "ph1", "label": "Pump house 1", "description": "two pumps, ring main west" },
+                                    { "id": "ph2", "label": "Pump house 2", "description": "one pump, the old town" },
+                                    { "id": "ph3", "label": "Pump house 3", "description": "two pumps, ring main north" },
+                                    { "id": "ph4", "label": "Pump house 4", "description": "two pumps, the harbour" },
+                                    {
+                                        "id": "ph5",
+                                        "label": "Pump house 5",
+                                        "description": "one pump, the hills; its settings on site differ from the plan",
+                                        "flag": "mismatch"
+                                    },
+                                    { "id": "ph6", "label": "Pump house 6", "description": "being built, live in November" },
+                                    { "id": "north", "label": "Reservoir North", "description": "level sensor and an inlet valve" },
+                                    { "id": "south", "label": "Reservoir South", "description": "level sensor and an inlet valve" },
+                                    { "id": "plant", "label": "Treatment plant", "description": "where the water comes from" },
+                                    {
+                                        "id": "weather",
+                                        "label": "Weather service",
+                                        "description": "an address outside the network",
+                                        "external": true
+                                    },
+                                    { "id": "energy", "label": "Energy supplier", "description": "an address outside the network", "external": true }
+                                ],
+                                "edges": [
+                                    { "from": "ph1", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "ph2", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "ph3", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "ph4", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "ph5", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "north", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "south", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "plant", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                    { "from": "centre", "to": "ph1", "kind": "control", "detail": "pump start and stop" },
+                                    { "from": "centre", "to": "ph3", "kind": "control", "detail": "pump start and stop, valve" },
+                                    { "from": "centre", "to": "plant", "kind": "control", "detail": "intake rate" },
+                                    { "from": "ph3", "to": "ph4", "kind": "radio", "detail": "spare path" },
+                                    { "from": "ph4", "to": "centre", "kind": "radio", "detail": "spare path" },
+                                    { "from": "centre", "to": "ph6", "kind": "planned", "detail": "fibre ordered" },
+                                    { "from": "centre", "to": "energy", "kind": "planned", "detail": "tariff feed ordered" },
+                                    { "from": "weather", "to": "centre", "kind": "telemetry", "detail": "rain radar every 10 min" }
+                                ],
+                                "kinds": [
+                                    {
+                                        "kind": "telemetry",
+                                        "label": "Telemetry",
+                                        "hint": "Readings sent to the control centre every minute",
+                                        "style": "solid",
+                                        "colour": "var(--chart-1)"
+                                    },
+                                    {
+                                        "kind": "control",
+                                        "label": "Remote control",
+                                        "hint": "Commands from the control centre to the site",
+                                        "style": "dash",
+                                        "colour": "var(--chart-2)"
+                                    },
+                                    {
+                                        "kind": "radio",
+                                        "label": "Radio link",
+                                        "hint": "A spare path over radio for when the line is down",
+                                        "style": "dot",
+                                        "colour": "var(--chart-4)"
+                                    },
+                                    {
+                                        "kind": "planned",
+                                        "label": "Planned",
+                                        "hint": "A link that is ordered but not live yet",
+                                        "style": "long-dash",
+                                        "colour": "var(--muted-foreground)"
+                                    },
+                                    {
+                                        "kind": "unused",
+                                        "label": "Not used here",
+                                        "hint": "A kind no link on this network has; the list leaves it out",
+                                        "style": "solid",
+                                        "colour": "var(--chart-5)"
+                                    }
+                                ],
+                                "hub": "centre"
+                            }
+                        </script>
+                    </figure>
+                    <p class="cat-note">Phone width</p>
+                    <div class="cat-resize" style="inline-size: 22.5rem; box-sizing: border-box">
+                        <figure class="kp-graph" data-kp-graph data-kp-key="network-phone" aria-label="The northern network, phone width">
+                            <script type="application/json" data-kp-graph-data>
+                                {
+                                    "nodes": [
+                                        { "id": "centre", "label": "Control centre", "description": "where every reading arrives" },
+                                        { "id": "ph1", "label": "Pump house 1", "description": "two pumps, ring main west" },
+                                        { "id": "ph2", "label": "Pump house 2", "description": "one pump, the old town" },
+                                        { "id": "ph3", "label": "Pump house 3", "description": "two pumps, ring main north" },
+                                        { "id": "ph4", "label": "Pump house 4", "description": "two pumps, the harbour" },
+                                        {
+                                            "id": "ph5",
+                                            "label": "Pump house 5",
+                                            "description": "one pump, the hills; its settings on site differ from the plan",
+                                            "flag": "mismatch"
+                                        },
+                                        { "id": "ph6", "label": "Pump house 6", "description": "being built, live in November" },
+                                        { "id": "north", "label": "Reservoir North", "description": "level sensor and an inlet valve" },
+                                        { "id": "south", "label": "Reservoir South", "description": "level sensor and an inlet valve" },
+                                        { "id": "plant", "label": "Treatment plant", "description": "where the water comes from" },
+                                        {
+                                            "id": "weather",
+                                            "label": "Weather service",
+                                            "description": "an address outside the network",
+                                            "external": true
+                                        },
+                                        {
+                                            "id": "energy",
+                                            "label": "Energy supplier",
+                                            "description": "an address outside the network",
+                                            "external": true
+                                        }
+                                    ],
+                                    "edges": [
+                                        { "from": "ph1", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "ph2", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "ph3", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "ph4", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "ph5", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "north", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "south", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "plant", "to": "centre", "kind": "telemetry", "detail": "readings every minute" },
+                                        { "from": "centre", "to": "ph1", "kind": "control", "detail": "pump start and stop" },
+                                        { "from": "centre", "to": "ph3", "kind": "control", "detail": "pump start and stop, valve" },
+                                        { "from": "centre", "to": "plant", "kind": "control", "detail": "intake rate" },
+                                        { "from": "ph3", "to": "ph4", "kind": "radio", "detail": "spare path" },
+                                        { "from": "ph4", "to": "centre", "kind": "radio", "detail": "spare path" },
+                                        { "from": "centre", "to": "ph6", "kind": "planned", "detail": "fibre ordered" },
+                                        { "from": "centre", "to": "energy", "kind": "planned", "detail": "tariff feed ordered" },
+                                        { "from": "weather", "to": "centre", "kind": "telemetry", "detail": "rain radar every 10 min" }
+                                    ],
+                                    "kinds": [
+                                        {
+                                            "kind": "telemetry",
+                                            "label": "Telemetry",
+                                            "hint": "Readings sent to the control centre every minute",
+                                            "style": "solid",
+                                            "colour": "var(--chart-1)"
+                                        },
+                                        {
+                                            "kind": "control",
+                                            "label": "Remote control",
+                                            "hint": "Commands from the control centre to the site",
+                                            "style": "dash",
+                                            "colour": "var(--chart-2)"
+                                        },
+                                        {
+                                            "kind": "radio",
+                                            "label": "Radio link",
+                                            "hint": "A spare path over radio for when the line is down",
+                                            "style": "dot",
+                                            "colour": "var(--chart-4)"
+                                        },
+                                        {
+                                            "kind": "planned",
+                                            "label": "Planned",
+                                            "hint": "A link that is ordered but not live yet",
+                                            "style": "long-dash",
+                                            "colour": "var(--muted-foreground)"
+                                        },
+                                        {
+                                            "kind": "unused",
+                                            "label": "Not used here",
+                                            "hint": "A kind no link on this network has; the list leaves it out",
+                                            "style": "solid",
+                                            "colour": "var(--chart-5)"
+                                        }
+                                    ],
+                                    "hub": "centre"
+                                }
+                            </script>
+                        </figure>
+                    </div>
+                </div>
+                <p class="cat-note" data-cat-graph-log role="status">Nothing picked: every link is shown.</p>
             </section>
         </main>
 

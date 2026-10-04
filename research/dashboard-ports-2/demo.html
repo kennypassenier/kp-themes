@@ -33,15 +33,15 @@
                 <h1>Dashboard components to port, round two</h1>
                 <p>
                     The rest of what the admin dashboard still keeps to itself: a menu of every other action, a meter with a tick, a strip of key
-                    figures that never leaves one tile alone on a row, a key figure with its 24-hour trend, a month of days coloured by how they
-                    went, a picture of a network, and a help drawer with a guided tour. Each section below is that component written already in the
+                    figures that never leaves one tile alone on a row, a key figure with its 24-hour trend, a month of days coloured by how they went,
+                    a picture of a network, and a help drawer with a guided tour. Each section below is that component written already in the
                     package's style (<code>ports2.css</code> and <code>ports2.js</code> next to this page), shown in formal only. Where there is a
                     real choice, the review dialog asks it as options to tick, and the buttons in the section let you see each option first.
                 </p>
                 <p class="dp-meta">
                     Each section shows the component at full width and, beside it, in a frame as narrow as a phone (360 px), so both widths can be
-                    judged on one screen. The data is made up: a water company's pump houses, readings and the nightly backups of its services.
-                    "Now" is 04/10/2026 14:40, and every date and time is the clock in Brussels.
+                    judged on one screen. The data is made up: a water company's pump houses, readings and the nightly backups of its services. "Now"
+                    is 04/10/2026 14:40, and every date and time is the clock in Brussels.
                 </p>
             </header>
 
@@ -64,28 +64,36 @@
                     <h2 id="h-menu">A menu of every other action</h2>
                     <p>
                         <code>.kp-menu-button</code> with a <code>.kp-menu--rich</code>: a button that opens the rare actions, grouped under small
-                        headings, each with a label over a one-line hint. An action that cannot be used now stays in the list and says why. The
-                        keys are those of a menu: ↓ or ↑ on the button opens it, ↓ ↑ Home End move, a letter jumps, Esc closes, Tab closes and moves
-                        on. A refill while it is open waits until it closes.
+                        headings, each with a label over a one-line hint. An action that cannot be used now stays in the list and says why. The keys
+                        are those of a menu: ↓ or ↑ on the button opens it, ↓ ↑ Home End move, a letter jumps, Esc closes, Tab closes and moves on. A
+                        refill while it is open waits until it closes.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Open <b>More ▾</b>: the labels and the hints start at one edge, the groups have their headings, and <b>Run a pressure
-                        test</b> is grey and says why it cannot run. Press ↓ until it is focused: the focus stops on it, and Enter does nothing.
-                        Press <b>Refill in 3 s</b>, open the menu and wait: nothing moves until you close it. In the phone frame the open menu
-                        spans the header's buttons. The <b>Headings</b> and <b>Cannot be used</b> buttons open the wide menu themselves, so each option shows the moment it is pressed; <b>Cannot be used</b> is about <b>Run a pressure test</b>, the grey entry, and where its reason sits.
+                        Open <b>More ▾</b>: the labels and the hints start at one edge, the groups have their headings, and
+                        <b>Run a pressure test</b> is grey and says why it cannot run. Press ↓ until it is focused: the focus stops on it, and Enter
+                        does nothing. Press <b>Refill in 3 s</b>, open the menu and wait: nothing moves until you close it. In the phone frame the
+                        open menu spans the header's buttons. The <b>Headings</b> and <b>Cannot be used</b> buttons open the wide menu themselves, so
+                        each option shows the moment it is pressed; <b>Cannot be used</b> is about <b>Run a pressure test</b>, the grey entry, and
+                        where its reason sits.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="headings">
                     <span>Headings:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="caps" aria-pressed="true">Small capitals, muted</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="plain" aria-pressed="false">Plain words, a line between groups</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="plain" aria-pressed="false">
+                        Plain words, a line between groups
+                    </button>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="reason">
                     <span>Cannot be used:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="replace" aria-pressed="true">The reason in place of its hint</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="add" aria-pressed="false">The hint, and the reason under it</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="replace" aria-pressed="true">
+                        The reason in place of its hint
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="add" aria-pressed="false">
+                        The hint, and the reason under it
+                    </button>
                 </div>
                 <div class="dp-actions" role="group" aria-label="Try the menu">
                     <button type="button" class="kp-button kp-button--sm" data-dp-menu="refill">Refill in 3 s</button>
@@ -175,9 +183,9 @@
                 <div class="dp-sec__head">
                     <h2 id="h-meter">A meter with a mark</h2>
                     <p>
-                        <code>.kp-meter</code> works anywhere: in a tile, at the start of a line of words, in a table cell. <code>--kp-value</code>
-                        is the share; <code>--kp-mark</code> an optional tick (a target, a limit, what is booked), which may lie past the end. A
-                        screen reader hears the real numbers, past 100 % too, and <code>setMeter()</code> writes it all in one call.
+                        <code>.kp-meter</code> works anywhere: in a tile, at the start of a line of words, in a table cell. <code>--kp-value</code> is
+                        the share; <code>--kp-mark</code> an optional tick (a target, a limit, what is booked), which may lie past the end. A screen
+                        reader hears the real numbers, past 100 % too, and <code>setMeter()</code> writes it all in one call.
                     </p>
                 </div>
                 <div data-review-look>
@@ -190,7 +198,9 @@
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="mark">
                     <span>Mark:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="tick" aria-pressed="true">A tick across the bar</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="notch" aria-pressed="false">A small triangle over the bar</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="notch" aria-pressed="false">
+                        A small triangle over the bar
+                    </button>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="over">
                     <span>Past the end:</span>
@@ -244,16 +254,16 @@
                 <div class="dp-sec__head">
                     <h2 id="h-kpis">Key figures that never leave one alone</h2>
                     <p>
-                        <code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile
-                        is wide enough, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it
-                        steps down to a count that does not; only when none exists does the last tile get the row to itself.
+                        <code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile is
+                        wide enough, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it steps
+                        down to a count that does not; only when none exists does the last tile get the row to itself.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Pick a number of tiles and a width: there is never one tile alone on a row with empty space beside it, except where no
-                        allowed count avoids it (seven at 700 px, five at phone width), and there the option decides. Every tile in a row has the
-                        same height. The table under it is the spec's own list of cases, worked out by the same function.
+                        Pick a number of tiles and a width: there is never one tile alone on a row with empty space beside it, except where no allowed
+                        count avoids it (seven at 700 px, five at phone width), and there the option decides. Every tile in a row has the same height.
+                        The table under it is the spec's own list of cases, worked out by the same function.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="lone">
@@ -281,7 +291,13 @@
                 </div>
                 <p class="dp-log" data-dp-strip-out role="status"></p>
                 <div class="dp-strip-stage" data-dp-strip-stage>
-                    <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network right now" data-dp-strip></div>
+                    <div
+                        class="kp-kpis"
+                        data-kp-kpis-columns="all 3 2 1"
+                        role="group"
+                        aria-label="The northern network right now"
+                        data-dp-strip
+                    ></div>
                 </div>
                 <div class="dp-pair">
                     <div class="dp-col">
@@ -308,7 +324,13 @@
                     <div class="dp-col dp-narrow">
                         <p class="dp-label">Five tiles, phone width</p>
                         <div class="dp-frame">
-                            <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network, phone width" data-dp-strip-phone></div>
+                            <div
+                                class="kp-kpis"
+                                data-kp-kpis-columns="all 3 2 1"
+                                role="group"
+                                aria-label="The northern network, phone width"
+                                data-dp-strip-phone
+                            ></div>
                         </div>
                     </div>
                 </div>
@@ -332,28 +354,32 @@
                 <div class="dp-sec__head">
                     <h2 id="h-trend">A key figure with its 24-hour trend</h2>
                     <p>
-                        <code>.kp-kpi--trend</code>: a key figure whose whole tile opens its chart (a stretched <code>.kp-kpi__link</code>), with
-                        the 24-hour trend inside it as a second stop for the keyboard. Under the line the axis says where it starts and that it
-                        ends now; a pointer, a finger or the arrow keys read one point, with its date, time and value.
+                        <code>.kp-kpi--trend</code>: a key figure whose whole tile opens its chart (a stretched <code>.kp-kpi__link</code>), with the
+                        24-hour trend inside it as a second stop for the keyboard. Under the line the axis says where it starts and that it ends now;
+                        a pointer, a finger or the arrow keys read one point, with its date, time and value.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Move the pointer over a trend: a thin crosshair and the reading, as <i>04/10/2026 02:40 · 3.12 bar</i>, kept inside the
-                        tile. Tab to a tile (the whole tile gets the ring), Tab again to its trend, then ← → Home End. <b>Flow into the
-                        network</b> stopped at 14:00, so its axis ends at 14:00, not now; <b>Reservoir South</b> started this morning, so it says
-                        today. In the phone frame the tiles are narrow: the value goes under the date and time, and the corner shows only ↗.
+                        Move the pointer over a trend: a thin crosshair and the reading, as <i>04/10/2026 02:40 · 3.12 bar</i>, kept inside the tile.
+                        Tab to a tile (the whole tile gets the ring), Tab again to its trend, then ← → Home End. <b>Flow into the network</b> stopped
+                        at 14:00, so its axis ends at 14:00, not now; <b>Reservoir South</b> started this morning, so it says today. In the phone
+                        frame the tiles are narrow: the value goes under the date and time, and the corner shows only ↗.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="note">
                     <span>avg 15 min:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="label" aria-pressed="true">In the label, in its capitals</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="label" aria-pressed="true">
+                        In the label, in its capitals
+                    </button>
                     <button type="button" class="kp-button kp-button--sm" data-value="value" aria-pressed="false">Beside the number</button>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="readout">
                     <span>Reading:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="float" aria-pressed="true">A chip over the line</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="axis" aria-pressed="false">Always in the row under the line</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="axis" aria-pressed="false">
+                        Always in the row under the line
+                    </button>
                 </div>
                 <div class="dp-actions" role="group" aria-label="Try the tiles">
                     <button type="button" class="kp-button kp-button--sm" data-dp-trend="live">Ten minutes later</button>
@@ -362,15 +388,33 @@
                 <div class="dp-stack">
                     <div class="dp-col">
                         <p class="dp-label">Four figures</p>
-                        <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1 right now" data-dp-trend-strip="main"></div>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="4 2 1"
+                            role="group"
+                            aria-label="Pump house 1 right now"
+                            data-dp-trend-strip="main"
+                        ></div>
                         <p class="dp-label dp-label--gap">The states a tile can be in</p>
-                        <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Tiles in other states" data-dp-trend-strip="states"></div>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="4 2 1"
+                            role="group"
+                            aria-label="Tiles in other states"
+                            data-dp-trend-strip="states"
+                        ></div>
                         <p class="dp-log" data-dp-trend-out role="status">No tile opened yet.</p>
                     </div>
                     <div class="dp-col dp-narrow">
                         <p class="dp-label">Phone width, two to a row</p>
                         <div class="dp-frame">
-                            <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1, phone width" data-dp-trend-strip="phone"></div>
+                            <div
+                                class="kp-kpis"
+                                data-kp-kpis-columns="4 2 1"
+                                role="group"
+                                aria-label="Pump house 1, phone width"
+                                data-dp-trend-strip="phone"
+                            ></div>
                         </div>
                     </div>
                 </div>
@@ -395,8 +439,8 @@
                     <h2 id="h-calendar">A month of nightly backups</h2>
                     <p>
                         <code>.kp-calendar</code>: a month as a grid of days, each a plate in the colour of how its night went, with how many of the
-                        services were backed up under the day's number. Always six weeks tall. One tab stop: the arrows move a day or a week, Home
-                        and End go to the week's ends, Page Up and Page Down change the month (with Shift, the year), Enter picks. Today is the day in
+                        services were backed up under the day's number. Always six weeks tall. One tab stop: the arrows move a day or a week, Home and
+                        End go to the week's ends, Page Up and Page Down change the month (with Shift, the year), Enter picks. Today is the day in
                         Brussels. Beside it, the page's own detail of the picked day.
                     </p>
                 </div>
@@ -404,8 +448,8 @@
                     <p data-for="formal">
                         Green nights had every service, amber some, red none; the dashed days are still to come or from before the first backup.
                         Today, 04/10, has a dark inner ring; the picked day an outer ring. Press <b>‹ Prev</b> twice and back: the grid keeps its
-                        height in every month. Try the states: <b>Loading</b> pulses every day in place, <b>Nothing to check</b> and <b>Could not
-                        read</b> stop the pulse and say why. In the phone frame the detail goes under the grid.
+                        height in every month. Try the states: <b>Loading</b> pulses every day in place, <b>Nothing to check</b> and
+                        <b>Could not read</b> stop the pulse and say why. In the phone frame the detail goes under the grid.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="glyph">
@@ -479,15 +523,15 @@
                     <p>
                         <code>.kp-graph</code>: one node in the middle, the rest on a ring around it, the links drawn by kind, each kind a colour and
                         a dash named in the legend. Hover or focus a node to see only its links; click it (or press Enter) to keep it, several at
-                        once; Esc or <b>Show all</b> clears. The graph is one tab stop; the arrows walk the ring. A label points away from the
-                        middle and is shortened where it would touch another, the full name in its tooltip.
+                        once; Esc or <b>Show all</b> clears. The graph is one tab stop; the arrows walk the ring. A label points away from the middle
+                        and is shortened where it would touch another, the full name in its tooltip.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Hover <b>Pump house 3</b>: only its links stay, the rest fades. Click two nodes: both stay picked. Turn a kind of link off
-                        in the legend. Press <b>Fifteen long names</b>: in the phone frame no two labels touch and none is cut off at the edge;
-                        those that had to be shortened end in … and show the full name on hover. The hint sits under the picture, never over it.
+                        Hover <b>Pump house 3</b>: only its links stay, the rest fades. Click two nodes: both stay picked. Turn a kind of link off in
+                        the legend. Press <b>Fifteen long names</b>: in the phone frame no two labels touch and none is cut off at the edge; those
+                        that had to be shortened end in … and show the full name on hover. The hint sits under the picture, never over it.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="colour">
@@ -510,7 +554,13 @@
                 </div>
                 <div class="dp-stack">
                     <div class="dp-col">
-                        <figure class="kp-graph" data-kp-graph data-kp-key="network" aria-label="The northern network" data-dp-graph-el="wide"></figure>
+                        <figure
+                            class="kp-graph"
+                            data-kp-graph
+                            data-kp-key="network"
+                            aria-label="The northern network"
+                            data-dp-graph-el="wide"
+                        ></figure>
                         <p class="dp-log" data-dp-graph-out role="status">Nothing picked: every link is shown.</p>
                     </div>
                     <div class="dp-col dp-narrow">
@@ -546,18 +596,18 @@
                 <div class="dp-sec__head">
                     <h2 id="h-help">Help, and a short tour</h2>
                     <p>
-                        <code>.kp-drawer</code>: Help as a drawer at the side, with a head, a body that scrolls, and a foot that stays. Its cards
-                        hold <code>.kp-help__list</code>s, words beside their meaning. <code>startTour()</code> walks a reader over the page, one
-                        card per part: the count is exact (a part not on the page is left out before counting), Back and Next, Esc ends, and the
-                        focus goes back where it was. A finished tour is remembered.
+                        <code>.kp-drawer</code>: Help as a drawer at the side, with a head, a body that scrolls, and a foot that stays. Its cards hold
+                        <code>.kp-help__list</code>s, words beside their meaning. <code>startTour()</code> walks a reader over the page, one card per
+                        part: the count is exact (a part not on the page is left out before counting), Back and Next, Esc ends, and the focus goes
+                        back where it was. A finished tour is remembered.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
                         Press <b>Help</b> in the little app: the drawer comes in from the right, its foot stays while the body scrolls. Press
                         <b>Take the 1-minute tour</b>: the first card says <i>1 of 5</i> (the sixth step points at a map this page does not have),
-                        sits under or over its part without covering it, and Back, Skip, Next work, as do ← → and Esc. In the phone frames: the
-                        drawer as it looks on a phone, and a tour over the phone's tab bar.
+                        sits under or over its part without covering it, and Back, Skip, Next work, as do ← → and Esc. In the phone frames: the drawer
+                        as it looks on a phone, and a tour over the phone's tab bar.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="highlight">
@@ -596,7 +646,9 @@
                     <div class="dp-app__body">
                         <div class="kp-card" data-dp-tour-step="readings">
                             <h3 class="kp-card__title">Readings today</h3>
-                            <p class="kp-card__body">Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.</p>
+                            <p class="kp-card__body">
+                                Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+                            </p>
                         </div>
                         <div class="kp-card" data-dp-tour-step="incidents">
                             <h3 class="kp-card__title">Open incidents</h3>
@@ -642,7 +694,9 @@
                 <dialog class="kp-dialog kp-drawer" id="dp-help" aria-labelledby="dp-help-title" data-dp-help>
                     <header class="kp-drawer__head">
                         <h2 class="kp-dialog__title" id="dp-help-title">Help</h2>
-                        <button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close Help" title="Close Help" data-dp-help-close>✕</button>
+                        <button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close Help" title="Close Help" data-dp-help-close>
+                            ✕
+                        </button>
                         <p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
                     </header>
                     <div class="kp-drawer__body">

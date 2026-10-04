@@ -10,6 +10,8 @@ export declare const CHART_ZOOM_EVENT = "kp-chart-zoom";
 export declare const CHART_RANGE_EVENT = "kp-chart-range";
 /** The zone a chart prints its times in and aligns its time axis to, unless attachCharts() is given another (rule 52). */
 export declare const CHART_TIME_ZONE = "Europe/Brussels";
+/** A key figure's 24-hour trend: the spark variant without its head line. */
+export declare const TREND_CHART = "[data-kp-chart=\"spark\"][data-kp-spark-head=\"none\"]";
 export type ChartPoint = [number, number];
 export type ChartSeries = {
     label: string;
@@ -181,6 +183,11 @@ export type ChartOptions = {
      * rebuilt legend included), so the page can mark it
      */
     decorate?: ChartDecorate;
+    /**
+     * the moment a trend's axis counts from (`now`, `today`, `yesterday`);
+     * `Date.now()` by default
+     */
+    now?: () => number;
 };
 export type ChartStrings = ReturnType<typeof chartWords>;
 export type Strings = import('./strings.js').Strings;
@@ -254,6 +261,8 @@ export type Strings = import('./strings.js').Strings;
  *   string falls back to formatChartValue()
  * @property {ChartDecorate} [decorate] called with every control a chart builds, each time it builds it (a
  *   rebuilt legend included), so the page can mark it
+ * @property {() => number} [now] the moment a trend's axis counts from (`now`, `today`, `yesterday`);
+ *   `Date.now()` by default
  * @typedef {ReturnType<typeof chartWords>} ChartStrings
  * @typedef {import('./strings.js').Strings} Strings
  */
@@ -290,6 +299,9 @@ export declare function chartWords(overrides?: Partial<Strings>): {
     onePoint: string;
     loading: string;
     pinnedOutside: string;
+    today: string;
+    yesterday: string;
+    trendKeys: string;
 };
 /**
  * The dash of the `i`-th source's line: none for the first five (each its
@@ -407,6 +419,32 @@ export declare function zonedTime(year: number, month: number, day: number, hour
  */
 export declare function numericTime(timeZone?: string): ChartTimeFormat;
 /**
+ * The words under a key figure's trend (`data-kp-spark-axis="relative"`):
+ * where it starts, as the first point's clock and its day (`14:40
+ * yesterday`, `07:00 today`, or `08:10 02/10/2026` when older), and where it
+ * ends: `now` while the last point is at most two steps old, else that
+ * point's clock (`14:00`, with its day when it is not today's). Fewer than
+ * two points: a no-break space each, so the row keeps its height. Days are
+ * the wall clock's in `timeZone` (rule 52).
+ * @param {readonly ChartPoint[]} points oldest first
+ * @param {{ now: number, step?: number, timeZone?: string, time?: ChartTimeFormat,
+ *   words?: { now: string, today: string, yesterday: string } }} context `step` is the points' spacing (10 min by
+ *   default); `time` prints the clock and an older date (`numericTime(timeZone)` by default); `words` are the
+ *   dictionary's `chartNow`, `chartToday` and `chartYesterday` unless given
+ * @returns {[string, string]}
+ */
+export declare function trendAxis(points: readonly ChartPoint[], { now, step, timeZone, time, words }: {
+    now: number;
+    step?: number;
+    timeZone?: string;
+    time?: ChartTimeFormat;
+    words?: {
+        now: string;
+        today: string;
+        yesterday: string;
+    };
+}): [string, string];
+/**
  * The distance between two time ticks over a window of `span`: the finest
  * the span allows (15 min up to 2 h, 30 min up to 4 h, 1 h up to 8 h, 3 h up
  * to 16 h, 6 h up to 1.2 days, a day beyond), coarser until no more than
@@ -451,6 +489,7 @@ export type ChartContext = {
     timeZone: string;
     format: ChartValueFormat | undefined;
     decorate: ChartDecorate | undefined;
+    now: () => number;
 };
 /**
  * @typedef {object} ChartState
@@ -471,6 +510,7 @@ export type ChartContext = {
  * @property {string} timeZone
  * @property {ChartValueFormat | undefined} format
  * @property {ChartDecorate | undefined} decorate
+ * @property {() => number} now
  */
 /**
  * Give a chart its sources and events (the page's own data). Before the chart
@@ -483,6 +523,36 @@ export type ChartContext = {
  * @param {ChartData} data
  */
 export declare function setChartData(el: Element, data: ChartData): void;
+export type TrendData = {
+    /**
+     * `[[ms, value]…]`, oldest first
+     */
+    points: ChartPoint[];
+    /**
+     * the points' spacing, ms (the axis says `now` while the last is at most two steps old)
+     */
+    step?: number;
+    unit?: string;
+    unitKind?: ChartUnitKind;
+    digits?: number;
+};
+/**
+ * @typedef {object} TrendData a key figure's trend, the short way
+ * @property {ChartPoint[]} points `[[ms, value]…]`, oldest first
+ * @property {number} [step] the points' spacing, ms (the axis says `now` while the last is at most two steps old)
+ * @property {string} [unit]
+ * @property {ChartUnitKind} [unitKind]
+ * @property {number} [digits]
+ */
+/**
+ * Give a key figure's trend its points: setChartData() with one source, the
+ * short way. `null` is loading: the trend stays empty at its final height
+ * and the tile around it is `aria-busy` until data comes. An empty
+ * `points` is a tile with no trend.
+ * @param {Element} figure the `[data-kp-chart="spark"]` element
+ * @param {TrendData | null} data
+ */
+export declare function setTrendData(figure: Element, data: TrendData | null): void;
 /**
  * Press legend source `index` of a chart, the way a click does: on or off
  * (a toggle without `on`, else on when `on` is true and off when false), or
@@ -573,4 +643,13 @@ declare class ChartGroup {
  * @returns {() => void} detach: these charts taken away (detachChart() each)
  */
 export declare function attachCharts(root?: ParentNode, options?: ChartOptions): () => void;
+/**
+ * Draw only the key figures' trends under `root` (`TREND_CHART`), with the
+ * options attachCharts() takes; for a page that wires its trends apart from
+ * its other charts. attachCharts() draws them too.
+ * @param {ParentNode} [root]
+ * @param {ChartOptions} [options]
+ * @returns {() => void} detach
+ */
+export declare function attachTrendCharts(root?: ParentNode, options?: ChartOptions): () => void;
 export {};

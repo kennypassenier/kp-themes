@@ -1991,7 +1991,7 @@ export const DESCRIPTORS = [
             { name: '.kp-kpi__label, __value, __note, __trend', what: 'The label (small capitals, one line, wrapping on a narrow tile), the number with a `<small>` unit, a note beside it, and the trend line.' },
             { name: '.kp-kpi__delta', what: 'A change in the trend line: `data-kp-direction="up|down"` puts ▲ or ▼ before it, `data-kp-tone="good|bad"` colours it.' },
             { name: '.kp-kpi__spark', what: 'An inline SVG with `data-kp-spark="12 14 13 …"`: the script draws a line over a soft area from the numbers, and again when they change.' },
-            { name: '.kp-kpi__meter', what: 'A used-of-total bar with `role="meter"`; the share, 0 to 1, is a custom property on its style (see the knobs).' },
+    { name: '.kp-kpi__meter', what: 'The meter at the bottom of a tile: the same rules as `.kp-meter` (its own page), with a mark, past the end and loading; the tile’s tone colours its fill.' },
             { name: 'data-kp-tone', what: 'On the tile, `warning` or `destructive`: a coloured edge and a coloured number (and the meter’s fill).' },
             { name: '.kp-kpi--toggle', what: 'A filter tile: a click flips `aria-pressed` and fires `kp-kpi-toggle` with `detail.pressed`; the page filters. Pressed, a primary border over a faint primary background.' },
             { name: '.kp-kpi__hint', what: 'What a click does, beside the label, in the page’s words: one child `data-kp-when="off"`, one `data-kp-when="on"`.' },
@@ -2003,6 +2003,135 @@ export const DESCRIPTORS = [
             'Built in — a delta’s direction is a ▲ or ▼ as well as a colour.',
             'Yours — give the meter its `aria-label` and values, and say in the trend line what a sparkline would otherwise only show.',
             'Yours — keep the hint `aria-hidden`; the pressed state already says what it says.',
+        ],
+    },
+    {
+        id: 'meter',
+        title: 'Meter with a mark',
+        group: 'Data',
+        classes: ['kp-meter'],
+        exports: [],
+        // What setMeter() writes for the stylesheet: a share past the end
+        // (on the meter and on its mark) and the loading pulse.
+        aliases: ['over', 'loading'],
+        intro: 'A used-of-total bar that works anywhere: in a table cell, at the bottom of a key figure (`.kp-kpi__meter`), at the start of a line of words (`.kp-meter--inline`). the share property is the share, the mark property an optional tick across the bar (a target, a limit, what is booked) that sticks out above and below without making the meter taller. A share or a mark past the end shows a small ▸ at the end, and a screen reader hears the real numbers, past 100 % too. js/kpi.js writes it all in one call: `setMeter(el, { value, mark, tone, label, markLabel, loading })`.',
+        whenToUse:
+            'For one share of a whole that the reader compares with a line: a reservoir against its target, capacity against what is booked tonight, a plan against what was done. Not for progress that moves on its own (that is a progress bar), and not for many values side by side (that is a chart).',
+        examples: [
+            {
+                title: 'A share against its mark, past the end, and in a line of words',
+                why: 'Written the way `setMeter()` writes it, so it reads right before any script runs: `role="meter"`, `aria-valuenow` from 0 to 100, and an `aria-valuetext` that names the real share. The tick is a `.kp-meter__mark` child; past the end it carries `data-kp-over`.',
+                markup: `
+<div class="kp-stack">
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62" aria-valuetext="62% full; 80% the target level" style="--kp-value: 0.62; --kp-mark: 0.8"><span class="kp-meter__mark" aria-hidden="true"></span></span>
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58" aria-valuetext="58% running now; 130% booked for tonight" style="--kp-value: 0.58; --kp-mark: 1.3"><span class="kp-meter__mark" aria-hidden="true" data-kp-over></span></span>
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-valuetext="112% of the plan used" data-kp-over style="--kp-value: 1.12"></span>
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78" aria-valuetext="78% full; 80% the overflow alarm" data-kp-tone="warning" style="--kp-value: 0.78; --kp-mark: 0.8"><span class="kp-meter__mark" aria-hidden="true"></span></span>
+<span class="kp-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuetext="being measured" aria-busy="true" data-kp-loading style="--kp-value: 0"></span>
+<p><span class="kp-meter kp-meter--inline" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="41" aria-valuetext="41% of today's plan; 55% planned by now" style="--kp-value: 0.41; --kp-mark: 0.55"><span class="kp-meter__mark" aria-hidden="true"></span></span>41 % of today’s plan, plan to 55 % by now</p>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-meter', what: 'The bar: the share property from 0 up (above 1 the fill is full), on the muted track, the primary colour by default.' },
+            { name: '.kp-kpi__meter', what: 'The same meter at the bottom of a key figure; a `data-kp-tone` on the tile colours its fill.' },
+            { name: '.kp-meter__mark', what: 'The tick at the mark property, across the bar and a little above and below it, with a halo of the card colour so it reads on the fill and on the track. The meter is as tall with it as without.' },
+            { name: 'data-kp-over', what: 'Past the end: on the meter, the share is above 1 and a ▸ sits at the bar’s end; on the mark, the tick stops just short of the end with the ▸ after it.' },
+            { name: 'data-kp-tone', what: '`warning` or `destructive` on the meter: an amber or red fill.' },
+            { name: 'data-kp-loading', what: 'Loading: the track pulses at its height (still under reduced motion), with no fill and no mark; `aria-busy` with it.' },
+            { name: '.kp-meter--inline', what: 'Three rem wide, at the start of a line of words, its middle on the line’s middle.' },
+            { name: 'setMeter(el, meter)', what: 'Writes the share, the mark (made the first time), the tone and the ARIA in one call; `meterText(value, mark, words)` and `meterParts(value, mark)` are the words and the arithmetic on their own.' },
+        ],
+        accessibility: [
+            'Built in — `setMeter()` writes `role="meter"`, `aria-valuenow` (0 to 100) and an `aria-valuetext` with the real share and the mark, past 100 % too (“58% running now; 130% booked for tonight”).',
+            'Built in — past the end is a ▸ as well as a full bar, so it does not rest on colour; a tone is a colour and the words carry the same.',
+            'Built in — the loading pulse stops under reduced motion; a loading meter says “being measured” (`meterMeasuring`).',
+            'Yours — the words: `label` names the share (“full”) and `markLabel` the mark (“the target level”); without a `label` the dictionary’s `meterUsed` is used. In markup you write the same `aria-valuetext` yourself.',
+        ],
+    },
+    {
+        id: 'kpi-columns',
+        title: 'Key figures on allowed column counts',
+        group: 'Data',
+        classes: [],
+        exports: [],
+        // The strip's list of allowed counts, and the flag the script writes
+        // when no count avoids a lone tile.
+        aliases: ['kpis-columns', 'kpis-span-last'],
+        intro: 'A strip of key figures that never leaves one tile alone on a row. `.kp-kpis[data-kp-kpis-columns="all 3 2 1"]` takes the first count in the list at which every tile is at least its minimum width wide, measured by the strip’s own width (not the window’s); if that leaves one tile alone on the last row it steps down to a count that does not, and only when none exists does the last tile span the whole row. js/kpi.js keeps it so as the strip resizes and as tiles come and go: `attachKpiStrips(root)`.',
+        whenToUse:
+            'For a strip whose number of tiles changes with the data (hosts, pumps, queues), or that sits in a column of changing width, where the package’s plain auto-fit would leave a single tile on the last row. Not needed for a fixed set of tiles that always fits.',
+        examples: [
+            {
+                title: 'Five tiles, three a row at most',
+                why: 'At a desk width the five sit on one row (`all`); narrower, three would leave 3 + 2, so three it is; at a phone width two would leave 2 + 2 + 1, and with no count left that avoids it the fifth spans its row. Before the script runs the strip keeps the package’s auto-fit.',
+                markup: `
+<div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network right now">
+<div class="kp-kpi"><span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1<small>bar</small></span><span class="kp-kpi__trend">two pumps running</span></div>
+<div class="kp-kpi"><span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span><span class="kp-kpi__trend">into the ring main</span></div>
+<div class="kp-kpi"><span class="kp-kpi__label">Reservoir North</span><span class="kp-kpi__value">71<small>%</small></span><span class="kp-kpi__trend">target 80 %</span></div>
+<div class="kp-kpi"><span class="kp-kpi__label">Reservoir South</span><span class="kp-kpi__value">64<small>%</small></span><span class="kp-kpi__trend">target 80 %</span></div>
+<div class="kp-kpi"><span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">2</span><span class="kp-kpi__trend">one needs a visit</span></div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-kpis-columns', what: 'The allowed counts, largest first: numbers and `all` (as many as there are tiles), for example `"all 3 2 1"` or `"4 2 1"`.' },
+            { name: 'data-kp-kpis-span-last', what: 'Written by the script when no allowed count avoids a lone tile: the last tile spans its row.' },
+            { name: 'kpiColumns(n, width, options)', what: 'The pure rule: `{ columns, spanLast }` for `n` tiles in `width` px, with `allowed`, `minTilePx` (144) and `gapPx` (16); `fitKpiStrip(strip)` applies it once.' },
+        ],
+        accessibility: [
+            'Built in — only the layout changes; the tiles keep their order in the markup and in the tab order.',
+            'Yours — name the strip (`role="group"` with an `aria-label`), as for any strip of key figures.',
+        ],
+    },
+    {
+        id: 'kpi-trend',
+        title: 'Key figure with its 24-hour trend',
+        group: 'Data',
+        classes: [],
+        exports: [],
+        // The spark variant's two options, and the chip's two-line form.
+        aliases: ['spark-head', 'spark-axis', 'stacked'],
+        intro: 'A key figure whose whole tile opens its chart, with its last 24 hours inside it. `.kp-kpi--trend` stretches its `.kp-kpi__link` over the tile; the trend is the time chart’s spark variant without its head line (`data-kp-spark-head="none"`), with the axis under it (`data-kp-spark-axis="relative"`): where it starts, as `14:40 yesterday`, and `now`. A pointer, a finger or the arrow keys read one point: a crosshair and a chip with its moment and value over the line, kept inside the tile. A note such as “avg 15 min” goes in the label, in its capitals (`.kp-kpi__label-note`). js/chart.js draws it.',
+        whenToUse:
+            'At the top of a dashboard, for the few readings whose last day matters as much as their value now, each leading to its full chart. Not for a reading whose history nobody looks at (a plain key figure), and not for comparing sources (the time chart).',
+        examples: [
+            {
+                title: 'A trend tile, its data in the markup',
+                why: 'The data is the page’s: a JSON child as here, or `setTrendData(figure, { points, step, unit, digits })` from a script (`null` is loading). The axis counts from the reader’s now on the Brussels clock; this sample’s readings are from 04/10/2026, so it names their dates.',
+                markup: `
+<div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1 right now">
+<div class="kp-kpi kp-kpi--trend">
+<span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+<a class="kp-kpi__link" href="#" title="Open Pressure on Charts"><span class="kp-kpi__link-word">Charts</span> ↗</a>
+<span class="kp-kpi__value">3.30<small>bar</small></span>
+<span class="kp-kpi__trend">now <b>3.36 bar</b> · peak 3.58 bar · two pumps</span>
+<figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Pressure, last 24 hours">
+<script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"series":[{"label":"Pressure","start":1791010800000,"step":3600000,"values":[3.36,3.45,3.44,3.44,3.45,3.45,3.45,3.44,3.4,3.35,3.32,3.35,3.41,3.44,3.46,3.44,3.48,3.55,3.58,3.55,3.51,3.38,3.31,3.3,3.36]}]}</script>
+</figure>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-kpi--trend', what: 'The tile: its link stretched over it, the trend a second stop for the keyboard; the whole tile takes the focus ring while its link has it.' },
+            { name: '.kp-kpi__link', what: 'The corner link (“Charts ↗”); in a tile of 12rem or less only ↗ shows, the word stays for a screen reader (`.kp-kpi__link-word`).' },
+            { name: '.kp-kpi__label-note', what: 'A note in the label, in its capitals, after a dot: “PRESSURE · AVG 15 MIN”.' },
+            { name: 'data-kp-spark-head="none"', what: 'On a `[data-kp-chart="spark"]`: no name and value line; a reading is a chip over the line, on the trend’s own crosshair, and a click that was not a drag follows the tile’s link.' },
+            { name: 'data-kp-spark-axis="relative"', what: 'The axis under the line: the first point’s clock and day (`today`, `yesterday`, else its date) and `now` while the last point is at most two steps old, else its clock. One point or none: two no-break spaces, so the row keeps its height.' },
+            { name: 'data-kp-stacked', what: 'Written on the chip when moment and value do not fit on one line: the value goes under the moment. When even that does not fit, the reading takes the axis row.' },
+            { name: 'states', what: 'Loading (`setTrendData(figure, null)`, or no data yet): the trend empty at its height, the tile `aria-busy`. No points: no trend, no tab stop. One point: the same, with the axis kept.' },
+            { name: 'trendAxis(points, { now, step })', what: 'The axis words on their own; `attachTrendCharts(root, options)` draws only the trends under `root` (attachCharts() draws them too).' },
+        ],
+        accessibility: [
+            'Built in — no control sits inside the link: the tile’s link is one tab stop, the trend (`role="application"`, named by the figure’s `aria-label`) the next, and only while it has two points or more.',
+            'Built in — ←/→ read point by point (Shift: ten), Home and End go to the ends, Esc hides the reading; what a key reads is said through a polite live region, with the keys described (`chartTrendKeys`).',
+            'Built in — every moment is `dd/mm/yyyy HH:mm` on the Brussels clock (rule 52); the words `now`, `today` and `yesterday` are the dictionary’s.',
+            'Yours — name the figure (“Pressure, last 24 hours”) and give the link a title that says where it goes; say the value that matters in the tile’s words, not only in the line.',
         ],
     },
     {
@@ -2073,6 +2202,54 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'graph',
+        title: 'Network graph',
+        group: 'Data',
+        classes: ['kp-graph'],
+        exports: [],
+        // The marks the script writes on what it draws and reads back: a
+        // link's ends and kind (`data-kp-from`, `-to`, `-kind`), its dash
+        // (`data-kp-style`), a node's id, Show all at rest (`-idle`), a
+        // graph with a node lit (`-focus`), its state, and the host's key
+        // that `decorate` passes on.
+        aliases: ['key', 'style', 'from', 'to', 'kind', 'id', 'idle', 'state', 'focus'],
+        intro: 'A picture of a network: one node in the middle, the rest on a ring around it from the top, clockwise, A to Z and then the nodes outside the network, the links drawn by kind (a colour and a dash each, listed above the picture with Show all). Hover or focus a node to see only its links; click it, or press Enter, to keep it picked, several at once; Esc or Show all clears. Each node takes its own hue at the theme’s chart lightness. A label points away from the middle and is shortened, with an ellipsis, where it would touch another or leave the picture; the full name stays in its title and its accessible name. js/graph.js builds it from the page’s data.',
+        whenToUse:
+            'For a network with one centre that everything reports to or is reached from: a control centre and its sites, a server and the services it talks to. Not for a network without a centre, not for a flow with a direction that matters more than the links, and not past a few dozen nodes, where the ring’s labels shrink to a letter.',
+        examples: [
+            {
+                title: 'A control centre, its sites and two kinds of link',
+                why: 'The data is the page’s, here as a JSON child (`setGraphData()` does the same from a script). The hub is the node named in `hub`, else the one with the most links. A kind the links do not use is left out of the list; a node marked `external` has a dashed grey ring and sits at the end of the ring.',
+                markup: `
+<figure class="kp-graph" data-kp-graph aria-label="The northern network">
+<script type="application/json" data-kp-graph-data>{"hub":"centre","nodes":[{"id":"centre","label":"Control centre","description":"where every reading arrives"},{"id":"ph1","label":"Pump house 1","description":"two pumps, ring main west"},{"id":"ph2","label":"Pump house 2","description":"one pump, the old town"},{"id":"ph3","label":"Pump house 3","description":"two pumps, ring main north","flag":"mismatch"},{"id":"north","label":"Reservoir North","description":"level sensor and an inlet valve"},{"id":"weather","label":"Weather service","description":"an address outside the network","external":true}],"edges":[{"from":"ph1","to":"centre","kind":"telemetry"},{"from":"ph2","to":"centre","kind":"telemetry"},{"from":"ph3","to":"centre","kind":"telemetry"},{"from":"north","to":"centre","kind":"telemetry"},{"from":"centre","to":"ph1","kind":"control","detail":"pump start and stop"},{"from":"weather","to":"centre","kind":"telemetry","detail":"rain radar every 10 min"}],"kinds":[{"kind":"telemetry","label":"Telemetry","hint":"Readings sent every minute","style":"solid","colour":"var(--chart-1)"},{"kind":"control","label":"Remote control","hint":"Commands to the site","style":"dash","colour":"var(--chart-2)"},{"kind":"radio","label":"Radio link","hint":"A spare path over radio","style":"dot","colour":"var(--chart-4)"}]}</script>
+</figure>
+`,
+            },
+        ],
+        variants: [
+            { name: '[data-kp-graph]', what: 'A graph; usually a `figure.kp-graph` with an `aria-label`. Its data comes from a `script[type="application/json"][data-kp-graph-data]` child or from `setGraphData(el, data)` after the attach; until then it shows loading.' },
+            { name: '.kp-graph__bar', what: 'Over the picture: the kinds of link (`.kp-graph__kinds`, one `.kp-graph__kind` toggle each, the ones the links use) and Show all, which keeps its place while there is nothing to show again (`data-kp-idle`).' },
+            { name: '.kp-graph__box', what: 'The picture (`.kp-graph__svg`) at the height it is drawn at (see the knobs), in every state, with `.kp-graph__note` for the state’s sentence.' },
+            { name: '.kp-graph__hint', what: 'What a pointer, a click and the keys do, under the picture in the page’s flow.' },
+            { name: '.kp-graph__edge', what: 'A link: its kind’s colour (the kind’s `colour`, a token such as `var(--chart-2)`) and dash (`data-kp-style="solid|dash|dot|long-dash"`). Two links between one pair bend apart, 26 px a step.' },
+            { name: '.kp-graph__node', what: 'A node: a ring (`__ring`), a core (`__core`) in its own hue (spread over the nodes A to Z unless a node gives its own `hue`), and its label (`__label`). A `weight` from 0 to 1 sizes it.' },
+            { name: '.kp-graph__node--hub', what: 'The node in the middle; its label sits under it.' },
+            { name: '.kp-graph__node--external', what: 'A node outside the network (`external: true`): a dashed grey ring, no core, at the end of the ring.' },
+            { name: '.kp-graph__flag', what: 'A dotted ring around a node whose `flag` is `mismatch`: its settings differ from the plan.' },
+            { name: 'lit, dim, picked', what: 'While a node is hovered, focused or picked, its links are `is-on`, the rest `is-dim`, and the nodes they do not reach fade; a picked node has a thicker ring. A kind turned off is `is-hidden`.' },
+            { name: 'data-kp-state', what: 'Written by the script: `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot before the page’s sentence), each at the picture’s full height; `ready` once it has nodes.' },
+        ],
+        accessibility: [
+            'Built in — the picture is one tab stop: Tab lands on the hub (or the node last focused), the arrow keys walk the ring, Home and End jump, Enter or Space picks, Esc shows all again.',
+            'Built in — every node is a `role="button"` with `aria-pressed` and the accessible name “label, description”; the picture is a named group whose name ends with the hint.',
+            'Built in — a shortened label keeps the full name in the node’s title and accessible name; the labels are fitted again when a web font arrives.',
+            'Built in — a kind toggle is a real button with `aria-pressed` and the kind’s hint as its title; a kind turned off is crossed out as well as faded.',
+            'Built in — a live update keeps the focus and the picks by id; a hover or a pick changes classes only, so the node under the pointer is never rebuilt.',
+            'Yours — name the graph (`aria-label`), give every node a `description` worth hearing, and say in text near it what a reader must not miss; the picture is the overview.',
+        ],
+    },
+    {
         id: 'state-word',
         title: 'State word',
         group: 'Data',
@@ -2132,6 +2309,51 @@ export const DESCRIPTORS = [
         accessibility: [
             'Built in — `aria-live="off"`, `aria-description` with the moment written out, a console warning when the line sits inside a live region.',
             'Yours — keep the line out of `role="status"`; announce staleness with `data-kp-ago-announce="state"` if it matters.',
+        ],
+    },
+    {
+        id: 'calendar',
+        title: 'Month heatmap',
+        group: 'Data',
+        classes: ['kp-calendar', 'kp-calendar-layout'],
+        exports: [],
+        // The calendar's own hooks follow from its class (`data-kp-calendar-…`);
+        // these are the generic ones it reads or writes on its parts.
+        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state'],
+        intro: 'A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone.',
+        whenToUse:
+            'Where a reader looks for the bad days in a month of one daily outcome and picks one to see why. Not for picking a date in a form, which is the date picker, and not for a value over time, which is a time chart.',
+        examples: [
+            {
+                title: 'A month of nightly backups, with the page’s detail beside it',
+                why: 'The markup is the empty section; the script builds the rest and the page gives the days with `setCalendarDays(el, { "2026-10-04": { tone: "warn", count: "7/9", label: "7 of 9 services backed up" } })`. A picked day fires `kp-calendar-pick`; the page fills the aside. Under 45rem the aside goes under the grid.',
+                markup: `
+<div class="kp-calendar-layout">
+<section class="kp-calendar" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups"></section>
+<aside aria-live="polite"><p>Pick a day to see every service’s own state that night.</p></aside>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
+            { name: '.kp-calendar-layout', what: 'The calendar beside the page’s own detail of the picked day; one column under 45rem of its own width.' },
+            { name: 'data-kp-tone="ok|warn|bad"', what: 'A day on its status plate, the text in the plate’s own ink: all done, partly done, nothing done.' },
+            { name: 'data-kp-tone="muted|none"', what: 'Nothing to do that day (a muted plate), or nothing known about it (an outline).' },
+            { name: 'data-kp-tone="future|before"', what: 'A day still to come, or from before anything was kept: a dashed outline, no count.' },
+            { name: 'data-kp-tone="loading"', what: 'Every day while `setCalendarState(el, "loading", words)`: a muted plate that pulses, at rest under reduced motion.' },
+            { name: 'data-kp-today', what: 'Written on today’s day: an inner ring in the text colour.' },
+            { name: 'td[aria-selected="true"]', what: 'The picked day: an outer ring in the primary colour; the focus ring sits further out.' },
+            { name: '.kp-calendar__pad', what: 'The neighbouring months’ days in the first and last weeks: their numbers, quiet and inert, so every week reads full.' },
+            { name: '.kp-calendar__state', what: 'The line under the month: the words of `setCalendarState()`; an error’s after a dot in the destructive colour.' },
+            { name: '.kp-calendar__legend', what: 'A swatch and its words per tone, from `setCalendarLegend(el, [{ tone, label }])`; hidden until given.' },
+        ],
+        accessibility: [
+            'Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.',
+            'Built in — every day is named by its date as dd/mm/yyyy and the page’s words for it, so the colour is never the only carrier.',
+            'Built in — a live update repaints in place: the focus and the pick stay on the same element.',
+            'Yours — give each day words that say what its colour says (`label`), and name the calendar (`aria-label`) when the month’s title alone does not say what it counts.',
+            'Yours — put the detail of a picked day in a polite live region, or move the focus there, so a screen reader hears it.',
         ],
     },
     {
@@ -2737,6 +2959,171 @@ export const DESCRIPTORS = [
             'Yours — make every entry a real button or link; a div with a click handler is not reachable.',
             'Yours — name the trigger, and say when it opens a menu rather than acting.',
             'Yours — put a destructive entry behind the same confirmation you would give a destructive button.',
+        ],
+    },
+    {
+        id: 'menu-button',
+        title: 'Menu button',
+        group: 'Navigation',
+        classes: ['kp-menu-button'],
+        exports: [],
+        aliases: ['menu-open', 'menu-close', 'menu-select', 'menu-empty', 'value', 'reason', 'loading'],
+        intro: 'A button that opens every other action of a page or a thing, grouped under small muted capitals, each entry its label over a one-line hint. It is the package’s `.kp-menu` with `.kp-menu__item` entries, made rich (`.kp-menu--rich`) and wired by js/menu-button.js: the keys of a menu, a fill that waits while the menu is open, and an action that cannot be used now that stays in the list and says why.',
+        whenToUse:
+            'For the rare actions on a page or a record, behind a “More ▾” at the end of its header, when each needs a word of explanation. Not for the one or two actions used every day, which are buttons; not for navigation, which reads better as links; and not for a plain list of short commands, which the dropdown menu does with less.',
+        examples: [
+            {
+                title: 'More ▾ with groups, hints and an action that cannot be used now',
+                why: 'The entries are markup here; `setMenu(wrapper, groups)` writes the same from a script, and a live page refills it the same way. ↓ on the button opens it on the first entry; the grey entry takes the focus, keeps its hint and says why under it, and Enter does nothing there.',
+                markup: `
+<div class="kp-menu-button" data-kp-menu-button data-kp-key="doc-pump-more">
+<button type="button" class="kp-button">More ▾</button>
+<div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" hidden>
+<div class="kp-menu__group" role="group" aria-labelledby="doc-mb-g1">
+<p class="kp-menu__heading" id="doc-mb-g1" role="presentation">Run</p>
+<button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="doc-mb-l1" aria-describedby="doc-mb-h1" data-kp-value="restart"><span class="kp-menu__label" id="doc-mb-l1">Restart the pumps</span><span class="kp-menu__hint" id="doc-mb-h1">Stop and start both pumps, one after the other</span></button>
+<button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-disabled="true" aria-labelledby="doc-mb-l2" aria-describedby="doc-mb-h2 doc-mb-r2" data-kp-value="test"><span class="kp-menu__label" id="doc-mb-l2">Run a pressure test</span><span class="kp-menu__hint" id="doc-mb-h2">Close the ring main valve and measure for ten minutes</span><span class="kp-menu__hint kp-menu__reason" id="doc-mb-r2">Not while a field engineer is on site</span></button>
+</div>
+<div class="kp-menu__group" role="group" aria-labelledby="doc-mb-g2">
+<p class="kp-menu__heading" id="doc-mb-g2" role="presentation">Records</p>
+<button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="doc-mb-l3" aria-describedby="doc-mb-h3" data-kp-value="print"><span class="kp-menu__label" id="doc-mb-l3">Print the site sheet</span><span class="kp-menu__hint" id="doc-mb-h3">One page with the pumps, the valves and the contacts</span></button>
+<button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive" tabindex="-1" aria-labelledby="doc-mb-l4" aria-describedby="doc-mb-h4" data-kp-value="archive"><span class="kp-menu__label" id="doc-mb-l4">Archive this pump house…</span><span class="kp-menu__hint" id="doc-mb-h4">Take it off the network; its readings are kept</span></button>
+</div>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-menu-button', what: 'The wrapper, `[data-kp-menu-button]`: a button, then its `[role="menu"]`. The menu hangs under the button at its end edge.' },
+            { name: '.kp-menu--rich', what: 'The menu itself, a `.kp-menu`: wide enough for a label over a hint, and past its maximum height it scrolls inside itself.' },
+            { name: '.kp-menu__group, __heading', what: 'A group of entries and its heading in small muted capitals, which names the `role="group"`. A menu of one entry, or a nameless group, has no heading.' },
+            { name: '.kp-menu__label, __hint', what: 'An entry’s label over its one-line hint; every label and every hint start at one edge.' },
+            { name: '.kp-menu__reason', what: 'Under the hint of an entry that cannot be used now (`aria-disabled`), in italics: why. The entry keeps its focus and does nothing.' },
+            { name: '.kp-menu__item--destructive', what: 'A destructive entry: its label in the destructive colour.' },
+            { name: 'loading', what: '`setMenu(wrapper, "loading")`: one grey entry at the height of a real one, the menu `aria-busy`.' },
+            { name: 'empty', what: 'No entries: the button stays, grey, and its title says why; `data-kp-menu-empty="hide"` takes it away instead.' },
+            { name: 'in a page header', what: 'In a `.kp-page-header` 40rem wide or narrower, the open menu spans the header’s buttons, inside the screen.' },
+            { name: 'a refill while open', what: 'Waits until the menu closes, so a live update never moves an entry under the pointer or the focus; a fill that shows the same is skipped.' },
+        ],
+        accessibility: [
+            'Built in — the APG menu button: `aria-haspopup`, `aria-expanded` and `aria-controls` on the button; ↓ or ↑ opens it on the first or last entry; ↓ ↑ wrap, Home and End, and a letter jumps to the next entry that starts with it.',
+            'Built in — Esc closes it and puts the focus back on the button, and the page’s own Escape listeners hear nothing; Tab closes it and moves on; a click outside closes it.',
+            'Built in — an entry that cannot be used stays focusable with `aria-disabled`, and its hint and reason are its description, so a keyboard reader learns why.',
+            'Built in — every word the menu says is in the dictionary (`menuLoading`, `menuEmpty`); `attachMenuButtons(root, { strings })` overrides them.',
+            'Yours — name the menu (`aria-label`) and say in the button that it opens one (“More ▾”).',
+            'Yours — put a destructive entry behind the same confirmation you would give a destructive button.',
+        ],
+    },
+    {
+        id: 'drawer',
+        title: 'Drawer',
+        group: 'Navigation',
+        classes: ['kp-drawer'],
+        exports: [],
+        intro: 'A panel at the end edge of the window, full height: a head with the title, the close button and one sentence, a body that scrolls, and a foot that stays. `.kp-drawer` lays out any element; a `dialog.kp-drawer` (with `.kp-dialog`) is placed at the edge and slides in.',
+        whenToUse:
+            'For Help, settings or the detail of one thing, kept beside the page rather than over its middle. Not for a decision that must be made first, which is a dialog, and not for navigation that is always there, which is a side navigation.',
+        examples: [
+            {
+                title: 'Help in a drawer',
+                why: 'The button names the dialog by id, as every dialog trigger does; Esc or ✕ closes it and the focus goes back to the button. The foot holds what Help can start.',
+                markup: `
+<button type="button" class="kp-button" data-kp-dialog="doc-drawer">Help</button>
+<dialog class="kp-drawer kp-dialog" id="doc-drawer" aria-labelledby="doc-drawer-title">
+<header class="kp-drawer__head">
+<h2 class="kp-dialog__title" id="doc-drawer-title">Help</h2>
+<button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close Help" data-kp-dialog-close>✕</button>
+<p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
+</header>
+<div class="kp-drawer__body">
+<section class="kp-help kp-card">
+<h3>Words</h3>
+<p>The words this site uses for things.</p>
+<dl class="kp-help__list">
+<dt>Pump house</dt><dd>A building with one or more pumps that keep the pressure up in a part of the network.</dd>
+<dt>Ring main</dt><dd>The loop of large pipes that feeds the town from two sides.</dd>
+</dl>
+</section>
+</div>
+<footer class="kp-drawer__foot">
+<button type="button" class="kp-button kp-button--primary">Take the 1-minute tour</button>
+</footer>
+</dialog>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-drawer', what: 'Three rows: the head, the body (which scrolls) and the foot (which stays). On any element.' },
+            { name: 'dialog.kp-drawer', what: 'At the end edge at the full height of the window, square, sliding in from the edge unless the reader asked for less motion.' },
+            { name: '.kp-drawer__head, __desc', what: 'The title (a `.kp-dialog__title`, kept clear of the close button) and one sentence under it.' },
+            { name: '.kp-drawer__body', what: 'What the drawer holds, in a column with room between; it scrolls inside itself.' },
+            { name: '.kp-drawer__foot', what: 'The drawer’s action, always in view at the bottom.' },
+        ],
+        accessibility: [
+            'Built in — as a modal `dialog` it traps the focus, closes on Escape and returns the focus to its button: the browser’s, as every dialog’s.',
+            'Yours — name the drawer by its title (`aria-labelledby`) and give it a close button with a name.',
+        ],
+    },
+    {
+        id: 'help-tour',
+        title: 'Help and the tour',
+        group: 'Navigation',
+        classes: ['kp-help', 'kp-tour'],
+        exports: [],
+        intro: 'Help cards (`.kp-help`), each a list of words beside their meanings, and a short guided tour over the page: `startTour(steps)` in js/tour.js shows one card (`.kp-tour`) per step beside the part it is about, with that part ringed and the rest of the page dimmed. The count is exact, because a step whose part is not on the page is left out before counting, and a tour that ended is remembered.',
+        whenToUse:
+            'Help for the words and keys a site uses, and a tour for a first visit to a page whose parts are not obvious. Not for instructions a reader needs every time, which belong on the page, and not for more than a handful of steps.',
+        examples: [
+            {
+                title: 'A help card',
+                why: 'A heading, a sentence and a `dl`: the words in one column, their meanings beside them, starting at one edge across every card; in a card of 22rem or less the word goes over its meaning.',
+                markup: `
+<section class="kp-help kp-card">
+<h3>Keys</h3>
+<p>Pressed anywhere outside a field.</p>
+<dl class="kp-help__list">
+<dt><kbd>?</kbd></dt><dd>Open this Help.</dd>
+<dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Jump to a page or a pump house by its name.</dd>
+<dt><kbd>Esc</kbd></dt><dd>Close what is open, or show all again.</dd>
+</dl>
+</section>
+`,
+            },
+            {
+                title: 'The tour’s card, as startTour() builds it',
+                why: 'Shown in place here; the tour places it 12 px under or over its target, 16 px inside the window, and moves it with the page. Back is hidden on the first step, and Next reads Done on the last.',
+                markup: `
+<div class="kp-tour" role="dialog" aria-labelledby="doc-tour-title" style="position: relative">
+<h3 class="kp-tour__title" id="doc-tour-title">The areas</h3>
+<p class="kp-tour__text">Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.</p>
+<footer class="kp-tour__foot">
+<span class="kp-tour__count">1 of 5</span>
+<span class="kp-tour__buttons">
+<button type="button" class="kp-button kp-button--sm kp-button--ghost">Skip</button>
+<button type="button" class="kp-button kp-button--sm kp-button--primary">Next</button>
+</span>
+</footer>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-help', what: 'A help card: a heading, a sentence, and its lists.' },
+            { name: '.kp-help__list', what: 'A `dl`: the words beside their meanings in two columns; in a card of 22rem or less, the word over its meaning.' },
+            { name: '.kp-help kbd', what: 'A key, drawn as a key.' },
+            { name: '.kp-tour', what: 'The tour’s card, a non-modal dialog: its title, its text, and a foot with the count and Back, Skip and Next.' },
+            { name: 'data-kp-tour-target', what: 'Written by the tour on the part it talks about: a ring in the focus colour, and the rest of the page dimmed around it.' },
+            { name: 'startTour(steps, options)', what: 'Starts it: each step a `target` (a selector or a function), a `title` and a `text`; `remember`, `returnFocus`, `onEnd`, `decorate`, `strings`. Returns `{ end, goto }`, or null when no step’s part is on the page.' },
+            { name: 'shouldStartTour()', what: 'Whether a page starts the tour by itself: `?tour` (or `?tour=3`) always; otherwise a first visit by a person, not a remembered one and not a browser driven by a script.' },
+            { name: 'in a dialog', what: 'When the part a step is about is inside an open modal dialog, the card goes into that dialog, where it can be used.' },
+        ],
+        accessibility: [
+            'Built in — the card is named by its title and described by its text; Next takes the focus on every step, ← and → move, and Esc ends the tour from anywhere and returns the focus where it was.',
+            'Built in — the page stays usable during the tour: the card is not modal.',
+            'Built in — every word the card says is in the dictionary (`tour…`); `startTour(steps, { strings })` overrides them.',
+            'Yours — keep the tour short and let Help start it again; never start it on every visit (`shouldStartTour` with the remembered state does that).',
+            'Yours — a help list’s words are the site’s own: write them as the pages use them.',
         ],
     },
     {

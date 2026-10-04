@@ -89,7 +89,24 @@ export {
 } from './js/progressbar.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
-export { KPI_TOGGLE, KPI_TOGGLE_EVENT, SPARK, attachKpiToggles, attachSparklines, drawSparkline, sparkPaths } from './js/kpi.js';
+export {
+    KPI_STRIP,
+    KPI_TOGGLE,
+    KPI_TOGGLE_EVENT,
+    METER,
+    SPARK,
+    attachKpiStrips,
+    attachKpiToggles,
+    attachSparklines,
+    drawSparkline,
+    fitKpiStrip,
+    kpiColumns,
+    meterParts,
+    meterText,
+    setMeter,
+    sparkPaths,
+} from './js/kpi.js';
+/** @typedef {import('./js/kpi.js').Meter} Meter */
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
 export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
@@ -100,7 +117,9 @@ export {
     CHART_SELECT_EVENT,
     CHART_TIME_ZONE,
     CHART_ZOOM_EVENT,
+    TREND_CHART,
     attachCharts,
+    attachTrendCharts,
     chartSelect,
     chartWords,
     chartZoom,
@@ -108,9 +127,69 @@ export {
     formatChartValue,
     numericTime,
     setChartData,
+    setTrendData,
     timeTicks,
+    trendAxis,
 } from './js/chart.js';
 /** @typedef {import('./js/chart.js').ChartData} ChartData */
+export {
+    MENU_BUTTON,
+    MENU_CLOSE_EVENT,
+    MENU_OPEN_EVENT,
+    MENU_SELECT_EVENT,
+    attachMenuButtons,
+    closeMenu,
+    menuKeyTarget,
+    menuSignature,
+    openMenu,
+    setMenu,
+} from './js/menu-button.js';
+/** @typedef {import('./js/menu-button.js').MenuGroup} MenuGroup */
+/** @typedef {import('./js/menu-button.js').MenuItem} MenuItem */
+export {
+    TOUR_GAP,
+    TOUR_GUTTER,
+    forgetTour,
+    shouldStartTour,
+    startTour,
+    tourCardPlace,
+    tourMemoryKey,
+    tourRemembered,
+    tourStepsOnPage,
+} from './js/tour.js';
+/** @typedef {import('./js/tour.js').TourStep} TourStep */
+/** @typedef {import('./js/chart.js').TrendData} TrendData */
+export {
+    CALENDAR,
+    CALENDAR_MONTH_EVENT,
+    CALENDAR_PICK_EVENT,
+    attachCalendars,
+    calendarMonth,
+    calendarSelect,
+    monthCells,
+    setCalendarDays,
+    setCalendarLegend,
+    setCalendarState,
+    shiftDay,
+    shiftMonth,
+} from './js/calendar.js';
+/** @typedef {import('./js/calendar.js').CalendarDay} CalendarDay */
+export {
+    GRAPH,
+    GRAPH_CHANGE_EVENT,
+    attachGraphs,
+    fitGraphLabels,
+    graphBends,
+    graphHideKind,
+    graphLabelText,
+    graphLayout,
+    graphSelect,
+    hubOf,
+    ringOf,
+    setGraphData,
+    setGraphState,
+} from './js/graph.js';
+/** @typedef {import('./js/graph.js').GraphData} GraphData */
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

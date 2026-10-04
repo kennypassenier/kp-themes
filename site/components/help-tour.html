@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Help and the tour — kp-themes</title>
+        <meta name="description" content="Help cards (`.kp-help`), each a list of words beside their meanings, and a short guided tour over the page: `startTour(steps)` in js/tour.js shows one card (`.kp-tour`) per step beside the part it is about, with that part ringed and the rest of the page dimmed. The count is exact, because a step whose part is not on the page is left out before counting, and a tour that ended is remembered." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html" aria-current="page">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Help and the tour</h1>
+                    <p class="kp-prose">Help cards (`.kp-help`), each a list of words beside their meanings, and a short guided tour over the page: `startTour(steps)` in js/tour.js shows one card (`.kp-tour`) per step beside the part it is about, with that part ringed and the rest of the page dimmed. The count is exact, because a step whose part is not on the page is left out before counting, and a tour that ended is remembered.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">Help for the words and keys a site uses, and a tour for a first visit to a page whose parts are not obvious. Not for instructions a reader needs every time, which belong on the page, and not for more than a handful of steps.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A help card</figcaption>
+                        <p class="kp-text-muted">A heading, a sentence and a `dl`: the words in one column, their meanings beside them, starting at one edge across every card; in a card of 22rem or less the word goes over its meaning.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-help kp-card">
+    <h3>Keys</h3>
+    <p>Pressed anywhere outside a field.</p>
+    <dl class="kp-help__list">
+        <dt><kbd>?</kbd></dt><dd>Open this Help.</dd>
+        <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Jump to a page or a pump house by its name.</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Close what is open, or show all again.</dd>
+    </dl>
+</section>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-help kp-card&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Keys&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Pressed anywhere outside a field.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">dl</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-help__list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span>&gt;?&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Open this Help.&lt;/<span class="kp-code__keyword">dd</span>&gt;
+        &lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span>&gt;Ctrl&lt;/<span class="kp-code__keyword">kbd</span>&gt; &lt;<span class="kp-code__keyword">kbd</span>&gt;K&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Jump to a page or a pump house by its name.&lt;/<span class="kp-code__keyword">dd</span>&gt;
+        &lt;<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">kbd</span>&gt;Esc&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">dt</span>&gt;&lt;<span class="kp-code__keyword">dd</span>&gt;Close what is open, or show all again.&lt;/<span class="kp-code__keyword">dd</span>&gt;
+    &lt;/<span class="kp-code__keyword">dl</span>&gt;
+&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The tour’s card, as startTour() builds it</figcaption>
+                        <p class="kp-text-muted">Shown in place here; the tour places it 12 px under or over its target, 16 px inside the window, and moves it with the page. Back is hidden on the first step, and Next reads Done on the last.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-tour" role="dialog" aria-labelledby="doc-tour-title" style="position: relative">
+    <h3 class="kp-tour__title" id="doc-tour-title">The areas</h3>
+    <p class="kp-tour__text">Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.</p>
+    <footer class="kp-tour__foot">
+        <span class="kp-tour__count">1 of 5</span>
+        <span class="kp-tour__buttons">
+            <button type="button" class="kp-button kp-button--sm kp-button--ghost">Skip</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Next</button>
+        </span>
+    </footer>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;dialog&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tour-title&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position: relative&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tour-title&quot;</span>&gt;The areas&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__text&quot;</span>&gt;Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__foot&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__count&quot;</span>&gt;1 of 5&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__buttons&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span>&gt;Skip&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">footer</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-overlays-help-tour">
+                        <figcaption class="kp-fw-semibold">Help, and a short tour</figcaption>
+                        <p class="kp-text-muted">The tour's card, <code>.kp-tour</code>, frozen beside the part it talks about: that part has a ring in the focus colour and the rest of the stage is dimmed around it. Press <b>Start the tour</b> (js/tour.js, <code>startTour()</code>): the first card says <i>1 of 5</i>, because the fourth of the six steps points at a map this page does not have, and the count leaves it out. The card sits 12 px under its part, or over it in the lower half of the window, never on it, and 16 px inside the window; scroll and it follows. Back, Skip and Next (Done on the last), ← and → on the card, and Esc anywhere work; when it ends, the focus goes back to the button that started it, and the line under the buttons says it was remembered (js/remember.js, under <code>kp-remember:tour:catalogue:done</code>). <b>Start the tour on the phone</b> runs it over the phone pane, its tab bar included. <b>Help ?</b> in the little app opens the drawer of the block above.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<nav class="kp-row" aria-label="Areas, frozen" data-kp-tour-target style="position: relative; padding: 0.5rem">
+    <a href="#help-tour">Overview</a>
+    <a href="#help-tour">Pump houses</a>
+    <a href="#help-tour">Readings</a>
+    <a href="#help-tour">Incidents</a>
+    <a href="#help-tour">Backups</a>
+</nav>
+<div
+class="kp-tour"
+role="dialog"
+aria-labelledby="ov-ht-frozen-title"
+style="position: relative; inline-size: min(22rem, 100%); margin-block-start: 0.75rem"
+>
+<h3 class="kp-tour__title" id="ov-ht-frozen-title">The areas</h3>
+<p class="kp-tour__text">
+    Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.
+</p>
+<footer class="kp-tour__foot">
+    <span class="kp-tour__count">1 of 5</span>
+    <span class="kp-tour__buttons">
+        <button type="button" class="kp-button kp-button--sm" hidden>Back</button>
+        <button type="button" class="kp-button kp-button--sm kp-button--ghost">Skip</button>
+        <button type="button" class="kp-button kp-button--sm kp-button--primary">Next</button>
+    </span>
+</footer>
+</div>
+<p class="kp-text-muted">
+    Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+</p>
+</div>
+<div class="sc-example__stage">
+<div class="kp-row" role="group" aria-label="Try the tour">
+    <button type="button" class="kp-button kp-button--sm" data-cat-tour="start">Start the tour</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-tour="phone">Start the tour on the phone</button>
+    <button type="button" class="kp-button kp-button--sm" data-cat-tour="forget">Forget that it was taken</button>
+</div>
+<p class="kp-text-muted" data-cat-tour-log role="status">No tour yet.</p>
+<div class="kp-stack" data-cat-tour-app="wide" style="padding: 1rem; border: 1px dashed var(--border-strong)">
+    <div class="kp-row">
+        <b>Northern network</b>
+        <nav class="kp-row" aria-label="Areas" data-cat-tour-step="areas">
+            <a href="#help-tour" aria-current="page">Overview</a>
+            <a href="#help-tour">Pump houses</a>
+            <a href="#help-tour">Readings</a>
+            <a href="#help-tour">Incidents</a>
+            <a href="#help-tour">Backups</a>
+        </nav>
+        <label class="kp-field" data-cat-tour-step="search" style="flex: 1 1 12rem">
+            <span class="kp-sr-only">Search</span>
+            <input class="kp-field__input" type="search" placeholder="Search a pump house" />
+        </label>
+        <button type="button" class="kp-button kp-button--sm" data-kp-dialog="ov-dr-help" data-cat-tour-step="help">
+            Help ?
+        </button>
+    </div>
+    <div class="kp-autogrid">
+        <div class="kp-card" data-cat-tour-step="readings">
+            <h3 class="kp-card__title">Readings today</h3>
+            <p class="kp-card__body">
+                Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+            </p>
+        </div>
+        <div class="kp-card" data-cat-tour-step="incidents">
+            <h3 class="kp-card__title">Open incidents</h3>
+            <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+        </div>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div
+class="cat-resize"
+data-cat-tour-app="phone"
+style="
+inline-size: 22.5rem;
+block-size: 36rem;
+padding: 0;
+overflow: hidden;
+resize: none;
+display: grid;
+grid-template-rows: auto minmax(0, 1fr) auto;
+"
+>
+<div class="kp-row kp-row--between" style="padding: 0.5rem 1rem; border-block-end: 1px solid var(--border)">
+    <b>Northern network</b>
+    <button type="button" class="kp-button kp-button--sm" data-cat-tour-phone="help">Help ?</button>
+</div>
+<div class="kp-stack" style="padding: 1rem; overflow-y: auto; align-content: start">
+    <div class="kp-card" data-cat-tour-phone="readings">
+        <h3 class="kp-card__title">Readings today</h3>
+        <p class="kp-card__body">Every pump house reported in the last ten minutes.</p>
+    </div>
+    <div class="kp-card" data-cat-tour-phone="incidents">
+        <h3 class="kp-card__title">Open incidents</h3>
+        <p class="kp-card__body">Two open.</p>
+    </div>
+</div>
+<nav
+aria-label="Areas, phone"
+data-cat-tour-phone="areas"
+style="
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+border-block-start: 1px solid var(--border);
+text-align: center;
+"
+>
+<a href="#help-tour" aria-current="page" style="padding: 0.5rem 0">Overview</a>
+<a href="#help-tour" style="padding: 0.5rem 0">Pumps</a>
+<a href="#help-tour" style="padding: 0.5rem 0">Readings</a>
+<a href="#help-tour" data-cat-tour-phone="search" style="padding: 0.5rem 0">Search</a>
+</nav>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Areas, frozen&quot;</span> <span class="kp-code__keyword">data-kp-tour-target</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position: relative; padding: 0.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Pump houses&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Backups&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;dialog&quot;</span>
+<span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-ht-frozen-title&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;position: relative; inline-size: min(22rem, 100%); margin-block-start: 0.75rem&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-ht-frozen-title&quot;</span>&gt;The areas&lt;/<span class="kp-code__keyword">h3</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__text&quot;</span>&gt;
+    Five areas, always in the same place: the overview, the pump houses, their readings, incidents and backups.
+&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">footer</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__foot&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__count&quot;</span>&gt;1 of 5&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tour__buttons&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Back&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span>&gt;Skip&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">footer</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span>&gt;
+    Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Try the tour&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-tour</span><span class="kp-code__string">=&quot;start&quot;</span>&gt;Start the tour&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-tour</span><span class="kp-code__string">=&quot;phone&quot;</span>&gt;Start the tour on the phone&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-tour</span><span class="kp-code__string">=&quot;forget&quot;</span>&gt;Forget that it was taken&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-cat-tour-log</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No tour yet.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">data-cat-tour-app</span><span class="kp-code__string">=&quot;wide&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 1rem; border: 1px dashed var(--border-strong)&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">b</span>&gt;Northern network&lt;/<span class="kp-code__keyword">b</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Areas&quot;</span> <span class="kp-code__keyword">data-cat-tour-step</span><span class="kp-code__string">=&quot;areas&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Pump houses&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Incidents&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span>&gt;Backups&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span> <span class="kp-code__keyword">data-cat-tour-step</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;flex: 1 1 12rem&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Search&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Search a pump house&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-dialog</span><span class="kp-code__string">=&quot;ov-dr-help&quot;</span> <span class="kp-code__keyword">data-cat-tour-step</span><span class="kp-code__string">=&quot;help&quot;</span>&gt;
+            Help ?
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-cat-tour-step</span><span class="kp-code__string">=&quot;readings&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Readings today&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;
+                Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.
+            &lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-cat-tour-step</span><span class="kp-code__string">=&quot;incidents&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span>
+<span class="kp-code__keyword">data-cat-tour-app</span><span class="kp-code__string">=&quot;phone&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;
+inline-size: 22.5rem;
+block-size: 36rem;
+padding: 0;
+overflow: hidden;
+resize: none;
+display: grid;
+grid-template-rows: auto minmax(0, 1fr) auto;
+&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 0.5rem 1rem; border-block-end: 1px solid var(--border)&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">b</span>&gt;Northern network&lt;/<span class="kp-code__keyword">b</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-tour-phone</span><span class="kp-code__string">=&quot;help&quot;</span>&gt;Help ?&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 1rem; overflow-y: auto; align-content: start&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-cat-tour-phone</span><span class="kp-code__string">=&quot;readings&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Readings today&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Every pump house reported in the last ten minutes.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-cat-tour-phone</span><span class="kp-code__string">=&quot;incidents&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Two open.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">nav</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Areas, phone&quot;</span>
+<span class="kp-code__keyword">data-cat-tour-phone</span><span class="kp-code__string">=&quot;areas&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+border-block-start: 1px solid var(--border);
+text-align: center;
+&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 0.5rem 0&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 0.5rem 0&quot;</span>&gt;Pumps&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 0.5rem 0&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#help-tour&quot;</span> <span class="kp-code__keyword">data-cat-tour-phone</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 0.5rem 0&quot;</span>&gt;Search&lt;/<span class="kp-code__keyword">a</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-tour-target</code></td><td>written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <p class="kp-text-muted">This unit fires no events.</p>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-help-term</code></td><td><code>8rem</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-tour-width</code></td><td><code>min(22rem, 100vw - 2rem)</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the card is named by its title and described by its text; Next takes the focus on every step, ← and → move, and Esc ends the tour from anywhere and returns the focus where it was.</li>
+                        <li>Built in — the page stays usable during the tour: the card is not modal.</li>
+                        <li>Built in — every word the card says is in the dictionary (`tour…`); `startTour(steps, { strings })` overrides them.</li>
+                        <li>Yours — keep the tour short and let Help start it again; never start it on every visit (`shouldStartTour` with the remembered state does that).</li>
+                        <li>Yours — a help list’s words are the site’s own: write them as the pages use them.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-help</code></td><td>A help card: a heading, a sentence, and its lists.</td></tr>
+                            <tr><td><code>.kp-help__list</code></td><td>A `dl`: the words beside their meanings in two columns; in a card of 22rem or less, the word over its meaning.</td></tr>
+                            <tr><td><code>.kp-help kbd</code></td><td>A key, drawn as a key.</td></tr>
+                            <tr><td><code>.kp-tour</code></td><td>The tour’s card, a non-modal dialog: its title, its text, and a foot with the count and Back, Skip and Next.</td></tr>
+                            <tr><td><code>data-kp-tour-target</code></td><td>Written by the tour on the part it talks about: a ring in the focus colour, and the rest of the page dimmed around it.</td></tr>
+                            <tr><td><code>startTour(steps, options)</code></td><td>Starts it: each step a `target` (a selector or a function), a `title` and a `text`; `remember`, `returnFocus`, `onEnd`, `decorate`, `strings`. Returns `{ end, goto }`, or null when no step’s part is on the page.</td></tr>
+                            <tr><td><code>shouldStartTour()</code></td><td>Whether a page starts the tour by itself: `?tour` (or `?tour=3`) always; otherwise a first visit by a person, not a remembered one and not a browser driven by a script.</td></tr>
+                            <tr><td><code>in a dialog</code></td><td>When the part a step is about is inside an open modal dialog, the card goes into that dialog, where it can be used.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
+    </body>
+</html>

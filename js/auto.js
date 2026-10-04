@@ -125,9 +125,9 @@ export const NEEDS = [
     { name: 'actions', when: '.kp-row-actions', load: () => import('./actions.js'), attach: (m, root) => [m.attachActionColumns(root)] },
     {
         name: 'kpi',
-        when: 'svg[data-kp-spark], button.kp-kpi--toggle',
+        when: 'svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]',
         load: () => import('./kpi.js'),
-        attach: (m, root) => [m.attachSparklines(root), m.attachKpiToggles(root)],
+        attach: (m, root) => [m.attachSparklines(root), m.attachKpiToggles(root), m.attachKpiStrips(root)],
     },
     { name: 'attention', when: '.kp-attention', load: () => import('./attention.js'), attach: (m, root) => [m.attachAttention(root)] },
     // Tiles of one height across a board, and the ticking freshness line
@@ -135,6 +135,12 @@ export const NEEDS = [
     { name: 'tiles', when: '[data-kp-tiles-set]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileSets(root)] },
     { name: 'freshness', when: '[data-kp-ago]', load: () => import('./freshness.js'), attach: (m, root) => [m.attachAgo(root)] },
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
+    // The menu button with its rich menu [scope-143]: every other action, grouped.
+    { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('./menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
+    // The month heatmap [scope-143]: a month of days, each a plate in the
+    // colour of its state; the page gives the days with setCalendarDays().
+    { name: 'calendar', when: '[data-kp-calendar]', load: () => import('./calendar.js'), attach: (m, root) => [m.attachCalendars(root)] },
+    { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // Every box that changes size after it is drawn, and every dialog's
         // close [scope-142]: the selector is the module's own.

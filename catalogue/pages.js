@@ -71,7 +71,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [{ href: 'research/dashboard-ports-2/demo.html', label: 'Dashboard components to port, round two' }],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -79,6 +79,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided at scope-143 (2026-10-05): the seven components of round two, moved into the package.
+            { href: 'research/dashboard-ports-2/demo.html', label: 'Dashboard components to port, round two' },
             // Decided at scope-143: the eight dashboard components, moved into the package.
             { href: 'research/dashboard-ports/demo.html', label: 'Dashboard components to port' },
             // Decided at scope-142: closing, resizing, arriving and leaving, every theme.
