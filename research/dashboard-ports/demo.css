@@ -1,0 +1,252 @@
+/* The page around the sections: a centred column of cards, each with its
+   head, its look-at note, its option buttons and its stage. Nothing here is
+   part of the proposal; that is ports.css. */
+.dp-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.dp-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.dp-intro h1,
+.dp-intro p {
+    margin: 0;
+}
+
+.dp-meta {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.dp-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.dp-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.dp-sec__head h2,
+.dp-sec__head p {
+    margin: 0;
+}
+
+.dp-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.dp-preview,
+.dp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.dp-preview > span {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.dp-preview > [aria-pressed='true'] {
+    border-color: var(--primary);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.dp-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+/* A stage beside a frame as narrow as a phone (360 px); under each other
+   once the window itself is that narrow. */
+.dp-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22.5rem;
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.dp-pair--phones {
+    grid-template-columns: repeat(2, 22.5rem);
+    justify-content: start;
+}
+
+.dp-col {
+    min-inline-size: 0;
+}
+
+.dp-narrow {
+    min-inline-size: 0;
+    max-inline-size: 22.5rem;
+}
+
+.dp-frame {
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+@media (max-width: 62rem) {
+    .dp-pair,
+    .dp-pair--phones {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Package today, for the action columns: each row's buttons at their own
+   size, pushed to the right, as a flex row does. */
+.dp-today-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dp-today-list > li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.dp-today-list > li > :first-child {
+    flex: 1 1 14rem;
+}
+
+.dp-today-list .kp-row-actions {
+    display: flex;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The tiles' footer: when on the left, the link on the right. */
+.dp-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.dp-kpi-frames {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+/* The overflow menu: one of its two buttons shows, by the option on view. */
+.dp-sec:not([data-dp-overflow='text']) .dp-more--text,
+.dp-sec[data-dp-overflow='text'] .dp-more--icon {
+    display: none;
+}
+
+.dp-menu {
+    position-area: block-end span-inline-start;
+}
+
+#dp-more-wide-icon {
+    anchor-name: --dp-more-wide-icon;
+}
+
+#dp-more-wide-text {
+    anchor-name: --dp-more-wide-text;
+}
+
+#dp-more-narrow-icon {
+    anchor-name: --dp-more-narrow-icon;
+}
+
+#dp-more-narrow-text {
+    anchor-name: --dp-more-narrow-text;
+}
+
+#dp-more-wide {
+    position-anchor: --dp-more-wide-icon;
+}
+
+[data-dp-overflow='text'] #dp-more-wide {
+    position-anchor: --dp-more-wide-text;
+}
+
+#dp-more-narrow {
+    position-anchor: --dp-more-narrow-icon;
+}
+
+[data-dp-overflow='text'] #dp-more-narrow {
+    position-anchor: --dp-more-narrow-text;
+}
+
+/* The state words: a pump per line, its word, then its button. */
+.dp-pumps {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dp-pumps > li {
+    display: flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.dp-pumps b {
+    inline-size: 6.5rem;
+}
+
+/* Package today, for the busy panel: what components.css draws now, put
+   back over the proposal for the left table only. */
+.dp-today-busy .kp-datatable__busy-overlay {
+    overflow: visible;
+}
+
+.dp-today-busy .kp-datatable__busy-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    max-inline-size: none;
+    padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1rem);
+    text-align: center;
+}
+
+.dp-today-busy .kp-datatable__busy-panel > .kp-spinner {
+    --kp-spinner-size: var(--kp-busy-overlay-spinner, 2.5rem);
+}
+
+.dp-today-busy .kp-datatable__busy-panel > .kp-datatable__busy-words {
+    display: inline;
+    overflow: visible;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+}
+
+.dp-note-list {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
