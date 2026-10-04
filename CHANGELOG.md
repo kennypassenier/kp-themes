@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 9.0.1 — 2026-10-04
 
 - **A modal dialog opens centred under a CSS reset.** Tailwind's preflight
   sets `margin: 0` on every element, which took the browser's centring away
