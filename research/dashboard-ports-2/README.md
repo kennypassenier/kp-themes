@@ -41,7 +41,7 @@ the disabled reason).
   `--kp-menu-max-height`. In a `.kp-page-header` at 40rem or narrower, the open
   menu spans `.kp-page-header__actions`.
 - JS: `attachMenuButtons(root, { decorate })`, `setMenu(wrapper, groups | 'loading')`
-  (skipped when nothing changed, and deferred while open), `openMenu(wrapper, { focus: 'first' | 'last' })`,
+  (skipped when nothing changed, and deferred while open), `openMenu(wrapper, { focus: 'first' | 'last' | 'none' })`,
   `closeMenu(wrapper, { focus })`, `menuSignature`, `MENU_STRINGS`. Events:
   `kp-menu-open`, `kp-menu-close`, and `kp-menu-select` (`{ item, value }`),
   which is cancelable and keeps the menu open when prevented. Attributes:

@@ -7,12 +7,14 @@ import {
     attachMenuButtons,
     attachTrendCharts,
     CALENDAR_PICK_EVENT,
+    closeMenu,
     dayKey,
     formatDay,
     formatMoment,
     GRAPH_CHANGE_EVENT,
     kpiColumns,
     MENU_SELECT_EVENT,
+    openMenu,
     setCalendarDays,
     setCalendarLegend,
     setCalendarState,
@@ -40,13 +42,20 @@ const now = () => clock;
 
 /** What each option does to the page. @type {Record<string, (value: string) => void>} */
 const APPLY = {
-    headings: (value) => all('.kp-menu--rich').forEach((menu) => menu.classList.toggle('kp-menu--plain-headings', value === 'plain')),
+    headings: (value) => {
+        all('.kp-menu--rich').forEach((menu) => menu.classList.toggle('kp-menu--plain-headings', value === 'plain'));
+        showMenu();
+    },
     reason: (value) => {
+        // The entries are redrawn, which waits while a menu is open: close
+        // them first, then show the wide menu with the option in it.
         for (const wrapper of all('[data-kp-menu-button]')) {
+            closeMenu(wrapper);
             if (value === 'add') wrapper.dataset.kpMenuReason = 'add';
             else delete wrapper.dataset.kpMenuReason;
         }
         fillMenus();
+        showMenu();
     },
     mark: (value) => all('.kp-meter, .kp-kpi__meter').forEach((m) => m.classList.toggle('kp-meter--notch', value === 'notch')),
     over: (value) => all('.kp-meter, .kp-kpi__meter').forEach((m) => m.classList.toggle('kp-meter--hatch-over', value === 'hatch')),
@@ -77,6 +86,14 @@ const APPLY = {
 };
 
 /** @param {string} name @param {string} value */
+// Both menu options live inside the dropdown, so picking one opens the wide
+// menu: the difference is on screen at once, and the focus stays on the
+// button that was pressed.
+const showMenu = () => {
+    const wrapper = document.querySelector('[data-dp-menu-target]');
+    if (wrapper) openMenu(wrapper, { focus: 'none' });
+};
+
 const choose = (name, value) => {
     APPLY[name]?.(value);
     for (const button of all(`[data-dp-preview="${name}"] [data-value]`)) button.setAttribute('aria-pressed', String(button.dataset.value === value));

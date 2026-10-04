@@ -271,9 +271,10 @@ function setEmpty(s, empty) {
 }
 
 /**
- * Open a menu button's menu and put the focus on its first (or last) entry.
+ * Open a menu button's menu and put the focus on its first (or last) entry;
+ * `none` leaves the focus where it is.
  * @param {Element} wrapper
- * @param {{ focus?: 'first' | 'last' }} [options]
+ * @param {{ focus?: 'first' | 'last' | 'none' }} [options]
  */
 export function openMenu(wrapper, { focus = 'first' } = {}) {
     const s = menus.get(wrapper);
@@ -303,7 +304,9 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
         () => view?.removeEventListener('keydown', escape, true),
     );
     const items = menuItems(s);
-    const target = focus === 'last' ? items.at(-1) : items[0];
+    // `none` keeps the focus where it is: a page showing the menu on its
+    // own, not the user asking for it.
+    const target = focus === 'none' ? null : focus === 'last' ? items.at(-1) : items[0];
     target?.focus();
     s.wrapper.dispatchEvent(new CustomEvent(MENU_OPEN_EVENT, { bubbles: true }));
 }
