@@ -1,0 +1,134 @@
+/* The page around the five sections: a centred column, each section a card
+   of the same width with its head, its look-at note and its controls in one
+   grid, so nothing moves between states. */
+.sm-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 64rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sm-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-intro h1 {
+    margin: 0;
+}
+
+.sm-meta,
+.sm-motion {
+    color: var(--muted-foreground);
+}
+
+.sm-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sm-sec__head h2,
+.sm-sec__head p {
+    margin: 0;
+}
+
+.sm-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.sm-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.sm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.sm-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 40rem) {
+    .sm-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sm-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.sm-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.sm-card__title {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+}
+
+.sm-card [data-sm-inner] {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-list {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sm-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius, 0.5rem) / 2);
+    font-variant-numeric: tabular-nums;
+}
+
+.sm-under {
+    margin: 0;
+    padding: 0.5rem 0;
+    border-top: 2px dashed var(--border-strong);
+    color: var(--muted-foreground);
+}
+
+.sm-grow {
+    inline-size: min(28rem, calc(100vw - 2rem));
+}
+
+.sm-grow__inner {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-where ul {
+    margin: 0;
+}
+
+/* The proposal's knobs, formal's values: out a third faster than in, on the
+   mirrored curve; a size change on the opening curve. */
+[data-theme='formal'] {
+    --kp-close-dur: 200ms;
+    --kp-close-ease: cubic-bezier(0.3, 0, 1, 1);
+    --kp-size-dur: 240ms;
+    --kp-size-ease: cubic-bezier(0.2, 0, 0, 1);
+}

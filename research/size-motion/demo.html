@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="size-motion" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a dialog closing, and boxes that grow and shrink</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="sm-page">
+            <header class="sm-intro">
+                <h1>A dialog closing, and boxes that grow and shrink</h1>
+                <p>
+                    Kenny, 2026-10-04: "we hebben nu wel een goede animatie voor dialog opens, maar wat met dialog closes? … dan opent de dialog mooi,
+                    en dan verspringt de grootte heel plots omdat er elementen bijkomen", and "kijk is waar we dat nog kunnen toepassen, bv als een
+                    div groeit of krimpt? want krimpen daar moet je dan ook rekening mee houden". Every section below has the same two buttons side by
+                    side: <b>Proposal</b> moves the way formal moves, and <b>Package today</b> does what 9.0.1 does, so the difference is one click
+                    apart. Formal only for now; the other themes follow once this one is right.
+                </p>
+                <p class="sm-motion" data-sm-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so the proposal changes size and closes at once, exactly like the package today. Turn
+                    it off in the system settings to judge the motion.
+                </p>
+                <p class="sm-meta">
+                    Formal's timing, read from its register: the dialog opens in 300 ms on <code>cubic-bezier(0.2, 0, 0, 1)</code>. The proposal
+                    closes it in 200 ms on the mirrored curve, <code>cubic-bezier(0.3, 0, 1, 1)</code> (out goes faster than in), and changes a size
+                    in 240 ms on the opening curve. Both are knobs on the theme: <code>--kp-close-dur</code> and <code>--kp-size-dur</code>.
+                </p>
+            </header>
+
+            <section
+                class="sm-sec"
+                data-review-item="dialog-close"
+                data-review-components="dialog"
+                data-review-title="Dialog close"
+                aria-labelledby="h-close"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-close">Dialog close</h2>
+                    <p>The dialog leaves the way it came: it sinks the same 14 px it rose and fades, a little faster than it opened.</p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open it and close it three ways: <b>Cancel</b>, Escape, and a click on the backdrop. Each close should play the same short
+                        exit, and the page behind should never flash. Then compare with <b>Package today</b>, where it vanishes at once.
+                    </p>
+                </div>
+                <p class="sm-actions">
+                    <button type="button" class="kp-button kp-button--primary" data-sm-dialog="close" data-sm-mode="proposal">Proposal</button>
+                    <button type="button" class="kp-button" data-sm-dialog="close" data-sm-mode="proposal" data-sm-slow>Proposal, ¼ speed</button>
+                    <button type="button" class="kp-button kp-button--ghost" data-sm-dialog="close" data-sm-mode="today">Package today</button>
+                </p>
+            </section>
+
+            <section
+                class="sm-sec"
+                data-review-item="dialog-grow"
+                data-review-components="dialog"
+                data-review-title="Dialog that grows and shrinks"
+                aria-labelledby="h-grow"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-grow">Dialog that grows and shrinks</h2>
+                    <p>
+                        The admin dashboard's case: the dialog opens, then rows arrive and the box jumps. In the proposal the box eases to its new
+                        height, whether rows arrive or leave, one at a time or five at once.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open the dialog, then use <b>Load five rows</b>, <b>Add a row</b>, <b>Remove a row</b> and <b>Clear</b> inside it. The box
+                        should glide to each new height in both directions, the buttons should stay where your pointer is, and a second click during a
+                        glide should continue from where the box is, not jump.
+                    </p>
+                </div>
+                <p class="sm-actions">
+                    <button type="button" class="kp-button kp-button--primary" data-sm-dialog="grow" data-sm-mode="proposal">Proposal</button>
+                    <button type="button" class="kp-button" data-sm-dialog="grow" data-sm-mode="proposal" data-sm-slow>Proposal, ¼ speed</button>
+                    <button type="button" class="kp-button kp-button--ghost" data-sm-dialog="grow" data-sm-mode="today">Package today</button>
+                </p>
+            </section>
+
+            <section
+                class="sm-sec"
+                data-review-item="card-grow"
+                data-review-components="card"
+                data-review-title="A card whose content changes"
+                aria-labelledby="h-card"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-card">A card whose content changes</h2>
+                    <p>
+                        Any box on a page: an alert that appears, a list that fills after loading, a form that shows its errors. The card eases to its
+                        new height, and what sits under it slides along instead of jumping.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Use the buttons on both cards. The left card follows the proposal, the right one is the package today. Watch the line under
+                        each card: on the left it should slide, on the right it jumps.
+                    </p>
+                </div>
+                <div class="sm-pair">
+                    <div class="sm-col" data-sm-card="proposal">
+                        <p class="sm-label">Proposal</p>
+                        <div class="kp-card sm-card" data-sm-smooth>
+                            <div data-sm-inner>
+                                <h3 class="sm-card__title">Line 2 readings</h3>
+                                <div class="kp-alert kp-alert--warning" role="status" data-sm-alert hidden>
+                                    <p>Pressure dropped to 1.1 bar at 02:40.</p>
+                                </div>
+                                <ul class="sm-list" data-sm-list></ul>
+                            </div>
+                        </div>
+                        <p class="sm-under">Everything under the card moves with it.</p>
+                        <p class="sm-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="alert">Alert on or off</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="load">Load six readings</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="clear">Clear</button>
+                        </p>
+                    </div>
+                    <div class="sm-col" data-sm-card="today">
+                        <p class="sm-label">Package today</p>
+                        <div class="kp-card sm-card">
+                            <div data-sm-inner>
+                                <h3 class="sm-card__title">Line 2 readings</h3>
+                                <div class="kp-alert kp-alert--warning" role="status" data-sm-alert hidden>
+                                    <p>Pressure dropped to 1.1 bar at 02:40.</p>
+                                </div>
+                                <ul class="sm-list" data-sm-list></ul>
+                            </div>
+                        </div>
+                        <p class="sm-under">Everything under the card moves with it.</p>
+                        <p class="sm-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="alert">Alert on or off</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="load">Load six readings</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-card-act="clear">Clear</button>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="sm-sec"
+                data-review-item="accordion"
+                data-review-components="accordion"
+                data-review-title="Accordion opening and closing"
+                aria-labelledby="h-acc"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-acc">Accordion opening and closing</h2>
+                    <p>An answer unfolds and folds back instead of appearing and vanishing.</p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open and close the questions on both sides, also quickly one after another. On the left the answer should unfold downward and
+                        fold back up; the question line itself never moves.
+                    </p>
+                </div>
+                <div class="sm-pair">
+                    <div class="sm-col">
+                        <p class="sm-label">Proposal</p>
+                        <div class="kp-accordion" data-sm-accordion>
+                            <details class="kp-accordion__item">
+                                <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                                <div class="kp-accordion__body">
+                                    The shift lead, after two readings ten minutes apart agree within 0.05 bar, and with the lock-out tag signed.
+                                </div>
+                            </details>
+                            <details class="kp-accordion__item">
+                                <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+                                <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="sm-col">
+                        <p class="sm-label">Package today</p>
+                        <div class="kp-accordion">
+                            <details class="kp-accordion__item">
+                                <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                                <div class="kp-accordion__body">
+                                    The shift lead, after two readings ten minutes apart agree within 0.05 bar, and with the lock-out tag signed.
+                                </div>
+                            </details>
+                            <details class="kp-accordion__item">
+                                <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+                                <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="sm-sec"
+                data-review-item="tabs"
+                data-review-components="tabs tab"
+                data-review-title="Tabs with panels of different heights"
+                aria-labelledby="h-tabs"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-tabs">Tabs with panels of different heights</h2>
+                    <p>Switching to a shorter or a longer panel eases the height instead of snapping it.</p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Switch between Summary (short), Readings (long) and Handover (medium) on both sides. On the left the box under the tabs should
+                        ease between heights, and the new text should be readable at once, not fade in.
+                    </p>
+                </div>
+                <div class="sm-pair">
+                    <div class="sm-col">
+                        <p class="sm-label">Proposal</p>
+                        <div class="kp-tabs" data-sm-tabs="proposal"></div>
+                    </div>
+                    <div class="sm-col">
+                        <p class="sm-label">Package today</p>
+                        <div class="kp-tabs" data-sm-tabs="today"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="sm-sec sm-where" aria-labelledby="h-where">
+                <h2 id="h-where">Where else this applies</h2>
+                <p>
+                    Searched the package's scripts for every place that changes a box after it is drawn (<code>.hidden =</code>,
+                    <code>.remove()</code>, <code>replaceChildren</code>, <code>append(</code> in <code>js/*.js</code>). Once formal is right, the
+                    same two knobs would carry to these:
+                </p>
+                <ul>
+                    <li><b>Data table</b>: rows arriving after the busy state, a row expanding to its detail, a filter emptying the list.</li>
+                    <li><b>Toasts</b>: the stack closing up when one toast leaves.</li>
+                    <li><b>Combobox and select list</b>: the list shrinking as you type a filter.</li>
+                    <li><b>Upload</b>: the file list growing per file and shrinking on remove.</li>
+                    <li><b>Field errors</b>: the error line appearing under a field and leaving again.</li>
+                    <li><b>Side navigation</b>: a group folding open and closed.</li>
+                    <li><b>Tree</b>: a branch folding open and closed.</li>
+                    <li><b>Wizard</b>: one step swapped for the next, of another height.</li>
+                </ul>
+                <p>Not proposed: menus and tooltips, which open in one piece and already have their own entrance.</p>
+            </section>
+        </main>
+
+        <template data-sm-template="close">
+            <dialog class="kp-dialog" aria-labelledby="sm-close-t" aria-describedby="sm-close-d">
+                <h2 class="kp-dialog__title" id="sm-close-t">Close incident INC-4471?</h2>
+                <p class="kp-dialog__description" id="sm-close-d">The day shift sees your note first.</p>
+                <div class="kp-dialog__actions">
+                    <button type="button" class="kp-button kp-button--secondary" data-sm-close>Cancel</button
+                    ><button type="button" class="kp-button kp-button--primary" data-sm-close>Close incident</button>
+                </div>
+            </dialog>
+        </template>
+
+        <template data-sm-template="grow">
+            <dialog class="kp-dialog sm-grow" aria-labelledby="sm-grow-t">
+                <div class="sm-grow__inner" data-sm-inner>
+                    <h2 class="kp-dialog__title" id="sm-grow-t">Readings on line 2</h2>
+                    <p class="kp-dialog__description">Rows arrive from the sensor while the dialog is open.</p>
+                    <p class="sm-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-sm-rows="5">Load five rows</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-rows="1">Add a row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-rows="-1">Remove a row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-rows="clear">Clear</button>
+                    </p>
+                    <ul class="sm-list" data-sm-list></ul>
+                    <div class="kp-dialog__actions">
+                        <button type="button" class="kp-button kp-button--primary" data-sm-close>Done</button>
+                    </div>
+                </div>
+            </dialog>
+        </template>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
