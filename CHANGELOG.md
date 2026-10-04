@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- **Elements leave the theme's way** [scope-142]: `leave(el)` (js/motion.js)
+  plays the element's arrival backwards while it folds shut, then removes it
+  (or hides it with `{ hide: true }`), so what is under it closes up and the
+  box around it shrinks along. `data-kp-arrive="none"` on a box keeps a live
+  view's redraws from replaying every arrival.
+
 ## 9.1.0 — 2026-10-04
 
 - **A dialog leaves the way it came, and boxes ease to a new size**

@@ -15,7 +15,7 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/motion.js": {
-            "digest": "4d555be0db9b0ffa",
+            "digest": "9c7aaca3548e8e0a",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -5788,6 +5788,7 @@
         "combobox": {
             "modules": "58fda77c0d684111",
             "families": [
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-close-on-blur",
@@ -5799,6 +5800,7 @@
                 "data-kp-disabled",
                 "data-kp-duplicates",
                 "data-kp-empty-row",
+                "data-kp-leaving",
                 "data-kp-loop",
                 "data-kp-match",
                 "data-kp-max-tags",
@@ -5862,6 +5864,7 @@
             "modules": "0f8cc6a16c8a4ae7",
             "families": [
                 "data-kp-align",
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-busy-overlay",
@@ -5951,6 +5954,7 @@
                 "data-kp-fixed",
                 "data-kp-fixed-columns",
                 "data-kp-grid",
+                "data-kp-leaving",
                 "data-kp-locale",
                 "data-kp-loop",
                 "data-kp-match",
@@ -6042,6 +6046,7 @@
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
@@ -6060,6 +6065,7 @@
                 "data-kp-dialog-mode",
                 "data-kp-dismiss-owner",
                 "data-kp-indeterminate",
+                "data-kp-leaving",
                 "data-kp-loop",
                 "data-kp-open-delay",
                 "data-kp-orientation",
@@ -6091,6 +6097,7 @@
         "field": {
             "modules": "00e535d81b7ff097",
             "families": [
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-close-on-blur",
@@ -6107,6 +6114,7 @@
                 "data-kp-form",
                 "data-kp-form-summary",
                 "data-kp-layout",
+                "data-kp-leaving",
                 "data-kp-loop",
                 "data-kp-match",
                 "data-kp-max-tags",
@@ -6280,6 +6288,7 @@
                 "data-kp-activation",
                 "data-kp-against",
                 "data-kp-armed",
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-channel",
                 "data-kp-close-delay",
@@ -6307,6 +6316,7 @@
                 "data-kp-dismiss-owner",
                 "data-kp-grid",
                 "data-kp-indeterminate",
+                "data-kp-leaving",
                 "data-kp-loop",
                 "data-kp-menu-label",
                 "data-kp-nav-compact",
@@ -6396,6 +6406,7 @@
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
@@ -6414,6 +6425,7 @@
                 "data-kp-dialog-mode",
                 "data-kp-dismiss-owner",
                 "data-kp-indeterminate",
+                "data-kp-leaving",
                 "data-kp-loop",
                 "data-kp-open-delay",
                 "data-kp-orientation",
@@ -6604,6 +6616,7 @@
         "structure": {
             "modules": "890468a04858ddbf",
             "families": [
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-click",
                 "data-kp-collapse",
@@ -6626,6 +6639,7 @@
                 "data-kp-item",
                 "data-kp-item-label",
                 "data-kp-large-step",
+                "data-kp-leaving",
                 "data-kp-month",
                 "data-kp-navigable",
                 "data-kp-orientation",
@@ -6711,6 +6725,7 @@
         "upload": {
             "modules": "41beb48099cf8444",
             "families": [
+                "data-kp-arrive",
                 "data-kp-arriving",
                 "data-kp-date-input",
                 "data-kp-date-open",
@@ -6721,6 +6736,7 @@
                 "data-kp-disabled",
                 "data-kp-dragging",
                 "data-kp-drop",
+                "data-kp-leaving",
                 "data-kp-locale",
                 "data-kp-max-bytes",
                 "data-kp-max-files",

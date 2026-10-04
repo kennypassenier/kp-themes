@@ -130,3 +130,28 @@
 .sm-tabs-room {
     min-block-size: 22rem;
 }
+
+.sm-notices {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-notice p {
+    margin: 0;
+}
+
+[data-sm-leave] .sm-card {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-sm-leave] .sm-list li {
+    align-items: center;
+}

@@ -2,7 +2,7 @@
 // js/motion.js in every theme; the "Package today" side runs nothing.
 
 import { THEMES } from '../../js/theme-registry.js';
-import { attachMotion, closeDialog, easeSize, themeMotion } from '../../js/motion.js';
+import { attachMotion, closeDialog, easeSize, leave, themeMotion } from '../../js/motion.js';
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduced()) document.querySelector('[data-sm-motion]')?.removeAttribute('hidden');
@@ -180,3 +180,52 @@ for (const host of document.querySelectorAll('[data-sm-tabs]')) {
     });
 }
 void slow;
+
+/* ------------------------------------------------- elements that leave */
+
+const NOTICES = [
+    ['kp-alert--warning', 'Pressure on line 2 dropped to 1.1 bar at 02:40.'],
+    ['kp-alert--info', 'The night shift locked the line out at 02:45.'],
+    ['kp-alert--destructive', 'Sensor 4 stopped reporting at 02:51.'],
+    ['kp-alert--success', 'Line 1 is back within range.'],
+];
+for (const col of document.querySelectorAll('[data-sm-leave]')) {
+    const proposal = col.getAttribute('data-sm-leave') === 'proposal';
+    const card = /** @type {HTMLElement} */ (col.querySelector('.sm-card'));
+    const notices = /** @type {HTMLElement} */ (col.querySelector('[data-sm-notices]'));
+    const list = /** @type {HTMLElement} */ (col.querySelector('[data-sm-leave-list]'));
+    if (proposal) {
+        easeSize(card);
+        attachMotion(card);
+    }
+    const go = (/** @type {HTMLElement} */ el) => (proposal ? leave(el) : el.remove());
+    const fill = () => {
+        notices.replaceChildren(
+            ...NOTICES.map(([kind, text]) => {
+                const n = document.createElement('div');
+                n.className = `kp-alert ${kind} sm-notice`;
+                n.setAttribute('role', 'status');
+                n.innerHTML = `<p>${text}</p><button type="button" class="kp-button kp-button--ghost kp-button--sm" data-sm-gone aria-label="Dismiss">✕</button>`;
+                return n;
+            }),
+        );
+        list.replaceChildren();
+        for (let i = 0; i < 5; i += 1) {
+            const li = row();
+            li.insertAdjacentHTML(
+                'beforeend',
+                '<button type="button" class="kp-button kp-button--ghost kp-button--sm" data-sm-gone aria-label="Remove">✕</button>',
+            );
+            list.append(li);
+        }
+    };
+    fill();
+    col.addEventListener('click', (event) => {
+        const target = /** @type {HTMLElement} */ (event.target);
+        const gone = target.closest('[data-sm-gone]');
+        if (gone) void go(/** @type {HTMLElement} */ (gone.parentElement));
+        const act = target.closest('[data-sm-leave-act]')?.getAttribute('data-sm-leave-act');
+        if (act === 'reset') fill();
+        if (act === 'all') for (const el of [...notices.children, ...list.children]) void go(/** @type {HTMLElement} */ (el));
+    });
+}

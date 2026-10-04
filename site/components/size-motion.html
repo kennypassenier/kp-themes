@@ -189,7 +189,9 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-arrive</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-arriving</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-leaving</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-resizing</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-size-motion</code></td><td>selector</td></tr>
                     </tbody></table></div>
@@ -226,6 +228,8 @@
                             <tr><td><code>--kp-size-max</code></td><td>The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.</td></tr>
                             <tr><td><code>data-kp-resizing</code></td><td>Written on a box while it glides to a new height, `grow` or `shrink`. A register draws its own character on it. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-arriving</code></td><td>Written for one arrival on what arrives in a box (a row, a shown panel or message). A register may give it its own arrival; without one it plays the theme’s toast entrance.</td></tr>
+                            <tr><td><code>data-kp-leaving</code></td><td>Written on an element while `leave(el)` plays its arrival backwards and folds it shut, before it is removed. Read it, do not set it.</td></tr>
+                            <tr><td><code>data-kp-arrive</code></td><td>`none` on a box whose rows a live view redraws: nothing in it plays an arrival, so a refresh does not replay every row.</td></tr>
                             <tr><td><code>--kp-size-ease</code></td><td>A theme’s own curve for its size changes, held from overshooting. Default: the dialog entrance’s curve.</td></tr>
                             <tr><td><code>--kp-size-steps</code></td><td>`line` moves a size one line of text at a time, growing and shrinking alike (terminal).</td></tr>
                             <tr><td><code>--kp-motion-scale</code></td><td>On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.</td></tr>

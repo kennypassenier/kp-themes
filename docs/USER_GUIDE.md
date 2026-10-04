@@ -497,6 +497,20 @@ own toast entrance. A theme may ask for its sizes to move one line at a time
 with `--kp-size-steps: line` (terminal does); `withoutOvershoot(ease)` is the
 curve rule, exported for a page that animates its own boxes.
 
+What leaves goes the same way backwards: `leave(el)` plays the element's
+arrival in reverse while it folds shut, then removes it (`leave(el, { hide:
+true })` sets `hidden` instead), so what is under it closes up:
+
+```js
+import { leave } from '@kp-soft/themes/js/motion';
+
+await leave(row);
+```
+
+A live view that redraws its rows on every refresh marks the box
+`data-kp-arrive="none"`; otherwise every refresh replays every row's
+arrival (found on the homelab dashboard, 2026-10-04).
+
 A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.

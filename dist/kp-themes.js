@@ -11006,6 +11006,7 @@ __export(motion_exports, {
   attachMotion: () => attachMotion,
   closeDialog: () => closeDialog,
   easeSize: () => easeSize,
+  leave: () => leave,
   themeMotion: () => themeMotion,
   withoutOvershoot: () => withoutOvershoot
 });
@@ -11192,6 +11193,71 @@ function arrive(el2, motion) {
   el2.addEventListener("animationend", end, { once: true });
   setTimeout(end, 1500);
 }
+function arrivalOf(el2) {
+  if (reduced()) return null;
+  const had = el2.hasAttribute("data-kp-arriving");
+  el2.setAttribute("data-kp-arriving", "");
+  const style = getComputedStyle(el2);
+  const own = style.animationName && style.animationName !== "none";
+  const read = own ? {
+    name: style.animationName.split(",")[0].trim(),
+    duration: firstMs(style.animationDuration),
+    ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim()
+  } : null;
+  if (!had) el2.removeAttribute("data-kp-arriving");
+  if (read && read.duration > 0) return read;
+  const toast2 = arrival(el2);
+  if (!toast2) return null;
+  const [name, duration, ...ease] = toast2.split(" ");
+  return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(" ") };
+}
+async function leave(el2, { hide = false } = {}) {
+  const gone = () => {
+    if (hide) el2.hidden = true;
+    else el2.remove();
+  };
+  if (!el2.isConnected || el2.hasAttribute("data-kp-leaving")) return;
+  const motion = arrivalOf(el2);
+  const { size, ease } = themeMotion(el2);
+  if (!motion && size <= 0) return gone();
+  el2.setAttribute("data-kp-leaving", "");
+  const running = [];
+  if (motion) {
+    el2.style.animation = `${motion.name} ${motion.duration}ms ${motion.ease} reverse forwards`;
+    running.push(
+      new Promise((resolve) => {
+        el2.addEventListener("animationend", resolve, { once: true });
+        setTimeout(resolve, motion.duration + 100);
+      })
+    );
+  }
+  if (size > 0) {
+    const style = getComputedStyle(el2);
+    el2.style.setProperty("overflow", "clip");
+    el2.style.setProperty("box-sizing", "border-box");
+    const fold = el2.animate(
+      [
+        {
+          height: `${el2.offsetHeight}px`,
+          marginTop: style.marginTop,
+          marginBottom: style.marginBottom,
+          paddingTop: style.paddingTop,
+          paddingBottom: style.paddingBottom
+        },
+        { height: "0px", marginTop: "0px", marginBottom: "0px", paddingTop: "0px", paddingBottom: "0px" }
+      ],
+      { duration: Math.max(size, motion?.duration ?? 0), easing: withoutOvershoot(ease), fill: "forwards" }
+    );
+    running.push(fold.finished.catch(() => void 0));
+  }
+  await Promise.all(running);
+  gone();
+  el2.removeAttribute("data-kp-leaving");
+  el2.style.removeProperty("animation");
+  el2.style.removeProperty("overflow");
+  el2.style.removeProperty("box-sizing");
+  for (const a of el2.getAnimations()) a.cancel();
+}
 function easeSize(box) {
   const own = (
     /** @type {any} */
@@ -11210,6 +11276,7 @@ function easeSize(box) {
     const to = box.offsetHeight;
     last = to;
     if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+    if (box.querySelector("[data-kp-leaving]")) return;
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
     const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
@@ -11226,7 +11293,8 @@ function easeSize(box) {
   };
   watch();
   const list = new MutationObserver((records) => {
-    const motion = records.length ? arrival(box) : null;
+    const quiet = box.closest('[data-kp-arrive="none"]') !== null;
+    const motion = records.length && !quiet ? arrival(box) : null;
     for (const record of records) {
       if (record.type === "childList" && record.target === box) {
         for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
@@ -12504,6 +12572,7 @@ export {
   jumpMove,
   layoutOf,
   lazy_register_exports as lazyRegisterExports,
+  leave,
   listbox_exports as listboxExports,
   luminance,
   matchesFilter,

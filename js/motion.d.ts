@@ -36,6 +36,21 @@ export declare function closeDialog(dialog: HTMLDialogElement, returnValue?: str
  */
 export declare function withoutOvershoot(ease: string): string;
 /**
+ * Let `el` leave the theme's way, then take it out [scope-142; Kenny,
+ * 2026-10-04: "die grow/shrink bewegingen moeten ook zijn als er opeens
+ * nieuwe elementen bijkomen of weggaan"]: it plays its arrival backwards
+ * while it folds shut, so what is under it closes up instead of jumping,
+ * and the box around it shrinks with it. Under reduced motion, or in a theme
+ * with no arrival, it goes at once.
+ *
+ * @param {HTMLElement} el
+ * @param {{ hide?: boolean }} [options] `hide: true` sets `hidden` instead of removing it
+ * @returns {Promise<void>} settled once it is gone
+ */
+export declare function leave(el: HTMLElement, { hide }?: {
+    hide?: boolean;
+}): Promise<void>;
+/**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.
  * @param {HTMLElement} box

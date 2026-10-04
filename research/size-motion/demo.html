@@ -215,6 +215,55 @@
 
             <section
                 class="sm-sec"
+                data-review-item="leave"
+                data-review-title="Elements that leave"
+                data-review-components="card"
+                aria-labelledby="h-leave"
+            >
+                <div class="sm-sec__head">
+                    <h2 id="h-leave">Elements that leave</h2>
+                    <p>
+                        A message dismissed, a row removed: in the proposal it leaves the theme's way, its arrival played backwards, while it folds
+                        shut, so what sits under it closes up and the card shrinks with it.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Dismiss the messages and remove rows with their ✕, one at a time and quickly after each other, then <b>Remove all at once</b>.
+                        On the left each one should leave as it arrives, only backwards, and nothing under it should jump; on the right it vanishes.
+                        <b>Bring them back</b> lets them arrive again.
+                    </p>
+                </div>
+                <div class="sm-pair">
+                    <div class="sm-col" data-sm-leave="proposal">
+                        <p class="sm-label">Proposal</p>
+                        <div class="kp-card sm-card" data-kp-size-motion>
+                            <div class="sm-notices" data-sm-notices></div>
+                            <ul class="sm-list" data-sm-leave-list></ul>
+                        </div>
+                        <p class="sm-under">Everything under the card moves with it.</p>
+                        <p class="sm-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
+                        </p>
+                    </div>
+                    <div class="sm-col" data-sm-leave="today">
+                        <p class="sm-label">Package today</p>
+                        <div class="kp-card sm-card" data-kp-size-motion>
+                            <div class="sm-notices" data-sm-notices></div>
+                            <ul class="sm-list" data-sm-leave-list></ul>
+                        </div>
+                        <p class="sm-under">Everything under the card moves with it.</p>
+                        <p class="sm-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
+                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="sm-sec"
                 data-review-item="tabs"
                 data-review-components="tabs tab"
                 data-review-title="Tabs with panels of different heights"

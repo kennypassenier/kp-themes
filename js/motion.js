@@ -362,6 +362,94 @@ function arrive(el, motion) {
 }
 
 /**
+ * The arrival `el` would play, as an animation name, duration and curve:
+ * the register's own `[data-kp-arriving]`, else the theme's toast entrance.
+ * @param {HTMLElement} el
+ * @returns {{ name: string, duration: number, ease: string } | null}
+ */
+function arrivalOf(el) {
+    if (reduced()) return null;
+    const had = el.hasAttribute('data-kp-arriving');
+    el.setAttribute('data-kp-arriving', '');
+    const style = getComputedStyle(el);
+    const own = style.animationName && style.animationName !== 'none';
+    const read = own
+        ? {
+              name: style.animationName.split(',')[0].trim(),
+              duration: firstMs(style.animationDuration),
+              ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim(),
+          }
+        : null;
+    if (!had) el.removeAttribute('data-kp-arriving');
+    if (read && read.duration > 0) return read;
+    const toast = arrival(el);
+    if (!toast) return null;
+    const [name, duration, ...ease] = toast.split(' ');
+    return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(' ') };
+}
+
+/**
+ * Let `el` leave the theme's way, then take it out [scope-142; Kenny,
+ * 2026-10-04: "die grow/shrink bewegingen moeten ook zijn als er opeens
+ * nieuwe elementen bijkomen of weggaan"]: it plays its arrival backwards
+ * while it folds shut, so what is under it closes up instead of jumping,
+ * and the box around it shrinks with it. Under reduced motion, or in a theme
+ * with no arrival, it goes at once.
+ *
+ * @param {HTMLElement} el
+ * @param {{ hide?: boolean }} [options] `hide: true` sets `hidden` instead of removing it
+ * @returns {Promise<void>} settled once it is gone
+ */
+export async function leave(el, { hide = false } = {}) {
+    const gone = () => {
+        if (hide) el.hidden = true;
+        else el.remove();
+    };
+    if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return;
+    const motion = arrivalOf(el);
+    const { size, ease } = themeMotion(el);
+    if (!motion && size <= 0) return gone();
+    el.setAttribute('data-kp-leaving', '');
+    /** @type {Promise<unknown>[]} */
+    const running = [];
+    if (motion) {
+        el.style.animation = `${motion.name} ${motion.duration}ms ${motion.ease} reverse forwards`;
+        running.push(
+            new Promise((resolve) => {
+                el.addEventListener('animationend', resolve, { once: true });
+                setTimeout(resolve, motion.duration + 100);
+            }),
+        );
+    }
+    if (size > 0) {
+        const style = getComputedStyle(el);
+        el.style.setProperty('overflow', 'clip');
+        el.style.setProperty('box-sizing', 'border-box');
+        const fold = el.animate(
+            [
+                {
+                    height: `${el.offsetHeight}px`,
+                    marginTop: style.marginTop,
+                    marginBottom: style.marginBottom,
+                    paddingTop: style.paddingTop,
+                    paddingBottom: style.paddingBottom,
+                },
+                { height: '0px', marginTop: '0px', marginBottom: '0px', paddingTop: '0px', paddingBottom: '0px' },
+            ],
+            { duration: Math.max(size, motion?.duration ?? 0), easing: withoutOvershoot(ease), fill: 'forwards' },
+        );
+        running.push(fold.finished.catch(() => undefined));
+    }
+    await Promise.all(running);
+    gone();
+    el.removeAttribute('data-kp-leaving');
+    el.style.removeProperty('animation');
+    el.style.removeProperty('overflow');
+    el.style.removeProperty('box-sizing');
+    for (const a of el.getAnimations()) a.cancel();
+}
+
+/**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.
  * @param {HTMLElement} box
@@ -385,6 +473,9 @@ export function easeSize(box) {
         const to = box.offsetHeight;
         last = to;
         if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+        // Something in it is leaving and folds itself shut; the box follows
+        // that fold frame by frame instead of gliding after it.
+        if (box.querySelector('[data-kp-leaving]')) return;
         const { size, ease } = themeMotion(box);
         if (size <= 0) return;
         const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
@@ -411,7 +502,11 @@ export function easeSize(box) {
     // What arrives (a row added, a panel or a message shown) arrives the
     // theme's way.
     const list = new MutationObserver((records) => {
-        const motion = records.length ? arrival(box) : null;
+        // A live view that redraws its rows marks the box
+        // `data-kp-arrive="none"`, or every refresh replays every arrival
+        // (the homelab dashboard's live repaint, 2026-10-04).
+        const quiet = box.closest('[data-kp-arrive="none"]') !== null;
+        const motion = records.length && !quiet ? arrival(box) : null;
         for (const record of records) {
             if (record.type === 'childList' && record.target === box)
                 for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);

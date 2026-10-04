@@ -1,6 +1,6 @@
 # A dialog closing, and boxes that grow and shrink
 
-**Decided (scope-142, 2026-10-04: approved in every theme over four rounds, 110 of 110).** Kenny approved every pair in every theme over four
+**Round five open (2026-10-04): elements that leave.** Rounds one to four were approved in every theme (110 of 110). Kenny approved every pair in every theme over four
 rounds: the close and the accordion in round two, the tabs in round three,
 growing and shrinking with a character per theme in round four (110 of 110).
 Built: `js/motion.js` [scope-142], the character of fourteen themes moved from
