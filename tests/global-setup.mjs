@@ -7,6 +7,7 @@
 import { build } from 'esbuild';
 import { mkdirSync, existsSync } from 'node:fs';
 import process from 'node:process';
+import { spawn } from 'node:child_process';
 
 /**
  * The spec paths on the command line that are not files [fix-44].
@@ -62,4 +63,43 @@ export default async function globalSetup() {
             logLevel: 'warning',
         });
     }
+
+    // The fixture server, started here rather than by Playwright's
+    // `webServer` (2026-10-04): Playwright first probes the port, and on WSL
+    // a connect to a closed localhost port is dropped rather than refused,
+    // so every run waited out the TCP timeout before it started the server —
+    // measured 2 min 15 s of a 2 min 20 s run of one small spec. Here each
+    // probe gives up after 300 ms. A server already listening (a second
+    // checkout's, or one started by hand) is reused, as before.
+    return ensureServer();
+
+}
+
+const PORT = Number(process.env.KP_TEST_PORT ?? 4173);
+const URL_PROBE = `http://127.0.0.1:${PORT}/tests/fixtures/picker.html`;
+
+/** @returns {Promise<boolean>} */
+const answers = async () => {
+    try {
+        return (await fetch(URL_PROBE, { signal: AbortSignal.timeout(300) })).ok;
+    } catch {
+        return false;
+    }
+};
+
+/** @returns {Promise<(() => void) | undefined>} the teardown, when this run started the server */
+async function ensureServer() {
+    if (await answers()) return undefined;
+    const root = new URL('../', import.meta.url).pathname;
+    const server = spawn(process.execPath, ['tests/fixtures/server.mjs'], {
+        cwd: root,
+        env: { ...process.env, PORT: String(PORT) },
+        stdio: 'ignore',
+    });
+    for (let i = 0; i < 200; i += 1) {
+        if (await answers()) return () => void server.kill();
+        await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    server.kill();
+    throw new Error(`the fixture server did not answer on ${URL_PROBE}`);
 }

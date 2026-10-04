@@ -60,10 +60,7 @@ export default defineConfig({
         ...(process.env.KP_TEST_CHROMIUM === '1' ? [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }] : []),
         { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
     ],
-    webServer: {
-        command: `node tests/fixtures/server.mjs`,
-        url: `http://127.0.0.1:${PORT}/tests/fixtures/picker.html`,
-        reuseExistingServer: true,
-        env: { PORT: String(PORT) },
-    },
+    // The fixture server is started by tests/global-setup.mjs, which probes
+    // its port with a 300 ms timeout; Playwright's own `webServer` probe waited
+    // out a dropped connect on WSL, 2 min 15 s per run (2026-10-04).
 });
