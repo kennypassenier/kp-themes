@@ -109,6 +109,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -308,12 +309,113 @@
                         &lt;/<span class="kp-code__keyword">li</span>&gt;
                     &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-data-tiles-set">
+                        <figcaption class="kp-fw-semibold">Tiles of one height across a board</figcaption>
+                        <p class="kp-text-muted">Two groups of tiles, each its own <code>.kp-tiles</code> grid, on one board marked <code>data-kp-tiles-set="cat-board"</code>: every tile of both groups is as tall as the tallest tile of the board, so the footers of the two groups sit on one line, though the tallest tile (<b>Pump house 3</b>) is only in the second group. Fold <b>Pump houses</b> away: only visible tiles count, so the reservoirs shrink to their own height; unfold it and they grow back. <b>Grow a reservoir</b> adds a line to a reservoir: when it becomes the tallest, every tile of the board follows within one frame. The line under the board reads the height the set shares.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-stack" data-kp-tiles-set="cat-board">
+    <details class="kp-accordion__item kp-accordion__item--bare" open>
+        <summary class="kp-text-muted kp-fs-sm">Reservoirs</summary>
+        <ul class="kp-tiles">
+            <li class="kp-card">
+                <h3 class="kp-card__title">Reservoir North</h3>
+                <p class="kp-card__body">71 % full.</p>
+                <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                    <span class="kp-timestamp">Read 2 min ago</span
+                        ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                    </div>
+                </li>
+                <li class="kp-card">
+                    <h3 class="kp-card__title">Reservoir South</h3>
+                    <p class="kp-card__body">64 % full.</p>
+                    <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                        <span class="kp-timestamp">Read 2 min ago</span
+                            ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                        </div>
+                    </li>
+                </ul>
+            </details>
+            <details class="kp-accordion__item kp-accordion__item--bare" open>
+                <summary class="kp-text-muted kp-fs-sm">Pump houses</summary>
+                <ul class="kp-tiles">
+                    <li class="kp-card">
+                        <h3 class="kp-card__title">Pump house 1</h3>
+                        <p class="kp-card__body">Two pumps, both running.</p>
+                        <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                            <span class="kp-timestamp">Read 2 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                            </div>
+                        </li>
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Pump house 3</h3>
+                            <p class="kp-card__body">Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way.</p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 2 min ago</span
+                                    ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+                <p class="cat-note" data-cat-tiles-set-height>The set's tile height: …</p>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-tiles-set</span><span class="kp-code__string">=&quot;cat-board&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item kp-accordion__item--bare&quot;</span> <span class="kp-code__keyword">open</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted kp-fs-sm&quot;</span>&gt;Reservoirs&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tiles&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Reservoir North&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;71 % full.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer kp-row kp-row--between kp-fs-sm&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Read 2 min ago&lt;/<span class="kp-code__keyword">span</span>
+                        &gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#tiles-set&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">a</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Reservoir South&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;64 % full.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer kp-row kp-row--between kp-fs-sm&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Read 2 min ago&lt;/<span class="kp-code__keyword">span</span>
+                            &gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#tiles-set&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">a</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">details</span>&gt;
+            &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item kp-accordion__item--bare&quot;</span> <span class="kp-code__keyword">open</span>&gt;
+                &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted kp-fs-sm&quot;</span>&gt;Pump houses&lt;/<span class="kp-code__keyword">summary</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tiles&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Pump house 1&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Two pumps, both running.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer kp-row kp-row--between kp-fs-sm&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Read 2 min ago&lt;/<span class="kp-code__keyword">span</span>
+                                &gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#tiles-set&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">a</span>&gt;
+                            &lt;/<span class="kp-code__keyword">div</span>&gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">h3</span>&gt;
+                            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way.&lt;/<span class="kp-code__keyword">p</span>&gt;
+                            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer kp-row kp-row--between kp-fs-sm&quot;</span>&gt;
+                                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Read 2 min ago&lt;/<span class="kp-code__keyword">span</span>
+                                    &gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--ghost&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#tiles-set&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">a</span>&gt;
+                                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                            &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                    &lt;/<span class="kp-code__keyword">details</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-note&quot;</span> <span class="kp-code__keyword">data-cat-tiles-set-height</span>&gt;The set's tile height: …&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-tiles-measuring</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-tiles-set</code></td><td>selector, read</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
@@ -334,6 +436,7 @@
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-tile-min</code></td><td><code>15rem</code></td></tr>
+                            <tr><td><code>--kp-tile-row-min</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-tile-title-size</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-tiles-gap</code></td><td><code>var(--kp-space-md, 1rem)</code></td></tr>
                     </tbody></table></div>

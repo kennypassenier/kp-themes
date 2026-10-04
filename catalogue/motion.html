@@ -27,6 +27,8 @@
                 <li><a href="#size">A box that grows and shrinks</a></li>
                 <li><a href="#arrive">What arrives</a></li>
                 <li><a href="#leave">What leaves</a></li>
+                <li><a href="#arrive-new">Only what is new arrives</a></li>
+                <li><a href="#size-selector">Boxes named by a selector, and let go</a></li>
                 <li><a href="#leave-options">Leaving: the options</a></li>
                 <li><a href="#motion-js">From a script</a></li>
             </ul>
@@ -142,6 +144,56 @@ await leave(panel, { hide: true });
 for (const row of selected) leave(row);</code></pre>
             </section>
 
+            <section class="cat-block" id="arrive-new">
+                <h2>Only what is new arrives</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a live list marked <code>data-kp-arrive="new"</code>, its rows keyed by <code>data-kp-key</code>. <b>Refresh</b>
+                    redraws every row from scratch, the way a poll does: nothing must arrive, the list stands still. <b>Refresh with a new row</b>
+                    redraws them and adds one: only that row arrives the theme's way. <b>Sort</b> puts the same rows in the other order: nothing
+                    arrives. <b>Rename one</b> gives a row a key it did not have: that row arrives, because a new key is new content. <b>Load</b>
+                    replaces three skeleton rows with data: nothing arrives, loading is not news. The line under the list counts the arrivals.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-card" data-kp-size-motion data-kp-arrive="new">
+                        <ul class="kp-stack" data-cat-arrive-list>
+                            <li data-kp-key="ph-1">Pump house 1 · 3.4 bar</li>
+                            <li data-kp-key="ph-3">Pump house 3 · 2.0 bar</li>
+                            <li data-kp-key="ph-7">Pump house 7 · no reading</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-arrive="refresh">Refresh</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-arrive="add">Refresh with a new row</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-arrive="sort">Sort</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-arrive="rename">Rename one</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-arrive="skeleton">Load from skeletons</button>
+                </p>
+                <p class="cat-note" data-cat-arrive-count aria-live="polite">Arrivals so far: 0</p>
+            </section>
+
+            <section class="cat-block" id="size-selector">
+                <h2>Boxes named by a selector, and let go</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the cards here carry no <code>data-kp-size-motion</code>: this block attaches
+                    <code>attachMotion(block, { size: '.kp-card' })</code>, so every card in it eases, including cards built after the attach. Press
+                    <b>Grow</b>: the first card glides to its new height. <b>Rebuild 100 cards</b> throws the cards away and builds a hundred new
+                    ones, ten times over, as a page that redraws itself on every navigation does: the count of boxes motion watches must come back to
+                    where it was, because a box that leaves the page is let go rather than watched forever.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-autogrid" data-cat-size-selector>
+                        <div class="kp-card kp-stack"><p>Reservoir North · 71 %</p></div>
+                        <div class="kp-card kp-stack"><p>Reservoir South · 64 %</p></div>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-size-selector="grow">Grow</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-size-selector="rebuild">Rebuild 100 cards</button>
+                </p>
+                <p class="cat-note" data-cat-size-count aria-live="polite">Boxes watched on this page: …</p>
+            </section>
+
             <section class="cat-block" id="leave-options">
                 <h2>Leaving: the options</h2>
                 <div class="cat-look">
@@ -244,6 +296,14 @@ for (const row of selected) leave(row);</code></pre>
                             <td>off</td>
                             <td>On a box: what arrives in it simply appears (a live view's redraws).</td>
                         </tr>
+                        <tr>
+                            <td><code>data-kp-arrive="new"</code></td>
+                            <td>off</td>
+                            <td>
+                                On a box: a row redrawn under the key of a row that just left (<code>data-kp-key</code>, <code>data-kp-row-key</code>,
+                                <code>id</code>) stays still, and only a row with a new key arrives.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
@@ -259,6 +319,7 @@ for (const row of selected) leave(row);</code></pre>
                 ><code>import { attachMotion, closeDialog, easeSize, leave, themeMotion, withoutOvershoot } from '@kp-soft/themes/js/motion';
 
 attachMotion(document);                 // every dialog and component box on the page, and [data-kp-size-motion]
+attachMotion(document, { size: '.card, .panel', arrive: 'new', arriveKeys: ['data-key'] }); // your own boxes too; only new rows arrive
 const stop = easeSize(card);            // one box by hand; stop() undoes it
 await closeDialog(dialog, 'saved');     // close with the theme's motion; resolves when it is shut
 await leave(row);                       // the theme's exit, then removed

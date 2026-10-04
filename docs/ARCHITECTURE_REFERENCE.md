@@ -66,7 +66,11 @@ js/actions.js        row buttons on shared      │
                      columns, a table measured  │
 js/kpi.js            a tile's sparkline and its │
                      filter toggle              │
-js/attention.js      a band kept worst first    │
+js/attention.js      a band kept worst first,   │
+                     and set by key             │
+js/tiles.js          tiles of one height across │
+                     a board's grids            │
+js/freshness.js      "updated 12 s ago", ticking│
 js/chart.js          the time chart; draws its  │
                      spark with js/kpi.js       │
 js/structure.js      tree, reorder, split       │

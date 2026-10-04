@@ -544,6 +544,13 @@
         border-radius: var(--radius);
     }
 
+    /* The warning plate's own ink read 4.51:1; a twentieth of the page's
+       text in it reads 4.78 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='formal'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='formal'] .kp-toasts {
         gap: var(--kp-space-sm);
     }

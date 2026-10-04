@@ -109,6 +109,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html" aria-current="page">Time chart</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -232,10 +233,10 @@
                     <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
                     <figure class="sc-example" id="more-chart-time-chart">
                         <figcaption class="kp-fw-semibold">Time chart</figcaption>
-                        <p class="kp-text-muted">Point at either chart: one crosshair runs through both and through the three sparklines, and only the chart under the pointer shows its tooltip, beside the crosshair on the side with room: every visible source's value, ▲/▼ and the amount over the hour before, and the event near it. Under the lines a soft area while one or two sources are on: click a single source in the legend and its area appears; with three or more on, the lines alone. Hover a source in the legend to single it out; click two, then <b>Show all</b>. In <b>Flow</b> the sixth and seventh pump houses repeat the first two colours as dashed lines. Drag across one chart: both zoom, and <b>Zoomed: … · Reset</b> appears beside the ranges; a double-click or Esc resets. Click the red marker above the plot (the alarm at 07:32): the tooltip pins with its <b>Open</b> link. Tab to a plot and use ←/→, Shift, Home/End, Enter and Esc. Try <b>1 h</b> and <b>7 d</b>: the page hands each range its own readings.</p>
+                        <p class="kp-text-muted">Point at either chart: one crosshair runs through both and through the three sparklines, and only the chart under the pointer shows its tooltip, beside the crosshair on the side with room: every visible source's value, ▲/▼ and the amount over the hour before, and the event near it. Under the lines a soft area while one or two sources are on: click a single source in the legend and its area appears; with three or more on, the lines alone. Hover a source in the legend to single it out; click two, then <b>Show all</b>. In <b>Flow</b> the sixth and seventh pump houses repeat the first two colours as dashed lines. Drag across one chart: both zoom, and <b>Zoomed: … · Reset</b> appears beside the ranges; a double-click or Esc resets. Click the red marker above the plot (the alarm at 07:32): the tooltip pins with its <b>Open</b> link. Tab to a plot and use ←/→, Shift, Home/End, Enter and Esc. Try <b>1 h</b> and <b>7 d</b>: the page hands each range its own readings, and under <b>7 d</b> the axis reads a date at each Brussels midnight; a zoom across two days names both dates in the chip.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample lang="en-GB">
+<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample>
     <div class="kp-chart-group__bar">
         <div class="kp-chart-ranges" role="group" aria-label="Time range">
             <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
@@ -631,7 +632,7 @@
 </div>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group__bar&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-ranges&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Time range&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-chart-range</span><span class="kp-code__string">=&quot;1h&quot;</span>&gt;1 h&lt;/<span class="kp-code__keyword">button</span>&gt;
@@ -1032,7 +1033,7 @@
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div class="cat-resize" style="inline-size: 22.5rem">
-    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample lang="en-GB">
+    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample>
         <div class="kp-chart-group__bar">
             <div class="kp-chart-ranges" role="group" aria-label="Time range, phone width">
                 <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
@@ -1447,7 +1448,7 @@
 </div>
                         </div>
                         <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span>&gt;
         &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group__bar&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-ranges&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Time range, phone width&quot;</span>&gt;
                 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-chart-range</span><span class="kp-code__string">=&quot;1h&quot;</span>&gt;1 h&lt;/<span class="kp-code__keyword">button</span>&gt;
@@ -1865,7 +1866,7 @@
                         <p class="kp-text-muted">A chart with one source: no legend and no hint, and a stronger soft area under its line than with two. The dashed red line is the alarm level (<code>threshold</code>); the dip under it this morning lines up with the alarm and the restart markers above the plot.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample lang="en-GB">
+<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-cat-chart-sample>
     <figure class="kp-chart" data-kp-chart data-cat-chart="alone" aria-label="Pump house 3 pressure">
         <figcaption class="kp-chart__title">Pump house 3, pressure, bar</figcaption>
         <script type="application/json" data-kp-chart-data>
@@ -1925,7 +1926,7 @@
 </div>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">data-kp-chart-span</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-cat-chart-sample</span>&gt;
     &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">data-cat-chart</span><span class="kp-code__string">=&quot;alone&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 3 pressure&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pump house 3, pressure, bar&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
         &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
@@ -1984,6 +1985,750 @@
     &lt;/<span class="kp-code__keyword">figure</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-chart-time-chart-units">
+                        <figcaption class="kp-fw-semibold">Units</figcaption>
+                        <p class="kp-text-muted">The control room's telemetry server, one chart per <code>unitKind</code>. The axis carries the unit: memory in binary steps (<b>0 B</b>, <b>1.0 GiB</b>, <b>2.0 GiB</b>), the network per second (<b>MiB/s</b>), the processor in percent with an axis of 10, 25, 50 or 100, here above 100 because the import job runs on several cores (nothing is cut off at 100). Point at any chart: the tooltip prints values such as <b>1.5 GiB</b>, <b>3.1 MiB/s</b> and <b>94%</b>. Meter readings are counts: the axis may shorten them (<b>20.0k</b>), but the tooltip, the legend and the day's totals in the legend (with nothing under the crosshair) print every digit: <b>1,183,402</b>, never 1.2M.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-chart-group" data-kp-chart-group>
+    <figure class="kp-chart" data-kp-chart aria-label="Memory">
+        <figcaption class="kp-chart__title">Memory</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Memory",
+            "unitKind": "bytes",
+            "series": [
+            {
+            "label": "Used",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            1550482100, 1559025902, 1530265915, 1538220516, 1515237654, 1508175298, 1515825387, 1486925325,
+            1512095850, 1499539087, 1495273717, 1487839778, 1502872294, 1504376666, 1489266790, 1485267102,
+            1484400706, 1505346266, 1494762269, 1486346898, 1502246443, 1486731453, 1497635087, 1511316708,
+            1485403129, 1486040291, 1493113514, 1495518643, 1521876675, 1510762397, 1534895202, 1542508117,
+            1549765799, 1543412693, 1544636880, 1576463978, 1566901098, 1606590710, 1594598841, 1593024347,
+            1601918635, 1592013762, 1601969221, 1578007019, 1567969660, 1561141517, 1553668881, 1549682933,
+            1530283834, 1519617245, 1521610697, 1521871880, 1521597757, 1507203406, 1484441886, 1512575633,
+            1513101729, 1497266943, 1503695428, 1503820347, 1492273209, 1486900016, 1489378628, 1480759335,
+            1481907096, 1458889883, 1453804530, 1457842990, 1445345743, 1439919697, 1419719321, 1415259930,
+            1414507950, 1396392289, 1396497118, 1411597063, 1400730590, 1415016418, 1437440320, 1447989967,
+            1456419653, 1470416135, 1495796002, 1504319190, 1530205954, 1573273062, 1598638991, 1600811804,
+            1635522282, 1626038115, 1652324523, 1628372340, 1623133219, 1633770313, 1616330589, 1580662846,
+            1556384806
+            ]
+            },
+            {
+            "label": "Cache",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            564417717, 595410637, 608385844, 604561244, 595666453, 605888343, 566530820, 587178051, 581773214,
+            593786350, 584166893, 595337026, 593183124, 577589050, 585686972, 587810545, 598257524, 571349285,
+            565955102, 587907029, 593473033, 600185107, 582883737, 584459522, 611779541, 585218558, 610215518,
+            604365653, 569175858, 592145174, 581369786, 589980347, 603646389, 596330323, 585845928, 581838455,
+            587239825, 599505088, 611624352, 612905498, 589524005, 578524454, 614210931, 566926008, 572151197,
+            600379286, 617312944, 582774338, 610527521, 590650666, 564027375, 612760261, 589668850, 599158570,
+            565237639, 604680344, 594736308, 599698572, 599418501, 593523525, 598168600, 589023615, 605260585,
+            585059682, 576895181, 574998173, 569570225, 597015810, 575461232, 569948878, 573870779, 613901083,
+            585288180, 571096219, 570882612, 605324048, 606245812, 575250313, 581459440, 598381239, 609407298,
+            606139952, 586931261, 609327672, 574303599, 601282118, 598082086, 582719910, 575951463, 601395606,
+            578660017, 592250209, 570394707, 608231461, 593305293, 582901324, 591029999
+            ]
+            }
+            ]
+            }
+        </script>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Network">
+        <figcaption class="kp-chart__title">Network</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Network",
+            "unitKind": "bytes/s",
+            "series": [
+            {
+            "label": "In",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            3166586, 3108898, 2998148, 2840751, 2833341, 2730510, 2679999, 2797304, 2741859, 2757654, 2826716,
+            2660361, 2738266, 2830306, 2824670, 2716581, 2806273, 2638238, 2666412, 2773313, 2676357, 2753414,
+            2771067, 2709953, 2751218, 2843588, 2689936, 2783079, 2712897, 2834236, 2784225, 2938548, 2931633,
+            3113426, 3070821, 3295621, 3288205, 3436982, 3333586, 3444346, 3427073, 3384511, 3440666, 3317724,
+            3171894, 3171691, 3077081, 3077900, 2955489, 2923831, 2792857, 2811698, 2834667, 2746536, 2678922,
+            2807986, 2733414, 2745486, 2785924, 2667629, 2663331, 2653221, 2720988, 2694495, 2540768, 2588704,
+            2493722, 2509450, 2452616, 2345118, 2219891, 2130923, 2168598, 2262437, 2193935, 2238372, 2128677,
+            2325868, 2353080, 2484486, 2497507, 2521334, 2626254, 2831517, 2902718, 3197200, 3202219, 3428318,
+            3527553, 3556870, 3563150, 3585677, 3657641, 3595694, 3417036, 3335702, 3128785
+            ]
+            },
+            {
+            "label": "Out",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            775513, 756325, 702393, 730961, 699202, 676203, 681174, 684136, 658956, 636788, 654719, 652190,
+            682188, 650778, 685980, 667979, 650808, 655061, 670478, 658680, 660896, 643664, 659212, 638930,
+            658772, 680436, 659571, 653873, 669719, 664690, 708720, 725075, 755707, 754697, 748647, 787307,
+            789299, 807195, 820650, 843969, 823782, 851074, 848668, 835155, 821545, 812528, 755065, 748922,
+            732735, 694222, 722839, 695370, 695251, 697686, 673959, 643084, 670779, 658488, 656472, 652390,
+            660309, 664233, 651279, 599827, 624141, 604678, 604685, 552665, 553866, 520213, 533479, 528138,
+            497116, 488476, 497108, 513741, 521590, 545478, 543758, 562424, 574692, 635202, 667240, 669481,
+            713137, 782029, 822658, 847034, 878572, 898322, 895984, 921576, 874383, 868887, 814225, 832601, 786651
+            ]
+            }
+            ]
+            }
+        </script>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Processor">
+        <figcaption class="kp-chart__title">Processor</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Processor",
+            "unitKind": "percent",
+            "series": [
+            {
+            "label": "Telemetry import",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            79.9, 73, 66.1, 61.9, 58.3, 57, 55.1, 53.8, 53.9, 52, 52.8, 52.5, 55.2, 52.6, 52.2, 52.7, 52.6, 53.3,
+            51.6, 55.3, 54.8, 51.5, 52.8, 52.9, 55.5, 54.6, 53.4, 56.8, 58.7, 57.6, 60.9, 64.3, 67.4, 73.6, 77.8,
+            82.1, 87.5, 93.7, 95, 100, 99.6, 98.5, 95.7, 91.6, 88, 83.9, 75.2, 70.5, 67.1, 62.4, 62.5, 57.6, 58.4,
+            55.4, 55.8, 54.7, 55.6, 54, 54, 51.8, 49.5, 48.6, 48.9, 48.8, 43.9, 42.4, 41.9, 37.6, 37.7, 36.7,
+            34.8, 30.3, 32, 31.3, 30.4, 30.8, 29.5, 30.7, 35.2, 39.4, 40.6, 44.7, 54.3, 61.4, 67.2, 78.4, 91.2,
+            99.6, 107.8, 114.4, 117.2, 117.3, 111.3, 103.9, 95, 88.2, 78.3
+            ]
+            },
+            {
+            "label": "Web",
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            15.3, 13.5, 13.9, 14.5, 13.7, 12.4, 11.8, 13.6, 13.5, 13.5, 11.7, 12.6, 12.4, 11.7, 13.2, 11.6, 11.8,
+            12.7, 11.6, 11.9, 13.3, 11.7, 11.7, 12, 12.1, 12.1, 12.7, 13.5, 13.1, 13, 13.9, 13.9, 14.3, 14, 15.4,
+            15, 14.8, 15, 16, 16.4, 15.3, 16.3, 15.7, 16.4, 14.6, 15.1, 14.1, 14.9, 14, 13.7, 13.2, 13.7, 13.9,
+            12.2, 12.7, 13.3, 11.9, 12, 13.1, 12.8, 11.9, 12.2, 12.6, 11.9, 10.9, 12.3, 12.2, 10.5, 11, 10.6, 9.9,
+            10.9, 10.7, 9.8, 9.5, 10.5, 9.8, 9.5, 10.2, 11, 11.3, 11, 11.7, 13.3, 13.3, 15, 15.5, 17, 17.1, 17,
+            16.5, 16.8, 17.8, 16.4, 16, 14.6, 15
+            ]
+            }
+            ]
+            }
+        </script>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Meter readings">
+        <figcaption class="kp-chart__title">Meter readings, per quarter of an hour</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Meter readings",
+            "unitKind": "count",
+            "series": [
+            {
+            "label": "Received",
+            "total": 1183402,
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            12650, 12276, 12046, 11742, 11294, 11101, 11150, 11031, 11151, 10950, 11009, 10963, 11007, 11002,
+            11084, 11067, 11048, 10804, 11001, 11086, 11091, 11029, 10886, 10921, 11056, 11170, 11087, 11171,
+            11107, 11392, 11523, 11776, 11994, 12167, 12418, 12682, 12991, 13160, 13365, 13530, 13611, 13575,
+            13384, 13273, 13131, 12779, 12547, 12056, 11999, 11718, 11594, 11226, 11222, 11082, 10989, 10895,
+            11114, 11110, 10988, 10889, 10782, 10584, 10657, 10328, 10440, 10053, 10047, 9824, 9414, 9177, 9213,
+            9066, 8933, 8774, 8622, 8895, 8909, 8995, 9312, 9569, 9936, 10462, 10797, 11399, 12059, 12512, 13060,
+            13694, 14115, 14365, 14547, 14553, 14082, 13854, 13530, 13212, 12564
+            ]
+            },
+            {
+            "label": "Rejected",
+            "total": 1534,
+            "start": 1791010800000,
+            "step": 900000,
+            "values": [
+            11, 11, 9, 9, 12, 8, 10, 10, 11, 14, 12, 12, 12, 16, 9, 14, 13, 12, 11, 12, 15, 15, 12, 10, 11, 11,
+            14, 8, 16, 11, 10, 14, 11, 15, 9, 12, 16, 13, 11, 11, 15, 11, 10, 8, 13, 10, 16, 16, 13, 11, 9, 8, 12,
+            13, 15, 10, 11, 13, 8, 10, 15, 10, 13, 16, 11, 14, 14, 11, 9, 15, 9, 12, 11, 9, 9, 12, 9, 16, 11, 14,
+            9, 15, 12, 11, 16, 15, 8, 14, 13, 11, 15, 8, 13, 13, 13, 9, 10
+            ]
+            }
+            ]
+            }
+        </script>
+    </figure>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Memory&quot;,
+            &quot;unitKind&quot;: &quot;bytes&quot;,
+            &quot;series&quot;: [
+            {
+            &quot;label&quot;: &quot;Used&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            1550482100, 1559025902, 1530265915, 1538220516, 1515237654, 1508175298, 1515825387, 1486925325,
+            1512095850, 1499539087, 1495273717, 1487839778, 1502872294, 1504376666, 1489266790, 1485267102,
+            1484400706, 1505346266, 1494762269, 1486346898, 1502246443, 1486731453, 1497635087, 1511316708,
+            1485403129, 1486040291, 1493113514, 1495518643, 1521876675, 1510762397, 1534895202, 1542508117,
+            1549765799, 1543412693, 1544636880, 1576463978, 1566901098, 1606590710, 1594598841, 1593024347,
+            1601918635, 1592013762, 1601969221, 1578007019, 1567969660, 1561141517, 1553668881, 1549682933,
+            1530283834, 1519617245, 1521610697, 1521871880, 1521597757, 1507203406, 1484441886, 1512575633,
+            1513101729, 1497266943, 1503695428, 1503820347, 1492273209, 1486900016, 1489378628, 1480759335,
+            1481907096, 1458889883, 1453804530, 1457842990, 1445345743, 1439919697, 1419719321, 1415259930,
+            1414507950, 1396392289, 1396497118, 1411597063, 1400730590, 1415016418, 1437440320, 1447989967,
+            1456419653, 1470416135, 1495796002, 1504319190, 1530205954, 1573273062, 1598638991, 1600811804,
+            1635522282, 1626038115, 1652324523, 1628372340, 1623133219, 1633770313, 1616330589, 1580662846,
+            1556384806
+            ]
+            },
+            {
+            &quot;label&quot;: &quot;Cache&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            564417717, 595410637, 608385844, 604561244, 595666453, 605888343, 566530820, 587178051, 581773214,
+            593786350, 584166893, 595337026, 593183124, 577589050, 585686972, 587810545, 598257524, 571349285,
+            565955102, 587907029, 593473033, 600185107, 582883737, 584459522, 611779541, 585218558, 610215518,
+            604365653, 569175858, 592145174, 581369786, 589980347, 603646389, 596330323, 585845928, 581838455,
+            587239825, 599505088, 611624352, 612905498, 589524005, 578524454, 614210931, 566926008, 572151197,
+            600379286, 617312944, 582774338, 610527521, 590650666, 564027375, 612760261, 589668850, 599158570,
+            565237639, 604680344, 594736308, 599698572, 599418501, 593523525, 598168600, 589023615, 605260585,
+            585059682, 576895181, 574998173, 569570225, 597015810, 575461232, 569948878, 573870779, 613901083,
+            585288180, 571096219, 570882612, 605324048, 606245812, 575250313, 581459440, 598381239, 609407298,
+            606139952, 586931261, 609327672, 574303599, 601282118, 598082086, 582719910, 575951463, 601395606,
+            578660017, 592250209, 570394707, 608231461, 593305293, 582901324, 591029999
+            ]
+            }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Network&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Network&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Network&quot;,
+            &quot;unitKind&quot;: &quot;bytes/s&quot;,
+            &quot;series&quot;: [
+            {
+            &quot;label&quot;: &quot;In&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            3166586, 3108898, 2998148, 2840751, 2833341, 2730510, 2679999, 2797304, 2741859, 2757654, 2826716,
+            2660361, 2738266, 2830306, 2824670, 2716581, 2806273, 2638238, 2666412, 2773313, 2676357, 2753414,
+            2771067, 2709953, 2751218, 2843588, 2689936, 2783079, 2712897, 2834236, 2784225, 2938548, 2931633,
+            3113426, 3070821, 3295621, 3288205, 3436982, 3333586, 3444346, 3427073, 3384511, 3440666, 3317724,
+            3171894, 3171691, 3077081, 3077900, 2955489, 2923831, 2792857, 2811698, 2834667, 2746536, 2678922,
+            2807986, 2733414, 2745486, 2785924, 2667629, 2663331, 2653221, 2720988, 2694495, 2540768, 2588704,
+            2493722, 2509450, 2452616, 2345118, 2219891, 2130923, 2168598, 2262437, 2193935, 2238372, 2128677,
+            2325868, 2353080, 2484486, 2497507, 2521334, 2626254, 2831517, 2902718, 3197200, 3202219, 3428318,
+            3527553, 3556870, 3563150, 3585677, 3657641, 3595694, 3417036, 3335702, 3128785
+            ]
+            },
+            {
+            &quot;label&quot;: &quot;Out&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            775513, 756325, 702393, 730961, 699202, 676203, 681174, 684136, 658956, 636788, 654719, 652190,
+            682188, 650778, 685980, 667979, 650808, 655061, 670478, 658680, 660896, 643664, 659212, 638930,
+            658772, 680436, 659571, 653873, 669719, 664690, 708720, 725075, 755707, 754697, 748647, 787307,
+            789299, 807195, 820650, 843969, 823782, 851074, 848668, 835155, 821545, 812528, 755065, 748922,
+            732735, 694222, 722839, 695370, 695251, 697686, 673959, 643084, 670779, 658488, 656472, 652390,
+            660309, 664233, 651279, 599827, 624141, 604678, 604685, 552665, 553866, 520213, 533479, 528138,
+            497116, 488476, 497108, 513741, 521590, 545478, 543758, 562424, 574692, 635202, 667240, 669481,
+            713137, 782029, 822658, 847034, 878572, 898322, 895984, 921576, 874383, 868887, 814225, 832601, 786651
+            ]
+            }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Processor&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Processor&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Processor&quot;,
+            &quot;unitKind&quot;: &quot;percent&quot;,
+            &quot;series&quot;: [
+            {
+            &quot;label&quot;: &quot;Telemetry import&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            79.9, 73, 66.1, 61.9, 58.3, 57, 55.1, 53.8, 53.9, 52, 52.8, 52.5, 55.2, 52.6, 52.2, 52.7, 52.6, 53.3,
+            51.6, 55.3, 54.8, 51.5, 52.8, 52.9, 55.5, 54.6, 53.4, 56.8, 58.7, 57.6, 60.9, 64.3, 67.4, 73.6, 77.8,
+            82.1, 87.5, 93.7, 95, 100, 99.6, 98.5, 95.7, 91.6, 88, 83.9, 75.2, 70.5, 67.1, 62.4, 62.5, 57.6, 58.4,
+            55.4, 55.8, 54.7, 55.6, 54, 54, 51.8, 49.5, 48.6, 48.9, 48.8, 43.9, 42.4, 41.9, 37.6, 37.7, 36.7,
+            34.8, 30.3, 32, 31.3, 30.4, 30.8, 29.5, 30.7, 35.2, 39.4, 40.6, 44.7, 54.3, 61.4, 67.2, 78.4, 91.2,
+            99.6, 107.8, 114.4, 117.2, 117.3, 111.3, 103.9, 95, 88.2, 78.3
+            ]
+            },
+            {
+            &quot;label&quot;: &quot;Web&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            15.3, 13.5, 13.9, 14.5, 13.7, 12.4, 11.8, 13.6, 13.5, 13.5, 11.7, 12.6, 12.4, 11.7, 13.2, 11.6, 11.8,
+            12.7, 11.6, 11.9, 13.3, 11.7, 11.7, 12, 12.1, 12.1, 12.7, 13.5, 13.1, 13, 13.9, 13.9, 14.3, 14, 15.4,
+            15, 14.8, 15, 16, 16.4, 15.3, 16.3, 15.7, 16.4, 14.6, 15.1, 14.1, 14.9, 14, 13.7, 13.2, 13.7, 13.9,
+            12.2, 12.7, 13.3, 11.9, 12, 13.1, 12.8, 11.9, 12.2, 12.6, 11.9, 10.9, 12.3, 12.2, 10.5, 11, 10.6, 9.9,
+            10.9, 10.7, 9.8, 9.5, 10.5, 9.8, 9.5, 10.2, 11, 11.3, 11, 11.7, 13.3, 13.3, 15, 15.5, 17, 17.1, 17,
+            16.5, 16.8, 17.8, 16.4, 16, 14.6, 15
+            ]
+            }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Meter readings&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Meter readings, per quarter of an hour&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Meter readings&quot;,
+            &quot;unitKind&quot;: &quot;count&quot;,
+            &quot;series&quot;: [
+            {
+            &quot;label&quot;: &quot;Received&quot;,
+            &quot;total&quot;: 1183402,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            12650, 12276, 12046, 11742, 11294, 11101, 11150, 11031, 11151, 10950, 11009, 10963, 11007, 11002,
+            11084, 11067, 11048, 10804, 11001, 11086, 11091, 11029, 10886, 10921, 11056, 11170, 11087, 11171,
+            11107, 11392, 11523, 11776, 11994, 12167, 12418, 12682, 12991, 13160, 13365, 13530, 13611, 13575,
+            13384, 13273, 13131, 12779, 12547, 12056, 11999, 11718, 11594, 11226, 11222, 11082, 10989, 10895,
+            11114, 11110, 10988, 10889, 10782, 10584, 10657, 10328, 10440, 10053, 10047, 9824, 9414, 9177, 9213,
+            9066, 8933, 8774, 8622, 8895, 8909, 8995, 9312, 9569, 9936, 10462, 10797, 11399, 12059, 12512, 13060,
+            13694, 14115, 14365, 14547, 14553, 14082, 13854, 13530, 13212, 12564
+            ]
+            },
+            {
+            &quot;label&quot;: &quot;Rejected&quot;,
+            &quot;total&quot;: 1534,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 900000,
+            &quot;values&quot;: [
+            11, 11, 9, 9, 12, 8, 10, 10, 11, 14, 12, 12, 12, 16, 9, 14, 13, 12, 11, 12, 15, 15, 12, 10, 11, 11,
+            14, 8, 16, 11, 10, 14, 11, 15, 9, 12, 16, 13, 11, 11, 15, 11, 10, 8, 13, 10, 16, 16, 13, 11, 9, 8, 12,
+            13, 15, 10, 11, 13, 8, 10, 15, 10, 13, 16, 11, 14, 14, 11, 9, 15, 9, 12, 11, 9, 9, 12, 9, 16, 11, 14,
+            9, 15, 12, 11, 16, 15, 8, 14, 13, 11, 15, 8, 13, 13, 13, 9, 10
+            ]
+            }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-chart-time-chart-states">
+                        <figcaption class="kp-fw-semibold">States</figcaption>
+                        <p class="kp-text-muted">Four charts that have no lines to draw, each at the height a chart with lines has, so the page does not move when the readings arrive. <b>Loading</b> (<code>data-kp-chart-loading</code>): the plot pulses (it stands still under reduced motion) and the legend row keeps room for the three sources <code>data-kp-chart-sources="3"</code> announces; <code>setChartData()</code> ends it. <b>No readings</b>: the words <i>No readings in this window yet.</i> in the middle. <b>Error</b> (<code>{ error }</code> in the data): the page's sentence with a red dot. <b>One reading</b>: a dot per source, and with <code>onePointNote</code> the note under it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-chart-group" data-kp-chart-group>
+    <figure class="kp-chart" data-kp-chart aria-label="Pressure, loading" data-kp-chart-loading data-kp-chart-sources="3">
+        <figcaption class="kp-chart__title">Pressure, loading</figcaption>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Pump house 9">
+        <figcaption class="kp-chart__title">Pump house 9, no readings</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            { "label": "Pump house 9", "unit": "bar", "series": [] }
+        </script>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Flow, error">
+        <figcaption class="kp-chart__title">Flow, error</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            { "label": "Flow", "unit": "m³/h", "series": [], "error": "The telemetry server did not answer: connection refused." }
+        </script>
+    </figure>
+    <figure class="kp-chart" data-kp-chart aria-label="Pump house 10">
+        <figcaption class="kp-chart__title">Pump house 10, one reading</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Pump house 10",
+            "unit": "bar",
+            "digits": 2,
+            "onePointNote": true,
+            "series": [
+            { "label": "Inlet", "points": [[1791097200000, 3.12]] },
+            { "label": "Outlet", "points": [[1791097200000, 2.64]] }
+            ]
+            }
+        </script>
+    </figure>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure, loading&quot;</span> <span class="kp-code__keyword">data-kp-chart-loading</span> <span class="kp-code__keyword">data-kp-chart-sources</span><span class="kp-code__string">=&quot;3&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pressure, loading&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 9&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pump house 9, no readings&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            { &quot;label&quot;: &quot;Pump house 9&quot;, &quot;unit&quot;: &quot;bar&quot;, &quot;series&quot;: [] }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Flow, error&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Flow, error&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            { &quot;label&quot;: &quot;Flow&quot;, &quot;unit&quot;: &quot;m³/h&quot;, &quot;series&quot;: [], &quot;error&quot;: &quot;The telemetry server did not answer: connection refused.&quot; }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 10&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pump house 10, one reading&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Pump house 10&quot;,
+            &quot;unit&quot;: &quot;bar&quot;,
+            &quot;digits&quot;: 2,
+            &quot;onePointNote&quot;: true,
+            &quot;series&quot;: [
+            { &quot;label&quot;: &quot;Inlet&quot;, &quot;points&quot;: [[1791097200000, 3.12]] },
+            { &quot;label&quot;: &quot;Outlet&quot;, &quot;points&quot;: [[1791097200000, 2.64]] }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-chart-time-chart-chip-elsewhere">
+                        <figcaption class="kp-fw-semibold">Zoom chip outside its group</figcaption>
+                        <p class="kp-text-muted">The chip sits in the page's toolbar, outside the group it belongs to, named by <code>data-kp-chart-zoom-for="cat-chart-far"</code>. Drag across the chart: <b>Zoomed: … · Reset</b> appears in the toolbar; Reset, a double-click or Esc hides it again.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-chart-group__bar">
+    <span>Toolbar of the page</span>
+    <span class="kp-chart-zoom" data-kp-chart-zoom data-kp-chart-zoom-for="cat-chart-far" hidden></span>
+</div>
+<div class="kp-chart-group" data-kp-chart-group id="cat-chart-far">
+    <figure class="kp-chart" data-kp-chart aria-label="Pump house 3 pressure, chip elsewhere">
+        <figcaption class="kp-chart__title">Pump house 3, pressure, bar</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            {
+            "label": "Pump house 3",
+            "unit": "bar",
+            "digits": 2,
+            "threshold": 2.1,
+            "series": [
+            {
+            "label": "Pump house 3",
+            "start": 1791010800000,
+            "step": 300000,
+            "values": [
+            2.77, 2.8, 2.77, 2.79, 2.83, 2.81, 2.83, 2.83, 2.84, 2.84, 2.86, 2.87, 2.86, 2.86, 2.84, 2.88, 2.84,
+            2.89, 2.85, 2.87, 2.88, 2.85, 2.88, 2.88, 2.86, 2.89, 2.89, 2.86, 2.89, 2.86, 2.85, 2.86, 2.87, 2.9,
+            2.86, 2.85, 2.89, 2.89, 2.9, 2.89, 2.88, 2.88, 2.88, 2.86, 2.89, 2.88, 2.88, 2.9, 2.87, 2.88, 2.88,
+            2.89, 2.87, 2.86, 2.87, 2.89, 2.9, 2.88, 2.9, 2.87, 2.9, 2.89, 2.87, 2.87, 2.9, 2.86, 2.9, 2.86, 2.88,
+            2.86, 2.87, 2.85, 2.85, 2.85, 2.88, 2.86, 2.88, 2.85, 2.85, 2.86, 2.88, 2.89, 2.85, 2.88, 2.87, 2.87,
+            2.88, 2.85, 2.83, 2.83, 2.84, 2.86, 2.84, 2.83, 2.81, 2.81, 2.83, 2.83, 2.8, 2.79, 2.81, 2.81, 2.78,
+            2.79, 2.78, 2.78, 2.79, 2.75, 2.75, 2.73, 2.77, 2.76, 2.73, 2.73, 2.71, 2.75, 2.74, 2.7, 2.71, 2.74,
+            2.74, 2.75, 2.73, 2.74, 2.73, 2.73, 2.73, 2.76, 2.76, 2.74, 2.76, 2.75, 2.76, 2.77, 2.76, 2.77, 2.77,
+            2.79, 2.78, 2.78, 2.79, 2.82, 2.83, 2.81, 2.84, 2.82, 2.82, 2.84, 2.84, 2.86, 2.82, 2.85, 2.83, 2.85,
+            2.84, 2.85, 2.84, 2.88, 2.86, 2.85, 2.85, 2.89, 2.85, 2.89, 2.88, 2.87, 2.88, 2.89, 2.85, 2.87, 2.85,
+            2.89, 2.88, 2.86, 2.86, 2.86, 2.89, 2.86, 2.9, 2.87, 2.87, 2.9, 2.91, 2.91, 2.91, 2.88, 2.89, 2.88,
+            2.91, 2.89, 2.93, 2.93, 2.92, 2.89, 2.93, 2.92, 2.91, 2.92, 2.95, 2.94, 2.94, 2.92, 2.96, 2.94, 2.97,
+            2.95, 2.96, 2.96, 2.95, 2.96, 2.98, 2.97, 3, 2.99, 2.97, 2.98, 3, 3.01, 3, 3.01, 3.02, 2.98, 3.01,
+            3.02, 3, 3.01, 2.98, 3.02, 3.01, 2.99, 2.96, 2.98, 2.96, 2.99, 2.99, 2.98, 2.94, 2.96, 2.94, 2.93,
+            2.91, 2.9, 2.91, 2.91, 2.89, 2.88, 2.9, 2.86, 2.85, 2.85, 2.85, 2.8, 2.83, 2.81, 2.8, 2.79, 2.77,
+            2.79, 2.76, 2.73, 2.74, 2.74, 2.74, 2.71, 2.69, 2.69, 2.67, 2.69, 2.71, 2.57, 2.45, 2.29, 2.17, 2.05,
+            1.93, 1.92, 1.92, 1.97, 1.95, 2.05, 2.27, 2.48, 2.66, 2.75, 2.76, 2.74, 2.75, 2.76, 2.76
+            ]
+            }
+            ],
+            "events": [
+            { "at": 1791072000000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790985600000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790899200000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790812800000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790726400000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790640000000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1790553600000, "label": "Backup", "tone": "info", "href": "#time-chart" },
+            { "at": 1791087000000, "label": "Valve swap, ring main", "tone": "info", "href": "#time-chart" },
+            {
+            "at": 1791091920000,
+            "label": "Alarm: pump house 3 below 2.1 bar",
+            "tone": "critical",
+            "href": "#time-chart"
+            },
+            { "at": 1791094320000, "label": "Pump restart, pump house 3", "tone": "warning", "href": "#time-chart" },
+            { "at": 1790943600000, "label": "Valve swap, reservoir North", "tone": "info", "href": "#time-chart" },
+            { "at": 1790759100000, "label": "Alarm: pump house 7 no reading", "tone": "critical", "href": "#time-chart" }
+            ]
+            }
+        </script>
+    </figure>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Toolbar of the page&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-zoom&quot;</span> <span class="kp-code__keyword">data-kp-chart-zoom</span> <span class="kp-code__keyword">data-kp-chart-zoom-for</span><span class="kp-code__string">=&quot;cat-chart-far&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group&quot;</span> <span class="kp-code__keyword">data-kp-chart-group</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cat-chart-far&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 3 pressure, chip elsewhere&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pump house 3, pressure, bar&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+        &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+            {
+            &quot;label&quot;: &quot;Pump house 3&quot;,
+            &quot;unit&quot;: &quot;bar&quot;,
+            &quot;digits&quot;: 2,
+            &quot;threshold&quot;: 2.1,
+            &quot;series&quot;: [
+            {
+            &quot;label&quot;: &quot;Pump house 3&quot;,
+            &quot;start&quot;: 1791010800000,
+            &quot;step&quot;: 300000,
+            &quot;values&quot;: [
+            2.77, 2.8, 2.77, 2.79, 2.83, 2.81, 2.83, 2.83, 2.84, 2.84, 2.86, 2.87, 2.86, 2.86, 2.84, 2.88, 2.84,
+            2.89, 2.85, 2.87, 2.88, 2.85, 2.88, 2.88, 2.86, 2.89, 2.89, 2.86, 2.89, 2.86, 2.85, 2.86, 2.87, 2.9,
+            2.86, 2.85, 2.89, 2.89, 2.9, 2.89, 2.88, 2.88, 2.88, 2.86, 2.89, 2.88, 2.88, 2.9, 2.87, 2.88, 2.88,
+            2.89, 2.87, 2.86, 2.87, 2.89, 2.9, 2.88, 2.9, 2.87, 2.9, 2.89, 2.87, 2.87, 2.9, 2.86, 2.9, 2.86, 2.88,
+            2.86, 2.87, 2.85, 2.85, 2.85, 2.88, 2.86, 2.88, 2.85, 2.85, 2.86, 2.88, 2.89, 2.85, 2.88, 2.87, 2.87,
+            2.88, 2.85, 2.83, 2.83, 2.84, 2.86, 2.84, 2.83, 2.81, 2.81, 2.83, 2.83, 2.8, 2.79, 2.81, 2.81, 2.78,
+            2.79, 2.78, 2.78, 2.79, 2.75, 2.75, 2.73, 2.77, 2.76, 2.73, 2.73, 2.71, 2.75, 2.74, 2.7, 2.71, 2.74,
+            2.74, 2.75, 2.73, 2.74, 2.73, 2.73, 2.73, 2.76, 2.76, 2.74, 2.76, 2.75, 2.76, 2.77, 2.76, 2.77, 2.77,
+            2.79, 2.78, 2.78, 2.79, 2.82, 2.83, 2.81, 2.84, 2.82, 2.82, 2.84, 2.84, 2.86, 2.82, 2.85, 2.83, 2.85,
+            2.84, 2.85, 2.84, 2.88, 2.86, 2.85, 2.85, 2.89, 2.85, 2.89, 2.88, 2.87, 2.88, 2.89, 2.85, 2.87, 2.85,
+            2.89, 2.88, 2.86, 2.86, 2.86, 2.89, 2.86, 2.9, 2.87, 2.87, 2.9, 2.91, 2.91, 2.91, 2.88, 2.89, 2.88,
+            2.91, 2.89, 2.93, 2.93, 2.92, 2.89, 2.93, 2.92, 2.91, 2.92, 2.95, 2.94, 2.94, 2.92, 2.96, 2.94, 2.97,
+            2.95, 2.96, 2.96, 2.95, 2.96, 2.98, 2.97, 3, 2.99, 2.97, 2.98, 3, 3.01, 3, 3.01, 3.02, 2.98, 3.01,
+            3.02, 3, 3.01, 2.98, 3.02, 3.01, 2.99, 2.96, 2.98, 2.96, 2.99, 2.99, 2.98, 2.94, 2.96, 2.94, 2.93,
+            2.91, 2.9, 2.91, 2.91, 2.89, 2.88, 2.9, 2.86, 2.85, 2.85, 2.85, 2.8, 2.83, 2.81, 2.8, 2.79, 2.77,
+            2.79, 2.76, 2.73, 2.74, 2.74, 2.74, 2.71, 2.69, 2.69, 2.67, 2.69, 2.71, 2.57, 2.45, 2.29, 2.17, 2.05,
+            1.93, 1.92, 1.92, 1.97, 1.95, 2.05, 2.27, 2.48, 2.66, 2.75, 2.76, 2.74, 2.75, 2.76, 2.76
+            ]
+            }
+            ],
+            &quot;events&quot;: [
+            { &quot;at&quot;: 1791072000000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790985600000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790899200000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790812800000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790726400000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790640000000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790553600000, &quot;label&quot;: &quot;Backup&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1791087000000, &quot;label&quot;: &quot;Valve swap, ring main&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            {
+            &quot;at&quot;: 1791091920000,
+            &quot;label&quot;: &quot;Alarm: pump house 3 below 2.1 bar&quot;,
+            &quot;tone&quot;: &quot;critical&quot;,
+            &quot;href&quot;: &quot;#time-chart&quot;
+            },
+            { &quot;at&quot;: 1791094320000, &quot;label&quot;: &quot;Pump restart, pump house 3&quot;, &quot;tone&quot;: &quot;warning&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790943600000, &quot;label&quot;: &quot;Valve swap, reservoir North&quot;, &quot;tone&quot;: &quot;info&quot;, &quot;href&quot;: &quot;#time-chart&quot; },
+            { &quot;at&quot;: 1790759100000, &quot;label&quot;: &quot;Alarm: pump house 7 no reading&quot;, &quot;tone&quot;: &quot;critical&quot;, &quot;href&quot;: &quot;#time-chart&quot; }
+            ]
+            }
+        &lt;/<span class="kp-code__keyword">script</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-chart-time-chart-no-group">
+                        <figcaption class="kp-fw-semibold">Charts outside any group</figcaption>
+                        <p class="kp-text-muted">Two charts with no group element: they still share one crosshair and one zoom (the page's), and the chip in the toolbar, with no group around it and no <code>-for</code>, is theirs. Drag across either chart: both zoom and the chip appears.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-chart-group__bar">
+    <span>Toolbar of the page</span>
+    <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+</div>
+<figure class="kp-chart" data-kp-chart aria-label="Network, no group">
+    <figcaption class="kp-chart__title">Network</figcaption>
+    <script type="application/json" data-kp-chart-data>
+        {
+        "label": "Network",
+        "unitKind": "bytes/s",
+        "series": [
+        {
+        "label": "In",
+        "start": 1791010800000,
+        "step": 900000,
+        "values": [
+        3166586, 3108898, 2998148, 2840751, 2833341, 2730510, 2679999, 2797304, 2741859, 2757654, 2826716,
+        2660361, 2738266, 2830306, 2824670, 2716581, 2806273, 2638238, 2666412, 2773313, 2676357, 2753414,
+        2771067, 2709953, 2751218, 2843588, 2689936, 2783079, 2712897, 2834236, 2784225, 2938548, 2931633,
+        3113426, 3070821, 3295621, 3288205, 3436982, 3333586, 3444346, 3427073, 3384511, 3440666, 3317724,
+        3171894, 3171691, 3077081, 3077900, 2955489, 2923831, 2792857, 2811698, 2834667, 2746536, 2678922,
+        2807986, 2733414, 2745486, 2785924, 2667629, 2663331, 2653221, 2720988, 2694495, 2540768, 2588704,
+        2493722, 2509450, 2452616, 2345118, 2219891, 2130923, 2168598, 2262437, 2193935, 2238372, 2128677,
+        2325868, 2353080, 2484486, 2497507, 2521334, 2626254, 2831517, 2902718, 3197200, 3202219, 3428318,
+        3527553, 3556870, 3563150, 3585677, 3657641, 3595694, 3417036, 3335702, 3128785
+        ]
+        },
+        {
+        "label": "Out",
+        "start": 1791010800000,
+        "step": 900000,
+        "values": [
+        775513, 756325, 702393, 730961, 699202, 676203, 681174, 684136, 658956, 636788, 654719, 652190, 682188,
+        650778, 685980, 667979, 650808, 655061, 670478, 658680, 660896, 643664, 659212, 638930, 658772, 680436,
+        659571, 653873, 669719, 664690, 708720, 725075, 755707, 754697, 748647, 787307, 789299, 807195, 820650,
+        843969, 823782, 851074, 848668, 835155, 821545, 812528, 755065, 748922, 732735, 694222, 722839, 695370,
+        695251, 697686, 673959, 643084, 670779, 658488, 656472, 652390, 660309, 664233, 651279, 599827, 624141,
+        604678, 604685, 552665, 553866, 520213, 533479, 528138, 497116, 488476, 497108, 513741, 521590, 545478,
+        543758, 562424, 574692, 635202, 667240, 669481, 713137, 782029, 822658, 847034, 878572, 898322, 895984,
+        921576, 874383, 868887, 814225, 832601, 786651
+        ]
+        }
+        ]
+        }
+    </script>
+</figure>
+<figure class="kp-chart" data-kp-chart aria-label="Memory, no group">
+    <figcaption class="kp-chart__title">Memory</figcaption>
+    <script type="application/json" data-kp-chart-data>
+        {
+        "label": "Memory",
+        "unitKind": "bytes",
+        "series": [
+        {
+        "label": "Used",
+        "start": 1791010800000,
+        "step": 900000,
+        "values": [
+        1550482100, 1559025902, 1530265915, 1538220516, 1515237654, 1508175298, 1515825387, 1486925325,
+        1512095850, 1499539087, 1495273717, 1487839778, 1502872294, 1504376666, 1489266790, 1485267102,
+        1484400706, 1505346266, 1494762269, 1486346898, 1502246443, 1486731453, 1497635087, 1511316708,
+        1485403129, 1486040291, 1493113514, 1495518643, 1521876675, 1510762397, 1534895202, 1542508117,
+        1549765799, 1543412693, 1544636880, 1576463978, 1566901098, 1606590710, 1594598841, 1593024347,
+        1601918635, 1592013762, 1601969221, 1578007019, 1567969660, 1561141517, 1553668881, 1549682933,
+        1530283834, 1519617245, 1521610697, 1521871880, 1521597757, 1507203406, 1484441886, 1512575633,
+        1513101729, 1497266943, 1503695428, 1503820347, 1492273209, 1486900016, 1489378628, 1480759335,
+        1481907096, 1458889883, 1453804530, 1457842990, 1445345743, 1439919697, 1419719321, 1415259930,
+        1414507950, 1396392289, 1396497118, 1411597063, 1400730590, 1415016418, 1437440320, 1447989967,
+        1456419653, 1470416135, 1495796002, 1504319190, 1530205954, 1573273062, 1598638991, 1600811804,
+        1635522282, 1626038115, 1652324523, 1628372340, 1623133219, 1633770313, 1616330589, 1580662846, 1556384806
+        ]
+        },
+        {
+        "label": "Cache",
+        "start": 1791010800000,
+        "step": 900000,
+        "values": [
+        564417717, 595410637, 608385844, 604561244, 595666453, 605888343, 566530820, 587178051, 581773214,
+        593786350, 584166893, 595337026, 593183124, 577589050, 585686972, 587810545, 598257524, 571349285,
+        565955102, 587907029, 593473033, 600185107, 582883737, 584459522, 611779541, 585218558, 610215518,
+        604365653, 569175858, 592145174, 581369786, 589980347, 603646389, 596330323, 585845928, 581838455,
+        587239825, 599505088, 611624352, 612905498, 589524005, 578524454, 614210931, 566926008, 572151197,
+        600379286, 617312944, 582774338, 610527521, 590650666, 564027375, 612760261, 589668850, 599158570,
+        565237639, 604680344, 594736308, 599698572, 599418501, 593523525, 598168600, 589023615, 605260585,
+        585059682, 576895181, 574998173, 569570225, 597015810, 575461232, 569948878, 573870779, 613901083,
+        585288180, 571096219, 570882612, 605324048, 606245812, 575250313, 581459440, 598381239, 609407298,
+        606139952, 586931261, 609327672, 574303599, 601282118, 598082086, 582719910, 575951463, 601395606,
+        578660017, 592250209, 570394707, 608231461, 593305293, 582901324, 591029999
+        ]
+        }
+        ]
+        }
+    </script>
+</figure>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-group__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Toolbar of the page&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart-zoom&quot;</span> <span class="kp-code__keyword">data-kp-chart-zoom</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Network, no group&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Network&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+        {
+        &quot;label&quot;: &quot;Network&quot;,
+        &quot;unitKind&quot;: &quot;bytes/s&quot;,
+        &quot;series&quot;: [
+        {
+        &quot;label&quot;: &quot;In&quot;,
+        &quot;start&quot;: 1791010800000,
+        &quot;step&quot;: 900000,
+        &quot;values&quot;: [
+        3166586, 3108898, 2998148, 2840751, 2833341, 2730510, 2679999, 2797304, 2741859, 2757654, 2826716,
+        2660361, 2738266, 2830306, 2824670, 2716581, 2806273, 2638238, 2666412, 2773313, 2676357, 2753414,
+        2771067, 2709953, 2751218, 2843588, 2689936, 2783079, 2712897, 2834236, 2784225, 2938548, 2931633,
+        3113426, 3070821, 3295621, 3288205, 3436982, 3333586, 3444346, 3427073, 3384511, 3440666, 3317724,
+        3171894, 3171691, 3077081, 3077900, 2955489, 2923831, 2792857, 2811698, 2834667, 2746536, 2678922,
+        2807986, 2733414, 2745486, 2785924, 2667629, 2663331, 2653221, 2720988, 2694495, 2540768, 2588704,
+        2493722, 2509450, 2452616, 2345118, 2219891, 2130923, 2168598, 2262437, 2193935, 2238372, 2128677,
+        2325868, 2353080, 2484486, 2497507, 2521334, 2626254, 2831517, 2902718, 3197200, 3202219, 3428318,
+        3527553, 3556870, 3563150, 3585677, 3657641, 3595694, 3417036, 3335702, 3128785
+        ]
+        },
+        {
+        &quot;label&quot;: &quot;Out&quot;,
+        &quot;start&quot;: 1791010800000,
+        &quot;step&quot;: 900000,
+        &quot;values&quot;: [
+        775513, 756325, 702393, 730961, 699202, 676203, 681174, 684136, 658956, 636788, 654719, 652190, 682188,
+        650778, 685980, 667979, 650808, 655061, 670478, 658680, 660896, 643664, 659212, 638930, 658772, 680436,
+        659571, 653873, 669719, 664690, 708720, 725075, 755707, 754697, 748647, 787307, 789299, 807195, 820650,
+        843969, 823782, 851074, 848668, 835155, 821545, 812528, 755065, 748922, 732735, 694222, 722839, 695370,
+        695251, 697686, 673959, 643084, 670779, 658488, 656472, 652390, 660309, 664233, 651279, 599827, 624141,
+        604678, 604685, 552665, 553866, 520213, 533479, 528138, 497116, 488476, 497108, 513741, 521590, 545478,
+        543758, 562424, 574692, 635202, 667240, 669481, 713137, 782029, 822658, 847034, 878572, 898322, 895984,
+        921576, 874383, 868887, 814225, 832601, 786651
+        ]
+        }
+        ]
+        }
+    &lt;/<span class="kp-code__keyword">script</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory, no group&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;
+        {
+        &quot;label&quot;: &quot;Memory&quot;,
+        &quot;unitKind&quot;: &quot;bytes&quot;,
+        &quot;series&quot;: [
+        {
+        &quot;label&quot;: &quot;Used&quot;,
+        &quot;start&quot;: 1791010800000,
+        &quot;step&quot;: 900000,
+        &quot;values&quot;: [
+        1550482100, 1559025902, 1530265915, 1538220516, 1515237654, 1508175298, 1515825387, 1486925325,
+        1512095850, 1499539087, 1495273717, 1487839778, 1502872294, 1504376666, 1489266790, 1485267102,
+        1484400706, 1505346266, 1494762269, 1486346898, 1502246443, 1486731453, 1497635087, 1511316708,
+        1485403129, 1486040291, 1493113514, 1495518643, 1521876675, 1510762397, 1534895202, 1542508117,
+        1549765799, 1543412693, 1544636880, 1576463978, 1566901098, 1606590710, 1594598841, 1593024347,
+        1601918635, 1592013762, 1601969221, 1578007019, 1567969660, 1561141517, 1553668881, 1549682933,
+        1530283834, 1519617245, 1521610697, 1521871880, 1521597757, 1507203406, 1484441886, 1512575633,
+        1513101729, 1497266943, 1503695428, 1503820347, 1492273209, 1486900016, 1489378628, 1480759335,
+        1481907096, 1458889883, 1453804530, 1457842990, 1445345743, 1439919697, 1419719321, 1415259930,
+        1414507950, 1396392289, 1396497118, 1411597063, 1400730590, 1415016418, 1437440320, 1447989967,
+        1456419653, 1470416135, 1495796002, 1504319190, 1530205954, 1573273062, 1598638991, 1600811804,
+        1635522282, 1626038115, 1652324523, 1628372340, 1623133219, 1633770313, 1616330589, 1580662846, 1556384806
+        ]
+        },
+        {
+        &quot;label&quot;: &quot;Cache&quot;,
+        &quot;start&quot;: 1791010800000,
+        &quot;step&quot;: 900000,
+        &quot;values&quot;: [
+        564417717, 595410637, 608385844, 604561244, 595666453, 605888343, 566530820, 587178051, 581773214,
+        593786350, 584166893, 595337026, 593183124, 577589050, 585686972, 587810545, 598257524, 571349285,
+        565955102, 587907029, 593473033, 600185107, 582883737, 584459522, 611779541, 585218558, 610215518,
+        604365653, 569175858, 592145174, 581369786, 589980347, 603646389, 596330323, 585845928, 581838455,
+        587239825, 599505088, 611624352, 612905498, 589524005, 578524454, 614210931, 566926008, 572151197,
+        600379286, 617312944, 582774338, 610527521, 590650666, 564027375, 612760261, 589668850, 599158570,
+        565237639, 604680344, 594736308, 599698572, 599418501, 593523525, 598168600, 589023615, 605260585,
+        585059682, 576895181, 574998173, 569570225, 597015810, 575461232, 569948878, 573870779, 613901083,
+        585288180, 571096219, 570882612, 605324048, 606245812, 575250313, 581459440, 598381239, 609407298,
+        606139952, 586931261, 609327672, 574303599, 601282118, 598082086, 582719910, 575951463, 601395606,
+        578660017, 592250209, 570394707, 608231461, 593305293, 582901324, 591029999
+        ]
+        }
+        ]
+        }
+    &lt;/<span class="kp-code__keyword">script</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -1991,13 +2736,18 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-chart</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-chart-</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-chart-data</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-chart-group</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-chart-loading</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-chart-range</code></td><td>selector, written, read</td></tr>
+                            <tr><td><code>data-kp-chart-sources</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-chart-span</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-chart-zoom</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-chart-zoom-for</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-dash</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-off</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-outside</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-pinned</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-series</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-tone</code></td><td>written</td></tr>
@@ -2024,6 +2774,9 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-chart-series</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-chart-tick-size</code></td><td><code>11px</code></td></tr>
+                            <tr><td><code>--kp-chart-tip-max</code></td><td><code>17.5rem</code></td></tr>
+                            <tr><td><code>--kp-chart-tip-min</code></td><td><code>14rem</code></td></tr>
                             <tr><td><code>--kp-chart-tip-x</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-chart-tone</code></td><td><code>var(--info-foreground)</code></td></tr>
                             <tr><td><code>--kp-kpi-spark-height</code></td><td><code>1.75rem</code></td></tr>
@@ -2049,6 +2802,7 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-outside</code></td><td>Written on the tooltip while its pinned moment lies outside the window: it docks at the plot’s edge and says so.</td></tr>
                             <tr><td><code>[data-kp-chart]</code></td><td>A chart; usually a `figure.kp-chart` with a `.kp-chart__title` caption. Its data comes from a `script[type=&quot;application/json&quot;][data-kp-chart-data]` child or from `setChartData(el, data)`, before or after it is attached.</td></tr>
                             <tr><td><code>data-kp-chart=&quot;spark&quot;</code></td><td>The spark variant: one source’s line over a soft area, its value at the crosshair (or now) beside its name, on the group’s crosshair.</td></tr>
                             <tr><td><code>.kp-chart-group</code></td><td>`[data-kp-chart-group]`: the charts in it share one crosshair, one zoom and one range; `data-kp-chart-span=&quot;24h&quot;` is the window (`15m`, `1h`, `7d` …).</td></tr>

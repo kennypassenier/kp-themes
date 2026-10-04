@@ -31,6 +31,7 @@
                 <li><a href="#wizard">Wizard, frozen</a></li>
                 <li><a href="#wizard-live">Wizard, live</a></li>
                 <li><a href="#remember">Remembered across pages</a></li>
+                <li><a href="#remember-later">Remembered groups on a live board</a></li>
             </ul>
 
             <section class="cat-block" id="accordion">
@@ -438,6 +439,45 @@
                     </div>
                 </div>
                 <p class="cat-note"><button type="button" class="kp-button kp-button--sm" data-cat-forget="cat-remember-">Forget</button></p>
+            </section>
+
+            <section class="cat-block" id="remember-later">
+                <h2>Remembered groups on a live board</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three groups, each a bare fold (<code>.kp-accordion__item--bare</code>: the accordion's glide and nothing of its
+                    chrome, under a quiet title of the page's own) that remembers itself (<code>data-kp-remember="cat-apps-&lt;group&gt;"</code>).
+                    Close <b>Media</b>, then press <b>Rebuild the board</b>, which throws every group away and builds new ones, as a live page does on
+                    each refresh: Media must come back closed, with no frame of it open first. Tick <b>Search running</b>: every group opens and the
+                    board carries <code>data-kp-remember-hold</code>, so opening or closing a group now is not remembered; untick it and each group goes
+                    back to what you left it at. <b>Forget the groups that are gone</b> prunes the memory to the three names on the board (the
+                    console says how many it removed).
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-board="rebuild">Rebuild the board</button>
+                    <span class="kp-field kp-field--check">
+                        <input class="kp-field__check" id="st-board-hold" type="checkbox" data-cat-board="hold" />
+                        <label class="kp-field__label" for="st-board-hold">Search running</label>
+                    </span>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-board="prune">
+                        Forget the groups that are gone
+                    </button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-stack" data-cat-board>
+                        <details class="kp-accordion__item kp-accordion__item--bare" open data-kp-remember="cat-apps-media">
+                            <summary class="kp-text-muted kp-fs-sm">Media</summary>
+                            <p>Jellyfin · Sonarr · Radarr</p>
+                        </details>
+                        <details class="kp-accordion__item kp-accordion__item--bare" open data-kp-remember="cat-apps-home">
+                            <summary class="kp-text-muted kp-fs-sm">Home</summary>
+                            <p>Home Assistant · Mosquitto</p>
+                        </details>
+                        <details class="kp-accordion__item kp-accordion__item--bare" open data-kp-remember="cat-apps-tools">
+                            <summary class="kp-text-muted kp-fs-sm">Tools</summary>
+                            <p>Grafana · Uptime Kuma · Loki</p>
+                        </details>
+                    </div>
+                </div>
             </section>
         </main>
 

@@ -71,7 +71,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [],
+        pages: [{ href: 'research/dashboard-ports-2/demo.html', label: 'Dashboard components to port, round two' }],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

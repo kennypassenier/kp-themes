@@ -474,6 +474,13 @@
         background: var(--muted);
     }
 
+    /* The info plate's own ink read 4.51:1; a twentieth of the page's text
+       in it reads 4.79 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='light'] .kp-alert--info:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--info-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='light'] .kp-health__dot {
         border-radius: var(--kp-radius-pill, 999px);
     }

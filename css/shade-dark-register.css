@@ -585,6 +585,12 @@
         border-radius: var(--radius);
     }
 
+    /* The info item on the attention band: at the default 8 % tint the
+       page's text read 4.49:1 on it; 6 % reads 4.71 [alert-contrast-M1]. */
+    [data-theme='shade-dark'] .kp-attention__item[data-kp-severity='info'] {
+        --kp-attention-tint: 6%;
+    }
+
     [data-theme='shade-dark'] .kp-grid {
         gap: 0.75rem;
     }

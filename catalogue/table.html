@@ -27,6 +27,7 @@
                 <li><a href="#empty">Empty, loading, failed</a></li>
                 <li><a href="#numbers">Numbers and alignment</a></li>
                 <li><a href="#action-columns">Buttons in shared columns</a></li>
+                <li><a href="#action-columns-narrow">Row buttons on a narrow screen</a></li>
                 <li><a href="#datatable">Data table</a></li>
                 <li><a href="#datatable-sticky">Data table, header that stays</a></li>
                 <li><a href="#datatable-states">Data table, loading and failed</a></li>
@@ -34,6 +35,7 @@
                 <li><a href="#datatable-multi-sort">Data table, sorting on more than one column</a></li>
                 <li><a href="#datatable-columns">Data table, choosing columns</a></li>
                 <li><a href="#datatable-expansion">Data table, rows that open</a></li>
+                <li><a href="#datatable-expand-groups">Data table, one open row and groups</a></li>
                 <li><a href="#datatable-fixed-column">Data table, a first column that stays</a></li>
                 <li><a href="#datatable-server">Data table, rows from a server</a></li>
                 <li><a href="#datatable-server-first-page">Data table, a server's first page</a></li>
@@ -663,6 +665,103 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="action-columns-narrow">
+                <h2>Row buttons on a narrow screen</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three panes of a phone's width and less. In the first two, a narrow <code>.kp-action-list</code> (under 30rem)
+                    stacks its buttons under the row's text, one per line on one left edge, each label on a single line: <b>Review and update all
+                    4…</b> is neither cut nor wrapped (Kenny's UI rule), and a row with fewer buttons simply has fewer lines. In the third, a plain
+                    <code>&lt;table&gt;</code> without the <code>.kp-table</code> class, inside the table wrapper: its row buttons stack in one column
+                    as wide as the widest, and the names and sizes keep their cells. A table outside any wrapper does the same once the window is under
+                    48rem.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <ul class="kp-action-list">
+                            <li>
+                                <div><b>Stacks</b> 4 updates are waiting</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Review and update all 4…</button>
+                                    <button type="button" class="kp-button kp-button--sm">Later</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div><b>Backups</b> last run 03:12, all green</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Verify</button>
+                                    <button type="button" class="kp-button kp-button--sm">Later</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 18rem">
+                        <ul class="kp-action-list">
+                            <li>
+                                <div><b>Stacks</b> 4 updates are waiting</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Review and update all 4…</button>
+                                    <button type="button" class="kp-button kp-button--sm">Later</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div><b>Backups</b> last run 03:12, all green</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Verify</button>
+                                    <button type="button" class="kp-button kp-button--sm">Later</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div class="kp-table-wrap">
+                            <table>
+                                <caption class="kp-sr-only">
+                                    Backup repositories with their row actions
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Repository</th>
+                                        <th scope="col">Snapshots</th>
+                                        <th scope="col"><span class="kp-sr-only">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>media</td>
+                                    <td>12 snapshots · 41 GB</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="restore">Restore…</button>
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="verify">Verify</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="show">Show a file</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>home-assistant</td>
+                                    <td>30 snapshots · 2 GB</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="restore">Restore…</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="show">Show a file</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2979,6 +3078,191 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <section class="cat-block" id="datatable-expand-groups">
+                <h2>Data table: one open row, and groups that fold</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the first table carries <code>data-kp-expand-single</code> and <code>data-kp-grid</code>. Open <b>RULE-20</b>,
+                    then <b>RULE-30</b>: RULE-20 closes as RULE-30 opens, and the line under the table shows one <code>kp-datatable-expand</code> per
+                    opening, naming the row it closed. Tab into the table, move to a cell of a rule with the arrow keys and press Enter or Space: the
+                    row opens as a click does. The second table has a heading row <code>tr data-kp-row-group</code> per stack over the rows marked
+                    <code>data-kp-group-of</code>; the platform stack starts folded (<code>data-kp-folded</code>). Click a heading, or its toggle, to
+                    fold or unfold its rows. The status line keeps saying 8 rows while a group is folded, and each heading counts its own rows. Sort
+                    by <b>Snapshots</b>: the rows sort within their stack and every heading stays above its own rows. Search for <b>zigbee</b>: only
+                    the home stack's heading is left. Check at 390 px that an open detail spans the whole table with no sideways scroll, and that a
+                    heading reads as a heading in every theme.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div
+                        class="kp-datatable"
+                        data-kp-datatable
+                        data-kp-cards
+                        data-kp-expandable
+                        data-kp-expand-single
+                        data-kp-grid
+                        data-kp-page-sizes="none"
+                    >
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Firewall rules, one can be open at a time
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Rule</th>
+                                        <th scope="col">Interface</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Source</th>
+                                        <th scope="col">Destination</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="RULE-10">
+                                        <td data-label="Rule"><code class="kp-mono">RULE-10</code></td>
+                                        <td data-label="Interface">LAN</td>
+                                        <td data-label="Action"><span class="kp-badge">Pass</span></td>
+                                        <td data-label="Source">LAN net</td>
+                                        <td data-label="Destination">any</td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            Lets every device on the home network reach the internet. Last matched on 04/10/2026 21:58; 1534 states
+                                            open.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="RULE-20">
+                                        <td data-label="Rule"><code class="kp-mono">RULE-20</code></td>
+                                        <td data-label="Interface">IoT</td>
+                                        <td data-label="Action"><span class="kp-badge">Block</span></td>
+                                        <td data-label="Source">IoT net</td>
+                                        <td data-label="Destination">LAN net</td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            Keeps the plugs, the lights and the sensors out of the home network; they reach Home Assistant only
+                                            through RULE-30. Last matched on 04/10/2026 22:03.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="RULE-30">
+                                        <td data-label="Rule"><code class="kp-mono">RULE-30</code></td>
+                                        <td data-label="Interface">IoT</td>
+                                        <td data-label="Action"><span class="kp-badge">Pass</span></td>
+                                        <td data-label="Source">IoT net</td>
+                                        <td data-label="Destination">10.10.5.101:8123</td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">
+                                            The one door from the IoT network to Home Assistant, above RULE-20 so it is read first. Last matched on
+                                            04/10/2026 22:04.
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="RULE-40">
+                                        <td data-label="Rule"><code class="kp-mono">RULE-40</code></td>
+                                        <td data-label="Interface">WAN</td>
+                                        <td data-label="Action"><span class="kp-badge">Block</span></td>
+                                        <td data-label="Source">any</td>
+                                        <td data-label="Destination">any</td>
+                                    </tr>
+                                    <tr data-kp-row-detail hidden>
+                                        <td colspan="6">Drops whatever reaches the outside address unasked. Last matched on 04/10/2026 22:05.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note" data-cat-expand-log>No rule opened yet.</p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none">
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search repositories" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Backup repositories, grouped by stack
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Repository</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Size (GB)</th>
+                                        <th scope="col">Last run</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-group="media">
+                                        <th scope="rowgroup" colspan="4">Stack media <span class="kp-badge" data-kp-group-count></span></th>
+                                    </tr>
+                                    <tr data-kp-row-key="media-jellyfin" data-kp-group-of="media">
+                                        <td data-label="Repository"><code class="kp-mono">media-jellyfin</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">42</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">118.4</td>
+                                        <td data-label="Last run">04/10/2026 03:12</td>
+                                    </tr>
+                                    <tr data-kp-row-key="media-sonarr" data-kp-group-of="media">
+                                        <td data-label="Repository"><code class="kp-mono">media-sonarr</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">40</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">2.1</td>
+                                        <td data-label="Last run">04/10/2026 03:14</td>
+                                    </tr>
+                                    <tr data-kp-row-key="media-radarr" data-kp-group-of="media">
+                                        <td data-label="Repository"><code class="kp-mono">media-radarr</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">41</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">1.9</td>
+                                        <td data-label="Last run">04/10/2026 03:15</td>
+                                    </tr>
+                                    <tr data-kp-row-group="home">
+                                        <th scope="rowgroup" colspan="4">Stack home <span class="kp-badge" data-kp-group-count></span></th>
+                                    </tr>
+                                    <tr data-kp-row-key="home-assistant" data-kp-group-of="home">
+                                        <td data-label="Repository"><code class="kp-mono">home-assistant</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">96</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">14.7</td>
+                                        <td data-label="Last run">04/10/2026 02:40</td>
+                                    </tr>
+                                    <tr data-kp-row-key="home-mosquitto" data-kp-group-of="home">
+                                        <td data-label="Repository"><code class="kp-mono">home-mosquitto</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">94</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">0.2</td>
+                                        <td data-label="Last run">04/10/2026 02:41</td>
+                                    </tr>
+                                    <tr data-kp-row-key="home-zigbee" data-kp-group-of="home">
+                                        <td data-label="Repository"><code class="kp-mono">home-zigbee</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">95</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">0.4</td>
+                                        <td data-label="Last run">04/10/2026 02:42</td>
+                                    </tr>
+                                    <tr data-kp-row-group="platform" data-kp-folded>
+                                        <th scope="rowgroup" colspan="4">Stack platform <span class="kp-badge" data-kp-group-count></span></th>
+                                    </tr>
+                                    <tr data-kp-row-key="platform-traefik" data-kp-group-of="platform">
+                                        <td data-label="Repository"><code class="kp-mono">platform-traefik</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">30</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">0.1</td>
+                                        <td data-label="Last run">04/10/2026 04:00</td>
+                                    </tr>
+                                    <tr data-kp-row-key="platform-crowdsec" data-kp-group-of="platform">
+                                        <td data-label="Repository"><code class="kp-mono">platform-crowdsec</code></td>
+                                        <td data-label="Snapshots" class="kp-text-end kp-numeric">29</td>
+                                        <td data-label="Size (GB)" class="kp-text-end kp-numeric">0.6</td>
+                                        <td data-label="Last run">04/10/2026 04:01</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note" data-cat-group-log>No stack folded or unfolded yet.</p>
             </section>
 
             <section class="cat-block" id="datatable-fixed-column">

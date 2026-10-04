@@ -1,0 +1,283 @@
+/* The page around the sections: a centred column of cards, each with its
+   head, its look-at note, its option buttons and its stage. Nothing here is
+   part of the proposal; that is ports2.css. */
+.dp-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.dp-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.dp-intro h1,
+.dp-intro p {
+    margin: 0;
+}
+
+.dp-meta {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.dp-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.dp-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.dp-sec__head h2,
+.dp-sec__head p {
+    margin: 0;
+}
+
+.dp-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.dp-preview,
+.dp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.dp-preview > span,
+.dp-actions__label {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.dp-preview > [aria-pressed='true'],
+.dp-actions > [aria-pressed='true'] {
+    border-color: var(--primary);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.dp-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.dp-label--gap {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.dp-log {
+    min-block-size: 1.5em;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* A stage beside a frame as narrow as a phone (360 px); under each other
+   once the window itself is that narrow. */
+.dp-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22.5rem;
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+/* The full width first, the phone frame under it. */
+.dp-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.dp-pair--phones {
+    grid-template-columns: repeat(2, 22.5rem);
+    justify-content: start;
+}
+
+.dp-col {
+    min-inline-size: 0;
+}
+
+.dp-narrow {
+    min-inline-size: 0;
+    max-inline-size: 22.5rem;
+}
+
+.dp-frame {
+    box-sizing: border-box;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.dp-narrow > .dp-frame,
+.dp-pair--phones .dp-frame {
+    max-inline-size: 22.5rem;
+}
+
+@media (max-width: 62rem) {
+    .dp-pair,
+    .dp-pair--phones {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* 2 · the meter table */
+.dp-meter-table td {
+    vertical-align: middle;
+}
+
+.dp-meter-table td:nth-child(2) {
+    inline-size: 40%;
+}
+
+.dp-meter-table td:nth-child(3) {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* 3 · the strip at a chosen width */
+.dp-strip-stage {
+    max-inline-size: var(--dp-strip-width, none);
+    padding-block: var(--kp-space-xs, 0.25rem);
+    outline: 1px dashed var(--border);
+    outline-offset: 4px;
+}
+
+/* 5 · the detail of the picked night */
+.dp-detail {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.dp-detail h3,
+.dp-detail p {
+    margin: 0;
+}
+
+.dp-detail ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dp-detail li > span {
+    display: block;
+    color: var(--muted-foreground);
+}
+
+.dp-detail [data-dp-missing] > b {
+    color: var(--destructive);
+}
+
+/* 7 · a small app to tour: a bar, two cards */
+.dp-app {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.dp-app__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.dp-app__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.dp-app__nav a,
+.dp-phone-app__tabs a {
+    color: var(--foreground);
+    text-decoration: none;
+}
+
+.dp-app__nav a[aria-current='page'],
+.dp-phone-app__tabs a[aria-current='page'] {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.dp-app__search {
+    flex: 1 1 12rem;
+}
+
+.dp-app__body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+.dp-frame--tall {
+    block-size: 36rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* The drawer as a phone shows it: the frame is the screen. */
+.dp-drawer-inline {
+    block-size: 100%;
+    background: var(--popover);
+    color: var(--popover-foreground);
+}
+
+.dp-phone-app {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.dp-phone-app__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.dp-phone-app__body {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    overflow-y: auto;
+}
+
+.dp-phone-app__tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-block-start: 1px solid var(--border);
+    text-align: center;
+}
+
+.dp-phone-app__tabs a {
+    padding: var(--kp-space-sm, 0.5rem) 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}

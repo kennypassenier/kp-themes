@@ -700,6 +700,18 @@
         border-left-color: var(--success-foreground);
     }
 
+    /* The success and info plates' own inks read 4.51 and 4.59:1; a
+       twentieth of the page's text in them reads 4.75 and 4.80
+       [alert-contrast-M1]. The band's items are left alone: they keep the
+       page's text on a soft tint. */
+    [data-theme='forest'] .kp-alert--success:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--success-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='forest'] .kp-alert--info:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--info-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='forest'] .kp-alert__label {
         font-family: var(--theme-font-display);
         font-weight: 700;

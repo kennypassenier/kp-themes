@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="dashboard-ports-2" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — dashboard components to port, round two</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="ports2.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="dp-page">
+            <header class="dp-intro">
+                <h1>Dashboard components to port, round two</h1>
+                <p>
+                    The rest of what the admin dashboard still keeps to itself: a menu of every other action, a meter with a tick, a strip of key
+                    figures that never leaves one tile alone on a row, a key figure with its 24-hour trend, a month of days coloured by how they
+                    went, a picture of a network, and a help drawer with a guided tour. Each section below is that component written already in the
+                    package's style (<code>ports2.css</code> and <code>ports2.js</code> next to this page), shown in formal only. Where there is a
+                    real choice, the review dialog asks it as options to tick, and the buttons in the section let you see each option first.
+                </p>
+                <p class="dp-meta">
+                    Each section shows the component at full width and, beside it, in a frame as narrow as a phone (360 px), so both widths can be
+                    judged on one screen. The data is made up: a water company's pump houses, readings and the nightly backups of its services.
+                    "Now" is 04/10/2026 14:40, and every date and time is the clock in Brussels.
+                </p>
+            </header>
+
+            <!-- 1 · Menu button -->
+            <section
+                class="dp-sec"
+                id="menu-button"
+                data-review-item="menu-button"
+                data-review-components="menu-button"
+                data-review-title="A menu of every other action"
+                data-review-choices='[{ "id": "headings", "label": "The headings over the groups", "once": true, "options": [
+                    { "value": "caps", "label": "Small capitals, muted", "hint": "RUN, READINGS, RECORDS in small grey capitals, no lines between the groups (the dashboard does this)." },
+                    { "value": "plain", "label": "Plain words, a line between groups", "hint": "Run, Readings, Records in the normal text colour, and a thin line over every group but the first." }]},
+                  { "id": "reason", "label": "An action that cannot be used now", "once": true, "options": [
+                    { "value": "replace", "label": "The reason in place of its hint", "hint": "Grey label, and under it only why it cannot be used (the dashboard does this); one line shorter." },
+                    { "value": "add", "label": "The hint, and the reason under it", "hint": "What the action would do stays, and the reason follows on a third line in italics; longer, but nothing is hidden." }]}]'
+                aria-labelledby="h-menu"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-menu">A menu of every other action</h2>
+                    <p>
+                        <code>.kp-menu-button</code> with a <code>.kp-menu--rich</code>: a button that opens the rare actions, grouped under small
+                        headings, each with a label over a one-line hint. An action that cannot be used now stays in the list and says why. The
+                        keys are those of a menu: ↓ or ↑ on the button opens it, ↓ ↑ Home End move, a letter jumps, Esc closes, Tab closes and moves
+                        on. A refill while it is open waits until it closes.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open <b>More ▾</b>: the labels and the hints start at one edge, the groups have their headings, and <b>Run a pressure
+                        test</b> is grey and says why it cannot run. Press ↓ until it is focused: the focus stops on it, and Enter does nothing.
+                        Press <b>Refill in 3 s</b>, open the menu and wait: nothing moves until you close it. In the phone frame the open menu
+                        spans the header's buttons. Compare both options for the headings and for the reason.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="headings">
+                    <span>Headings:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="caps" aria-pressed="true">Small capitals, muted</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="plain" aria-pressed="false">Plain words, a line between groups</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="reason">
+                    <span>Cannot be used:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="replace" aria-pressed="true">The reason in place of its hint</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="add" aria-pressed="false">The hint, and the reason under it</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="Try the menu">
+                    <button type="button" class="kp-button kp-button--sm" data-dp-menu="refill">Refill in 3 s</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-menu="loading">Loading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-menu="many">Twenty-four actions</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-menu="empty">No actions</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-menu="normal">Back to normal</button>
+                </div>
+                <div class="dp-stack">
+                    <div class="dp-col">
+                        <p class="dp-label">A page header, full width</p>
+                        <div class="dp-frame">
+                            <header class="kp-page-header">
+                                <div class="kp-page-header__inner">
+                                    <div>
+                                        <h1 class="kp-page-header__title">Pump house 3</h1>
+                                        <p class="kp-page-header__description">
+                                            Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                                        </p>
+                                    </div>
+                                    <div class="kp-page-header__actions">
+                                        <button type="button" class="kp-button">Export readings</button>
+                                        <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+                                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-more" data-dp-menu-target>
+                                            <button type="button" class="kp-button" aria-keyshortcuts=".">More ▾</button>
+                                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">The same header, phone width</p>
+                        <div class="dp-frame">
+                            <header class="kp-page-header">
+                                <div class="kp-page-header__inner">
+                                    <div>
+                                        <h1 class="kp-page-header__title">Pump house 3</h1>
+                                        <p class="kp-page-header__description">
+                                            Two pumps on the ring main north of the reservoir: their state, the last readings, and what is planned.
+                                        </p>
+                                    </div>
+                                    <div class="kp-page-header__actions">
+                                        <button type="button" class="kp-button">Export readings</button>
+                                        <button type="button" class="kp-button kp-button--primary">Schedule a visit</button>
+                                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="pump-house-more-phone" data-dp-menu-target>
+                                            <button type="button" class="kp-button">More ▾</button>
+                                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                    </div>
+                </div>
+                <div class="dp-pair">
+                    <div class="dp-col">
+                        <p class="dp-label">One action only: no heading, even though it comes from a group</p>
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="reservoir-more" data-dp-menu-single>
+                            <button type="button" class="kp-button kp-button--sm">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this reservoir"></div>
+                        </div>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">What the page heard</p>
+                        <p class="dp-log" data-dp-menu-log role="status">Nothing picked yet. The page's own Escape listener heard 0 presses.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2 · Meter with a mark -->
+            <section
+                class="dp-sec"
+                id="meter"
+                data-review-item="meter"
+                data-review-components="meter"
+                data-review-title="A meter with a mark"
+                data-review-choices='[{ "id": "mark", "label": "The mark on the bar", "once": true, "options": [
+                    { "value": "tick", "label": "A tick across the bar", "hint": "A thin upright line through the bar, sticking out a little above and below (the dashboard does this)." },
+                    { "value": "notch", "label": "A small triangle over the bar", "hint": "A thin line from above down to the bar, topped by a small triangle that points at the spot; easier to find, a little taller over the bar." }]},
+                  { "id": "over", "label": "When the mark is past the end (more than 100 %)", "once": true, "options": [
+                    { "value": "arrow", "label": "A small ▸ at the end", "hint": "The tick stops just short of the end and a small arrow fills the last bit: past the end, inside the bar." },
+                    { "value": "hatch", "label": "The end of the bar hatched", "hint": "No arrow; the last stretch of the bar gets diagonal stripes, and the tick sits at the very end." }]}]'
+                aria-labelledby="h-meter"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-meter">A meter with a mark</h2>
+                    <p>
+                        <code>.kp-meter</code> works anywhere: in a tile, at the start of a line of words, in a table cell. <code>--kp-value</code>
+                        is the share; <code>--kp-mark</code> an optional tick (a target, a limit, what is booked), which may lie past the end. A
+                        screen reader hears the real numbers, past 100 % too, and <code>setMeter()</code> writes it all in one call.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Each meter is as thick with a mark as without one; the mark reads on the dark fill and on the light track alike. The row
+                        <b>Booked tonight</b> has its mark past the end: compare the two options. The tile with the red edge has a red fill; the
+                        warning row an amber one. Press <b>Book more</b>: the tick moves past the end and the words say 130 %.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="mark">
+                    <span>Mark:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="tick" aria-pressed="true">A tick across the bar</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="notch" aria-pressed="false">A small triangle over the bar</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="over">
+                    <span>Past the end:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="arrow" aria-pressed="true">A small ▸ at the end</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="hatch" aria-pressed="false">The end of the bar hatched</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="Try the meters">
+                    <button type="button" class="kp-button kp-button--sm" data-dp-meter="book" aria-pressed="false">Book more</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-meter="loading" aria-pressed="false">Loading</button>
+                </div>
+                <div class="dp-pair">
+                    <div class="dp-col" data-dp-meters="wide">
+                        <p class="dp-label">Every state, in a table</p>
+                        <table class="kp-table dp-meter-table">
+                            <caption class="kp-sr-only">
+                                Meters in every state
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Case</th>
+                                    <th scope="col">Meter</th>
+                                    <th scope="col">What a screen reader hears</th>
+                                </tr>
+                            </thead>
+                            <tbody data-dp-meter-rows></tbody>
+                        </table>
+                        <p class="dp-label">In key figures</p>
+                        <div class="kp-kpis" data-kp-kpis-columns="all 2 1" data-dp-meter-tiles></div>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">Phone width</p>
+                        <div class="dp-frame" data-dp-meters="narrow">
+                            <div class="kp-kpis" data-kp-kpis-columns="all 2 1" data-dp-meter-tiles></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3 · KPI strip columns -->
+            <section
+                class="dp-sec"
+                id="kpi-strip"
+                data-review-item="kpi-strip"
+                data-review-components="kpi-strip"
+                data-review-title="Key figures that never leave one alone"
+                data-review-choices='[{ "id": "lone", "label": "When one tile must stay alone on the last row", "once": true, "options": [
+                    { "value": "span", "label": "It spans the whole row", "hint": "The last tile stretches over the full width of the strip, so the strip stays a clean rectangle." },
+                    { "value": "centre", "label": "One tile wide, centred", "hint": "The last tile keeps the width of the others and sits in the middle of its row; every tile one size, with space either side." }]}]'
+                aria-labelledby="h-kpis"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-kpis">Key figures that never leave one alone</h2>
+                    <p>
+                        <code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile
+                        is wide enough, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it
+                        steps down to a count that does not; only when none exists does the last tile get the row to itself.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Pick a number of tiles and a width: there is never one tile alone on a row with empty space beside it, except where no
+                        allowed count avoids it (seven at 700 px, five at phone width), and there the option decides. Every tile in a row has the
+                        same height. The table under it is the spec's own list of cases, worked out by the same function.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="lone">
+                    <span>Alone on the last row:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="span" aria-pressed="true">It spans the whole row</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="centre" aria-pressed="false">One tile wide, centred</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="How many tiles" data-dp-strip-count>
+                    <span class="dp-actions__label">Tiles:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="1" aria-pressed="false">1</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="2" aria-pressed="false">2</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="3" aria-pressed="false">3</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="4" aria-pressed="false">4</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="5" aria-pressed="true">5</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="6" aria-pressed="false">6</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="7" aria-pressed="false">7</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="8" aria-pressed="false">8</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="How wide the strip is" data-dp-strip-width>
+                    <span class="dp-actions__label">Strip width:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="full" aria-pressed="true">The full section</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="700" aria-pressed="false">700 px</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="600" aria-pressed="false">600 px</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="358" aria-pressed="false">358 px, a phone</button>
+                </div>
+                <p class="dp-log" data-dp-strip-out role="status"></p>
+                <div class="dp-strip-stage" data-dp-strip-stage>
+                    <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network right now" data-dp-strip></div>
+                </div>
+                <div class="dp-pair">
+                    <div class="dp-col">
+                        <p class="dp-label">The spec's cases (gap 16 px, smallest tile 160 px, allowed "all 3 2 1")</p>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Column counts for the spec's cases
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Tiles</th>
+                                        <th scope="col">Strip width</th>
+                                        <th scope="col">Columns</th>
+                                        <th scope="col">Rows</th>
+                                        <th scope="col">Last spans</th>
+                                        <th scope="col">As the spec says</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-dp-strip-cases></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">Five tiles, phone width</p>
+                        <div class="dp-frame">
+                            <div class="kp-kpis" data-kp-kpis-columns="all 3 2 1" role="group" aria-label="The northern network, phone width" data-dp-strip-phone></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4 · Trend tile -->
+            <section
+                class="dp-sec"
+                id="trend-tile"
+                data-review-item="trend-tile"
+                data-review-components="kpi-trend"
+                data-review-title="A key figure with its 24-hour trend"
+                data-review-choices='[{ "id": "note", "label": "Where &#39;avg 15 min&#39; goes", "once": true, "options": [
+                    { "value": "label", "label": "In the label, in its capitals", "hint": "PRESSURE · AVG 15 MIN on the top line, as the approved dashboard demo shows; the number stands alone." },
+                    { "value": "value", "label": "Beside the number", "hint": "The label is just PRESSURE; avg 15 min sits in small grey letters right of the big number, where the package put its note in 9.2.0." }]},
+                  { "id": "readout", "label": "Reading one point of the trend", "once": true, "options": [
+                    { "value": "float", "label": "A chip over the line", "hint": "Date, time and value float in a small box above the line, beside the crosshair, inside the tile; on a narrow tile the value goes under the date and time (the dashboard does the chip, without the narrow case)." },
+                    { "value": "axis", "label": "Always in the row under the line", "hint": "The date and time, with the value under them, replace the axis words while you read; nothing floats over the tile, but that row is two lines tall in every tile." }]}]'
+                aria-labelledby="h-trend"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-trend">A key figure with its 24-hour trend</h2>
+                    <p>
+                        <code>.kp-kpi--trend</code>: a key figure whose whole tile opens its chart (a stretched <code>.kp-kpi__link</code>), with
+                        the 24-hour trend inside it as a second stop for the keyboard. Under the line the axis says where it starts and that it
+                        ends now; a pointer, a finger or the arrow keys read one point, with its date, time and value.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Move the pointer over a trend: a thin crosshair and the reading, as <i>04/10/2026 02:40 · 3.12 bar</i>, kept inside the
+                        tile. Tab to a tile (the whole tile gets the ring), Tab again to its trend, then ← → Home End. <b>Flow into the
+                        network</b> stopped at 14:00, so its axis ends at 14:00, not now; <b>Reservoir South</b> started this morning, so it says
+                        today. In the phone frame the tiles are narrow: the value goes under the date and time, and the corner shows only ↗.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="note">
+                    <span>avg 15 min:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="label" aria-pressed="true">In the label, in its capitals</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="value" aria-pressed="false">Beside the number</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="readout">
+                    <span>Reading:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="float" aria-pressed="true">A chip over the line</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="axis" aria-pressed="false">Always in the row under the line</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="Try the tiles">
+                    <button type="button" class="kp-button kp-button--sm" data-dp-trend="live">Ten minutes later</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-trend="loading" aria-pressed="false">Loading</button>
+                </div>
+                <div class="dp-stack">
+                    <div class="dp-col">
+                        <p class="dp-label">Four figures</p>
+                        <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1 right now" data-dp-trend-strip="main"></div>
+                        <p class="dp-label dp-label--gap">The states a tile can be in</p>
+                        <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Tiles in other states" data-dp-trend-strip="states"></div>
+                        <p class="dp-log" data-dp-trend-out role="status">No tile opened yet.</p>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">Phone width, two to a row</p>
+                        <div class="dp-frame">
+                            <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Pump house 1, phone width" data-dp-trend-strip="phone"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5 · Month heatmap -->
+            <section
+                class="dp-sec"
+                id="calendar"
+                data-review-item="calendar"
+                data-review-components="calendar"
+                data-review-title="A month of nightly backups"
+                data-review-choices='[{ "id": "glyph", "label": "A night when nothing was backed up", "once": true, "options": [
+                    { "value": "mark", "label": "A ✕ before the count", "hint": "The red plate shows ✕ 0/9, so the bad night stands out without colour too (new: the dashboard has no mark)." },
+                    { "value": "none", "label": "Only the red plate", "hint": "The red plate shows 0/9 like every other day; the colour alone tells it apart." }]},
+                  { "id": "pads", "label": "The days of the month before and after", "once": true, "options": [
+                    { "value": "blank", "label": "Left blank", "hint": "Only this month&#39;s days are drawn; the first and last week have empty places (the dashboard does this)." },
+                    { "value": "adjacent", "label": "Their numbers, quiet", "hint": "The neighbouring months&#39; day numbers sit in the empty places in light grey, not clickable, so every week reads full." }]}]'
+                aria-labelledby="h-calendar"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-calendar">A month of nightly backups</h2>
+                    <p>
+                        <code>.kp-calendar</code>: a month as a grid of days, each a plate in the colour of how its night went, with how many of the
+                        services were backed up under the day's number. Always six weeks tall. One tab stop: the arrows move a day or a week, Home
+                        and End go to the week's ends, Page Up and Page Down change the month (with Shift, the year), Enter picks. Today is the day in
+                        Brussels. Beside it, the page's own detail of the picked day.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Green nights had every service, amber some, red none; the dashed days are still to come or from before the first backup.
+                        Today, 04/10, has a dark inner ring; the picked day an outer ring. Press <b>‹ Prev</b> twice and back: the grid keeps its
+                        height in every month. Try the states: <b>Loading</b> pulses every day in place, <b>Nothing to check</b> and <b>Could not
+                        read</b> stop the pulse and say why. In the phone frame the detail goes under the grid.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="glyph">
+                    <span>No backup:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="mark" aria-pressed="true">A ✕ before the count</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="none" aria-pressed="false">Only the red plate</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="pads">
+                    <span>Other months' days:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="blank" aria-pressed="true">Left blank</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="adjacent" aria-pressed="false">Their numbers, quiet</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="The calendar's state">
+                    <span class="dp-actions__label">State:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-cal="ready" aria-pressed="true">Read</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-cal="loading" aria-pressed="false">Loading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-cal="empty" aria-pressed="false">Nothing to check</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-cal="error" aria-pressed="false">Could not read</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-cal="live">The late copies arrive</button>
+                </div>
+                <div class="dp-stack">
+                    <div class="dp-col">
+                        <div class="kp-calendar-layout">
+                            <section
+                                class="kp-calendar kp-calendar--marks"
+                                data-kp-calendar
+                                data-kp-time-zone="Europe/Brussels"
+                                data-kp-calendar-month="2026-10"
+                                data-kp-key="backups"
+                                data-dp-calendar="wide"
+                            ></section>
+                            <aside class="dp-detail" aria-live="polite" data-dp-detail="wide"></aside>
+                        </div>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">Phone width</p>
+                        <div class="dp-frame">
+                            <div class="kp-calendar-layout">
+                                <section
+                                    class="kp-calendar kp-calendar--marks"
+                                    data-kp-calendar
+                                    data-kp-time-zone="Europe/Brussels"
+                                    data-kp-calendar-month="2026-10"
+                                    data-kp-key="backups-phone"
+                                    data-dp-calendar="narrow"
+                                ></section>
+                                <aside class="dp-detail" aria-live="polite" data-dp-detail="narrow"></aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 · Graph -->
+            <section
+                class="dp-sec"
+                id="graph"
+                data-review-item="graph"
+                data-review-components="graph"
+                data-review-title="A picture of the network"
+                data-review-choices='[{ "id": "colour", "label": "The colour of the nodes", "once": true, "options": [
+                    { "value": "hue", "label": "Each its own colour", "hint": "Every pump house and reservoir gets its own hue, at the strength of the theme&#39;s first chart colour (the dashboard does this); easy to tell apart, busier." },
+                    { "value": "plain", "label": "One colour for every node", "hint": "Every node in the primary colour; only the links carry colour, so the kinds of link stand out." }]},
+                  { "id": "legend", "label": "Where the kinds of link are listed", "once": true, "options": [
+                    { "value": "above", "label": "Above the picture", "hint": "The kinds sit in one row with Show all, over the picture; you see what the lines mean before you look." },
+                    { "value": "below", "label": "Under the picture", "hint": "The kinds follow the hint under the picture; Show all stays on top; the picture starts higher." }]}]'
+                aria-labelledby="h-graph"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-graph">A picture of the network</h2>
+                    <p>
+                        <code>.kp-graph</code>: one node in the middle, the rest on a ring around it, the links drawn by kind, each kind a colour and
+                        a dash named in the legend. Hover or focus a node to see only its links; click it (or press Enter) to keep it, several at
+                        once; Esc or <b>Show all</b> clears. The graph is one tab stop; the arrows walk the ring. A label points away from the
+                        middle and is shortened where it would touch another, the full name in its tooltip.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Hover <b>Pump house 3</b>: only its links stay, the rest fades. Click two nodes: both stay picked. Turn a kind of link off
+                        in the legend. Press <b>Fifteen long names</b>: in the phone frame no two labels touch and none is cut off at the edge;
+                        those that had to be shortened end in … and show the full name on hover. The hint sits under the picture, never over it.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="colour">
+                    <span>Nodes:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="hue" aria-pressed="true">Each its own colour</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="plain" aria-pressed="false">One colour for every node</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="legend">
+                    <span>Kinds of link:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="above" aria-pressed="true">Above the picture</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="below" aria-pressed="false">Under the picture</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="Try the graph">
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="long" aria-pressed="false">Fifteen long names</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="weights" aria-pressed="false">Size by flow</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="live">Live update</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="loading">Loading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="empty">Nothing to draw</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-graph="error">Could not read</button>
+                </div>
+                <div class="dp-stack">
+                    <div class="dp-col">
+                        <figure class="kp-graph" data-kp-graph data-kp-key="network" aria-label="The northern network" data-dp-graph-el="wide"></figure>
+                        <p class="dp-log" data-dp-graph-out role="status">Nothing picked: every link is shown.</p>
+                    </div>
+                    <div class="dp-col dp-narrow">
+                        <p class="dp-label">Phone width</p>
+                        <div class="dp-frame">
+                            <figure
+                                class="kp-graph"
+                                data-kp-graph
+                                data-kp-key="network-phone"
+                                aria-label="The northern network, phone width"
+                                data-dp-graph-el="narrow"
+                            ></figure>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7 · Help drawer and tour -->
+            <section
+                class="dp-sec"
+                id="help-tour"
+                data-review-item="help-tour"
+                data-review-components="help-tour"
+                data-review-title="Help, and a short tour"
+                data-review-choices='[{ "id": "highlight", "label": "What the tour does to the part it talks about", "once": true, "options": [
+                    { "value": "ring", "label": "A ring around it", "hint": "A thick ring in the focus colour around the part; the rest of the page stays as it is (the dashboard does this)." },
+                    { "value": "dim", "label": "A ring, and the rest dimmed", "hint": "The same ring, and everything else on the page fades behind a veil, so the eye goes straight to the part." }]},
+                  { "id": "help-list", "label": "The lists in Help (a word and what it means)", "once": true, "options": [
+                    { "value": "columns", "label": "Side by side", "hint": "The word on the left, its meaning beside it, the meanings in one column across every card; on a phone the word goes over its meaning." },
+                    { "value": "stacked", "label": "The word over its meaning", "hint": "Always the word in bold on a line of its own and its meaning under it; narrower, longer." }]}]'
+                aria-labelledby="h-help"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-help">Help, and a short tour</h2>
+                    <p>
+                        <code>.kp-drawer</code>: Help as a drawer at the side, with a head, a body that scrolls, and a foot that stays. Its cards
+                        hold <code>.kp-help__list</code>s, words beside their meaning. <code>startTour()</code> walks a reader over the page, one
+                        card per part: the count is exact (a part not on the page is left out before counting), Back and Next, Esc ends, and the
+                        focus goes back where it was. A finished tour is remembered.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press <b>Help</b> in the little app: the drawer comes in from the right, its foot stays while the body scrolls. Press
+                        <b>Take the 1-minute tour</b>: the first card says <i>1 of 5</i> (the sixth step points at a map this page does not have),
+                        sits under or over its part without covering it, and Back, Skip, Next work, as do ← → and Esc. In the phone frames: the
+                        drawer as it looks on a phone, and a tour over the phone's tab bar.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="highlight">
+                    <span>The part:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="ring" aria-pressed="true">A ring around it</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="dim" aria-pressed="false">A ring, and the rest dimmed</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="help-list">
+                    <span>Help lists:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="columns" aria-pressed="true">Side by side</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="stacked" aria-pressed="false">The word over its meaning</button>
+                </div>
+                <div class="dp-actions" role="group" aria-label="Try the tour">
+                    <button type="button" class="kp-button kp-button--sm" data-dp-tour="start">Start the tour</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-tour="phone">Start the tour on the phone</button>
+                    <button type="button" class="kp-button kp-button--sm" data-dp-tour="forget">Forget that it was taken</button>
+                </div>
+                <p class="dp-log" data-dp-tour-out role="status"></p>
+
+                <div class="dp-app" data-dp-app="wide">
+                    <div class="dp-app__bar">
+                        <b class="dp-app__brand">Northern network</b>
+                        <nav class="dp-app__nav" aria-label="Areas" data-dp-tour-step="areas">
+                            <a href="#help-tour" aria-current="page">Overview</a>
+                            <a href="#help-tour">Pump houses</a>
+                            <a href="#help-tour">Readings</a>
+                            <a href="#help-tour">Incidents</a>
+                            <a href="#help-tour">Backups</a>
+                        </nav>
+                        <label class="dp-app__search" data-dp-tour-step="search">
+                            <span class="kp-sr-only">Search</span>
+                            <input class="kp-field__input" type="search" placeholder="Search a pump house" />
+                        </label>
+                        <button type="button" class="kp-button kp-button--sm" data-dp-help-open data-dp-tour-step="help">Help ?</button>
+                    </div>
+                    <div class="dp-app__body">
+                        <div class="kp-card" data-dp-tour-step="readings">
+                            <h3 class="kp-card__title">Readings today</h3>
+                            <p class="kp-card__body">Every pump house reported in the last ten minutes; pump house 3 ran at low pressure from 07:32 to 08:12.</p>
+                        </div>
+                        <div class="kp-card" data-dp-tour-step="incidents">
+                            <h3 class="kp-card__title">Open incidents</h3>
+                            <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dp-pair dp-pair--phones">
+                    <div class="dp-col">
+                        <p class="dp-label">Help on a phone</p>
+                        <div class="dp-frame dp-frame--tall">
+                            <div class="kp-drawer dp-drawer-inline" data-dp-help-copy></div>
+                        </div>
+                    </div>
+                    <div class="dp-col">
+                        <p class="dp-label">The tour on a phone</p>
+                        <div class="dp-frame dp-frame--tall dp-phone-app" data-dp-app="phone">
+                            <div class="dp-phone-app__head">
+                                <b>Northern network</b>
+                                <button type="button" class="kp-button kp-button--sm" data-dp-tour-phone="help">Help ?</button>
+                            </div>
+                            <div class="dp-phone-app__body">
+                                <div class="kp-card" data-dp-tour-phone="readings">
+                                    <h3 class="kp-card__title">Readings today</h3>
+                                    <p class="kp-card__body">Every pump house reported in the last ten minutes.</p>
+                                </div>
+                                <div class="kp-card" data-dp-tour-phone="incidents">
+                                    <h3 class="kp-card__title">Open incidents</h3>
+                                    <p class="kp-card__body">Two open.</p>
+                                </div>
+                            </div>
+                            <nav class="dp-phone-app__tabs" aria-label="Areas, phone" data-dp-tour-phone="areas">
+                                <a href="#help-tour" aria-current="page">Overview</a>
+                                <a href="#help-tour">Pumps</a>
+                                <a href="#help-tour">Readings</a>
+                                <a href="#help-tour" data-dp-tour-phone="search">Search</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <dialog class="kp-dialog kp-drawer" id="dp-help" aria-labelledby="dp-help-title" data-dp-help>
+                    <header class="kp-drawer__head">
+                        <h2 class="kp-dialog__title" id="dp-help-title">Help</h2>
+                        <button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close Help" title="Close Help" data-dp-help-close>✕</button>
+                        <p class="kp-drawer__desc">Where things live on this site, the words it uses, and its keys.</p>
+                    </header>
+                    <div class="kp-drawer__body">
+                        <section class="kp-card kp-help">
+                            <h3>Where things live</h3>
+                            <p>Six areas, one line each.</p>
+                            <dl class="kp-help__list">
+                                <dt>Overview</dt>
+                                <dd>The network at a glance: what needs a visit, and what changed since this morning.</dd>
+                                <dt>Pump houses</dt>
+                                <dd>Every pump house with its pumps, its last reading and its open incidents.</dd>
+                                <dt>Readings</dt>
+                                <dd>Pressure, flow and levels as charts, for an hour, a day or a week.</dd>
+                                <dt>Incidents</dt>
+                                <dd>What went wrong, who is on it, and what was done.</dd>
+                                <dt>Backups</dt>
+                                <dd>Each night's backup of every service, as a month of days.</dd>
+                                <dt>Map</dt>
+                                <dd>The network as a picture: which site talks to which.</dd>
+                            </dl>
+                        </section>
+                        <section class="kp-card kp-help">
+                            <h3>Words</h3>
+                            <p>The words this site uses for things.</p>
+                            <dl class="kp-help__list">
+                                <dt>Pump house</dt>
+                                <dd>A building with one or more pumps that keep the pressure up in a part of the network.</dd>
+                                <dt>Reading</dt>
+                                <dd>One measurement from a field unit, sent every minute.</dd>
+                                <dt>Ring main</dt>
+                                <dd>The loop of large pipes that feeds the town from two sides.</dd>
+                                <dt>Service</dt>
+                                <dd>A program the control room runs, such as the readings database; each is backed up every night.</dd>
+                            </dl>
+                        </section>
+                        <section class="kp-card kp-help">
+                            <h3>Keys</h3>
+                            <p>Pressed anywhere outside a field.</p>
+                            <dl class="kp-help__list">
+                                <dt><kbd>?</kbd></dt>
+                                <dd>Open this Help.</dd>
+                                <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt>
+                                <dd>Jump to a page or a pump house by its name.</dd>
+                                <dt><kbd>.</kbd></dt>
+                                <dd>Open the page's More menu.</dd>
+                                <dt><kbd>Esc</kbd></dt>
+                                <dd>Close what is open, or show all again.</dd>
+                            </dl>
+                        </section>
+                    </div>
+                    <footer class="kp-drawer__foot">
+                        <button type="button" class="kp-button kp-button--primary" data-dp-help-tour>Take the 1-minute tour</button>
+                    </footer>
+                </dialog>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-04-r1" }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -892,7 +892,7 @@ export const DESCRIPTORS = [
             'total',
             // scope-90: the state that draws the sticky header's reach.
             'scrolled',
-        ],
+            'folded'],
         intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead.',
         whenToUse:
             'For a table a reader will interrogate — hundreds of rows, a search box, a sort on one column or several, a choice of columns, rows that open, values edited in place, arrow keys between cells. Not for thousands without a server behind it: there is no virtualisation, and export is the app’s, from the rows the table hands over. Not for a handful of rows either, where a search box over six lines is furniture.',
@@ -938,6 +938,7 @@ export const DESCRIPTORS = [
             },
         ],
         variants: [
+            { name: 'data-kp-folded', what: 'Written on a group row (`tr[data-kp-row-group]`) while its members are folded away; `fold()` and `view().folded` read and set it.' },
             {
                 name: 'loading, on a phone',
                 what: 'In a table under 30rem the busy layer lies flat over the skeleton rows: the spinner beside the words, the words kept to three lines (the status line says all of it), the layer clipped to the table [scope-143].',
@@ -2013,7 +2014,7 @@ export const DESCRIPTORS = [
         // The marks the script writes on what it draws: a source's colour
         // (`data-kp-series`, `data-kp-dash`), a legend button kept off, a
         // pinned tooltip, an event's tone, the hint's two audiences.
-        aliases: ['series', 'dash', 'off', 'pinned', 'tone', 'when'],
+        aliases: ['series', 'dash', 'off', 'pinned', 'tone', 'when', 'outside'],
         intro: 'The one time chart every page draws, so its controls mean the same everywhere. js/chart.js draws a `[data-kp-chart]` from the page’s data: a legend that singles a source out and keeps sources on or off, a crosshair every chart of a group shares, a tooltip beside it with every value, the change over the hour before and the events within reach, drag to zoom, event markers, range buttons, and a spark variant that is a tile’s 24-hour line on the same crosshair.',
         whenToUse:
             'For readings over time: pressures, flows, response times, a queue’s length. Not for a share of a whole or a comparison of categories, and not for a single number now, which is a key figure.',
@@ -2051,6 +2052,7 @@ export const DESCRIPTORS = [
             },
         ],
         variants: [
+            { name: 'data-kp-outside', what: 'Written on the tooltip while its pinned moment lies outside the window: it docks at the plot’s edge and says so.' },
             { name: '[data-kp-chart]', what: 'A chart; usually a `figure.kp-chart` with a `.kp-chart__title` caption. Its data comes from a `script[type="application/json"][data-kp-chart-data]` child or from `setChartData(el, data)`, before or after it is attached.' },
             { name: 'data-kp-chart="spark"', what: 'The spark variant: one source’s line over a soft area, its value at the crosshair (or now) beside its name, on the group’s crosshair.' },
             { name: '.kp-chart-group', what: '`[data-kp-chart-group]`: the charts in it share one crosshair, one zoom and one range; `data-kp-chart-span="24h"` is the window (`15m`, `1h`, `7d` …).' },
@@ -2097,6 +2099,39 @@ export const DESCRIPTORS = [
         accessibility: [
             'Built in — the held width is an invisible pseudo-element; a screen reader reads the shown word only.',
             'Yours — announce a state change that matters (a live region nearby); the word changing on screen is silent.',
+        ],
+    },
+    {
+        id: 'freshness',
+        title: 'Freshness line',
+        group: 'Data',
+        classes: ['kp-ago'],
+        exports: [],
+        aliases: ['ago', 'updated', 'stale'],
+        intro: 'A ticking “updated 42 s ago” (js/freshness.js): one timer per page, a width held at the widest text of its unit so nothing beside it moves, a stale plate once the moment is older than `data-kp-stale-after`, and the moment itself as dd/mm/yyyy HH:mm in Europe/Brussels in the title. It stays out of live regions: a line that ticks must not be read aloud every second.',
+        whenToUse:
+            'Where a page shows data that goes stale: a dashboard’s last reading, a list’s last refresh. Not for a fixed date: write that out.',
+        examples: [
+            {
+                title: 'A reading’s freshness, stale after three minutes',
+                why: 'The moment is the `datetime`; the verb is yours; past 180 s the line takes the stale plate and `data-kp-stale`.',
+                markup: `
+<time class="kp-ago" datetime="2026-10-04T12:00:00Z" data-kp-ago data-kp-ago-verb="updated" data-kp-stale-after="180">updated 42 s ago</time>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-ago', what: 'The line itself; the moment is the `datetime`, or this attribute’s value (ISO or ms).' },
+            { name: 'data-kp-ago-verb', what: 'The word before the age (“updated”, “read”); the dictionary’s `agoVerb` when absent.' },
+            { name: 'data-kp-stale-after', what: 'Seconds after which the line is stale and carries `data-kp-stale`; the stale plate’s three knobs are listed below.' },
+            { name: 'data-kp-stale', what: 'Written by the module while the moment is older than `data-kp-stale-after`. Read it, do not set it.' },
+            { name: 'data-kp-ago-width', what: 'Written by the module: the held width, measured once per unit and cached by font.' },
+            { name: 'data-kp-ago-announce', what: '`state` announces only the change to stale and back, through a polite region of its own; the ticking itself is never announced.' },
+            { name: 'data-kp-ago-voice', what: 'Written by the module: the live region it announces through when `data-kp-ago-announce` is set.' },
+        ],
+        accessibility: [
+            'Built in — `aria-live="off"`, `aria-description` with the moment written out, a console warning when the line sits inside a live region.',
+            'Yours — keep the line out of `role="status"`; announce staleness with `data-kp-ago-announce="state"` if it matters.',
         ],
     },
     {

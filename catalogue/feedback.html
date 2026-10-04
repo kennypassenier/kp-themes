@@ -33,6 +33,8 @@
                 <li><a href="#skeleton">Skeleton</a></li>
                 <li><a href="#empty">Empty state</a></li>
                 <li><a href="#attention">Attention band</a></li>
+                <li><a href="#attention-live">Attention band, live</a></li>
+                <li><a href="#freshness">How old the data is</a></li>
             </ul>
 
             <section class="cat-block" id="alerts">
@@ -552,6 +554,85 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="attention-live">
+                <h2>Attention band, live</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a band the page builds after it loaded and refreshes the way a poll does, with
+                    <code>setAttention(band, items)</code>: each problem has a key, and a refresh keeps an unchanged problem as the same element. Press
+                    <b>Build the band</b>: it appears worst first, though it was built after <code>attachAttention()</code> ran. Press
+                    <b>Refresh</b> a few times: nothing moves or flickers, and the line under the band, which counts every time an alert was put into
+                    the page, does not go up (a screen reader hears each problem once, not on every poll). Tick <b>Refresh every two seconds</b> and
+                    Tab to <b>Open the incident</b>: the focus stays on that button through every refresh. <b>Reword the
+                    warning</b> changes its text in place; <b>Raise the warning</b> makes it critical and it moves above the information;
+                    <b>Resolve the information</b> lets that one leave the theme's way.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention-live="build">Build the band</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention-live="refresh">Refresh</button>
+                    <span class="kp-field kp-field--check">
+                        <input class="kp-field__check" id="fb-attention-poll" type="checkbox" data-cat-attention-live="poll" />
+                        <label class="kp-field__label" for="fb-attention-poll">Refresh every two seconds</label>
+                    </span>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention-live="reword">Reword the warning</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention-live="raise">Raise the warning</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-attention-live="resolve">
+                        Resolve the information
+                    </button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-attention-live-host></div>
+                    <p class="cat-note" data-cat-attention-live-count>Alerts put into the page: 0</p>
+                </div>
+                <pre
+                    class="kp-code-block"
+                ><code>import { setAttention } from '@kp-soft/themes/js/attention';
+
+setAttention(band, [
+    { key: 'inc-4471', severity: 'critical', title: 'Pump house 3 is below 2.1 bar', text: 'For forty minutes.', action: openButton },
+    { key: 'fw-4.2', severity: 'info', title: 'Firmware 4.2 is out for six field units' },
+]);</code></pre>
+            </section>
+
+            <section class="cat-block" id="freshness">
+                <h2>How old the data is</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> freshness lines that tick by themselves (<code>data-kp-ago</code>, <code>js/freshness.js</code>), one timer for the
+                    page. The words are exact (<i>12 s</i>, <i>2 min 5 s</i>, <i>1 day 1 h</i>), and pointing at a line shows the moment itself as
+                    <i>dd/mm/yyyy HH:mm</i> in Brussels time. Watch the first line go from <i>59 s</i> to <i>1 min</i>: the words after it do not move,
+                    because the line keeps the width of the longest text its unit can reach. The second line is marked stale after 20 seconds
+                    (<code>data-kp-stale-after="20"</code>): a warning plate appears around it and nothing around it moves; it also tells a screen
+                    reader once, through its own status, and never ticks into one. The last line has no moment yet.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <p>
+                        Pump house 3:
+                        <time class="kp-ago" data-kp-ago data-kp-ago-verb="updated" data-cat-ago="-48">updated 48 s ago</time> · 14 stations
+                        reporting
+                    </p>
+                    <p>
+                        Reservoir North:
+                        <time
+                            class="kp-ago"
+                            data-kp-ago
+                            data-kp-ago-verb="read"
+                            data-kp-stale-after="20"
+                            data-kp-ago-announce="state"
+                            data-cat-ago="-5"
+                            >read 5 s ago</time
+                        >
+                        · level 71 %
+                    </p>
+                    <p>
+                        Night export: <time class="kp-ago" data-kp-ago data-kp-ago-verb="finished" data-cat-ago="-3725">finished 1 h 2 min ago</time>
+                    </p>
+                    <p>
+                        Handover note:
+                        <time class="kp-ago" data-kp-ago data-kp-ago-verb="signed" datetime="2026-10-03T10:00:00Z">signed 1 day ago</time>
+                    </p>
+                    <p>Vendor portal: <time class="kp-ago" data-kp-ago data-kp-ago-verb="synced">not synced yet</time></p>
                 </div>
             </section>
         </main>

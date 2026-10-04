@@ -42,6 +42,19 @@
  * @property {string} alertWarning
  * @property {string} alertInfo
  * @property {string} alertError
+ * @property {string} attentionCritical  The word a screen reader hears before a critical problem on the attention band (setAttention) [scope-143]
+ * @property {string} attentionWarning  The same, before a warning [scope-143]
+ * @property {string} attentionInfo  The same, before an information [scope-143]
+ * @property {(verb: string, duration: string) => string} agoText  A ticking freshness line, "updated 12 s ago" (js/freshness.js) [scope-143]
+ * @property {(verb: string) => string} agoNever  The same line with no moment yet, "not updated yet" [scope-143]
+ * @property {(n: number) => string} agoSeconds  A duration's seconds part, "12 s" [scope-143]
+ * @property {(n: number) => string} agoMinutes  Its minutes part, "2 min" [scope-143]
+ * @property {(n: number) => string} agoHours  Its hours part, "3 h" [scope-143]
+ * @property {(n: number) => string} agoDays  Its days part, "1 day", "2 days" [scope-143]
+ * @property {string} agoVerb  The verb a freshness line uses when its element names none [scope-143]
+ * @property {(text: string) => string} agoStale  What a freshness line with `data-kp-ago-announce="state"` announces once it turns stale [scope-143]
+ * @property {(text: string) => string} agoFresh  What it announces once it is fresh again [scope-143]
+ * @property {string} agoInLiveRegion  The console warning for a ticking line inside a live region [scope-143]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -132,6 +145,7 @@
  * @property {(shown: number, total: number) => string} tableColumnsShown
  * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
  * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {(group: string, count: number) => string} tableGroupRows  A group row's fold button: the group's name and how many of its rows match [J2]
  * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
  * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name
  * @property {(column: string, key: string) => string} tableEditing  Said when an editor opens
@@ -232,13 +246,18 @@
  * @property {string} chartChange  The tooltip's foot: what the ▲/▼ column is [scope-143]
  * @property {string} chartOpen  An event's link in a pinned tooltip [scope-143]
  * @property {(label: string, time: string) => string} chartMark  An event marker's title [scope-143]
- * @property {(from: string, to: string) => string} chartZoomed  The zoom chip, before its Reset [scope-143]
+ * @property {(from: string, to: string) => string} chartZoomed  The zoom chip, before its Reset, from its two ends; used only when a consumer overrides it and not `chartZoomedSpan` [scope-143]
+ * @property {(span: string) => string} chartZoomedSpan  The zoom chip, before its Reset: `span` is the zoom as the chart's `range` time style prints it [scope-143]
  * @property {string} chartReset  The zoom chip's button [scope-143]
  * @property {string} chartResetTitle  Its title [scope-143]
  * @property {string} chartUp  A rise, as the readout says it [scope-143]
  * @property {string} chartDown  A fall, as the readout says it [scope-143]
  * @property {string} chartSame  No change, as the readout says it [scope-143]
  * @property {string} chartNow  A spark line's value when no time is under the crosshair [scope-143]
+ * @property {string} chartEmpty  A time chart with no readings in its window, in the plot at its height [scope-143]
+ * @property {string} chartOnePoint  Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
+ * @property {string} chartLoading  A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
+ * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]
 
  * @property {string} breadcrumb
  * @property {string} pagination
@@ -280,6 +299,23 @@ export const DEFAULT_STRINGS = Object.freeze({
     alertWarning: 'Warning',
     alertInfo: 'Info',
     alertError: 'Error',
+    // The attention band's severities, for a screen reader [scope-143].
+    attentionCritical: 'Critical',
+    attentionWarning: 'Warning',
+    attentionInfo: 'Information',
+    // A ticking freshness line [scope-143]: exact numbers, the two largest
+    // units, a zero part left out ("2 min", "2 min 5 s", "1 day 1 h").
+    agoText: (verb, duration) => `${verb} ${duration} ago`,
+    agoNever: (verb) => `not ${verb} yet`,
+    agoSeconds: (n) => `${n} s`,
+    agoMinutes: (n) => `${n} min`,
+    agoHours: (n) => `${n} h`,
+    agoDays: (n) => (n === 1 ? '1 day' : `${n} days`),
+    agoVerb: 'updated',
+    agoStale: (text) => `${text}, out of date`,
+    agoFresh: (text) => `${text}, up to date`,
+    agoInLiveRegion:
+        'kp-themes: a ticking freshness line (data-kp-ago) sits inside a live region, so a screen reader would hear it every second. It is silenced (aria-live="off"); move it out of the region, or use data-kp-ago-announce="state".',
     busy: 'Working…',
     close: 'Close',
     // The nav toggle carries no glyph of its own — this package ships
@@ -421,6 +457,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableColumnsShown: (shown, total) => `${shown} of ${total} columns shown`,
     tableDetailsColumn: 'Details',
     tableRowDetails: (key) => `Details for ${key}`,
+    tableGroupRows: (group, count) => `${group}: ${count} ${count === 1 ? 'row' : 'rows'}`,
     tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
     tableEditField: (column, key) => `${column} of ${key}`,
     tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
@@ -557,12 +594,17 @@ export const DEFAULT_STRINGS = Object.freeze({
     chartOpen: 'Open',
     chartMark: (label, time) => `${label} · ${time}; click to pin`,
     chartZoomed: (from, to) => `Zoomed: ${from}–${to} · `,
+    chartZoomedSpan: (span) => `Zoomed: ${span} · `,
     chartReset: 'Reset',
     chartResetTitle: 'Show the whole range again (double-click or Esc)',
     chartUp: 'up',
     chartDown: 'down',
     chartSame: 'unchanged',
     chartNow: 'now',
+    chartEmpty: 'No readings in this window yet.',
+    chartOnePoint: 'Only one reading so far: the line grows as more readings arrive.',
+    chartLoading: 'Loading the readings…',
+    chartPinnedOutside: '(pinned, outside the window)',
     breadcrumb: 'Breadcrumb',
     pagination: 'Pagination',
     themePicker: 'Choose a theme',

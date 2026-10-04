@@ -5,6 +5,9 @@
 import { toast } from '../js/overlays.js';
 import { attachEffects, MEMO_PREFIX, REVEALS } from '../js/effects.js';
 import { THEME_EVENT } from '../js/theme-core.js';
+import { attachAttention, setAttention } from '../js/attention.js';
+import { setAgo } from '../js/freshness.js';
+import { forgetRememberedExcept } from '../js/remember.js';
 
 const WORDS = {
     '': 'Saved. The handover note is visible to the day shift.',
@@ -65,6 +68,19 @@ document.addEventListener('kp-reveal', (event) => {
 document.addEventListener('kp-alarm-close', (event) => {
     const { reason } = /** @type {CustomEvent} */ (event).detail;
     logIn(event, '[data-cat-alarm-log]', `kp-alarm-close: closed with reason "${reason}".`);
+});
+// catalogue/table.html#datatable-expand-groups: one event per opening in the
+// single-open table, with the row it closed; and each fold of a stack.
+let expandEvents = 0;
+document.addEventListener('kp-datatable-expand', (event) => {
+    const { key, open, closed } = /** @type {CustomEvent} */ (event).detail;
+    expandEvents += 1;
+    const shut = Array.isArray(closed) && closed.length > 0 ? `, closing ${closed.join(', ')}` : '';
+    logIn(event, '[data-cat-expand-log]', `kp-datatable-expand #${expandEvents}: "${key}" ${open ? 'opened' : 'closed'}${shut}.`);
+});
+document.addEventListener('kp-datatable-group', (event) => {
+    const { key, open, members } = /** @type {CustomEvent} */ (event).detail;
+    logIn(event, '[data-cat-group-log]', `kp-datatable-group: "${key}" ${open ? 'unfolded' : 'folded'}, ${members.length} rows.`);
 });
 
 /* ------------------------------------------------ what a page remembers */
@@ -411,4 +427,132 @@ document.addEventListener('kp-chart-range', (event) => {
     const { range } = /** @type {CustomEvent} */ (event).detail;
     for (const chart of group.querySelectorAll('[data-cat-chart]'))
         chartSample.setChartData(chart, chartSample.sampleData(chart.getAttribute('data-cat-chart') ?? '', range));
+});
+
+/* ------------------------------------------------ attention band, live */
+
+// catalogue/feedback.html#attention-live: a band built after the page
+// loaded and refreshed by key with setAttention(), and a count of every
+// alert put into the page (it must not grow on a refresh that changes
+// nothing).
+/** @type {Record<string, { severity: 'critical' | 'warning' | 'info', title: string, text: string, fix: string }>} */
+const LIVE_PROBLEMS = {
+    'inc-4471': { severity: 'critical', title: 'Pump house 3 is below 2.1 bar', text: 'For forty minutes; the ring main loses pressure first.', fix: 'Open the incident' },
+    'ph-7': { severity: 'warning', title: 'Pump house 7 has sent no reading since 06:00', text: 'The unit answers a ping; its modem may need a restart.', fix: 'Restart the modem' },
+    'fw-4.2': { severity: 'info', title: 'Firmware 4.2 is out for six field units', text: "It fixes the flow meter's drift after a power cut.", fix: 'Plan the update' },
+};
+/** @type {WeakMap<Element, { keys: string[], polls: ReturnType<typeof setInterval> | null }>} */
+const liveBands = new WeakMap();
+/** @param {Element} band */
+const paintLive = (band) => {
+    const state = liveBands.get(band);
+    if (!state) return;
+    setAttention(
+        band,
+        state.keys.map((key) => {
+            const p = LIVE_PROBLEMS[key];
+            const fix = document.createElement('button');
+            fix.type = 'button';
+            fix.className = 'kp-button kp-button--sm';
+            fix.textContent = p.fix;
+            return { key, severity: p.severity, title: p.title, text: p.text, action: fix };
+        }),
+    );
+};
+document.addEventListener('click', (event) => {
+    const control = event.target instanceof Element ? event.target.closest('[data-cat-attention-live]') : null;
+    const block = control?.closest('.cat-block');
+    const host = block?.querySelector('[data-cat-attention-live-host]');
+    if (!control || !block || !host) return;
+    const what = control.getAttribute('data-cat-attention-live');
+    let band = host.querySelector('.kp-attention');
+    if (!band) {
+        if (what !== 'build') return;
+        band = document.createElement('div');
+        band.className = 'kp-attention';
+        band.setAttribute('role', 'region');
+        band.setAttribute('aria-label', 'Needs attention, built after load');
+        liveBands.set(band, { keys: ['fw-4.2', 'ph-7', 'inc-4471'], polls: null });
+        let inserted = 0;
+        const count = block.querySelector('[data-cat-attention-live-count]');
+        new MutationObserver((records) => {
+            for (const record of records) for (const node of record.addedNodes) if (node instanceof Element && node.getAttribute('role') === 'alert') inserted += 1;
+            if (count) count.textContent = `Alerts put into the page: ${inserted}`;
+        }).observe(band, { childList: true });
+        // On the component page attachAttention() already watches the
+        // document; on a page that gathered this block it may not.
+        attachAttention(host);
+        host.append(band);
+        paintLive(band);
+        return;
+    }
+    const state = liveBands.get(band);
+    if (!state) return;
+    if (what === 'poll') {
+        if (state.polls !== null) clearInterval(state.polls);
+        state.polls = /** @type {HTMLInputElement} */ (control).checked ? setInterval(() => paintLive(/** @type {Element} */ (band)), 2000) : null;
+        return;
+    }
+    if (what === 'reword') LIVE_PROBLEMS['ph-7'].text = LIVE_PROBLEMS['ph-7'].text.endsWith('restart.') ? 'Still no reading; the modem was restarted at 09:10.' : 'The unit answers a ping; its modem may need a restart.';
+    if (what === 'raise') LIVE_PROBLEMS['ph-7'].severity = LIVE_PROBLEMS['ph-7'].severity === 'warning' ? 'critical' : 'warning';
+    if (what === 'resolve') state.keys = state.keys.includes('fw-4.2') ? state.keys.filter((k) => k !== 'fw-4.2') : [...state.keys, 'fw-4.2'];
+    paintLive(band);
+});
+
+/* ------------------------------------------------- how old the data is */
+
+// catalogue/feedback.html#freshness: each line's moment, set from the
+// page's load so the words are worth reading (`data-cat-ago` seconds).
+for (const line of document.querySelectorAll('[data-cat-ago]')) {
+    setAgo(/** @type {HTMLElement} */ (line), Date.now() + Number(line.getAttribute('data-cat-ago')) * 1000);
+}
+
+/* --------------------------------------- tiles of one height, a board */
+
+// catalogue/data.html#tiles-set: a reservoir that grows a line, and the
+// height the set shares, read off the grids.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-tiles-set]') : null;
+    const block = button?.closest('.cat-block');
+    const body = block?.querySelector('[data-kp-tiles-set] .kp-tiles .kp-card__body');
+    if (!button || !body) return;
+    const longer = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(longer));
+    body.textContent = longer
+        ? '71 % full. The inlet valve is throttled to 40 % while the south pipe is flushed; the level will hold until the flush ends at noon, then rise again by about 3 % an hour.'
+        : '71 % full.';
+});
+const showTileHeight = () => {
+    for (const block of document.querySelectorAll('.cat-block')) {
+        const line = block.querySelector('[data-cat-tiles-set-height]');
+        const grid = block.querySelector('[data-kp-tiles-set] .kp-tiles');
+        if (!line || !(grid instanceof HTMLElement)) continue;
+        const value = grid.style.getPropertyValue('--kp-tile-row-min') || 'not set';
+        const text = `The set's tile height: ${value}`;
+        if (line.textContent !== text) line.textContent = text;
+    }
+    requestAnimationFrame(showTileHeight);
+};
+if (document.querySelector('[data-cat-tiles-set-height]')) requestAnimationFrame(showTileHeight);
+
+/* ------------------------------------ remembered groups on a live board */
+
+// catalogue/structure.html#remember-later: the board rebuilt from scratch,
+// held open while a search runs, and its memory pruned to its groups.
+document.addEventListener('click', (event) => {
+    const control = event.target instanceof Element ? event.target.closest('[data-cat-board]') : null;
+    const block = control?.closest('.cat-block');
+    const board = block?.querySelector('div[data-cat-board]');
+    if (!control || !board) return;
+    const what = control.getAttribute('data-cat-board');
+    if (what === 'rebuild') board.replaceChildren(...[...board.children].map((group) => group.cloneNode(true)));
+    if (what === 'hold') {
+        const on = /** @type {HTMLInputElement} */ (control).checked;
+        board.toggleAttribute('data-kp-remember-hold', on);
+        if (on) for (const group of board.querySelectorAll('details')) /** @type {HTMLDetailsElement} */ (group).open = true;
+    }
+    if (what === 'prune') {
+        const names = [...board.querySelectorAll('[data-kp-remember]')].map((group) => group.getAttribute('data-kp-remember') ?? '');
+        console.info(`Forgot ${forgetRememberedExcept('disclosure', 'cat-apps-', names)} stored groups that are no longer on the board.`);
+    }
 });

@@ -46,6 +46,8 @@ const EAGER =
     "import('./actions.js').then((m) => m.attachActionColumns());\n" +
     "import('./kpi.js').then((m) => { m.attachSparklines(); m.attachKpiToggles(); });\n" +
     "import('./attention.js').then((m) => m.attachAttention());\n" +
+    "import('./tiles.js').then((m) => m.attachTileSets());\n" +
+    "import('./freshness.js').then((m) => m.attachAgo());\n" +
     "import('./chart.js').then((m) => m.attachCharts());\n";
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');

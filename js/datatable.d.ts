@@ -1,3 +1,5 @@
+/** A heading row that folds the rows of its group [J2]. */
+export declare const GROUP_ROW = "[data-kp-row-group]";
 /** A detail row, directly after the row it belongs to. */
 export declare const DETAIL = "[data-kp-row-detail]";
 export type Direction = 'ascending' | 'descending' | 'none';
@@ -34,6 +36,7 @@ export type View = {
     state: State;
     keys: string[];
     pageKeys: string[];
+    folded: string[];
 };
 export type DataRequest = {
     id: number;
@@ -73,7 +76,7 @@ export type EditDetail = {
 /**
  * @typedef {{ shown: number, total: number, page: number, pages: number, pageSize: number, query: string, scope: number | null,
  *   filters: Record<number, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
- *   keys: string[], pageKeys: string[] }} View
+ *   keys: string[], pageKeys: string[], folded: string[] }} View
  */
 /**
  * What a server-backed table asks its `load` for [Kenny, 2026-09-13].
@@ -101,12 +104,17 @@ export declare const SORT_EVENT = "kp-datatable-sort";
 export declare const RETRY_EVENT = "kp-datatable-retry";
 /** Fired when the reader shows or hides a column: `{ hidden }`, the column indices. */
 export declare const COLUMNS_EVENT = "kp-datatable-columns";
-/** Fired when a row opens or closes: `{ key, row, open, cell, expanded }`; `cell` is the detail cell, for an app that fills it then. */
+/**
+ * Fired when a row opens or closes: `{ key, row, open, cell, expanded }`; `cell` is the detail cell, for an app that fills it then.
+ * In a `data-kp-expand-single` table an opening that closed the row open before fires once, with those keys in `closed`.
+ */
 export declare const EXPAND_EVENT = "kp-datatable-expand";
 /** Fired when a server-backed table needs rows: the DataRequest, plus `respond(answer)` and `fail(error)`. */
 export declare const REQUEST_EVENT = "kp-datatable-request";
 /** Fired, cancelable, when an edited value is about to be saved (EditDetail); `preventDefault()` refuses it. */
 export declare const EDIT_EVENT = "kp-datatable-edit";
+/** Fired when a group row folds or unfolds [J2]: `{ key, row, open, members, folded }`; `members` are the group's rows, `folded` every folded key. */
+export declare const GROUP_EVENT = "kp-datatable-group";
 /** Rows per page when the consumer does not say [Kenny, 2026-09-13]. Per table as `data-kp-page-size`. */
 export declare const PAGE_SIZE = 25;
 /** The page sizes on offer when the consumer does not say. Per table as `data-kp-page-sizes="10,25"`, or `none`. */
@@ -337,9 +345,13 @@ export type DataTableHandle = {
      */
     hideColumns: (columns: readonly number[]) => void;
     /**
-     * the rows to open, by key
+     * the rows to open, by key; in a `data-kp-expand-single` table only the last key opens
      */
     expand: (keys: readonly string[]) => void;
+    /**
+     * the group rows to fold, by group key; every other group unfolds [J2]
+     */
+    fold: (keys: readonly string[]) => void;
     density: (density: Density) => void;
     /**
      * loading, failed, or ready again
@@ -429,6 +441,23 @@ export type DataTableOptions = {
      * Default 5.
      */
     gridPageRows?: number;
+    /**
+     * Opening a row closes the one that was open. Default false; per table `data-kp-expand-single`.
+     */
+    expandSingle?: boolean;
+    /**
+     * Called with every row toggle and group toggle the
+     * table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
+     */
+    decorate?: (part: HTMLElement, info: DataTableDecorateInfo) => void;
+};
+export type DataTableDecorateInfo = {
+    kind: 'row-toggle' | 'row-group-toggle';
+    host: HTMLElement;
+    key?: string;
+    index?: number;
+    label?: string;
+    value?: string;
 };
 /**
  * @typedef {object} DataTableOptions
@@ -451,6 +480,15 @@ export type DataTableOptions = {
  * @property {string} [expandGlyph]   Default ▸.
  * @property {string} [collapseGlyph] Default ▾.
  * @property {number} [gridPageRows]  Default 5.
+ * @property {boolean} [expandSingle]  Opening a row closes the one that was open. Default false; per table `data-kp-expand-single`.
+ * @property {(part: HTMLElement, info: DataTableDecorateInfo) => void} [decorate]  Called with every row toggle and group toggle the
+ *   table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
+ */
+/**
+ * What `decorate` is told about the control it is handed: the same shape every kp module's `decorate` takes.
+ * `kind` is `row-toggle` (a row's expand button; `value` is the row key) or `row-group-toggle` (a group row's fold button;
+ * `value` is the group key). `host` is the data table's wrapper and `key` its `data-kp-key`.
+ * @typedef {{ kind: 'row-toggle' | 'row-group-toggle', host: HTMLElement, key?: string, index?: number, label?: string, value?: string }} DataTableDecorateInfo
  */
 /**
  * Attach every data table under `root`.
@@ -462,6 +500,6 @@ export type DataTableOptions = {
  *   wrapper untouched.
  * @returns {(() => void) & { handles: DataTableHandle[] }} detach
  */
-export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, filterMode, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, }?: DataTableOptions): (() => void) & {
+export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, filterMode, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, expandSingle, decorate, }?: DataTableOptions): (() => void) & {
     handles: DataTableHandle[];
 };

@@ -130,6 +130,10 @@ export const NEEDS = [
         attach: (m, root) => [m.attachSparklines(root), m.attachKpiToggles(root)],
     },
     { name: 'attention', when: '.kp-attention', load: () => import('./attention.js'), attach: (m, root) => [m.attachAttention(root)] },
+    // Tiles of one height across a board, and the ticking freshness line
+    // (port spec H and I.4).
+    { name: 'tiles', when: '[data-kp-tiles-set]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileSets(root)] },
+    { name: 'freshness', when: '[data-kp-ago]', load: () => import('./freshness.js'), attach: (m, root) => [m.attachAgo(root)] },
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
     {
         // Every box that changes size after it is drawn, and every dialog's

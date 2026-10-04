@@ -250,7 +250,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // (--kp-kpi-min, --kp-kpis-gap, --kp-kpi-spark-height, -value-size,
     // -meter-fill), the chart's three (--kp-chart-series, -tone, -tip-x)
     // and the busy panel's --kp-busy-overlay-spinner-narrow: 250 + 19.
-    assert.equal(result.expected, 269, 'AR21 counted the --kp-* properties in css/components.css');
+    // The homelab port (scope-143, 2026-10-04) added seven: the tile set's
+    // --kp-tile-row-min, the freshness line's stale plate (--kp-ago-stale-bg,
+    // -fg, -edge), the attention band's --kp-attention-tint and the data
+    // table's group row (--kp-datatable-group-ground, -weight): 269 + 7.
+    assert.equal(result.expected, 280, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -293,9 +297,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // so every register that draws segments reads one value; the plain bar
     // the package draws has no segments to count. scope-142's
     // --kp-resize-dur is read through var() too: 248 + 1. So are
-    // scope-143's nineteen: 249 + 19.
-    assert.equal(result.readCount, 268);
-    assert.deepEqual(result.unread, ['--kp-steps']);
+    // scope-143's nineteen: 249 + 19. And the homelab port's seven: 268 + 7.
+    assert.equal(result.readCount, 278);
+    // `--kp-chart-height` is read by js/chart.js (the plot's height when the
+    // data names none), not by a stylesheet [scope-143].
+    assert.deepEqual(result.unread, ['--kp-chart-height', '--kp-steps']);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {

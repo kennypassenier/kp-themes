@@ -5339,6 +5339,22 @@
         margin-block-end: var(--kp-space-sm, 0.5rem);
     }
 
+    /* Tiles of one height across a board [port spec H]: the grids of one
+ * `data-kp-tiles-set` share the set's tallest tile as the floor of their
+ * rows, `--kp-tile-row-min`, which attachTileSets() (js/tiles.js) measures
+ * and writes. Unset, the floor is `auto`, so a grid outside a set is laid
+ * out exactly as before. While the script measures, a grid's rows size to
+ * their content and its tiles to their own height. */
+    :where([data-kp-tiles-set]) .kp-tiles,
+    .kp-tiles[data-kp-tiles-set] {
+        grid-auto-rows: minmax(var(--kp-tile-row-min, auto), 1fr);
+    }
+
+    .kp-tiles[data-kp-tiles-measuring] {
+        grid-auto-rows: auto;
+        align-items: start;
+    }
+
     /* --- Key figures: the KPI strip and tile [scope-143] ------------------- */
 
     /* A row of key figures. Every tile is as tall as the tallest, on every row
@@ -5686,7 +5702,7 @@
 
     .kp-chart__tick {
         fill: var(--muted-foreground);
-        font-size: 11px;
+        font-size: var(--kp-chart-tick-size, 11px);
         font-variant-numeric: tabular-nums;
     }
 
@@ -5813,8 +5829,8 @@
         display: grid;
         gap: 3px;
         inline-size: max-content;
-        min-inline-size: min(14rem, 100%);
-        max-inline-size: min(17.5rem, 100%);
+        min-inline-size: min(var(--kp-chart-tip-min, 14rem), 100%);
+        max-inline-size: min(var(--kp-chart-tip-max, 17.5rem), 100%);
         padding: var(--kp-space-sm, 0.5rem) 0.625rem;
         border: 1px solid var(--border);
         border-radius: calc(var(--radius, 0.5rem) * 0.75);
@@ -5849,8 +5865,9 @@
         font-variant-numeric: tabular-nums;
     }
 
+    /* The tooltip's words are all in the popover's own ink: the muted ink
+ * reads 4.44:1 on titanium's popover and 4.48:1 on lapis's [scope-143]. */
     .kp-chart__pin {
-        color: var(--muted-foreground);
         white-space: nowrap;
     }
 
@@ -5892,21 +5909,26 @@
     }
 
     /* The change over the hour before: up and down are not good or bad, so
- * neither is green or red. */
-    .kp-chart__delta {
-        color: var(--muted-foreground);
+ * neither is green or red. A status ink is text only on its own plate:
+ * `--warning-foreground` on the popover read 1.00:1 in high-contrast and
+ * `--info-foreground` 1.00:1 in grotesk [scope-143]. */
+    .kp-chart__delta[data-kp-direction] {
+        justify-self: end;
+        padding-inline: 0.3em;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
     }
 
     .kp-chart__delta[data-kp-direction='up'] {
+        background: var(--warning);
         color: var(--warning-foreground);
     }
 
     .kp-chart__delta[data-kp-direction='down'] {
+        background: var(--info);
         color: var(--info-foreground);
     }
 
     .kp-chart__tip-foot {
-        color: var(--muted-foreground);
         text-align: end;
     }
 
@@ -5920,9 +5942,13 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* In the popover's ink and underlined: `--primary` read 4.26:1 on
+ * lapis's popover [scope-143]. */
     .kp-chart__tip-event > a {
-        color: var(--primary);
+        color: inherit;
         font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
     }
 
     .kp-chart__dot {
@@ -5998,8 +6024,10 @@
         box-shadow: 0 0 0 1px var(--ring);
     }
 
+    /* A source not shown is struck through, its label at full contrast:
+ * at opacity 0.45 it read 1.89:1 to 3.02:1 [scope-143]. */
     .kp-chart__source[data-kp-off] {
-        opacity: 0.45;
+        text-decoration: line-through;
     }
 
     .kp-chart__source[data-kp-off] > .kp-chart__swatch {
@@ -6084,6 +6112,78 @@
         stroke-width: 1;
     }
 
+    /* The chart's states [scope-143]: loading, no readings and an error keep
+ * the plot's final height (js/chart.js writes it, border-box, from
+ * `data.height`, else `--kp-chart-height`, else 168px), the sentence in the
+ * middle. Loading is also a `.kp-skeleton`, so it pulses only without
+ * reduced motion. */
+    .kp-chart__state {
+        display: grid;
+        place-items: center;
+        padding: var(--kp-space-md, 0.75rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-chart__state-text {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-sm, 0.5rem);
+        max-inline-size: 48ch;
+        margin: 0;
+    }
+
+    .kp-chart__state[data-kp-state='error'] {
+        color: var(--foreground);
+    }
+
+    .kp-chart__state-text > .kp-chart__dot {
+        flex: none;
+    }
+
+    /* While loading, the legend row keeps its place for the sources to come:
+ * a stub the size of a source button. */
+    .kp-chart__source-stub {
+        padding: 3px var(--kp-space-sm, 0.5rem);
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: inherit;
+    }
+
+    /* Under a chart whose every source has one reading (`onePointNote`). */
+    .kp-chart__note {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* A long source name stops at 24 characters; the button's title says all of it. */
+    .kp-chart__source-label {
+        overflow: hidden;
+        min-inline-size: 0;
+        max-inline-size: 24ch;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* The tooltip's rows: after twelve they scroll (a pinned tooltip takes
+ * the pointer and the wheel). */
+    .kp-chart__tip-rows {
+        display: grid;
+        gap: 3px;
+        max-block-size: calc(12 * 1.5em + 11 * 3px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-chart__tip-rows[hidden],
+    .kp-chart__tip-foot[hidden] {
+        display: none;
+    }
+
     /* --- Alert [TH4] ----------------------------------------------------- */
 
     .kp-alert {
@@ -6139,6 +6239,27 @@
     .kp-alert__close {
         margin-inline-start: auto;
         flex: none;
+    }
+
+    /* --- Freshness line [scope-143] ---------------------------------------- */
+
+    /* "updated 12 s ago", ticking (js/freshness.js). Tabular digits, kept
+ * whole on one line (it wraps as a unit, never inside a number), and as
+ * wide as the widest text of its unit: the script reserves that width, so
+ * a neighbour never moves when "59 s" becomes "1 min". Turning stale
+ * (`data-kp-stale`, past `data-kp-stale-after` seconds) draws a warning
+ * plate whose edge is a shadow, so it changes no size either. */
+    :where(.kp-ago, [data-kp-ago]) {
+        display: inline-block;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    :where(.kp-ago, [data-kp-ago])[data-kp-stale] {
+        background: var(--kp-ago-stale-bg, var(--warning));
+        color: var(--kp-ago-stale-fg, var(--warning-foreground));
+        box-shadow: 0 0 0 var(--kp-ago-stale-edge, 0.25em) var(--kp-ago-stale-bg, var(--warning));
     }
 
     /* --- Attention band [scope-143] --------------------------------------- */
@@ -6202,11 +6323,14 @@
     }
 
     /* A soft tint of the severity with an edge of it, in the page's own
- * text colour, and a solid round icon: calm, still unmistakable. */
+ * text colour, and a solid round icon: calm, still unmistakable.
+ * `--kp-attention-tint` is how much of the tone the plate takes, 8 % by
+ * default; a register lowers it for a severity whose tint pulls the page's
+ * text under 4.6:1 (shade-dark's info, 4.49 at 8 %) [alert-contrast-M1]. */
     .kp-attention > .kp-attention__item {
         border-color: color-mix(in oklab, var(--kp-attention-tone) 45%, var(--border));
         border-inline-start-width: 3px;
-        background: color-mix(in oklab, var(--kp-attention-tone) 8%, var(--card));
+        background: color-mix(in oklab, var(--kp-attention-tone) var(--kp-attention-tint, 8%), var(--card));
         color: var(--foreground);
     }
 
@@ -6814,36 +6938,63 @@
         justify-self: start;
     }
 
-    /* On a narrow list the row's text takes the whole line and its buttons
-     * go under it, spread over the full width in equal columns: the list's
-     * own columns, so a role still lines up from row to row (Kenny,
-     * 2026-10-04: "side by side under the text … more spread out, no more of
-     * this right aligned buttons"). */
+    /* On a narrow list (under 30rem) the row's text takes the whole line
+     * and its buttons stack under it, one per line on one left edge, each
+     * label on a single line: a label is never wrapped or cut (Kenny's UI
+     * rule; the equal columns of the wider list cut "Review and update all
+     * 4…" by 20 px on the dashboard's Inbox, action-columns-narrow-M1). The
+     * wider list keeps the equal columns Kenny approved (2026-10-04). */
     @container kp-action-list (max-width: 30rem) {
-        /* Every row lays out the same equal columns, as many as the list
-           has buttons, so they still line up without the list's grid. */
         .kp-action-list > li {
-            grid-template-columns: repeat(var(--kp-action-count), minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1fr);
         }
 
         .kp-action-list > li > :first-child,
         .kp-action-list .kp-row-actions {
-            grid-column: 1 / -1;
+            grid-column: 1;
+        }
+
+        .kp-action-list .kp-row-actions {
+            grid-template-columns: minmax(0, max-content);
+            grid-auto-flow: row;
+            justify-content: start;
+            row-gap: var(--kp-space-xs, 0.25rem);
         }
 
         .kp-action-list .kp-row-actions > * {
-            justify-self: stretch;
-            inline-size: 100%;
+            grid-column: 1;
+            justify-self: start;
+            inline-size: auto;
+            white-space: nowrap;
         }
     }
 
+    /* On a narrow table the row's buttons stack in one column, as wide as
+     * the widest (`--kp-action-stack`, measured by attachActionColumns()).
+     * Any table holding `.kp-row-actions`, not only `.kp-table`
+     * [action-columns-narrow-M1]: inside the package's table wrapper
+     * (`.kp-table-wrap`, the `kp-table` container) at its 30rem, and in a
+     * table outside it once the window is a phone's or a small tablet's
+     * (under 48rem, the width the homelab dashboard measured its own
+     * repository table squeezing its cells at). */
     @container kp-table (max-width: 30rem) {
-        .kp-table .kp-row-actions {
+        table .kp-row-actions {
             grid-auto-flow: row;
             grid-template-columns: var(--kp-action-stack, max-content);
         }
 
-        .kp-table .kp-row-actions > * {
+        table .kp-row-actions > * {
+            grid-column: 1;
+        }
+    }
+
+    @media (max-width: 48rem) {
+        table:not(.kp-table-wrap table, .kp-datatable table) .kp-row-actions {
+            grid-auto-flow: row;
+            grid-template-columns: var(--kp-action-stack, max-content);
+        }
+
+        table:not(.kp-table-wrap table, .kp-datatable table) .kp-row-actions > * {
             grid-column: 1;
         }
     }
@@ -8311,6 +8462,14 @@
 
     .kp-accordion__item {
         border-bottom: 1px solid var(--border);
+    }
+
+    /* A bare item [port spec J3]: the fold's motion and memory without the
+ * accordion's chrome, for a group whose title is the page's own (a quiet
+ * label above a board's tiles). Give its summary a class of your own, not
+ * `.kp-accordion__summary`, which every register paints. */
+    .kp-accordion__item--bare {
+        border-bottom: 0;
     }
 
     .kp-accordion__summary {
@@ -9819,6 +9978,40 @@
     .kp-table tr.kp-datatable__detail > td {
         padding-block: var(--kp-datatable-detail-padding-block, 0.75rem 1rem);
         white-space: normal;
+    }
+
+    /* A group row that folds a run of rows [J2, scope-143]: the whole row
+ * folds, so the whole row says so; it reads as a heading over its rows,
+ * on the ground a row takes under the pointer, and its toggle sits before
+ * its name. */
+    .kp-datatable tbody > tr[data-kp-row-group] {
+        cursor: pointer;
+    }
+
+    .kp-table tbody > tr[data-kp-row-group] > :is(th, td) {
+        background-color: var(--kp-datatable-group-ground, var(--muted));
+        font-weight: var(--kp-datatable-group-weight, 600);
+        text-align: start;
+        white-space: normal;
+    }
+
+    .kp-datatable__group-toggle {
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* In the card layout a group row is the heading over its cards, not a
+ * card of its own: the whole width, no frame [J2]. */
+    @container kp-table (max-width: 40rem) {
+        .kp-datatable[data-kp-cards] .kp-table tr[data-kp-row-group] {
+            padding: 0;
+            border: 0;
+            background: none;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table tr[data-kp-row-group] > :is(th, td) {
+            display: block;
+            border-radius: var(--radius, 0.5rem);
+        }
     }
 
     /* A first column that stays [#sticky]. The script marks the cells of the
@@ -30036,6 +30229,18 @@
         border-radius: 0.8rem;
     }
 
+    /* The success and warning plates' own inks read 4.57 and 4.58:1; a
+       twentieth of the page's text in them reads 4.79 and 4.75
+       [alert-contrast-M1]. The band's items are left alone: they keep the
+       page's text on a soft tint. */
+    [data-theme='pastel'] .kp-alert--success:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--success-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='pastel'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='pastel'] .kp-grid {
         gap: 1rem;
     }
@@ -32128,6 +32333,13 @@
         border-radius: var(--radius);
     }
 
+    /* The warning plate's own light ink read 4.55:1; drawn 60 % towards the
+       card it reads 4.67 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='shade-light'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 40%, var(--card));
+    }
+
     [data-theme='shade-light'] .kp-alert__label {
         font-family: var(--theme-font-display);
         font-weight: 600;
@@ -34103,6 +34315,18 @@
 
     [data-theme='forest'] .kp-alert--success {
         border-left-color: var(--success-foreground);
+    }
+
+    /* The success and info plates' own inks read 4.51 and 4.59:1; a
+       twentieth of the page's text in them reads 4.75 and 4.80
+       [alert-contrast-M1]. The band's items are left alone: they keep the
+       page's text on a soft tint. */
+    [data-theme='forest'] .kp-alert--success:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--success-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='forest'] .kp-alert--info:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--info-foreground) 95%, var(--foreground));
     }
 
     [data-theme='forest'] .kp-alert__label {
@@ -37837,6 +38061,13 @@
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
         background: var(--muted);
+    }
+
+    /* The info plate's own ink read 4.51:1; a twentieth of the page's text
+       in it reads 4.79 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='light'] .kp-alert--info:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--info-foreground) 95%, var(--foreground));
     }
 
     [data-theme='light'] .kp-health__dot {
@@ -48177,6 +48408,13 @@
         border-radius: var(--radius);
     }
 
+    /* The warning plate's own ink read 4.51:1; a twentieth of the page's
+       text in it reads 4.78 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='formal'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='formal'] .kp-toasts {
         gap: var(--kp-space-sm);
     }
@@ -57766,6 +58004,12 @@
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The info item on the attention band: at the default 8 % tint the
+       page's text read 4.49:1 on it; 6 % reads 4.71 [alert-contrast-M1]. */
+    [data-theme='shade-dark'] .kp-attention__item[data-kp-severity='info'] {
+        --kp-attention-tint: 6%;
     }
 
     [data-theme='shade-dark'] .kp-grid {

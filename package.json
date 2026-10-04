@@ -144,6 +144,14 @@
             "types": "./js/attention.d.ts",
             "default": "./js/attention.js"
         },
+        "./js/tiles": {
+            "types": "./js/tiles.d.ts",
+            "default": "./js/tiles.js"
+        },
+        "./js/freshness": {
+            "types": "./js/freshness.d.ts",
+            "default": "./js/freshness.js"
+        },
         "./js/chart": {
             "types": "./js/chart.d.ts",
             "default": "./js/chart.js"

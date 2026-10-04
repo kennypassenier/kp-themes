@@ -531,6 +531,31 @@ A live view that redraws its rows on every refresh marks the box
 `data-kp-arrive="none"`; otherwise every refresh replays every row's
 arrival (found on the homelab dashboard, 2026-10-04).
 
+`data-kp-arrive="new"` is the finer choice for a live view whose rows carry a
+stable id: a row added back under the key of a row that left in the same
+change (`data-kp-key`, `data-kp-row-key` or `id`, read in that order) is a
+repaint and stays still, and only a row with a new key arrives. Without
+keys, a row counts as a repaint when its parent lost one more element of its
+tag and class than it took back; a sort is a repaint; and what replaces a
+loading skeleton (`.kp-skeleton`, `[data-kp-skeleton]`) is not news either.
+The attribute goes on the box or any ancestor; `repaintedIn(records)` is the
+test, exported. `attachMotion(root, options)` takes three options for a
+consumer's own page: `size` (a selector of more boxes to ease, beside
+`[data-kp-size-motion]`, for blocks you do not want to mark one by one),
+`arrive` (`'all'`, the default, `'new'` or `'none'`, for the whole root) and
+`arriveKeys` (more id attributes, read first, such as `['data-key']`):
+
+```js
+attachMotion(document, { size: '.card, .panel', arrive: 'new', arriveKeys: ['data-key'] });
+```
+
+A box, dialog or disclosure that leaves the page is let go a moment after
+(its observers disconnected), so a page that rebuilds itself on every
+navigation does not keep the old boxes watched; `motionWatchCount()` says how
+many are watched, for a test. Measured (Firefox, 2026-10-04): a thousand
+boxes added and removed leave the count where it was, and a box of 158 cells
+redrawn under `data-kp-arrive="new"` costs about 5 ms per change.
+
 A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.
@@ -746,6 +771,14 @@ narrow table they stack in the cell at one width. Knob:
 `--kp-action-gap`. Exports: `attachActionColumns`, `fitActionColumns(list)`,
 `rowRoles`, `mergeRoles`, `ROW_ACTIONS`, `ACTION_LIST`.
 
+On a narrow list (under 30rem) the buttons stack under the row's text, one
+per line on one left edge, each label on a single line; a label is never
+wrapped or cut. The table rule holds for any
+`<table>` holding `.kp-row-actions`, not only a `.kp-table`: in the table
+wrapper (`.kp-table-wrap`) under 30rem, and in a table outside it while the
+window is under 48rem. A register's margin on its buttons counts in a
+table's measured widths.
+
 ### Tiles of one height
 
 `.kp-tiles` lays the package's own `.kp-card` out in a grid: every tile as
@@ -768,6 +801,30 @@ line.
 Knobs: `--kp-tile-min` (15rem, the narrowest column), `--kp-tiles-gap`,
 `--kp-tile-title-size` (1.125rem, a step under a page card's title). No
 script.
+
+A board of several grids (groups of tiles under their own headings, in folds
+or columns) shares one tile height when it is marked
+`data-kp-tiles-set="<name>"`: every `.kp-tiles` inside it, or carrying it,
+belongs to the set, and two branches of the page with the same name are one
+set.
+
+```html
+<div class="board" data-kp-tiles-set="apps">
+    <details open><summary>Media</summary><ul class="kp-tiles">…</ul></details>
+    <ul class="kp-tiles">…</ul>
+</div>
+```
+
+`attachTileSets(root)` (`js/tiles.js`, loaded by `js/auto.js` where the
+attribute is) reads the natural height of every visible tile of the set (a
+tile in a closed `<details>` or hidden does not count; a skeleton tile does)
+and writes the tallest on each grid as `--kp-tile-row-min`, the floor of its
+rows. It runs once per frame after a tile's size or content changes, a grid's
+width changes or a fold opens or closes, and writes only when the height
+changed, so a refresh that redraws the same tiles writes nothing. A tile's
+inside stays yours: reserve a row (a "lines" row on every tile) if you want
+it on one line across the board. Exports: `attachTileSets`,
+`evenTileSet(grids)`, `tileSets(root)`, `TILES_SET`, `TILE_ROW_MIN`.
 
 ### Key figures
 
@@ -871,6 +928,39 @@ one arrives or changes severity, so a screen reader meets them in the order
 the eye does; `sortAttention(band)` does it once. In a band under 34rem the
 actions go under the words.
 
+The item's plate is `--kp-attention-tint` of its severity's colour mixed
+into `--card`, 8 % by default. Lower it on an item when the page's text
+reads too faint on the tint, for example
+`.kp-attention__item[data-kp-severity='info'] { --kp-attention-tint: 6%; }`;
+shade-dark does exactly that, which takes its info item from 4.49:1 to
+4.71:1.
+
+A live page builds its band later and refreshes it on every poll.
+`attachAttention(root)` also orders a band added under `root` after it ran,
+and lets go of one that leaves the page. `setAttention(band, items)` sets the
+band's problems by key:
+
+```js
+import { setAttention } from '@kp-soft/themes/js/attention';
+
+setAttention(band, [
+    { key: 'inc-4471', severity: 'critical', title: 'Pump house 3 is below 2.1 bar', text: 'For forty minutes.', action: openButton },
+    { key: 'fw-4.2', severity: 'info', title: 'Firmware 4.2 is out for six field units', action: planButton },
+]);
+```
+
+An item whose key is already on the band stays the same element, and only
+what changed in it is rewritten, so a critical problem is put into the page
+(and announced, `role="alert"`) once rather than on every poll, and a focused
+fix button keeps its focus. A new key makes the markup above (`role="alert"`
+for critical, `role="status"` otherwise, the screen reader's severity word
+from the dictionary's `attentionCritical`, `attentionWarning` and
+`attentionInfo`, or the item's own `srSeverity`); a key no longer given
+leaves the theme's way (`leave()` from `js/motion.js`). The band ends worst
+first, in your order within a severity. `action` left out keeps the action
+an item has, `null` removes it, and a new node equal in markup to the one
+shown keeps the one shown (and its listeners).
+
 ### A state word that keeps its width
 
 ```html
@@ -883,6 +973,52 @@ line), so the button beside it never moves when the state changes.
 `setStateWord(el, word)` (`js/components.js`) changes the word and adds a
 new one to the list, so the width never shrinks back.
 `.kp-state-word--center` keeps the word in the middle of that width.
+
+### How old the data is
+
+A freshness line that ticks by itself, `updated 12 s ago`:
+
+```html
+<time class="kp-ago" data-kp-ago data-kp-ago-verb="updated" data-kp-stale-after="180" datetime="2026-10-04T12:00:05Z">updated 12 s ago</time>
+```
+
+`js/freshness.js` (loaded by `js/auto.js` where `data-kp-ago` is) rewrites
+every line once a second, with one timer for the whole page however many
+lines it carries, and finds lines added later itself. The moment is the
+element's `datetime` (ISO, for machines), or the value of `data-kp-ago`
+(ISO or milliseconds). The words are exact, with the two largest units and a
+zero part left out (`12 s`, `2 min`, `2 min 5 s`, `3 h 12 min`, `1 day 1 h`);
+a moment in the future reads `0 s`, and no moment reads `not updated yet`.
+They come from the dictionary (`agoText`, `agoNever`, `agoSeconds`,
+`agoMinutes`, `agoHours`, `agoDays`, `agoVerb`), so a Dutch page writes its
+own. The title (and `aria-description`) is the moment itself as rule 52
+writes one, `dd/mm/yyyy HH:mm` on a 24-hour clock in Europe/Brussels,
+whatever the reader's zone.
+
+- `data-kp-stale-after="<seconds>"`: older than that, the line gets
+  `data-kp-stale`, drawn as a warning plate whose edge is a shadow, so
+  nothing moves. Knobs: `--kp-ago-stale-bg`, `--kp-ago-stale-fg` (the warning
+  pair), `--kp-ago-stale-edge` (0.25em).
+- The line keeps the width of the widest text its unit can reach ("updated
+  59 min 59 s ago" under an hour), so the words after it never move when
+  `59 s` becomes `1 min`; `data-kp-ago-width="14ch"` sets the width itself.
+- It is `aria-live="off"`: a screen reader is not told the time every second.
+  Keep it out of a live region (a line found inside one warns once in the
+  console). `data-kp-ago-announce="state"` adds a hidden status beside it
+  that speaks only when the line turns stale or fresh again (`agoStale`,
+  `agoFresh`).
+- The timer stops while the tab is hidden and every line is repainted the
+  moment it is shown again.
+
+```js
+import { attachAgo, setAgo } from '@kp-soft/themes/js/freshness';
+
+const stop = attachAgo(document, { timeZone: 'Europe/Brussels' }); // `now` can be given, for a test
+setAgo(line, Date.now()); // a new moment, in ms; null for none
+```
+
+Also exported: `agoText(verb, atMs, nowMs)`, `humanDuration(seconds)`,
+`agoMoment(ms, timeZone)`, `momentOf(el)`, `AGO`, `FRESHNESS_TIME_ZONE`.
 
 ### A data table loading on a phone
 
@@ -897,7 +1033,7 @@ stays free. Knob: `--kp-busy-overlay-spinner-narrow` (1.75rem).
 One time chart for every page, so its controls mean the same everywhere:
 
 ```html
-<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" lang="en-GB">
+<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h">
     <div class="kp-chart-group__bar">
         <div class="kp-chart-ranges" role="group" aria-label="Time range">
             <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
@@ -916,20 +1052,24 @@ One time chart for every page, so its controls mean the same everywhere:
 </div>
 ```
 
-`attachCharts(root, { strings?, locale? })` (`js/chart.js`) draws every
+`attachCharts(root, { strings?, locale?, timeZone?, time?, format?, decorate? })` (`js/chart.js`) draws every
 `[data-kp-chart]` under `root`. A chart's data is the page's: a
 `script[type="application/json"][data-kp-chart-data]` child, or
 `setChartData(el, data)` before or after the attach. The data is
-`{ label?, unit?, digits?, series, events?, from?, to?, yMax?, threshold?, stacked?, height? }`;
+`{ label?, key?, unit?, unitKind?, digits?, series, events?, from?, to?, yMax?, threshold?, stacked?, height?, error?, onePointNote? }`;
 a series is `{ label, points: [[ms, value], …] }` or, compact,
 `{ label, start, step, values }`, with an optional `colour` (`var(--…)`) and
 `total`; an event is `{ at, label, tone?, href? }` with `tone` `critical`,
 `warning` or `info`.
 
 The charts of one `[data-kp-chart-group]` share a crosshair, a zoom and a
-range. Hover or focus a source in the legend to single it out; a click keeps
+range, whichever `attachCharts()` call attached them: a chart added later
+joins the group as it is (zoomed, if it is). Charts outside any group
+element share the page's one group. Hover or focus a source in the legend to single it out; a click keeps
 one or several on (`kp-chart-select`, `detail.on`), Show all and Esc reset.
-The tooltip sits beside the crosshair, on the side with room, with every
+Only the chart under the pointer, or a pinned one, shows its tooltip,
+also after a zoom or a live update. The tooltip sits beside the crosshair,
+on the side with room and never past the chart's edge, with every
 visible source's value, ▲/▼ over the hour before and the events within
 reach; a click pins it, ✕ or Esc releases it. A drag zooms the whole group
 (`kp-chart-zoom` on the group, `detail` `{ from, to }` or null), a
@@ -954,11 +1094,80 @@ group.addEventListener(CHART_RANGE_EVENT, (event) => {
 
 `data-kp-chart="spark"` is the spark variant: one source's line over a soft
 area (drawn by the KPI tile's own `drawSparkline()`), its value at the
-crosshair or now beside its name, on the group's crosshair. The clock and
-the numbers follow `locale`, else the nearest `lang` above the group. Every
-word the chart says is in the dictionary (`chartPlot`, `chartShowAll`,
-`chartZoomed`, … in `js/strings.js`); `setStrings()` changes them for every
-chart and `attachCharts(root, { strings })` for those under `root`.
+crosshair or now beside its name, on the group's crosshair. The numbers
+follow `locale`, else the nearest `lang` above the group, and are printed
+whole: a legend total of 12345 reads `12,345`, never `12.3k`. Every word the
+chart says is in the dictionary (`chartPlot`, `chartShowAll`,
+`chartZoomedSpan`, … in `js/strings.js`); `setStrings()` changes them for
+every chart and `attachCharts(root, { strings })` for those under `root`.
+
+Every date and time a chart prints is `dd/mm/yyyy HH:mm` (or a part of it)
+on a 24-hour clock in Europe/Brussels, whatever the reader's zone and the
+page's language (rule 52):
+
+| Option     | Default                 | What it does                                                                                                                                                                                                                                                 |
+| ---------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `strings`  | the dictionary          | any of the dictionary's `chart…` words, for these charts only                                                                                                                                                                                                |
+| `locale`   | the nearest `lang`      | how numbers are grouped and pointed (`1,534.5` or `1.534,5`); times do not follow it                                                                                                                                                                         |
+| `timeZone` | `'Europe/Brussels'`     | the IANA zone every printed time is in, and the zone the time axis is aligned to: six-hour ticks on 00:00, 06:00, 12:00 and 18:00, day ticks at midnight, worked out tick by tick so a change of the clock inside the window moves none of them off the hour |
+| `time`     | `numericTime(timeZone)` | `(ms, style, ctx) => string`, prints every time itself; `style` is where the time goes (below)                                                                                                                                                               |
+
+| `style` | Where                                                    | Built in                                                                                      |
+| ------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `clock` | the spark's value, an event line in the tooltip          | `14:05`                                                                                       |
+| `tick`  | a time-axis label; `ctx.stride` is the tick distance, ms | `14:00` while the ticks are less than a day apart, `04/10/2026` from a day on (the 7 d range) |
+| `full`  | the tooltip's head, an event marker's title, the readout | `04/10/2026 14:05`                                                                            |
+| `range` | the zoom chip; `ctx.from` and `ctx.to` are the zoom      | `14:00–16:30` within one Brussels day, `03/10/2026 22:00 – 04/10/2026 02:00` across days      |
+
+`numericTime(timeZone)` is the built-in formatter, exported so a page's own
+times and the chart's agree; `timeTicks(from, to, most, timeZone)` is the
+time axis (`{ stride, ticks }`), exported for the same reason. A consumer
+who reworded the chip through `chartZoomed(from, to)` keeps those words: the
+two ends are clock times within one day and full dates across days.
+
+A value's kind, `unitKind` in the data, prints and scales it the dashboard's
+way, and puts the unit on the axis too (a plain `unit` stays off the axis):
+
+| `unitKind`                  | Tooltip, legend, readout                              | Axis                                                       |
+| --------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| `bytes`                     | binary steps, `512 B`, `1.5 GiB`, `120 MiB`           | `0 B`, `1.0 GiB`, `2.0 GiB`: round in the unit it prints   |
+| `bytes/s` (or `rate`)       | the same per second, `3.2 MiB/s`                      | the same, `/s`                                             |
+| `percent`                   | a decimal under 10, `7.5%`, `42%`, `0%`               | a top of 10, 25, 50 or 100; above 100 when a value is      |
+| `celsius`                   | whole degrees, `54 °C`                                | the same                                                   |
+| `count`, `flag`             | exact and grouped, `12,345` (R-COUNT)                 | shortened from 10,000 on, `12.3k`                          |
+
+`format: (v, where, chart) => string` prints values itself (`where` is
+`axis`, `tip`, `delta`, `legend`, `readout` or `spark`; anything but a
+string falls back to the built-in), and `formatChartValue(v, where, data,
+locale)` is that built-in, exported so a page's own numbers match.
+
+The page can drive a chart, and mark what the chart builds:
+
+| Call or markup                                  | What it does                                                                                                                                                                                       |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `chartSelect(el, index, on?)`                   | presses legend source `index` as a click does (a toggle without `on`), or with `null` shows every source; fires `kp-chart-select` when the selection changes                                       |
+| `chartZoom(el, { from, to } \| null)`           | zooms the group of `el` (a chart, a group element, or the document for the charts outside any group), or resets it; fires `kp-chart-zoom`                                                         |
+| `detachChart(el)`                               | takes one chart away; its group draws on, and a group left empty lets go of its range buttons and chips                                                                                            |
+| `data-kp-chart-zoom` anywhere                   | a zoom chip outside its group: `data-kp-chart-zoom-for="<group id>"`, else the group around it, else the page's charts outside any group; `kp-chart-zoom` fires on the group element, else on the document |
+| `decorate: (part, info) => void`                | called with every control a chart builds, each time it builds it (a rebuilt legend included): `info.kind` is `source`, `show-all`, `release`, `plot`, `range` or `zoom-reset`, with `host`, `key`, `index`, `label` or `value` |
+| `key` in the data, or `data-kp-key`             | the chart's stable name, passed to `decorate`                                                                                                                                                      |
+
+Every state keeps the plot at its height (`data.height`, else
+`--kp-chart-height` on the chart, else 168 px), so a card does not move when
+its readings arrive. `data-kp-chart-loading` makes the plot pulse (it stands still
+under reduced motion) and keeps the legend row for
+`data-kp-chart-sources="N"` sources; `setChartData()` ends it. No readings
+show the `chartEmpty` words in the middle; `{ error: '…' }` shows the
+page's sentence with a red dot; a single reading is a dot, with
+`onePointNote` the `chartOnePoint` words under it.
+
+`setChartData()` on an attached chart is a live update: the crosshair stays
+at its moment, a pin at its own (when the window moves past it, the tooltip
+stays docked at the edge with `(pinned, outside the window)` until ✕), a
+zoom, the selection, the singled-out source and the focus stay. New
+sources reset the selection and fire `kp-chart-select` with `[]`.
+Knobs: `--kp-chart-height` (168px), `--kp-chart-tip-min` (14rem),
+`--kp-chart-tip-max` (17.5rem), `--kp-chart-tick-size` (11px).
 
 ## Tables that fit [TH95, TH96]
 
@@ -1185,6 +1394,71 @@ The handle: `expand([keys])`, `view().expanded`. React: `renderDetail`,
 `expandGlyph` and `collapseGlyph` (▸ and ▾; `expandGlyph` and
 `collapseGlyph` as attach options). Knobs:
 `--kp-datatable-detail-padding-block`, `--kp-datatable-expand-size`.
+
+#### One open row, groups that fold, and marking the toggles
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-expand-single>…</div>
+
+<tbody>
+    <tr data-kp-row-group="media" data-kp-folded>
+        <th scope="rowgroup" colspan="4">Stack media <span class="kp-badge" data-kp-group-count></span></th>
+    </tr>
+    <tr data-kp-row-key="media-jellyfin" data-kp-group-of="media">…</tr>
+    <tr data-kp-row-key="media-sonarr" data-kp-group-of="media">…</tr>
+</tbody>
+```
+
+`data-kp-expand-single` on the wrapper (or `expandSingle: true` as an
+attach option) keeps one row open at a time: opening a row closes the one
+that was open, in the same step, and `kp-datatable-expand` fires once for
+the opening, with the keys it closed in `closed` beside `expanded`.
+`expand([keys])` opens only the last key, and of several rows marked
+`data-kp-expanded` the last stays open.
+
+A `tr data-kp-row-group="<key>"` is a heading row over the rows marked
+`data-kp-group-of="<key>"`. Write it with one cell; the table spans that
+cell across the visible columns and puts a fold button first in it: a real
+button with `aria-expanded`, `aria-controls` naming the group's rows on the
+page (give them `data-kp-row-key`), and a name from
+`strings.tableGroupRows(group, count)`; the group's name is the heading's
+text, or `data-kp-group-label`. A click anywhere in the heading folds or
+unfolds it, as for a row that opens. A `[data-kp-group-count]` in the
+heading gets the number of the group's rows that match the search and the
+filters. `data-kp-folded` starts a group folded. Folded rows still count
+as matched, so the status line keeps the exact number. The fold is kept
+by group key, so it survives `refresh()`, even when the heading row was
+replaced. A sort orders the rows within their group, and the groups (and
+any run of rows outside a group between them) keep the place the markup
+gave them, so a heading always stands above its own rows; a group whose
+rows all fail the search or a filter hides its heading, and a group split
+over two pages shows its heading on both. The handle: `fold([keys])` and
+`view().folded`; the event `kp-datatable-group` with
+`{ key, row, open, members, folded }`. Not for a `data-kp-server` table,
+whose server orders the rows. In the card layout a heading is the whole
+width over its cards. Knobs: `--kp-datatable-group-ground`,
+`--kp-datatable-group-weight`.
+
+Enter or Space on a row or a cell that holds the focus itself (a cell of
+the `data-kp-grid` keyboard grid, or a row you gave a `tabindex`) opens the
+row, or folds the group, as a click does; a control in the row keeps its
+own keys. After `refresh()` the toggle that held the focus keeps it, and
+when you replaced its row, the new row's toggle with the same key takes it.
+
+`decorate(part, info)`, an attach option, is called with every toggle the
+table builds, each time it builds one (rows added and refreshed later
+included): `info.kind` is `row-toggle` (`info.value` is the row key) or
+`row-group-toggle` (`info.value` is the group key), `info.host` the
+wrapper, `info.key` its `data-kp-key`, `info.label` the row's or group's
+name. It is the same shape every kp module's `decorate` takes, for a
+consumer that marks what its own tooling presses:
+
+```js
+attachDataTables(document, { decorate: (el, info) => (el.dataset.drive = `${info.kind}:${info.value}`) });
+```
+
+These four are in the plain-JS attach; the React channel does not have
+them yet.
 
 ### A first column that stays
 
@@ -2167,6 +2441,29 @@ else is needed: `js/auto.js` restores every remembering element before the
 first frame, and each module goes on reading the markup. A page that
 attaches modules itself calls `restoreRemembered()` once, as early as it
 can, and `attachRemembered()` for its `<details>` disclosures.
+
+`attachRemembered(root)` also wires a remembering `<details>` added under
+`root` later, and paints its memory in the same step, before the browser
+paints it: a live page that rebuilds its groups on every refresh shows each
+one as it was left, with no frame of its markup default. While
+`data-kp-remember-hold` is on the element or an ancestor, the memory is
+neither painted nor written (a page that opens every group while a search
+runs); when the hold goes, the stored state is painted back.
+`forgetRememberedExcept(component, prefix, names)` removes the stored state of
+every name of that component starting with `prefix` that is not in `names`,
+so a board whose groups come and go can prune what it remembers.
+
+A group whose title is the page's own, rather than an accordion's, takes
+`.kp-accordion__item--bare`: the accordion's glide and memory with none of
+its chrome. Give its summary a class of your own, not
+`.kp-accordion__summary`, which every register paints.
+
+```html
+<details class="kp-accordion__item kp-accordion__item--bare" open data-kp-remember="apps-media">
+    <summary class="kp-text-muted kp-fs-sm">Media</summary>
+    …
+</details>
+```
 
 **The key is composed, never hardcoded**:
 

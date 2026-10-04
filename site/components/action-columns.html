@@ -109,6 +109,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -516,6 +517,176 @@
     &lt;/<span class="kp-code__keyword">table</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-table-action-columns-narrow">
+                        <figcaption class="kp-fw-semibold">Row buttons on a narrow screen</figcaption>
+                        <p class="kp-text-muted">Three panes of a phone's width and less. In the first two, a narrow <code>.kp-action-list</code> (under 30rem) stacks its buttons under the row's text, one per line on one left edge, each label on a single line: <b>Review and update all 4…</b> is neither cut nor wrapped (Kenny's UI rule), and a row with fewer buttons simply has fewer lines. In the third, a plain <code>&lt;table&gt;</code> without the <code>.kp-table</code> class, inside the table wrapper: its row buttons stack in one column as wide as the widest, and the names and sizes keep their cells. A table outside any wrapper does the same once the window is under 48rem.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem">
+    <ul class="kp-action-list">
+        <li>
+            <div><b>Stacks</b> 4 updates are waiting</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Review and update all 4…</button>
+                <button type="button" class="kp-button kp-button--sm">Later</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+        <li>
+            <div><b>Backups</b> last run 03:12, all green</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Verify</button>
+                <button type="button" class="kp-button kp-button--sm">Later</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 18rem">
+    <ul class="kp-action-list">
+        <li>
+            <div><b>Stacks</b> 4 updates are waiting</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Review and update all 4…</button>
+                <button type="button" class="kp-button kp-button--sm">Later</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+        <li>
+            <div><b>Backups</b> last run 03:12, all green</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Verify</button>
+                <button type="button" class="kp-button kp-button--sm">Later</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem">
+    <div class="kp-table-wrap">
+        <table>
+            <caption class="kp-sr-only">
+                Backup repositories with their row actions
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Repository</th>
+                    <th scope="col">Snapshots</th>
+                    <th scope="col"><span class="kp-sr-only">Actions</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>media</td>
+                    <td>12 snapshots · 41 GB</td>
+                    <td>
+                        <div class="kp-row-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-kp-action="restore">Restore…</button>
+                            <button type="button" class="kp-button kp-button--sm" data-kp-action="verify">Verify</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="show">Show a file</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>home-assistant</td>
+                    <td>30 snapshots · 2 GB</td>
+                    <td>
+                        <div class="kp-row-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-kp-action="restore">Restore…</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="show">Show a file</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action-list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Stacks&lt;/<span class="kp-code__keyword">b</span>&gt; 4 updates are waiting&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Review and update all 4…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Later&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Backups&lt;/<span class="kp-code__keyword">b</span>&gt; last run 03:12, all green&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Verify&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Later&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 18rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action-list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Stacks&lt;/<span class="kp-code__keyword">b</span>&gt; 4 updates are waiting&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Review and update all 4…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Later&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;Backups&lt;/<span class="kp-code__keyword">b</span>&gt; last run 03:12, all green&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Verify&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Later&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+                Backup repositories with their row actions
+            &lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Repository&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Snapshots&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Actions&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;media&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;12 snapshots · 41 GB&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;restore&quot;</span>&gt;Restore…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;verify&quot;</span>&gt;Verify&lt;/<span class="kp-code__keyword">button</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;show&quot;</span>&gt;Show a file&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;home-assistant&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;30 snapshots · 2 GB&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;restore&quot;</span>&gt;Restore…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;show&quot;</span>&gt;Show a file&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;/<span class="kp-code__keyword">div</span>&gt;
+                    &lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -547,6 +718,7 @@
                             <tr><td><code>--kp-action-col</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-action-count</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-action-gap</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-action-stack</code></td><td><code>max-content</code></td></tr>
                             <tr><td><code>--kp-action-widths</code></td><td><code>none</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>

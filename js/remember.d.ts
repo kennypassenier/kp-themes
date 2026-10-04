@@ -112,12 +112,40 @@ export declare function paintRemembered(element: Element, component: Remembered,
  * @param {ParentNode} [root]
  */
 export declare function restoreRemembered(root?: ParentNode): void;
+/** The attribute that holds a disclosure's memory still: while it is on the element or an ancestor, the memory is neither painted nor written. */
+export declare const REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
 /**
  * Wire the disclosures that remember — a `<details data-kp-remember>`, the
  * accordion's own element. Every other component writes its state from its
  * own module; a `<details>` has no module, so this is it.
  *
+ * A disclosure added under `root` later is wired as it arrives, and its
+ * memory painted in the same step, before the browser paints it, so a page
+ * that rebuilds its groups on every refresh shows each one as it was left,
+ * with no frame of its markup default (port spec J3). One that leaves the
+ * page is let go.
+ *
+ * `data-kp-remember-hold` on the element or an ancestor holds the memory
+ * still: the page sets `open` itself (every group open while a search runs)
+ * and nothing is painted over it or written from it. When the hold goes,
+ * the stored state is painted back.
+ *
  * @param {ParentNode} [root]
  * @returns {() => void} detach
  */
 export declare function attachRemembered(root?: ParentNode): () => void;
+/**
+ * Forget the stored state of every element of `component` whose name starts
+ * with `prefix` and is not in `names`: a page whose groups come and go
+ * (named `apps-<group>`) prunes the groups that no longer exist, so its
+ * memory does not grow without end.
+ *
+ * @param {Remembered} component
+ * @param {string} prefix
+ * @param {Iterable<string>} names the names still in use
+ * @param {{ storage?: Storage | null }} [options]
+ * @returns {number} how many stored values were removed
+ */
+export declare function forgetRememberedExcept(component: Remembered, prefix: string, names: Iterable<string>, { storage: given }?: {
+    storage?: Storage | null;
+}): number;

@@ -65,10 +65,12 @@ export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export {
     REMEMBER_ATTRIBUTE,
     REMEMBER_CLASH_EVENT,
+    REMEMBER_HOLD_ATTRIBUTE,
     REMEMBER_PREFIX,
     attachRemembered,
     configureRemember,
     forgetClaims,
+    forgetRememberedExcept,
     memoryFor,
     paintRemembered,
     restoreRemembered,
@@ -88,8 +90,26 @@ export {
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export { KPI_TOGGLE, KPI_TOGGLE_EVENT, SPARK, attachKpiToggles, attachSparklines, drawSparkline, sparkPaths } from './js/kpi.js';
-export { ATTENTION, SEVERITIES, attachAttention, sortAttention } from './js/attention.js';
-export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, attachCharts, chartWords, setChartData } from './js/chart.js';
+export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
+export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';
+export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
+export {
+    CHART,
+    CHART_GROUP,
+    CHART_RANGE_EVENT,
+    CHART_SELECT_EVENT,
+    CHART_TIME_ZONE,
+    CHART_ZOOM_EVENT,
+    attachCharts,
+    chartSelect,
+    chartWords,
+    chartZoom,
+    detachChart,
+    formatChartValue,
+    numericTime,
+    setChartData,
+    timeTicks,
+} from './js/chart.js';
 /** @typedef {import('./js/chart.js').ChartData} ChartData */
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';

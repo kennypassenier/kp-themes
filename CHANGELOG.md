@@ -1,5 +1,163 @@
 # Changelog
 
+## Unreleased
+
+- **Data table: one open row, groups that fold, Enter on a row, and
+  `decorate`** [scope-143, J2]: `data-kp-expand-single` (or
+  `expandSingle`) keeps one row open, and the opening's
+  `kp-datatable-expand` names the row it closed in `closed`. A heading row
+  `tr data-kp-row-group="<key>"` folds the rows marked
+  `data-kp-group-of="<key>"` with a real button (`aria-expanded`,
+  `aria-controls`, `strings.tableGroupRows`); a sort orders rows within
+  their group, the status line keeps the exact number while a group is
+  folded, `[data-kp-group-count]` counts each group's matched rows, the fold
+  survives `refresh()` by key, and the handle has `fold()`,
+  `view().folded` and the event `kp-datatable-group`. Enter or Space on a
+  row or grid cell that holds the focus opens it as a click does, and
+  `refresh()` keeps the focus on the toggle that had it, by key. The attach
+  option `decorate(part, info)` is called with every row toggle
+  (`row-toggle`) and group toggle (`row-group-toggle`) it builds. All off
+  until asked for; catalogue: table.html#datatable-expand-groups.
+- **Time chart: dates and times follow rule 52** [scope-143]: every time the
+  chart prints is `dd/mm/yyyy HH:mm` (or a part of it) on a 24-hour clock in
+  Europe/Brussels, whatever the reader's zone and the page's language. The
+  tooltip's head and an event marker's title read `04/10/2026 14:05`, an
+  event line `14:05`, the time axis `14:00` below a day's stride and
+  `04/10/2026` from a day on (the 7 d range), and the zoom chip names both
+  dates once a zoom spans two days
+  (`Zoomed: 03/10/2026 22:00 – 04/10/2026 02:00`; it read `22:00–02:00`).
+  Until now the chart printed through
+  `Intl` in the browser's zone ("Sun 4", "Sun 4 Oct, 14:05", `02:05 PM`
+  under `en-US`). The time axis lands on round wall-clock times in that
+  zone, worked out tick by tick: six-hour ticks on 00:00, 06:00, 12:00 and
+  18:00 across a change of the clock, day ticks at Brussels midnight (one
+  `getTimezoneOffset()` of the browser at the window's start did it before).
+  New: `attachCharts(root, { timeZone, time })` with
+  `time(ms, style, ctx)` and the styles `clock`, `tick`, `full` and
+  `range`; the exports `numericTime()`, `timeTicks()` and
+  `CHART_TIME_ZONE`; the dictionary word `chartZoomedSpan` (a reworded
+  `chartZoomed` keeps working). `locale` now steers the numbers only.
+- **Time chart: units, groups across calls, control from the page, every
+  state** [scope-143, port-spec-M1]: `unitKind` (`bytes`, `bytes/s` or
+  `rate`, `percent`, `celsius`, `count`, `flag`) prints values the
+  dashboard's way with the unit on the axis (`0 B`, `1.0 GiB`, `2.0 GiB`;
+  `3.2 MiB/s`), a percent axis of 10, 25, 50 or 100 that goes above 100 when
+  a value does (nothing cut off), and counts exact outside the axis
+  (`12,345`; `12.3k` on the axis only); `format(v, where, chart)` and the
+  export `formatChartValue()`, and `niceMax(v, kind)`. A group is its
+  element's across `attachCharts()` calls (a chart attached later shares the
+  crosshair and the zoom), charts outside any group share the page's, and a
+  zoom chip may sit anywhere (`data-kp-chart-zoom-for`); `kp-chart-zoom`
+  reaches the document when there is no group element. New exports
+  `chartSelect(el, index, on?)`, `chartZoom(el, zoom)`, `detachChart(el)`,
+  and `nextSelection()` in js/chart.js; the option `decorate(part, info)` marks every legend
+  source, Show all, ✕, plot, range button and zoom Reset, each time it is
+  built; `key` in the data (`data-kp-key`). After a live update only the
+  chart under the pointer, or a pinned one, shows its tooltip; a pin the
+  window moves past stays docked with `(pinned, outside the window)` until
+  ✕; leaving a chart no longer clears a crosshair another chart has taken.
+  States at the plot's final height (`--kp-chart-height`): loading
+  (`data-kp-chart-loading`, `data-kp-chart-sources`), no readings
+  (`chartEmpty`), `{ error }`, one reading (a whole dot, `onePointNote`,
+  `chartOnePoint`); new words `chartEmpty`, `chartOnePoint`, `chartLoading`,
+  `chartPinnedOutside`. Unit tests in gates/chart-api.test.mjs; measured in
+  firefox at 1280 and 390 px (A7.6 to A7.15 and the states table, no console
+  errors). Catalogue: chart.html#time-chart-units, #time-chart-states,
+  #time-chart-chip-elsewhere, #time-chart-no-group.
+- **Every alert's text reads at 4.6:1 or more on its plate** [scope-143,
+  alert-contrast-M1]: measured in firefox over all 22 themes (440 distinct
+  ink-on-plate pairs: the label and body of the five catalogue alerts and
+  the long warning, the title, text and icon of the attention band's three
+  items), 22 text pairs read under 4.6, the lowest 4.49. Raised: formal
+  warning 4.51 → 4.78, light info 4.51 → 4.79, pastel success 4.57 → 4.79
+  and warning 4.58 → 4.75, forest success 4.51 → 4.75 and info
+  4.59 → 4.80 (each ink drawn 5 % towards the page's `--foreground` in the
+  register), shade-light warning 4.55 → 4.67 (its light ink drawn 60 %
+  towards `--card`), and shade-dark's info item on the attention band
+  4.49 → 4.71. The band's plate takes the new knob `--kp-attention-tint`
+  (default 8 %, unchanged elsewhere), which shade-dark sets to 6 % on its
+  info item. The lowest text pair now reads 4.63; no token changed, and the
+  band's items keep the page's own text in every theme.
+- **The attention band follows a live page** [scope-143, attention-live-M1]:
+  `attachAttention(root)` also orders a `.kp-attention` added after it ran
+  and lets go of one that leaves (its watcher disconnected). New
+  `setAttention(band, items)` sets a band's problems by key
+  (`data-kp-key`): an unchanged item stays the same element and only what
+  changed is rewritten, so a critical problem is put into the page (and
+  announced) once rather than on every poll and a focused fix keeps its
+  focus; a new key builds the 9.2.0 markup, a missing one leaves through
+  `leave()`. New dictionary words `attentionCritical`, `attentionWarning`,
+  `attentionInfo`. Measured in firefox: a band inserted after attach reads
+  critical before info, a critical item kept over four refreshes is
+  inserted once, focus on its fix survives a refresh. Catalogue:
+  feedback.html#attention-live.
+- **Only what is new arrives** [scope-143, arrive-none-M1]:
+  `data-kp-arrive="new"` on a box (or `attachMotion(root, { arrive: 'new' })`)
+  keeps a row redrawn under the key of a row that just left still
+  (`data-kp-key`, `data-kp-row-key`, `id`, plus `arriveKeys`), and only a
+  row with a new key arrives; a sort, an unkeyed redraw of as many rows and
+  data replacing a skeleton do not arrive either. The test is the homelab
+  dashboard's, exported as `repaintedIn(records, { keys })` and unit-tested
+  with its cases (gates/motion-arrive.test.mjs). Measured in firefox: five
+  keyed rows redrawn, 0 arrivals (3 in the default mode); a sixth key, 1;
+  three unkeyed rows redrawn as four, 1; the same five reversed, 0.
+  Catalogue: motion.html#arrive-new.
+- **Size motion: a selector option, and boxes that leave are let go**
+  [scope-143, size-motion-docs-M1]: `attachMotion(root, { size })` eases a
+  consumer's own boxes by selector, also those added later; a box, dialog or
+  disclosure that leaves the page has its observers disconnected a
+  microtask later (a move stays), and `motionWatchCount()` reads how many
+  are watched. Measured: 1000 boxes added and removed return the count to
+  where it was; a 158-cell box redrawn costs about 5 ms per change.
+  Catalogue: motion.html#size-selector.
+- **Tiles of one height across a board** [scope-143, tiles-board-M1]:
+  `data-kp-tiles-set="<name>"` makes the `.kp-tiles` grids under it (or
+  carrying it, across branches by name) share the set's tallest visible
+  tile as the floor of their rows, `--kp-tile-row-min`, measured and
+  written by `attachTileSets(root)` in the new `js/tiles.js` (in
+  `js/auto.js`, `index.js` and the exports map). Folded and hidden tiles do
+  not count; it writes only when the height changed. Measured in firefox
+  with the spec's 72/96 px tiles: all 96, back to 72 within a frame when the
+  tall one goes, 72 with its fold closed, 0 style writes on an identical
+  refresh. Catalogue: data.html#tiles-set.
+- **A freshness line that ticks** [scope-143, freshness-M1]: the new
+  `js/freshness.js` rewrites every `[data-kp-ago]` once a second with one
+  timer per page ("updated 12 s ago", "2 min 5 s", "1 day 1 h"; the words
+  in the dictionary: `agoText`, `agoNever`, `agoSeconds`, `agoMinutes`,
+  `agoHours`, `agoDays`, `agoVerb`, `agoStale`, `agoFresh`,
+  `agoInLiveRegion`), from `datetime` or `data-kp-ago`, with the verb in
+  `data-kp-ago-verb`. The title is the moment as rule 52 writes it
+  (`04/10/2026 14:00`, Europe/Brussels); `data-kp-stale-after` sets
+  `data-kp-stale`, a warning plate drawn without a size change; the line
+  reserves the width of its unit's longest text, is `aria-live="off"`,
+  warns once inside a live region, can announce only stale and fresh
+  (`data-kp-ago-announce="state"`), and pauses while the tab is hidden.
+  Exports `attachAgo`, `setAgo`, `agoText`, `humanDuration`, `agoMoment`,
+  `momentOf`; in `js/auto.js`, `index.js` and the exports map; unit tests in
+  gates/freshness.test.mjs. Measured in firefox with a fake clock: one
+  width (180 px) over 70 ticks from 0 s, stale at 181 s with the box
+  unchanged, correct on the frame the tab is shown after 5 min hidden.
+  Catalogue: feedback.html#freshness.
+- **Remembered disclosures on a page that rebuilds them** [scope-143,
+  size-motion-docs-M1]: `attachRemembered(root)` wires a
+  `<details data-kp-remember>` added later and paints its memory before the
+  first frame (measured: rebuilt closed, `open` false on the first frame),
+  and lets go of one that leaves; `data-kp-remember-hold` on it or an
+  ancestor stops painting and writing until it goes, then paints the stored
+  state back; `forgetRememberedExcept(component, prefix, names)` prunes the
+  names no longer used. `.kp-accordion__item--bare` is the accordion's
+  glide without its chrome. Catalogue: structure.html#remember-later.
+- **Row buttons on a narrow screen** [scope-143, action-columns-narrow-M1]:
+  under 30rem a `.kp-action-list` stacks its buttons under the row's text,
+  one per line on one left edge, each label on a single line, never wrapped
+  or cut (Kenny's UI rule; the equal columns cut "Review and update all 4…"
+  by 20 px). The narrow table's
+  stacking holds for any `<table>` holding `.kp-row-actions`: in the
+  `kp-table` container under 30rem, and outside it while the window is under
+  48rem. A table's measured widths count a register's button margin (sepia's
+  label sat 5 px into its padding). Measured in firefox over all 22 themes:
+  no label cut or wrapped, stacked under 30rem and in the plain table. Catalogue: table.html#action-columns-narrow.
+
 ## 9.2.1 — 2026-10-04
 
 - **An alert's close button takes the alert's plate and ink** [fix-95]: in

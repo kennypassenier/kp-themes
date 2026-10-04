@@ -47,6 +47,29 @@ export const SIZE_SELECTOR = [
 /** The disclosures that unfold and fold back. */
 export const FOLD_SELECTOR = '.kp-accordion__item';
 
+/**
+ * The attributes that give a row its stable id, in the order they are read,
+ * for `data-kp-arrive="new"` [port spec G]: a row added back under the key
+ * of a row that just left is the same row, repainted.
+ */
+export const ARRIVE_KEYS = /** @type {readonly string[]} */ (Object.freeze(['data-kp-key', 'data-kp-row-key', 'id']));
+
+/** A loading placeholder: what replaces one is the data it waited for, not news. */
+const SKELETON = '.kp-skeleton, [data-kp-skeleton]';
+
+/** How many dialogs, boxes and folds motion watches now, for a test to read. */
+let watching = 0;
+
+/**
+ * How many dialogs, boxes and disclosures motion is watching right now. A
+ * diagnostic: after a page removes its boxes it returns to where it was,
+ * because a box that leaves the page is let go.
+ * @returns {number}
+ */
+export function motionWatchCount() {
+    return watching;
+}
+
 const CLOSE_SHARE = 2 / 3;
 const SIZE_SHARE = 4 / 5;
 
@@ -197,6 +220,7 @@ function attachClose(dialog) {
     const own = /** @type {any} */ (dialog);
     if (own.__kpMotion) return () => {};
     own.__kpMotion = true;
+    watching += 1;
     const showModal = dialog.showModal;
     const show = dialog.show;
     own.showModal = function () {
@@ -219,6 +243,8 @@ function attachClose(dialog) {
     };
     dialog.addEventListener('cancel', onCancel);
     return () => {
+        if (!own.__kpMotion) return;
+        watching -= 1;
         dialog.removeEventListener('cancel', onCancel);
         delete own.showModal;
         delete own.show;
@@ -605,15 +631,99 @@ async function leaveOne(el, hide, exited) {
 }
 
 /**
+ * @typedef {{ getAttribute: (name: string) => string | null, tagName: string, className: string, id?: string, nodeType: number, matches?: (selector: string) => boolean, querySelector?: (selector: string) => unknown }} RepaintNode
+ */
+
+/**
+ * The added elements of one batch of changes that only repaint what was
+ * there [port spec G; the homelab dashboard's `repaints()`, moved here]:
+ * an element is a repaint when its parent lost, in the same batch, an
+ * element with its key (the first of `keys` it carries) or, with no key,
+ * one more element of its tag and class than it already took back. An
+ * element added where a loading skeleton left (`.kp-skeleton`,
+ * `[data-kp-skeleton]`) is not news either: it is the data the skeleton
+ * waited for. Everything else is new content.
+ *
+ * Measured by the dashboard (8 quiet seconds per page): without this, a
+ * live refresh that redrew its rows replayed the arrival on 158 cells of
+ * one page, 112 on another and 72 on a third, though nothing new had come.
+ *
+ * @param {Iterable<{ type: string, target: unknown, addedNodes: ArrayLike<any>, removedNodes: ArrayLike<any> }>} records
+ * @param {{ keys?: readonly string[] }} [options]
+ * @returns {Set<any>} the added elements that are repaints
+ */
+export function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
+    const list = [...records].filter((r) => r.type === 'childList');
+    /** @type {Map<unknown, { keys: Set<string>, sigs: Map<string, number>, skeleton: boolean }>} */
+    const gone = new Map();
+    const keyOf = (/** @type {RepaintNode} */ e) => {
+        for (const name of keys) {
+            const value = name === 'id' ? e.getAttribute('id') || e.id || null : e.getAttribute(name);
+            if (value) return `${name}=${value}`;
+        }
+        return null;
+    };
+    const sigOf = (/** @type {RepaintNode} */ e) => `${e.tagName}.${e.className}`;
+    const skeletal = (/** @type {RepaintNode} */ e) =>
+        (typeof e.matches === 'function' && e.matches(SKELETON)) || (typeof e.querySelector === 'function' && e.querySelector(SKELETON) !== null);
+    for (const r of list)
+        for (const n of Array.from(r.removedNodes)) {
+            if (n?.nodeType !== 1) continue;
+            const g = gone.get(r.target) ?? { keys: new Set(), sigs: new Map(), skeleton: false };
+            gone.set(r.target, g);
+            const k = keyOf(n);
+            if (k) g.keys.add(k);
+            g.sigs.set(sigOf(n), (g.sigs.get(sigOf(n)) ?? 0) + 1);
+            if (skeletal(n)) g.skeleton = true;
+        }
+    /** @type {Set<any>} */
+    const out = new Set();
+    for (const r of list)
+        for (const n of Array.from(r.addedNodes)) {
+            if (n?.nodeType !== 1) continue;
+            const g = gone.get(r.target);
+            if (!g) continue;
+            if (g.skeleton) {
+                out.add(n);
+                continue;
+            }
+            const k = keyOf(n);
+            const left = g.sigs.get(sigOf(n)) ?? 0;
+            if (k ? g.keys.has(k) : left > 0) {
+                out.add(n);
+                if (!k) g.sigs.set(sigOf(n), left - 1);
+            }
+        }
+    return out;
+}
+
+/**
+ * Which arrivals play under `el`: its closest `data-kp-arrive` (`all`,
+ * `new` or `none`), else the attach's own default.
+ * @param {Element} el @param {string} fallback
+ * @returns {string}
+ */
+const arriveMode = (el, fallback) => el.closest('[data-kp-arrive]')?.getAttribute('data-kp-arrive') || fallback;
+
+/**
+ * @typedef {object} SizeOptions
+ * @property {'all' | 'new' | 'none'} [arrive] which added elements arrive the theme's way when no `data-kp-arrive` says otherwise: every one (`all`, the default), only those that are not a repaint of a row that just left under the same key (`new`), or none
+ * @property {readonly string[]} [arriveKeys] more attributes that carry a row's stable id, read before `data-kp-key`, `data-kp-row-key` and `id`
+ */
+
+/**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.
  * @param {HTMLElement} box
+ * @param {SizeOptions} [options]
  * @returns {() => void}
  */
-export function easeSize(box) {
+export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}) {
     const own = /** @type {any} */ (box);
     if (own.__kpSize) return () => {};
     own.__kpSize = true;
+    watching += 1;
+    const keys = [...arriveKeys, ...ARRIVE_KEYS];
     let last = box.offsetHeight;
     /** @type {Animation | null} */
     let running = null;
@@ -659,22 +769,33 @@ export function easeSize(box) {
     const list = new MutationObserver((records) => {
         // A live view that redraws its rows marks the box
         // `data-kp-arrive="none"`, or every refresh replays every arrival
-        // (the homelab dashboard's live repaint, 2026-10-04).
-        const quiet = box.closest('[data-kp-arrive="none"]') !== null;
-        const motion = records.length && !quiet ? arrival(box) : null;
+        // (the homelab dashboard's live repaint, 2026-10-04); with
+        // `data-kp-arrive="new"` a redrawn row stays still and only a row
+        // with a key not seen a moment ago arrives [port spec G].
+        const modeOf = (/** @type {Node} */ target) => arriveMode(target instanceof Element ? target : box, fallback);
+        const any = records.some((record) => modeOf(record.target) !== 'none');
+        const motion = records.length && any ? arrival(box) : null;
+        /** @type {Set<any> | null} */
+        let repainted = null;
         for (const record of records) {
-            if (record.type === 'childList' && record.target === box)
-                for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+            const mode = modeOf(record.target);
+            if (mode === 'none') continue;
             if (record.type === 'attributes' && record.target instanceof HTMLElement && !record.target.hidden) arrive(record.target, motion);
-            // A list inside the box (rows in a <ul>) brings its rows too.
-            if (record.type === 'childList' && record.target !== box)
-                for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+            // Added to the box, or to a list inside it (rows in a <ul>).
+            if (record.type === 'childList')
+                for (const node of record.addedNodes) {
+                    if (!(node instanceof HTMLElement)) continue;
+                    if (mode === 'new' && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
+                    arrive(node, motion);
+                }
         }
         watch();
         settle();
     });
     list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
     return () => {
+        if (!own.__kpSize) return;
+        watching -= 1;
         sizes.disconnect();
         list.disconnect();
         running?.cancel();
@@ -693,9 +814,10 @@ export function easeSize(box) {
 function attachFold(details) {
     const own = /** @type {any} */ (details);
     if (own.__kpFold) return () => {};
-    own.__kpFold = true;
     const summary = details.querySelector(':scope > summary');
     if (!summary) return () => {};
+    own.__kpFold = true;
+    watching += 1;
     /** @type {Animation | null} */
     let running = null;
     let folding = false;
@@ -732,6 +854,8 @@ function attachFold(details) {
     };
     summary.addEventListener('click', onClick);
     return () => {
+        if (!own.__kpFold) return;
+        watching -= 1;
         summary.removeEventListener('click', onClick);
         running?.cancel();
         details.style.removeProperty('overflow');
@@ -743,31 +867,57 @@ function attachFold(details) {
 
 /**
  * Give every dialog its leaving motion and every box above its easing, under
- * `root` and in whatever is added to it later.
+ * `root` and in whatever is added to it later. A box, dialog or disclosure
+ * that leaves the page is let go (its observers disconnected) a microtask
+ * after it left, so a page that rebuilds itself on every navigation does not
+ * keep the old boxes' watchers alive; one moved within the page stays.
  *
  * @param {ParentNode} [root]
+ * @param {SizeOptions & { size?: string }} [options] `size`: more boxes to ease, as a selector, beside the package's own and `[data-kp-size-motion]` (a consumer's cards and panels, without marking each one); `arrive` and `arriveKeys` as for easeSize()
  * @returns {() => void} detach
  */
-export function attachMotion(root = document) {
-    /** @type {(() => void)[]} */
-    const detaches = [];
+export function attachMotion(root = document, { size = '', arrive = 'all', arriveKeys = [] } = {}) {
+    /** @type {Map<Element, () => void>} */
+    const detaches = new Map();
+    const sizeSelector = size.trim() ? `${SIZE_SELECTOR}, ${size}` : SIZE_SELECTOR;
+    /** @param {Element} el @param {() => void} detach */
+    const keep = (el, detach) => {
+        const before = detaches.get(el);
+        detaches.set(el, before ? () => (before(), detach()) : detach);
+    };
     /** @param {ParentNode} scope */
     const scan = (scope) => {
         const all = (/** @type {string} */ selector) => [
             ...(scope instanceof Element && scope.matches(selector) ? [scope] : []),
             ...scope.querySelectorAll(selector),
         ];
-        for (const el of all('dialog.kp-dialog')) detaches.push(attachClose(/** @type {HTMLDialogElement} */ (el)));
-        for (const el of all(SIZE_SELECTOR)) detaches.push(easeSize(/** @type {HTMLElement} */ (el)));
-        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement) detaches.push(attachFold(el));
+        for (const el of all('dialog.kp-dialog')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
+        for (const el of all(sizeSelector)) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
+        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement) keep(el, attachFold(el));
     };
     scan(root);
+    let sweeping = false;
+    const sweep = () => {
+        sweeping = false;
+        for (const [el, detach] of detaches)
+            if (!el.isConnected) {
+                detach();
+                detaches.delete(el);
+            }
+    };
     const later = new MutationObserver((records) => {
-        for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
+        for (const record of records) {
+            for (const node of record.addedNodes) if (node instanceof Element) scan(node);
+            if (record.removedNodes.length && !sweeping) {
+                sweeping = true;
+                queueMicrotask(sweep);
+            }
+        }
     });
     later.observe(root instanceof Document ? root.documentElement : /** @type {Node} */ (root), { childList: true, subtree: true });
     return () => {
         later.disconnect();
-        for (const one of detaches) one();
+        for (const one of detaches.values()) one();
+        detaches.clear();
     };
 }

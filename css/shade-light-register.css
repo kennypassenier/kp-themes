@@ -703,6 +703,13 @@
         border-radius: var(--radius);
     }
 
+    /* The warning plate's own light ink read 4.55:1; drawn 60 % towards the
+       card it reads 4.67 [alert-contrast-M1]. The band's items are left
+       alone: they keep the page's text on a soft tint. */
+    [data-theme='shade-light'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 40%, var(--card));
+    }
+
     [data-theme='shade-light'] .kp-alert__label {
         font-family: var(--theme-font-display);
         font-weight: 600;

@@ -3,6 +3,58 @@ export type Strings = {
     alertWarning: string;
     alertInfo: string;
     alertError: string;
+    /**
+     * The word a screen reader hears before a critical problem on the attention band (setAttention) [scope-143]
+     */
+    attentionCritical: string;
+    /**
+     * The same, before a warning [scope-143]
+     */
+    attentionWarning: string;
+    /**
+     * The same, before an information [scope-143]
+     */
+    attentionInfo: string;
+    /**
+     * A ticking freshness line, "updated 12 s ago" (js/freshness.js) [scope-143]
+     */
+    agoText: (verb: string, duration: string) => string;
+    /**
+     * The same line with no moment yet, "not updated yet" [scope-143]
+     */
+    agoNever: (verb: string) => string;
+    /**
+     * A duration's seconds part, "12 s" [scope-143]
+     */
+    agoSeconds: (n: number) => string;
+    /**
+     * Its minutes part, "2 min" [scope-143]
+     */
+    agoMinutes: (n: number) => string;
+    /**
+     * Its hours part, "3 h" [scope-143]
+     */
+    agoHours: (n: number) => string;
+    /**
+     * Its days part, "1 day", "2 days" [scope-143]
+     */
+    agoDays: (n: number) => string;
+    /**
+     * The verb a freshness line uses when its element names none [scope-143]
+     */
+    agoVerb: string;
+    /**
+     * What a freshness line with `data-kp-ago-announce="state"` announces once it turns stale [scope-143]
+     */
+    agoStale: (text: string) => string;
+    /**
+     * What it announces once it is fresh again [scope-143]
+     */
+    agoFresh: (text: string) => string;
+    /**
+     * The console warning for a ticking line inside a live region [scope-143]
+     */
+    agoInLiveRegion: string;
     busy: string;
     close: string;
     /**
@@ -237,6 +289,10 @@ export type Strings = {
      * A row's expand button
      */
     tableRowDetails: (key: string) => string;
+    /**
+     * A group row's fold button: the group's name and how many of its rows match [J2]
+     */
+    tableGroupRows: (group: string, count: number) => string;
     /**
      * An editable cell's button
      */
@@ -480,9 +536,13 @@ export type Strings = {
      */
     chartMark: (label: string, time: string) => string;
     /**
-     * The zoom chip, before its Reset [scope-143]
+     * The zoom chip, before its Reset, from its two ends; used only when a consumer overrides it and not `chartZoomedSpan` [scope-143]
      */
     chartZoomed: (from: string, to: string) => string;
+    /**
+     * The zoom chip, before its Reset: `span` is the zoom as the chart's `range` time style prints it [scope-143]
+     */
+    chartZoomedSpan: (span: string) => string;
     /**
      * The zoom chip's button [scope-143]
      */
@@ -507,6 +567,22 @@ export type Strings = {
      * A spark line's value when no time is under the crosshair [scope-143]
      */
     chartNow: string;
+    /**
+     * A time chart with no readings in its window, in the plot at its height [scope-143]
+     */
+    chartEmpty: string;
+    /**
+     * Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
+     */
+    chartOnePoint: string;
+    /**
+     * A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
+     */
+    chartLoading: string;
+    /**
+     * A pinned tooltip's head once a live update moved the window past the pin [scope-143]
+     */
+    chartPinnedOutside: string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -546,6 +622,19 @@ export type Strings = {
  * @property {string} alertWarning
  * @property {string} alertInfo
  * @property {string} alertError
+ * @property {string} attentionCritical  The word a screen reader hears before a critical problem on the attention band (setAttention) [scope-143]
+ * @property {string} attentionWarning  The same, before a warning [scope-143]
+ * @property {string} attentionInfo  The same, before an information [scope-143]
+ * @property {(verb: string, duration: string) => string} agoText  A ticking freshness line, "updated 12 s ago" (js/freshness.js) [scope-143]
+ * @property {(verb: string) => string} agoNever  The same line with no moment yet, "not updated yet" [scope-143]
+ * @property {(n: number) => string} agoSeconds  A duration's seconds part, "12 s" [scope-143]
+ * @property {(n: number) => string} agoMinutes  Its minutes part, "2 min" [scope-143]
+ * @property {(n: number) => string} agoHours  Its hours part, "3 h" [scope-143]
+ * @property {(n: number) => string} agoDays  Its days part, "1 day", "2 days" [scope-143]
+ * @property {string} agoVerb  The verb a freshness line uses when its element names none [scope-143]
+ * @property {(text: string) => string} agoStale  What a freshness line with `data-kp-ago-announce="state"` announces once it turns stale [scope-143]
+ * @property {(text: string) => string} agoFresh  What it announces once it is fresh again [scope-143]
+ * @property {string} agoInLiveRegion  The console warning for a ticking line inside a live region [scope-143]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -636,6 +725,7 @@ export type Strings = {
  * @property {(shown: number, total: number) => string} tableColumnsShown
  * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
  * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {(group: string, count: number) => string} tableGroupRows  A group row's fold button: the group's name and how many of its rows match [J2]
  * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
  * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name
  * @property {(column: string, key: string) => string} tableEditing  Said when an editor opens
@@ -736,13 +826,18 @@ export type Strings = {
  * @property {string} chartChange  The tooltip's foot: what the ▲/▼ column is [scope-143]
  * @property {string} chartOpen  An event's link in a pinned tooltip [scope-143]
  * @property {(label: string, time: string) => string} chartMark  An event marker's title [scope-143]
- * @property {(from: string, to: string) => string} chartZoomed  The zoom chip, before its Reset [scope-143]
+ * @property {(from: string, to: string) => string} chartZoomed  The zoom chip, before its Reset, from its two ends; used only when a consumer overrides it and not `chartZoomedSpan` [scope-143]
+ * @property {(span: string) => string} chartZoomedSpan  The zoom chip, before its Reset: `span` is the zoom as the chart's `range` time style prints it [scope-143]
  * @property {string} chartReset  The zoom chip's button [scope-143]
  * @property {string} chartResetTitle  Its title [scope-143]
  * @property {string} chartUp  A rise, as the readout says it [scope-143]
  * @property {string} chartDown  A fall, as the readout says it [scope-143]
  * @property {string} chartSame  No change, as the readout says it [scope-143]
  * @property {string} chartNow  A spark line's value when no time is under the crosshair [scope-143]
+ * @property {string} chartEmpty  A time chart with no readings in its window, in the plot at its height [scope-143]
+ * @property {string} chartOnePoint  Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
+ * @property {string} chartLoading  A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
+ * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]
 
  * @property {string} breadcrumb
  * @property {string} pagination

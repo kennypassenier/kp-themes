@@ -109,6 +109,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -588,6 +589,44 @@
         &lt;<span class="kp-code__keyword">span</span>&gt;02:52 · 1.84 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
         &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-arrive-new">
+                        <figcaption class="kp-fw-semibold">Only what is new arrives</figcaption>
+                        <p class="kp-text-muted">A live list marked <code>data-kp-arrive="new"</code>, its rows keyed by <code>data-kp-key</code>. <b>Refresh</b> redraws every row from scratch, the way a poll does: nothing must arrive, the list stands still. <b>Refresh with a new row</b> redraws them and adds one: only that row arrives the theme's way. <b>Sort</b> puts the same rows in the other order: nothing arrives. <b>Rename one</b> gives a row a key it did not have: that row arrives, because a new key is new content. <b>Load</b> replaces three skeleton rows with data: nothing arrives, loading is not news. The line under the list counts the arrivals.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card" data-kp-size-motion data-kp-arrive="new">
+    <ul class="kp-stack" data-cat-arrive-list>
+        <li data-kp-key="ph-1">Pump house 1 · 3.4 bar</li>
+        <li data-kp-key="ph-3">Pump house 3 · 2.0 bar</li>
+        <li data-kp-key="ph-7">Pump house 7 · no reading</li>
+    </ul>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-kp-arrive</span><span class="kp-code__string">=&quot;new&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">data-cat-arrive-list</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;ph-1&quot;</span>&gt;Pump house 1 · 3.4 bar&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;ph-3&quot;</span>&gt;Pump house 3 · 2.0 bar&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;ph-7&quot;</span>&gt;Pump house 7 · no reading&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-size-selector">
+                        <figcaption class="kp-fw-semibold">Boxes named by a selector, and let go</figcaption>
+                        <p class="kp-text-muted">The cards here carry no <code>data-kp-size-motion</code>: this block attaches <code>attachMotion(block, { size: '.kp-card' })</code>, so every card in it eases, including cards built after the attach. Press <b>Grow</b>: the first card glides to its new height. <b>Rebuild 100 cards</b> throws the cards away and builds a hundred new ones, ten times over, as a page that redraws itself on every navigation does: the count of boxes motion watches must come back to where it was, because a box that leaves the page is let go rather than watched forever.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-autogrid" data-cat-size-selector>
+    <div class="kp-card kp-stack"><p>Reservoir North · 71 %</p></div>
+    <div class="kp-card kp-stack"><p>Reservoir South · 64 %</p></div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span> <span class="kp-code__keyword">data-cat-size-selector</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir North · 71 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir South · 64 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                     <figure class="sc-example" id="more-motion-leave-options">

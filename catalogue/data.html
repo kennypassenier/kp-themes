@@ -36,6 +36,7 @@
                 <li><a href="#count">Numbers that count up</a></li>
                 <li><a href="#card">Card with actions</a></li>
                 <li><a href="#tiles">Tiles of one height</a></li>
+                <li><a href="#tiles-set">Tiles of one height across a board</a></li>
                 <li><a href="#kpis">Key figures</a></li>
                 <li><a href="#state-word">A state word that keeps its width</a></li>
             </ul>
@@ -528,6 +529,67 @@
                             </div>
                         </li>
                     </ul>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tiles-set">
+                <h2>Tiles of one height across a board</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> two groups of tiles, each its own <code>.kp-tiles</code> grid, on one board marked
+                    <code>data-kp-tiles-set="cat-board"</code>: every tile of both groups is as tall as the tallest tile of the board, so the
+                    footers of the two groups sit on one line, though the tallest tile (<b>Pump house 3</b>) is only in the second group. Fold
+                    <b>Pump houses</b> away: only visible tiles count, so the reservoirs shrink to their own height; unfold it and they grow back. <b>Grow a reservoir</b> adds a line to a reservoir: when it becomes the tallest, every tile of the
+                    board follows within one frame. The line under the board reads the height the set shares.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-tiles-set="grow" aria-pressed="false">Grow a reservoir</button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-stack" data-kp-tiles-set="cat-board">
+                        <details class="kp-accordion__item kp-accordion__item--bare" open>
+                            <summary class="kp-text-muted kp-fs-sm">Reservoirs</summary>
+                            <ul class="kp-tiles">
+                                <li class="kp-card">
+                                    <h3 class="kp-card__title">Reservoir North</h3>
+                                    <p class="kp-card__body">71 % full.</p>
+                                    <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                        <span class="kp-timestamp">Read 2 min ago</span
+                                        ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                                    </div>
+                                </li>
+                                <li class="kp-card">
+                                    <h3 class="kp-card__title">Reservoir South</h3>
+                                    <p class="kp-card__body">64 % full.</p>
+                                    <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                        <span class="kp-timestamp">Read 2 min ago</span
+                                        ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </details>
+                        <details class="kp-accordion__item kp-accordion__item--bare" open>
+                            <summary class="kp-text-muted kp-fs-sm">Pump houses</summary>
+                            <ul class="kp-tiles">
+                                <li class="kp-card">
+                                    <h3 class="kp-card__title">Pump house 1</h3>
+                                    <p class="kp-card__body">Two pumps, both running.</p>
+                                    <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                        <span class="kp-timestamp">Read 2 min ago</span
+                                        ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                                    </div>
+                                </li>
+                                <li class="kp-card">
+                                    <h3 class="kp-card__title">Pump house 3</h3>
+                                    <p class="kp-card__body">Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way.</p>
+                                    <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                        <span class="kp-timestamp">Read 2 min ago</span
+                                        ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles-set">Open</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </details>
+                    </div>
+                    <p class="cat-note" data-cat-tiles-set-height>The set's tile height: …</p>
                 </div>
             </section>
 

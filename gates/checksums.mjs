@@ -156,6 +156,8 @@ export const FILES = [
     'js/actions.js',
     'js/kpi.js',
     'js/attention.js',
+    'js/tiles.js',
+    'js/freshness.js',
     'js/chart.js',
     'js/remember.js',
     'js/sidenav.js',

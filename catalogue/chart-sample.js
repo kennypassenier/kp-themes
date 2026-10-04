@@ -102,3 +102,57 @@ export function sampleData(name, range = '24h') {
     // pump house, not its place in a one-source chart.
     return { label: source.label, unit: 'bar', digits: 2, series: [{ ...series(source, DAY, 300_000, 2), colour: `var(--chart-${k + 1})` }] };
 }
+
+const GIB = 2 ** 30;
+const MIB = 2 ** 20;
+/** One reading per quarter of an hour over the day up to now. @param {(t: number) => number} at @returns {Pick<import('../js/chart.js').ChartSeries, 'start' | 'step' | 'values'>} */
+const quarterly = (at) => {
+    const step = 15 * 60_000;
+    const start = NOW - DAY;
+    return { start, step, values: Array.from({ length: DAY / step + 1 }, (_, i) => at(start + i * step)) };
+};
+
+/**
+ * The control room's telemetry server, one chart per unit kind [scope-143]:
+ * `memory` (bytes), `network` (bytes/s), `cpu` (percent, the import job
+ * above 100 on several cores), `readings` (count, with the day's totals).
+ * @param {'memory' | 'network' | 'cpu' | 'readings'} name
+ * @returns {import('../js/chart.js').ChartData}
+ */
+export function unitData(name) {
+    if (name === 'memory')
+        return {
+            label: 'Memory',
+            unitKind: 'bytes',
+            series: [
+                { label: 'Used', ...quarterly((t) => Math.round((1.2 + 0.35 * demand(t) + 0.03 * noise(t, 21)) * GIB)) },
+                { label: 'Cache', ...quarterly((t) => Math.round((0.55 + 0.05 * noise(t, 22)) * GIB)) },
+            ],
+        };
+    if (name === 'network')
+        return {
+            label: 'Network',
+            unitKind: 'bytes/s',
+            series: [
+                { label: 'In', ...quarterly((t) => Math.round((1.4 + 2.2 * demand(t) + 0.2 * noise(t, 23)) * MIB)) },
+                { label: 'Out', ...quarterly((t) => Math.round((0.3 + 0.6 * demand(t) + 0.05 * noise(t, 24)) * MIB)) },
+            ],
+        };
+    if (name === 'cpu')
+        return {
+            label: 'Processor',
+            unitKind: 'percent',
+            series: [
+                { label: 'Telemetry import', ...quarterly((t) => Number((20 + 110 * demand(t) ** 2 + 4 * noise(t, 25)).toFixed(1))) },
+                { label: 'Web', ...quarterly((t) => Number((6 + 12 * demand(t) + 2 * noise(t, 26)).toFixed(1))) },
+            ],
+        };
+    return {
+        label: 'Meter readings',
+        unitKind: 'count',
+        series: [
+            { label: 'Received', total: 1183402, ...quarterly((t) => Math.round(6000 + 9000 * demand(t) + 300 * noise(t, 27))) },
+            { label: 'Rejected', total: 1534, ...quarterly((t) => Math.max(0, Math.round(12 + 8 * noise(t, 28)))) },
+        ],
+    };
+}
