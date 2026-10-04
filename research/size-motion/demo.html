@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="demo.css" />
         <link rel="stylesheet" href="leaves.css" />
         <link rel="stylesheet" href="exits.css" />
+        <link rel="stylesheet" href="signature-exits.css" />
     </head>
     <body>
         <main class="sm-page">
@@ -232,8 +233,9 @@
                 <div class="sm-sec__head">
                     <h2 id="h-leave">Elements that leave</h2>
                     <p>
-                        Two separate questions. <b>What the element does</b> as it leaves: the three cards below each show one exit of this theme (1,
-                        2 and 3). <b>When its space closes</b>, so the card shrinks: pick that once with the buttons, it applies to all three cards.
+                        A single element leaves with its theme's exit; several removed together leave one by one, the lowest first. The three cards
+                        each show one exit of this theme: 1 and 2 are quieter, 3 is the theme's signature. The buttons below set, for all three cards,
+                        when the space closes and how several leave together.
                     </p>
                     <div class="sm-actions" role="group" aria-label="When the space closes">
                         <b>When the space closes:</b>
@@ -248,12 +250,22 @@
                             At once, under a copy that plays the exit
                         </button>
                     </div>
+                    <div class="sm-actions" role="group" aria-label="When several leave together">
+                        <b>Remove all at once:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-stagger="1" aria-pressed="true">
+                            One after another, each exit in full
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-stagger="0.5" aria-pressed="false">
+                            The next one starts halfway
+                        </button>
+                    </div>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Pick when the space closes with the buttons, then try the three cards with their ✕ buttons and <b>Remove all at once</b>. In
-                        the note, write the number of the exit you want for this theme (1, 2 or 3) and, once, which space button you prefer; approve
-                        when one of the three fits.
+                        Three things to decide. <b>Per theme:</b> which exit, 1, 2 or 3; write the number in this theme's note, and approve when one
+                        of the three fits. Exit 3 is the theme's signature exit, drawn for this theme alone. <b>Once, in any note:</b> which button
+                        under <i>When the space closes</i>, and which under <i>Remove all at once</i>. Every animation plays at a quarter; the speed
+                        buttons at the top of the page change that.
                     </p>
                 </div>
                 <div class="sm-pair sm-trio">

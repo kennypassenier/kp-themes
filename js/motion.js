@@ -361,6 +361,30 @@ function arrive(el, motion) {
 }
 
 /**
+ * Settles once the CSS animations on `el` are `share` of the way through,
+ * or when `done` settles, whichever is first.
+ * @param {HTMLElement} el @param {number} share @param {Promise<unknown>} done
+ * @returns {Promise<unknown>}
+ */
+function partway(el, share, done) {
+    const css = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+    const reached = new Promise((resolve) => {
+        const tick = () => {
+            const through = css.every((a) => {
+                const timing = a.effect?.getComputedTiming();
+                return a.playState === 'finished' || (timing?.progress ?? 0) >= share || (timing?.currentIteration ?? 0) > 0;
+            });
+            if (through) resolve(undefined);
+            else requestAnimationFrame(tick);
+        };
+        tick();
+    });
+    return Promise.race([reached, done]);
+}
+
+/**
  * Settles when the CSS animations running on `el` have played out, at
  * whatever rate they play (a slowed-down review plays them at a quarter);
  * with none running, after `fallback` ms.
@@ -368,7 +392,10 @@ function arrive(el, motion) {
  * @returns {Promise<unknown>}
  */
 function playedOut(el, fallback) {
-    const css = el.getAnimations().filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation);
+    // Its pseudo-elements count too: a theme may draw its exit on ::after.
+    const css = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
     if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback));
     return Promise.all(css.map((a) => a.finished.catch(() => undefined)));
 }
@@ -513,7 +540,12 @@ async function leaveOne(el, hide, exited) {
     }
     if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
     const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
-    void exit.then(exited);
+    // The next in a row of leaves starts once this one's exit is
+    // `--kp-leave-stagger` of the way through (1, the default, waits for
+    // all of it), read off the animation itself so any playback rate holds.
+    const stagger = parseFloat(style.getPropertyValue('--kp-leave-stagger'));
+    if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+    else void exit.then(exited);
     running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its
     // leave, and the table glides shut once it is out.

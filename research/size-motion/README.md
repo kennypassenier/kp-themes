@@ -1,6 +1,6 @@
 # A dialog closing, and boxes that grow and shrink
 
-**Round five open (2026-10-04): elements that leave.** Rounds one to four were approved in every theme (110 of 110). Kenny approved every pair in every theme over four
+**Round five open (2026-10-04): elements that leave.** One element leaves with its theme's exit; several removed together go one by one, bottom first. Three exits per theme are on show (`leaves.css`, `exits.css`, and the signature exits in `signature-exits.css`), with when the space closes (`--kp-leave-fold`) and how far into one exit the next starts (`--kp-leave-stagger`) as page-wide buttons. Rounds one to four were approved in every theme (110 of 110). Kenny approved every pair in every theme over four
 rounds: the close and the accordion in round two, the tabs in round three,
 growing and shrinking with a character per theme in round four (110 of 110).
 Built: `js/motion.js` [scope-142], the character of fourteen themes moved from

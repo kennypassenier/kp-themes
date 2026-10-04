@@ -1,0 +1,1033 @@
+/* Round five, exit 3: a signature exit per theme, something only that theme
+   would do (Kenny, 2026-10-04: "ik wil echt distincte dingen per thema. Denk
+   aan het voorbeeld van pacman in garuda, durf buiten bestaande boundaries te
+   denken"). Each draws on the leaving element and its ::after; js/motion.js
+   waits for both before the element goes. Shown in the demo's third column. */
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-sm-exit='3'] [data-kp-leaving] {
+        position: relative;
+        overflow: clip;
+    }
+
+    [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* formal: a red VOID stamp thuds onto it, then the voided entry fades. */
+    [data-theme='formal'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-formal-void 1000ms linear forwards;
+    }
+
+    [data-theme='formal'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: 'VOID';
+        inset: auto;
+        top: 50%;
+        left: 50%;
+        padding: 0.1em 0.5em;
+        border: 3px solid var(--destructive);
+        color: var(--destructive);
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        background: var(--background);
+        animation: sx-formal-stamp 1000ms linear forwards;
+    }
+
+    @keyframes sx-formal-void {
+        0%,
+        70% {
+            opacity: 1;
+            filter: none;
+        }
+
+        30% {
+            filter: grayscale(1);
+        }
+
+        to {
+            opacity: 0;
+            filter: grayscale(1);
+        }
+    }
+
+    @keyframes sx-formal-stamp {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(-12deg) scale(2.6);
+        }
+
+        22% {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(-12deg) scale(0.92);
+        }
+
+        30%,
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+        }
+    }
+
+    /* light: a beam of sunlight sweeps across, everything glows in it, and
+       then it is gone in the glare. */
+    [data-theme='light'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-light-bleach 1000ms ease-in-out forwards;
+    }
+
+    [data-theme='light'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: -20% auto -20% 0;
+        width: 35%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.95), transparent);
+        filter: blur(3px);
+        animation: sx-light-beam 1000ms ease-in-out forwards;
+    }
+
+    @keyframes sx-light-bleach {
+        0% {
+            filter: none;
+        }
+
+        55% {
+            filter: brightness(1.15) drop-shadow(0 0 10px rgb(255 220 120 / 0.9));
+            opacity: 1;
+        }
+
+        to {
+            filter: brightness(1.6) blur(4px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-light-beam {
+        from {
+            transform: translateX(-110%);
+        }
+
+        55%,
+        to {
+            transform: translateX(300%);
+        }
+    }
+
+    /* dark: the lights go out around it until only a pinpoint is left, and
+       then that goes out too. */
+    [data-theme='dark'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-dark-hold 1000ms linear forwards;
+    }
+
+    [data-theme='dark'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: auto;
+        top: 50%;
+        left: 50%;
+        width: 260%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        box-shadow: 0 0 0 200vmax var(--background);
+        background: radial-gradient(circle, transparent 40%, var(--background) 72%);
+        animation: sx-dark-out 1000ms cubic-bezier(0.6, 0, 0.8, 0.4) forwards;
+    }
+
+    @keyframes sx-dark-hold {
+        0%,
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-dark-out {
+        from {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        80% {
+            transform: translate(-50%, -50%) scale(0.02);
+        }
+
+        to {
+            transform: translate(-50%, -50%) scale(0);
+        }
+    }
+
+    /* cyberpunk: the colour channels tear apart, a DELETED tag flickers over
+       it, and it drops off the feed. */
+    [data-theme='cyberpunk'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-cyber-tear 900ms steps(9, jump-end) forwards;
+    }
+
+    [data-theme='cyberpunk'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: '> DELETED_';
+        display: grid;
+        place-items: center;
+        font-family: var(--font-mono, monospace);
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        color: var(--primary);
+        text-shadow:
+            2px 0 #ff2a6d,
+            -2px 0 #05d9e8;
+        background: rgb(0 0 0 / 0.55);
+        animation: sx-cyber-tag 900ms steps(9, jump-end) forwards;
+    }
+
+    @keyframes sx-cyber-tear {
+        0% {
+            filter: none;
+        }
+
+        20% {
+            filter: drop-shadow(4px 0 #ff2a6d) drop-shadow(-4px 0 #05d9e8);
+            transform: translateX(-4px) skewX(-8deg);
+        }
+
+        45% {
+            filter: drop-shadow(-6px 0 #ff2a6d) drop-shadow(6px 0 #05d9e8);
+            clip-path: inset(15% 0 40% 0);
+            transform: translateX(6px);
+        }
+
+        70% {
+            clip-path: inset(0 0 0 0);
+            transform: none;
+        }
+
+        to {
+            clip-path: inset(50% 0 50% 0);
+            transform: translateX(20px);
+        }
+    }
+
+    @keyframes sx-cyber-tag {
+        0%,
+        30% {
+            opacity: 0;
+        }
+
+        40%,
+        60% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.2;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* synthwave: it tips back onto the neon grid and races to the vanishing
+       point on the horizon. */
+    [data-theme='synthwave'] [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: 50% 100%;
+        animation: sx-synth-horizon 1000ms cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+    }
+
+    [data-theme='synthwave'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background:
+            repeating-linear-gradient(90deg, transparent 0 18px, var(--primary) 18px 20px),
+            repeating-linear-gradient(0deg, transparent 0 10px, var(--primary) 10px 12px);
+        mix-blend-mode: screen;
+        animation: sx-synth-grid 1000ms ease-in forwards;
+    }
+
+    @keyframes sx-synth-horizon {
+        from {
+            transform: perspective(500px) rotateX(0);
+        }
+
+        35% {
+            transform: perspective(500px) rotateX(60deg);
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        to {
+            transform: perspective(500px) rotateX(78deg) translateY(-140px) scale(0.2);
+            filter: drop-shadow(0 0 16px var(--primary));
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-synth-grid {
+        from {
+            opacity: 0;
+        }
+
+        35% {
+            opacity: 0.7;
+        }
+
+        to {
+            opacity: 0.9;
+        }
+    }
+
+    /* pastel: it swells like a bubble and pops into confetti. */
+    [data-theme='pastel'] [data-sm-exit='3'] [data-kp-leaving] {
+        overflow: visible !important;
+        animation: sx-pastel-bubble 900ms ease-in forwards;
+    }
+
+    [data-theme='pastel'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: auto;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #f9a8d4;
+        box-shadow:
+            -60px -20px 0 #a5b4fc,
+            50px -30px 0 #86efac,
+            -30px 25px 0 #fcd34d,
+            70px 15px 0 #f9a8d4,
+            -90px 5px 0 #93c5fd,
+            20px 30px 0 #c4b5fd,
+            110px -10px 0 #fda4af,
+            -120px -25px 0 #6ee7b7;
+        opacity: 0;
+        visibility: visible;
+        animation: sx-pastel-confetti 900ms ease-out forwards;
+    }
+
+    @keyframes sx-pastel-bubble {
+        0% {
+            transform: scale(1);
+        }
+
+        45% {
+            transform: scale(1.06);
+            border-radius: 2rem;
+        }
+
+        55% {
+            transform: scale(1.08);
+            opacity: 1;
+        }
+
+        60%,
+        to {
+            transform: scale(1.1);
+            visibility: hidden;
+        }
+    }
+
+    @keyframes sx-pastel-confetti {
+        0%,
+        55% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.2);
+        }
+
+        60% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+            transform: translate(-50%, -20%) scale(1.6);
+        }
+    }
+
+    /* terminal: a block cursor backs up over the line, deleting it character
+       by character, then blinks once on the empty line. */
+    [data-theme='terminal'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-term-delete 1000ms steps(20, jump-end) forwards;
+    }
+
+    [data-theme='terminal'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 0 auto 0 auto;
+        width: 0.7em;
+        background: var(--primary);
+        animation:
+            sx-term-cursor 800ms steps(20, jump-end) forwards,
+            sx-term-blink 200ms steps(1, jump-end) 800ms 1 forwards;
+    }
+
+    @keyframes sx-term-delete {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
+        80%,
+        to {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes sx-term-cursor {
+        from {
+            right: 0;
+        }
+
+        to {
+            right: calc(100% - 0.7em);
+        }
+    }
+
+    @keyframes sx-term-blink {
+        from {
+            right: calc(100% - 0.7em);
+            opacity: 0;
+        }
+
+        to {
+            right: calc(100% - 0.7em);
+            opacity: 0;
+        }
+    }
+
+    /* forest: it turns to autumn, and its leaves come loose and drift down
+       until nothing is left. */
+    [data-theme='forest'] [data-sm-exit='3'] [data-kp-leaving] {
+        overflow: visible !important;
+        animation: sx-forest-autumn 1100ms ease-in forwards;
+    }
+
+    [data-theme='forest'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: '❦   ❧     ❦  ❧   ❦    ❧';
+        white-space: pre;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        font-size: 1.4em;
+        color: #c2410c;
+        opacity: 0;
+        animation: sx-forest-leaves 1100ms ease-in forwards;
+    }
+
+    @keyframes sx-forest-autumn {
+        0% {
+            filter: none;
+        }
+
+        40% {
+            filter: sepia(1) saturate(2.2) hue-rotate(-20deg);
+            opacity: 1;
+        }
+
+        to {
+            filter: sepia(1) saturate(2.2) hue-rotate(-20deg);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-forest-leaves {
+        0%,
+        35% {
+            opacity: 0;
+            transform: none;
+        }
+
+        45% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(40px) rotate(14deg);
+        }
+    }
+
+    /* high-contrast: warning tape is pulled across it, then it is gone in
+       one step: unmistakable. */
+    [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-hc-gone 700ms steps(1, jump-end) forwards;
+    }
+
+    [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 30% 0;
+        background: repeating-linear-gradient(-45deg, #ffd400 0 12px, #000 12px 24px);
+        border-block: 2px solid #000;
+        transform-origin: left;
+        animation: sx-hc-tape 700ms steps(4, jump-end) forwards;
+    }
+
+    @keyframes sx-hc-gone {
+        0%,
+        85% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-hc-tape {
+        from {
+            transform: scaleX(0);
+        }
+
+        60%,
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* sepia: the old film's iris closes on it, like the end of a reel. */
+    [data-theme='sepia'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-sepia-reel 1000ms linear forwards;
+    }
+
+    [data-theme='sepia'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: auto;
+        top: 50%;
+        left: 50%;
+        width: 160%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        box-shadow: 0 0 0 200vmax #2b1d0e;
+        animation: sx-sepia-iris 1000ms cubic-bezier(0.5, 0, 0.75, 0.5) forwards;
+    }
+
+    @keyframes sx-sepia-reel {
+        0%,
+        92% {
+            opacity: 1;
+            filter: sepia(0.6);
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-sepia-iris {
+        from {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        85%,
+        to {
+            transform: translate(-50%, -50%) scale(0);
+        }
+    }
+
+    /* blueprint: it is hatched out like a wall marked for demolition on a
+       plan, line by line, then lifted off the sheet. */
+    [data-theme='blueprint'] [data-sm-exit='3'] [data-kp-leaving] {
+        outline: 1px dashed var(--primary);
+        animation: sx-bp-lift 1100ms linear forwards;
+    }
+
+    [data-theme='blueprint'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background: repeating-linear-gradient(45deg, var(--primary) 0 1.5px, transparent 1.5px 9px);
+        animation: sx-bp-hatch 1100ms linear forwards;
+    }
+
+    @keyframes sx-bp-lift {
+        0%,
+        70% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+            transform: translate(6px, -6px);
+        }
+    }
+
+    @keyframes sx-bp-hatch {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        60%,
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* solstice: an eclipse. A dark disc crosses it with a corona at its rim
+       and takes the light with it. */
+    [data-theme='solstice'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-sol-dim 1100ms ease-in forwards;
+    }
+
+    [data-theme='solstice'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: auto;
+        top: 50%;
+        left: 0;
+        height: 220%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #120a1c;
+        box-shadow:
+            0 0 14px 4px #ffb347,
+            0 0 40px 12px rgb(255 140 60 / 0.5);
+        animation: sx-sol-disc 1100ms cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+
+    @keyframes sx-sol-dim {
+        0%,
+        55% {
+            opacity: 1;
+            filter: none;
+        }
+
+        75% {
+            filter: brightness(0.4);
+        }
+
+        to {
+            opacity: 0;
+            filter: brightness(0.2);
+        }
+    }
+
+    @keyframes sx-sol-disc {
+        from {
+            left: -60%;
+            transform: translateY(-50%) scale(1);
+        }
+
+        60% {
+            left: 35%;
+            transform: translateY(-50%) scale(1);
+        }
+
+        to {
+            left: 35%;
+            transform: translateY(-50%) scale(4);
+        }
+    }
+
+    /* brutalism: a huge black cross slams onto it, then it falls off in two
+       hard steps. */
+    [data-theme='brutalism'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-brut-fall 700ms steps(1, jump-end) forwards;
+    }
+
+    [data-theme='brutalism'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: '✕';
+        display: grid;
+        place-items: center;
+        font-size: 4.5em;
+        font-weight: 900;
+        line-height: 1;
+        color: #000;
+        -webkit-text-stroke: 3px #fff;
+        paint-order: stroke fill;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        translate: none;
+        animation: sx-brut-x 700ms steps(1, jump-end) forwards;
+    }
+
+    @keyframes sx-brut-fall {
+        0%,
+        60% {
+            transform: none;
+            opacity: 1;
+        }
+
+        75% {
+            transform: translate(8px, 14px) rotate(3deg);
+        }
+
+        90%,
+        to {
+            transform: translate(16px, 40px) rotate(7deg);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-brut-x {
+        from {
+            transform: scale(2.4);
+            opacity: 0;
+        }
+
+        15% {
+            transform: scale(1.15);
+            opacity: 1;
+        }
+
+        30%,
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* deco: gold sunburst rays fan out from its foot, then it folds shut
+       into them like a fan. */
+    [data-theme='deco'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-deco-shut 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    [data-theme='deco'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background: repeating-conic-gradient(from -90deg at 50% 100%, var(--primary) 0 3deg, transparent 3deg 12deg);
+        mask: linear-gradient(to top, #000, transparent 90%);
+        animation: sx-deco-rays 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes sx-deco-shut {
+        0%,
+        45% {
+            transform: none;
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleX(0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-deco-rays {
+        from {
+            opacity: 0;
+            clip-path: polygon(50% 100%, 50% 100%, 50% 100%);
+        }
+
+        40% {
+            opacity: 0.9;
+            clip-path: polygon(50% 100%, -60% -60%, 160% -60%);
+        }
+
+        to {
+            opacity: 0.9;
+            clip-path: polygon(50% 100%, -60% -60%, 160% -60%);
+        }
+    }
+
+    /* phantom: it becomes a ghost: see-through, wavering, it rises out of
+       its place and dissolves. */
+    [data-theme='phantom'] [data-sm-exit='3'] [data-kp-leaving] {
+        overflow: visible !important;
+        animation: sx-phantom-rise 1200ms ease-in forwards;
+    }
+
+    @keyframes sx-phantom-rise {
+        0% {
+            opacity: 1;
+            filter: none;
+        }
+
+        20% {
+            opacity: 0.55;
+            transform: skewX(4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+        }
+
+        40% {
+            transform: translateY(-6px) skewX(-4deg);
+        }
+
+        60% {
+            transform: translateY(-14px) skewX(4deg);
+            opacity: 0.35;
+        }
+
+        80% {
+            transform: translateY(-22px) skewX(-3deg);
+        }
+
+        to {
+            transform: translateY(-34px) scaleX(0.9);
+            opacity: 0;
+            filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+        }
+    }
+
+    /* shade-light and shade-dark: the shadow under it rises up over it and
+       swallows it whole. */
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-shade-swallowed 1100ms ease-in forwards;
+    }
+
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 0 0 -40% 0;
+        background: linear-gradient(to top, rgb(0 0 0 / 0.88) 55%, transparent);
+        animation: sx-shade-pool 1100ms cubic-bezier(0.5, 0, 0.75, 0.6) forwards;
+    }
+
+    @keyframes sx-shade-swallowed {
+        0%,
+        20% {
+            transform: none;
+        }
+
+        70% {
+            transform: translateY(4px) scale(0.98);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateY(6px) scale(0.97);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-shade-pool {
+        from {
+            transform: translateY(100%);
+        }
+
+        70%,
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* retro: PAC-MAN comes in from the left and eats it, leaving the black
+       of the maze behind him. */
+    [data-theme='retro'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-retro-eaten 1300ms linear forwards;
+    }
+
+    [data-theme='retro'] [data-sm-exit='3'] [data-kp-leaving]::before {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        z-index: 2;
+        background: #000;
+        pointer-events: none;
+        animation: sx-retro-maze 1300ms steps(13, jump-end) forwards;
+    }
+
+    [data-theme='retro'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: auto;
+        top: 50%;
+        z-index: 3;
+        width: 1.8em;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #ffe600;
+        animation:
+            sx-retro-run 1300ms steps(13, jump-end) forwards,
+            sx-retro-chomp 200ms steps(1, jump-end) 6;
+    }
+
+    @keyframes sx-retro-eaten {
+        0%,
+        92% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-retro-maze {
+        from {
+            width: 0;
+        }
+
+        85%,
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes sx-retro-run {
+        from {
+            left: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        85%,
+        to {
+            left: 100%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    @keyframes sx-retro-chomp {
+        from {
+            clip-path: polygon(50% 50%, 100% 15%, 100% 0, 0 0, 0 100%, 100% 100%, 100% 85%);
+        }
+
+        50% {
+            clip-path: polygon(50% 50%, 100% 50%, 100% 0, 0 0, 0 100%, 100% 100%, 100% 50%);
+        }
+    }
+
+    /* grotesk: a thick censor bar is slapped across it in three hard moves,
+       then the whole thing is ripped away to the right. */
+    [data-theme='grotesk'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-grot-rip 700ms steps(1, jump-end) forwards;
+    }
+
+    [data-theme='grotesk'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 18% 0;
+        background: var(--foreground);
+        transform-origin: left;
+        animation: sx-grot-bar 700ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes sx-grot-rip {
+        0%,
+        65% {
+            transform: none;
+            opacity: 1;
+        }
+
+        80% {
+            transform: translateX(30%) rotate(-2deg);
+        }
+
+        95%,
+        to {
+            transform: translateX(110%) rotate(-4deg);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-grot-bar {
+        from {
+            transform: scaleX(0);
+        }
+
+        55%,
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* lapis: a sheet of gold leaf is laid over it with a shimmer, then the
+       gilded piece flakes away from the corner. */
+    [data-theme='lapis'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-lapis-flake 1200ms ease-in forwards;
+    }
+
+    [data-theme='lapis'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background:
+            linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.8) 45%, transparent 60%) no-repeat,
+            linear-gradient(135deg, #b8860b, #ffd770 45%, #b8860b);
+        background-size:
+            250% 100%,
+            100% 100%;
+        animation: sx-lapis-gild 1200ms ease-in-out forwards;
+    }
+
+    @keyframes sx-lapis-flake {
+        0%,
+        55% {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        70% {
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 70% 100%, 0 100%);
+        }
+
+        85% {
+            clip-path: polygon(0 0, 70% 0, 30% 100%, 0 100%);
+        }
+
+        to {
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+        }
+    }
+
+    @keyframes sx-lapis-gild {
+        from {
+            opacity: 0;
+            background-position:
+                150% 0,
+                0 0;
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        55%,
+        to {
+            opacity: 1;
+            background-position:
+                -100% 0,
+                0 0;
+        }
+    }
+
+    /* nostromo: MOTHER types her verdict over it in green phosphor, ENTRY
+       PURGED, and the line goes dark. */
+    [data-theme='nostromo'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-nos-dark 1300ms linear forwards;
+    }
+
+    [data-theme='nostromo'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        content: 'MOTHER: ENTRY PURGED';
+        display: flex;
+        align-items: center;
+        padding-inline: 0.75em;
+        white-space: pre;
+        overflow: hidden;
+        font-family: var(--font-mono, monospace);
+        letter-spacing: 0.1em;
+        color: var(--primary);
+        text-shadow: 0 0 6px var(--primary);
+        background: var(--background);
+        animation: sx-nos-type 1300ms steps(20, jump-end) forwards;
+    }
+
+    @keyframes sx-nos-dark {
+        0%,
+        85% {
+            opacity: 1;
+            filter: none;
+        }
+
+        to {
+            opacity: 0;
+            filter: brightness(2);
+        }
+    }
+
+    @keyframes sx-nos-type {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        70%,
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* titanium: a steel shutter rolls down over it, slat by slat, and locks. */
+    [data-theme='titanium'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: sx-ti-locked 1000ms linear forwards;
+    }
+
+    [data-theme='titanium'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background: repeating-linear-gradient(180deg, #9aa3ad 0 6px, #6b737c 6px 8px, #c3cad1 8px 10px);
+        transform-origin: top;
+        animation: sx-ti-shutter 1000ms steps(8, jump-end) forwards;
+    }
+
+    @keyframes sx-ti-locked {
+        0%,
+        85% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sx-ti-shutter {
+        from {
+            transform: scaleY(0);
+        }
+
+        75%,
+        to {
+            transform: scaleY(1);
+        }
+    }
+}

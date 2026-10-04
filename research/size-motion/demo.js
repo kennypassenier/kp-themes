@@ -57,28 +57,31 @@ const LEAVE = {
 
 // Options 2 and 3 per theme in the exit-options section (exits.css).
 const EXITS = {
-    formal: ['Folded up like a letter, from the bottom edge to the top.', 'Struck out with a red rule, then it fades.'],
-    light: ['Lifted up and out of the page.', 'It brightens to white where it stands.'],
-    dark: ['It sinks into the dark.', 'It slips left into shadow.'],
-    cyberpunk: ['Derezzed: colours shift, it skews and breaks up.', 'A scanline wipes it from the top down.'],
-    synthwave: ['It sinks into the sunset, colours shifting.', 'It turns to neon vapour and drifts away.'],
-    pastel: ['A balloon let go: it floats up with a little tilt.', 'It melts down softly into the page.'],
-    terminal: ['Cleared from the top, line by line.', 'It flickers twice and is gone.'],
-    forest: ['It withers: browns, shrinks and fades.', 'Blown off by the wind, to the right.'],
-    'high-contrast': ['Inverted for a moment, then gone.', 'Collapsed to a thick line, then gone.'],
-    sepia: ['It fades like an old photograph.', 'Slid back into the book, like a page turned sideways.'],
-    blueprint: ['Erased from left to right at an even pace.', 'It fades back to tracing paper, then is gone.'],
-    solstice: ['It rises like morning mist.', 'An eclipse: a circle closes over it.'],
-    brutalism: ['Slammed out to the left in two hard steps.', 'Cut in half, then gone.'],
-    deco: ['A curtain closing from both sides to the centre.', 'A last gold flash, then it fades.'],
-    phantom: ['It rises into mist.', 'It flickers like a ghost before vanishing.'],
-    'shade-light': ['Lifted off the page: its shadow grows, then it fades.', 'Pressed flat into the page.'],
-    retro: ['It falls off the screen in four pixel steps.', 'It blinks out like a lost life.'],
-    grotesk: ['Shoved out to the right in three hard steps.', 'Cut away from the top in three cuts.'],
-    lapis: ['It sinks into deep blue.', 'A gold sweep wipes it away from the left.'],
-    nostromo: ['The phosphor glows up and fades out.', 'It scrolls off the top of the monitor.'],
-    titanium: ['It slides down a rail at an even pace.', 'A shutter closes over it from the top.'],
-    'shade-dark': ['Lifted off the page: its shadow grows, then it fades.', 'Pressed flat into the page.'],
+    formal: ['Folded up like a letter, from the bottom edge to the top.', 'A red VOID stamp thuds onto it, then the voided entry fades.'],
+    light: ['Lifted up and out of the page.', 'A beam of sunlight sweeps across and bleaches away everything it passes.'],
+    dark: ['It sinks into the dark.', 'The lights go out around it until a pinpoint is left, then that goes out too.'],
+    cyberpunk: [
+        'Derezzed: colours shift, it skews and breaks up.',
+        'The colour channels tear apart, a DELETED tag flickers over it, and it drops off the feed.',
+    ],
+    synthwave: ['It sinks into the sunset, colours shifting.', 'It tips back onto the neon grid and races to the vanishing point.'],
+    pastel: ['A balloon let go: it floats up with a little tilt.', 'It swells like a bubble and pops into confetti.'],
+    terminal: ['Cleared from the top, line by line.', 'A block cursor backs up over the line, deleting it character by character.'],
+    forest: ['It withers: browns, shrinks and fades.', 'It turns to autumn, and its leaves come loose and drift down.'],
+    'high-contrast': ['Inverted for a moment, then gone.', 'Warning tape is pulled across it, then it is gone in one step.'],
+    sepia: ['It fades like an old photograph.', 'The iris of an old film closes on it, like the end of a reel.'],
+    blueprint: ['Erased from left to right at an even pace.', 'Hatched out like a wall marked for demolition on a plan, then lifted off the sheet.'],
+    solstice: ['It rises like morning mist.', 'An eclipse: a dark disc with a glowing corona crosses it and takes the light.'],
+    brutalism: ['Slammed out to the left in two hard steps.', 'A huge black cross slams onto it, then it falls off in two hard steps.'],
+    deco: ['A curtain closing from both sides to the centre.', 'Gold sunburst rays fan out from its foot, then it folds shut into them like a fan.'],
+    phantom: ['It rises into mist.', 'It becomes a ghost: see-through and wavering, it rises out of its place and dissolves.'],
+    'shade-light': ['Lifted off the page: its shadow grows, then it fades.', 'Its own shadow grows under it and swallows it whole.'],
+    retro: ['It falls off the screen in four pixel steps.', 'PAC-MAN comes in from the left and eats it.'],
+    grotesk: ['Shoved out to the right in three hard steps.', 'A thick censor bar is slapped across it in three moves, then it is ripped away.'],
+    lapis: ['It sinks into deep blue.', 'Gold leaf is laid over it with a shimmer, then the gilded piece flakes away.'],
+    nostromo: ['The phosphor glows up and fades out.', 'MOTHER types her verdict over it, ENTRY PURGED, and the line goes dark.'],
+    titanium: ['It slides down a rail at an even pace.', 'A steel shutter rolls down over it, slat by slat, and locks.'],
+    'shade-dark': ['Lifted off the page: its shadow grows, then it fades.', 'Its own shadow grows under it and swallows it whole.'],
 };
 
 // One note per section serves every theme: the review dialog reads a note
@@ -298,6 +301,15 @@ const applyExitTiming = (/** @type {string} */ value) => {
 };
 for (const b of timingButtons) b.addEventListener('click', () => applyExitTiming(b.getAttribute('data-sm-exit-timing') ?? 'after'));
 applyExitTiming('after');
+
+// Remove all at once: each exit in full, or the next starting halfway.
+const staggerButtons = [...document.querySelectorAll('[data-sm-stagger]')];
+const applyStagger = (/** @type {string} */ value) => {
+    for (const b of staggerButtons) b.setAttribute('aria-pressed', String(b.getAttribute('data-sm-stagger') === value));
+    for (const col of document.querySelectorAll('[data-sm-exit]')) /** @type {HTMLElement} */ (col).style.setProperty('--kp-leave-stagger', value);
+};
+for (const b of staggerButtons) b.addEventListener('click', () => applyStagger(b.getAttribute('data-sm-stagger') ?? '1'));
+applyStagger('1');
 
 // Slow motion for judging (Kenny, 2026-10-04: "zet is een optie om alles op
 // 1/4 snelheid te kunnen afspelen"): every animation on the page, CSS or
