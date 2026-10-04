@@ -626,6 +626,14 @@
         transform: skewX(var(--kp-skew));
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='phantom'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='phantom'] .kp-icon-button:hover {
         border-color: var(--foreground);
         background: var(--primary);

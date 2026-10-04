@@ -450,6 +450,14 @@
         border-width: 2px;
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='high-contrast'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     /* ── Fields: a soft hairline at rest, black on focus ──────────────── */
 
     [data-theme='high-contrast'] .kp-field__input,

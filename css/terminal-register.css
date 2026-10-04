@@ -564,6 +564,14 @@
         color: inherit;
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='terminal'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='terminal'] .kp-icon-button:hover {
         border-color: var(--foreground);
         color: var(--kp-hot);

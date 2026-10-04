@@ -434,6 +434,14 @@
             color: inherit;
         }
 
+        /* On an alert the close button sits on the alert's own plate, in the
+           alert's ink, the way it does on a toast [fix-95]. */
+        [data-theme='pastel'] .kp-alert .kp-icon-button {
+            background: transparent;
+            border-color: transparent;
+            color: inherit;
+        }
+
         [data-theme='pastel'] .kp-icon-button:active:not(:disabled) {
             scale: 0.98;
         }

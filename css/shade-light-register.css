@@ -406,6 +406,14 @@
         font-weight: 600;
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='shade-light'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='shade-light'] .kp-button--primary {
         background: var(--primary);
         color: var(--primary-foreground);

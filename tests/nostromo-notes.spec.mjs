@@ -115,7 +115,7 @@ test(
 );
 
 test(
-    'every word on a severity toast reads at 4.5:1, its buttons included, in every theme [scope-60]',
+    'every word on a severity toast or alert reads at 4.5:1, its buttons included, in every theme [scope-60, fix-95]',
     { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
     async ({ page }) => {
         await open(page, '/catalogue/feedback.html');
@@ -124,7 +124,11 @@ test(
         for (const theme of THEME_NAMES) {
             await wear(page, theme);
             const reads = await page
-                .locator('#toasts [class*="kp-toast--"], #toasts [class*="kp-toast--"] button')
+                // The alerts too since fix-95: a close button on a coloured
+                // plate kept a plate, or ink, of its own in seven themes.
+                .locator(
+                    '#toasts [class*="kp-toast--"], #toasts [class*="kp-toast--"] button, #alerts [class*="kp-alert--"], #alerts [class*="kp-alert--"] button, #alert-long [class*="kp-alert--"], #alert-long [class*="kp-alert--"] button',
+                )
                 .evaluateAll((els) => els.map((el) => ({ what: el.className, .../** @type {any} */ (window).kpPaint(el) })));
             for (const r of reads) {
                 const ratio = contrast(r.ink, r.ground);

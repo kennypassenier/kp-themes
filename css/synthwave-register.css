@@ -680,6 +680,14 @@
         color: var(--accent);
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='synthwave'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='synthwave'] .kp-icon-button:hover {
         border-color: var(--accent);
         box-shadow: 0 0 0.6em hsl(from var(--accent) h s l / 0.4);

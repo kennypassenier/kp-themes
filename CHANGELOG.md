@@ -1,5 +1,14 @@
 # Changelog
 
+## 9.2.1 — 2026-10-04
+
+- **An alert's close button takes the alert's plate and ink** [fix-95]: in
+  every register `.kp-alert .kp-icon-button` draws no plate or border of its
+  own and inherits the alert's colour, as the toast's close button does
+  since 9.2.0. Measured before the fix: eleven close buttons in seven
+  themes under 4.5:1 (forest and brutalism 1.03). The severity-contrast test
+  now reads the alerts as well as the toasts.
+
 ## 9.2.0 — 2026-10-04
 
 - **Buttons in shared columns** [scope-143]: `.kp-action-list` (a list whose

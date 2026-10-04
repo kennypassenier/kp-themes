@@ -331,6 +331,14 @@
         border-radius: var(--radius);
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='formal'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     /* ── Fields: ruled boxes on the page ground ───────────────────────── */
 
     [data-theme='formal'] .kp-field {

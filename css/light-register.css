@@ -352,6 +352,14 @@
         border-radius: var(--kp-radius-pill, 999px);
     }
 
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='light'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='light'] .kp-button {
             transition-timing-function: var(--kp-ease-hover);
