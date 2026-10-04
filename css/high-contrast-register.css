@@ -1691,5 +1691,33 @@
             opacity: 0;
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── high-contrast: clarity first. The changing box is marked with a
+           bold outline while it moves, in two plain steps, and what arrives is
+           outlined once so the eye finds it. ────────────────────────────── */
+        [data-theme='high-contrast'] {
+            --kp-size-ease: steps(2, jump-end);
+        }
+
+        [data-theme='high-contrast'] [data-kp-resizing] {
+            outline: 3px solid var(--ring);
+            outline-offset: 2px;
+        }
+
+        [data-theme='high-contrast'] [data-kp-arriving] {
+            animation: kp-sig-high-contrast-size-mark 600ms steps(1, jump-end) backwards;
+        }
+
+        @keyframes kp-sig-high-contrast-size-mark {
+            from {
+                outline: 3px solid var(--ring);
+                outline-offset: 1px;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

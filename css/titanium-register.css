@@ -2149,5 +2149,34 @@
             transform: translateX(360%);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: the machine. The box runs at an even, mechanical pace
+           inside a fine machined edge, and new content slides in like a
+           drawer. ───────────────────────────────────────────────────────── */
+        [data-theme='titanium'] {
+            --kp-size-ease: linear;
+        }
+
+        [data-theme='titanium'] [data-kp-resizing] {
+            outline: 1px solid var(--border-strong);
+            outline-offset: -3px;
+            filter: brightness(1.05);
+        }
+
+        [data-theme='titanium'] [data-kp-arriving] {
+            animation: kp-sig-titanium-size-drawer 260ms linear backwards;
+        }
+
+        @keyframes kp-sig-titanium-size-drawer {
+            from {
+                opacity: 0;
+                transform: translateX(14px);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

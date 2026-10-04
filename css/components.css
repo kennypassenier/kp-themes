@@ -2563,6 +2563,35 @@
         z-index: calc(var(--kp-sidenav-layer, 60) + 1);
     }
 
+    /* --- Growing and shrinking [scope-142] ------------------------------- */
+
+    /* js/motion.js glides a box to its new height and marks it
+       `[data-kp-resizing]` meanwhile; a register draws its character on that
+       mark (an outline, a glow, a shadow). The boxes carry the transition at
+       rest too, so the character fades out as well as in. A register's own
+       transition on one of these boxes wins, from its later layer. */
+    @media (prefers-reduced-motion: no-preference) {
+        :is(
+            .kp-dialog,
+            .kp-tabs,
+            .kp-card,
+            .kp-datatable,
+            .kp-toasts,
+            .kp-upload__list,
+            .kp-combobox__list,
+            .kp-tree,
+            .kp-wizard,
+            .kp-field,
+            [data-kp-size-motion]
+        ) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out;
+            outline: 0 solid transparent;
+        }
+    }
+
     /* --- Dialog ---------------------------------------------------------- */
 
     /* The browser centres a dialog with `margin: auto` from its own sheet;

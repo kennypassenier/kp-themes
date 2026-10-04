@@ -1938,5 +1938,34 @@
             transform: scale(1.08);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: the ship's terminal, in amber. The box moves a line at a
+           time behind a flickering amber frame, and a new line prints with a
+           scan. ─────────────────────────────────────────────────────────── */
+        [data-theme='nostromo'] {
+            --kp-size-steps: line;
+        }
+
+        [data-theme='nostromo'] [data-kp-resizing] {
+            outline: 1px solid var(--primary);
+            outline-offset: 2px;
+            filter: drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.6));
+        }
+
+        [data-theme='nostromo'] [data-kp-arriving] {
+            animation: kp-sig-nostromo-size-scan 300ms steps(4, jump-end) backwards;
+        }
+
+        @keyframes kp-sig-nostromo-size-scan {
+            from {
+                clip-path: inset(0 0 100% 0);
+                filter: brightness(1.8);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -1,5 +1,12 @@
 # A dialog closing, and boxes that grow and shrink
 
+**Decided (scope-142, 2026-10-04: approved in every theme over four rounds, 110 of 110).** Kenny approved every pair in every theme over four
+rounds: the close and the accordion in round two, the tabs in round three,
+growing and shrinking with a character per theme in round four (110 of 110).
+Built: `js/motion.js` [scope-142], the character of fourteen themes moved from
+`characters.css` into their registers, and deco's dialog entrance remade
+without a clip.
+
 Kenny, 2026-10-04: "we hebben nu wel een goede animatie voor dialog opens,
 maar wat met dialog closes? … dan opent de dialog mooi, en dan verspringt de
 grootte heel plots omdat er elementen bijkomen. Is er een optie om die groei

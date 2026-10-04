@@ -2148,5 +2148,29 @@
             transform: translateX(0);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── blueprint: the drawing. A dashed dimension frame stands off the
+           box while it is measured anew, and new lines are plotted top down,
+           at the plotter's even pace. ──────────────────────────────────── */
+        [data-theme='blueprint'] [data-kp-resizing] {
+            outline: 1px dashed var(--primary);
+            outline-offset: 8px;
+        }
+
+        [data-theme='blueprint'] [data-kp-arriving] {
+            animation: kp-sig-blueprint-size-plot 420ms linear backwards;
+        }
+
+        @keyframes kp-sig-blueprint-size-plot {
+            from {
+                clip-path: inset(0 0 100% 0);
+                outline: 1px dashed var(--primary);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

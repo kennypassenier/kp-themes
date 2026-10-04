@@ -16,8 +16,17 @@
   the end of its glide, terminal grows and shrinks one line at a time, and
   what arrives in a box arrives with the theme's toast entrance
   [scope-142].
-- Deco's dialog entrance holds its last frame, so the sunburst's clip
-  cannot stay painted half-way in Firefox.
+- Growing and shrinking have a character per theme [scope-142]: a register
+  draws it on `[data-kp-resizing]` (the gliding box) and `[data-kp-arriving]`
+  (what arrives), and may set `--kp-size-ease` or `--kp-size-steps: line`.
+  Fourteen registers carry one (formal's ink, dark's darkroom, synthwave's
+  neon, high-contrast's two clear steps, sepia's page, blueprint's plotter,
+  solstice's dawn, shade's shadow, grotesk's cuts, lapis's gilt, nostromo's
+  amber lines, titanium's drawer, light's bloom); the others use their toast
+  entrance.
+- Deco's dialog entrance is remade without a clip: the dialog unfolds from
+  its top edge and the sunburst fans open. The circle clip it opened with
+  stayed cut at the bottom corners in Firefox.
 
 ## 9.0.1 — 2026-10-04
 

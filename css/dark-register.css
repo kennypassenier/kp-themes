@@ -2376,5 +2376,27 @@
             clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── dark: the darkroom. The oxide halo glows while the box changes,
+           and new content develops, from a pale print to its own contrast. ─ */
+        [data-theme='dark'] [data-kp-resizing] {
+            filter: drop-shadow(0 0 16px hsl(from var(--primary) h s l / 0.45));
+        }
+
+        [data-theme='dark'] [data-kp-arriving] {
+            animation: kp-sig-dark-size-develop 480ms ease-out backwards;
+        }
+
+        @keyframes kp-sig-dark-size-develop {
+            from {
+                opacity: 0.2;
+                filter: contrast(0.2) brightness(1.8) sepia(0.6);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

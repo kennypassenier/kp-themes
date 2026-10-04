@@ -1874,13 +1874,20 @@
             animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
         }
 
-        /* Held on its last frame (`both`, not `backwards`): Kenny saw the
-           dialog stay cut along the sunburst's circle in Firefox
-           (2026-10-04), as if the frame where the clip goes away was never
-           painted. The last frame is the whole dialog, so holding it shows
-           the same and leaves nothing to repaint. */
+        /* Remade without a clip (Kenny, 2026-10-04: "just remake the dialog on
+           art deco because it's still doing it"): the circle clip it opened
+           with stayed cut at its bottom corners in his Firefox, twice after a
+           fix. Now the sun rises: the dialog unfolds down from its top edge
+           and fades in, and the sunburst over the title fans open from its
+           centre. Nothing is clipped, so nothing can stay cut. */
         [data-theme='deco'] .kp-dialog {
-            animation: kp-sig-deco-deco-sunburst var(--kp-sig-dur) var(--fx-ease) both;
+            transform-origin: 50% 0;
+            animation: kp-sig-deco-deco-sunrise var(--kp-sig-dur) var(--fx-ease) backwards;
+        }
+
+        [data-theme='deco'] .kp-dialog::before {
+            transform-origin: 50% 100%;
+            animation: kp-sig-deco-deco-fan var(--kp-sig-dur) var(--fx-ease) backwards;
         }
 
         [data-theme='deco'] .kp-tooltip {
@@ -1938,22 +1945,26 @@
         }
     }
 
-    /* `outline-offset` stays 0 throughout: it is there only so the browser
-       runs this animation on the main thread. Deco is the one register whose
-       dialog entrance animates a circle(); Kenny saw the dialog stay cut
-       along that circle in Firefox (2026-10-04). Not reproduced here, where
-       the animation always reported finished at its full size; a cut that
-       outlives a finished animation points at the compositor's copy of the
-       clip, which this takes out of play. */
-    @keyframes kp-sig-deco-deco-sunburst {
+    @keyframes kp-sig-deco-deco-sunrise {
         from {
-            clip-path: circle(0 at 50% 0);
-            outline-offset: 0;
+            opacity: 0;
+            transform: scaleY(0.82);
         }
 
-        to {
-            clip-path: circle(150% at 50% 0);
-            outline-offset: 0;
+        40% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-fan {
+        from {
+            opacity: 0;
+            transform: scale(0.15, 0.4);
+        }
+
+        35% {
+            opacity: 0;
+            transform: scale(0.15, 0.4);
         }
     }
 

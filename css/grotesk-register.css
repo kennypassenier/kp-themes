@@ -1974,5 +1974,31 @@
             transform: translateX(1100%);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── grotesk: the cut. The box jumps in three hard cuts behind a heavy
+           rule, and a new line is cut in from the left in three. ────────── */
+        [data-theme='grotesk'] {
+            --kp-size-ease: steps(3, jump-end);
+        }
+
+        [data-theme='grotesk'] [data-kp-resizing] {
+            outline: 3px solid var(--foreground);
+            outline-offset: 0;
+        }
+
+        [data-theme='grotesk'] [data-kp-arriving] {
+            animation: kp-sig-grotesk-size-cut 240ms steps(3, jump-end) backwards;
+        }
+
+        @keyframes kp-sig-grotesk-size-cut {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -1470,5 +1470,27 @@
             transform: translateY(4px) scale(0.96);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── light: daylight. The box brightens as it opens up, and new
+           content blooms in out of the glare. ───────────────────────────── */
+        [data-theme='light'] [data-kp-resizing] {
+            filter: brightness(1.04) drop-shadow(0 0 14px hsl(from var(--primary) h s l / 0.28));
+        }
+
+        [data-theme='light'] [data-kp-arriving] {
+            animation: kp-sig-light-size-bloom 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        @keyframes kp-sig-light-size-bloom {
+            from {
+                opacity: 0;
+                filter: blur(4px) brightness(1.4);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

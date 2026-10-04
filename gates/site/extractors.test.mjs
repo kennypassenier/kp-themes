@@ -240,7 +240,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // and --kp-progress-stripe left, and the signature bar brought six —
     // --kp-value, --kp-steps, --kp-progressbar-height, -max-width, -duration
     // and -ease: 245 - 2 + 6.
-    assert.equal(result.expected, 249, 'AR21 counted the --kp-* properties in css/components.css');
+    // scope-142 added one, --kp-resize-dur: how long a box's glide to its
+    // new height lasts, which js/motion.js writes and the transitions that
+    // fade a theme's character read: 249 + 1.
+    assert.equal(result.expected, 250, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -281,8 +284,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // One is declared and not read here, on purpose: --kp-steps is the
     // progress bar contract's segment count (scope-140), declared on the bar
     // so every register that draws segments reads one value; the plain bar
-    // the package draws has no segments to count.
-    assert.equal(result.readCount, 248);
+    // the package draws has no segments to count. scope-142's
+    // --kp-resize-dur is read through var() too: 248 + 1.
+    assert.equal(result.readCount, 249);
     assert.deepEqual(result.unread, ['--kp-steps']);
 });
 

@@ -1968,5 +1968,27 @@
             transform: rotate(135deg);
         }
     }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── lapis: the burnish. The box catches the gold while it moves, and
+           new content arrives gilded and cools to its colour. ───────────── */
+        [data-theme='lapis'] [data-kp-resizing] {
+            filter: brightness(1.12) saturate(1.25) drop-shadow(0 0 10px hsl(from var(--primary) h s l / 0.4));
+        }
+
+        [data-theme='lapis'] [data-kp-arriving] {
+            animation: kp-sig-lapis-size-gild 520ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+        }
+
+        @keyframes kp-sig-lapis-size-gild {
+            from {
+                opacity: 0;
+                filter: sepia(1) saturate(3) brightness(1.4) hue-rotate(-10deg);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
