@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 9.1.0 — 2026-10-04
 
 - **A dialog leaves the way it came, and boxes ease to a new size**
   [scope-142]. `js/motion.js` (loaded by `js/auto.js`, attached by the React
