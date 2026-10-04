@@ -315,7 +315,7 @@
                     </figure>
                     <figure class="sc-example" id="more-overlays-confirm">
                         <figcaption class="kp-fw-semibold">Confirmation</figcaption>
-                        <p class="kp-text-muted"><code>.kp-confirm</code> is the dialog <code>js/components.js</code> opens in front of a destructive button. It is narrower than a dialog — the width of a question — with the question as its title, the fixed warning under it, and two answers: <b>Cancel</b> in the ordinary weight and <b>Yes, do it</b> in the alarm colour. Press the live button: focus must land on <b>Cancel</b>, not on the destructive answer, so a stray Enter does nothing harmful; Escape must <i>not</i> close it.</p>
+                        <p class="kp-text-muted"><code>.kp-confirm</code> is the dialog <code>js/components.js</code> opens in front of a destructive button. It is narrower than a dialog — the width of a question — with the question as its title, the fixed warning under it, and two answers: <b>Cancel</b> in the ordinary weight and <b>Yes, do it</b> in the alarm colour. Press the live button: focus must land on <b>Cancel</b>, not on the destructive answer, so a stray Enter does nothing harmful; Escape must <i>not</i> close it. The variant without a dialog, <code>data-kp-confirm-mode="inline"</code>, is on the Buttons page under <b>Confirm by pressing twice</b>.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <dialog
@@ -369,7 +369,7 @@ Delete incident
                     </figure>
                     <figure class="sc-example" id="more-overlays-dialog-long">
                         <figcaption class="kp-fw-semibold">A dialog with sixty rows</figcaption>
-                        <p class="kp-text-muted">Press <b>Open sixty readings</b>. The modal dialog is taller than any window, so it stops a margin short of the window's edges and scrolls its <code>.kp-dialog__body</code> <i>inside itself</i>: the title stays at the top and the buttons stay at the bottom while the rows move between them, and the page behind must not scroll along. The frozen copy below is <i>not</i> modal and takes the same cap (<code>--kp-dialog-max-height</code>, the window minus 2rem), so it scrolls its body the same way; the stage around it still scrolls so it does not cover the rest of this page, and that scrollbar belongs to the catalogue, not to the dialog.</p>
+                        <p class="kp-text-muted">Press <b>Open sixty readings</b>. The modal dialog is taller than any window, so it stops a margin short of the window's edges and scrolls its <code>.kp-dialog__body</code> <i>inside itself</i>: the title stays at the top and the buttons stay at the bottom while the rows move between them, and the page behind must not scroll along. The frozen copy below is <i>not</i> modal and takes the same cap (<code>--kp-dialog-max-height</code>, the window minus 2rem), so it scrolls its body the same way; the stage around it still scrolls so it does not cover the rest of this page, and that scrollbar belongs to the catalogue, not to the dialog. While a body is taller than its box, <code>js/overlays.js</code> keeps <code>data-kp-popover-overflowing</code> on it with <code>--kp-scroll-view</code>, <code>--kp-scroll-ratio</code> and <code>--kp-scroll-progress</code> beside it; the short dialog in the last stage has no such state. Nothing is drawn from them except in <b>retro</b>, which draws its own 1995 scrollbar on every dialog body: on the long one the arrows are ink and a thumb sits in the track and moves as you scroll (press an arrow, the track or drag the thumb: it scrolls), on the short one the bar is disabled — grey embossed arrows and no thumb. In every other theme the two bodies differ only in length.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage sc-example__stage--row">
 <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="ov-long-live">Open sixty readings</button>
@@ -995,6 +995,45 @@ Delete incident
                         <td class="kp-text-end kp-numeric">3.10 bar</td>
                         <td>Normal</td>
                     </tr>
+                    <tr>
+                        <td class="kp-numeric">02:57</td>
+                        <td class="kp-text-end kp-numeric">3.20 bar</td>
+                        <td>Normal</td>
+                    </tr>
+                    <tr>
+                        <td class="kp-numeric">02:58</td>
+                        <td class="kp-text-end kp-numeric">3.15 bar</td>
+                        <td>Normal</td>
+                    </tr>
+                    <tr>
+                        <td class="kp-numeric">02:59</td>
+                        <td class="kp-text-end kp-numeric">3.10 bar</td>
+                        <td>Normal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button kp-button--ghost">Close</button>
+        <button type="button" class="kp-button">Export</button>
+    </div>
+</dialog>
+</div>
+<div class="sc-example__stage">
+<dialog class="kp-dialog" open aria-labelledby="ov-short-title">
+    <h2 class="kp-dialog__title" id="ov-short-title">Pressure readings, line 2, last three minutes (frozen, not modal)</h2>
+    <div class="kp-dialog__body">
+        <div class="kp-table-wrap">
+            <table class="kp-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Time</th>
+                        <th scope="col" class="kp-text-end">Pressure</th>
+                        <th scope="col">Reading</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr>
                         <td class="kp-numeric">02:57</td>
                         <td class="kp-text-end kp-numeric">3.20 bar</td>
@@ -1664,6 +1703,69 @@ Delete incident
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Close&lt;/<span class="kp-code__keyword">button</span>&gt;
         &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;ov-short-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;ov-short-title&quot;</span>&gt;Pressure readings, line 2, last three minutes (frozen, not modal)&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__body&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">thead</span>&gt;
+                    &lt;<span class="kp-code__keyword">tr</span>&gt;
+                        &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Time&lt;/<span class="kp-code__keyword">th</span>&gt;
+                        &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">th</span>&gt;
+                        &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Reading&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;/<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                    &lt;<span class="kp-code__keyword">tr</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;02:57&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;3.20 bar&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span>&gt;Normal&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">tr</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;02:58&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;3.15 bar&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span>&gt;Normal&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">tr</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span>&gt;02:59&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;3.10 bar&lt;/<span class="kp-code__keyword">td</span>&gt;
+                        &lt;<span class="kp-code__keyword">td</span>&gt;Normal&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;/<span class="kp-code__keyword">table</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Close&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-dialog-close">
+                        <figcaption class="kp-fw-semibold">Dialog closing</figcaption>
+                        <p class="kp-text-muted">Open the dialog and close it with either button or Escape. It must leave the way it came, the theme's own entrance played backwards, in about two thirds of its time, and the page behind it must not jump when it is gone. Nothing to write for it: every <code>.kp-dialog</code> on a page that loads <code>js/auto.js</code> closes this way.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<button type="button" class="kp-button kp-button--secondary" data-kp-dialog="mo-dialog">Open the dialog</button>
+<dialog class="kp-dialog" id="mo-dialog" aria-labelledby="mo-dialog-title">
+    <h2 class="kp-dialog__title" id="mo-dialog-title">Sign the handover?</h2>
+    <p>The night shift's readings are locked and the day shift takes the line over.</p>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Not yet</button>
+        <button type="button" class="kp-button" data-kp-dialog-close="sign">Sign</button>
+    </div>
+</dialog>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-kp-dialog</span><span class="kp-code__string">=&quot;mo-dialog&quot;</span>&gt;Open the dialog&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;mo-dialog&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;mo-dialog-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;mo-dialog-title&quot;</span>&gt;Sign the handover?&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The night shift's readings are locked and the day shift takes the line over.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span><span class="kp-code__string">=&quot;keep&quot;</span>&gt;Not yet&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span><span class="kp-code__string">=&quot;sign&quot;</span>&gt;Sign&lt;/<span class="kp-code__keyword">button</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre></details>
                     </figure>

@@ -34,6 +34,7 @@
                 <li><a href="#section-rule">Section rule</a></li>
                 <li><a href="#dividers">Dividers</a></li>
                 <li><a href="#dossier">Dossier</a></li>
+                <li><a href="#reveal-every">Once a session, or every load</a></li>
                 <li><a href="#surfaces">Surfaces</a></li>
                 <li><a href="#nav-cta">Call to action and end side</a></li>
                 <li><a href="#button-readout">Button readout</a></li>
@@ -326,6 +327,43 @@
                                 </section>
                             </template>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="reveal-every">
+                <h2>Once a session, or every load</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a reveal plays once per page per session and then stands at rest on every later load; a dashboard reloaded on
+                    every click would otherwise replay its headline each time. <code>data-kp-reveal-every="load"</code> opts one element back in. The
+                    live copy holds two headlines, the second with the attribute. Press <b>Load again</b> (it attaches the copy again, as a reload
+                    does, without forgetting what this session saw): the first stands still at rest, the second plays its theme's routine again. Each
+                    reveal that reaches rest fires <code>kp-reveal</code> with <code>{ reveal, routine, skipped }</code>; the list under the live copy
+                    shows them, newest first — <i>skipped</i> means it went straight to rest (seen this session, reduced motion, or a theme with no
+                    routine, such as forest). The copy at rest must look the same for both.
+                </div>
+                <div class="cat-live" data-cat-effect="once">
+                    <div class="cat-live__bar">
+                        <span class="cat-note">Live</span>
+                        <button type="button" class="kp-button kp-button--sm" data-cat-replay>Load again</button>
+                    </div>
+                    <template>
+                        <section class="kp-section kp-stack" data-kp-surface="hero">
+                            <h2 data-kp-reveal="headline">Once a session: the handover board.</h2>
+                            <h2 data-kp-reveal="headline" data-kp-reveal-every="load">Every load: three readings unsigned.</h2>
+                        </section>
+                    </template>
+                </div>
+                <ol class="kp-mono cat-note" reversed data-cat-reveal-log aria-label="kp-reveal events"></ol>
+                <p class="cat-note">At rest</p>
+                <div class="cat-stage cat-stage--block">
+                    <div data-cat-effect="rest">
+                        <template>
+                            <section class="kp-section kp-stack" data-kp-surface="hero">
+                                <h2 data-kp-reveal="headline">Once a session: the handover board.</h2>
+                                <h2 data-kp-reveal="headline" data-kp-reveal-every="load">Every load: three readings unsigned.</h2>
+                            </section>
+                        </template>
                     </div>
                 </div>
             </section>

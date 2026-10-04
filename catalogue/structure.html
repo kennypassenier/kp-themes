@@ -30,6 +30,7 @@
                 <li><a href="#reorder">Reorder</a></li>
                 <li><a href="#wizard">Wizard, frozen</a></li>
                 <li><a href="#wizard-live">Wizard, live</a></li>
+                <li><a href="#remember">Remembered across pages</a></li>
             </ul>
 
             <section class="cat-block" id="accordion">
@@ -383,6 +384,60 @@
                         </div>
                     </div>
                 </div>
+            </section>
+            <section class="cat-block" id="remember">
+                <h2>Remembered across pages</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-remember="&lt;name&gt;"</code> on three components that keep what the reader did. Close the open
+                    question, open the tree's <b>Line 1</b>, and drag the split pane's separator; reload the page, or go to another catalogue page and
+                    back: all three are as you left them, from the first frame, with nothing opening and then snapping back. The question is a
+                    <code>&lt;details&gt;</code> (slot <code>open</code>), the tree remembers its open branches by <code>data-kp-item</code> (slot
+                    <code>branches</code>), the split its position (slot <code>value</code>). Each key is composed from the name, so the same name on
+                    another page shares the state. Press <b>Forget</b> to clear what this block remembered and reload; judge it in the state its
+                    markup gives.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-accordion">
+                        <details class="kp-accordion__item" open data-kp-remember="cat-remember-question">
+                            <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                            <div class="kp-accordion__body">
+                                Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+                            </div>
+                        </details>
+                    </div>
+                    <ul class="kp-tree" role="tree" data-kp-tree aria-label="Pump house 4 files, remembered" data-kp-remember="cat-remember-tree">
+                        <li role="treeitem" aria-expanded="false" data-kp-item="line-1">
+                            Line 1
+                            <ul role="group">
+                                <li role="treeitem" data-kp-item="line-1-0100">readings-0100.csv</li>
+                                <li role="treeitem" data-kp-item="line-1-0200">readings-0200.csv</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem" aria-expanded="true" data-kp-item="line-2">
+                            Line 2
+                            <ul role="group">
+                                <li role="treeitem" data-kp-item="line-2-0240">readings-0240.csv</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div style="display: grid; block-size: 8rem; margin-block-start: 1rem">
+                        <div class="kp-split" data-kp-split data-kp-remember="cat-remember-split">
+                            <div class="kp-split__pane">Open incidents</div>
+                            <div
+                                class="kp-split__separator"
+                                role="separator"
+                                tabindex="0"
+                                aria-orientation="vertical"
+                                aria-valuemin="20"
+                                aria-valuemax="80"
+                                aria-valuenow="35"
+                                aria-label="Resize the remembered incident list"
+                            ></div>
+                            <div class="kp-split__pane">INC-4471 · line 2</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note"><button type="button" class="kp-button kp-button--sm" data-cat-forget="cat-remember-">Forget</button></p>
             </section>
         </main>
 

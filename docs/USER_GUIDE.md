@@ -535,6 +535,24 @@ A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.
 
+## Back to top [feat-page-1]
+
+Put one on every page that can grow taller than the window; every example
+page carries it, so a page copied from one has it already:
+
+```html
+<button type="button" class="kp-button kp-to-top" data-kp-to-top></button>
+```
+
+`js/auto.js` wires it. It stays out of sight, and out of the tab order,
+until the reader is 400 px down (`data-kp-to-top-after` changes that); a
+press scrolls to the top and moves the focus there too, so the next Tab
+starts where the eye is (`data-kp-to-top-target`, a selector, lands it
+elsewhere). An empty button draws the theme's arrow and is named "Back to
+top"; give it words of your own and it keeps them. `--kp-to-top-offset`
+moves it from the corner, and the `kp-to-top` event (`{ shown }`) says when
+it comes and goes.
+
 ## The alarm [scope-94]
 
 Bigger than a toast: a full-screen dramatic alert with a code line, one huge

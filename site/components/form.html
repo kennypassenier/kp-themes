@@ -291,6 +291,84 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-field-validate-timing">
+                        <figcaption class="kp-fw-semibold">When a form checks</figcaption>
+                        <p class="kp-text-muted">Three attributes on the form that decide <i>when</i> <code>js/forms.js</code> speaks; the look of each message is the one above. The first form has <code>data-kp-validate-on="input"</code>: type one letter into <b>Reporter's email</b> and the error appears at once, and goes once the address is whole. The second has <code>data-kp-validate-on="submit"</code>, <code>data-kp-revalidate-on="blur"</code> and <code>data-kp-focus-summary="false"</code>: nothing is said while you type or leave a field; press <b>Report</b> empty and the summary appears but focus stays on the button; then fix a field and its message clears only when you leave it, not while you type. The defaults (blur, then input, then focus the summary) are the live form in <b>Error summary</b>.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<form class="kp-form" data-kp-form data-kp-validate-on="input" novalidate aria-label="Checked while typing">
+    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="f-vt-mail">Reporter's email <span class="kp-field__required">required</span></label>
+        <input class="kp-field__input" id="f-vt-mail" name="mail" type="email" required />
+        <span class="kp-field__error" data-kp-field-error hidden></span>
+    </div>
+    <div>
+        <button type="submit" class="kp-button" data-kp-submit>Report</button>
+    </div>
+</form>
+<form
+class="kp-form"
+data-kp-form
+data-kp-validate-on="submit"
+data-kp-revalidate-on="blur"
+data-kp-focus-summary="false"
+novalidate
+aria-label="Checked on submit only"
+>
+<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-vs-ref">Incident reference <span class="kp-field__required">required</span></label>
+    <input class="kp-field__input" id="f-vs-ref" name="ref" type="text" required />
+    <span class="kp-field__error" data-kp-field-error hidden></span>
+</div>
+<div class="kp-field">
+    <label class="kp-field__label" for="f-vs-mail">Reporter's email <span class="kp-field__required">required</span></label>
+    <input class="kp-field__input" id="f-vs-mail" name="mail" type="email" required />
+    <span class="kp-field__error" data-kp-field-error hidden></span>
+</div>
+<div>
+    <button type="submit" class="kp-button" data-kp-submit>Report</button>
+</div>
+</form>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span> <span class="kp-code__keyword">data-kp-form</span> <span class="kp-code__keyword">data-kp-validate-on</span><span class="kp-code__string">=&quot;input&quot;</span> <span class="kp-code__keyword">novalidate</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Checked while typing&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-vt-mail&quot;</span>&gt;Reporter's email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-vt-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Report&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;<span class="kp-code__keyword">form</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form&quot;</span>
+<span class="kp-code__keyword">data-kp-form</span>
+<span class="kp-code__keyword">data-kp-validate-on</span><span class="kp-code__string">=&quot;submit&quot;</span>
+<span class="kp-code__keyword">data-kp-revalidate-on</span><span class="kp-code__string">=&quot;blur&quot;</span>
+<span class="kp-code__keyword">data-kp-focus-summary</span><span class="kp-code__string">=&quot;false&quot;</span>
+<span class="kp-code__keyword">novalidate</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Checked on submit only&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-form__summary&quot;</span> <span class="kp-code__keyword">data-kp-form-summary</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-vs-ref&quot;</span>&gt;Incident reference &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-vs-ref&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;ref&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;f-vs-mail&quot;</span>&gt;Reporter's email &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__required&quot;</span>&gt;required&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;f-vs-mail&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;mail&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;email&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">data-kp-field-error</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-submit</span>&gt;Report&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-field-narrow">
                         <figcaption class="kp-fw-semibold">A form in a narrow pane</figcaption>
                         <p class="kp-text-muted">Every control in this form is the package's own: the site is a drawn select, the start is the date picker, the rest are fields, a fieldset and buttons — a bare browser control here is a fault the catalogue gate refuses. Drag the pane's right edge until it is as narrow as it goes. Every field must shrink with it — no input may stick out past the dashed edge, and no label may overlap its neighbour; the date picker's calendar button must stay beside its input or wrap under it, never overflow. The checkbox's label and its error must wrap under the box rather than into a column one word wide. The buttons at the bottom must wrap onto two lines rather than overflow. The gap between fields must stay the same at every width: it is the form's, not the pane's.</p>

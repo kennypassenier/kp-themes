@@ -29,6 +29,7 @@
                 <li><a href="#many">Forty options</a></li>
                 <li><a href="#tags">Tag input</a></li>
                 <li><a href="#keyboard">Keyboard</a></li>
+                <li><a href="#clear">Clear button</a></li>
             </ul>
 
             <section class="cat-block" id="closed">
@@ -353,6 +354,38 @@
                             <li class="kp-combobox__option" role="option" data-kp-option>Mathias Dries — deputy</li>
                             <li class="kp-combobox__option" role="option" data-kp-option>Hydroflow — vendor hotline</li>
                             <li class="kp-combobox__option" role="option" data-kp-option>Night shift lead</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="clear">
+                <h2>Clear button, React shape</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-combobox__clear</code>, the × that <code>components/combobox.jsx</code> renders with
+                    <code>clearable</code> while the box holds a value, frozen here with <i>Pump house 4</i> chosen; the framework-free combobox has
+                    no clear button. It is a bare glyph in the muted ink, positioned against the combobox box at its inline end: it must sit inside
+                    the input, centred on the input's height and clear of the typed text, never on the label above or the status line under it. Its
+                    name is <b>Close</b> from the dictionary. This copy is not attached, so pressing it does nothing.
+                </div>
+                <div class="cat-stage">
+                    <div class="kp-combobox">
+                        <label class="kp-field__label" for="cb-clear">Site</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="cb-clear"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="cb-clear-list"
+                            autocomplete="off"
+                            value="Pump house 4"
+                        />
+                        <button type="button" class="kp-combobox__clear" aria-label="Close">×</button>
+                        <ul class="kp-combobox__list" id="cb-clear-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
                         </ul>
                         <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
                     </div>

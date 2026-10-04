@@ -12,6 +12,7 @@ import { pagePath, REVIEW_PAGE, slugOf } from './review-state.js';
 import { mountJudging } from './judging.js';
 import { mountPrompt } from './prompt.js';
 import './demos.js';
+import './motion-demo.js';
 
 /** The repository root, wherever the pages are served from (a local server, a Pages subpath). */
 const ROOT = new URL('../', import.meta.url);
@@ -302,13 +303,18 @@ function mountComforts() {
     // Always in reach, bottom right: the review page is thousands of pixels
     // long (Kenny, 2026-09-13). The catalogue's own control, not the package's
     // back-to-top, which is itself one of the things under review.
-    const up = document.createElement('button');
-    up.type = 'button';
-    up.className = 'kp-button kp-button--primary cat-to-top';
-    up.setAttribute('aria-label', 'Back to the top of the page');
-    up.textContent = '↑ Top';
-    up.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    document.body.append(up);
+    // A page that brings the package's own control outside a block (the
+    // example pages do) keeps that one alone in the corner.
+    const ownControl = [...document.querySelectorAll('[data-kp-to-top]')].some((el) => !el.closest('.cat-block'));
+    if (!ownControl) {
+        const up = document.createElement('button');
+        up.type = 'button';
+        up.className = 'kp-button kp-button--primary cat-to-top';
+        up.setAttribute('aria-label', 'Back to the top of the page');
+        up.textContent = '↑ Top';
+        up.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        document.body.append(up);
+    }
 
     // A demo form must never navigate: a submit would reload the page and
     // throw away the scroll position (notes and verdicts are stored as they are

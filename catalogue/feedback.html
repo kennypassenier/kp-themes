@@ -113,18 +113,20 @@
                 <h2>Toasts</h2>
                 <div class="cat-look">
                     <b>Look at:</b> the stack below is a real <code>.kp-toasts</code> region, pinned to the corner of this stage instead of the window
-                    so it can be reviewed in place. Five toasts: the plain one on the popover surface, and four with a meaning — success, info,
-                    warning and destructive — each on the same plate and ink as the severity badge and the alert of that meaning, with its words
-                    saying the meaning as well; every theme restates the four, so no toast of meaning may look like the plain one. The words and the
-                    buttons on each plate must pass contrast on it. The toasts float on the popover surface with a boundary that must stay visible
-                    over anything behind them. The words sit in <code>.kp-toast__body</code>; the action button and the close button sit at the
-                    toast's right end, level with the words, in every toast and whatever the length of its text — so the buttons of the five line up
-                    down the stack. A close button that drops below the text or hugs it with no gap is a fault. Hover each button: its ground turns a
-                    shade of that toast's own plate (green on the success toast, red on the error toast, the popover colour on the plain one), never
-                    the theme's page hover, and its word still reads on it. Then press the buttons to raise real toasts in the window's corner: they
-                    must stack upwards from the bottom, above any texture or scanline the theme paints, and leave after five seconds.
+                    so it can be reviewed in place. Six toasts: the plain one on the popover surface, and five with a meaning — success, info,
+                    warning, destructive and error (<code>.kp-toast--error</code> is the same plate as <code>--destructive</code>, the name an app
+                    that says "error" reaches for; the <b>Raise an error toast</b> button raises one) — each on the same plate and ink as the severity
+                    badge and the alert of that meaning, with its words saying the meaning as well; every theme restates the four, so no toast of
+                    meaning may look like the plain one. The words and the buttons on each plate must pass contrast on it. The toasts float on the
+                    popover surface with a boundary that must stay visible over anything behind them. The words sit in <code>.kp-toast__body</code>;
+                    the action button and the close button sit at the toast's right end, level with the words, in every toast and whatever the length
+                    of its text — so the buttons of the six line up down the stack. A close button that drops below the text or hugs it with no gap is
+                    a fault. Hover each button: its ground turns a shade of that toast's own plate (green on the success toast, red on the error
+                    toast, the popover colour on the plain one), never the theme's page hover, and its word still reads on it. Then press the buttons
+                    to raise real toasts in the window's corner: they must stack upwards from the bottom, above any texture or scanline the theme
+                    paints, and leave after five seconds.
                 </div>
-                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 24rem">
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 28rem">
                     <div class="kp-toasts" role="status" aria-live="polite">
                         <div class="kp-toast">
                             <span class="kp-toast__body">Saved. The handover note is visible to the day shift.</span>
@@ -145,6 +147,10 @@
                         <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
                             <span class="kp-toast__body"><b>Error:</b> the note was not saved; you are offline.</span>
                             <button type="button" class="kp-button kp-button--ghost">Retry</button>
+                        </div>
+                        <div class="kp-toast kp-toast--error" data-kp-variant="error">
+                            <span class="kp-toast__body"><b>Error:</b> the export failed; the file was not written.</span>
+                            <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
                         </div>
                     </div>
                     <p style="margin: 0">

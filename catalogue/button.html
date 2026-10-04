@@ -28,6 +28,9 @@
                 <li><a href="#extremes">Extremes</a></li>
                 <li><a href="#accelerator">Accelerator</a></li>
                 <li><a href="#groups">In a row</a></li>
+                <li><a href="#undo">Delete with an undo</a></li>
+                <li><a href="#confirm-inline">Confirm by pressing twice</a></li>
+                <li><a href="#direction">Pointing back</a></li>
             </ul>
 
             <section class="cat-block" id="variants">
@@ -177,6 +180,106 @@
                             <button type="button" class="kp-button kp-button--destructive">Discard</button>
                         </div>
                     </div>
+                </div>
+            </section>
+            <section class="cat-block" id="undo">
+                <h2>Delete with an undo</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a destructive button that acts at once and offers the way back instead of asking first. Each <b>Delete</b> carries
+                    <code>data-kp-undo-action</code>: pressed, its row (the nearest <code>data-kp-undo-target</code>, else the table row, else the
+                    parent) goes at once and a toast says so with <b>Undo</b> on it, in the theme's ghost button. Press <b>Undo</b> and the row is
+                    back where it was and <code>kp-action-undo</code> fires; wait out the window and <code>kp-action-commit</code> fires, the moment
+                    an app sends the delete to its server. The first row's window is the default six seconds, the second's
+                    <code>data-kp-undo-ms="12000"</code>, with its own words (<code>data-kp-undo-text</code>, <code>data-kp-undo-label</code>). The
+                    line under the stage logs both events. <code>data-kp-undo</code> on each button is what satisfies the destructive contract without
+                    a confirmation; a destructive button with neither is disabled and reported. The second stage is the React <code>Button</code> with
+                    <code>onUndo</code>, frozen while it offers the undo: <code>.kp-button__undo</code> sits beside the button on its baseline with a
+                    small gap, holding a ghost <b>Undo</b>. Reload the page to get deleted rows back.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ul class="kp-stack" aria-label="Saved filters">
+                        <li class="kp-row" data-kp-undo-target data-kp-key="night-shift">
+                            <span>Night shift, line 2</span>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--destructive kp-button--sm"
+                                data-kp-destructive
+                                data-kp-undo
+                                data-kp-undo-action
+                            >
+                                Delete
+                            </button>
+                        </li>
+                        <li class="kp-row" data-kp-undo-target data-kp-key="cold-store">
+                            <span>Cold store, open over 24 hours</span>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--destructive kp-button--sm"
+                                data-kp-destructive
+                                data-kp-undo
+                                data-kp-undo-action
+                                data-kp-undo-ms="12000"
+                                data-kp-undo-text="Filter “Cold store, open over 24 hours” deleted."
+                                data-kp-undo-label="Bring it back"
+                            >
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <p class="cat-note" data-cat-undo-log>Nothing deleted yet.</p>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-undo>Delete</button>
+                    <span class="kp-button__undo" role="status" data-kp-undo-offer
+                        ><button type="button" class="kp-button kp-button--ghost">Undo</button></span
+                    >
+                </div>
+            </section>
+
+            <section class="cat-block" id="confirm-inline">
+                <h2>Confirm by pressing twice</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-confirm-mode="inline"</code>, the variant of the confirmation dialog. The first press opens nothing:
+                    it arms the button, and its label becomes the phrase in <code>data-kp-confirm</code>; the second press acts. The label is the only
+                    change the package makes (it also sets <code>data-kp-armed</code> for a page that wants more), so the phrase must still fit the
+                    button on one line, close enough to the old width that the second press lands on it. Wait a few seconds, or Tab away, and it
+                    disarms back to <b>Remove reading</b>. The second button sets its own window with <code>data-kp-confirm-ms="8000"</code>.
+                </div>
+                <div class="cat-stage">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-destructive
+                        data-kp-confirm="Press again to remove"
+                        data-kp-confirm-mode="inline"
+                    >
+                        Remove reading
+                    </button>
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-destructive
+                        data-kp-confirm="Sure? Press again"
+                        data-kp-confirm-mode="inline"
+                        data-kp-confirm-ms="8000"
+                    >
+                        Revoke key
+                    </button>
+                </div>
+            </section>
+
+            <section class="cat-block" id="direction">
+                <h2>A button that points back</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-direction="back"</code> says a button goes backwards — the data table's pager writes it on its
+                    <b>Previous</b> by itself, and an app may write it on its own Back. It is meaning, not look: only <b>cyberpunk</b> answers it, by
+                    turning the button's cut corner to the side it points to, so its Previous and Next mirror each other. In every other theme the two
+                    buttons must look exactly alike.
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button" data-kp-direction="back">Previous</button>
+                    <button type="button" class="kp-button">Next</button>
+                    <button type="button" class="kp-button kp-button--primary" data-kp-direction="back">Back to the list</button>
                 </div>
             </section>
         </main>

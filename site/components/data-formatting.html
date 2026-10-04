@@ -257,6 +257,28 @@
     &gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-data-count">
+                        <figcaption class="kp-fw-semibold">Numbers that count up</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-count</code> on an element that holds the final number. The module reads it, counts from 0 to it and writes the same string back, so every number must end exactly as written — the same grouping, the same decimals, the € and the m³ untouched. The page's <code>lang</code> decides which mark groups and which is the decimal point: the Dutch line counts to 1.118.204,75, the English one to 1,204.50. The fourth sets the two knobs inline — <code>--kp-count: 2400</code> (milliseconds) and <code>--kp-count-from: 1000</code> — so it starts at 1000 and takes longer; the fifth, <code>--kp-count: 0</code>, never counts. Press <b>Count again</b> to watch the live copy: the figures must not shift sideways while they count (tabular figures), and nothing around them may move. While it counts the element carries <code>data-kp-count-state="running"</code>, then <code>done</code>, and a <code>kp-count</code> event reports the value; the line under the stage shows the last one. With reduced motion asked for, every number is simply there.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-stack">
+    <p>Readings today: <b class="kp-numeric" data-kp-count>1204</b></p>
+    <p lang="nl">Omzet dit jaar: <b class="kp-numeric" data-kp-count>€ 1.118.204,75</b></p>
+    <p lang="en">Water through line 2: <b class="kp-numeric" data-kp-count>1,204.50</b> m³</p>
+    <p>From 1000, over 2.4 s: <b class="kp-numeric" data-kp-count style="--kp-count: 2400; --kp-count-from: 1000">1204</b></p>
+    <p>Never counts: <b class="kp-numeric" data-kp-count style="--kp-count: 0">1204</b></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Readings today: &lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span> <span class="kp-code__keyword">data-kp-count</span>&gt;1204&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;nl&quot;</span>&gt;Omzet dit jaar: &lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span> <span class="kp-code__keyword">data-kp-count</span>&gt;€ 1.118.204,75&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en&quot;</span>&gt;Water through line 2: &lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span> <span class="kp-code__keyword">data-kp-count</span>&gt;1,204.50&lt;/<span class="kp-code__keyword">b</span>&gt; m³&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;From 1000, over 2.4 s: &lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span> <span class="kp-code__keyword">data-kp-count</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-count: 2400; --kp-count-from: 1000&quot;</span>&gt;1204&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Never counts: &lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-numeric&quot;</span> <span class="kp-code__keyword">data-kp-count</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-count: 0&quot;</span>&gt;1204&lt;/<span class="kp-code__keyword">b</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

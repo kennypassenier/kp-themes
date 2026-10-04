@@ -805,11 +805,11 @@
                     </figure>
                     <figure class="sc-example" id="more-navigation-bar-sticky">
                         <figcaption class="kp-fw-semibold">Shrinking header</figcaption>
-                        <p class="kp-text-muted">The box below scrolls on its own, and its bar is <code>.kp-nav-wrap--sticky</code>. Scroll inside the box: the bar must stay at the box's top and cover the text passing under it completely — no text showing through its ground or beside its rule. Once you have scrolled further than the bar is tall it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by lowering its block padding only, so the brand, the links and the current page's mark keep their size, their baseline and their look — only the room above and below them goes. The change must glide, not jump, unless your system asks for less motion; then it must happen at once. Scroll back to the top: it returns to its full height. In the compact bar the links must not touch the rule under the bar or the box's top edge. Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.</p>
+                        <p class="kp-text-muted">The box below scrolls on its own, and its bar is <code>.kp-nav-wrap--sticky</code>. Scroll inside the box: the bar must stay at the box's top and cover the text passing under it completely — no text showing through its ground or beside its rule. Once you have scrolled further than 120 px — <code>data-kp-nav-sticky-after="120"</code> on the wrapper; without it, the bar's own height — it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by lowering its block padding only, so the brand, the links and the current page's mark keep their size, their baseline and their look — only the room above and below them goes. The change must glide, not jump, unless your system asks for less motion; then it must happen at once. Scroll back to the top: it returns to its full height. In the compact bar the links must not touch the rule under the bar or the box's top edge. Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div style="block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)">
-    <div class="kp-nav-wrap kp-nav-wrap--sticky">
+    <div class="kp-nav-wrap kp-nav-wrap--sticky" data-kp-nav-sticky-after="120">
         <nav class="kp-nav" aria-label="Site operations, sticky">
             <a class="kp-nav__brand" href="#bar-sticky">Pump house 4</a>
             <ul class="kp-nav__links">
@@ -853,7 +853,7 @@
 </div>
                         </div>
                         <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap kp-nav-wrap--sticky&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap kp-nav-wrap--sticky&quot;</span> <span class="kp-code__keyword">data-kp-nav-sticky-after</span><span class="kp-code__string">=&quot;120&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Site operations, sticky&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#bar-sticky&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">a</span>&gt;
             &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
@@ -897,37 +897,38 @@
                     </figure>
                     <figure class="sc-example" id="more-navigation-app-shell">
                         <figcaption class="kp-fw-semibold">Application shell</figcaption>
-                        <p class="kp-text-muted">The three navigations composed into one screen, as <code>examples/app-shell.html</code> builds it: the bar across the top holds the product's areas (<b>Invoices</b> is current), the rail beside the content holds the pages of that area, and the breadcrumb above the content says where in it. Judge them as one family: the bar, the rail and the breadcrumb must read as three levels of the same interface in every theme — no double border where the bar meets the rail, the rail running from the bar to the bottom of the box, the breadcrumb lined up with the content rather than with the rail. Collapse the rail from its arrow: the content must take the room without jumping, and the breadcrumb and the heading must move with it. Open <b>Reports</b> in the bar: its dropdown must lie above the rail and the content, never under them — that is the bar's layer, now the same in all 22 themes (<code>--kp-z-nav</code>). Then make the window narrower than 40rem of this stage (or open <code>examples/app-shell.html</code> at phone width): the rail leaves the page, and a <b>☰</b> appears in the bar. Press it: the rail slides in over the page with every label written out, even if you had collapsed it to icons, and the page behind it dims. It covers the bar, so it must close from inside — the <b>×</b> in its footer, Escape, or a press on the dimmed page — and the focus must land back on the <b>☰</b>. Widen the window again: the rail is back beside the content as it was, and the ☰ and × are gone. On the examples page at full width the rail must run to the bottom of the window, not stop where the content ends.</p>
+                        <p class="kp-text-muted">The three navigations composed into one screen, as <code>examples/app-shell.html</code> builds it: the bar across the top holds the product's areas (<b>Invoices</b> is current), the rail beside the content holds the pages of that area, and the breadcrumb above the content says where in it. Judge them as one family: the bar, the rail and the breadcrumb must read as three levels of the same interface in every theme — no double border where the bar meets the rail, the rail running from the bar to the bottom of the box, the breadcrumb lined up with the content rather than with the rail. Collapse the rail from its arrow: the content must take the room without jumping, and the breadcrumb and the heading must move with it. Open <b>Reports</b> in the bar: its dropdown must lie above the rail and the content, never under them — that is the bar's layer, now the same in all 22 themes (<code>--kp-z-nav</code>). Then make the window narrower than 40rem of this stage (or open <code>examples/app-shell.html</code> at phone width): the rail leaves the page, and a <b>☰</b> appears in the bar. Press it: the rail slides in over the page with every label written out, even if you had collapsed it to icons, and the page behind it dims. It covers the bar, so it must close from inside — the <b>×</b> in its footer, Escape, or a press on the dimmed page — and the focus must land back on the <b>☰</b>. Widen the window again: the rail is back beside the content as it was, and the ☰ and × are gone. On the examples page at full width the rail must run to the bottom of the window, not stop where the content ends. The frame is <code>.kp-shell</code> with the bar and a <code>.kp-shell__body</code> row under it; the shell is as tall as the window by default and here as tall as <code>--kp-shell-min: 30rem</code> says, and the rail must still run from the bar to the bottom of that height when the content beside it is shorter.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div class="kp-nav-wrap">
-    <nav class="kp-nav" aria-label="Northwind">
-        <a class="kp-nav__brand" href="#app-shell">Northwind</a>
-        <ul class="kp-nav__links">
-            <li><a class="kp-nav__link" href="#app-shell">Overview</a></li>
-            <li><a class="kp-nav__link" href="#app-shell" aria-current="page">Invoices</a></li>
-            <li>
-                <a class="kp-nav__link" href="#app-shell" aria-haspopup="true">Reports</a>
-                <ul class="kp-nav__menu">
-                    <li><a href="#app-shell">Monthly</a></li>
-                    <li><a href="#app-shell">Ageing</a></li>
-                    <li><a href="#app-shell">Tax</a></li>
-                </ul>
-            </li>
-            <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
-        </ul>
-        <button
-        type="button"
-        class="kp-sidenav__toggle kp-icon-button"
-        data-kp-sidenav-toggle
-        aria-controls="nv-shell-rail"
-        hidden
-        >
-        <span aria-hidden="true">☰</span>
-    </button>
-</nav>
+<div class="kp-shell" style="--kp-shell-min: 30rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" aria-label="Northwind">
+            <a class="kp-nav__brand" href="#app-shell">Northwind</a>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#app-shell">Overview</a></li>
+                <li><a class="kp-nav__link" href="#app-shell" aria-current="page">Invoices</a></li>
+                <li>
+                    <a class="kp-nav__link" href="#app-shell" aria-haspopup="true">Reports</a>
+                    <ul class="kp-nav__menu">
+                        <li><a href="#app-shell">Monthly</a></li>
+                        <li><a href="#app-shell">Ageing</a></li>
+                        <li><a href="#app-shell">Tax</a></li>
+                    </ul>
+                </li>
+                <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
+            </ul>
+            <button
+            type="button"
+            class="kp-sidenav__toggle kp-icon-button"
+            data-kp-sidenav-toggle
+            aria-controls="nv-shell-rail"
+            hidden
+            >
+            <span aria-hidden="true">☰</span>
+        </button>
+    </nav>
 </div>
-<div class="kp-d-flex kp-flex-wrap" style="min-block-size: 26rem">
+<div class="kp-shell__body">
     <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim data-kp-sidenav-over-below>
         <div class="kp-sidenav__scroll">
             <ul class="kp-sidenav__list">
@@ -999,36 +1000,38 @@
                     </div>
                 </div>
             </div>
+        </div>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Northwind&quot;</span>&gt;
-        &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Northwind&lt;/<span class="kp-code__keyword">a</span>&gt;
-        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
-            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Invoices&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-            &lt;<span class="kp-code__keyword">li</span>&gt;
-                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Reports&lt;/<span class="kp-code__keyword">a</span>&gt;
-                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span>&gt;
-                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Monthly&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Ageing&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-                    &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Tax&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-                &lt;/<span class="kp-code__keyword">ul</span>&gt;
-            &lt;/<span class="kp-code__keyword">li</span>&gt;
-            &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
-        &lt;/<span class="kp-code__keyword">ul</span>&gt;
-        &lt;<span class="kp-code__keyword">button</span>
-        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
-        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-icon-button&quot;</span>
-        <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
-        <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span>
-        <span class="kp-code__keyword">hidden</span>
-        &gt;
-        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;☰&lt;/<span class="kp-code__keyword">span</span>&gt;
-    &lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;/<span class="kp-code__keyword">nav</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shell&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-shell-min: 30rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Northwind&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Northwind&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Invoices&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span> <span class="kp-code__keyword">aria-haspopup</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Reports&lt;/<span class="kp-code__keyword">a</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__menu&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Monthly&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Ageing&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Tax&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#app-shell&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span>
+            <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+            <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-icon-button&quot;</span>
+            <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
+            <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span>
+            <span class="kp-code__keyword">hidden</span>
+            &gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;☰&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">nav</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-d-flex kp-flex-wrap&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;min-block-size: 26rem&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shell__body&quot;</span>&gt;
     &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-shell-rail&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Invoices&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-slim</span> <span class="kp-code__keyword">data-kp-sidenav-over-below</span>&gt;
         &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
@@ -1099,7 +1102,8 @@
                         &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-prose&quot;</span>&gt;Invoice 2026-0114 was sent at 09:14; the monthly report was generated at 08:02.&lt;/<span class="kp-code__keyword">p</span>&gt;
                     &lt;/<span class="kp-code__keyword">div</span>&gt;
                 &lt;/<span class="kp-code__keyword">div</span>&gt;
-            &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                     <figure class="sc-example" id="more-page-effects-nav-cta">
                         <figcaption class="kp-fw-semibold">Call to action and end side</figcaption>

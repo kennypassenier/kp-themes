@@ -40,6 +40,7 @@
                 <li><a href="#sidenav-slim-toggle">Rail toggle</a></li>
                 <li><a href="#app-shell">Application shell</a></li>
                 <li><a href="#sidenav-over">Over the page</a></li>
+                <li><a href="#sidenav-remember">A side navigation that remembers</a></li>
                 <li><a href="#to-top">Back to top</a></li>
             </ul>
 
@@ -401,15 +402,16 @@
                 <div class="cat-look">
                     <b>Look at:</b> the box below scrolls on its own, and its bar is <code>.kp-nav-wrap--sticky</code>. Scroll inside the box: the bar
                     must stay at the box's top and cover the text passing under it completely — no text showing through its ground or beside its rule.
-                    Once you have scrolled further than the bar is tall it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by
-                    lowering its block padding only, so the brand, the links and the current page's mark keep their size, their baseline and their
-                    look — only the room above and below them goes. The change must glide, not jump, unless your system asks for less motion; then it
-                    must happen at once. Scroll back to the top: it returns to its full height. In the compact bar the links must not touch the rule
-                    under the bar or the box's top edge. Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.
+                    Once you have scrolled further than 120 px — <code>data-kp-nav-sticky-after="120"</code> on the wrapper; without it, the bar's own
+                    height — it turns compact (<code>data-kp-nav-compact</code>): the bar gets shorter by lowering its block padding only, so the
+                    brand, the links and the current page's mark keep their size, their baseline and their look — only the room above and below them
+                    goes. The change must glide, not jump, unless your system asks for less motion; then it must happen at once. Scroll back to the
+                    top: it returns to its full height. In the compact bar the links must not touch the rule under the bar or the box's top edge.
+                    Press <b>Section 3</b> in the bar: the heading must land just below the bar, never under it.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div style="block-size: 18rem; overflow-y: auto; border: 1px dashed var(--border)">
-                        <div class="kp-nav-wrap kp-nav-wrap--sticky">
+                        <div class="kp-nav-wrap kp-nav-wrap--sticky" data-kp-nav-sticky-after="120">
                             <nav class="kp-nav" aria-label="Site operations, sticky">
                                 <a class="kp-nav__brand" href="#bar-sticky">Pump house 4</a>
                                 <ul class="kp-nav__links">
@@ -962,105 +964,110 @@
                     label written out, even if you had collapsed it to icons, and the page behind it dims. It covers the bar, so it must close from
                     inside — the <b>×</b> in its footer, Escape, or a press on the dimmed page — and the focus must land back on the <b>☰</b>. Widen
                     the window again: the rail is back beside the content as it was, and the ☰ and × are gone. On the examples page at full width the
-                    rail must run to the bottom of the window, not stop where the content ends.
+                    rail must run to the bottom of the window, not stop where the content ends. The frame is <code>.kp-shell</code> with the bar and a
+                    <code>.kp-shell__body</code> row under it; the shell is as tall as the window by default and here as tall as
+                    <code>--kp-shell-min: 30rem</code> says, and the rail must still run from the bar to the bottom of that height when the content
+                    beside it is shorter.
                 </div>
                 <div class="cat-stage cat-stage--block" style="padding: 0">
-                    <div class="kp-nav-wrap">
-                        <nav class="kp-nav" aria-label="Northwind">
-                            <a class="kp-nav__brand" href="#app-shell">Northwind</a>
-                            <ul class="kp-nav__links">
-                                <li><a class="kp-nav__link" href="#app-shell">Overview</a></li>
-                                <li><a class="kp-nav__link" href="#app-shell" aria-current="page">Invoices</a></li>
-                                <li>
-                                    <a class="kp-nav__link" href="#app-shell" aria-haspopup="true">Reports</a>
-                                    <ul class="kp-nav__menu">
-                                        <li><a href="#app-shell">Monthly</a></li>
-                                        <li><a href="#app-shell">Ageing</a></li>
-                                        <li><a href="#app-shell">Tax</a></li>
-                                    </ul>
-                                </li>
-                                <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
-                            </ul>
-                            <button
-                                type="button"
-                                class="kp-sidenav__toggle kp-icon-button"
-                                data-kp-sidenav-toggle
-                                aria-controls="nv-shell-rail"
-                                hidden
-                            >
-                                <span aria-hidden="true">☰</span>
-                            </button>
-                        </nav>
-                    </div>
-                    <div class="kp-d-flex kp-flex-wrap" style="min-block-size: 26rem">
-                        <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim data-kp-sidenav-over-below>
-                            <div class="kp-sidenav__scroll">
-                                <ul class="kp-sidenav__list">
+                    <div class="kp-shell" style="--kp-shell-min: 30rem">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Northwind">
+                                <a class="kp-nav__brand" href="#app-shell">Northwind</a>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#app-shell">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#app-shell" aria-current="page">Invoices</a></li>
                                     <li>
-                                        <a class="kp-sidenav__link" href="#app-shell" aria-current="page"
-                                            ><span class="kp-sidenav__icon" aria-hidden="true">▤</span
-                                            ><span class="kp-sidenav__label">All invoices</span></a
-                                        >
+                                        <a class="kp-nav__link" href="#app-shell" aria-haspopup="true">Reports</a>
+                                        <ul class="kp-nav__menu">
+                                            <li><a href="#app-shell">Monthly</a></li>
+                                            <li><a href="#app-shell">Ageing</a></li>
+                                            <li><a href="#app-shell">Tax</a></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <a class="kp-sidenav__link" href="#app-shell"
-                                            ><span class="kp-sidenav__icon" aria-hidden="true">✎</span
-                                            ><span class="kp-sidenav__label">Drafts</span></a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a class="kp-sidenav__link" href="#app-shell"
-                                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span
-                                            ><span class="kp-sidenav__label">Overdue</span></a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a class="kp-sidenav__link" href="#app-shell"
-                                            ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
-                                            ><span class="kp-sidenav__label">Customers</span></a
-                                        >
-                                    </li>
+                                    <li><a class="kp-nav__link" href="#app-shell">Settings</a></li>
                                 </ul>
-                            </div>
-                            <div class="kp-sidenav__footer">
-                                <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-shell-rail">
-                                    <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
-                                    <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
-                                </button>
                                 <button
                                     type="button"
-                                    class="kp-sidenav__toggle kp-sidenav__link"
+                                    class="kp-sidenav__toggle kp-icon-button"
                                     data-kp-sidenav-toggle
                                     aria-controls="nv-shell-rail"
                                     hidden
                                 >
-                                    <span class="kp-sidenav__icon" aria-hidden="true">×</span>
+                                    <span aria-hidden="true">☰</span>
                                 </button>
-                            </div>
-                        </nav>
-                        <div class="kp-flex-1">
-                            <div class="kp-page kp-py-sm">
-                                <nav class="kp-breadcrumb" aria-label="Breadcrumb">
-                                    <ol>
-                                        <li><a href="#app-shell">Northwind</a></li>
-                                        <li><a href="#app-shell">Invoices</a></li>
-                                        <li><span aria-current="page">All invoices</span></li>
-                                    </ol>
-                                </nav>
-                            </div>
-                            <div class="kp-page kp-stack">
-                                <h3>All invoices</h3>
-                                <div class="kp-autogrid">
-                                    <div class="kp-card" data-slot="card">
-                                        <div class="kp-card__header"><h4 class="kp-card__title">Open invoices</h4></div>
-                                        <div class="kp-card__body"><p class="kp-mono">128</p></div>
-                                    </div>
-                                    <div class="kp-card" data-slot="card">
-                                        <div class="kp-card__header"><h4 class="kp-card__title">Overdue</h4></div>
-                                        <div class="kp-card__body"><p class="kp-mono">7</p></div>
-                                    </div>
+                            </nav>
+                        </div>
+                        <div class="kp-shell__body">
+                            <nav class="kp-sidenav" id="nv-shell-rail" aria-label="Invoices" data-kp-sidenav-slim data-kp-sidenav-over-below>
+                                <div class="kp-sidenav__scroll">
+                                    <ul class="kp-sidenav__list">
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#app-shell" aria-current="page"
+                                                ><span class="kp-sidenav__icon" aria-hidden="true">▤</span
+                                                ><span class="kp-sidenav__label">All invoices</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#app-shell"
+                                                ><span class="kp-sidenav__icon" aria-hidden="true">✎</span
+                                                ><span class="kp-sidenav__label">Drafts</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#app-shell"
+                                                ><span class="kp-sidenav__icon" aria-hidden="true">!</span
+                                                ><span class="kp-sidenav__label">Overdue</span></a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a class="kp-sidenav__link" href="#app-shell"
+                                                ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
+                                                ><span class="kp-sidenav__label">Customers</span></a
+                                            >
+                                        </li>
+                                    </ul>
                                 </div>
-                                <p class="kp-prose">Invoice 2026-0114 was sent at 09:14; the monthly report was generated at 08:02.</p>
+                                <div class="kp-sidenav__footer">
+                                    <button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="nv-shell-rail">
+                                        <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span>
+                                        <span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="kp-sidenav__toggle kp-sidenav__link"
+                                        data-kp-sidenav-toggle
+                                        aria-controls="nv-shell-rail"
+                                        hidden
+                                    >
+                                        <span class="kp-sidenav__icon" aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                            </nav>
+                            <div class="kp-flex-1">
+                                <div class="kp-page kp-py-sm">
+                                    <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                                        <ol>
+                                            <li><a href="#app-shell">Northwind</a></li>
+                                            <li><a href="#app-shell">Invoices</a></li>
+                                            <li><span aria-current="page">All invoices</span></li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                                <div class="kp-page kp-stack">
+                                    <h3>All invoices</h3>
+                                    <div class="kp-autogrid">
+                                        <div class="kp-card" data-slot="card">
+                                            <div class="kp-card__header"><h4 class="kp-card__title">Open invoices</h4></div>
+                                            <div class="kp-card__body"><p class="kp-mono">128</p></div>
+                                        </div>
+                                        <div class="kp-card" data-slot="card">
+                                            <div class="kp-card__header"><h4 class="kp-card__title">Overdue</h4></div>
+                                            <div class="kp-card__body"><p class="kp-mono">7</p></div>
+                                        </div>
+                                    </div>
+                                    <p class="kp-prose">Invoice 2026-0114 was sent at 09:14; the monthly report was generated at 08:02.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1076,7 +1083,9 @@
                     Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press
                     <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its
                     first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is
-                    open.
+                    open. The backdrop is on by default (<code>data-kp-sidenav-backdrop</code>, written out on the live panel);
+                    <b>Open without a backdrop</b> opens the same panel with <code>data-kp-sidenav-backdrop="false"</code>: the page behind is not
+                    dimmed and a press on it does nothing, so Escape and the panel's own <b>Close</b> are the ways out.
                 </div>
                 <div class="cat-stage" style="align-items: stretch">
                     <div style="position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden">
@@ -1119,7 +1128,7 @@
                         >
                             Open the panel
                         </button>
-                        <nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over">
+                        <nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
                             <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
                             <div class="kp-sidenav__scroll">
                                 <ul class="kp-sidenav__list">
@@ -1143,7 +1152,112 @@
                             </div>
                         </nav>
                     </div>
+                    <div>
+                        <button
+                            type="button"
+                            class="kp-sidenav__toggle kp-button kp-button--secondary"
+                            data-kp-sidenav-toggle
+                            aria-controls="nv-over-bare"
+                        >
+                            Open without a backdrop
+                        </button>
+                        <nav
+                            class="kp-sidenav"
+                            id="nv-over-bare"
+                            aria-label="Incident sections, no backdrop"
+                            data-kp-sidenav-mode="over"
+                            data-kp-sidenav-backdrop="false"
+                        >
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4468</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+                                            ><span class="kp-sidenav__label">Summary</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-sidenav__footer">
+                                <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="nv-over-bare">
+                                    Close
+                                </button>
+                            </div>
+                        </nav>
+                    </div>
                 </div>
+            </section>
+
+            <section class="cat-block" id="sidenav-remember">
+                <h2>A side navigation that remembers</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-remember="cat-remember-nav"</code> on the panel, and a name of its own on each group. Fold
+                    <b>Readings</b> away and open <b>Maintenance</b>, then reload the page or follow a link to another catalogue page and come back:
+                    both groups are as you left them, drawn that way from the first frame — no group may open and then snap shut. The state lives in
+                    <code>localStorage</code> under <code>kp-remember:sidenav:cat-remember-nav:groups</code>, a key composed from the element's name,
+                    so another page with a panel of the same name shares it. Without the attribute nothing is stored at all. The same attribute works
+                    on a <code>&lt;details&gt;</code>, a tree, a split pane and a data table (see the Structure page). Press <b>Forget</b> to clear
+                    what this block remembered and reload: it opens as the markup says, Readings open and Maintenance closed. Judge the block in that
+                    state.
+                </div>
+                <div class="cat-stage" style="padding: 0; flex-wrap: nowrap; align-items: stretch; block-size: 18rem">
+                    <nav class="kp-sidenav" id="nv-remember" aria-label="North site sections, remembered" data-kp-remember="cat-remember-nav">
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav-remember" aria-current="page"
+                                        ><span class="kp-sidenav__label">Overview</span></a
+                                    >
+                                </li>
+                                <li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="readings">
+                                    <button type="button" class="kp-sidenav__category-toggle">
+                                        <span class="kp-sidenav__label">Readings</span>
+                                    </button>
+                                    <div class="kp-sidenav__submenu">
+                                        <ul class="kp-sidenav__list">
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-remember"
+                                                    ><span class="kp-sidenav__label">Pressure</span></a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-remember"
+                                                    ><span class="kp-sidenav__label">Flow rate</span></a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="kp-sidenav__category" data-kp-remember="maintenance">
+                                    <button type="button" class="kp-sidenav__category-toggle">
+                                        <span class="kp-sidenav__label">Maintenance</span>
+                                    </button>
+                                    <div class="kp-sidenav__submenu">
+                                        <ul class="kp-sidenav__list">
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-remember"
+                                                    ><span class="kp-sidenav__label">Lock-outs</span></a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a class="kp-sidenav__link" href="#sidenav-remember"
+                                                    ><span class="kp-sidenav__label">Spare parts</span></a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div style="padding: 1rem; min-inline-size: 0">
+                        <p style="margin-block-start: 0">Fold a group, reload, and it stays folded.</p>
+                    </div>
+                </div>
+                <p class="cat-note"><button type="button" class="kp-button kp-button--sm" data-cat-forget="cat-remember-">Forget</button></p>
             </section>
 
             <section class="cat-block" id="to-top">

@@ -965,6 +965,62 @@
     &lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-page-theme-status">
+                        <figcaption class="kp-fw-semibold">Theme picker: a choice that will not be kept</figcaption>
+                        <p class="kp-text-muted">What the picker says when the browser refuses to store the choice — a private window, or site data blocked. The page still changes theme, but the next load will not remember it, so <code>js/theme-picker.js</code> writes the sentence into <code>[data-kp-theme-status]</code> and shows it. Both shapes are frozen with the sentence showing. In the first, the plain picker of the theme guide, it is a line under the buttons in the alarm colour, a step smaller than the text. In the second, the menu, it is <code>.kp-theme-menu__status</code>, the first row of the menu with the padding of a menu item, so it lines up with the options under it and never looks like one of them. The words must read on the menu's ground in every theme. Pressing an option here does change the page; where storage works the sentence then goes, as it should.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div data-kp-theme-picker aria-label="Choose a theme, storage blocked">
+    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
+</div>
+<p data-kp-theme-status>This choice will not be remembered — storage is blocked in this browser.</p>
+</div>
+<div class="sc-example__stage">
+<span class="kp-theme-menu">
+    <button type="button" class="kp-icon-button" aria-label="Choose a theme" aria-expanded="true">
+        <span aria-hidden="true">◐</span>
+    </button>
+    <div class="kp-popover">
+        <ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme, storage blocked">
+            <li role="presentation" class="kp-theme-menu__status" data-kp-theme-status>
+                This choice will not be remembered — storage is blocked in this browser.
+            </li>
+            <li>
+                <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button>
+            </li>
+            <li>
+                <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button>
+            </li>
+        </ul>
+    </div>
+</span>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-theme-picker</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Choose a theme, storage blocked&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Formal&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Dark&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-theme-status</span>&gt;This choice will not be remembered — storage is blocked in this browser.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-theme-menu&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Choose a theme&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;◐&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-popover&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu&quot;</span> <span class="kp-code__keyword">data-kp-theme-picker</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Choose a theme, storage blocked&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;presentation&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-theme-menu__status&quot;</span> <span class="kp-code__keyword">data-kp-theme-status</span>&gt;
+                This choice will not be remembered — storage is blocked in this browser.
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;Formal&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;Dark&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-page-effects-picker-focus">
                         <figcaption class="kp-fw-semibold">Theme picker focus ring</figcaption>
                         <p class="kp-text-muted">Tab into the row of theme buttons and walk it with Tab. In <b>every</b> theme the focused button shows a ring of two visible channels: a solid outline at least 2 px wide, standing at least 2 px off the button, and a second, contrasting colour with it, so the ring shows on a light and on a dark ground alike. On the button of the theme on screen, the selection's own border and check must not hide the ring. Pressing a button switches this page's theme.</p>

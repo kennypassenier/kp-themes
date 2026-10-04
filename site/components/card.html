@@ -295,6 +295,64 @@
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-colorpicker__contrast&quot;</span> <span class="kp-code__keyword">data-kp-colorpicker-contrast</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-data-card">
+                        <figcaption class="kp-fw-semibold">Card with a header, actions and a footer</figcaption>
+                        <p class="kp-text-muted">The card's slots as <code>components/card.jsx</code> renders them and a server writes them. The <code>.kp-card__header</code> is a row: the title at its start, <code>.kp-card__actions</code> at its end with a small gap between the buttons, and the two on one baseline — not the buttons' boxes centred on the title's box. The body under it is in the muted ink, the footer is set off by a hairline. In the narrow copy the actions must wrap under the title or stay beside it, never push the card wider than its pane. The buttons must read on the card's ground in every theme that paints the card apart from the page.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card" data-slot="card">
+    <div class="kp-card__header">
+        <h3 class="kp-card__title">Line 2</h3>
+        <div class="kp-card__actions">
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm">Edit</button>
+            <button type="button" class="kp-button kp-button--sm">Open readings</button>
+        </div>
+    </div>
+    <div class="kp-card__body">
+        <p>Two open incidents. The pressure dropped from 3.2 to 1.1 bar at 02:10 and recovered by 02:40.</p>
+    </div>
+    <div class="kp-card__footer">Last reading 02:59 · signed by the night shift</div>
+</div>
+<div class="cat-resize" style="inline-size: 18rem; margin-block-start: 1rem">
+    <div class="kp-card" data-slot="card">
+        <div class="kp-card__header">
+            <h3 class="kp-card__title">Cold store, compressor B</h3>
+            <div class="kp-card__actions">
+                <button type="button" class="kp-button kp-button--ghost kp-button--sm">Mute</button>
+                <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+            </div>
+        </div>
+        <div class="kp-card__body"><p>Running hot for 43 minutes.</p></div>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Line 2&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span>&gt;Edit&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Open readings&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Two open incidents. The pressure dropped from 3.2 to 1.1 bar at 02:10 and recovered by 02:40.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer&quot;</span>&gt;Last reading 02:59 · signed by the night shift&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 18rem; margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-slot</span><span class="kp-code__string">=&quot;card&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Cold store, compressor B&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span>&gt;Mute&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Running hot for 43 minutes.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-page-effects-dossier">
                         <figcaption class="kp-fw-semibold">Dossier</figcaption>
                         <p class="kp-text-muted">The dossier card (<code>data-kp-reveal="emphasis"</code> with a trigger inside). The left copy is covered, waiting for its trigger; the right copy is the same file opened. In <b>every</b> theme: while covered the three redacted phrases are not readable but keep their place, so opening the file re-breaks no line; opened, they read at full contrast; the stamp reads the card's own <code>data-kp-label</code> ("Sealed") and never covers the title or the text; a theme that swaps the word shows <code>data-kp-label-open</code> ("Cleared") once open. In the live copy, press <b>Open the file</b>: the redactions must lift in one motion or on a short stagger, never a flicker, and a second press covers them again; <b>Replay</b> puts it back covered. Per theme: <b>formal</b> names its word, static, and clears left to right; <b>nostromo</b>'s label tape swaps its word and the redactions clear together; <b>grotesk</b>'s bars cut away in three steps; <b>retro</b> is a Notepad window with a read-only stamp and a dither brush lifting off; <b>terminal</b> a bracketed stamp with cells clearing; <b>brutalism</b> a tilted stamp with a pixel outline and bars sliding off; <b>phantom</b> a rotated red plate and censor plates shearing off; <b>solstice</b> a slightly rotated stamp and a boundary-coloured bar lifted right to left; <b>lapis</b> a seal over the redactions; <b>deco</b> jewel redactions; <b>synthwave</b> the stamp in the OSD face and noise that clears; <b>blueprint</b> solid ink blocks cleared left to right; <b>forest</b> and <b>sepia</b> a rotated stamp in the destructive ink; <b>pastel</b> a rotated stamp that swaps its word; <b>dark</b> a log with a redact bar; <b>high-contrast</b> staggered by 90 ms.</p>
@@ -433,6 +491,184 @@
     &lt;/<span class="kp-code__keyword">section</span>&gt;
 &lt;/<span class="kp-code__keyword">template</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-size">
+                        <figcaption class="kp-fw-semibold">A box that grows and shrinks</figcaption>
+                        <p class="kp-text-muted">Add and remove readings. The card must glide to its new height both ways, never snap and never overshoot, with the theme's own character while it moves (formal rules its frame in, terminal moves a line at a time, and so on); everything under the card moves with it. Opt a box in with <code>data-kp-size-motion</code>; dialogs, accordions, tabs, tables, toasts and the other components do it without.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-list>
+    <p class="kp-text-muted">Readings, pump house 4</p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-list</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span>&gt;Readings, pump house 4&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-arrive">
+                        <figcaption class="kp-fw-semibold">What arrives</figcaption>
+                        <p class="kp-text-muted">A message shown in the box on the left arrives the theme's way while the box grows to make room. The box on the right is marked <code>data-kp-arrive="none"</code>, the way a live view that redraws its rows on every refresh is marked: there the same message simply appears, and only the size eases.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-autogrid">
+    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-arrive>
+        <p class="kp-text-muted">Arrives the theme's way</p>
+    </div>
+    <div class="kp-card kp-stack" data-kp-size-motion data-kp-arrive="none" data-cat-motion-arrive>
+        <p class="kp-text-muted">A live view: <code>data-kp-arrive="none"</code></p>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-arrive</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span>&gt;Arrives the theme's way&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-kp-arrive</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-cat-motion-arrive</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span>&gt;A live view: &lt;<span class="kp-code__keyword">code</span>&gt;data-kp-arrive=&quot;none&quot;&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-leave">
+                        <figcaption class="kp-fw-semibold">What leaves</figcaption>
+                        <p class="kp-text-muted">Remove one message or row with its ✕: it must play this theme's own exit (formal folds it up like a letter, retro shrinks it in pixel steps, titanium runs it through the colours titanium takes under heat, high-contrast lays REMOVED across it, one per theme), its space must close during the exit, and nothing may be drawn over the element above or below it. Then <b>Remove all at once</b>: they go one by one, the lowest first, each starting when the one before is halfway. <b>Bring them back</b> lets them arrive again.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave>
+    <div class="kp-alert kp-alert--warning" role="status">
+        <span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Pressure on line 2 dropped to 1.1 bar at 02:40.</span>
+        <button type="button" class="kp-icon-button kp-alert__close" data-cat-leave aria-label="Dismiss">×</button>
+    </div>
+    <div class="kp-alert kp-alert--info" role="status">
+        <span class="kp-alert__body"><span class="kp-alert__label">Info: </span>The night shift locked the line out at 02:45.</span>
+        <button type="button" class="kp-icon-button kp-alert__close" data-cat-leave aria-label="Dismiss">×</button>
+    </div>
+    <div class="kp-row kp-row--between">
+        <span>02:51 · 1.47 bar</span>
+        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+    </div>
+    <div class="kp-row kp-row--between">
+        <span>02:52 · 1.84 bar</span>
+        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-leave</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Pressure on line 2 dropped to 1.1 bar at 02:40.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;Info: &lt;/<span class="kp-code__keyword">span</span>&gt;The night shift locked the line out at 02:45.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-alert__close&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Dismiss&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;02:51 · 1.47 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;02:52 · 1.84 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-motion-leave-options">
+                        <figcaption class="kp-fw-semibold">Leaving: the options</figcaption>
+                        <p class="kp-text-muted">The same rows with the defaults changed by a custom property on the box. On the left <code>--kp-leave-stagger: 1</code>: <b>Remove all</b> waits for each exit in full before the next. In the middle <code>--kp-leave-fold: after</code>: each exit plays out before its space closes. On the right <code>--kp-leave-fold: ghost</code>: the space closes at once under a copy that plays the exit. Each must still end with every row gone and the card at its smallest.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-autogrid">
+    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-stagger: 1">
+        <div class="kp-row kp-row--between">
+            <span>02:41 · 1.37 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:42 · 1.74 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:43 · 1.21 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+    </div>
+    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-fold: after">
+        <div class="kp-row kp-row--between">
+            <span>02:41 · 1.37 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:42 · 1.74 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:43 · 1.21 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+    </div>
+    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-fold: ghost">
+        <div class="kp-row kp-row--between">
+            <span>02:41 · 1.37 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:42 · 1.74 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+        <div class="kp-row kp-row--between">
+            <span>02:43 · 1.21 bar</span>
+            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+        </div>
+    </div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-leave</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-leave-stagger: 1&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:41 · 1.37 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:42 · 1.74 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:43 · 1.21 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-leave</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-leave-fold: after&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:41 · 1.37 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:42 · 1.74 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:43 · 1.21 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-size-motion</span> <span class="kp-code__keyword">data-cat-motion-leave</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-leave-fold: ghost&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:41 · 1.37 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:42 · 1.74 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-row--between&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span>&gt;02:43 · 1.21 bar&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost kp-button--sm&quot;</span> <span class="kp-code__keyword">data-cat-leave</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Remove&quot;</span>&gt;✕&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                 </section>

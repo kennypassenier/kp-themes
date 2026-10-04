@@ -1,6 +1,8 @@
 # A dialog closing, and boxes that grow and shrink
 
-**Round five open (2026-10-04): elements that leave.** One element leaves with its theme's exit; several removed together go one by one, bottom first. Three exits per theme are on show (`leaves.css`, `exits.css`, and the signature exits in `signature-exits.css`), with when the space closes (`--kp-leave-fold`) and how far into one exit the next starts (`--kp-leave-stagger`) as page-wide buttons. Rounds one to four were approved in every theme (110 of 110). Kenny approved every pair in every theme over four
+**Decided (2026-10-04).** Every theme's leave is picked (rounds five to eight) and lives in its register; the motion is on the catalogue's Motion page. Archived.
+
+**Round five (2026-10-04): elements that leave.** One element leaves with its theme's exit; several removed together go one by one, bottom first. Three exits per theme are on show (`leaves.css`, `exits.css`, and the signature exits in `signature-exits.css`), with when the space closes (`--kp-leave-fold`) and how far into one exit the next starts (`--kp-leave-stagger`) as page-wide buttons. Rounds one to four were approved in every theme (110 of 110). Kenny approved every pair in every theme over four
 rounds: the close and the accordion in round two, the tabs in round three,
 growing and shrinking with a character per theme in round four (110 of 110).
 Built: `js/motion.js` [scope-142], the character of fourteen themes moved from
@@ -8,6 +10,8 @@ Built: `js/motion.js` [scope-142], the character of fourteen themes moved from
 without a clip.
 
 **Round six verdicts (2026-10-04).** Picked: formal exit 2, light 1, dark 2, pastel 2, forest 2, blueprint 3, solstice 2, brutalism 2, deco 1, shade-light 2, shade-dark 2, retro 1, nostromo 2. Once for every theme: the space closes during the exit (`--kp-leave-fold: together`), and in a row of leaves the next starts halfway (`--kp-leave-stagger: 0.5`). Sent back with three new exits each in `round7.css`: cyberpunk, synthwave, terminal, high-contrast, sepia, phantom, grotesk, lapis, titanium. Kenny: "where I put commentary, I almost always mean to change it into what I mean and fill the rest with prototypes of new ideas".
+
+**Round eight verdict (2026-10-04).** High-contrast picked exit 1, announced (a REMOVED caption).
 
 **Round seven verdicts (2026-10-04).** Picked: cyberpunk exit 1 (classic glitch), synthwave 2 (sunset), terminal 1 (cursor), sepia 2 (burned), phantom 1, grotesk 3 (colour bands), lapis 1, titanium 1 (anodised). High-contrast sent back again: three new exits in round eight (announced, braille, focus moves on).
 

@@ -39,7 +39,8 @@
                     headline flickers in and each letter decodes through two noise glyphs, a split copy slices through it, the glow breathes and the
                     bars march. Only the button closes it: a click, Enter or Space. Escape does nothing, a click on the plate does nothing, and
                     waiting does nothing. The page behind cannot be clicked and Tab stays inside. When it closes, focus is back on the button you
-                    pressed. <b>Raise it, Escape allowed</b> is the same alarm with <code>escape</code> on.
+                    pressed. <b>Raise it, Escape allowed</b> is the same alarm with <code>escape</code> on. Every close fires
+                    <code>kp-alarm-close</code> on the trigger with the reason it closed for; the line under the stage shows the last one.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" data-kp-alarm-motion="still" inert>
@@ -80,6 +81,7 @@
                         </button>
                     </div>
                 </div>
+                <p class="cat-note" data-cat-alarm-log>No alarm closed yet.</p>
             </section>
 
             <section class="cat-block" id="auto">
@@ -91,7 +93,8 @@
                     acknowledged one, the bar empties and the alarm goes away by itself, with focus back on the button. Raise it again and press
                     Escape: it closes. Raise it a third time and press Tab once: focus lands on Keep open, and pressing it stops the clock, brings the
                     Acknowledge button back and gives it focus; from then on only that button closes it. With reduced motion asked for, the bar steps
-                    a whole second at a time instead of sliding.
+                    a whole second at a time instead of sliding. The line under the stage shows the reason <code>kp-alarm-close</code> carried: a
+                    different one when the clock ran out than when Escape or the button closed it.
                 </div>
                 <div class="cat-stage cat-stage--block">
                     <div
@@ -131,6 +134,7 @@
                         </button>
                     </div>
                 </div>
+                <p class="cat-note" data-cat-alarm-log>No alarm closed yet.</p>
             </section>
         </main>
 

@@ -29,6 +29,7 @@
                 <li><a href="#invalid">Invalid</a></li>
                 <li><a href="#unavailable">Disabled and read-only</a></li>
                 <li><a href="#summary">Error summary</a></li>
+                <li><a href="#validate-timing">When a form checks</a></li>
                 <li><a href="#extremes">Extremes</a></li>
                 <li><a href="#narrow">A form in a narrow pane</a></li>
                 <li><a href="#error-page">Error page</a></li>
@@ -287,6 +288,57 @@ Closed by the day shift after the gauge was replaced.</textarea>
                     The live form never sends anything: it has no action, and a valid submit only turns the button busy. Reload the page to get it
                     back.
                 </p>
+            </section>
+
+            <section class="cat-block" id="validate-timing">
+                <h2>When a form checks</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> three attributes on the form that decide <i>when</i> <code>js/forms.js</code> speaks; the look of each message is
+                    the one above. The first form has <code>data-kp-validate-on="input"</code>: type one letter into <b>Reporter's email</b> and the
+                    error appears at once, and goes once the address is whole. The second has <code>data-kp-validate-on="submit"</code>,
+                    <code>data-kp-revalidate-on="blur"</code> and <code>data-kp-focus-summary="false"</code>: nothing is said while you type or leave
+                    a field; press <b>Report</b> empty and the summary appears but focus stays on the button; then fix a field and its message clears
+                    only when you leave it, not while you type. The defaults (blur, then input, then focus the summary) are the live form in
+                    <b>Error summary</b>.
+                </div>
+                <div class="cat-stage">
+                    <form class="kp-form" data-kp-form data-kp-validate-on="input" novalidate aria-label="Checked while typing">
+                        <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="f-vt-mail">Reporter's email <span class="kp-field__required">required</span></label>
+                            <input class="kp-field__input" id="f-vt-mail" name="mail" type="email" required />
+                            <span class="kp-field__error" data-kp-field-error hidden></span>
+                        </div>
+                        <div>
+                            <button type="submit" class="kp-button" data-kp-submit>Report</button>
+                        </div>
+                    </form>
+                    <form
+                        class="kp-form"
+                        data-kp-form
+                        data-kp-validate-on="submit"
+                        data-kp-revalidate-on="blur"
+                        data-kp-focus-summary="false"
+                        novalidate
+                        aria-label="Checked on submit only"
+                    >
+                        <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="f-vs-ref">Incident reference <span class="kp-field__required">required</span></label>
+                            <input class="kp-field__input" id="f-vs-ref" name="ref" type="text" required />
+                            <span class="kp-field__error" data-kp-field-error hidden></span>
+                        </div>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="f-vs-mail">Reporter's email <span class="kp-field__required">required</span></label>
+                            <input class="kp-field__input" id="f-vs-mail" name="mail" type="email" required />
+                            <span class="kp-field__error" data-kp-field-error hidden></span>
+                        </div>
+                        <div>
+                            <button type="submit" class="kp-button" data-kp-submit>Report</button>
+                        </div>
+                    </form>
+                </div>
+                <p class="cat-note">Neither form sends anything; a valid submit only turns its button busy. Reload the page to get them back.</p>
             </section>
 
             <section class="cat-block" id="extremes">

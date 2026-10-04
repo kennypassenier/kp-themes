@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Motion · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Motion</h1>
+            <p class="cat-intro">
+                How things move in every theme [scope-142]: a dialog leaves the way it came, a box eases to its new size when what is in it changes,
+                what arrives in a box arrives the theme's way, and what leaves plays the theme's own exit while its space closes. All of it is
+                <code>js/motion.js</code>, which <code>js/auto.js</code> loads by itself; every speed comes from the theme's own dialog entrance, and
+                a reader who asked for reduced motion gets none of it. The buttons in each block play it; the markup in each stage is what you write.
+            </p>
+            <ul class="cat-toc">
+                <li><a href="#dialog-close">Dialog closing</a></li>
+                <li><a href="#size">A box that grows and shrinks</a></li>
+                <li><a href="#arrive">What arrives</a></li>
+                <li><a href="#leave">What leaves</a></li>
+                <li><a href="#leave-options">Leaving: the options</a></li>
+                <li><a href="#motion-js">From a script</a></li>
+            </ul>
+
+            <section class="cat-block" id="dialog-close">
+                <h2>Dialog closing</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> open the dialog and close it with either button or Escape. It must leave the way it came, the theme's own entrance
+                    played backwards, in about two thirds of its time, and the page behind it must not jump when it is gone. Nothing to write for it:
+                    every <code>.kp-dialog</code> on a page that loads <code>js/auto.js</code> closes this way.
+                </div>
+                <div class="cat-stage">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="mo-dialog">Open the dialog</button>
+                    <dialog class="kp-dialog" id="mo-dialog" aria-labelledby="mo-dialog-title">
+                        <h2 class="kp-dialog__title" id="mo-dialog-title">Sign the handover?</h2>
+                        <p>The night shift's readings are locked and the day shift takes the line over.</p>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Not yet</button>
+                            <button type="button" class="kp-button" data-kp-dialog-close="sign">Sign</button>
+                        </div>
+                    </dialog>
+                </div>
+            </section>
+
+            <section class="cat-block" id="size">
+                <h2>A box that grows and shrinks</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> add and remove readings. The card must glide to its new height both ways, never snap and never overshoot, with the
+                    theme's own character while it moves (formal rules its frame in, terminal moves a line at a time, and so on); everything under the
+                    card moves with it. Opt a box in with <code>data-kp-size-motion</code>; dialogs, accordions, tabs, tables, toasts and the other
+                    components do it without.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-list>
+                        <p class="kp-text-muted">Readings, pump house 4</p>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-motion="add">Add a reading</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-motion="add3">Add three</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-motion="remove">Remove the last</button>
+                </p>
+            </section>
+
+            <section class="cat-block" id="arrive">
+                <h2>What arrives</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a message shown in the box on the left arrives the theme's way while the box grows to make room. The box on the
+                    right is marked <code>data-kp-arrive="none"</code>, the way a live view that redraws its rows on every refresh is marked: there
+                    the same message simply appears, and only the size eases.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-autogrid">
+                        <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-arrive>
+                            <p class="kp-text-muted">Arrives the theme's way</p>
+                        </div>
+                        <div class="kp-card kp-stack" data-kp-size-motion data-kp-arrive="none" data-cat-motion-arrive>
+                            <p class="kp-text-muted">A live view: <code>data-kp-arrive="none"</code></p>
+                        </div>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-motion="arrive">Show a message in both</button>
+                </p>
+            </section>
+
+            <section class="cat-block" id="leave">
+                <h2>What leaves</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> remove one message or row with its ✕: it must play this theme's own exit (formal folds it up like a letter, retro
+                    shrinks it in pixel steps, titanium runs it through the colours titanium takes under heat, high-contrast lays REMOVED across it,
+                    one per theme), its space must close during the exit, and nothing may be drawn over the element above or below it. Then
+                    <b>Remove all at once</b>: they go one by one, the lowest first, each starting when the one before is halfway.
+                    <b>Bring them back</b> lets them arrive again.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave>
+                        <div class="kp-alert kp-alert--warning" role="status">
+                            <span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Pressure on line 2 dropped to 1.1 bar at 02:40.</span>
+                            <button type="button" class="kp-icon-button kp-alert__close" data-cat-leave aria-label="Dismiss">×</button>
+                        </div>
+                        <div class="kp-alert kp-alert--info" role="status">
+                            <span class="kp-alert__body"><span class="kp-alert__label">Info: </span>The night shift locked the line out at 02:45.</span>
+                            <button type="button" class="kp-icon-button kp-alert__close" data-cat-leave aria-label="Dismiss">×</button>
+                        </div>
+                        <div class="kp-row kp-row--between">
+                            <span>02:51 · 1.47 bar</span>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                        </div>
+                        <div class="kp-row kp-row--between">
+                            <span>02:52 · 1.84 bar</span>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-motion="leave-all">Remove all at once</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-motion="leave-reset">Bring them back</button>
+                </p>
+                <pre class="kp-code-block"><code>import { leave } from '@kp-soft/themes/js/motion';
+
+// One element: the theme's exit, then it is removed.
+await leave(row);
+
+// Hidden instead of removed.
+await leave(panel, { hide: true });
+
+// Several in the same task: one by one, the lowest first.
+for (const row of selected) leave(row);</code></pre>
+            </section>
+
+            <section class="cat-block" id="leave-options">
+                <h2>Leaving: the options</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the same rows with the defaults changed by a custom property on the box. On the left
+                    <code>--kp-leave-stagger: 1</code>: <b>Remove all</b> waits for each exit in full before the next. In the middle
+                    <code>--kp-leave-fold: after</code>: each exit plays out before its space closes. On the right
+                    <code>--kp-leave-fold: ghost</code>: the space closes at once under a copy that plays the exit. Each must still end with every row
+                    gone and the card at its smallest.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-autogrid">
+                        <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-stagger: 1">
+                            <div class="kp-row kp-row--between">
+                                <span>02:41 · 1.37 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:42 · 1.74 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:43 · 1.21 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                        </div>
+                        <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-fold: after">
+                            <div class="kp-row kp-row--between">
+                                <span>02:41 · 1.37 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:42 · 1.74 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:43 · 1.21 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                        </div>
+                        <div class="kp-card kp-stack" data-kp-size-motion data-cat-motion-leave style="--kp-leave-fold: ghost">
+                            <div class="kp-row kp-row--between">
+                                <span>02:41 · 1.37 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:42 · 1.74 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                            <div class="kp-row kp-row--between">
+                                <span>02:43 · 1.21 bar</span>
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-cat-leave aria-label="Remove">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-motion="leave-all">Remove all at once</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-motion="leave-reset">Bring them back</button>
+                </p>
+                <table class="kp-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Custom property</th>
+                            <th scope="col">Default</th>
+                            <th scope="col">What it does</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>--kp-leave-stagger</code></td>
+                            <td><code>0.5</code></td>
+                            <td>How far into one exit the next of several starts; <code>1</code> waits for each in full.</td>
+                        </tr>
+                        <tr>
+                            <td><code>--kp-leave-fold</code></td>
+                            <td><code>together</code></td>
+                            <td>
+                                When the space closes: <code>together</code> a third into the exit, <code>after</code> once it is over,
+                                <code>ghost</code>
+                                at once under a copy that plays the exit.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>--kp-leave-pause</code></td>
+                            <td><code>0</code></td>
+                            <td>With <code>after</code>: milliseconds of empty space before it closes.</td>
+                        </tr>
+                        <tr>
+                            <td><code>--kp-motion-scale</code></td>
+                            <td><code>1</code></td>
+                            <td>On the root: plays every dialog close and resize slower (above 1) or faster (below 1).</td>
+                        </tr>
+                        <tr>
+                            <td><code>--kp-close-max</code> / <code>--kp-size-max</code></td>
+                            <td><code>600ms</code> / <code>480ms</code></td>
+                            <td>The longest a dialog close and a resize may take, whatever the theme's entrance.</td>
+                        </tr>
+                        <tr>
+                            <td><code>data-kp-arrive="none"</code></td>
+                            <td>off</td>
+                            <td>On a box: what arrives in it simply appears (a live view's redraws).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="cat-block" id="motion-js">
+                <h2>From a script</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> nothing moves here; it is the code for a page that does not load <code>js/auto.js</code>, or that drives the
+                    motion itself.
+                </div>
+                <pre
+                    class="kp-code-block"
+                ><code>import { attachMotion, closeDialog, easeSize, leave, themeMotion, withoutOvershoot } from '@kp-soft/themes/js/motion';
+
+attachMotion(document);                 // every dialog and component box on the page, and [data-kp-size-motion]
+const stop = easeSize(card);            // one box by hand; stop() undoes it
+await closeDialog(dialog, 'saved');     // close with the theme's motion; resolves when it is shut
+await leave(row);                       // the theme's exit, then removed
+const { open, close, size, ease } = themeMotion(); // the theme's timings, in ms
+el.animate(frames, { easing: withoutOvershoot(ease) }); // the theme's curve without its overshoot</code></pre>
+            </section>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+    </body>
+</html>

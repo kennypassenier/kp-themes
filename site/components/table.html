@@ -423,10 +423,10 @@
                     </figure>
                     <figure class="sc-example" id="more-table-wide">
                         <figcaption class="kp-fw-semibold">Forty columns</figcaption>
-                        <p class="kp-text-muted">The wrapper scrolls on its own and the page never does. Two ways to reach the columns off screen, both to check. With Tab: the first cell of each row is a link, so Tab walks down the rows, and when the wrapper itself has focus the arrow keys scroll it sideways — a table cell is not a Tab stop, so Tab alone never walks across a row (Kenny found the earlier note promised that, and it cannot). With the pointer: scroll sideways inside the wrapper. The header must stay readable while it scrolls, and in a theme that paints a frame or a bezel, the frame must not scroll away with the content.</p>
+                        <p class="kp-text-muted">The wrapper scrolls on its own and the page never does. Two ways to reach the columns off screen, both to check. With Tab: the first cell of each row is a link, so Tab walks down the rows, and when the wrapper itself has focus the arrow keys scroll it sideways — a table cell is not a Tab stop, so Tab alone never walks across a row (Kenny found the earlier note promised that, and it cannot). With the pointer: scroll sideways inside the wrapper. The header must stay readable while it scrolls, and in a theme that paints a frame or a bezel, the frame must not scroll away with the content. The wrapper is written with only <code>data-kp-region-label</code>: <code>js/tables.js</code> gives it <code>tabindex="0"</code>, <code>role="region"</code> and that name, so the focus ring on the wrapper is the package's, not the page's.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div class="kp-table-wrap" tabindex="0" role="region" aria-label="Forty-column incident detail">
+<div class="kp-table-wrap" data-kp-region-label="Forty-column incident detail">
     <table class="kp-table">
         <thead>
             <tr>
@@ -688,7 +688,7 @@
 </div>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;region&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Forty-column incident detail&quot;</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span> <span class="kp-code__keyword">data-kp-region-label</span><span class="kp-code__string">=&quot;Forty-column incident detail&quot;</span>&gt;
     &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">thead</span>&gt;
             &lt;<span class="kp-code__keyword">tr</span>&gt;

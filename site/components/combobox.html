@@ -753,6 +753,52 @@
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-combobox-clear">
+                        <figcaption class="kp-fw-semibold">Clear button, React shape</figcaption>
+                        <p class="kp-text-muted"><code>.kp-combobox__clear</code>, the × that <code>components/combobox.jsx</code> renders with <code>clearable</code> while the box holds a value, frozen here with <i>Pump house 4</i> chosen; the framework-free combobox has no clear button. It is a bare glyph in the muted ink, positioned against the combobox box at its inline end: it must sit inside the input, centred on the input's height and clear of the typed text, never on the label above or the status line under it. Its name is <b>Close</b> from the dictionary. This copy is not attached, so pressing it does nothing.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<div class="kp-combobox">
+    <label class="kp-field__label" for="cb-clear">Site</label>
+    <input
+    class="kp-combobox__input"
+    id="cb-clear"
+    type="text"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="cb-clear-list"
+    autocomplete="off"
+    value="Pump house 4"
+    />
+    <button type="button" class="kp-combobox__clear" aria-label="Close">×</button>
+    <ul class="kp-combobox__list" id="cb-clear-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;cb-clear&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__input&quot;</span>
+    <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-clear&quot;</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span>
+    <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;cb-clear-list&quot;</span>
+    <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span>
+    <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;Pump house 4&quot;</span>
+    /&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__clear&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;cb-clear-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;ph4&quot;</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;cold&quot;</span>&gt;Cold store&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-combobox__status&quot;</span> <span class="kp-code__keyword">data-kp-combobox-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-feedback-tags">
                         <figcaption class="kp-fw-semibold">Tags</figcaption>
                         <p class="kp-text-muted">A <code>.kp-tag-list</code> of <code>.kp-tag</code> pills. A tag differs from a badge by its hairline border and its remove button; side by side, nobody should mistake one for the other. Hover a remove button: it fills with the alarm colour, and the × on it must stay visible. The remove buttons have names ("Remove Night shift") — a row of identical × is useless to a screen reader. The tag holding a sentence must wrap inside its pill; the list must wrap onto new lines rather than scroll.</p>

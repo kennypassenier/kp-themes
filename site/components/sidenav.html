@@ -815,7 +815,7 @@
                     </figure>
                     <figure class="sc-example" id="more-navigation-sidenav-over">
                         <figcaption class="kp-fw-semibold">Over the page</figcaption>
-                        <p class="kp-text-muted">The left box is an <code>over</code> panel frozen open inside its box (<code>data-kp-sidenav-position="absolute"</code>): it covers the content, and the backdrop behind it <i>dims</i> the box — by darkening, never by tinting it with the theme's colour. The panel must have an edge against the dimmed content in every theme. Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is open.</p>
+                        <p class="kp-text-muted">The left box is an <code>over</code> panel frozen open inside its box (<code>data-kp-sidenav-position="absolute"</code>): it covers the content, and the backdrop behind it <i>dims</i> the box — by darkening, never by tinting it with the theme's colour. The panel must have an edge against the dimmed content in every theme. Clicking the backdrop or pressing Escape closes it, as it should; reload the page to get it back. The right box is live: press <b>Open the panel</b> and it must slide in from the left edge of the window with a backdrop over the whole page, take focus to its first link, keep Tab inside itself, and on Escape give focus back to the button — whose accessible name must change while it is open. The backdrop is on by default (<code>data-kp-sidenav-backdrop</code>, written out on the live panel); <b>Open without a backdrop</b> opens the same panel with <code>data-kp-sidenav-backdrop="false"</code>: the page behind is not dimmed and a press on it does nothing, so Escape and the panel's own <b>Close</b> are the ways out.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage sc-example__stage--row">
 <div style="position: relative; inline-size: 20rem; max-inline-size: 100%; block-size: 16rem; overflow: hidden">
@@ -858,7 +858,7 @@
     >
     Open the panel
 </button>
-<nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over">
+<nav class="kp-sidenav" id="nv-over-live" aria-label="Incident sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
     <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
     <div class="kp-sidenav__scroll">
         <ul class="kp-sidenav__list">
@@ -880,6 +880,42 @@
             Close
         </button>
     </div>
+</nav>
+</div>
+<div>
+    <button
+    type="button"
+    class="kp-sidenav__toggle kp-button kp-button--secondary"
+    data-kp-sidenav-toggle
+    aria-controls="nv-over-bare"
+    >
+    Open without a backdrop
+</button>
+<nav
+class="kp-sidenav"
+id="nv-over-bare"
+aria-label="Incident sections, no backdrop"
+data-kp-sidenav-mode="over"
+data-kp-sidenav-backdrop="false"
+>
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4468</p></div>
+<div class="kp-sidenav__scroll">
+    <ul class="kp-sidenav__list">
+        <li>
+            <a class="kp-sidenav__link" href="#sidenav-over" aria-current="page"
+            ><span class="kp-sidenav__label">Summary</span></a
+            >
+        </li>
+        <li>
+            <a class="kp-sidenav__link" href="#sidenav-over"><span class="kp-sidenav__label">Readings</span></a>
+        </li>
+    </ul>
+</div>
+<div class="kp-sidenav__footer">
+    <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="nv-over-bare">
+        Close
+    </button>
+</div>
 </nav>
 </div>
 </div>
@@ -924,7 +960,7 @@
     &gt;
     Open the panel
 &lt;/<span class="kp-code__keyword">button</span>&gt;
-&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-over-live&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident sections&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span>&gt;
+&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-over-live&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident sections&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-backdrop</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
@@ -947,6 +983,154 @@
         &lt;/<span class="kp-code__keyword">button</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__toggle kp-button kp-button--secondary&quot;</span>
+    <span class="kp-code__keyword">data-kp-sidenav-toggle</span>
+    <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-over-bare&quot;</span>
+    &gt;
+    Open without a backdrop
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">nav</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span>
+<span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-over-bare&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Incident sections, no backdrop&quot;</span>
+<span class="kp-code__keyword">data-kp-sidenav-mode</span><span class="kp-code__string">=&quot;over&quot;</span>
+<span class="kp-code__keyword">data-kp-sidenav-backdrop</span><span class="kp-code__string">=&quot;false&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__title&quot;</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Summary&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+            &gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-over&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__footer&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-toggle</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;nv-over-bare&quot;</span>&gt;
+        Close
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-navigation-sidenav-remember">
+                        <figcaption class="kp-fw-semibold">A side navigation that remembers</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-remember="cat-remember-nav"</code> on the panel, and a name of its own on each group. Fold <b>Readings</b> away and open <b>Maintenance</b>, then reload the page or follow a link to another catalogue page and come back: both groups are as you left them, drawn that way from the first frame — no group may open and then snap shut. The state lives in <code>localStorage</code> under <code>kp-remember:sidenav:cat-remember-nav:groups</code>, a key composed from the element's name, so another page with a panel of the same name shares it. Without the attribute nothing is stored at all. The same attribute works on a <code>&lt;details&gt;</code>, a tree, a split pane and a data table (see the Structure page). Press <b>Forget</b> to clear what this block remembered and reload: it opens as the markup says, Readings open and Maintenance closed. Judge the block in that state.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<nav class="kp-sidenav" id="nv-remember" aria-label="North site sections, remembered" data-kp-remember="cat-remember-nav">
+    <div class="kp-sidenav__scroll">
+        <ul class="kp-sidenav__list">
+            <li>
+                <a class="kp-sidenav__link" href="#sidenav-remember" aria-current="page"
+                ><span class="kp-sidenav__label">Overview</span></a
+                >
+            </li>
+            <li class="kp-sidenav__category" data-kp-sidenav-expanded data-kp-remember="readings">
+                <button type="button" class="kp-sidenav__category-toggle">
+                    <span class="kp-sidenav__label">Readings</span>
+                </button>
+                <div class="kp-sidenav__submenu">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#sidenav-remember"
+                            ><span class="kp-sidenav__label">Pressure</span></a
+                            >
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#sidenav-remember"
+                            ><span class="kp-sidenav__label">Flow rate</span></a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="kp-sidenav__category" data-kp-remember="maintenance">
+                <button type="button" class="kp-sidenav__category-toggle">
+                    <span class="kp-sidenav__label">Maintenance</span>
+                </button>
+                <div class="kp-sidenav__submenu">
+                    <ul class="kp-sidenav__list">
+                        <li>
+                            <a class="kp-sidenav__link" href="#sidenav-remember"
+                            ><span class="kp-sidenav__label">Lock-outs</span></a
+                            >
+                        </li>
+                        <li>
+                            <a class="kp-sidenav__link" href="#sidenav-remember"
+                            ><span class="kp-sidenav__label">Spare parts</span></a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div style="padding: 1rem; min-inline-size: 0">
+    <p style="margin-block-start: 0">Fold a group, reload, and it stays folded.</p>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;nv-remember&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;North site sections, remembered&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;cat-remember-nav&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__scroll&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-remember&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>
+                &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                &gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category&quot;</span> <span class="kp-code__keyword">data-kp-sidenav-expanded</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;readings&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category-toggle&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Readings&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__submenu&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-remember&quot;</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Pressure&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-remember&quot;</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Flow rate&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;maintenance&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__category-toggle&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Maintenance&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__submenu&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__list&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-remember&quot;</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Lock-outs&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                        &lt;<span class="kp-code__keyword">li</span>&gt;
+                            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#sidenav-remember&quot;</span>
+                            &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sidenav__label&quot;</span>&gt;Spare parts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>
+                            &gt;
+                        &lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;padding: 1rem; min-inline-size: 0&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 0&quot;</span>&gt;Fold a group, reload, and it stays folded.&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                 </section>

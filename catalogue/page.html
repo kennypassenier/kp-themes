@@ -31,6 +31,7 @@
                 <li><a href="#theme-menu">Theme menu</a></li>
                 <li><a href="#theme-menu-react">Theme menu, React shape</a></li>
                 <li><a href="#theme-buttons">Theme picker as buttons</a></li>
+                <li><a href="#theme-status">Theme picker, choice not kept</a></li>
             </ul>
 
             <section class="cat-block" id="footer">
@@ -650,6 +651,46 @@
                             </ul>
                         </li>
                     </ul>
+                </div>
+            </section>
+
+            <section class="cat-block" id="theme-status">
+                <h2>Theme picker: a choice that will not be kept</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> what the picker says when the browser refuses to store the choice — a private window, or site data blocked. The
+                    page still changes theme, but the next load will not remember it, so <code>js/theme-picker.js</code> writes the sentence into
+                    <code>[data-kp-theme-status]</code> and shows it. Both shapes are frozen with the sentence showing. In the first, the plain picker
+                    of the theme guide, it is a line under the buttons in the alarm colour, a step smaller than the text. In the second, the menu, it
+                    is <code>.kp-theme-menu__status</code>, the first row of the menu with the padding of a menu item, so it lines up with the options
+                    under it and never looks like one of them. The words must read on the menu's ground in every theme. Pressing an option here does
+                    change the page; where storage works the sentence then goes, as it should.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div data-kp-theme-picker aria-label="Choose a theme, storage blocked">
+                        <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+                        <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
+                    </div>
+                    <p data-kp-theme-status>This choice will not be remembered — storage is blocked in this browser.</p>
+                </div>
+                <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 12rem">
+                    <span class="kp-theme-menu">
+                        <button type="button" class="kp-icon-button" aria-label="Choose a theme" aria-expanded="true">
+                            <span aria-hidden="true">◐</span>
+                        </button>
+                        <div class="kp-popover">
+                            <ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme, storage blocked">
+                                <li role="presentation" class="kp-theme-menu__status" data-kp-theme-status>
+                                    This choice will not be remembered — storage is blocked in this browser.
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
                 </div>
             </section>
         </main>

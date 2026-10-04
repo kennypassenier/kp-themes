@@ -1401,7 +1401,7 @@
                     </figure>
                     <figure class="sc-example" id="more-table-datatable-states">
                         <figcaption class="kp-fw-semibold">Data table: loading and failed</figcaption>
-                        <p class="kp-text-muted">Three data tables held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the loading slot — the shape of what is coming, not a blank box — and the status line turns its spinner and says it is busy. The third is loading too, with the app's own words in the status line through the handle's <code>busy(text)</code>, the way a page says how long it has been asking [fix-80]. <b>Failed</b> shows the alert with its way out, <b>Try again</b>, which fires <code>kp-datatable-retry</code> for the app to load again. Only the failed one may be in the alarm colour.</p>
+                        <p class="kp-text-muted">The first three data tables are held in a state by <code>data-kp-state</code>. <b>Loading</b> has no rows yet, so it shows the loading slot — the shape of what is coming, not a blank box — and the status line turns its spinner and says it is busy. The third is loading too, with the app's own words in the status line through the handle's <code>busy(text)</code>, the way a page says how long it has been asking [fix-80]. The fourth counts by itself: <code>busy({ text, since })</code> puts a <code>.kp-datatable__busy-clock</code> after the words that ticks every second ("43 s so far", then "1 min 0 s so far") in the status line's own ink, and the line must not jump as the number grows [fix-84]. <b>Failed</b> shows the alert with its way out, <b>Try again</b>, which fires <code>kp-datatable-retry</code> for the app to load again. The next one was put there by the handle's <code>fail(reason)</code>: the app's reason sits in the slot's <code>data-kp-datatable-failed-reason</code> part, and it may fail a table that holds rows, not only a server's [fix-85]. Only the failed ones may be in the alarm colour. The last two share one empty slot with two parts: <code>data-kp-datatable-empty-none</code> shows when the table has no rows at all, and <code>data-kp-datatable-empty-nomatch</code> when a search or a filter hides every row — type <i>zzz</i> in the search of the first to see it swap, with <b>Clear the search</b> as its way out.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div class="kp-datatable" data-kp-datatable data-kp-state="loading">
@@ -1453,6 +1453,28 @@
 </div>
 </div>
 <div class="sc-example__stage">
+<div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-cat-busy-since="Asking the host…">
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">
+                Stacks, loading with a count the table keeps
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Stack</th>
+                    <th scope="col">Container</th>
+                    <th scope="col">State</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
 <div class="kp-datatable" data-kp-datatable data-kp-state="failed">
     <div class="kp-alert kp-alert--destructive" data-kp-datatable-failed hidden>
         <p class="kp-alert__label">The incident list could not be loaded</p>
@@ -1473,6 +1495,129 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div
+class="kp-datatable"
+data-kp-datatable
+data-cat-fail-reason="The status service answered 503 at 02:14. The rows below are from 02:10; nothing was changed."
+>
+<div class="kp-alert kp-alert--destructive" data-kp-datatable-failed role="alert" hidden>
+    <p class="kp-alert__label">The incident list could not be refreshed</p>
+    <p data-kp-datatable-failed-reason></p>
+    <button type="button" class="kp-button" data-kp-datatable-retry>Try again</button>
+</div>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption class="kp-sr-only">
+            Incidents, failed with the app's reason
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Reference</th>
+                <th scope="col">Site</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code class="kp-mono">INC-4471</code></td>
+                <td>Pump house 4</td>
+                <td><span class="kp-badge">Open</span></td>
+            </tr>
+            <tr>
+                <td><code class="kp-mono">INC-4468</code></td>
+                <td>Cold store</td>
+                <td><span class="kp-badge">Watching</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="kp-datatable__bar">
+    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+</div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+    <div class="kp-datatable__bar">
+        <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the open incidents" />
+    </div>
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">
+                Open incidents, with two empty texts
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col" data-kp-sort="text">Reference</th>
+                    <th scope="col" data-kp-sort="text">Site</th>
+                    <th scope="col" data-kp-sort="text">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code class="kp-mono">INC-4471</code></td>
+                    <td>Pump house 4</td>
+                    <td><span class="kp-badge">Open</span></td>
+                </tr>
+                <tr>
+                    <td><code class="kp-mono">INC-4468</code></td>
+                    <td>Cold store</td>
+                    <td><span class="kp-badge">Open</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="kp-empty" data-kp-datatable-empty hidden>
+        <div data-kp-datatable-empty-none>
+            <p class="kp-empty__title">No open incidents</p>
+            <p>Every incident is closed. A new one appears here as soon as a site reports it.</p>
+        </div>
+        <div data-kp-datatable-empty-nomatch hidden>
+            <p class="kp-empty__title">No open incident matches</p>
+            <button type="button" class="kp-button kp-button--secondary" data-kp-datatable-clear>Clear the search</button>
+        </div>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    </div>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+    <div class="kp-datatable__bar">
+        <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the closed incidents" />
+    </div>
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">
+                Closed incidents, none yet
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col" data-kp-sort="text">Reference</th>
+                    <th scope="col" data-kp-sort="text">Site</th>
+                    <th scope="col" data-kp-sort="text">Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="kp-empty" data-kp-datatable-empty hidden>
+        <div data-kp-datatable-empty-none>
+            <p class="kp-empty__title">No closed incidents yet</p>
+            <p>Close an incident from its page and it moves here.</p>
+        </div>
+        <div data-kp-datatable-empty-nomatch hidden>
+            <p class="kp-empty__title">No closed incident matches</p>
+            <button type="button" class="kp-button kp-button--secondary" data-kp-datatable-clear>Clear the search</button>
+        </div>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
     </div>
 </div>
 </div>
@@ -1522,6 +1667,26 @@
         &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span> <span class="kp-code__keyword">data-cat-busy-since</span><span class="kp-code__string">=&quot;Asking the host…&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+                Stacks, loading with a count the table keeps
+            &lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Stack&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Container&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;State&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;failed&quot;</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">data-kp-datatable-failed</span> <span class="kp-code__keyword">hidden</span>&gt;
         &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;The incident list could not be loaded&lt;/<span class="kp-code__keyword">p</span>&gt;
@@ -1542,6 +1707,123 @@
             &lt;/<span class="kp-code__keyword">thead</span>&gt;
             &lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;
         &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span>
+<span class="kp-code__keyword">data-kp-datatable</span>
+<span class="kp-code__keyword">data-cat-fail-reason</span><span class="kp-code__string">=&quot;The status service answered 503 at 02:14. The rows below are from 02:10; nothing was changed.&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">data-kp-datatable-failed</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__label&quot;</span>&gt;The incident list could not be refreshed&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-datatable-failed-reason</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-datatable-retry</span>&gt;Try again&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+            Incidents, failed with the app's reason
+        &lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">code</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">code</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Cold store&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;Watching&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__search&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">data-kp-datatable-search</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search the open incidents&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+                Open incidents, with two empty texts
+            &lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">code</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">code</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;Cold store&lt;/<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty&quot;</span> <span class="kp-code__keyword">data-kp-datatable-empty</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-datatable-empty-none</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty__title&quot;</span>&gt;No open incidents&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;Every incident is closed. A new one appears here as soon as a site reports it.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-datatable-empty-nomatch</span> <span class="kp-code__keyword">hidden</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty__title&quot;</span>&gt;No open incident matches&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-kp-datatable-clear</span>&gt;Clear the search&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__search&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">data-kp-datatable-search</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search the closed incidents&quot;</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+                Closed incidents, none yet
+            &lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty&quot;</span> <span class="kp-code__keyword">data-kp-datatable-empty</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-datatable-empty-none</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty__title&quot;</span>&gt;No closed incidents yet&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span>&gt;Close an incident from its page and it moves here.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-datatable-empty-nomatch</span> <span class="kp-code__keyword">hidden</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-empty__title&quot;</span>&gt;No closed incident matches&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary&quot;</span> <span class="kp-code__keyword">data-kp-datatable-clear</span>&gt;Clear the search&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
@@ -2091,7 +2373,7 @@ data-cat-busy="Asking the host… 42 s so far"
                     </figure>
                     <figure class="sc-example" id="more-table-datatable-columns">
                         <figcaption class="kp-fw-semibold">Data table: choosing which columns show</figcaption>
-                        <p class="kp-text-muted"><code>data-kp-column-menu</code>. Press <b>Columns</b>: the menu is the theme's own <code>.kp-menu</code> on a <code>.kp-popover</code>, under its button, with the theme's checkboxes. Untick <b>Note</b> and <b>Owner</b>: the header and the cells go together, and the count beside the button follows. <b>Reference (always shown)</b> cannot be unticked, because a row without its key cannot be told apart. <b>Show every column</b> brings them all back. Check the open menu in every theme: its ground, its items under the pointer, and the disabled item.</p>
+                        <p class="kp-text-muted"><code>data-kp-column-menu</code>. Press <b>Columns</b>: the menu is the theme's own <code>.kp-menu</code> on a <code>.kp-popover</code>, under its button, with the theme's checkboxes. <b>Note</b> starts hidden, because its header carries <code>data-kp-column-hidden</code>: tick it and it comes in, header and cells together. Untick <b>Owner</b>: the count beside the button follows. <b>Reference</b> cannot be unticked, because a row without its key cannot be told apart, and neither can <b>Site</b>, which <code>data-kp-column-locked</code> locks as well; both say so in the menu. <b>Show every column</b> brings them all back. Check the open menu in every theme: its ground, its items under the pointer, and the disabled item.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div class="kp-datatable" data-kp-datatable data-kp-column-menu data-kp-page-size="8" data-kp-page-sizes="none">
@@ -2103,11 +2385,11 @@ data-cat-busy="Asking the host… 42 s so far"
             <thead>
                 <tr>
                     <th scope="col">Reference</th>
-                    <th scope="col">Site</th>
+                    <th scope="col" data-kp-column-locked>Site</th>
                     <th scope="col">Status</th>
                     <th scope="col">Severity</th>
                     <th scope="col">Owner</th>
-                    <th scope="col">Note</th>
+                    <th scope="col" data-kp-column-hidden>Note</th>
                 </tr>
             </thead>
             <tbody>
@@ -2438,11 +2720,11 @@ data-cat-busy="Asking the host… 42 s so far"
             &lt;<span class="kp-code__keyword">thead</span>&gt;
                 &lt;<span class="kp-code__keyword">tr</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
-                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-column-locked</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Severity&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Owner&lt;/<span class="kp-code__keyword">th</span>&gt;
-                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Note&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-column-hidden</span>&gt;Note&lt;/<span class="kp-code__keyword">th</span>&gt;
                 &lt;/<span class="kp-code__keyword">tr</span>&gt;
             &lt;/<span class="kp-code__keyword">thead</span>&gt;
             &lt;<span class="kp-code__keyword">tbody</span>&gt;
@@ -5025,9 +5307,265 @@ data-cat-busy="Asking the host… 42 s so far"
 &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span> <span class="kp-code__keyword">reversed</span> <span class="kp-code__keyword">data-cat-server-log</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Requests sent&quot;</span>&gt;&lt;/<span class="kp-code__keyword">ol</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-table-datatable-server-first-page">
+                        <figcaption class="kp-fw-semibold">Data table: a server's first page in the markup</figcaption>
+                        <p class="kp-text-muted">The same pretend server as the block above, with the first page written into the markup by the server and <code>data-kp-total="60"</code> on the wrapper: the table shows those eight rows and <i>Showing 1–8 of 60</i> at once, with no skeleton and no first request — the log under it stays empty until you page, sort or search. <code>data-kp-debounce="600"</code> makes the search wait 600 ms after the last key instead of 300. <code>data-kp-row-key-field="ref"</code> names the field the server's rows are known by: tick two rows, go to page 2 and back, and they are still ticked, and the action bar keeps counting them across pages.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div
+class="kp-datatable"
+data-kp-datatable
+data-kp-server
+data-kp-total="60"
+data-kp-row-key-field="ref"
+data-kp-debounce="600"
+data-kp-page-size="8"
+data-kp-page-sizes="none"
+data-cat-server
+>
+<div class="kp-datatable__bar">
+    <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the served incidents" />
+</div>
+<div class="kp-datatable__actions" data-kp-datatable-actions hidden>
+    <span data-kp-datatable-selected-count></span>
+    <button type="button" class="kp-button kp-button--ghost" data-kp-datatable-clear-selection>Clear selection</button>
+</div>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption class="kp-sr-only">
+            Incidents, first page rendered by the server
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all /></th>
+                <th scope="col" data-kp-sort="text" data-kp-field="ref">Reference</th>
+                <th scope="col" data-kp-sort="text" data-kp-field="site">Site</th>
+                <th scope="col" data-kp-sort="text" data-kp-field="status">Status</th>
+                <th scope="col" data-kp-sort="text" data-kp-field="severity">Severity</th>
+                <th
+                scope="col"
+                data-kp-sort="number"
+                data-kp-field="hours"
+                data-kp-cell-class="kp-text-end kp-numeric"
+                class="kp-text-end"
+                >
+                Hours open
+            </th>
+            <th scope="col" data-kp-sort="text" data-kp-field="owner">Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-kp-row-key="INC-4471">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4471" /></td>
+            <td>INC-4471</td>
+            <td>Pump house 4</td>
+            <td>Open</td>
+            <td>High</td>
+            <td class="kp-text-end kp-numeric">2</td>
+            <td>Anouk Peeters</td>
+        </tr>
+        <tr data-kp-row-key="INC-4468">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4468" /></td>
+            <td>INC-4468</td>
+            <td>Cold store</td>
+            <td>Watching</td>
+            <td>Medium</td>
+            <td class="kp-text-end kp-numeric">9</td>
+            <td>Chloé Martens</td>
+        </tr>
+        <tr data-kp-row-key="INC-4465">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4465" /></td>
+            <td>INC-4465</td>
+            <td>Weighbridge</td>
+            <td>Closed</td>
+            <td>Critical</td>
+            <td class="kp-text-end kp-numeric">16</td>
+            <td>Elif Yilmaz</td>
+        </tr>
+        <tr data-kp-row-key="INC-4462">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4462" /></td>
+            <td>INC-4462</td>
+            <td>Boiler room</td>
+            <td>Open</td>
+            <td>Low</td>
+            <td class="kp-text-end kp-numeric">23</td>
+            <td>Bram De Smet</td>
+        </tr>
+        <tr data-kp-row-key="INC-4459">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4459" /></td>
+            <td>INC-4459</td>
+            <td>Loading bay</td>
+            <td>Watching</td>
+            <td>High</td>
+            <td class="kp-text-end kp-numeric">30</td>
+            <td>Dries Wouters</td>
+        </tr>
+        <tr data-kp-row-key="INC-4456">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4456" /></td>
+            <td>INC-4456</td>
+            <td>Main gate</td>
+            <td>Closed</td>
+            <td>Medium</td>
+            <td class="kp-text-end kp-numeric">37</td>
+            <td>Anouk Peeters</td>
+        </tr>
+        <tr data-kp-row-key="INC-4453">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4453" /></td>
+            <td>INC-4453</td>
+            <td>Server room</td>
+            <td>Open</td>
+            <td>Critical</td>
+            <td class="kp-text-end kp-numeric">3</td>
+            <td>Chloé Martens</td>
+        </tr>
+        <tr data-kp-row-key="INC-4450">
+            <td><input class="kp-field__check" type="checkbox" data-kp-select-row aria-label="Select INC-4450" /></td>
+            <td>INC-4450</td>
+            <td>Canteen</td>
+            <td>Watching</td>
+            <td>Low</td>
+            <td class="kp-text-end kp-numeric">10</td>
+            <td>Elif Yilmaz</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div class="kp-datatable__bar">
+    <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+</div>
+<ol class="kp-mono" reversed data-cat-server-log aria-label="Requests sent"></ol>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span>
+<span class="kp-code__keyword">data-kp-datatable</span>
+<span class="kp-code__keyword">data-kp-server</span>
+<span class="kp-code__keyword">data-kp-total</span><span class="kp-code__string">=&quot;60&quot;</span>
+<span class="kp-code__keyword">data-kp-row-key-field</span><span class="kp-code__string">=&quot;ref&quot;</span>
+<span class="kp-code__keyword">data-kp-debounce</span><span class="kp-code__string">=&quot;600&quot;</span>
+<span class="kp-code__keyword">data-kp-page-size</span><span class="kp-code__string">=&quot;8&quot;</span>
+<span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span>
+<span class="kp-code__keyword">data-cat-server</span>
+&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__search&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">data-kp-datatable-search</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search the served incidents&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__actions&quot;</span> <span class="kp-code__keyword">data-kp-datatable-actions</span> <span class="kp-code__keyword">hidden</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-datatable-selected-count</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-datatable-clear-selection</span>&gt;Clear selection&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+            Incidents, first page rendered by the server
+        &lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-all</span> /&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;ref&quot;</span>&gt;Reference&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;site&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;severity&quot;</span>&gt;Severity&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span>
+                <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>
+                <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;number&quot;</span>
+                <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;hours&quot;</span>
+                <span class="kp-code__keyword">data-kp-cell-class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>
+                <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>
+                &gt;
+                Hours open
+            &lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-field</span><span class="kp-code__string">=&quot;owner&quot;</span>&gt;Owner&lt;/<span class="kp-code__keyword">th</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;/<span class="kp-code__keyword">thead</span>&gt;
+    &lt;<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4471&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4471&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 4&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Open&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;High&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;2&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Anouk Peeters&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4468&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4468&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Cold store&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Watching&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Medium&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;9&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Chloé Martens&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4465&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4465&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4465&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Weighbridge&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Closed&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Critical&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;16&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Elif Yilmaz&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4462&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4462&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4462&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Boiler room&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Open&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Low&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;23&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Bram De Smet&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4459&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4459&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4459&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Loading bay&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Watching&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;High&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;30&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Dries Wouters&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4456&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4456&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4456&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Main gate&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Closed&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Medium&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;37&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Anouk Peeters&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4453&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4453&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4453&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Server room&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Open&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Critical&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;3&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Chloé Martens&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;INC-4450&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__check&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Select INC-4450&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;INC-4450&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Canteen&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Watching&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Low&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;10&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;<span class="kp-code__keyword">td</span>&gt;Elif Yilmaz&lt;/<span class="kp-code__keyword">td</span>&gt;
+        &lt;/<span class="kp-code__keyword">tr</span>&gt;
+    &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+&lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__pager&quot;</span> <span class="kp-code__keyword">data-kp-datatable-pager</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-mono&quot;</span> <span class="kp-code__keyword">reversed</span> <span class="kp-code__keyword">data-cat-server-log</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Requests sent&quot;</span>&gt;&lt;/<span class="kp-code__keyword">ol</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-table-datatable-inline-edit">
                         <figcaption class="kp-fw-semibold">Data table: editing a value in its cell</figcaption>
-                        <p class="kp-text-muted"><code>data-kp-edit</code> on six headers. Their values have a dashed underline and a pencil: each is a button, so it is plain which cells can be edited before a pointer finds them. Press one: <b>Status</b>, <b>Severity</b> and <b>Owner</b> open the theme's drawn select, <b>Site</b> a text field, <b>Hours open</b> a number field and <b>Opened</b> the theme's date picker. Enter saves (on a select, Enter takes the highlighted option), moving away saves, Escape cancels; the line under the table says what changed and <b>Undo</b> puts it back, and the focus returns to the cell. Empty <b>Site</b> and press Enter: the field's error shows and nothing is saved. Set <b>Hours open</b> above 100: the page refuses it through <code>kp-datatable-edit</code>, with its own message. Check that the editor fits its cell without making the row jump, in every theme.</p>
+                        <p class="kp-text-muted"><code>data-kp-edit</code> on six headers. Their values have a dashed underline and a pencil: each is a button, so it is plain which cells can be edited before a pointer finds them. Press one: <b>Status</b>, <b>Severity</b> and <b>Owner</b> open the theme's drawn select, <b>Site</b> a text field, <b>Hours open</b> a number field and <b>Opened</b> the theme's date picker. Enter saves (on a select, Enter takes the highlighted option), moving away saves, Escape cancels; the line under the table says what changed and <b>Undo</b> puts it back, and the focus returns to the cell. Empty <b>Site</b> and press Enter: the field's error shows and nothing is saved. In <b>Hours open</b> the arrow keys and the field's spinner stop at 0, the <code>data-kp-edit-min</code> its header carries. Set it above 100: the page refuses it through <code>kp-datatable-edit</code>, with its own message. Check that the editor fits its cell without making the row jump, in every theme.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
 <div class="kp-datatable" data-kp-datatable data-kp-page-size="8" data-kp-page-sizes="none" data-cat-edit>
@@ -5042,7 +5580,7 @@ data-cat-busy="Asking the host… 42 s so far"
                     <th scope="col" data-kp-edit="text" data-kp-edit-required>Site</th>
                     <th scope="col" data-kp-edit="select" data-kp-edit-options="Open,Watching,Closed">Status</th>
                     <th scope="col" data-kp-edit="select" data-kp-edit-options="Critical,High,Medium,Low">Severity</th>
-                    <th scope="col" data-kp-edit="number" class="kp-text-end">Hours open</th>
+                    <th scope="col" data-kp-edit="number" data-kp-edit-min="0" class="kp-text-end">Hours open</th>
                     <th scope="col" data-kp-edit="date">Opened</th>
                     <th
                     scope="col"
@@ -5292,7 +5830,7 @@ data-cat-busy="Asking the host… 42 s so far"
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">data-kp-edit-required</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;select&quot;</span> <span class="kp-code__keyword">data-kp-edit-options</span><span class="kp-code__string">=&quot;Open,Watching,Closed&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;select&quot;</span> <span class="kp-code__keyword">data-kp-edit-options</span><span class="kp-code__string">=&quot;Critical,High,Medium,Low&quot;</span>&gt;Severity&lt;/<span class="kp-code__keyword">th</span>&gt;
-                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;number&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>&gt;Hours open&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;number&quot;</span> <span class="kp-code__keyword">data-kp-edit-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>&gt;Hours open&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-edit</span><span class="kp-code__string">=&quot;date&quot;</span>&gt;Opened&lt;/<span class="kp-code__keyword">th</span>&gt;
                     &lt;<span class="kp-code__keyword">th</span>
                     <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>

@@ -387,6 +387,142 @@
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-key</span>&gt;R&lt;/<span class="kp-code__keyword">span</span>&gt;etry
 &lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-button-undo">
+                        <figcaption class="kp-fw-semibold">Delete with an undo</figcaption>
+                        <p class="kp-text-muted">A destructive button that acts at once and offers the way back instead of asking first. Each <b>Delete</b> carries <code>data-kp-undo-action</code>: pressed, its row (the nearest <code>data-kp-undo-target</code>, else the table row, else the parent) goes at once and a toast says so with <b>Undo</b> on it, in the theme's ghost button. Press <b>Undo</b> and the row is back where it was and <code>kp-action-undo</code> fires; wait out the window and <code>kp-action-commit</code> fires, the moment an app sends the delete to its server. The first row's window is the default six seconds, the second's <code>data-kp-undo-ms="12000"</code>, with its own words (<code>data-kp-undo-text</code>, <code>data-kp-undo-label</code>). The line under the stage logs both events. <code>data-kp-undo</code> on each button is what satisfies the destructive contract without a confirmation; a destructive button with neither is disabled and reported. The second stage is the React <code>Button</code> with <code>onUndo</code>, frozen while it offers the undo: <code>.kp-button__undo</code> sits beside the button on its baseline with a small gap, holding a ghost <b>Undo</b>. Reload the page to get deleted rows back.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<ul class="kp-stack" aria-label="Saved filters">
+    <li class="kp-row" data-kp-undo-target data-kp-key="night-shift">
+        <span>Night shift, line 2</span>
+        <button
+        type="button"
+        class="kp-button kp-button--destructive kp-button--sm"
+        data-kp-destructive
+        data-kp-undo
+        data-kp-undo-action
+        >
+        Delete
+    </button>
+</li>
+<li class="kp-row" data-kp-undo-target data-kp-key="cold-store">
+    <span>Cold store, open over 24 hours</span>
+    <button
+    type="button"
+    class="kp-button kp-button--destructive kp-button--sm"
+    data-kp-destructive
+    data-kp-undo
+    data-kp-undo-action
+    data-kp-undo-ms="12000"
+    data-kp-undo-text="Filter “Cold store, open over 24 hours” deleted."
+    data-kp-undo-label="Bring it back"
+    >
+    Delete
+</button>
+</li>
+</ul>
+</div>
+<div class="sc-example__stage sc-example__stage--row">
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-undo>Delete</button>
+<span class="kp-button__undo" role="status" data-kp-undo-offer
+><button type="button" class="kp-button kp-button--ghost">Undo</button></span
+>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Saved filters&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">data-kp-undo-target</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;night-shift&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span>&gt;Night shift, line 2&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span>
+        <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive kp-button--sm&quot;</span>
+        <span class="kp-code__keyword">data-kp-destructive</span>
+        <span class="kp-code__keyword">data-kp-undo</span>
+        <span class="kp-code__keyword">data-kp-undo-action</span>
+        &gt;
+        Delete
+    &lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span> <span class="kp-code__keyword">data-kp-undo-target</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;cold-store&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Cold store, open over 24 hours&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span>
+    <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive kp-button--sm&quot;</span>
+    <span class="kp-code__keyword">data-kp-destructive</span>
+    <span class="kp-code__keyword">data-kp-undo</span>
+    <span class="kp-code__keyword">data-kp-undo-action</span>
+    <span class="kp-code__keyword">data-kp-undo-ms</span><span class="kp-code__string">=&quot;12000&quot;</span>
+    <span class="kp-code__keyword">data-kp-undo-text</span><span class="kp-code__string">=&quot;Filter “Cold store, open over 24 hours” deleted.&quot;</span>
+    <span class="kp-code__keyword">data-kp-undo-label</span><span class="kp-code__string">=&quot;Bring it back&quot;</span>
+    &gt;
+    Delete
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-undo</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__undo&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-undo-offer</span>
+&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span>&gt;Undo&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-button-confirm-inline">
+                        <figcaption class="kp-fw-semibold">Confirm by pressing twice</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-confirm-mode="inline"</code>, the variant of the confirmation dialog. The first press opens nothing: it arms the button, and its label becomes the phrase in <code>data-kp-confirm</code>; the second press acts. The label is the only change the package makes (it also sets <code>data-kp-armed</code> for a page that wants more), so the phrase must still fit the button on one line, close enough to the old width that the second press lands on it. Wait a few seconds, or Tab away, and it disarms back to <b>Remove reading</b>. The second button sets its own window with <code>data-kp-confirm-ms="8000"</code>.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<button
+type="button"
+class="kp-button kp-button--destructive"
+data-kp-destructive
+data-kp-confirm="Press again to remove"
+data-kp-confirm-mode="inline"
+>
+Remove reading
+</button>
+<button
+type="button"
+class="kp-button kp-button--destructive"
+data-kp-destructive
+data-kp-confirm="Sure? Press again"
+data-kp-confirm-mode="inline"
+data-kp-confirm-ms="8000"
+>
+Revoke key
+</button>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>
+<span class="kp-code__keyword">data-kp-destructive</span>
+<span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Press again to remove&quot;</span>
+<span class="kp-code__keyword">data-kp-confirm-mode</span><span class="kp-code__string">=&quot;inline&quot;</span>
+&gt;
+Remove reading
+&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span>
+<span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span>
+<span class="kp-code__keyword">data-kp-destructive</span>
+<span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Sure? Press again&quot;</span>
+<span class="kp-code__keyword">data-kp-confirm-mode</span><span class="kp-code__string">=&quot;inline&quot;</span>
+<span class="kp-code__keyword">data-kp-confirm-ms</span><span class="kp-code__string">=&quot;8000&quot;</span>
+&gt;
+Revoke key
+&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre></details>
+                    </figure>
+                    <figure class="sc-example" id="more-button-direction">
+                        <figcaption class="kp-fw-semibold">A button that points back</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-direction="back"</code> says a button goes backwards — the data table's pager writes it on its <b>Previous</b> by itself, and an app may write it on its own Back. It is meaning, not look: only <b>cyberpunk</b> answers it, by turning the button's cut corner to the side it points to, so its Previous and Next mirror each other. In every other theme the two buttons must look exactly alike.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage sc-example__stage--row">
+<button type="button" class="kp-button" data-kp-direction="back">Previous</button>
+<button type="button" class="kp-button">Next</button>
+<button type="button" class="kp-button kp-button--primary" data-kp-direction="back">Back to the list</button>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-direction</span><span class="kp-code__string">=&quot;back&quot;</span>&gt;Previous&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Next&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-direction</span><span class="kp-code__string">=&quot;back&quot;</span>&gt;Back to the list&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre></details>
+                    </figure>
                     <figure class="sc-example" id="more-page-effects-surfaces">
                         <figcaption class="kp-fw-semibold">Surfaces</figcaption>
                         <p class="kp-text-muted">The hero surface (<code>data-kp-surface="hero"</code>) and the app surface (<code>data-kp-surface="app"</code>), each in a stage tall enough for the texture to show. In <b>every</b> theme: the hero paints its own ground (the theme's hero colour) and the app paints the theme's background, so the two read as two grounds; every text on both — microlabel, heading, muted line, link, each button — clears its contrast floor on its own ground; and a theme's texture stays inside the surface it belongs to rather than bleeding over the stage around it. In <b>every</b> theme no text or button touches a surface's left or right edge: the package keeps one lg step of room inside the ground (<code>--kp-surface-padding-inline</code>). The third stage is the same hero with <code>data-kp-surface-align="center"</code>, an option that is off unless a page writes it: the microlabel, heading and line centre, and the row of buttons sits in the middle. Per theme: <b>cyberpunk</b>'s hero is the yellow ground and its app the void; <b>synthwave</b>'s hero carries a striped, static sun and a floor that drifts without changing brightness; <b>phantom</b>'s hero carries its plates; <b>lapis</b> confines its girih tile to the two surfaces and turns the page-wide texture off; <b>forest</b> and <b>shade-light</b> paint their own app ground; <b>titanium</b>'s ground is carbon twill under a moving light.</p>

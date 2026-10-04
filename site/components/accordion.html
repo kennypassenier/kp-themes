@@ -257,6 +257,92 @@
     &lt;/<span class="kp-code__keyword">details</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-structure-remember">
+                        <figcaption class="kp-fw-semibold">Remembered across pages</figcaption>
+                        <p class="kp-text-muted"><code>data-kp-remember="&lt;name&gt;"</code> on three components that keep what the reader did. Close the open question, open the tree's <b>Line 1</b>, and drag the split pane's separator; reload the page, or go to another catalogue page and back: all three are as you left them, from the first frame, with nothing opening and then snapping back. The question is a <code>&lt;details&gt;</code> (slot <code>open</code>), the tree remembers its open branches by <code>data-kp-item</code> (slot <code>branches</code>), the split its position (slot <code>value</code>). Each key is composed from the name, so the same name on another page shares the state. Press <b>Forget</b> to clear what this block remembered and reload; judge it in the state its markup gives.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-accordion">
+    <details class="kp-accordion__item" open data-kp-remember="cat-remember-question">
+        <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+        <div class="kp-accordion__body">
+            Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+        </div>
+    </details>
+</div>
+<ul class="kp-tree" role="tree" data-kp-tree aria-label="Pump house 4 files, remembered" data-kp-remember="cat-remember-tree">
+    <li role="treeitem" aria-expanded="false" data-kp-item="line-1">
+        Line 1
+        <ul role="group">
+            <li role="treeitem" data-kp-item="line-1-0100">readings-0100.csv</li>
+            <li role="treeitem" data-kp-item="line-1-0200">readings-0200.csv</li>
+        </ul>
+    </li>
+    <li role="treeitem" aria-expanded="true" data-kp-item="line-2">
+        Line 2
+        <ul role="group">
+            <li role="treeitem" data-kp-item="line-2-0240">readings-0240.csv</li>
+        </ul>
+    </li>
+</ul>
+<div style="display: grid; block-size: 8rem; margin-block-start: 1rem">
+    <div class="kp-split" data-kp-split data-kp-remember="cat-remember-split">
+        <div class="kp-split__pane">Open incidents</div>
+        <div
+        class="kp-split__separator"
+        role="separator"
+        tabindex="0"
+        aria-orientation="vertical"
+        aria-valuemin="20"
+        aria-valuemax="80"
+        aria-valuenow="35"
+        aria-label="Resize the remembered incident list"
+        ></div>
+    <div class="kp-split__pane">INC-4471 · line 2</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__item&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;cat-remember-question&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__summary&quot;</span>&gt;Who may reopen a locked-out line?&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-accordion__body&quot;</span>&gt;
+            Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tree&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tree&quot;</span> <span class="kp-code__keyword">data-kp-tree</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 4 files, remembered&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;cat-remember-tree&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;line-1&quot;</span>&gt;
+        Line 1
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;line-1-0100&quot;</span>&gt;readings-0100.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;line-1-0200&quot;</span>&gt;readings-0200.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;line-2&quot;</span>&gt;
+        Line 2
+        &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;treeitem&quot;</span> <span class="kp-code__keyword">data-kp-item</span><span class="kp-code__string">=&quot;line-2-0240&quot;</span>&gt;readings-0240.csv&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;display: grid; block-size: 8rem; margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split&quot;</span> <span class="kp-code__keyword">data-kp-split</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;cat-remember-split&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;Open incidents&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__separator&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;separator&quot;</span>
+        <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-orientation</span><span class="kp-code__string">=&quot;vertical&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;20&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;80&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Resize the remembered incident list&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-split__pane&quot;</span>&gt;INC-4471 · line 2&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

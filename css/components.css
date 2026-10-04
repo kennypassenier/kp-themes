@@ -807,6 +807,9 @@
  * fixed <h3> and a body div. */
     .kp-card__header {
         display: flex;
+        /* In a narrow card the actions go under the title rather than
+           breaking their own words apart. */
+        flex-wrap: wrap;
         align-items: baseline;
         justify-content: space-between;
         gap: var(--kp-space-sm);
@@ -3815,11 +3818,32 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* The clear button shares the input's grid cell, so it is centred on the
+       input and not on the whole box with its label and status line. */
+    .kp-combobox:has(> .kp-combobox__clear) {
+        display: grid;
+        grid-template-areas: 'label' 'input';
+    }
+
+    .kp-combobox:has(> .kp-combobox__clear) > :where(label, .kp-field__label) {
+        grid-area: label;
+    }
+
+    .kp-combobox:has(> .kp-combobox__clear) > .kp-combobox__input {
+        grid-area: input;
+    }
+
+    /* Under a label the input carries the gap above it; so does the button,
+       or it would centre on the gap and the input together. */
+    .kp-combobox > :where(label, .kp-field__label) ~ .kp-combobox__clear {
+        margin-block-start: var(--kp-combobox-gap, 0.375rem);
+    }
+
     .kp-combobox__clear {
-        position: absolute;
-        inset-inline-end: var(--kp-space-sm);
-        inset-block-start: 50%;
-        translate: 0 -50%;
+        grid-area: input;
+        justify-self: end;
+        align-self: center;
+        margin-inline-end: var(--kp-space-sm);
         border: 0;
         background: none;
         color: var(--muted-foreground);

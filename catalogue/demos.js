@@ -25,6 +25,68 @@ document.addEventListener('click', (event) => {
     }
 });
 
+/* --------------------------------------------- what the blocks announce */
+
+// catalogue/button.html#undo, data.html#count and alarm.html: the events a page
+// listens to, written into the block's own log line so a reviewer sees them
+// fire. The line sits outside the stage; it is not part of the component.
+/** @param {Event} event @param {string} selector @param {string} text */
+const logIn = (event, selector, text) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const line = target?.closest('.cat-block')?.querySelector(selector);
+    if (line) line.textContent = text;
+};
+document.addEventListener('kp-action-commit', (event) => {
+    const { key } = /** @type {CustomEvent} */ (event).detail;
+    logIn(event, '[data-cat-undo-log]', `kp-action-commit: "${key}" — the undo window closed; an app deletes it on its server now.`);
+});
+document.addEventListener('kp-action-undo', (event) => {
+    const { key } = /** @type {CustomEvent} */ (event).detail;
+    logIn(event, '[data-cat-undo-log]', `kp-action-undo: "${key}" is back; nothing reached the server.`);
+});
+// catalogue/data.html#count: the value each counting number landed on.
+document.addEventListener('kp-count', (event) => {
+    const { value } = /** @type {CustomEvent} */ (event).detail;
+    logIn(event, '[data-cat-count-log]', `kp-count: landed on ${value}.`);
+});
+// catalogue/page-effects.html#reveal-every: every reveal that reached rest,
+// newest first, and whether it played or was skipped.
+document.addEventListener('kp-reveal', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const log = target?.closest('.cat-block')?.querySelector('[data-cat-reveal-log]');
+    if (!target || !log || !target.closest('.cat-live')) return;
+    const { reveal, routine, skipped } = /** @type {CustomEvent} */ (event).detail;
+    const item = document.createElement('li');
+    const words = (target.getAttribute('data-kp-text') ?? target.textContent ?? '').trim();
+    item.textContent = `kp-reveal: ${reveal} "${words}" — ${skipped ? 'skipped to rest' : 'played'}${routine ? ` (${routine})` : ''}`;
+    log.prepend(item);
+    while (log.children.length > 6) log.lastElementChild?.remove();
+});
+document.addEventListener('kp-alarm-close', (event) => {
+    const { reason } = /** @type {CustomEvent} */ (event).detail;
+    logIn(event, '[data-cat-alarm-log]', `kp-alarm-close: closed with reason "${reason}".`);
+});
+
+/* ------------------------------------------------ what a page remembers */
+
+// catalogue/navigation.html#sidenav-remember and structure.html#remember:
+// Forget clears every memory whose name starts with the button's prefix and
+// reloads, so the block is judged as its markup draws it.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-forget]') : null;
+    if (button === null) return;
+    const prefix = button.getAttribute('data-cat-forget') ?? '';
+    try {
+        for (const key of Object.keys(localStorage)) {
+            const name = key.split(':')[2] ?? '';
+            if (key.startsWith('kp-remember:') && prefix !== '' && name.startsWith(prefix)) localStorage.removeItem(key);
+        }
+    } catch {
+        /* no storage: nothing was remembered */
+    }
+    location.reload();
+});
+
 /* ------------------------------------------- the data table's server rows */
 
 // The pretend server of catalogue/table.html#datatable-server: it searches,
@@ -99,20 +161,27 @@ document.addEventListener('kp-datatable-request', (event) => {
 });
 
 // A table attached before this module listened asked into the void; ask again.
+// One whose first page came in the markup (data-kp-total) never asked.
 import('../js/datatable.js').then(({ dataTable }) => {
-    for (const table of document.querySelectorAll('[data-cat-server]')) {
+    for (const table of document.querySelectorAll('[data-cat-server]:not([data-kp-total])')) {
         if (!heard.has(table)) dataTable(table)?.reload();
     }
     // catalogue/table.html#datatable-states: a loading table that says, in the
     // app's own words, how long it has been asking (the handle's busy(), fix-80).
     // The words are fixed rather than a running clock, so the block reads the
     // same at every look.
+    // The same block's fourth table counts by itself (busy({ since }), fix-84),
+    // from a start 42 seconds before the page came, and its fifth was failed
+    // by the app with its own reason (fail(reason), fix-85).
     let tries = 0;
+    const loadedAt = Date.now();
     const busy = () => {
-        const waiting = [...document.querySelectorAll('[data-cat-busy]')].filter((table) => {
+        const waiting = [...document.querySelectorAll('[data-cat-busy], [data-cat-busy-since], [data-cat-fail-reason]')].filter((table) => {
             const handle = dataTable(table);
             if (handle === null) return true;
-            handle.busy(table.getAttribute('data-cat-busy'));
+            if (table.hasAttribute('data-cat-busy')) handle.busy(table.getAttribute('data-cat-busy'));
+            if (table.hasAttribute('data-cat-busy-since')) handle.busy({ text: table.getAttribute('data-cat-busy-since'), since: loadedAt - 42_000 });
+            if (table.hasAttribute('data-cat-fail-reason')) handle.fail(table.getAttribute('data-cat-fail-reason'));
             return false;
         });
         if (waiting.length > 0 && tries++ < 60) requestAnimationFrame(busy);
@@ -149,6 +218,8 @@ document.addEventListener('kp-datatable-edit', (event) => {
 //   data-cat-effect="open"   the same, with its trigger pressed once
 //   data-cat-effect="live"   attached as usual, outside the stage the hash reads;
 //                            its [data-cat-replay] button stamps it again
+//   data-cat-effect="once"   the same, but what this session has seen stays seen:
+//                            a replay is a reload, so only data-kp-reveal-every="load" plays
 //
 // Every copy is stamped again when the theme changes, because the module reads
 // a theme's routine when it attaches: the live copy then plays the new theme's

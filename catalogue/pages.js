@@ -34,6 +34,7 @@ export const PAGES = [
             { href: 'catalogue/media.html', label: 'Media, grid, marquee', component: true },
             { href: 'catalogue/page.html', label: 'Footer, palette, theme menu', component: true },
             { href: 'catalogue/page-effects.html', label: 'Page effects', component: true },
+            { href: 'catalogue/motion.html', label: 'Motion: closing, resizing, arriving, leaving', component: true },
             // Not a component page: each block is a window playing one theme's
             // intro on demand, so the review page does not gather it [scope-84].
             { href: 'catalogue/intros.html', label: 'Theme intros', component: true },
@@ -69,7 +70,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [{ href: 'research/size-motion/demo.html', label: 'Elements that leave, and the rest of the size motion' }],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -77,6 +78,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided at scope-142: closing, resizing, arriving and leaving, every theme.
+            { href: 'research/size-motion/demo.html', label: 'Closing, resizing and leaving per theme' },
             // Decided at scope-124: the three research demos of 2026-09-17.
             { href: 'research/jellyfin/demo.html', label: 'Jellyfin: the web client in two themes' },
             { href: 'research/vscode/demo.html', label: 'VS Code: cyberpunk as an editor theme' },

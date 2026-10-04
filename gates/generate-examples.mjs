@@ -106,6 +106,9 @@ function page(title, body, { themeFromQuery = false, theme = '', reviewShell = f
     // markup, so the words and the tokens arrive together with no script.
     const attrs = [themeFromQuery ? ' data-kp-theme-from-query' : '', theme ? ` data-theme="${theme}"` : ''].join('');
     const html = `<html lang="en"${attrs}>`;
+    // Every page carries the back-to-top control, so a page copied from
+    // here has it (Kenny, 2026-10-04: "zie dat we dat ook overal
+    // implementeren, is goed voor usability").
     return `<!doctype html>
 ${html}
     <head>
@@ -119,6 +122,7 @@ ${links}
     </head>
     <body>
 ${body}
+        <button type="button" class="kp-button kp-to-top" data-kp-to-top></button>
         <script type="module" src="../js/auto.js"></script>${reviewShell ? `\n        ${REVIEW_SHELL}` : ''}
     </body>
 </html>

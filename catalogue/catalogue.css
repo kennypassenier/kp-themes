@@ -8,6 +8,10 @@
     /* The shell catalogue.js builds around every page: the package's own
        side navigation beside a column holding the bar and the page. */
     body.cat-shell {
+        /* A `.kp-shell` in a stage (navigation.html#app-shell) takes the
+           window's body margin away, which is right for an app and wrong
+           for the page reviewing it: the browser's margin stays. */
+        margin: revert;
         display: flex;
         align-items: flex-start;
         min-block-size: 100vh;
