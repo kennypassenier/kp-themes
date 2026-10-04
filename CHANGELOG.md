@@ -34,6 +34,17 @@
   buttons and a spark variant. It fires `kp-chart-select`, `kp-chart-zoom`
   and `kp-chart-range`; its words are `chart…` in `js/strings.js`. The
   catalogue has a new page for it, `catalogue/chart.html`.
+- **Back to top on every example page** [feat-page-1]: the generated example
+  pages carry `.kp-to-top`, and the user guide says how to add it.
+- **A narrow card's actions wrap** instead of breaking their own words
+  (`.kp-card__header` wraps), and **the combobox clear button is centred on
+  the input**, not on the whole box with its label and status line.
+- **The catalogue shows every option and effect** with copyable markup: a
+  Motion page, and blocks for the data table's live busy counter, failure
+  reason and empty texts, undo after an action, inline confirm, count-up
+  numbers, remembered navigation, `.kp-shell`, the error toast, date picker
+  views and locale, the overflowing dialog, card actions, the theme status
+  line, validation timing and reveals on every load.
 - **Elements leave the theme's way** [scope-142]: `leave(el)` (js/motion.js)
   marks the element `[data-kp-leaving]` and every register now draws its own
   exit on it, one per theme, picked by Kenny on research/size-motion over
