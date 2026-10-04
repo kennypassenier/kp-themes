@@ -7,6 +7,8 @@ Built: `js/motion.js` [scope-142], the character of fourteen themes moved from
 `characters.css` into their registers, and deco's dialog entrance remade
 without a clip.
 
+**Round six verdicts (2026-10-04).** Picked: formal exit 2, light 1, dark 2, pastel 2, forest 2, blueprint 3, solstice 2, brutalism 2, deco 1, shade-light 2, shade-dark 2, retro 1, nostromo 2. Once for every theme: the space closes during the exit (`--kp-leave-fold: together`), and in a row of leaves the next starts halfway (`--kp-leave-stagger: 0.5`). Sent back with three new exits each in `round7.css`: cyberpunk, synthwave, terminal, high-contrast, sepia, phantom, grotesk, lapis, titanium. Kenny: "where I put commentary, I almost always mean to change it into what I mean and fill the rest with prototypes of new ideas".
+
 Kenny, 2026-10-04: "we hebben nu wel een goede animatie voor dialog opens,
 maar wat met dialog closes? … dan opent de dialog mooi, en dan verspringt de
 grootte heel plots omdat er elementen bijkomen. Is er een optie om die groei

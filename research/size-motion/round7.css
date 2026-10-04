@@ -1,0 +1,1037 @@
+/* Round seven (2026-10-04): three new exits for each of the nine themes
+   Kenny sent back. Where he named what he liked, exit 1 is that one reworked
+   the way he described; the others are new prototypes ("where I put
+   commentary, I almost always mean to change it into what I mean and fill
+   the rest with prototypes of new ideas"). Every exit stays inside its own
+   box, so nothing is drawn over the element above or below it. */
+
+@media (prefers-reduced-motion: no-preference) {
+    :is(
+            [data-theme='cyberpunk'],
+            [data-theme='synthwave'],
+            [data-theme='terminal'],
+            [data-theme='high-contrast'],
+            [data-theme='sepia'],
+            [data-theme='phantom'],
+            [data-theme='grotesk'],
+            [data-theme='lapis'],
+            [data-theme='titanium']
+        )
+        [data-sm-exit]
+        [data-kp-leaving] {
+        position: relative;
+        overflow: clip;
+    }
+
+    :is(
+            [data-theme='cyberpunk'],
+            [data-theme='synthwave'],
+            [data-theme='terminal'],
+            [data-theme='high-contrast'],
+            [data-theme='sepia'],
+            [data-theme='phantom'],
+            [data-theme='grotesk'],
+            [data-theme='lapis'],
+            [data-theme='titanium']
+        )
+        [data-sm-exit]
+        [data-kp-leaving]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* ---------------------------------------------------------- cyberpunk */
+
+    /* 1. The classic glitch: the text turns neon blue, a cyan copy jumps
+       right and up while a magenta copy jumps right and down, it jitters,
+       and it is sliced away. */
+    [data-theme='cyberpunk'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-cyber-classic 650ms linear forwards;
+    }
+
+    @keyframes r7-cyber-classic {
+        0% {
+            color: inherit;
+            text-shadow: none;
+        }
+
+        12% {
+            color: #3df2ff;
+            text-shadow:
+                4px -3px 0 rgb(5 217 232 / 0.85),
+                4px 3px 0 rgb(255 42 109 / 0.85);
+            transform: translateX(2px);
+        }
+
+        24% {
+            text-shadow:
+                7px -5px 0 rgb(5 217 232 / 0.85),
+                7px 5px 0 rgb(255 42 109 / 0.85);
+            transform: translateX(-2px);
+        }
+
+        36% {
+            text-shadow:
+                3px -2px 0 rgb(5 217 232 / 0.85),
+                3px 2px 0 rgb(255 42 109 / 0.85);
+            transform: translateX(3px);
+            clip-path: inset(0 0 0 0);
+        }
+
+        50% {
+            color: #3df2ff;
+            text-shadow:
+                10px -6px 0 rgb(5 217 232 / 0.9),
+                10px 6px 0 rgb(255 42 109 / 0.9);
+            clip-path: inset(20% 0 35% 0);
+            transform: translateX(-4px);
+        }
+
+        65% {
+            clip-path: inset(55% 0 10% 0);
+            transform: translateX(6px);
+        }
+
+        80% {
+            clip-path: inset(5% 0 75% 0);
+            transform: translateX(-3px);
+        }
+
+        to {
+            color: #3df2ff;
+            clip-path: inset(50% 0 50% 0);
+            transform: translateX(8px);
+            opacity: 0;
+        }
+    }
+
+    /* 2. Slice shift: it is cut into bands that slide past each other, the
+       colour drifting, until the bands run out. */
+    [data-theme='cyberpunk'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-cyber-bands 600ms linear forwards;
+    }
+
+    [data-theme='cyberpunk'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        background: repeating-linear-gradient(180deg, transparent 0 6px, rgb(5 217 232 / 0.35) 6px 8px, transparent 8px 14px);
+        animation: r7-cyber-scan 600ms linear forwards;
+    }
+
+    @keyframes r7-cyber-bands {
+        0% {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            filter: none;
+        }
+
+        30% {
+            clip-path: polygon(4% 0, 100% 0, 100% 33%, 0 33%, 0 34%, 96% 34%, 96% 66%, 6% 66%, 6% 67%, 100% 67%, 100% 100%, 0 100%);
+            filter: hue-rotate(40deg);
+        }
+
+        60% {
+            clip-path: polygon(20% 0, 100% 0, 100% 33%, 0 33%, 0 34%, 70% 34%, 70% 66%, 35% 66%, 35% 67%, 100% 67%, 100% 100%, 15% 100%);
+            filter: hue-rotate(90deg) saturate(2);
+        }
+
+        to {
+            clip-path: polygon(100% 0, 100% 0, 100% 33%, 0 33%, 0 34%, 0 34%, 0 66%, 100% 66%, 100% 67%, 100% 67%, 100% 100%, 100% 100%);
+            filter: hue-rotate(140deg) saturate(3);
+            opacity: 0.4;
+        }
+    }
+
+    @keyframes r7-cyber-scan {
+        from {
+            transform: translateY(-14px);
+        }
+
+        to {
+            transform: translateY(14px);
+        }
+    }
+
+    /* 3. Signal lost: the colour channels pull apart, scan noise rolls over
+       it, and it collapses to a bright line that cuts out. No tag. */
+    [data-theme='cyberpunk'] [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: center;
+        animation: r7-cyber-signal 700ms ease-in forwards;
+    }
+
+    [data-theme='cyberpunk'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background: repeating-linear-gradient(180deg, rgb(255 255 255 / 0.18) 0 1px, transparent 1px 3px);
+        animation: r7-cyber-noise 700ms linear forwards;
+    }
+
+    @keyframes r7-cyber-signal {
+        0% {
+            filter: none;
+        }
+
+        40% {
+            filter: drop-shadow(5px 0 0 #ff2a6d) drop-shadow(-5px 0 0 #05d9e8);
+            transform: scaleY(1);
+        }
+
+        75% {
+            filter: drop-shadow(8px 0 0 #ff2a6d) drop-shadow(-8px 0 0 #05d9e8) brightness(1.6);
+            transform: scaleY(0.06);
+        }
+
+        to {
+            filter: brightness(3);
+            transform: scale(0, 0.06);
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-cyber-noise {
+        from {
+            background-position: 0 0;
+            opacity: 0;
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        to {
+            background-position: 0 30px;
+            opacity: 1;
+        }
+    }
+
+    /* ---------------------------------------------------------- synthwave */
+
+    /* 1. Your exit 3, reworked: it tips back onto the neon grid around its
+       own foot and fades out as it lies flat, in its own place; nothing
+       moves up over the element above. */
+    [data-theme='synthwave'] [data-sm-exit='1'] [data-kp-leaving] {
+        transform-origin: 50% 100%;
+        animation: r7-synth-tip 750ms cubic-bezier(0.5, 0, 0.75, 0.4) forwards;
+    }
+
+    [data-theme='synthwave'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        background:
+            repeating-linear-gradient(90deg, transparent 0 18px, var(--primary) 18px 20px),
+            repeating-linear-gradient(0deg, transparent 0 10px, var(--primary) 10px 12px);
+        mix-blend-mode: screen;
+        animation: r7-synth-grid 750ms ease-in forwards;
+    }
+
+    @keyframes r7-synth-tip {
+        from {
+            transform: perspective(500px) rotateX(0);
+            opacity: 1;
+        }
+
+        55% {
+            transform: perspective(500px) rotateX(55deg);
+            filter: drop-shadow(0 0 8px var(--primary));
+            opacity: 1;
+        }
+
+        to {
+            transform: perspective(500px) rotateX(85deg);
+            filter: drop-shadow(0 0 14px var(--primary));
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-synth-grid {
+        from {
+            opacity: 0;
+        }
+
+        45% {
+            opacity: 0.75;
+        }
+
+        to {
+            opacity: 0.9;
+        }
+    }
+
+    /* 2. Sunset: the striped retro sun rises behind it from below, its bands
+       widening until the element is gone in the glow. */
+    [data-theme='synthwave'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-synth-dusk 750ms ease-in forwards;
+    }
+
+    [data-theme='synthwave'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        background: linear-gradient(180deg, #ffd319, #ff901f 35%, #ff2975 70%, #8c1eff);
+        mask: repeating-linear-gradient(180deg, #000 0 8px, transparent 8px 12px);
+        animation: r7-synth-sun 750ms cubic-bezier(0.3, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes r7-synth-dusk {
+        0%,
+        60% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-synth-sun {
+        from {
+            clip-path: circle(0% at 50% 120%);
+        }
+
+        70%,
+        to {
+            clip-path: circle(120% at 50% 120%);
+        }
+    }
+
+    /* 3. Outrun: it turns into its neon outline and races off to the right
+       inside its own lane, light streaks trailing behind. */
+    [data-theme='synthwave'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-synth-outrun 700ms cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+    }
+
+    [data-theme='synthwave'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background: repeating-linear-gradient(180deg, transparent 0 7px, #ff2975 7px 9px, transparent 9px 15px, #05d9e8 15px 16px);
+        mask: linear-gradient(90deg, transparent, #000);
+        transform-origin: left;
+        animation: r7-synth-streaks 700ms cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+    }
+
+    @keyframes r7-synth-outrun {
+        from {
+            clip-path: inset(0 0 0 0);
+            filter: none;
+        }
+
+        30% {
+            filter: drop-shadow(0 0 6px #ff2975) saturate(2);
+        }
+
+        to {
+            clip-path: inset(0 0 0 100%);
+            filter: drop-shadow(0 0 10px #ff2975) saturate(3);
+        }
+    }
+
+    @keyframes r7-synth-streaks {
+        from {
+            transform: scaleX(0);
+            opacity: 0;
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleX(1);
+            opacity: 0.8;
+        }
+    }
+
+    /* ----------------------------------------------------------- terminal */
+
+    /* 1. Your exit 3, reworked: the block cursor glides back over the line
+       in one fluent sweep, deleting it as it goes, glowing. */
+    [data-theme='terminal'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-term-delete 480ms linear forwards;
+    }
+
+    [data-theme='terminal'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        inset: 0 auto 0 auto;
+        width: 0.7em;
+        background: var(--primary);
+        box-shadow: 0 0 8px var(--primary);
+        animation: r7-term-cursor 480ms linear forwards;
+    }
+
+    @keyframes r7-term-delete {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes r7-term-cursor {
+        from {
+            right: 0;
+        }
+
+        to {
+            right: calc(100% - 0.7em);
+        }
+    }
+
+    /* 2. Line feed: it scrolls up and out of its line like output on a full
+       screen, with a phosphor afterglow. */
+    [data-theme='terminal'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-term-feed 450ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes r7-term-feed {
+        from {
+            clip-path: inset(0 0 0 0);
+            filter: none;
+        }
+
+        to {
+            clip-path: inset(0 0 100% 0);
+            filter: drop-shadow(0 0 6px var(--primary)) brightness(1.4);
+        }
+    }
+
+    /* 3. Clear: a bright scan beam sweeps down over it and leaves the line
+       empty behind it. */
+    [data-theme='terminal'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-term-clear 450ms linear forwards;
+    }
+
+    [data-theme='terminal'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 0 0 auto 0;
+        height: 3px;
+        background: var(--primary);
+        box-shadow: 0 0 10px 2px var(--primary);
+        animation: r7-term-beam 450ms linear forwards;
+    }
+
+    @keyframes r7-term-clear {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    @keyframes r7-term-beam {
+        from {
+            top: 0;
+        }
+
+        to {
+            top: calc(100% - 3px);
+        }
+    }
+
+    /* ------------------------------------------------------ high-contrast */
+
+    /* 1. Your exit 2, reworked: it flips to the theme's own inverse, ink
+       background and paper text, so it shows on any element, light or dark,
+       then it is gone in one step. */
+    [data-theme='high-contrast'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-hc-invert 450ms linear forwards;
+    }
+
+    /* Its text takes the flipped colour too, whatever colour it had. */
+    [data-theme='high-contrast'] [data-sm-exit='1'] [data-kp-leaving] *,
+    [data-theme='cyberpunk'] [data-sm-exit='1'] [data-kp-leaving] * {
+        color: inherit !important;
+        text-shadow: inherit;
+    }
+
+    @keyframes r7-hc-invert {
+        0%,
+        70% {
+            background-color: var(--foreground);
+            color: var(--background);
+            border-color: var(--background);
+            opacity: 1;
+        }
+
+        71%,
+        to {
+            background-color: var(--foreground);
+            color: var(--background);
+            opacity: 0;
+        }
+    }
+
+    /* 2. Ring and close: a thick focus ring marks it, then it closes to a
+       line in its middle in two clear steps. */
+    [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-hc-close 450ms steps(3, jump-end) forwards;
+    }
+
+    [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        box-shadow: inset 0 0 0 4px var(--ring);
+    }
+
+    @keyframes r7-hc-close {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(0 50% 0 50%);
+        }
+    }
+
+    /* 3. Struck through: a heavy bar in the text colour crosses it, then it
+       is gone in one step. */
+    [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-hc-struck 450ms steps(1, jump-end) forwards;
+    }
+
+    [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: calc(50% - 3px) 0 auto 0;
+        height: 6px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 2px var(--background);
+        transform-origin: left;
+        animation: r7-hc-bar 450ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes r7-hc-struck {
+        0%,
+        75% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-hc-bar {
+        from {
+            transform: scaleX(0);
+        }
+
+        60%,
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* -------------------------------------------------------------- sepia */
+
+    /* 1. Your 1 and 2 together: the page turns up and over away from you
+       while it fades to an old photograph. */
+    [data-theme='sepia'] [data-sm-exit='1'] [data-kp-leaving] {
+        transform-origin: bottom;
+        animation: r7-sepia-turn 600ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes r7-sepia-turn {
+        from {
+            transform: perspective(600px) rotateX(0);
+            filter: none;
+        }
+
+        45% {
+            filter: sepia(1) contrast(0.7);
+        }
+
+        to {
+            transform: perspective(600px) rotateX(80deg);
+            filter: sepia(1) contrast(0.4);
+            opacity: 0;
+        }
+    }
+
+    /* 2. Burned: the edges brown and char inward like paper held to a
+       candle, until nothing is left. */
+    [data-theme='sepia'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-sepia-burnt 700ms ease-in forwards;
+    }
+
+    [data-theme='sepia'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        animation: r7-sepia-char 700ms ease-in forwards;
+    }
+
+    @keyframes r7-sepia-burnt {
+        0%,
+        80% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-sepia-char {
+        from {
+            box-shadow: inset 0 0 0 0 #3b2512;
+        }
+
+        40% {
+            box-shadow:
+                inset 0 0 12px 6px #6b3f1d,
+                inset 0 0 2px 2px #2a170a;
+        }
+
+        to {
+            box-shadow:
+                inset 0 0 40px 60px #2a170a,
+                inset 0 0 4px 4px #120a04;
+        }
+    }
+
+    /* 3. Torn out: a ragged tear runs across it and the scrap is pulled off
+       the page. */
+    [data-theme='sepia'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-sepia-tear 600ms cubic-bezier(0.5, 0, 0.8, 0.5) forwards;
+    }
+
+    @keyframes r7-sepia-tear {
+        from {
+            clip-path: polygon(0 0, 104% 0, 98% 15%, 106% 30%, 97% 45%, 105% 60%, 96% 75%, 103% 90%, 100% 100%, 0 100%);
+            transform: none;
+        }
+
+        50% {
+            clip-path: polygon(0 0, 58% 0, 50% 15%, 62% 30%, 48% 45%, 60% 60%, 47% 75%, 57% 90%, 52% 100%, 0 100%);
+            transform: rotate(-0.6deg);
+        }
+
+        to {
+            clip-path: polygon(0 0, 4% 0, -4% 15%, 6% 30%, -6% 45%, 5% 60%, -7% 75%, 3% 90%, -2% 100%, 0 100%);
+            transform: rotate(-1deg);
+            filter: sepia(0.8);
+        }
+    }
+
+    /* ------------------------------------------------------------ phantom */
+
+    /* 1. Your exit 3, faster: the ghost turns see-through and wavers as it
+       rises and dissolves, now in under two thirds of a second and only
+       within its own place. */
+    [data-theme='phantom'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-phantom-rise 650ms ease-in forwards;
+    }
+
+    @keyframes r7-phantom-rise {
+        0% {
+            opacity: 1;
+            filter: none;
+        }
+
+        25% {
+            opacity: 0.55;
+            transform: skewX(4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+        }
+
+        50% {
+            transform: translateY(-3px) skewX(-4deg);
+        }
+
+        75% {
+            transform: translateY(-6px) skewX(3deg);
+            opacity: 0.3;
+        }
+
+        to {
+            transform: translateY(-9px) scaleX(0.94);
+            opacity: 0;
+            filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+        }
+    }
+
+    /* 2. Possessed: it flickers twice in a violet glow, then stretches into
+       a blur and is gone. */
+    [data-theme='phantom'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-phantom-possessed 600ms linear forwards;
+    }
+
+    @keyframes r7-phantom-possessed {
+        0% {
+            opacity: 1;
+            filter: none;
+        }
+
+        12% {
+            opacity: 0.25;
+            filter: drop-shadow(0 0 10px #a855f7);
+        }
+
+        24% {
+            opacity: 0.95;
+        }
+
+        36% {
+            opacity: 0.2;
+        }
+
+        48% {
+            opacity: 0.9;
+            filter: drop-shadow(0 0 14px #a855f7);
+            transform: scaleY(1);
+        }
+
+        to {
+            opacity: 0;
+            filter: blur(10px) drop-shadow(0 0 18px #a855f7);
+            transform: scaleY(1.04);
+        }
+    }
+
+    /* 3. Through the wall: it drifts sideways and passes into an unseen
+       wall, fading from its leading edge, a faint trail behind. */
+    [data-theme='phantom'] [data-sm-exit='3'] [data-kp-leaving] {
+        mask: linear-gradient(90deg, #000 0 50%, transparent 50% 100%) 0 0 / 200% 100% no-repeat;
+        animation: r7-phantom-wall 600ms ease-in forwards;
+    }
+
+    @keyframes r7-phantom-wall {
+        from {
+            mask-position: 0 0;
+            filter: none;
+        }
+
+        to {
+            mask-position: 100% 0;
+            filter: blur(2px) drop-shadow(-12px 0 8px var(--primary));
+        }
+    }
+
+    /* ------------------------------------------------------------ grotesk */
+
+    /* 1. Headline: a big black-on-colour word, GONE, slams across it in two
+       hard moves, then the whole block is gone. */
+    [data-theme='grotesk'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-grot-gone 600ms steps(1, jump-end) forwards;
+    }
+
+    [data-theme='grotesk'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        content: 'GONE';
+        display: grid;
+        align-items: center;
+        padding-inline: 0.3em;
+        font-size: 2.6em;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--foreground);
+        background: var(--primary);
+        animation: r7-grot-word 600ms steps(2, jump-end) forwards;
+    }
+
+    @keyframes r7-grot-gone {
+        0%,
+        80% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-grot-word {
+        from {
+            transform: translateX(-100%);
+        }
+
+        50%,
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    /* 2. Cut on the diagonal: three hard cuts slice it down to a sliver,
+       like a poster trimmed with a guillotine. */
+    [data-theme='grotesk'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-grot-cut 450ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes r7-grot-cut {
+        from {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        to {
+            clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 100%);
+        }
+    }
+
+    /* 3. Colour bands: three flat bands, accent, ink and paper, sweep across
+       one after another like a Swiss poster, and take it with them. */
+    [data-theme='grotesk'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-grot-bands-out 550ms linear forwards;
+    }
+
+    [data-theme='grotesk'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        inset: 0 auto 0 0;
+        width: 300%;
+        background: linear-gradient(90deg, var(--primary) 0 33.3%, var(--foreground) 33.3% 66.6%, var(--background) 66.6% 100%);
+        animation: r7-grot-bands 550ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes r7-grot-bands-out {
+        0%,
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-grot-bands {
+        from {
+            transform: translateX(33.4%);
+        }
+
+        to {
+            transform: translateX(-66.7%);
+        }
+    }
+
+    /* -------------------------------------------------------------- lapis */
+
+    /* 1. Your exit 3, much faster: gold leaf is laid over it with one
+       shimmer, then the gilded piece flakes off from the corner. */
+    [data-theme='lapis'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-lapis-flake 550ms ease-in forwards;
+    }
+
+    [data-theme='lapis'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        background:
+            linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.8) 45%, transparent 60%) no-repeat,
+            linear-gradient(135deg, #b8860b, #ffd770 45%, #b8860b);
+        background-size:
+            250% 100%,
+            100% 100%;
+        animation: r7-lapis-gild 550ms ease-out forwards;
+    }
+
+    @keyframes r7-lapis-flake {
+        0%,
+        45% {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        70% {
+            clip-path: polygon(0 0, 100% 0, 100% 55%, 65% 100%, 0 100%);
+        }
+
+        to {
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0);
+        }
+    }
+
+    @keyframes r7-lapis-gild {
+        from {
+            opacity: 0;
+            background-position:
+                150% 0,
+                0 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        45%,
+        to {
+            opacity: 1;
+            background-position:
+                -100% 0,
+                0 0;
+        }
+    }
+
+    /* 2. Lapis dust: it deepens to lapis blue flecked with gold, then
+       crumbles to nothing. */
+    [data-theme='lapis'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: r7-lapis-crumble 550ms ease-in forwards;
+    }
+
+    [data-theme='lapis'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        background:
+            radial-gradient(circle, #ffd770 0 1px, transparent 1.5px) 0 0 / 9px 9px,
+            radial-gradient(circle, #e6b34a 0 1px, transparent 1.5px) 4px 5px / 11px 11px,
+            #1e3a8a;
+        animation: r7-lapis-dust 550ms ease-in forwards;
+    }
+
+    @keyframes r7-lapis-crumble {
+        0%,
+        70% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-lapis-dust {
+        from {
+            opacity: 0;
+        }
+
+        35% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(4px);
+            filter: blur(1px);
+        }
+    }
+
+    /* 3. Inlay: its gold frame thickens inward until it covers it whole,
+       then the gold goes dark. */
+    [data-theme='lapis'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-lapis-inlaid 550ms ease-in forwards;
+    }
+
+    [data-theme='lapis'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        animation: r7-lapis-frame 550ms cubic-bezier(0.5, 0, 0.5, 1) forwards;
+    }
+
+    @keyframes r7-lapis-inlaid {
+        0%,
+        80% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-lapis-frame {
+        from {
+            box-shadow: inset 0 0 0 2px #d4a72c;
+        }
+
+        75%,
+        to {
+            box-shadow: inset 0 0 0 120px #d4a72c;
+        }
+    }
+
+    /* ----------------------------------------------------------- titanium */
+
+    /* 1. Anodised: it runs through the colours titanium takes under heat,
+       gold, violet, blue, and cools away. */
+    [data-theme='titanium'] [data-sm-exit='1'] [data-kp-leaving] {
+        animation: r7-ti-anodise 650ms ease-in forwards;
+    }
+
+    [data-theme='titanium'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        background: linear-gradient(110deg, #c9a227, #8e44ad, #2e86de, #48c9b0);
+        background-size: 300% 100%;
+        mix-blend-mode: color;
+        animation: r7-ti-heat 650ms ease-in forwards;
+    }
+
+    @keyframes r7-ti-anodise {
+        0%,
+        70% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes r7-ti-heat {
+        from {
+            opacity: 0;
+            background-position: 0 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            background-position: 100% 0;
+        }
+    }
+
+    /* 2. Machined: a cutting line runs down it, turning it to brushed metal
+       behind it, and the plate drops into its slot. */
+    [data-theme='titanium'] [data-sm-exit='2'] [data-kp-leaving] {
+        transform-origin: bottom;
+        animation: r7-ti-slot 650ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    [data-theme='titanium'] [data-sm-exit='2'] [data-kp-leaving]::after {
+        background:
+            linear-gradient(180deg, transparent calc(100% - 2px), #e8f6ff calc(100% - 2px)) no-repeat,
+            repeating-linear-gradient(90deg, #8d969f 0 1px, #a7b0b9 1px 3px, #959ea7 3px 4px);
+        background-size:
+            100% 100%,
+            auto;
+        box-shadow: 0 2px 8px #bfe9ff;
+        animation: r7-ti-cut 650ms linear forwards;
+    }
+
+    @keyframes r7-ti-slot {
+        0%,
+        55% {
+            transform: scaleY(1);
+        }
+
+        to {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes r7-ti-cut {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        50%,
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* 3. Bolted plate: four bolts are set in its corners, then the plate
+       slides out sideways along its rail with a precise mechanical ease. */
+    [data-theme='titanium'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: r7-ti-rail 700ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    [data-theme='titanium'] [data-sm-exit='3'] [data-kp-leaving]::after {
+        background:
+            radial-gradient(circle at 10px 10px, #d9dee3 0 3px, #5c636a 3px 4px, transparent 4.5px),
+            radial-gradient(circle at calc(100% - 10px) 10px, #d9dee3 0 3px, #5c636a 3px 4px, transparent 4.5px),
+            radial-gradient(circle at 10px calc(100% - 10px), #d9dee3 0 3px, #5c636a 3px 4px, transparent 4.5px),
+            radial-gradient(circle at calc(100% - 10px) calc(100% - 10px), #d9dee3 0 3px, #5c636a 3px 4px, transparent 4.5px);
+        animation: r7-ti-bolts 700ms linear forwards;
+    }
+
+    @keyframes r7-ti-rail {
+        0%,
+        35% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes r7-ti-bolts {
+        from {
+            opacity: 0;
+            transform: scale(1.4);
+        }
+
+        25%,
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}

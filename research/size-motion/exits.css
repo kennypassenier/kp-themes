@@ -42,36 +42,6 @@
         }
     }
 
-    /* cyberpunk, option 2: Derezzed: colours shift, it skews and breaks up. */
-    [data-theme='cyberpunk'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-cyberpunk-2 400ms steps(8, jump-end) forwards;
-    }
-
-    @keyframes lx-cyberpunk-2 {
-        50% {
-            filter: hue-rotate(90deg) saturate(3);
-            transform: skewX(-12deg);
-        }
-        to {
-            filter: hue-rotate(180deg) saturate(4);
-            transform: skewX(20deg) scaleY(0.2);
-            opacity: 0;
-        }
-    }
-
-    /* synthwave, option 2: It sinks into the sunset, colours shifting. */
-    [data-theme='synthwave'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-synthwave-2 460ms cubic-bezier(0.4, 0, 1, 1) forwards;
-    }
-
-    @keyframes lx-synthwave-2 {
-        to {
-            transform: translateY(20px);
-            filter: hue-rotate(-50deg) saturate(2);
-            opacity: 0;
-        }
-    }
-
     /* pastel, option 2: A balloon let go: it floats up with a little tilt. */
     [data-theme='pastel'] [data-sm-exit='2'] [data-kp-leaving] {
         animation: lx-pastel-2 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
@@ -84,17 +54,6 @@
         }
     }
 
-    /* terminal, option 2: Cleared from the top, line by line. */
-    [data-theme='terminal'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-terminal-2 400ms steps(8, jump-end) forwards;
-    }
-
-    @keyframes lx-terminal-2 {
-        to {
-            clip-path: inset(100% 0 0 0);
-        }
-    }
-
     /* forest, option 2: It withers: browns, shrinks and fades. */
     [data-theme='forest'] [data-sm-exit='2'] [data-kp-leaving] {
         animation: lx-forest-2 560ms ease-in forwards;
@@ -104,32 +63,6 @@
         to {
             filter: sepia(1) saturate(0.6);
             transform: scale(0.94);
-            opacity: 0;
-        }
-    }
-
-    /* high-contrast, option 2: Inverted for a moment, then gone. */
-    [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-high-contrast-2 300ms steps(1, jump-end) forwards;
-    }
-
-    @keyframes lx-high-contrast-2 {
-        from {
-            filter: invert(1);
-        }
-        to {
-            opacity: 0;
-        }
-    }
-
-    /* sepia, option 2: It fades like an old photograph. */
-    [data-theme='sepia'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-sepia-2 520ms linear forwards;
-    }
-
-    @keyframes lx-sepia-2 {
-        to {
-            filter: sepia(1) contrast(0.4);
             opacity: 0;
         }
     }
@@ -188,19 +121,6 @@
         }
     }
 
-    /* phantom, option 2: It rises into mist. */
-    [data-theme='phantom'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-phantom-2 580ms ease-in forwards;
-    }
-
-    @keyframes lx-phantom-2 {
-        to {
-            transform: translateY(-12px);
-            filter: blur(8px);
-            opacity: 0;
-        }
-    }
-
     /* shade, option 2: Lifted off the page: its shadow grows, then it fades. */
     :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-sm-exit='2'] [data-kp-leaving] {
         animation: lx-shade-2 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
@@ -229,31 +149,6 @@
         }
     }
 
-    /* grotesk, option 2: Shoved out to the right in three hard steps. */
-    [data-theme='grotesk'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-grotesk-2 240ms steps(3, jump-end) forwards;
-    }
-
-    @keyframes lx-grotesk-2 {
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-
-    /* lapis, option 2: It sinks into deep blue. */
-    [data-theme='lapis'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-lapis-2 520ms ease-in forwards;
-    }
-
-    @keyframes lx-lapis-2 {
-        to {
-            transform: translateY(10px);
-            filter: hue-rotate(20deg) brightness(0.4) saturate(1.6);
-            opacity: 0;
-        }
-    }
-
     /* nostromo, option 2: The phosphor glows up and fades out. */
     [data-theme='nostromo'] [data-sm-exit='2'] [data-kp-leaving] {
         animation: lx-nostromo-2 480ms ease-in forwards;
@@ -265,18 +160,6 @@
         }
         to {
             filter: brightness(1.2) blur(3px);
-            opacity: 0;
-        }
-    }
-
-    /* titanium, option 2: It slides down a rail at an even pace. */
-    [data-theme='titanium'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-titanium-2 320ms linear forwards;
-    }
-
-    @keyframes lx-titanium-2 {
-        to {
-            transform: translateY(18px);
             opacity: 0;
         }
     }

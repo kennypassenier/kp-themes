@@ -1,5 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="formal" data-review="size-motion">
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="size-motion"
+    data-review-themes="cyberpunk,synthwave,terminal,high-contrast,sepia,phantom,grotesk,lapis,titanium"
+>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +33,7 @@
         <link rel="stylesheet" href="leaves.css" />
         <link rel="stylesheet" href="exits.css" />
         <link rel="stylesheet" href="signature-exits.css" />
+        <link rel="stylesheet" href="round7.css" />
     </head>
     <body>
         <main class="sm-page">
@@ -226,7 +232,7 @@
             <section
                 class="sm-sec"
                 data-review-item="leave"
-                data-review-choices='[{"id": "exit", "label": "Exit for this theme", "options": [{"value": "1", "label": "Exit 1"}, {"value": "2", "label": "Exit 2"}, {"value": "3", "label": "Exit 3 (signature)"}]}, {"id": "space", "label": "When the space closes", "once": true, "options": [{"value": "together", "label": "During the exit"}, {"value": "after", "label": "After the exit"}, {"value": "pause", "label": "After the exit and a short pause"}, {"value": "ghost", "label": "At once, under a copy that plays the exit"}]}, {"id": "stagger", "label": "Remove all at once", "once": true, "options": [{"value": "1", "label": "One after another, each exit in full"}, {"value": "0.5", "label": "The next one starts halfway"}]}]'
+                data-review-choices='[{"id": "exit", "label": "Exit for this theme", "options": [{"value": "1", "label": "Exit 1"}, {"value": "2", "label": "Exit 2"}, {"value": "3", "label": "Exit 3 (signature)"}]}]'
                 data-review-title="Elements that leave"
                 data-review-components="card"
                 aria-labelledby="h-leave"
@@ -263,10 +269,9 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Three things to decide, each ticked here. <b>Per theme:</b> which exit, 1, 2 or 3; exit 3 is the theme's signature, drawn for
-                        this theme alone. <b>Once, for every theme:</b> when the space closes, and how several leave when removed all at once; ticking
-                        one sets the buttons on the page, so what you tick is what you see. Every animation plays at a quarter; the speed buttons at
-                        the top of the page change that.
+                        Pick the exit for this theme: three new ones, each described under its option. Where you named what you liked, exit 1 is that
+                        one reworked the way you described; 2 and 3 are new prototypes. The space closes during the exit and the next one starts
+                        halfway, as you chose; every animation plays at a quarter, and the speed buttons at the top of the page change that.
                     </p>
                 </div>
                 <div class="sm-pair sm-trio">
@@ -389,33 +394,20 @@
             </dialog>
         </template>
 
-        <!-- Round six (2026-10-04): "Elements that leave" was redrawn as three exits per theme, so every theme's verdict on it is
-             withdrawn and judged again (Kenny: "waarom heb ik bij formal en light geen demo? die goedkeuring moet ingetrokken worden"). -->
+        <!-- Round seven (2026-10-04): thirteen themes picked their exit and the space and remove-all timings were chosen (during the
+             exit; the next starts halfway). The nine themes sent back show three new exits each and are the only ones walked. -->
         <script type="application/json" data-review-round>
             {
-                "round": "2026-10-04-r6",
+                "round": "2026-10-04-r7",
                 "reopen": [
-                    "formal|leave",
-                    "light|leave",
-                    "dark|leave",
                     "cyberpunk|leave",
                     "synthwave|leave",
-                    "pastel|leave",
                     "terminal|leave",
-                    "forest|leave",
                     "high-contrast|leave",
                     "sepia|leave",
-                    "blueprint|leave",
-                    "solstice|leave",
-                    "brutalism|leave",
-                    "deco|leave",
                     "phantom|leave",
-                    "shade-light|leave",
-                    "shade-dark|leave",
-                    "retro|leave",
                     "grotesk|leave",
                     "lapis|leave",
-                    "nostromo|leave",
                     "titanium|leave"
                 ]
             }

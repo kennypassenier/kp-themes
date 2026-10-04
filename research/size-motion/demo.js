@@ -84,6 +84,59 @@ const EXITS = {
     'shade-dark': ['Lifted off the page: its shadow grows, then it fades.', 'Its own shadow grows under it and swallows it whole.'],
 };
 
+// Round seven: the nine themes sent back show three new exits each.
+const ROUND7 = {
+    cyberpunk: [
+        'Your exit 3 without the tag, as the classic glitch: the text turns neon blue, a cyan copy jumps right and up while a magenta copy jumps right and down, it jitters and is sliced away.',
+        'Slice shift: it is cut into bands that slide past each other, the colour drifting, until the bands run out.',
+        'Signal lost: the colour channels pull apart, scan noise rolls over it, and it collapses to a bright line that cuts out.',
+    ],
+    synthwave: [
+        'Your exit 3, reworked: it tips back onto the neon grid around its own foot and fades as it lies flat, in its own place; nothing moves over the element above.',
+        'Sunset: the striped retro sun rises behind it from below, its bands widening until the element is gone in the glow.',
+        'Outrun: it turns into its neon outline and races off to the right inside its own lane, light streaks trailing.',
+    ],
+    terminal: [
+        'Your exit 3, reworked: the block cursor glides back over the line in one fluent sweep, deleting it as it goes, in under half a second.',
+        'Line feed: it rolls up out of its line, bottom first, with a phosphor afterglow.',
+        'Clear: a bright scan beam sweeps down over it and leaves the line empty behind it.',
+    ],
+    'high-contrast': [
+        'Your exit 2, reworked: it flips to the exact inverse of what is under it, so it shows on light and dark elements alike, then it is gone in one step.',
+        'Ring and close: a thick focus ring marks it, then it closes to a line in its middle in clear steps.',
+        'Struck through: a heavy bar in the text colour crosses it, then it is gone in one step.',
+    ],
+    sepia: [
+        'Your 1 and 2 together: the page turns up and over away from you while it fades to an old photograph.',
+        'Burned: the edges brown and char inward like paper held to a candle, until nothing is left.',
+        'Torn out: a ragged tear runs across it and the scrap is pulled off the page.',
+    ],
+    phantom: [
+        'Your exit 3, faster: see-through and wavering, it rises a little and dissolves, now in 650 ms and within its own place.',
+        'Possessed: it flickers twice in a violet glow, then stretches into a blur and is gone.',
+        'Through the wall: it passes into an unseen wall, fading from its leading edge, a faint trail behind.',
+    ],
+    grotesk: [
+        'Headline: a big word, GONE, slams across it in two hard moves, then the whole block is gone.',
+        'Cut on the diagonal: three hard cuts slice it down to a sliver, like a poster trimmed with a guillotine.',
+        'Colour bands: three flat bands, accent, ink and paper, sweep across like a Swiss poster and take it with them.',
+    ],
+    lapis: [
+        'Your exit 3, much faster: gold leaf is laid over it with one shimmer, then the gilded piece flakes off from the corner, in 550 ms.',
+        'Lapis dust: it deepens to lapis blue flecked with gold, then crumbles to nothing.',
+        'Inlay: its gold frame thickens inward until it covers it whole, then it is gone.',
+    ],
+    titanium: [
+        'Anodised: it runs through the colours titanium takes under heat, gold, violet, blue, and cools away.',
+        'Machined: a cutting line runs down it, turning it to brushed metal behind it, and the plate drops into its slot.',
+        'Bolted plate: four bolts are set in its corners, then the plate slides out along its rail with a precise mechanical ease.',
+    ],
+};
+for (const [name, [one, two, three]] of Object.entries(ROUND7)) {
+    /** @type {Record<string, string>} */ (LEAVE)[name] = one;
+    /** @type {Record<string, string[]>} */ (EXITS)[name] = [two, three];
+}
+
 // The leave section's choices say what each option does; the exits in each
 // theme's own words (Kenny, 2026-10-04: "leg duidelijker uit wat het verschil
 // tussen opties is"). Set before the review kit reads them.
@@ -330,7 +383,7 @@ const applyExitTiming = (/** @type {string} */ value) => {
     }
 };
 for (const b of timingButtons) b.addEventListener('click', () => applyExitTiming(b.getAttribute('data-sm-exit-timing') ?? 'after'));
-applyExitTiming('after');
+applyExitTiming('together');
 
 // Remove all at once: each exit in full, or the next starting halfway.
 const staggerButtons = [...document.querySelectorAll('[data-sm-stagger]')];
@@ -339,7 +392,7 @@ const applyStagger = (/** @type {string} */ value) => {
     for (const col of document.querySelectorAll('[data-sm-exit]')) /** @type {HTMLElement} */ (col).style.setProperty('--kp-leave-stagger', value);
 };
 for (const b of staggerButtons) b.addEventListener('click', () => applyStagger(b.getAttribute('data-sm-stagger') ?? '1'));
-applyStagger('1');
+applyStagger('0.5');
 
 // Slow motion for judging (Kenny, 2026-10-04: "zet is een optie om alles op
 // 1/4 snelheid te kunnen afspelen"): every animation on the page, CSS or
