@@ -18522,9 +18522,9 @@
                 "firefox": {
                     "verdict": "approved",
                     "hash": "9827ff3f24749d32c460f6e005dedb5c439a7fa4913abab79e5e19636a7b9eaa",
-                    "commit": "4ee53f5a6e5606195543588d038d0e68506be0ca",
-                    "given": "2026-09-20",
-                    "ratio": 2.222
+                    "commit": "f7b295c82aacbdc7db0f29f960c97861449f7661",
+                    "given": "2026-10-04",
+                    "ratio": 2
                 }
             },
             "lapis": {
