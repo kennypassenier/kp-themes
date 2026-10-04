@@ -408,20 +408,66 @@ function arrivalOf(el) {
  * and the box around it shrinks with it. Under reduced motion, or in a theme
  * with no arrival, it goes at once.
  *
+ * Elements told to leave in the same task leave one by one, bottom first.
+ *
  * @param {HTMLElement} el
  * @param {{ hide?: boolean }} [options] `hide: true` sets `hidden` instead of removing it
  * @returns {Promise<void>} settled once it is gone
  */
-export async function leave(el, { hide = false } = {}) {
+export function leave(el, { hide = false } = {}) {
+    return new Promise((resolve) => {
+        if (!batch) {
+            batch = [];
+            queueMicrotask(() => {
+                const items = /** @type {Leaving[]} */ (batch);
+                batch = null;
+                void leaveInTurn(items);
+            });
+        }
+        batch.push({ el, hide, resolve });
+    });
+}
+
+/** @typedef {{ el: HTMLElement, hide: boolean, resolve: () => void }} Leaving */
+/** @type {Leaving[] | null} */
+let batch = null;
+
+/**
+ * Several elements told to leave at once go one by one, the lowest first,
+ * each starting as the one before has played its exit (Kenny, 2026-10-04:
+ * "als er twee of meerdere elementen zijn, dan moeten die één voor één in
+ * logische volgorde (pak van beneden naar boven) verwijderd worden").
+ * @param {Leaving[]} items
+ */
+async function leaveInTurn(items) {
+    items.sort((a, b) => (a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1));
+    for (const item of items) {
+        /** @type {Promise<void>} */
+        const exited = new Promise((resolve) => {
+            void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+        });
+        await exited;
+    }
+}
+
+/**
+ * @param {HTMLElement} el @param {boolean} hide
+ * @param {() => void} exited called once its exit has played, or at once when it has none
+ * @returns {Promise<void>}
+ */
+async function leaveOne(el, hide, exited) {
     const gone = () => {
         if (hide) el.hidden = true;
         else el.remove();
     };
-    if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return;
+    if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return exited();
     const before = getComputedStyle(el).animationName;
     const arrival = arrivalOf(el);
     const { size, ease } = themeMotion(el);
-    if (!arrival && size <= 0) return gone();
+    if (!arrival && size <= 0) {
+        exited();
+        return gone();
+    }
     el.setAttribute('data-kp-leaving', '');
     // A register with a leave of its own draws it on `[data-kp-leaving]`
     // (Kenny, 2026-10-04: "kan je die ook meer on-theme maken met distincte
@@ -466,8 +512,9 @@ export async function leave(el, { hide = false } = {}) {
         el.style.setProperty('animation', 'none');
     }
     if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
-    if (lasts > 0)
-        running.push(playedOut(actor, lasts + 100));
+    const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
+    void exit.then(exited);
+    running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its
     // leave, and the table glides shut once it is out.
     if (size > 0 && !(el instanceof HTMLTableRowElement)) {
@@ -475,13 +522,24 @@ export async function leave(el, { hide = false } = {}) {
         // anywhere else it closes from below.
         const parent = el.parentElement ? getComputedStyle(el.parentElement) : null;
         const sideways =
-            style.display.startsWith('inline') ||
-            (parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith('column'));
+            style.display.startsWith('inline') || (parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith('column'));
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
         const from = sideways
-            ? { width: `${el.offsetWidth}px`, marginLeft: style.marginLeft, marginRight: style.marginRight, paddingLeft: style.paddingLeft, paddingRight: style.paddingRight }
-            : { height: `${el.offsetHeight}px`, marginTop: style.marginTop, marginBottom: style.marginBottom, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom };
+            ? {
+                  width: `${el.offsetWidth}px`,
+                  marginLeft: style.marginLeft,
+                  marginRight: style.marginRight,
+                  paddingLeft: style.paddingLeft,
+                  paddingRight: style.paddingRight,
+              }
+            : {
+                  height: `${el.offsetHeight}px`,
+                  marginTop: style.marginTop,
+                  marginBottom: style.marginBottom,
+                  paddingTop: style.paddingTop,
+                  paddingBottom: style.paddingBottom,
+              };
         const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
         // The space closes slower than a plain resize, so the eye can follow
         // what closes up (Kenny, 2026-10-04: "ik zou het graag iets trager

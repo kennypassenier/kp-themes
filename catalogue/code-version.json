@@ -15,7 +15,7 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/motion.js": {
-            "digest": "a38582592b34b399",
+            "digest": "fd468e1afe0c7c16",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },

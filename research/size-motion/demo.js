@@ -57,7 +57,7 @@ const LEAVE = {
 
 // Options 2 and 3 per theme in the exit-options section (exits.css).
 const EXITS = {
-    formal: ['Folded up like a letter, from the bottom edge to the top.', 'The ink greys out and the line slides back into the margin.'],
+    formal: ['Folded up like a letter, from the bottom edge to the top.', 'Struck out with a red rule, then it fades.'],
     light: ['Lifted up and out of the page.', 'It brightens to white where it stands.'],
     dark: ['It sinks into the dark.', 'It slips left into shadow.'],
     cyberpunk: ['Derezzed: colours shift, it skews and breaks up.', 'A scanline wipes it from the top down.'],
@@ -96,10 +96,9 @@ for (const look of document.querySelectorAll('[data-review-look]')) {
         const character = /** @type {Record<string, string>} */ (CHARACTER)[name];
         if (grows && character) copy.innerHTML = `${base}<br /><b>This theme's character:</b> ${character}`;
         const leaves = /** @type {Record<string, string>} */ (LEAVE)[name];
-        if (item.startsWith('leave') && item !== 'leave-exits' && leaves) copy.innerHTML = `${base}<br /><b>This theme's leave:</b> ${leaves}`;
         const exits = /** @type {Record<string, string[]>} */ (EXITS)[name];
-        if (item === 'leave-exits' && leaves && exits)
-            copy.innerHTML = `${base}<br /><b>Option 1:</b> ${leaves}<br /><b>Option 2:</b> ${exits[0]}<br /><b>Option 3:</b> ${exits[1]}`;
+        if (item === 'leave' && leaves && exits)
+            copy.innerHTML = `${base}<br /><b>Exit 1:</b> ${leaves}<br /><b>Exit 2:</b> ${exits[0]}<br /><b>Exit 3:</b> ${exits[1]}`;
         if (copy !== note) {
             copy.hidden = true;
             look.append(copy);
@@ -287,28 +286,31 @@ for (const col of document.querySelectorAll('[data-sm-leave]')) {
     });
 }
 
-// The exit-options section closes its space with the timing picked above it.
-const exitTiming = /** @type {HTMLSelectElement | null} */ (document.querySelector('[data-sm-exit-timing]'));
-const applyExitTiming = () => {
-    if (!exitTiming) return;
+// The leave section closes its space when the pressed button says.
+const timingButtons = [...document.querySelectorAll('[data-sm-exit-timing]')];
+const applyExitTiming = (/** @type {string} */ value) => {
+    for (const b of timingButtons) b.setAttribute('aria-pressed', String(b.getAttribute('data-sm-exit-timing') === value));
     for (const col of document.querySelectorAll('[data-sm-exit]')) {
         const style = /** @type {HTMLElement} */ (col).style;
-        style.setProperty('--kp-leave-fold', exitTiming.value === 'pause' ? 'after' : exitTiming.value);
-        style.setProperty('--kp-leave-pause', exitTiming.value === 'pause' ? '150ms' : '0ms');
+        style.setProperty('--kp-leave-fold', value === 'pause' ? 'after' : value);
+        style.setProperty('--kp-leave-pause', value === 'pause' ? '150ms' : '0ms');
     }
 };
-exitTiming?.addEventListener('change', applyExitTiming);
-applyExitTiming();
+for (const b of timingButtons) b.addEventListener('click', () => applyExitTiming(b.getAttribute('data-sm-exit-timing') ?? 'after'));
+applyExitTiming('after');
 
 // Slow motion for judging (Kenny, 2026-10-04: "zet is een optie om alles op
 // 1/4 snelheid te kunnen afspelen"): every animation on the page, CSS or
 // scripted, plays at a quarter while the toggle is on; remembered per viewer.
-const slowButton = document.querySelector('[data-sm-slow]');
-let rate = 1;
+const speedButtons = [...document.querySelectorAll('[data-sm-speed]')];
+// A quarter by default, so the detail can be seen (Kenny, 2026-10-04: "maak
+// de demo standaard nog trager, ik wil het in detail kunnen zien").
+let rate = 0.25;
 try {
-    if (localStorage.getItem('sm-slow') === '1') rate = 0.25;
+    const kept = Number(localStorage.getItem('sm-speed'));
+    if (kept > 0) rate = kept;
 } catch {
-    // No storage: start at full speed.
+    // No storage: start at a quarter.
 }
 const animate = Element.prototype.animate;
 Element.prototype.animate = function (...args) {
@@ -325,18 +327,27 @@ const slowEachFrame = () => {
 };
 document.addEventListener('animationstart', slowNow, { capture: true });
 requestAnimationFrame(slowEachFrame);
-const showSlow = () => {
-    if (!slowButton) return;
-    slowButton.setAttribute('aria-pressed', String(rate < 1));
-    slowButton.textContent = rate < 1 ? 'Back to full speed' : 'Play everything at ¼ speed';
+const showSpeed = () => {
+    for (const b of speedButtons) b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-sm-speed')) === rate));
 };
-slowButton?.addEventListener('click', () => {
-    rate = rate < 1 ? 1 : 0.25;
-    try {
-        localStorage.setItem('sm-slow', rate < 1 ? '1' : '0');
-    } catch {
-        // Not remembered; it still applies now.
-    }
-    showSlow();
-});
-showSlow();
+for (const b of speedButtons)
+    b.addEventListener('click', () => {
+        rate = Number(b.getAttribute('data-sm-speed'));
+        try {
+            localStorage.setItem('sm-speed', String(rate));
+        } catch {
+            // Not remembered; it still applies now.
+        }
+        showSpeed();
+    });
+showSpeed();
+
+// Each exit card names what it does in the theme on screen.
+const describeExits = () => {
+    const name = document.documentElement.getAttribute('data-theme') ?? 'formal';
+    const exits = /** @type {Record<string, string[]>} */ (EXITS)[name] ?? [];
+    const texts = [/** @type {Record<string, string>} */ (LEAVE)[name], ...exits];
+    for (const el of document.querySelectorAll('[data-sm-exit-desc]')) el.textContent = texts[Number(el.getAttribute('data-sm-exit-desc')) - 1] ?? '';
+};
+new MutationObserver(describeExits).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+describeExits();

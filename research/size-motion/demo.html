@@ -50,12 +50,13 @@
                     both are capped (600 ms to close, 480 ms to resize), because light and dark open over two seconds. This theme:
                     <b data-sm-timing>…</b>
                 </p>
-                <p class="sm-actions sm-slow">
-                    <button type="button" class="kp-button kp-button--sm" data-sm-slow aria-pressed="false">Play everything at ¼ speed</button>
-                    <span class="sm-meta"
-                        >Slows every animation on this page to a quarter, so each one can be judged; it stays on when you change theme.</span
-                    >
-                </p>
+                <div class="sm-actions sm-slow" role="group" aria-label="Animation speed">
+                    <b>Speed of every animation on this page:</b>
+                    <button type="button" class="kp-button kp-button--sm" data-sm-speed="1" aria-pressed="false">Full</button>
+                    <button type="button" class="kp-button kp-button--sm" data-sm-speed="0.5" aria-pressed="false">½</button>
+                    <button type="button" class="kp-button kp-button--sm" data-sm-speed="0.25" aria-pressed="true">¼</button>
+                    <button type="button" class="kp-button kp-button--sm" data-sm-speed="0.125" aria-pressed="false">⅛</button>
+                </div>
             </header>
 
             <section
@@ -224,178 +225,41 @@
             <section
                 class="sm-sec"
                 data-review-item="leave"
-                data-review-title="Elements that leave: together"
+                data-review-title="Elements that leave"
                 data-review-components="card"
                 aria-labelledby="h-leave"
             >
                 <div class="sm-sec__head">
-                    <h2 id="h-leave">Elements that leave: together (A)</h2>
+                    <h2 id="h-leave">Elements that leave</h2>
                     <p>
-                        The theme's exit and the closing of its space run together: the space starts closing a third of the way into the exit. This is
-                        the draft you saw first.
+                        Two separate questions. <b>What the element does</b> as it leaves: the three cards below each show one exit of this theme (1,
+                        2 and 3). <b>When its space closes</b>, so the card shrinks: pick that once with the buttons, it applies to all three cards.
                     </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Variant A of four. Dismiss the messages and remove rows with their ✕, one at a time and quickly after each other, then
-                        <b>Remove all at once</b>; <b>Bring them back</b> lets them arrive again. Approve the variant where the theme's own exit stays
-                        visible every time and nothing under it jumps; leave the others unapproved.
-                    </p>
-                </div>
-                <div class="sm-pair">
-                    <div class="sm-col" data-sm-leave="together" style="--kp-leave-fold: together">
-                        <p class="sm-label">Variant A</p>
-                        <div class="kp-card sm-card" data-kp-size-motion>
-                            <div class="sm-notices" data-sm-notices></div>
-                            <ul class="sm-list" data-sm-leave-list></ul>
-                        </div>
-                        <p class="sm-under">Everything under the card moves with it.</p>
-                        <p class="sm-actions">
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
-                        </p>
+                    <div class="sm-actions" role="group" aria-label="When the space closes">
+                        <b>When the space closes:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-exit-timing="together" aria-pressed="false">
+                            During the exit
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-exit-timing="after" aria-pressed="true">After the exit</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-exit-timing="pause" aria-pressed="false">
+                            After the exit and a short pause
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sm-exit-timing="ghost" aria-pressed="false">
+                            At once, under a copy that plays the exit
+                        </button>
                     </div>
                 </div>
-            </section>
-
-            <section
-                class="sm-sec"
-                data-review-item="leave-after"
-                data-review-title="Elements that leave: exit first, then close"
-                data-review-components="card"
-                aria-labelledby="h-leave-after"
-            >
-                <div class="sm-sec__head">
-                    <h2 id="h-leave-after">Elements that leave: exit first, then close (B)</h2>
-                    <p>The theme's exit plays out in full while the space stays open; only then does the space close and the card shrink.</p>
-                </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Variant B of four. Dismiss the messages and remove rows with their ✕, one at a time and quickly after each other, then
-                        <b>Remove all at once</b>; <b>Bring them back</b> lets them arrive again. Approve the variant where the theme's own exit stays
-                        visible every time and nothing under it jumps; leave the others unapproved.
-                    </p>
-                </div>
-                <div class="sm-pair">
-                    <div class="sm-col" data-sm-leave="after" style="--kp-leave-fold: after">
-                        <p class="sm-label">Variant B</p>
-                        <div class="kp-card sm-card" data-kp-size-motion>
-                            <div class="sm-notices" data-sm-notices></div>
-                            <ul class="sm-list" data-sm-leave-list></ul>
-                        </div>
-                        <p class="sm-under">Everything under the card moves with it.</p>
-                        <p class="sm-actions">
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="sm-sec"
-                data-review-item="leave-pause"
-                data-review-title="Elements that leave: exit, a beat, then close"
-                data-review-components="card"
-                aria-labelledby="h-leave-pause"
-            >
-                <div class="sm-sec__head">
-                    <h2 id="h-leave-pause">Elements that leave: exit, a beat, then close (C)</h2>
-                    <p>The theme's exit plays out in full, the empty space stays for a short beat (150 ms), then it closes and the card shrinks.</p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Variant C of four. Dismiss the messages and remove rows with their ✕, one at a time and quickly after each other, then
-                        <b>Remove all at once</b>; <b>Bring them back</b> lets them arrive again. Approve the variant where the theme's own exit stays
-                        visible every time and nothing under it jumps; leave the others unapproved.
-                    </p>
-                </div>
-                <div class="sm-pair">
-                    <div class="sm-col" data-sm-leave="pause" style="--kp-leave-fold: after; --kp-leave-pause: 150ms">
-                        <p class="sm-label">Variant C</p>
-                        <div class="kp-card sm-card" data-kp-size-motion>
-                            <div class="sm-notices" data-sm-notices></div>
-                            <ul class="sm-list" data-sm-leave-list></ul>
-                        </div>
-                        <p class="sm-under">Everything under the card moves with it.</p>
-                        <p class="sm-actions">
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="sm-sec"
-                data-review-item="leave-ghost"
-                data-review-title="Elements that leave: a stand-in plays the exit"
-                data-review-components="card"
-                aria-labelledby="h-leave-ghost"
-            >
-                <div class="sm-sec__head">
-                    <h2 id="h-leave-ghost">Elements that leave: a stand-in plays the exit (D)</h2>
-                    <p>
-                        A copy of the element, the same shape, is laid on top and plays the theme's exit; the element itself is hidden at once and its
-                        space closes underneath, so the exit is never squeezed by the closing space.
-                    </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Variant D of four. Dismiss the messages and remove rows with their ✕, one at a time and quickly after each other, then
-                        <b>Remove all at once</b>; <b>Bring them back</b> lets them arrive again. Approve the variant where the theme's own exit stays
-                        visible every time and nothing under it jumps; leave the others unapproved.
-                    </p>
-                </div>
-                <div class="sm-pair">
-                    <div class="sm-col" data-sm-leave="ghost" style="--kp-leave-fold: ghost">
-                        <p class="sm-label">Variant D</p>
-                        <div class="kp-card sm-card" data-kp-size-motion>
-                            <div class="sm-notices" data-sm-notices></div>
-                            <ul class="sm-list" data-sm-leave-list></ul>
-                        </div>
-                        <p class="sm-actions">
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="reset">Bring them back</button>
-                            <button type="button" class="kp-button kp-button--sm" data-sm-leave-act="all">Remove all at once</button>
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="sm-sec"
-                data-review-item="leave-exits"
-                data-review-title="Exit options per theme"
-                data-review-components="card"
-                aria-labelledby="h-leave-exits"
-            >
-                <div class="sm-sec__head">
-                    <h2 id="h-leave-exits">Exit options per theme</h2>
-                    <p>
-                        Three exits for this theme side by side: option 1 is the one in A to D, options 2 and 3 are new. The timing above them picks
-                        how the space closes, the same A to D as the sections before.
-                    </p>
-                    <p class="sm-actions">
-                        <label
-                            >Timing
-                            <select class="kp-select" data-sm-exit-timing>
-                                <option value="together">A: together</option>
-                                <option value="after" selected>B: exit first, then close</option>
-                                <option value="pause">C: exit, a beat, then close</option>
-                                <option value="ghost">D: a stand-in plays the exit</option>
-                            </select>
-                        </label>
-                    </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Try each option with its ✕ buttons and <b>Remove all at once</b>. In the note, write the number of the exit you want for this
-                        theme (1, 2 or 3), or what is missing; approve when one of the three fits.
+                        Pick when the space closes with the buttons, then try the three cards with their ✕ buttons and <b>Remove all at once</b>. In
+                        the note, write the number of the exit you want for this theme (1, 2 or 3) and, once, which space button you prefer; approve
+                        when one of the three fits.
                     </p>
                 </div>
                 <div class="sm-pair sm-trio">
                     <div class="sm-col" data-sm-leave="exit-1" data-sm-exit="1">
-                        <p class="sm-label">Option 1</p>
+                        <p class="sm-label">Exit 1</p>
+                        <p class="sm-meta" data-sm-exit-desc="1"></p>
                         <div class="kp-card sm-card" data-kp-size-motion>
                             <div class="sm-notices" data-sm-notices></div>
                             <ul class="sm-list" data-sm-leave-list></ul>
@@ -406,7 +270,8 @@
                         </p>
                     </div>
                     <div class="sm-col" data-sm-leave="exit-2" data-sm-exit="2">
-                        <p class="sm-label">Option 2</p>
+                        <p class="sm-label">Exit 2</p>
+                        <p class="sm-meta" data-sm-exit-desc="2"></p>
                         <div class="kp-card sm-card" data-kp-size-motion>
                             <div class="sm-notices" data-sm-notices></div>
                             <ul class="sm-list" data-sm-leave-list></ul>
@@ -417,7 +282,8 @@
                         </p>
                     </div>
                     <div class="sm-col" data-sm-leave="exit-3" data-sm-exit="3">
-                        <p class="sm-label">Option 3</p>
+                        <p class="sm-label">Exit 3</p>
+                        <p class="sm-meta" data-sm-exit-desc="3"></p>
                         <div class="kp-card sm-card" data-kp-size-motion>
                             <div class="sm-notices" data-sm-notices></div>
                             <ul class="sm-list" data-sm-leave-list></ul>

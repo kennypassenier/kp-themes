@@ -165,3 +165,9 @@
         grid-template-columns: minmax(0, 1fr);
     }
 }
+
+[data-sm-exit-timing][aria-pressed='true'],
+[data-sm-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}

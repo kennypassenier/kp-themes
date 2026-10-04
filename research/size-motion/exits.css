@@ -17,16 +17,24 @@
         }
     }
 
-    /* formal, option 3: The ink greys out and the line slides back into the margin. */
+    /* formal, option 3: Struck out with a red rule, then it fades. */
     [data-theme='formal'] [data-sm-exit='3'] [data-kp-leaving] {
-        animation: lx-formal-3 420ms ease-in forwards;
+        animation: lx-formal-3 520ms ease-in forwards;
     }
 
     @keyframes lx-formal-3 {
+        from {
+            text-decoration: line-through 2px transparent;
+        }
+
+        45% {
+            text-decoration: line-through 2px var(--destructive);
+            opacity: 1;
+        }
+
         to {
-            filter: grayscale(1);
+            text-decoration: line-through 2px var(--destructive);
             opacity: 0;
-            transform: translateX(-12px);
         }
     }
 
