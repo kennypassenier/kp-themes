@@ -377,7 +377,10 @@ export function easeSize(box) {
     const settle = () => {
         if (!box.isConnected) return;
         const from = running ? box.offsetHeight : last;
-        running?.cancel();
+        // Finished rather than cancelled: a page that awaits every
+        // animation's `finished` must not see an AbortError for a glide a
+        // newer one replaced (tests/register-dark-faults awaited one).
+        running?.finish();
         running = null;
         const to = box.offsetHeight;
         last = to;
@@ -388,9 +391,9 @@ export function easeSize(box) {
         running = mine;
         mine.finished
             .then(() => {
-                if (running !== mine) return;
-                running = null;
+                // done() leaves the box alone when a newer glide owns it.
                 done();
+                if (running === mine) running = null;
             })
             .catch(() => undefined);
     };
@@ -451,7 +454,7 @@ function attachFold(details) {
         if (size <= 0) return;
         event.preventDefault();
         const from = details.offsetHeight;
-        running?.cancel();
+        running?.finish();
         const opening = !details.open || folding;
         folding = !opening;
         details.open = true;
@@ -467,9 +470,9 @@ function attachFold(details) {
         running = mine;
         mine.finished
             .then(() => {
+                done();
                 if (running !== mine) return;
                 running = null;
-                done();
                 if (folding) {
                     folding = false;
                     details.open = false;

@@ -11205,7 +11205,7 @@ function easeSize(box) {
   const settle = () => {
     if (!box.isConnected) return;
     const from = running ? box.offsetHeight : last;
-    running?.cancel();
+    running?.finish();
     running = null;
     const to = box.offsetHeight;
     last = to;
@@ -11215,9 +11215,8 @@ function easeSize(box) {
     const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
     running = mine;
     mine.finished.then(() => {
-      if (running !== mine) return;
-      running = null;
       done();
+      if (running === mine) running = null;
     }).catch(() => void 0);
   };
   const sizes = new ResizeObserver(settle);
@@ -11268,7 +11267,7 @@ function attachFold(details) {
     if (size <= 0) return;
     event.preventDefault();
     const from = details.offsetHeight;
-    running?.cancel();
+    running?.finish();
     const opening = !details.open || folding;
     folding = !opening;
     details.open = true;
@@ -11281,9 +11280,9 @@ function attachFold(details) {
     const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
     running = mine;
     mine.finished.then(() => {
+      done();
       if (running !== mine) return;
       running = null;
-      done();
       if (folding) {
         folding = false;
         details.open = false;
