@@ -11209,7 +11209,7 @@ function easeSize(box) {
     running = null;
     const to = box.offsetHeight;
     last = to;
-    if (Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+    if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
     const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
@@ -11328,7 +11328,7 @@ function attachMotion(root = document) {
     for (const one of detaches) one();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, switching;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -11364,6 +11364,16 @@ var init_motion = __esm({
     entrances = /* @__PURE__ */ new WeakMap();
     closing = /* @__PURE__ */ new WeakSet();
     nativeClose = typeof HTMLDialogElement === "undefined" ? null : HTMLDialogElement.prototype.close;
+    switching = 0;
+    if (typeof document !== "undefined" && typeof MutationObserver === "function") {
+      new MutationObserver(() => {
+        const mine = ++switching;
+        const release = () => {
+          if (switching === mine) switching = 0;
+        };
+        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    }
   }
 });
 

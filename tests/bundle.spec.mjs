@@ -32,6 +32,11 @@ const THEMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.me
  * made the test time out at 30 seconds on the 40-second drift.
  */
 const snapshot = async (page) => {
+    // Every module the page asked for has attached: the loose page fetches
+    // them one by one, the bundle has them all, and a field measured before
+    // its module attached read 1.2px apart from one measured after (since
+    // 9.1.0 added a module to fetch, in a different theme every run).
+    await page.waitForSelector('html[data-kp-auto-ready]', { state: 'attached', timeout: 10_000 }).catch(() => undefined);
     await page.evaluate(async () => {
         await document.fonts.ready;
         // A finite animation is jumped to its end, an endless one is

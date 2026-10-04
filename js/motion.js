@@ -230,6 +230,23 @@ function attachClose(dialog) {
 /* -------------------------------------------------------------- sizing */
 
 /**
+ * A theme switch changes many sizes at once (a field's gap, a face's
+ * metrics); none of that is content arriving, so nothing glides for it. The
+ * box takes its new size, as the rest of the page does. Set for two frames
+ * after the root's theme changes, and while the new register's faces load.
+ */
+let switching = 0;
+if (typeof document !== 'undefined' && typeof MutationObserver === 'function') {
+    new MutationObserver(() => {
+        const mine = ++switching;
+        const release = () => {
+            if (switching === mine) switching = 0;
+        };
+        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+
+/**
  * The entrance's curve without its overshoot: a size goes to its new value
  * and stops there (Kenny, 2026-10-04: pastel's and synthwave's cards "grow
  * too much and shrink again at the end, it should just grow to the correct
@@ -364,7 +381,7 @@ export function easeSize(box) {
         running = null;
         const to = box.offsetHeight;
         last = to;
-        if (Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+        if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
         const { size, ease } = themeMotion(box);
         if (size <= 0) return;
         const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
