@@ -51,9 +51,6 @@
                 data-review-item="action-columns"
                 data-review-components="action-columns"
                 data-review-title="Buttons in shared columns"
-                data-review-choices='[{ "id": "phone", "label": "On a phone, a row&#39;s buttons", "once": true, "options": [
-                    { "value": "row", "label": "Side by side under the text", "hint": "The row&#39;s text takes the whole line; the buttons sit under it against the right edge, in the same columns as every other row." },
-                    { "value": "stack", "label": "Stacked beside the text", "hint": "The text keeps the left; the buttons stack on the right, every one as wide as the widest button of the list (the dashboard does this)." }]}]'
                 aria-labelledby="h-actions"
             >
                 <div class="dp-sec__head">
@@ -69,15 +66,12 @@
                         In the list, every <b>Open</b> sits in one column, every <b>Assign…</b> and the second row's <b>Reassign…</b> in the one
                         before it, one width, and the incident without Acknowledge leaves that slot empty. Press <b>Longer label</b>: the whole Assign
                         column widens, on every row. In the table the buttons are named by role, so <b>Open</b> stays under Open even on the rows
-                        without Recalibrate. Compare with <b>Package today</b> at the bottom, where the buttons wander.
+                        without Recalibrate. Compare with <b>Package today</b> at the bottom, where the buttons wander. In the phone frame the buttons
+                        go under the row's text, side by side and spread over the full width in equal columns, so each role still lines up from row to
+                        row; nothing is pushed to the right edge.
                     </p>
                 </div>
-                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="phone">
-                    <span>On a phone:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="row" aria-pressed="true">Side by side under the text</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="stack" aria-pressed="false">Stacked beside the text</button>
-                    <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-dp-longer aria-pressed="false">Longer label</button>
-                </div>
+
                 <div class="dp-pair">
                     <div class="dp-col">
                         <p class="dp-label">Incidents, by position from the end (no script)</p>
@@ -267,8 +261,8 @@
                 data-review-components="kpis"
                 data-review-title="Key figures"
                 data-review-choices='[{ "id": "pressed", "label": "A key figure that filters, when it is on", "once": true, "options": [
-                    { "value": "ring", "label": "A doubled primary edge", "hint": "The tile keeps its card colour; its edge turns primary and twice as thick (the dashboard does this)." },
-                    { "value": "tint", "label": "A primary edge over a light wash", "hint": "The edge turns primary and the tile takes a faint primary tint, so an active filter shows from further away." }]},
+                    { "value": "ring", "label": "A thick border, the tile stays white", "hint": "When the filter is on, only the tile&#39;s border changes: it turns the primary colour and twice as thick. The inside of the tile stays its normal card colour (the dashboard does this). See the left pair under &#39;Side by side&#39;." },
+                    { "value": "tint", "label": "A border and a coloured background", "hint": "When the filter is on, the border turns the primary colour and the whole inside of the tile gets a faint primary background, so you see from across the room which filters are on. See the right pair under &#39;Side by side&#39;." }]},
                   { "id": "spark", "label": "The 24-hour sparkline", "once": true, "options": [
                     { "value": "area", "label": "A line over a soft area", "hint": "The line with a faint fill under it (the dashboard does this)." },
                     { "value": "line", "label": "The line alone", "hint": "Quieter; the shape reads a little less at a glance." }]}]'
@@ -291,15 +285,64 @@
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="pressed">
                     <span>When on:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="ring" aria-pressed="true">A doubled primary edge</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="ring" aria-pressed="true">
+                        A thick border, the tile stays white
+                    </button>
                     <button type="button" class="kp-button kp-button--sm" data-value="tint" aria-pressed="false">
-                        A primary edge over a light wash
+                        A border and a coloured background
                     </button>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="spark">
                     <span>Sparkline:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="area" aria-pressed="true">A line over a soft area</button>
                     <button type="button" class="kp-button kp-button--sm" data-value="line" aria-pressed="false">The line alone</button>
+                </div>
+                <div class="dp-compare">
+                    <p class="dp-label">Side by side: a filter tile off and on, in each option</p>
+                    <div class="dp-compare__grid">
+                        <div>
+                            <p class="dp-label">A thick border, the tile stays white</p>
+                            <div class="kp-kpis">
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-kpi-owned tabindex="-1">
+                                    <span class="kp-kpi__label">Open incidents</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                    >
+                                    <span class="kp-kpi__value">3</span>
+                                    <span class="kp-kpi__trend">off</span>
+                                </button>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="true" data-kp-kpi-owned tabindex="-1">
+                                    <span class="kp-kpi__label">Open incidents</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                    >
+                                    <span class="kp-kpi__value">3</span>
+                                    <span class="kp-kpi__trend">on</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="dp-label">A border and a coloured background</p>
+                            <div class="kp-kpis kp-kpis--tint">
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-kpi-owned tabindex="-1">
+                                    <span class="kp-kpi__label">Open incidents</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                    >
+                                    <span class="kp-kpi__value">3</span>
+                                    <span class="kp-kpi__trend">off</span>
+                                </button>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="true" data-kp-kpi-owned tabindex="-1">
+                                    <span class="kp-kpi__label">Open incidents</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                    >
+                                    <span class="kp-kpi__value">3</span>
+                                    <span class="kp-kpi__trend">on</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="dp-kpi-frames">
                     <div class="kp-kpis" role="group" aria-label="Network at a glance" data-dp-kpis>
@@ -855,7 +898,7 @@
         </main>
 
         <script type="application/json" data-review-round>
-            { "round": "2026-10-04-r1" }
+            { "round": "2026-10-04-r2" }
         </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>

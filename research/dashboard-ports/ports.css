@@ -109,22 +109,26 @@
         justify-self: start;
     }
 
-    /* On a narrow list the row's text takes the whole line and the buttons
- * go under it. The columns stay the list's, so they still line up.
- * Option A (phone: "row"): the buttons side by side, against the right
- * edge. Option B (`data-kp-action-phone="stack"`): the text keeps the left
- * and the buttons stack beside it, every one as wide as the list's widest. */
+    /* On a narrow list the row's text takes the whole line and its buttons
+     * go under it, spread over the full width in equal columns: the list's
+     * own columns, so a role still lines up from row to row (Kenny,
+     * 2026-10-04: "side by side under the text … more spread out, no more of
+     * this right aligned buttons"). */
     @container kp-action-list (max-width: 30rem) {
-        .kp-action-list:not([data-kp-action-phone='stack']) > li > :first-child {
+        /* Every row lays out the same equal columns, as many as the list
+           has buttons, so they still line up without the list's grid. */
+        .kp-action-list > li {
+            grid-template-columns: repeat(var(--kp-action-count), minmax(0, 1fr));
+        }
+
+        .kp-action-list > li > :first-child,
+        .kp-action-list .kp-row-actions {
             grid-column: 1 / -1;
         }
 
-        .kp-action-list[data-kp-action-phone='stack'] .kp-row-actions {
-            grid-auto-flow: row;
-        }
-
-        .kp-action-list[data-kp-action-phone='stack'] .kp-row-actions > * {
-            grid-column: 1 / -1;
+        .kp-action-list .kp-row-actions > * {
+            justify-self: stretch;
+            inline-size: 100%;
         }
     }
 

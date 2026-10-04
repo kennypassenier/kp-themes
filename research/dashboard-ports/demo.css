@@ -257,3 +257,9 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
     gap: var(--kp-space-md, 1rem);
 }
+
+.dp-compare__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+}
