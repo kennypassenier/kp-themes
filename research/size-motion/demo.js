@@ -68,7 +68,11 @@ const EXITS = {
     pastel: ['A balloon let go: it floats up with a little tilt.', 'It swells like a bubble and pops into confetti.'],
     terminal: ['Cleared from the top, line by line.', 'A block cursor backs up over the line, deleting it character by character.'],
     forest: ['It withers: browns, shrinks and fades.', 'It turns to autumn, and its leaves come loose and drift down.'],
-    'high-contrast': ['Inverted for a moment, then gone.', 'Warning tape is pulled across it, then it is gone in one step.'],
+    'high-contrast': [
+        'Announced: a bold caption, the way a screen reader would say it, REMOVED in ink on yellow, is laid across it; then it is gone in one step.',
+        'Braille: its text turns into raised dots, the way it would read under a fingertip, and the dots go out row by row.',
+        'Focus moves on: the thick keyboard focus ring locks onto it, then the element closes to the centre inside it, the way focus jumps to the next element.',
+    ],
     sepia: ['It fades like an old photograph.', 'The iris of an old film closes on it, like the end of a reel.'],
     blueprint: ['Erased from left to right at an even pace.', 'Hatched out like a wall marked for demolition on a plan, then lifted off the sheet.'],
     solstice: ['It rises like morning mist.', 'An eclipse: a dark disc with a glowing corona crosses it and takes the light.'],
@@ -102,9 +106,9 @@ const ROUND7 = {
         'Clear: a bright scan beam sweeps down over it and leaves the line empty behind it.',
     ],
     'high-contrast': [
-        'Your exit 2, reworked: it flips to the exact inverse of what is under it, so it shows on light and dark elements alike, then it is gone in one step.',
-        'Ring and close: a thick focus ring marks it, then it closes to a line in its middle in clear steps.',
-        'Struck through: a heavy bar in the text colour crosses it, then it is gone in one step.',
+        'Announced: a bold caption, the way a screen reader would say it, REMOVED in ink on yellow, is laid across it; then it is gone in one step.',
+        'Braille: its text turns into raised dots, the way it would read under a fingertip, and the dots go out row by row.',
+        'Focus moves on: the thick keyboard focus ring locks onto it, then the element closes to the centre inside it, the way focus jumps to the next element.',
     ],
     sepia: [
         'Your 1 and 2 together: the page turns up and over away from you while it fades to an old photograph.',

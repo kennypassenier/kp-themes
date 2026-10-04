@@ -1,10 +1,5 @@
 <!doctype html>
-<html
-    lang="en"
-    data-theme="formal"
-    data-review="size-motion"
-    data-review-themes="cyberpunk,synthwave,terminal,high-contrast,sepia,phantom,grotesk,lapis,titanium"
->
+<html lang="en" data-theme="formal" data-review="size-motion" data-review-themes="high-contrast">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -394,23 +389,9 @@
             </dialog>
         </template>
 
-        <!-- Round seven (2026-10-04): thirteen themes picked their exit and the space and remove-all timings were chosen (during the
-             exit; the next starts halfway). The nine themes sent back show three new exits each and are the only ones walked. -->
+        <!-- Round eight (2026-10-04): every theme but high-contrast has its exit; high-contrast shows three new ones. -->
         <script type="application/json" data-review-round>
-            {
-                "round": "2026-10-04-r7",
-                "reopen": [
-                    "cyberpunk|leave",
-                    "synthwave|leave",
-                    "terminal|leave",
-                    "high-contrast|leave",
-                    "sepia|leave",
-                    "phantom|leave",
-                    "grotesk|leave",
-                    "lapis|leave",
-                    "titanium|leave"
-                ]
-            }
+            { "round": "2026-10-04-r8", "reopen": ["high-contrast|leave"] }
         </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>

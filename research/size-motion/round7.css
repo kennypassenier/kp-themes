@@ -421,92 +421,139 @@
     }
 
     /* ------------------------------------------------------ high-contrast */
+    /* Round eight: three new ones, each from the world this theme serves,
+       accessibility, where nothing may change without being said. */
 
-    /* 1. Your exit 2, reworked: it flips to the theme's own inverse, ink
-       background and paper text, so it shows on any element, light or dark,
-       then it is gone in one step. */
+    /* 1. Announced: a bold caption, the way a screen reader would say it,
+       is laid across it, REMOVED, in ink on yellow; then it is gone in one
+       step. Nothing leaves without being said. */
     [data-theme='high-contrast'] [data-sm-exit='1'] [data-kp-leaving] {
-        animation: r7-hc-invert 450ms linear forwards;
+        animation: r8-hc-said 700ms linear forwards;
     }
 
-    /* Its text takes the flipped colour too, whatever colour it had. */
-    [data-theme='high-contrast'] [data-sm-exit='1'] [data-kp-leaving] *,
-    [data-theme='cyberpunk'] [data-sm-exit='1'] [data-kp-leaving] * {
-        color: inherit !important;
-        text-shadow: inherit;
+    [data-theme='high-contrast'] [data-sm-exit='1'] [data-kp-leaving]::after {
+        content: '✕ REMOVED';
+        display: flex;
+        align-items: center;
+        padding-inline: 0.75em;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        color: #000;
+        background: #ffd400;
+        border: 3px solid #000;
+        animation: r8-hc-caption 700ms cubic-bezier(0.2, 0, 0, 1) forwards;
     }
 
-    @keyframes r7-hc-invert {
+    @keyframes r8-hc-said {
         0%,
-        70% {
-            background-color: var(--foreground);
-            color: var(--background);
-            border-color: var(--background);
+        85% {
             opacity: 1;
         }
 
-        71%,
+        86%,
         to {
-            background-color: var(--foreground);
-            color: var(--background);
             opacity: 0;
         }
     }
 
-    /* 2. Ring and close: a thick focus ring marks it, then it closes to a
-       line in its middle in two clear steps. */
+    @keyframes r8-hc-caption {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        30%,
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* 2. Braille: its text turns into raised dots, the way it would read
+       under a fingertip, and the dots go out row by row. */
     [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: r7-hc-close 450ms steps(3, jump-end) forwards;
+        animation: r8-hc-braille-out 800ms linear forwards;
     }
 
     [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving]::after {
-        box-shadow: inset 0 0 0 4px var(--ring);
+        visibility: visible;
+        background:
+            radial-gradient(circle at 5px 5px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            radial-gradient(circle at 12px 5px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            radial-gradient(circle at 5px 12px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            radial-gradient(circle at 12px 12px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            radial-gradient(circle at 5px 19px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            radial-gradient(circle at 12px 19px, var(--foreground) 0 2.2px, transparent 2.7px) 0 0 / 22px 26px,
+            var(--background);
+        border: 2px solid var(--foreground);
+        animation: r8-hc-braille 800ms linear forwards;
     }
 
-    @keyframes r7-hc-close {
+    /* Once the dots are down, the print under them is gone. */
+    @keyframes r8-hc-braille-out {
+        0%,
+        24% {
+            visibility: visible;
+        }
+
+        25%,
+        to {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes r8-hc-braille {
         from {
+            opacity: 0;
+            clip-path: inset(0 0 0 0);
+        }
+
+        25%,
+        40% {
+            opacity: 1;
             clip-path: inset(0 0 0 0);
         }
 
         to {
-            clip-path: inset(0 50% 0 50%);
+            opacity: 1;
+            clip-path: inset(0 0 100% 0);
         }
     }
 
-    /* 3. Struck through: a heavy bar in the text colour crosses it, then it
-       is gone in one step. */
+    /* 3. Focus moves on: the thick keyboard focus ring locks onto it, then
+       draws tight around its centre and snaps shut, the way focus jumps
+       to the next element. */
     [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving] {
-        animation: r7-hc-struck 450ms steps(1, jump-end) forwards;
+        animation: r8-hc-focus-out 650ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
     }
 
     [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving]::after {
-        inset: calc(50% - 3px) 0 auto 0;
-        height: 6px;
-        background: var(--foreground);
-        box-shadow: 0 0 0 2px var(--background);
-        transform-origin: left;
-        animation: r7-hc-bar 450ms steps(3, jump-end) forwards;
+        inset: 3px;
+        border: 4px solid var(--ring);
+        outline: 2px solid var(--background);
+        animation: r8-hc-ring 650ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
     }
 
-    @keyframes r7-hc-struck {
+    @keyframes r8-hc-focus-out {
         0%,
-        75% {
+        30% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(50% 50% 50% 50%);
+        }
+    }
+
+    @keyframes r8-hc-ring {
+        from {
+            opacity: 0;
+        }
+
+        15% {
             opacity: 1;
         }
 
         to {
-            opacity: 0;
-        }
-    }
-
-    @keyframes r7-hc-bar {
-        from {
-            transform: scaleX(0);
-        }
-
-        60%,
-        to {
-            transform: scaleX(1);
+            opacity: 1;
         }
     }
 
