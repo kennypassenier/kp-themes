@@ -190,9 +190,7 @@
 [data-theme='shade-dark'] .sx-sig .kp-dialog {
     --sx-dur: 480ms;
     border-color: var(--border);
-    background:
-        radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--foreground) h s l / 0.07), transparent 75%),
-        var(--popover);
+    background: radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--foreground) h s l / 0.07), transparent 75%), var(--popover);
     box-shadow: none;
 }
 
@@ -278,8 +276,12 @@
     padding: 2rem 1.5rem;
     border: 0;
     border-radius: 0;
-    background:
-        radial-gradient(ellipse 62% 90% at 50% 50%, hsl(from var(--popover) h s l / 0.6), hsl(from var(--popover) h s l / 0.18) 45%, transparent 75%);
+    background: radial-gradient(
+        ellipse 62% 90% at 50% 50%,
+        hsl(from var(--popover) h s l / 0.6),
+        hsl(from var(--popover) h s l / 0.18) 45%,
+        transparent 75%
+    );
 }
 
 [data-theme='shade-dark'] .sx-sig .kp-empty::after {

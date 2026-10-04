@@ -20,7 +20,12 @@
     /* The horizon, and the faint arc the sun travels. */
     background:
         linear-gradient(var(--border-strong), var(--border-strong)) 50% 80% / 100% 1.5px no-repeat,
-        radial-gradient(circle 0.5rem at 50% 80%, transparent calc(100% - 1px), hsl(from var(--primary) h s l / 0.3) calc(100% - 1px) 100%, transparent 100%);
+        radial-gradient(
+            circle 0.5rem at 50% 80%,
+            transparent calc(100% - 1px),
+            hsl(from var(--primary) h s l / 0.3) calc(100% - 1px) 100%,
+            transparent 100%
+        );
     animation: none;
 }
 
@@ -191,7 +196,9 @@
     border-color: var(--border);
     border-block-start: 2px solid var(--primary);
     border-radius: var(--radius);
-    box-shadow: 0 -12px 40px -24px hsl(from var(--primary) h s l / 0.7), 0 24px 40px -24px hsl(from var(--background) h s calc(l * 0.3));
+    box-shadow:
+        0 -12px 40px -24px hsl(from var(--primary) h s l / 0.7),
+        0 24px 40px -24px hsl(from var(--background) h s calc(l * 0.3));
 }
 
 [data-theme='solstice'] .sx-sig .kp-dialog__title {

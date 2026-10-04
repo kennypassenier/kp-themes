@@ -13,4 +13,3 @@ screen: "Open the dialog", "Slow motion (¼ speed)" and "Package today" for
 comparison. In the review dialog (research/_review) each theme's step opens it
 once by itself. The drawings are the round's own files under
 `../signature-elements/`, so nothing is copied.
-

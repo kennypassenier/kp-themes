@@ -34,15 +34,16 @@ for (const theme of themes) {
     const box = await title.boundingBox();
     // Wide enough to hold ornaments that stand outside the title's box.
     const clip = { x: box.x - 24, y: box.y - 24, width: box.width + 48, height: box.height + 48 };
-    const style = (css) => page.evaluate((css) => {
-        let tag = document.getElementById('clear-check');
-        if (!tag) {
-            tag = document.createElement('style');
-            tag.id = 'clear-check';
-            document.head.append(tag);
-        }
-        tag.textContent = css;
-    }, css);
+    const style = (css) =>
+        page.evaluate((css) => {
+            let tag = document.getElementById('clear-check');
+            if (!tag) {
+                tag = document.createElement('style');
+                tag.id = 'clear-check';
+                document.head.append(tag);
+            }
+            tag.textContent = css;
+        }, css);
     const T = '#dialog .kp-dialog__title';
     const HIDE_TEXT = `${T} { color: transparent !important; -webkit-text-fill-color: transparent !important; text-shadow: none !important; }`;
     const HIDE_ORN = `${T}::before, ${T}::after { visibility: hidden !important; }`;

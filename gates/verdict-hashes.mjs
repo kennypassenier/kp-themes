@@ -256,7 +256,8 @@ export async function shootPlaywright(page, { base, href, themes, width, height 
                 const main = own?.closest('main');
                 if (main && own)
                     for (const el of main.children)
-                        if (!el.matches('section') && !el.contains(own)) /** @type {HTMLElement} */ (el).style.setProperty('display', 'none', 'important');
+                        if (!el.matches('section') && !el.contains(own))
+                            /** @type {HTMLElement} */ (el).style.setProperty('display', 'none', 'important');
                 window.scrollTo(0, 0);
             }, block.id);
             const parts = block.stages > 0 ? page.locator(`[id="${block.id}"] .cat-stage`) : page.locator(`[id="${block.id}"]`);
@@ -313,14 +314,25 @@ export async function printShell(page, { base, href, theme, width, height = 1000
             /** @type {{ text: string, test: string[] | null }[]} */
             const rules = [];
             const grouping = (/** @type {CSSRule} */ rule) =>
-                rule instanceof CSSMediaRule || rule instanceof CSSSupportsRule || rule instanceof CSSLayerBlockRule || rule instanceof CSSContainerRule;
+                rule instanceof CSSMediaRule ||
+                rule instanceof CSSSupportsRule ||
+                rule instanceof CSSLayerBlockRule ||
+                rule instanceof CSSContainerRule;
             // A selector made testable: pseudo-elements dropped (a rule on
             // ::before reaches the element that carries it). State
             // pseudo-classes stay: the photograph is taken at rest.
             const testable = (/** @type {string} */ selector) =>
                 selector
                     .split(/,(?![^(]*\))/)
-                    .map((one) => one.replace(/::?(before|after|marker|placeholder|backdrop|selection|first-line|first-letter|file-selector-button|-[a-z-]+)(\([^)]*\))?/g, '').trim() || '*');
+                    .map(
+                        (one) =>
+                            one
+                                .replace(
+                                    /::?(before|after|marker|placeholder|backdrop|selection|first-line|first-letter|file-selector-button|-[a-z-]+)(\([^)]*\))?/g,
+                                    '',
+                                )
+                                .trim() || '*',
+                    );
             const walk = (/** @type {CSSRuleList} */ list, /** @type {string} */ around, /** @type {string} */ parent) => {
                 for (const rule of list) {
                     if (rule instanceof CSSStyleRule) {
@@ -362,7 +374,13 @@ export async function printShell(page, { base, href, theme, width, height = 1000
                     copy.outerHTML,
                     `${Math.round(rect.width * 100)}x${Math.round(rect.height * 100)}`,
                     ...around.map((el) => `${el.tagName}${[...el.attributes].map((a) => ` ${a.name}=${a.value}`).join('')}`),
-                    ...els.map((el, i) => `${i}:${rules.filter((r) => r.test && matches(el, r.test)).map((r) => r.text).join('\n')}`),
+                    ...els.map(
+                        (el, i) =>
+                            `${i}:${rules
+                                .filter((r) => r.test && matches(el, r.test))
+                                .map((r) => r.text)
+                                .join('\n')}`,
+                    ),
                     ...everyone,
                 ];
             }

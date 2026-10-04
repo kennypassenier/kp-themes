@@ -23,13 +23,10 @@
     --sx-no-ease: cubic-bezier(0.2, 0, 0, 1);
     /* Moulded: a highlight along the top edge and a shadow under. */
     --sx-no-raised:
-        inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
-        0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+        inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9), 0 1px 0 hsl(from var(--foreground) h s l / 0.28),
         0 2px 3px hsl(from var(--foreground) h s l / 0.15);
     /* Pressed in: a shadow inside the top edge, a highlight under. */
-    --sx-no-well:
-        inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
-        0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
+    --sx-no-well: inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3), 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
     /* A lit LED: a bright lens with a hot centre, in a dark bezel ring. */
     --sx-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--sx-no-led) 30%, var(--accent) 70%);
 }
@@ -48,9 +45,7 @@
     border: 0;
     border-radius: 50%;
     /* The tape pack: dark, with a faint wound ring. */
-    background:
-        radial-gradient(circle, transparent 0 62%, hsl(from var(--card) h s l / 0.18) 63% 64%, transparent 65%),
-        var(--foreground);
+    background: radial-gradient(circle, transparent 0 62%, hsl(from var(--card) h s l / 0.18) 63% 64%, transparent 65%), var(--foreground);
     box-shadow: var(--sx-no-well);
     animation: none;
 }
@@ -244,7 +239,12 @@
 
 [data-theme='nostromo'] .sx-sig .kp-dialog {
     --sx-dur: 260ms;
-    --sx-no-screw: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.45) 0 1.5px, hsl(from var(--foreground) h s l / 0.2) 2px 3px, transparent 3.5px);
+    --sx-no-screw: radial-gradient(
+        circle,
+        hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
+        hsl(from var(--foreground) h s l / 0.2) 2px 3px,
+        transparent 3.5px
+    );
     background:
         var(--sx-no-screw) 6px 6px / 8px 8px no-repeat,
         var(--sx-no-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
@@ -354,11 +354,7 @@
     inset-block-start: 0.8rem;
     inset-inline: calc(50% - 3rem);
     block-size: 0.9rem;
-    background: repeating-linear-gradient(
-        to bottom,
-        hsl(from var(--foreground) h s l / 0.3) 0 2px,
-        transparent 2px 4.5px
-    );
+    background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 2px, transparent 2px 4.5px);
     border-radius: 1px;
 }
 

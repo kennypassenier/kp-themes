@@ -334,7 +334,9 @@
     border: 1px solid var(--accent);
     background: none;
     color: var(--accent);
-    box-shadow: 0 0 0 3px var(--background), 0 0 0 4px hsl(from var(--accent) h s l / 0.6);
+    box-shadow:
+        0 0 0 3px var(--background),
+        0 0 0 4px hsl(from var(--accent) h s l / 0.6);
 }
 
 [data-theme='blueprint'] .sx-sig .kp-wizard__steps li[data-state='current'] {

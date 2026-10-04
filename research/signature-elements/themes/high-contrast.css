@@ -91,14 +91,8 @@
     inset-block: 0;
     inset-inline-start: calc(var(--sx-hc-hatch) * -1);
     inset-inline-end: 0;
-    background: linear-gradient(
-            45deg,
-            var(--foreground) 0 17.7%,
-            transparent 17.7% 50%,
-            var(--foreground) 50% 67.7%,
-            transparent 67.7%
-        )
-        0 0 / var(--sx-hc-hatch) var(--sx-hc-hatch);
+    background: linear-gradient(45deg, var(--foreground) 0 17.7%, transparent 17.7% 50%, var(--foreground) 50% 67.7%, transparent 67.7%) 0 0 /
+        var(--sx-hc-hatch) var(--sx-hc-hatch);
 }
 
 [data-theme='high-contrast'] .sx-sig .kp-skeleton + .kp-skeleton {

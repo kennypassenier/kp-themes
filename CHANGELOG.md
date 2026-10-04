@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 9.2.0 — 2026-10-04
 
 - **Buttons in shared columns** [scope-143]: `.kp-action-list` (a list whose
   rows are one grid) and `.kp-row-actions` line a list's row buttons up in

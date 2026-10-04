@@ -73,7 +73,8 @@
 [data-theme='forest'] .sx-sig .kp-switch__input {
     border-color: var(--border-strong);
     background:
-        repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.5) 0 4px, transparent 4px 7px) 50% 50% / calc(100% - 12px) 2px no-repeat,
+        repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.5) 0 4px, transparent 4px 7px) 50% 50% / calc(100% - 12px) 2px
+            no-repeat,
         var(--background);
 }
 
@@ -86,7 +87,8 @@
 [data-theme='forest'] .sx-sig .kp-switch__input:checked {
     border-color: var(--primary);
     background:
-        linear-gradient(hsl(from var(--primary-foreground) h s l / 0.45), hsl(from var(--primary-foreground) h s l / 0.45)) 50% 50% / calc(100% - 12px) 2px no-repeat,
+        linear-gradient(hsl(from var(--primary-foreground) h s l / 0.45), hsl(from var(--primary-foreground) h s l / 0.45)) 50% 50% /
+            calc(100% - 12px) 2px no-repeat,
         var(--primary);
 }
 

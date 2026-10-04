@@ -10,15 +10,54 @@
    Persian digits; the step's name always stands beside them. */
 
 [data-theme='lapis'] .sx-sig {
-    --sx-lapis-star10: polygon(50% 0%, 61.1% 15.8%, 79.4% 9.5%, 79.1% 28.8%, 97.6% 34.5%, 86% 50%, 97.6% 65.5%, 79.1% 71.2%, 79.4% 90.5%, 61.1% 84.2%, 50% 100%, 38.9% 84.2%, 20.6% 90.5%, 20.9% 71.2%, 2.4% 65.5%, 14% 50%, 2.4% 34.5%, 20.9% 28.8%, 20.6% 9.5%, 38.9% 15.8%);
-    --sx-lapis-star8: polygon(50% 0%, 61.9% 21.4%, 85.4% 14.6%, 78.6% 38.1%, 100% 50%, 78.6% 61.9%, 85.4% 85.4%, 61.9% 78.6%, 50% 100%, 38.1% 78.6%, 14.6% 85.4%, 21.4% 61.9%, 0% 50%, 21.4% 38.1%, 14.6% 14.6%, 38.1% 21.4%);
+    --sx-lapis-star10: polygon(
+        50% 0%,
+        61.1% 15.8%,
+        79.4% 9.5%,
+        79.1% 28.8%,
+        97.6% 34.5%,
+        86% 50%,
+        97.6% 65.5%,
+        79.1% 71.2%,
+        79.4% 90.5%,
+        61.1% 84.2%,
+        50% 100%,
+        38.9% 84.2%,
+        20.6% 90.5%,
+        20.9% 71.2%,
+        2.4% 65.5%,
+        14% 50%,
+        2.4% 34.5%,
+        20.9% 28.8%,
+        20.6% 9.5%,
+        38.9% 15.8%
+    );
+    --sx-lapis-star8: polygon(
+        50% 0%,
+        61.9% 21.4%,
+        85.4% 14.6%,
+        78.6% 38.1%,
+        100% 50%,
+        78.6% 61.9%,
+        85.4% 85.4%,
+        61.9% 78.6%,
+        50% 100%,
+        38.1% 78.6%,
+        14.6% 85.4%,
+        21.4% 61.9%,
+        0% 50%,
+        21.4% 38.1%,
+        14.6% 14.6%,
+        38.1% 21.4%
+    );
 }
 
 /* The ruled frame: four concentric rings inside an edge, the gaps in the
    surface's own colour (declared here so each surface resolves its own). */
 [data-theme='lapis'] .sx-sig :is(.kp-toast, .kp-dialog, .kp-empty) {
-    --sx-lapis-rings: inset 0 0 0 3px var(--sx-lapis-ground), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.55),
-        inset 0 0 0 6px var(--sx-lapis-ground), inset 0 0 0 7px hsl(from var(--primary) h s l / 0.3);
+    --sx-lapis-rings:
+        inset 0 0 0 3px var(--sx-lapis-ground), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.55), inset 0 0 0 6px var(--sx-lapis-ground),
+        inset 0 0 0 7px hsl(from var(--primary) h s l / 0.3);
 }
 
 /* ── 1 · Spinner: a ten-fold girih star ───────────────────────────────── */
@@ -99,7 +138,9 @@
     --sx-lapis-ground: var(--background);
     border-color: var(--border-strong);
     background: var(--background);
-    box-shadow: inset 0 0 0 2px var(--background), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.35);
+    box-shadow:
+        inset 0 0 0 2px var(--background),
+        inset 0 0 0 3px hsl(from var(--primary) h s l / 0.35);
 }
 
 [data-theme='lapis'] .sx-sig .kp-switch__input::before {
@@ -110,7 +151,9 @@
 [data-theme='lapis'] .sx-sig .kp-switch__input:checked {
     border-color: var(--primary);
     background: var(--primary);
-    box-shadow: inset 0 0 0 2px var(--primary), inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.4);
+    box-shadow:
+        inset 0 0 0 2px var(--primary),
+        inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.4);
 }
 
 [data-theme='lapis'] .sx-sig .kp-switch__input:checked::before {
@@ -132,7 +175,9 @@
     border: 1px solid var(--border-strong);
     border-radius: 3px;
     background: var(--background);
-    box-shadow: inset 0 0 0 2px var(--background), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    box-shadow:
+        inset 0 0 0 2px var(--background),
+        inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
 }
 
 [data-theme='lapis'] .sx-sig .kp-field__check:checked {
@@ -208,7 +253,9 @@
     border-color: var(--border-strong);
     border-radius: var(--radius);
     background: var(--popover);
-    box-shadow: var(--sx-lapis-rings), 0 18px 40px -20px hsl(from var(--background) h s calc(l * 0.3));
+    box-shadow:
+        var(--sx-lapis-rings),
+        0 18px 40px -20px hsl(from var(--background) h s calc(l * 0.3));
     text-align: center;
 }
 
@@ -342,9 +389,7 @@
     inline-size: 3rem;
     block-size: 3rem;
     margin: 0 auto 0.6rem;
-    background:
-        radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px),
-        var(--primary);
+    background: radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px), var(--primary);
     clip-path: var(--sx-lapis-star10);
     mask: radial-gradient(circle, black 0 4px, transparent 4px 9px, black 9px 11px, transparent 11px 13.5px, black 13.5px);
 }

@@ -330,8 +330,7 @@
     border: 0;
     border-radius: 0;
     background:
-        var(--sx-dark-brackets),
-        repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+        var(--sx-dark-brackets), repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
         repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem);
 }
 

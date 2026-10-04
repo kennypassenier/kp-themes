@@ -16,14 +16,7 @@
 [data-theme='titanium'] .sx-sig {
     --sx-ti-fast: var(--fx-duration, 60ms);
     --sx-ti-c: 0.35rem;
-    --sx-ti-cut: polygon(
-        0 0,
-        calc(100% - var(--sx-ti-c)) 0,
-        100% var(--sx-ti-c),
-        100% 100%,
-        var(--sx-ti-c) 100%,
-        0 calc(100% - var(--sx-ti-c))
-    );
+    --sx-ti-cut: polygon(0 0, calc(100% - var(--sx-ti-c)) 0, 100% var(--sx-ti-c), 100% 100%, var(--sx-ti-c) 100%, 0 calc(100% - var(--sx-ti-c)));
     --sx-ti-weave:
         repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px),
         repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px);
@@ -63,16 +56,7 @@
     background: none;
     box-shadow: none;
     /* The silhouette: the chamfered shank end and the chamfered tip. */
-    clip-path: polygon(
-        0 22%,
-        3% 0,
-        93% 0,
-        100% 30%,
-        100% 70%,
-        93% 100%,
-        3% 100%,
-        0 78%
-    );
+    clip-path: polygon(0 22%, 3% 0, 93% 0, 100% 30%, 100% 70%, 93% 100%, 3% 100%, 0 78%);
     vertical-align: middle;
     animation: none;
 }

@@ -198,7 +198,8 @@ export function parseVerdictLines(text) {
     // A copied prompt ends its block with "End of verdict lines: N." (2026-10-03,
     // after two prompts lost the tail of their last line in transit).
     if (declared === null) faults.push('the "Verdict lines" block has no "End of verdict lines: N." line: the prompt was cut off; copy it again');
-    else if (declared !== lines.length + faults.length) faults.push(`the block says ${declared} line(s) and holds ${lines.length + faults.length}: the prompt was cut off or edited; copy it again`);
+    else if (declared !== lines.length + faults.length)
+        faults.push(`the block says ${declared} line(s) and holds ${lines.length + faults.length}: the prompt was cut off or edited; copy it again`);
     return { version, lines, faults };
 }
 
@@ -935,7 +936,8 @@ async function shootAt({ commit, root, engine, ratio, width, requests, repeat = 
         /** @type {[string, { themes: Set<string>, keys: Set<string> }][]} */
         const queue = [];
         for (const [href, wanted] of byPage)
-            for (const theme of print ? [[...wanted.themes].sort()[0]] : wanted.themes) queue.push([href, { themes: new Set([theme]), keys: wanted.keys }]);
+            for (const theme of print ? [[...wanted.themes].sort()[0]] : wanted.themes)
+                queue.push([href, { themes: new Set([theme]), keys: wanted.keys }]);
         const units = queue.length;
         const where = commit ? String(commit).slice(0, 12) : 'HEAD';
         const base = server.base;

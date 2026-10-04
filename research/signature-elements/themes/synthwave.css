@@ -206,7 +206,12 @@
 [data-theme='synthwave'] .sx-sig .sx-backdrop {
     position: relative;
     background:
-        linear-gradient(to bottom, transparent calc(50% - 1px), hsl(from var(--accent) h s l / 0.5) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+        linear-gradient(
+            to bottom,
+            transparent calc(50% - 1px),
+            hsl(from var(--accent) h s l / 0.5) calc(50% - 1px) calc(50% + 1px),
+            transparent calc(50% + 1px)
+        ),
         hsl(from var(--sidebar-background) h s l / 0.7);
 }
 
@@ -286,7 +291,14 @@
 [data-theme='synthwave'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
     border: 0;
     background:
-        linear-gradient(to bottom, transparent 62%, hsl(from var(--sidebar-background) h s l / 0.55) 62% 68%, transparent 68% 78%, hsl(from var(--sidebar-background) h s l / 0.55) 78% 84%, transparent 84%),
+        linear-gradient(
+            to bottom,
+            transparent 62%,
+            hsl(from var(--sidebar-background) h s l / 0.55) 62% 68%,
+            transparent 68% 78%,
+            hsl(from var(--sidebar-background) h s l / 0.55) 78% 84%,
+            transparent 84%
+        ),
         var(--sx-sw-sun);
     box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
     color: var(--sidebar-background);
@@ -313,8 +325,24 @@
     block-size: 3.2rem;
     border-radius: 50%;
     background: var(--sx-sw-sun);
-    -webkit-mask: linear-gradient(to bottom, var(--foreground) 0 50%, transparent 50% 56%, var(--foreground) 56% 63%, transparent 63% 70%, var(--foreground) 70% 75%, transparent 75%);
-    mask: linear-gradient(to bottom, var(--foreground) 0 50%, transparent 50% 56%, var(--foreground) 56% 63%, transparent 63% 70%, var(--foreground) 70% 75%, transparent 75%);
+    -webkit-mask: linear-gradient(
+        to bottom,
+        var(--foreground) 0 50%,
+        transparent 50% 56%,
+        var(--foreground) 56% 63%,
+        transparent 63% 70%,
+        var(--foreground) 70% 75%,
+        transparent 75%
+    );
+    mask: linear-gradient(
+        to bottom,
+        var(--foreground) 0 50%,
+        transparent 50% 56%,
+        var(--foreground) 56% 63%,
+        transparent 63% 70%,
+        var(--foreground) 70% 75%,
+        transparent 75%
+    );
 }
 
 [data-theme='synthwave'] .sx-sig .kp-empty::after {

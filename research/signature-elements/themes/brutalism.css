@@ -346,7 +346,9 @@
     padding-inline: 0.15em;
     background: var(--secondary);
     color: var(--secondary-foreground);
-    box-shadow: 0 0 0 2px var(--border-strong), 3px 3px 0 2px var(--border-strong);
+    box-shadow:
+        0 0 0 2px var(--border-strong),
+        3px 3px 0 2px var(--border-strong);
     text-decoration-color: var(--border-strong);
 }
 

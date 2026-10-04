@@ -38,12 +38,12 @@ the selectors and their order are identical, which is what
 | `css/shade-dark-register.css` | 68.2 kB | 34.7 kB | 49% |
 | `css/shade-light-register.css` | 75.9 kB | 38.3 kB | 50% |
 | `css/solstice-register.css` | 60.6 kB | 32.0 kB | 47% |
-| `css/synthwave-register.css` | 87.4 kB | 49.1 kB | 44% |
+| `css/synthwave-register.css` | 87.5 kB | 49.1 kB | 44% |
 | `css/terminal-register.css` | 77.6 kB | 41.7 kB | 46% |
 | `css/themes.css` | 183.3 kB | 119.1 kB | 35% |
 | `css/titanium-register.css` | 82.2 kB | 40.7 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2176.1 kB | 1115.3 kB | 49% |
+| `dist/kp-themes.css` | 2176.2 kB | 1115.3 kB | 49% |
 | `dist/kp-themes.js` | 527.5 kB | 279.7 kB | 47% |
 
 The loose stylesheets together weigh **2232.8 kB** authored and
@@ -57,4 +57,4 @@ carries, and a generated file that a gate compares must read the same on
 every machine. `npm run generate:min` prints it for the machine it runs
 on.
 
-Version 9.1.0.
+Version 9.2.0.

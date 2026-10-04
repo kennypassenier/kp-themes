@@ -24,7 +24,6 @@ declares its own `@layer` order statement before the package's must add
 the order needs to do nothing. Unlayered consumer CSS still wins over all of
 it, as before.
 
-
 The native `<progress class="kp-progress">` is gone [scope-140]. Every theme
 now draws a progress bar of its own, and a native `<progress>` has nothing a
 theme can give a shape, so the bar is an element with three parts. A page

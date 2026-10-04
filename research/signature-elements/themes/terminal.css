@@ -72,11 +72,7 @@
     --sx-dur: 2200ms;
     block-size: 1em;
     border-radius: 0;
-    background: repeating-linear-gradient(
-        90deg,
-        hsl(from var(--primary) h s l / 0.3) 0 calc(0.6em - 1px),
-        transparent calc(0.6em - 1px) 0.6em
-    );
+    background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.3) 0 calc(0.6em - 1px), transparent calc(0.6em - 1px) 0.6em);
     font-family: var(--theme-font-mono);
     animation: none;
 }

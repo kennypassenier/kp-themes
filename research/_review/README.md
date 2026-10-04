@@ -7,16 +7,16 @@ copy one structured answer back into the conversation [scope-141].
 
 ```html
 <html lang="en" data-review="my-topic" data-review-themes="formal,retro">
-  …
-  <section data-review-item="spinner" data-review-title="Spinner">
-    <div data-review-look>
-      <p data-for="formal">What to look at in formal.</p>
-      <p data-for="retro">What to look at in retro.</p>
-    </div>
     …
-  </section>
-  …
-  <script type="module" src="../_review/review.js"></script>
+    <section data-review-item="spinner" data-review-title="Spinner">
+        <div data-review-look>
+            <p data-for="formal">What to look at in formal.</p>
+            <p data-for="retro">What to look at in retro.</p>
+        </div>
+        …
+    </section>
+    …
+    <script type="module" src="../_review/review.js"></script>
 </html>
 ```
 
@@ -29,8 +29,16 @@ catalogue page itself):
 
 ```html
 <script type="application/json" data-review-extra>
-    [{ "page": "catalogue/field.html", "block": "choices", "theme": "retro",
-       "engine": "firefox", "title": "Fields › Choices", "look": "What changed." }]
+    [
+        {
+            "page": "catalogue/field.html",
+            "block": "choices",
+            "theme": "retro",
+            "engine": "firefox",
+            "title": "Fields › Choices",
+            "look": "What changed."
+        }
+    ]
 </script>
 ```
 
@@ -69,7 +77,9 @@ After fixing what was not approved, add a round marker with a new id to the
 demo, and keep its demo id:
 
 ```html
-<script type="application/json" data-review-round>{ "round": "r2" }</script>
+<script type="application/json" data-review-round>
+    { "round": "r2" }
+</script>
 ```
 
 On the reviewer's next visit the new round reopens every pair rejected
@@ -84,11 +94,14 @@ dialog as choices to tick, never as a number typed into a note (Kenny,
 2026-10-04). A section lists them in `data-review-choices`:
 
 ```html
-<section data-review-item="leave" data-review-choices='[
+<section
+    data-review-item="leave"
+    data-review-choices='[
   { "id": "exit", "label": "Exit for this theme",
     "options": [{ "value": "1", "label": "Exit 1", "hints": { "formal": "Blotted out …" } }, …] },
   { "id": "space", "label": "When the space closes", "once": true,
-    "options": [{ "value": "together", "label": "During the exit", "hint": "…" }, …] }]'>
+    "options": [{ "value": "together", "label": "During the exit", "hint": "…" }, …] }]'
+></section>
 ```
 
 A choice is asked per theme, or with `"once": true` once for the whole demo.

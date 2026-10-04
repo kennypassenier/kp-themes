@@ -14,11 +14,7 @@
 [data-theme='grotesk'] .sx-sig {
     --sx-gr-draw: var(--kp-rule-draw, 320ms);
     --sx-gr-ease: cubic-bezier(0.2, 0, 0, 1);
-    --sx-gr-cols: repeating-linear-gradient(
-        to right,
-        hsl(from var(--foreground) h s l / 0.06) 0 1px,
-        transparent 1px calc(100% / 12)
-    );
+    --sx-gr-cols: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.06) 0 1px, transparent 1px calc(100% / 12));
 }
 
 /* ── 1 · Spinner: a quarter disc going round a square ────────────────────
@@ -65,7 +61,8 @@
     border-radius: 0;
     background:
         linear-gradient(var(--foreground), var(--foreground)) bottom / 100% var(--sx-gr-base) no-repeat,
-        linear-gradient(hsl(from var(--foreground) h s l / 0.09), hsl(from var(--foreground) h s l / 0.09)) top / 100% calc(100% - var(--sx-gr-base) - 3px) no-repeat;
+        linear-gradient(hsl(from var(--foreground) h s l / 0.09), hsl(from var(--foreground) h s l / 0.09)) top / 100%
+            calc(100% - var(--sx-gr-base) - 3px) no-repeat;
     animation: none;
 }
 

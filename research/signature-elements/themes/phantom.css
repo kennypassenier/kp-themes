@@ -59,7 +59,9 @@
     overflow: hidden;
     block-size: 0.95rem;
     border-radius: 0;
-    background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px, var(--muted);
+    background:
+        radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px,
+        var(--muted);
     clip-path: var(--sx-ph-cut);
     animation: none;
 }

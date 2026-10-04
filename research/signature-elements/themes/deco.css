@@ -32,8 +32,7 @@
     inset: 1px;
     border-radius: 50%;
     background:
-        radial-gradient(circle, var(--primary) 0 1.6px, transparent 2px),
-        repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
+        radial-gradient(circle, var(--primary) 0 1.6px, transparent 2px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
     mask: radial-gradient(circle, black 0 2px, transparent 2px 3.5px, black 3.5px);
 }
 
@@ -196,9 +195,7 @@
     block-size: 1.4rem;
     margin: -0.25rem auto 0.6rem;
     border-block-end: 1px solid var(--primary);
-    background:
-        radial-gradient(circle at 50% 100%, var(--primary) 0 0.4rem, transparent 0.45rem),
-        var(--sx-deco-rays);
+    background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.4rem, transparent 0.45rem), var(--sx-deco-rays);
     mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 55%, transparent);
 }
 
@@ -315,9 +312,7 @@
     block-size: 2.4rem;
     margin: 0 auto 0.7rem;
     border-block-end: 4px double var(--primary);
-    background:
-        radial-gradient(circle at 50% 100%, var(--primary) 0 0.55rem, transparent 0.6rem),
-        var(--sx-deco-rays);
+    background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.55rem, transparent 0.6rem), var(--sx-deco-rays);
     mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 60%, transparent);
 }
 

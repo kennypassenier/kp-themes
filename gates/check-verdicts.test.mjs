@@ -174,13 +174,17 @@ test('record: verdict lines become register entries; a refused line records noth
     assert.equal(again.unchanged.length, 2);
     assert.equal(register.verdicts['button--variants'].formal.firefox.commit, 'abc1234');
 
-    const unknown = parseVerdictLines(`Verdict lines (hash version 2):\nbutton--nope · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 1.`);
+    const unknown = parseVerdictLines(
+        `Verdict lines (hash version 2):\nbutton--nope · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 1.`,
+    );
     const empty = { hashVersion: 2, verdicts: {} };
     const refused = applyVerdictLines(empty, unknown, { ...context(), commit: 'abc1234', given: '2026-09-14' });
     assert.match(refused.faults[0], /button--nope · formal · firefox: not a block/);
     assert.deepEqual(empty.verdicts, {});
 
-    const old = parseVerdictLines(`Verdict lines (hash version 1):\nbutton--variants · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 1.`);
+    const old = parseVerdictLines(
+        `Verdict lines (hash version 1):\nbutton--variants · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 1.`,
+    );
     assert.match(applyVerdictLines({ hashVersion: 2, verdicts: {} }, old, { ...context(), commit: 'a', given: 'b' }).faults[0], /hash version 1/);
 });
 
@@ -259,7 +263,9 @@ test('a verdict line may carry the pixel ratio it was read at as a sixth field; 
     // The same verdict at another ratio is a change, not "already recorded".
     const moved = applyVerdictLines(
         register,
-        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.5\nEnd of verdict lines: 1.`),
+        parseVerdictLines(
+            `Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.5\nEnd of verdict lines: 1.`,
+        ),
         {
             ...context(),
             commit: 'def5678',
@@ -269,12 +275,16 @@ test('a verdict line may carry the pixel ratio it was read at as a sixth field; 
     assert.equal(moved.changed.length, 1);
 
     assert.match(
-        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · 1.25\nEnd of verdict lines: 1.`).faults[0],
+        parseVerdictLines(
+            `Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · 1.25\nEnd of verdict lines: 1.`,
+        ).faults[0],
         /sixth field is not @<ratio>/,
     );
     const bad = applyVerdictLines(
         { hashVersion: 2, verdicts: {} },
-        parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.23456\nEnd of verdict lines: 1.`),
+        parseVerdictLines(
+            `Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @1.23456\nEnd of verdict lines: 1.`,
+        ),
         {
             ...context(),
             commit: 'a1b2c3d',
@@ -504,10 +514,13 @@ test('a verdict block without its end line, or with a different count, is refuse
     // the tail of the message for a mention. The end line is what tells.
     const cut = parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH}`);
     assert.match(cut.faults.at(-1) ?? '', /no "End of verdict lines: N\." line/);
-    const short = parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 2.`);
+    const short = parseVerdictLines(
+        `Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH}\nEnd of verdict lines: 2.`,
+    );
     assert.match(short.faults.at(-1) ?? '', /says 2 line\(s\) and holds 1/);
-    const whole = parseVerdictLines(`Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @2\nEnd of verdict lines: 1.`);
+    const whole = parseVerdictLines(
+        `Verdict lines (hash version 2):\nbutton--variants · formal · firefox · approved · ${HASH} · @2\nEnd of verdict lines: 1.`,
+    );
     assert.deepEqual(whole.faults, []);
     assert.equal(whole.lines[0].ratio, 2);
 });
-

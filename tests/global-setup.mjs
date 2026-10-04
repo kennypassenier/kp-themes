@@ -72,7 +72,6 @@ export default async function globalSetup() {
     // probe gives up after 300 ms. A server already listening (a second
     // checkout's, or one started by hand) is reused, as before.
     return ensureServer();
-
 }
 
 const PORT = Number(process.env.KP_TEST_PORT ?? 4173);
