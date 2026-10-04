@@ -29,6 +29,32 @@ const CHARACTER = {
     titanium: 'The machine: the box runs at an even, mechanical pace inside a fine machined edge, and new content slides in like a drawer.',
 };
 
+/** Round five: how each theme lets something leave. */
+const LEAVE = {
+    formal: 'Blotted out: the line is wiped away from its start, like a ledger entry ruled off.',
+    light: 'It rises into the light and is gone in the glare.',
+    dark: 'Overexposed: the print burns white and fades off the paper.',
+    cyberpunk: 'Glitched out: it tears sideways in slices and drops from the feed.',
+    synthwave: 'It races off to the right, leaning into the speed, with a neon streak behind it.',
+    pastel: 'A soft bubble that swells a touch and pops.',
+    terminal: 'Deleted from the end, a character at a time, like a held backspace.',
+    forest: 'A leaf that lets go: it tips and drifts down.',
+    'high-contrast': 'Outlined once so the eye sees what goes, then gone in one step.',
+    sepia: 'The page is turned away, up and over.',
+    blueprint: 'The plotter takes it back up, bottom to top, inside its dashed frame.',
+    solstice: 'It sets like the sun: it sinks and dims into dusk.',
+    brutalism: 'Dropped, in two hard steps, and gone.',
+    deco: 'It closes like a fan, folding to its centre.',
+    phantom: 'It dissolves into a ghost and drifts off.',
+    'shade-light': 'It sinks back into its own shadow.',
+    'shade-dark': 'It sinks back into its own shadow.',
+    retro: 'Shrunk away in four pixel steps.',
+    grotesk: 'Cut out from the left in three hard cuts.',
+    lapis: 'It catches the gold one last time and fades.',
+    nostromo: 'Switched off like the old monitor: it collapses to a glowing line, then the line goes out.',
+    titanium: 'Pulled out like a drawer, at an even mechanical pace.',
+};
+
 // One note per section serves every theme: the review dialog reads a note
 // per theme, so formal's is copied to the other twenty-one, and the two
 // growing sections add the theme's character where it was re-drawn.
@@ -43,6 +69,8 @@ for (const look of document.querySelectorAll('[data-review-look]')) {
         copy.setAttribute('data-for', name);
         const character = /** @type {Record<string, string>} */ (CHARACTER)[name];
         if (grows && character) copy.innerHTML = `${base}<br /><b>This theme's character:</b> ${character}`;
+        const leaves = /** @type {Record<string, string>} */ (LEAVE)[name];
+        if (item === 'leave' && leaves) copy.innerHTML = `${base}<br /><b>This theme's leave:</b> ${leaves}`;
         if (copy !== note) {
             copy.hidden = true;
             look.append(copy);

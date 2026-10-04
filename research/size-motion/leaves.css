@@ -1,0 +1,318 @@
+/* Round five, second draft: a leave of its own per theme (Kenny,
+   2026-10-04: "kan je die ook meer on-theme maken met distincte animaties
+   per thema?"). js/motion.js marks what leaves `[data-kp-leaving]` and folds
+   its space shut a third of the way in; each theme draws its exit here.
+   Once approved, each block moves into its register under kp.signature. */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* formal: blotted out. The line is wiped away from its start, like a
+       ledger entry ruled off. */
+    [data-theme='formal'] [data-kp-leaving] {
+        animation: lv-formal-blot 360ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lv-formal-blot {
+        to {
+            clip-path: inset(0 0 0 100%);
+            opacity: 0.4;
+        }
+    }
+
+    /* light: it rises into the light and is gone in the glare. */
+    [data-theme='light'] [data-kp-leaving] {
+        animation: lv-light-glare 420ms ease-in forwards;
+    }
+
+    @keyframes lv-light-glare {
+        to {
+            opacity: 0;
+            transform: translateY(-8px);
+            filter: blur(5px) brightness(1.6);
+        }
+    }
+
+    /* dark: overexposed. The print burns white and fades off the paper. */
+    [data-theme='dark'] [data-kp-leaving] {
+        animation: lv-dark-burn 480ms ease-in forwards;
+    }
+
+    @keyframes lv-dark-burn {
+        40% {
+            filter: brightness(2.2) contrast(0.4);
+        }
+
+        to {
+            opacity: 0;
+            filter: brightness(3) contrast(0);
+        }
+    }
+
+    /* cyberpunk: glitched out. It tears sideways in slices and drops from
+       the feed. */
+    [data-theme='cyberpunk'] [data-kp-leaving] {
+        animation: lv-cyberpunk-glitch 360ms steps(6, jump-end) forwards;
+    }
+
+    @keyframes lv-cyberpunk-glitch {
+        20% {
+            transform: translateX(-6px);
+            clip-path: inset(10% 0 55% 0);
+        }
+
+        40% {
+            transform: translateX(8px);
+            clip-path: inset(45% 0 20% 0);
+        }
+
+        60% {
+            transform: translateX(-3px);
+            clip-path: inset(0 0 70% 0);
+            opacity: 0.7;
+        }
+
+        to {
+            transform: translateX(14px);
+            clip-path: inset(50% 0 50% 0);
+            opacity: 0;
+        }
+    }
+
+    /* synthwave: it races off to the right, leaning into the speed, with a
+       neon streak behind it. */
+    [data-theme='synthwave'] [data-kp-leaving] {
+        animation: lv-synthwave-race 380ms cubic-bezier(0.5, 0, 1, 0.5) forwards;
+    }
+
+    @keyframes lv-synthwave-race {
+        to {
+            opacity: 0;
+            transform: translateX(40px) skewX(-18deg);
+            filter: drop-shadow(-14px 0 6px var(--primary));
+        }
+    }
+
+    /* pastel: a soft bubble that swells a touch and pops. */
+    [data-theme='pastel'] [data-kp-leaving] {
+        animation: lv-pastel-pop 340ms ease-in forwards;
+    }
+
+    @keyframes lv-pastel-pop {
+        35% {
+            transform: scale(1.04);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+    }
+
+    /* terminal: deleted from the end, a character at a time, like a
+       backspace held down. */
+    [data-theme='terminal'] [data-kp-leaving] {
+        animation: lv-terminal-backspace 420ms steps(16, jump-end) forwards;
+    }
+
+    @keyframes lv-terminal-backspace {
+        to {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    /* forest: a leaf that lets go: it tips and drifts down. */
+    [data-theme='forest'] [data-kp-leaving] {
+        transform-origin: 0 0;
+        animation: lv-forest-fall 520ms cubic-bezier(0.5, 0, 0.75, 0) forwards;
+    }
+
+    @keyframes lv-forest-fall {
+        to {
+            opacity: 0;
+            transform: translateY(16px) rotate(6deg);
+        }
+    }
+
+    /* high-contrast: clarity first. It is outlined once so the eye sees what
+       goes, then it goes in one step. */
+    [data-theme='high-contrast'] [data-kp-leaving] {
+        animation: lv-hc-mark 300ms steps(1, jump-end) forwards;
+    }
+
+    @keyframes lv-hc-mark {
+        from {
+            outline: 3px solid var(--ring);
+            outline-offset: 1px;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* sepia: the page is turned away, up and over. */
+    [data-theme='sepia'] [data-kp-leaving] {
+        transform-origin: bottom;
+        animation: lv-sepia-turn 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lv-sepia-turn {
+        to {
+            opacity: 0;
+            transform: perspective(600px) rotateX(75deg);
+        }
+    }
+
+    /* blueprint: the plotter takes it back up, bottom to top, at its even
+       pace, inside its dashed frame. */
+    [data-theme='blueprint'] [data-kp-leaving] {
+        animation: lv-blueprint-unplot 420ms linear forwards;
+    }
+
+    @keyframes lv-blueprint-unplot {
+        from {
+            outline: 1px dashed var(--primary);
+        }
+
+        to {
+            outline: 1px dashed var(--primary);
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    /* solstice: it sets like the sun: it sinks and dims into dusk. */
+    [data-theme='solstice'] [data-kp-leaving] {
+        animation: lv-solstice-set 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lv-solstice-set {
+        to {
+            opacity: 0;
+            transform: translateY(12px);
+            filter: brightness(0.5) saturate(1.6);
+        }
+    }
+
+    /* brutalism: dropped, in two hard steps, and gone. */
+    [data-theme='brutalism'] [data-kp-leaving] {
+        animation: lv-brutalism-drop 240ms steps(2, jump-end) forwards;
+    }
+
+    @keyframes lv-brutalism-drop {
+        to {
+            opacity: 0;
+            transform: translate(6px, 24px);
+        }
+    }
+
+    /* deco: it closes like a fan, folding to its centre. */
+    [data-theme='deco'] [data-kp-leaving] {
+        animation: lv-deco-fan 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes lv-deco-fan {
+        to {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+    }
+
+    /* phantom: it dissolves into a ghost and drifts off. */
+    [data-theme='phantom'] [data-kp-leaving] {
+        animation: lv-phantom-ghost 560ms ease-in forwards;
+    }
+
+    @keyframes lv-phantom-ghost {
+        to {
+            opacity: 0;
+            transform: translateX(10px);
+            filter: blur(6px);
+        }
+    }
+
+    /* shade-light and shade-dark: it sinks back into its own shadow. */
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-kp-leaving] {
+        animation: lv-shade-sink 420ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lv-shade-sink {
+        50% {
+            filter: drop-shadow(0 10px 8px hsl(from var(--foreground) h s l / 0.45));
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(8px) scale(0.97);
+            filter: drop-shadow(0 2px 2px hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    /* retro: shrunk away in four pixel steps. */
+    [data-theme='retro'] [data-kp-leaving] {
+        animation: lv-retro-shrink 280ms steps(4, jump-end) forwards;
+    }
+
+    @keyframes lv-retro-shrink {
+        to {
+            transform: scale(0.1);
+            opacity: 0;
+        }
+    }
+
+    /* grotesk: cut out from the left in three hard cuts. */
+    [data-theme='grotesk'] [data-kp-leaving] {
+        animation: lv-grotesk-cut 240ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes lv-grotesk-cut {
+        to {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* lapis: it catches the gold one last time and fades. */
+    [data-theme='lapis'] [data-kp-leaving] {
+        animation: lv-lapis-gild 520ms ease-in forwards;
+    }
+
+    @keyframes lv-lapis-gild {
+        40% {
+            filter: sepia(1) saturate(3) brightness(1.4);
+        }
+
+        to {
+            opacity: 0;
+            filter: sepia(1) saturate(3) brightness(1.8);
+        }
+    }
+
+    /* nostromo: switched off like the old monitor: it collapses to a
+       glowing line, then the line goes out. */
+    [data-theme='nostromo'] [data-kp-leaving] {
+        animation: lv-nostromo-off 360ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lv-nostromo-off {
+        55% {
+            transform: scaleY(0.04);
+            filter: brightness(2.2);
+        }
+
+        to {
+            transform: scale(0, 0.04);
+            filter: brightness(3);
+            opacity: 0;
+        }
+    }
+
+    /* titanium: pulled out like a drawer, at an even mechanical pace. */
+    [data-theme='titanium'] [data-kp-leaving] {
+        animation: lv-titanium-drawer 300ms linear forwards;
+    }
+
+    @keyframes lv-titanium-drawer {
+        to {
+            opacity: 0;
+            transform: translateX(24px);
+        }
+    }
+}

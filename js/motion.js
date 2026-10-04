@@ -406,38 +406,53 @@ export async function leave(el, { hide = false } = {}) {
         else el.remove();
     };
     if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return;
-    const motion = arrivalOf(el);
+    const before = getComputedStyle(el).animationName;
+    const arrival = arrivalOf(el);
     const { size, ease } = themeMotion(el);
-    if (!motion && size <= 0) return gone();
+    if (!arrival && size <= 0) return gone();
     el.setAttribute('data-kp-leaving', '');
+    // A register with a leave of its own draws it on `[data-kp-leaving]`
+    // (Kenny, 2026-10-04: "kan je die ook meer on-theme maken met distincte
+    // animaties per thema?"); one without plays its arrival backwards.
+    const style = getComputedStyle(el);
+    const ownName = style.animationName;
+    const own = ownName && ownName !== 'none' && ownName !== before ? { duration: firstMs(style.animationDuration) } : null;
     /** @type {Promise<unknown>[]} */
     const running = [];
-    if (motion) {
-        el.style.animation = `${motion.name} ${motion.duration}ms ${motion.ease} reverse forwards`;
+    const lasts = own ? own.duration : (arrival?.duration ?? 0);
+    if (!own && arrival) el.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
+    if (lasts > 0)
         running.push(
             new Promise((resolve) => {
                 el.addEventListener('animationend', resolve, { once: true });
-                setTimeout(resolve, motion.duration + 100);
+                setTimeout(resolve, lasts + 100);
             }),
         );
-    }
-    if (size > 0) {
-        const style = getComputedStyle(el);
+    // A table row cannot be folded below its cells' content: it plays its
+    // leave, and the table glides shut once it is out.
+    if (size > 0 && !(el instanceof HTMLTableRowElement)) {
+        // In a row (a flex row, an inline chip) the space closes sideways;
+        // anywhere else it closes from below.
+        const parent = el.parentElement ? getComputedStyle(el.parentElement) : null;
+        const sideways =
+            style.display.startsWith('inline') ||
+            (parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith('column'));
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
-        const fold = el.animate(
-            [
-                {
-                    height: `${el.offsetHeight}px`,
-                    marginTop: style.marginTop,
-                    marginBottom: style.marginBottom,
-                    paddingTop: style.paddingTop,
-                    paddingBottom: style.paddingBottom,
-                },
-                { height: '0px', marginTop: '0px', marginBottom: '0px', paddingTop: '0px', paddingBottom: '0px' },
-            ],
-            { duration: Math.max(size, motion?.duration ?? 0), easing: withoutOvershoot(ease), fill: 'forwards' },
-        );
+        const from = sideways
+            ? { width: `${el.offsetWidth}px`, marginLeft: style.marginLeft, marginRight: style.marginRight, paddingLeft: style.paddingLeft, paddingRight: style.paddingRight }
+            : { height: `${el.offsetHeight}px`, marginTop: style.marginTop, marginBottom: style.marginBottom, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom };
+        const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
+        // The space closes a third of the way into the leave, so the theme's
+        // exit shows first, and slower than a plain resize, so the eye can
+        // follow what closes up (Kenny, 2026-10-04: "ik zou het graag iets
+        // trager zien gaan, zodat de animatie zichtbaar is").
+        const fold = el.animate([from, to], {
+            duration: Math.max(size, lasts) * 1.25,
+            delay: lasts / 3,
+            easing: withoutOvershoot(ease),
+            fill: 'forwards',
+        });
         running.push(fold.finished.catch(() => undefined));
     }
     await Promise.all(running);
