@@ -28,6 +28,14 @@ export declare function themeMotion(scope?: Element): {
  */
 export declare function closeDialog(dialog: HTMLDialogElement, returnValue?: string): Promise<void>;
 /**
+ * The entrance's curve without its overshoot: a size goes to its new value
+ * and stops there (Kenny, 2026-10-04: pastel's and synthwave's cards "grow
+ * too much and shrink again at the end, it should just grow to the correct
+ * size"). A cubic-bezier's y values are held between 0 and 1.
+ * @param {string} ease
+ */
+export declare function withoutOvershoot(ease: string): string;
+/**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.
  * @param {HTMLElement} box

@@ -21,7 +21,7 @@ the selectors and their order are identical, which is what
 | `css/components.css` | 223.2 kB | 83.5 kB | 63% |
 | `css/cyberpunk-register.css` | 93.9 kB | 53.1 kB | 43% |
 | `css/dark-register.css` | 91.5 kB | 42.4 kB | 54% |
-| `css/deco-register.css` | 67.2 kB | 35.8 kB | 47% |
+| `css/deco-register.css` | 67.5 kB | 35.8 kB | 47% |
 | `css/fonts.css` | 27.0 kB | 20.2 kB | 25% |
 | `css/forest-register.css` | 69.8 kB | 39.7 kB | 43% |
 | `css/formal-register.css` | 60.3 kB | 31.0 kB | 49% |
@@ -39,14 +39,14 @@ the selectors and their order are identical, which is what
 | `css/shade-light-register.css` | 73.8 kB | 37.5 kB | 49% |
 | `css/solstice-register.css` | 58.9 kB | 31.4 kB | 47% |
 | `css/synthwave-register.css` | 84.7 kB | 47.9 kB | 43% |
-| `css/terminal-register.css` | 75.9 kB | 41.1 kB | 46% |
+| `css/terminal-register.css` | 76.2 kB | 41.2 kB | 46% |
 | `css/themes.css` | 183.3 kB | 119.1 kB | 35% |
 | `css/titanium-register.css` | 79.4 kB | 39.6 kB | 50% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2101.4 kB | 1081.5 kB | 49% |
-| `dist/kp-themes.js` | 471.3 kB | 246.3 kB | 48% |
+| `dist/kp-themes.css` | 2102.1 kB | 1081.5 kB | 49% |
+| `dist/kp-themes.js` | 474.2 kB | 248.2 kB | 48% |
 
-The loose stylesheets together weigh **2158.1 kB** authored and
+The loose stylesheets together weigh **2158.7 kB** authored and
 **1114.3 kB** minified, 48% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 

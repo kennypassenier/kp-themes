@@ -1874,8 +1874,13 @@
             animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
         }
 
+        /* Held on its last frame (`both`, not `backwards`): Kenny saw the
+           dialog stay cut along the sunburst's circle in Firefox
+           (2026-10-04), as if the frame where the clip goes away was never
+           painted. The last frame is the whole dialog, so holding it shows
+           the same and leaves nothing to repaint. */
         [data-theme='deco'] .kp-dialog {
-            animation: kp-sig-deco-deco-sunburst var(--kp-sig-dur) var(--fx-ease) backwards;
+            animation: kp-sig-deco-deco-sunburst var(--kp-sig-dur) var(--fx-ease) both;
         }
 
         [data-theme='deco'] .kp-tooltip {

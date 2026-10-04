@@ -123,3 +123,10 @@
 .sm-where ul {
     margin: 0;
 }
+
+/* The tabs stand in a room taller than their longest panel, so switching a
+   panel never moves the section, nor the review dialog's frame around it
+   (Kenny, 2026-10-04: "het kader van de dialog zelf versprong altijd"). */
+.sm-tabs-room {
+    min-block-size: 22rem;
+}

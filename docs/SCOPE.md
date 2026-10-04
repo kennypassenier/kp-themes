@@ -2417,3 +2417,12 @@ resize. It applies to every dialog, accordion item, tab set, data table, toast
 stack, upload list, combobox list, tree, wizard and field, and to any box
 marked `data-kp-size-motion`; `js/auto.js` loads it, and the React `Dialog`
 attaches it itself. Reduced motion: none.
+Round three, the same day, on Kenny's notes (close and accordion approved in
+every theme; growing and shrinking judged again everywhere but blueprint): a
+size never overshoots (the entrance's curve with its y values held between 0
+and 1), the glide measures the border box so a padded card no longer clicks
+smaller at its end, terminal grows and shrinks one line at a time
+(`--kp-size-steps: line` in its register), and what arrives in a box (a row,
+a shown panel or message) arrives with the theme's own toast entrance. Deco's
+sunburst entrance holds its last frame, after Kenny saw a deco dialog stay
+cut along the sunburst's circle in Firefox.

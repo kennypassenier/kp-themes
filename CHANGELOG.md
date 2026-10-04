@@ -12,6 +12,12 @@
   `--kp-close-max` (600ms), `--kp-size-max` (480ms), `--kp-motion-scale` (1).
   A closing dialog stays `open` until its motion ends; its `close` event comes
   then. Reduced motion: nothing moves.
+- A size change never overshoots, a padded box no longer clicks smaller at
+  the end of its glide, terminal grows and shrinks one line at a time, and
+  what arrives in a box arrives with the theme's toast entrance
+  [scope-142].
+- Deco's dialog entrance holds its last frame, so the sunburst's clip
+  cannot stay painted half-way in Firefox.
 
 ## 9.0.1 — 2026-10-04
 

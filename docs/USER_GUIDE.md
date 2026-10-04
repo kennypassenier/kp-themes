@@ -491,6 +491,12 @@ attachMotion(document);
 await closeDialog(dialog, 'saved');
 ```
 
+A size never overshoots, even in a theme whose entrance does, and what
+arrives in a box (a row, a panel or a message shown) arrives with the theme's
+own toast entrance. A theme may ask for its sizes to move one line at a time
+with `--kp-size-steps: line` (terminal does); `withoutOvershoot(ease)` is the
+curve rule, exported for a page that animates its own boxes.
+
 A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.

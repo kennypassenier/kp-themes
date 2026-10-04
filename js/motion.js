@@ -230,6 +230,92 @@ function attachClose(dialog) {
 /* -------------------------------------------------------------- sizing */
 
 /**
+ * The entrance's curve without its overshoot: a size goes to its new value
+ * and stops there (Kenny, 2026-10-04: pastel's and synthwave's cards "grow
+ * too much and shrink again at the end, it should just grow to the correct
+ * size"). A cubic-bezier's y values are held between 0 and 1.
+ * @param {string} ease
+ */
+export function withoutOvershoot(ease) {
+    const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
+    if (!m) return ease;
+    const [x1, y1, x2, y2] = m.slice(1).map(Number);
+    const hold = (/** @type {number} */ y) => Math.min(1, Math.max(0, y));
+    return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
+}
+
+/**
+ * The curve a size change runs on: the entrance's, without overshoot, or,
+ * where the theme asks for it (`--kp-size-steps: line`, terminal), one step
+ * per line of text the box gains or loses.
+ * @param {HTMLElement} box @param {string} ease @param {number} change in px
+ */
+function sizeEase(box, ease, change) {
+    const style = getComputedStyle(box);
+    if (style.getPropertyValue('--kp-size-steps').trim() === 'line') {
+        const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
+        return `steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`;
+    }
+    return withoutOvershoot(ease);
+}
+
+/**
+ * Glide `box` from one height to another. During the glide the box clips
+ * what overflows it and measures its border box, so the last frame is the
+ * size it keeps (a card with padding read its padding twice and then
+ * clicked smaller, in forest and high-contrast).
+ * @param {HTMLElement} box @param {number} from @param {number} to @param {number} duration @param {string} easing
+ */
+function glide(box, from, to, duration, easing) {
+    box.style.setProperty('overflow', 'clip');
+    box.style.setProperty('box-sizing', 'border-box');
+    const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+    const done = () => {
+        box.style.removeProperty('overflow');
+        box.style.removeProperty('box-sizing');
+    };
+    return { animation: mine, done };
+}
+
+/**
+ * The theme's own way of letting a small thing arrive: its toast entrance,
+ * already decided per register, read from a toast drawn out of sight.
+ * @param {Element} scope
+ * @returns {string | null} an `animation` value, or null for none
+ */
+function arrival(scope) {
+    if (reduced()) return null;
+    const probe = document.createElement('div');
+    probe.className = 'kp-toast';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none;';
+    const themed = scope.closest('[data-theme]');
+    (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : document.body).append(probe);
+    try {
+        const style = getComputedStyle(probe);
+        if (!style.animationName || style.animationName === 'none') return null;
+        const name = style.animationName.split(',')[0].trim();
+        const cap = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, '--kp-size-max', 480);
+        const duration = Math.min(firstMs(style.animationDuration), cap);
+        if (duration <= 0) return null;
+        const ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim();
+        return `${name} ${duration}ms ${ease} backwards`;
+    } finally {
+        probe.remove();
+    }
+}
+
+/**
+ * Let `el` arrive the theme's way, once.
+ * @param {HTMLElement} el @param {string | null} motion
+ */
+function arrive(el, motion) {
+    if (!motion || el.style.animation) return;
+    el.style.animation = motion;
+    el.addEventListener('animationend', () => el.style.removeProperty('animation'), { once: true });
+}
+
+/**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.
  * @param {HTMLElement} box
@@ -252,14 +338,13 @@ export function easeSize(box) {
         if (Math.abs(to - from) < 1 || from === 0 || to === 0) return;
         const { size, ease } = themeMotion(box);
         if (size <= 0) return;
-        box.style.setProperty('overflow', 'clip');
-        const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing: ease });
+        const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
         running = mine;
         mine.finished
             .then(() => {
                 if (running !== mine) return;
                 running = null;
-                box.style.removeProperty('overflow');
+                done();
             })
             .catch(() => undefined);
     };
@@ -274,16 +359,28 @@ export function easeSize(box) {
     };
     watch();
     // A child that leaves changes no child's size; the list itself is watched.
-    const list = new MutationObserver(() => {
+    // What arrives (a row added, a panel or a message shown) arrives the
+    // theme's way.
+    const list = new MutationObserver((records) => {
+        const motion = records.length ? arrival(box) : null;
+        for (const record of records) {
+            if (record.type === 'childList' && record.target === box)
+                for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+            if (record.type === 'attributes' && record.target instanceof HTMLElement && !record.target.hidden) arrive(record.target, motion);
+            // A list inside the box (rows in a <ul>) brings its rows too.
+            if (record.type === 'childList' && record.target !== box)
+                for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+        }
         watch();
         settle();
     });
-    list.observe(box, { childList: true });
+    list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
     return () => {
         sizes.disconnect();
         list.disconnect();
         running?.cancel();
         box.style.removeProperty('overflow');
+        box.style.removeProperty('box-sizing');
         delete own.__kpSize;
     };
 }
@@ -317,14 +414,14 @@ function attachFold(details) {
             /** @type {HTMLElement} */ (summary).offsetHeight +
             parseFloat(getComputedStyle(details).borderBlockStartWidth || '0') +
             parseFloat(getComputedStyle(details).borderBlockEndWidth || '0');
-        details.style.setProperty('overflow', 'clip');
-        const mine = details.animate([{ height: `${from}px` }, { height: `${opening ? full : shut}px` }], { duration: size, easing: ease });
+        const to = opening ? full : shut;
+        const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from));
         running = mine;
         mine.finished
             .then(() => {
                 if (running !== mine) return;
                 running = null;
-                details.style.removeProperty('overflow');
+                done();
                 if (folding) {
                     folding = false;
                     details.open = false;

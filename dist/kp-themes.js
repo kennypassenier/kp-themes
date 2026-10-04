@@ -1413,7 +1413,7 @@ function install9(ctx) {
     arrivalPlays,
     arrivalsOnScreen: arrivalsOnScreen2
   } = ctx;
-  const arrival = () => {
+  const arrival2 = () => {
     const routine = arrivalRoutine;
     if (!arrivalPerformed || !doc.body) return;
     const card = routine === "card";
@@ -1520,7 +1520,7 @@ function install9(ctx) {
     } else if (lines && lines.length > 0) lineStep();
     else step();
   };
-  return { arrival };
+  return { arrival: arrival2 };
 }
 var init_arrival = __esm({
   "js/effects/arrival.js"() {
@@ -11006,7 +11006,8 @@ __export(motion_exports, {
   attachMotion: () => attachMotion,
   closeDialog: () => closeDialog,
   easeSize: () => easeSize,
-  themeMotion: () => themeMotion
+  themeMotion: () => themeMotion,
+  withoutOvershoot: () => withoutOvershoot
 });
 function themeMotion(scope = document.documentElement) {
   if (reduced()) return { open: 0, ease: "linear", close: 0, size: 0 };
@@ -11118,6 +11119,57 @@ function attachClose(dialog) {
     delete own.__kpMotion;
   };
 }
+function withoutOvershoot(ease) {
+  const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
+  if (!m) return ease;
+  const [x1, y1, x2, y2] = m.slice(1).map(Number);
+  const hold = (y) => Math.min(1, Math.max(0, y));
+  return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
+}
+function sizeEase(box, ease, change) {
+  const style = getComputedStyle(box);
+  if (style.getPropertyValue("--kp-size-steps").trim() === "line") {
+    const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
+    return `steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`;
+  }
+  return withoutOvershoot(ease);
+}
+function glide(box, from, to, duration, easing) {
+  box.style.setProperty("overflow", "clip");
+  box.style.setProperty("box-sizing", "border-box");
+  const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+  const done = () => {
+    box.style.removeProperty("overflow");
+    box.style.removeProperty("box-sizing");
+  };
+  return { animation: mine, done };
+}
+function arrival(scope) {
+  if (reduced()) return null;
+  const probe = document.createElement("div");
+  probe.className = "kp-toast";
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
+  const themed = scope.closest("[data-theme]");
+  (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : document.body).append(probe);
+  try {
+    const style = getComputedStyle(probe);
+    if (!style.animationName || style.animationName === "none") return null;
+    const name = style.animationName.split(",")[0].trim();
+    const cap = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, "--kp-size-max", 480);
+    const duration = Math.min(firstMs(style.animationDuration), cap);
+    if (duration <= 0) return null;
+    const ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim();
+    return `${name} ${duration}ms ${ease} backwards`;
+  } finally {
+    probe.remove();
+  }
+}
+function arrive(el2, motion) {
+  if (!motion || el2.style.animation) return;
+  el2.style.animation = motion;
+  el2.addEventListener("animationend", () => el2.style.removeProperty("animation"), { once: true });
+}
 function easeSize(box) {
   const own = (
     /** @type {any} */
@@ -11138,13 +11190,12 @@ function easeSize(box) {
     if (Math.abs(to - from) < 1 || from === 0 || to === 0) return;
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
-    box.style.setProperty("overflow", "clip");
-    const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing: ease });
+    const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
     running = mine;
     mine.finished.then(() => {
       if (running !== mine) return;
       running = null;
-      box.style.removeProperty("overflow");
+      done();
     }).catch(() => void 0);
   };
   const sizes = new ResizeObserver(settle);
@@ -11153,16 +11204,27 @@ function easeSize(box) {
     for (const child of box.children) sizes.observe(child);
   };
   watch();
-  const list = new MutationObserver(() => {
+  const list = new MutationObserver((records) => {
+    const motion = records.length ? arrival(box) : null;
+    for (const record of records) {
+      if (record.type === "childList" && record.target === box) {
+        for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+      }
+      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden) arrive(record.target, motion);
+      if (record.type === "childList" && record.target !== box) {
+        for (const node of record.addedNodes) if (node instanceof HTMLElement) arrive(node, motion);
+      }
+    }
     watch();
     settle();
   });
-  list.observe(box, { childList: true });
+  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
   return () => {
     sizes.disconnect();
     list.disconnect();
     running?.cancel();
     box.style.removeProperty("overflow");
+    box.style.removeProperty("box-sizing");
     delete own.__kpSize;
   };
 }
@@ -11193,13 +11255,13 @@ function attachFold(details) {
       /** @type {HTMLElement} */
       summary.offsetHeight + parseFloat(getComputedStyle(details).borderBlockStartWidth || "0") + parseFloat(getComputedStyle(details).borderBlockEndWidth || "0")
     );
-    details.style.setProperty("overflow", "clip");
-    const mine = details.animate([{ height: `${from}px` }, { height: `${opening ? full : shut}px` }], { duration: size, easing: ease });
+    const to = opening ? full : shut;
+    const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from));
     running = mine;
     mine.finished.then(() => {
       if (running !== mine) return;
       running = null;
-      details.style.removeProperty("overflow");
+      done();
       if (folding) {
         folding = false;
         details.open = false;
@@ -12494,6 +12556,7 @@ export {
   watchScrollbar,
   watchScrolled,
   watchTabOverflow,
+  withoutOvershoot,
   wizard,
   wizard_exports as wizardExports,
   writeCountdown,

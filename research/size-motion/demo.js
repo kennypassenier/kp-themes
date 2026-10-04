@@ -16,6 +16,7 @@ for (const look of document.querySelectorAll('[data-review-look]')) {
         if (name === 'formal') continue;
         const copy = /** @type {HTMLElement} */ (note.cloneNode(true));
         copy.setAttribute('data-for', name);
+        copy.hidden = true;
         look.append(copy);
     }
 }

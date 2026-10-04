@@ -1730,6 +1730,14 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* A box grows and shrinks one line at a time, as a terminal prints and
+       clears them [scope-142; Kenny, 2026-10-04: "the shrinking should look
+       like the inverse of the growing, where every line gets removed at a
+       time"]. js/motion.js reads it. */
+    [data-theme='terminal'] {
+        --kp-size-steps: line;
+    }
+
     /* The link signature is for links in running text; a link in a navigation,
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
