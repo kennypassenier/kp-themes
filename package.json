@@ -132,6 +132,22 @@
             "types": "./js/progressbar.d.ts",
             "default": "./js/progressbar.js"
         },
+        "./js/actions": {
+            "types": "./js/actions.d.ts",
+            "default": "./js/actions.js"
+        },
+        "./js/kpi": {
+            "types": "./js/kpi.d.ts",
+            "default": "./js/kpi.js"
+        },
+        "./js/attention": {
+            "types": "./js/attention.d.ts",
+            "default": "./js/attention.js"
+        },
+        "./js/chart": {
+            "types": "./js/chart.d.ts",
+            "default": "./js/chart.js"
+        },
         "./js/motion": {
             "types": "./js/motion.d.ts",
             "default": "./js/motion.js"

@@ -705,6 +705,261 @@ rewrites badly:
 <div class="kp-empty">Nog geen sollicitaties.</div>
 ```
 
+## Dashboard components [scope-143]
+
+Eight things the homelab admin dashboard grew and any dashboard on this
+package needs, approved by Kenny in formal on 2026-10-04 from
+`research/dashboard-ports/` and moved in as approved. The registers do not
+answer them yet (they are on `gates/register-pending.json`), so every theme
+draws them from the tokens alone. `js/auto.js` fetches each module only on a
+page that carries its markup; the attach functions are also exported for a
+subtree rendered later, and each returns a detach.
+
+### Buttons in shared columns
+
+A list's row buttons share columns: a button of one role starts at one edge
+and has one width on every row, whatever its label, and a row without that
+role leaves its column empty.
+
+```html
+<ul class="kp-action-list">
+    <li>
+        <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Assign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+</ul>
+```
+
+The list is a grid and every row a subgrid of it, so the browser sizes each
+column to its widest button, with nothing to redo when a font arrives or the
+theme changes. By position from the end it needs no script, up to four
+buttons. Where the rows' buttons differ, name them by role with
+`data-kp-action="<role>"`: `attachActionColumns(root)` (`js/actions.js`)
+writes each button's column. A table cannot be a subgrid, so in a table the
+same function measures each role's widest button and writes the widths on
+the table. In a list narrower than 30rem the buttons go under the row's
+text, side by side and spread over the full width in equal columns; in a
+narrow table they stack in the cell at one width. Knob:
+`--kp-action-gap`. Exports: `attachActionColumns`, `fitActionColumns(list)`,
+`rowRoles`, `mergeRoles`, `ROW_ACTIONS`, `ACTION_LIST`.
+
+### Tiles of one height
+
+`.kp-tiles` lays the package's own `.kp-card` out in a grid: every tile as
+tall as the tallest tile of the grid, on every row, and each card's
+`.kp-card__footer` kept to its bottom edge, so the footers of a row form one
+line.
+
+```html
+<ul class="kp-tiles">
+    <li class="kp-card">
+        <h3 class="kp-card__title">Pump house 1</h3>
+        <p class="kp-card__body">Two pumps, both running.</p>
+        <div class="kp-card__footer kp-row kp-row--between">
+            <span class="kp-timestamp">Read 2 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="/ph/1">Open</a>
+        </div>
+    </li>
+</ul>
+```
+
+Knobs: `--kp-tile-min` (15rem, the narrowest column), `--kp-tiles-gap`,
+`--kp-tile-title-size` (1.125rem, a step under a page card's title). No
+script.
+
+### Key figures
+
+`.kp-kpis` is a strip of `.kp-kpi` tiles, one height on every row it wraps
+to, so labels, numbers and trend lines line up across it:
+
+```html
+<div class="kp-kpis" role="group" aria-label="Network at a glance">
+    <a class="kp-kpi" href="/flow">
+        <span class="kp-kpi__label">Flow now</span>
+        <span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+        <span class="kp-kpi__trend"><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span>
+        <svg class="kp-kpi__spark" data-kp-spark="380 371 352 340 335 338 360 395 430 451"></svg>
+    </a>
+    <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning">
+        <span class="kp-kpi__label">Open incidents</span>
+        <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span>
+        <span class="kp-kpi__value">3</span>
+        <span class="kp-kpi__trend">2 new today</span>
+    </button>
+</div>
+```
+
+A tile is a `div`, an `a` that leads to its detail, or a
+`button.kp-kpi--toggle` that turns a filter on this page on and off.
+`data-kp-tone="warning"` or `"destructive"` on a tile gives it a coloured
+edge and a coloured number. A `.kp-kpi__delta` takes ▲ or ▼ from
+`data-kp-direction="up|down"` and its colour from `data-kp-tone="good|bad"`.
+At the bottom, a sparkline or a meter:
+`<span class="kp-kpi__meter" role="meter" … style="--kp-value: 0.71">`
+paints a used-of-total bar.
+
+`js/kpi.js` brings the two behaviours. `attachSparklines(root)` draws every
+`svg[data-kp-spark]` from its numbers as a line over a soft area, and draws
+it again when the attribute changes (`drawSparkline(svg, values)` and
+`sparkPaths(values)` are there for a page that draws its own).
+`attachKpiToggles(root)` makes a click on a toggle flip `aria-pressed` and
+fire `kp-kpi-toggle` (bubbling, `detail.pressed`); the page does the
+filtering. Pressed, the tile takes a primary border over a faint primary
+background, and its `.kp-kpi__hint` shows the `data-kp-when="on"` child in
+place of the `off` one; the words are yours. A tile marked
+`data-kp-kpi-owned` is left to a framework that keeps the pressed state
+itself. Knobs: `--kp-kpi-min` (9rem), `--kp-kpis-gap`,
+`--kp-kpi-value-size` (1.75rem), `--kp-kpi-spark-height` (1.75rem),
+`--kp-kpi-meter-fill`.
+
+### The page header
+
+```html
+<header class="kp-page-header">
+    <div class="kp-page-header__inner">
+        <div>
+            <h1 class="kp-page-header__title">Pump houses</h1>
+            <p class="kp-page-header__description">Fifteen pump houses on the northern network.</p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button">Export readings</button>
+            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+            <button type="button" class="kp-button" popovertarget="page-more" aria-haspopup="menu" style="anchor-name: --page-more">More ▾</button>
+            <div popover="auto" id="page-more" class="kp-popover" style="position-anchor: --page-more">
+                <ul class="kp-menu" role="menu">
+                    <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+```
+
+The title and its one-sentence description on the left, the page's actions
+against the right edge, level with the title: secondary buttons, one
+primary, and an overflow button that says "More ▾" for the rare things; its
+popover hangs under it towards the start, so it stays on the page. Under
+40rem of its own width the title takes the line and the buttons fold under
+the description: the primary first, on a line of its own at the full width,
+the others beside each other under it. That order is visual only; the tab
+order stays yours. No script.
+
+### The attention band
+
+One alert per problem, worst first, each with the action that fixes it, as a
+soft tint of its severity with a coloured edge in the page's own text
+colour. With nothing wrong the band takes no room at all.
+
+```html
+<div class="kp-attention" role="region" aria-label="Needs attention">
+    <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text">
+            <strong><span class="kp-sr-only">Critical: </span>Pump house 3 is below 2.1 bar</strong>
+            <span>For forty minutes.</span>
+        </div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Open the incident</button></div>
+    </div>
+</div>
+```
+
+`data-kp-severity` is `critical`, `warning` or `info`. `attachAttention(root)`
+(`js/attention.js`) keeps the items in that order in the DOM, now and when
+one arrives or changes severity, so a screen reader meets them in the order
+the eye does; `sortAttention(band)` does it once. In a band under 34rem the
+actions go under the words.
+
+### A state word that keeps its width
+
+```html
+<span class="kp-state-word" data-kp-words="Running&#10;Stopped&#10;Starting in 3 min">Stopped</span>
+<button type="button" class="kp-button kp-button--sm">Start</button>
+```
+
+`.kp-state-word` is as wide as the widest word in `data-kp-words` (one per
+line), so the button beside it never moves when the state changes.
+`setStateWord(el, word)` (`js/components.js`) changes the word and adds a
+new one to the list, so the width never shrinks back.
+`.kp-state-word--center` keeps the word in the middle of that width.
+
+### A data table loading on a phone
+
+Nothing to write: a data table with the busy overlay (`data-kp-busy-overlay`
+or `busy({ overlay: true })`) that is narrower than 30rem lays its panel flat
+over the skeleton rows, the spinner beside the words and the words kept to
+three lines, and clips the layer to the table so the status line under it
+stays free. Knob: `--kp-busy-overlay-spinner-narrow` (1.75rem).
+
+### The time chart
+
+One time chart for every page, so its controls mean the same everywhere:
+
+```html
+<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" lang="en-GB">
+    <div class="kp-chart-group__bar">
+        <div class="kp-chart-ranges" role="group" aria-label="Time range">
+            <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
+            <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+            <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+        </div>
+        <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+    </div>
+    <figure class="kp-chart" data-kp-chart aria-label="Pressure">
+        <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+        <script type="application/json" data-kp-chart-data>
+            { "unit": "bar", "digits": 2, "threshold": 2.1, "series": [{ "label": "Pump house 1", "start": 1791010800000, "step": 3600000, "values": [3.36, 3.45, 3.44] }] }
+        </script>
+    </figure>
+    <div class="kp-chart" data-kp-chart="spark" aria-label="Pump house 3"></div>
+</div>
+```
+
+`attachCharts(root, { strings?, locale? })` (`js/chart.js`) draws every
+`[data-kp-chart]` under `root`. A chart's data is the page's: a
+`script[type="application/json"][data-kp-chart-data]` child, or
+`setChartData(el, data)` before or after the attach. The data is
+`{ label?, unit?, digits?, series, events?, from?, to?, yMax?, threshold?, stacked?, height? }`;
+a series is `{ label, points: [[ms, value], …] }` or, compact,
+`{ label, start, step, values }`, with an optional `colour` (`var(--…)`) and
+`total`; an event is `{ at, label, tone?, href? }` with `tone` `critical`,
+`warning` or `info`.
+
+The charts of one `[data-kp-chart-group]` share a crosshair, a zoom and a
+range. Hover or focus a source in the legend to single it out; a click keeps
+one or several on (`kp-chart-select`, `detail.on`), Show all and Esc reset.
+The tooltip sits beside the crosshair, on the side with room, with every
+visible source's value, ▲/▼ over the hour before and the events within
+reach; a click pins it, ✕ or Esc releases it. A drag zooms the whole group
+(`kp-chart-zoom` on the group, `detail` `{ from, to }` or null), a
+double-click or Esc resets. On a focused plot ←/→ (Shift: ten points),
+Home/End, Enter and Esc move, pin and step back, and a live region says what
+is under the crosshair. Under the lines lies a soft area while one or two
+sources are on, the lines alone with three or more. The colours are the
+theme's `--chart-1` to `--chart-5`; from the sixth source on they come round
+again with a dashed line.
+
+A range button (`data-kp-chart-range="1h|24h|7d"`, any `15m`, `6h`, `2d`)
+sets the group's window and fires `kp-chart-range` (`detail` `{ range, span }`)
+before the charts redraw, so a page can hand them that range's data first:
+
+```js
+import { CHART_RANGE_EVENT, setChartData } from '@kp-soft/themes/js/chart';
+
+group.addEventListener(CHART_RANGE_EVENT, (event) => {
+    setChartData(pressure, readingsFor(event.detail.range));
+});
+```
+
+`data-kp-chart="spark"` is the spark variant: one source's line over a soft
+area (drawn by the KPI tile's own `drawSparkline()`), its value at the
+crosshair or now beside its name, on the group's crosshair. The clock and
+the numbers follow `locale`, else the nearest `lang` above the group. Every
+word the chart says is in the dictionary (`chartPlot`, `chartShowAll`,
+`chartZoomed`, … in `js/strings.js`); `setStrings()` changes them for every
+chart and `attachCharts(root, { strings })` for those under `root`.
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

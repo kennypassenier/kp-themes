@@ -1,5 +1,16 @@
 # Dashboard components to port
 
+**Decided (2026-10-04).** Kenny approved all eight in formal with these picks:
+tiles, every row as tall as the tallest tile; key figures, a filter tile when on
+has a border and a coloured background, and the 24-hour sparkline is a line over
+a soft area; page header, the overflow button is the word "More" with ▾, and on a
+phone the primary comes first at the full width; attention band, a soft tint with
+a coloured edge; time chart, the tooltip beside the crosshair and a soft area
+under the lines while one or two sources are on; action columns, on a phone the
+buttons go under the text, side by side, in equal columns over the full width;
+the state word and the data table loading on a phone as shown. Moved into the
+package [scope-143].
+
 **Round one open (2026-10-04).** Formal only; eight sections in the review dialog, choices to tick in six of them. The time chart (9) joined the same round later that day: the round id stays `2026-10-04-r1`, so verdicts already given stand and only the new section is open.
 
 The homelab admin dashboard (branch `fix-371-1`, `admin/web/`) grew components

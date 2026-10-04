@@ -1,3 +1,15 @@
 {
-    "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry once every register covers it, so nothing can sit here after the work is done."
+    "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry once every register covers it, so nothing can sit here after the work is done.",
+    "action-list": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "row-actions": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "tiles": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "kpis": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "kpi": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "chart": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "chart-group": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "chart-ranges": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "chart-zoom": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "attention": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "page-header": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "state-word": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme"
 }

@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Buttons in shared columns — kp-themes</title>
+        <meta name="description" content="A list’s row buttons on columns the whole list shares: a button of one role starts at one edge and has one width on every row, whatever its label, and a row without that role leaves its column empty. In a list the browser does it — the list is a grid, each row a subgrid — and by position from the end no script is needed. A table measures, through `attachActionColumns()` in js/actions.js." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/shade-light-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/sepia-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../css/high-contrast-register.css" />
+        <link rel="stylesheet" href="../../css/lapis-register.css" />
+        <link rel="stylesheet" href="../../css/shade-dark-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html" aria-current="page">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Buttons in shared columns</h1>
+                    <p class="kp-prose">A list’s row buttons on columns the whole list shares: a button of one role starts at one edge and has one width on every row, whatever its label, and a row without that role leaves its column empty. In a list the browser does it — the list is a grid, each row a subgrid — and by position from the end no script is needed. A table measures, through `attachActionColumns()` in js/actions.js.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For a list or a table whose rows carry the same few actions, so the eye finds Open in the same place on every row. Not for one row’s toolbar, and not for a long row of actions: four from the end is what the stylesheet places alone, and beyond that a menu reads better.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A list, by position from the end</figcaption>
+                        <p class="kp-text-muted">No script: the last button of every row shares the last column, the one before it the column before, and a shorter row leaves its first columns empty. Every column is as wide as its widest button.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<ul class="kp-action-list">
+    <li>
+        <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+            <button type="button" class="kp-button kp-button--sm">Assign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+    <li>
+        <div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Reassign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+</ul>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action-list&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 3: pressure below 2.1 bar&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Assign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 7: no reading since 06:00&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Reassign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A table, by role</figcaption>
+                        <p class="kp-text-muted">A table cannot be a subgrid, so `attachActionColumns()` measures each role’s widest button and writes the widths on the table. Named by role, Open stays under Open on a row without Recalibrate.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <thead><tr><th scope="col">Pump house</th><th scope="col"><span class="kp-sr-only">Actions</span></th></tr></thead>
+        <tbody>
+            <tr><td>Pump house 1</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button></div></td></tr>
+            <tr><td>Pump house 3</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button></div></td></tr>
+        </tbody>
+    </table>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Pump house&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Actions&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Pump house 1&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>&gt;Recalibrate…&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="more-examples" id="more-examples">
+                    <h2 class="kp-fw-semibold">More examples</h2>
+                    <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
+                    <figure class="sc-example" id="more-table-action-columns">
+                        <figcaption class="kp-fw-semibold">Buttons in shared columns</figcaption>
+                        <p class="kp-text-muted">A list's row buttons share columns. In the list (<code>.kp-action-list</code>) every <b>Open</b> sits in one column, every <b>Assign…</b> and the second row's <b>Reassign…</b> in the one before it, at one width, and the incident without Acknowledge leaves that slot empty; nothing is measured, the list is a subgrid. Press <b>Longer label</b>: the whole Assign column widens, on every row. In the table the buttons are named by role (<code>data-kp-action</code>) and measured by <code>attachActionColumns()</code>, so <b>Open</b> stays under Open even on the rows without Recalibrate. In the phone pane the buttons go under the row's text, side by side and spread over the full width in equal columns, so each role still lines up from row to row; nothing is pushed to the right edge.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<ul class="kp-action-list">
+    <li>
+        <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+            <button type="button" class="kp-button kp-button--sm">Assign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+    <li>
+        <div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Reassign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+    <li>
+        <div><b>INC-4462</b> Reservoir North: level sensor drifting</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+            <button type="button" class="kp-button kp-button--sm">Assign…</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+    <li>
+        <div><b>INC-4459</b> Pump house 1: door contact open</div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+</ul>
+</div>
+<div class="sc-example__stage">
+<div class="cat-resize" style="inline-size: 22.5rem">
+    <ul class="kp-action-list">
+        <li>
+            <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+        <li>
+            <div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Reassign…</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+        <li>
+            <div><b>INC-4462</b> Reservoir North: level sensor drifting</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+        <li>
+            <div><b>INC-4459</b> Pump house 1: door contact open</div>
+            <div class="kp-row-actions">
+                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+            </div>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="sc-example__stage">
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption class="kp-sr-only">
+            Pump houses with their row actions
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Pump house</th>
+                <th scope="col">Last reading</th>
+                <th scope="col"><span class="kp-sr-only">Actions</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pump house 1</td>
+                <td>3.4 bar · 08:41</td>
+                <td>
+                    <div class="kp-row-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                            Open
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Pump house 3</td>
+                <td>2.0 bar · 08:40</td>
+                <td>
+                    <div class="kp-row-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                            Open
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Pump house 7</td>
+                <td>no reading since 06:00</td>
+                <td>
+                    <div class="kp-row-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="restart">Restart the unit…</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                            Open
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Reservoir North</td>
+                <td>71 % · 08:39</td>
+                <td>
+                    <div class="kp-row-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                            Open
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action-list&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 3: pressure below 2.1 bar&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Assign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 7: no reading since 06:00&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Reassign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4462&lt;/<span class="kp-code__keyword">b</span>&gt; Reservoir North: level sensor drifting&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Assign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4459&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 1: door contact open&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-resize&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 22.5rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action-list&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4471&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 3: pressure below 2.1 bar&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Assign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4468&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 7: no reading since 06:00&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Reassign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4462&lt;/<span class="kp-code__keyword">b</span>&gt; Reservoir North: level sensor drifting&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Acknowledge&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Assign…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">b</span>&gt;INC-4459&lt;/<span class="kp-code__keyword">b</span>&gt; Pump house 1: door contact open&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span>&gt;Open&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;
+            Pump houses with their row actions
+        &lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Pump house&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Last reading&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Actions&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 1&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;3.4 bar · 08:41&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;export&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>&gt;Recalibrate…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;
+                            Open
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;2.0 bar · 08:40&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;export&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;
+                            Open
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 7&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;no reading since 06:00&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;restart&quot;</span>&gt;Restart the unit…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;
+                            Open
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Reservoir North&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;71 % · 08:39&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row-actions&quot;</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;export&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;recalibrate&quot;</span>&gt;Recalibrate…&lt;/<span class="kp-code__keyword">button</span>&gt;
+                        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-action</span><span class="kp-code__string">=&quot;open&quot;</span>&gt;
+                            Open
+                        &lt;/<span class="kp-code__keyword">button</span>&gt;
+                    &lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-action</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-action-measuring</code></td><td>written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-action-commit</code></td><td>Fired on the row when an optimistic action commits — the undo window closed [TH26]. Detail: ActionDetail.</td></tr>
+                            <tr><td><code>kp-action-undo</code></td><td>Fired on the row when it is undone instead. Detail: ActionDetail.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-action-col</code></td><td><code>auto</code></td></tr>
+                            <tr><td><code>--kp-action-count</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-action-gap</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-action-widths</code></td><td><code>none</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the buttons keep their order in the markup; the columns are layout only, so the tab order is the row’s own.</li>
+                        <li>Built in — a column a row leaves empty holds nothing focusable.</li>
+                        <li>Yours — name a button by what it does to that row (“Open INC-4471” for a screen reader) when the visible word alone is the same on every row.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-action-list</code></td><td>A list (`ul` or `ol`) whose rows are one grid: the row’s text first, then one column per button.</td></tr>
+                            <tr><td><code>.kp-row-actions</code></td><td>The button box in a row or a table cell. Empty, it takes no room.</td></tr>
+                            <tr><td><code>data-kp-action</code></td><td>A button’s role, for rows whose buttons are not the same from the end: one column per role, in the order the rows give them.</td></tr>
+                            <tr><td><code>on a phone</code></td><td>In a list narrower than 30rem the buttons go under the row’s text, side by side, spread over the full width in equal columns, so a role still lines up from row to row. In a narrow table they stack in the cell at one width.</td></tr>
+                            <tr><td><code>data-kp-action-measuring</code></td><td>What the script writes on a table for the moment it measures, every button at its own size.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../catalogue/demos.js"></script>
+    </body>
+</html>

@@ -26,9 +26,11 @@
                 <li><a href="#wide">Forty columns</a></li>
                 <li><a href="#empty">Empty, loading, failed</a></li>
                 <li><a href="#numbers">Numbers and alignment</a></li>
+                <li><a href="#action-columns">Buttons in shared columns</a></li>
                 <li><a href="#datatable">Data table</a></li>
                 <li><a href="#datatable-sticky">Data table, header that stays</a></li>
                 <li><a href="#datatable-states">Data table, loading and failed</a></li>
+                <li><a href="#datatable-busy-phone">Data table, loading on a phone</a></li>
                 <li><a href="#datatable-multi-sort">Data table, sorting on more than one column</a></li>
                 <li><a href="#datatable-columns">Data table, choosing columns</a></li>
                 <li><a href="#datatable-expansion">Data table, rows that open</a></li>
@@ -506,6 +508,158 @@
                                     <td>Faults</td>
                                     <td class="kp-text-end kp-numeric">7.00</td>
                                     <td class="kp-text-end">7.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="action-columns">
+                <h2>Buttons in shared columns</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a list's row buttons share columns. In the list (<code>.kp-action-list</code>) every <b>Open</b> sits in one
+                    column, every <b>Assign…</b> and the second row's <b>Reassign…</b> in the one before it, at one width, and the incident without
+                    Acknowledge leaves that slot empty; nothing is measured, the list is a subgrid. Press <b>Longer label</b>: the whole Assign column
+                    widens, on every row. In the table the buttons are named by role (<code>data-kp-action</code>) and measured by
+                    <code>attachActionColumns()</code>, so <b>Open</b> stays under Open even on the rows without Recalibrate. In the phone pane the
+                    buttons go under the row's text, side by side and spread over the full width in equal columns, so each role still lines up from
+                    row to row; nothing is pushed to the right edge.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-longer aria-pressed="false">Longer label</button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <ul class="kp-action-list">
+                        <li>
+                            <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+                            <div class="kp-row-actions">
+                                <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                                <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+                            <div class="kp-row-actions">
+                                <button type="button" class="kp-button kp-button--sm">Reassign…</button>
+                                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div><b>INC-4462</b> Reservoir North: level sensor drifting</div>
+                            <div class="kp-row-actions">
+                                <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                                <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div><b>INC-4459</b> Pump house 1: door contact open</div>
+                            <div class="kp-row-actions">
+                                <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <ul class="kp-action-list">
+                            <li>
+                                <div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                                    <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Reassign…</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div><b>INC-4462</b> Reservoir North: level sensor drifting</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+                                    <button type="button" class="kp-button kp-button--sm">Assign…</button>
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div><b>INC-4459</b> Pump house 1: door contact open</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                Pump houses with their row actions
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Pump house</th>
+                                    <th scope="col">Last reading</th>
+                                    <th scope="col"><span class="kp-sr-only">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pump house 1</td>
+                                    <td>3.4 bar · 08:41</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                                                Open
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pump house 3</td>
+                                    <td>2.0 bar · 08:40</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                                                Open
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pump house 7</td>
+                                    <td>no reading since 06:00</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="restart">Restart the unit…</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                                                Open
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Reservoir North</td>
+                                    <td>71 % · 08:39</td>
+                                    <td>
+                                        <div class="kp-row-actions">
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="export">Export</button>
+                                            <button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button>
+                                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">
+                                                Open
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1414,6 +1568,47 @@
                         </div>
                         <div class="kp-datatable__bar">
                             <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="datatable-busy-phone">
+                <h2>Data table: loading, on a phone</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a data table as narrow as a phone, loading for the first time with <code>data-kp-busy-overlay</code> and long
+                    words from the app. The panel lies flat inside the three skeleton rows: the spinner beside the words, the words kept to three
+                    lines (the status line under the table still says all of it), and the layer clipped to the table, so the status line under it
+                    stays free and readable. Widen the pane past 30rem and the panel stands up again, the spinner over the words, as in the block
+                    above.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div
+                            class="kp-datatable"
+                            data-kp-datatable
+                            data-kp-state="loading"
+                            data-kp-busy-overlay
+                            data-cat-busy="Reading the pump houses from the field units on the northern network… 42 s so far"
+                        >
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Pump houses, loading
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Pump house</th>
+                                            <th scope="col">Pressure</th>
+                                            <th scope="col">Read</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            </div>
                         </div>
                     </div>
                 </div>

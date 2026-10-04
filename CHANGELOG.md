@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **Buttons in shared columns** [scope-143]: `.kp-action-list` (a list whose
+  rows are one grid) and `.kp-row-actions` line a list's row buttons up in
+  columns, by position from the end with no script, or by role
+  (`data-kp-action`) through `attachActionColumns()` in the new
+  `js/actions.js`, which also measures a table's. On a phone the buttons go
+  under the text, side by side in equal columns over the full width.
+- **Tiles of one height** [scope-143]: `.kp-tiles` lays `.kp-card`s out with
+  every row as tall as the tallest tile and each footer on the bottom edge.
+- **Key figures** [scope-143]: `.kp-kpis` and `.kp-kpi` (label, value with a
+  unit and a note, trend, delta, sparkline, meter, warning and destructive
+  tones). The new `js/kpi.js` draws `svg[data-kp-spark]` as a line over a soft
+  area and makes a `button.kp-kpi--toggle` a filter: pressed, a primary border
+  over a faint primary background; it fires `kp-kpi-toggle`.
+- **Page header** [scope-143]: `.kp-page-header`, the title and description
+  beside the page's actions with a "More ▾" overflow menu; on a phone the
+  primary comes first at the full width.
+- **Attention band** [scope-143]: `.kp-attention`, one soft-tinted alert per
+  problem with a coloured edge, no room at all when empty, kept worst first
+  in the DOM by `attachAttention()` in the new `js/attention.js`.
+- **A state word that keeps its width** [scope-143]: `.kp-state-word` with
+  `data-kp-words`, and `setStateWord(el, word)` in `js/components.js`.
+- **A data table loading on a phone** [scope-143]: in a table under 30rem the
+  busy overlay's panel lies flat (the spinner beside the words, three lines at
+  most) and the layer is clipped to the table.
+- **Time chart** [scope-143]: `.kp-chart`, `.kp-chart-group`,
+  `.kp-chart-ranges` and `.kp-chart-zoom`, drawn by `attachCharts()` in the
+  new `js/chart.js` from the page's data (`setChartData()` or a JSON child):
+  a legend that singles a source out and keeps sources on, one crosshair per
+  group, a tooltip beside it, drag to zoom, event markers, keys, range
+  buttons and a spark variant. It fires `kp-chart-select`, `kp-chart-zoom`
+  and `kp-chart-range`; its words are `chart…` in `js/strings.js`. The
+  catalogue has a new page for it, `catalogue/chart.html`.
 - **Elements leave the theme's way** [scope-142]: `leave(el)` (js/motion.js)
   marks the element `[data-kp-leaving]` and every register now draws its own
   exit on it, one per theme, picked by Kenny on research/size-motion over

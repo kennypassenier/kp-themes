@@ -427,6 +427,86 @@ export type Strings = {
      * The size of the box the measurement frame holds (blueprint) [scope-18]
      */
     measureBox: (w: number, h: number) => string;
+    /**
+     * A time chart's plot, for a screen reader: what it is and its keys [scope-143]
+     */
+    chartPlot: (label: string) => string;
+    /**
+     * A chart's 24-hour spark line, for a screen reader [scope-143]
+     */
+    chartSpark: (label: string) => string;
+    /**
+     * The name of a chart's legend [scope-143]
+     */
+    chartSources: (label: string) => string;
+    /**
+     * A legend button's title: what hovering and clicking it do [scope-143]
+     */
+    chartSource: (label: string) => string;
+    /**
+     * The legend's way back to every source [scope-143]
+     */
+    chartShowAll: string;
+    /**
+     * Its title [scope-143]
+     */
+    chartShowAllTitle: string;
+    /**
+     * The hint under a legend, for a pointer [scope-143]
+     */
+    chartHintPointer: string;
+    /**
+     * The same hint, for a finger [scope-143]
+     */
+    chartHintTouch: string;
+    /**
+     * The word in a pinned tooltip's head [scope-143]
+     */
+    chartPinned: string;
+    /**
+     * The pinned tooltip's ✕, named [scope-143]
+     */
+    chartRelease: string;
+    /**
+     * The tooltip's foot: what the ▲/▼ column is [scope-143]
+     */
+    chartChange: string;
+    /**
+     * An event's link in a pinned tooltip [scope-143]
+     */
+    chartOpen: string;
+    /**
+     * An event marker's title [scope-143]
+     */
+    chartMark: (label: string, time: string) => string;
+    /**
+     * The zoom chip, before its Reset [scope-143]
+     */
+    chartZoomed: (from: string, to: string) => string;
+    /**
+     * The zoom chip's button [scope-143]
+     */
+    chartReset: string;
+    /**
+     * Its title [scope-143]
+     */
+    chartResetTitle: string;
+    /**
+     * A rise, as the readout says it [scope-143]
+     */
+    chartUp: string;
+    /**
+     * A fall, as the readout says it [scope-143]
+     */
+    chartDown: string;
+    /**
+     * No change, as the readout says it [scope-143]
+     */
+    chartSame: string;
+    /**
+     * A spark line's value when no time is under the crosshair [scope-143]
+     */
+    chartNow: string;
     breadcrumb: string;
     pagination: string;
     themePicker: string;
@@ -643,6 +723,26 @@ export type Strings = {
  * @property {string} arrivalSkip  The button that ends the arrival at once
  * @property {string} measureLoading  A live dimension label before the first measurement lands (blueprint) [S48]
  * @property {(w: number, h: number) => string} measureBox  The size of the box the measurement frame holds (blueprint) [scope-18]
+ * @property {(label: string) => string} chartPlot  A time chart's plot, for a screen reader: what it is and its keys [scope-143]
+ * @property {(label: string) => string} chartSpark  A chart's 24-hour spark line, for a screen reader [scope-143]
+ * @property {(label: string) => string} chartSources  The name of a chart's legend [scope-143]
+ * @property {(label: string) => string} chartSource  A legend button's title: what hovering and clicking it do [scope-143]
+ * @property {string} chartShowAll  The legend's way back to every source [scope-143]
+ * @property {string} chartShowAllTitle  Its title [scope-143]
+ * @property {string} chartHintPointer  The hint under a legend, for a pointer [scope-143]
+ * @property {string} chartHintTouch  The same hint, for a finger [scope-143]
+ * @property {string} chartPinned  The word in a pinned tooltip's head [scope-143]
+ * @property {string} chartRelease  The pinned tooltip's ✕, named [scope-143]
+ * @property {string} chartChange  The tooltip's foot: what the ▲/▼ column is [scope-143]
+ * @property {string} chartOpen  An event's link in a pinned tooltip [scope-143]
+ * @property {(label: string, time: string) => string} chartMark  An event marker's title [scope-143]
+ * @property {(from: string, to: string) => string} chartZoomed  The zoom chip, before its Reset [scope-143]
+ * @property {string} chartReset  The zoom chip's button [scope-143]
+ * @property {string} chartResetTitle  Its title [scope-143]
+ * @property {string} chartUp  A rise, as the readout says it [scope-143]
+ * @property {string} chartDown  A fall, as the readout says it [scope-143]
+ * @property {string} chartSame  No change, as the readout says it [scope-143]
+ * @property {string} chartNow  A spark line's value when no time is under the crosshair [scope-143]
 
  * @property {string} breadcrumb
  * @property {string} pagination

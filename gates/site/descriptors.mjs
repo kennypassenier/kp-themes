@@ -938,6 +938,10 @@ export const DESCRIPTORS = [
             },
         ],
         variants: [
+            {
+                name: 'loading, on a phone',
+                what: 'In a table under 30rem the busy layer lies flat over the skeleton rows: the spinner beside the words, the words kept to three lines (the status line says all of it), the layer clipped to the table [scope-143].',
+            },
             { name: '.kp-datatable__bar', what: 'A row of controls above or below the table: the search box, the status line, the pager.' },
             { name: '.kp-datatable__sort', what: 'The sort control inside a header cell. It wears the header’s own case and spacing, and a click anywhere in the header sorts.' },
             { name: '.kp-datatable__filters / __pills', what: 'The filter panel the headers declare, and the removable pills of the filters that are set.' },
@@ -1337,6 +1341,55 @@ export const DESCRIPTORS = [
             'Yours — choose the role: a status for something the reader can finish reading first, an alert only for what interrupts.',
             'Yours — an alert added after the page has loaded needs a live region, or it appears silently.',
             'Yours — name the dismiss button, and leave the reader a way back to what the message was about.',
+        ],
+    },
+    {
+        id: 'attention',
+        title: 'Attention band',
+        group: 'Feedback',
+        classes: ['kp-attention'],
+        exports: [],
+        // The band ranks its items by `data-kp-severity`, the word the log
+        // reads too.
+        aliases: ['severity'],
+        intro: 'One alert per problem, worst first, each with the action that fixes it. Each is a soft tint of its severity with a coloured edge, the page’s own text colour and a solid round icon: calm, still unmistakable. With nothing wrong the band takes no room at all. `attachAttention()` in js/attention.js keeps the order in the page itself, so a screen reader meets the problems in the order the eye does.',
+        whenToUse:
+            'At the top of a dashboard, for what needs a person now. Not for a message about the action just taken, which is a toast, and never for an “all is well” line: an empty band is the all-clear.',
+        examples: [
+            {
+                title: 'Three problems, written in any order',
+                why: 'Written info, critical, warning; shown critical, warning, info.',
+                markup: `
+<div class="kp-attention" role="region" aria-label="Needs attention">
+<div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+<span class="kp-attention__icon" aria-hidden="true">i</span>
+<div class="kp-attention__text"><strong><span class="kp-sr-only">Information: </span>Firmware 4.2 is out for six field units</strong><span>It fixes the flow meter’s drift after a power cut.</span></div>
+<div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Plan the update</button></div>
+</div>
+<div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+<span class="kp-attention__icon" aria-hidden="true">!</span>
+<div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>Pump house 3 is below 2.1 bar</strong><span>For forty minutes.</span></div>
+<div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Open the incident</button></div>
+</div>
+<div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+<span class="kp-attention__icon" aria-hidden="true">!</span>
+<div class="kp-attention__text"><strong><span class="kp-sr-only">Warning: </span>Pump house 7 has sent no reading since 06:00</strong><span>Its modem may need a restart.</span></div>
+<div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Restart the modem</button></div>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-attention', what: 'The band: a region of items one under the other; with no item it is not drawn.' },
+            { name: '.kp-attention__item', what: 'One problem, on a `.kp-alert` of its tone: a soft tint of the severity, a thick edge of it, the page’s own text colour.' },
+            { name: 'data-kp-severity', what: '`critical`, `warning` or `info`: the order and the tint.' },
+            { name: '.kp-attention__icon, __text, __actions', what: 'A solid round icon, the problem in a strong line and a sentence, and the action that fixes it. In a band under 34rem the actions go under the words.' },
+        ],
+        accessibility: [
+            'Built in — the DOM order is the severity order, so reading order and visual order agree.',
+            'Built in — the severity is a word for a screen reader (the hidden prefix) and an icon, not only a colour.',
+            'Yours — `role="alert"` for a critical problem that arrives while the reader is on the page, `role="status"` for the rest; and the hidden prefix in your words.',
         ],
     },
     {
@@ -1820,6 +1873,230 @@ export const DESCRIPTORS = [
             'Built in — the columns are the list\'s, so a long message wraps inside its own column instead of pushing the ones before it.',
             'Yours — give the list a name and say whether it follows the tail, where a reader can scroll it.',
             'Yours — announce a line that demands attention; a stream nobody is watching is silent by design.',
+        ],
+    },
+    {
+        id: 'action-columns',
+        title: 'Buttons in shared columns',
+        group: 'Data',
+        classes: ['kp-action-list', 'kp-row-actions'],
+        exports: [],
+        // `data-kp-action` names a button's role; the button page claims the
+        // same word for its undo action, so the two share it.
+        aliases: ['action'],
+        intro: 'A list’s row buttons on columns the whole list shares: a button of one role starts at one edge and has one width on every row, whatever its label, and a row without that role leaves its column empty. In a list the browser does it — the list is a grid, each row a subgrid — and by position from the end no script is needed. A table measures, through `attachActionColumns()` in js/actions.js.',
+        whenToUse:
+            'For a list or a table whose rows carry the same few actions, so the eye finds Open in the same place on every row. Not for one row’s toolbar, and not for a long row of actions: four from the end is what the stylesheet places alone, and beyond that a menu reads better.',
+        examples: [
+            {
+                title: 'A list, by position from the end',
+                why: 'No script: the last button of every row shares the last column, the one before it the column before, and a shorter row leaves its first columns empty. Every column is as wide as its widest button.',
+                markup: `
+<ul class="kp-action-list">
+<li>
+<div><b>INC-4471</b> Pump house 3: pressure below 2.1 bar</div>
+<div class="kp-row-actions">
+<button type="button" class="kp-button kp-button--sm">Acknowledge</button>
+<button type="button" class="kp-button kp-button--sm">Assign…</button>
+<button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+</div>
+</li>
+<li>
+<div><b>INC-4468</b> Pump house 7: no reading since 06:00</div>
+<div class="kp-row-actions">
+<button type="button" class="kp-button kp-button--sm">Reassign…</button>
+<button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+</div>
+</li>
+</ul>
+`,
+            },
+            {
+                title: 'A table, by role',
+                why: 'A table cannot be a subgrid, so `attachActionColumns()` measures each role’s widest button and writes the widths on the table. Named by role, Open stays under Open on a row without Recalibrate.',
+                markup: `
+<div class="kp-table-wrap">
+<table class="kp-table">
+<thead><tr><th scope="col">Pump house</th><th scope="col"><span class="kp-sr-only">Actions</span></th></tr></thead>
+<tbody>
+<tr><td>Pump house 1</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="recalibrate">Recalibrate…</button><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button></div></td></tr>
+<tr><td>Pump house 3</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button></div></td></tr>
+</tbody>
+</table>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-action-list', what: 'A list (`ul` or `ol`) whose rows are one grid: the row’s text first, then one column per button.' },
+            { name: '.kp-row-actions', what: 'The button box in a row or a table cell. Empty, it takes no room.' },
+            { name: 'data-kp-action', what: 'A button’s role, for rows whose buttons are not the same from the end: one column per role, in the order the rows give them.' },
+            {
+                name: 'on a phone',
+                what: 'In a list narrower than 30rem the buttons go under the row’s text, side by side, spread over the full width in equal columns, so a role still lines up from row to row. In a narrow table they stack in the cell at one width.',
+            },
+            { name: 'data-kp-action-measuring', what: 'What the script writes on a table for the moment it measures, every button at its own size.' },
+        ],
+        accessibility: [
+            'Built in — the buttons keep their order in the markup; the columns are layout only, so the tab order is the row’s own.',
+            'Built in — a column a row leaves empty holds nothing focusable.',
+            'Yours — name a button by what it does to that row (“Open INC-4471” for a screen reader) when the visible word alone is the same on every row.',
+        ],
+    },
+    {
+        id: 'kpi',
+        title: 'Key figures',
+        group: 'Data',
+        classes: ['kp-kpis', 'kp-kpi'],
+        exports: [],
+        // The tile's sparkline is `data-kp-spark`; its tone and its hint's
+        // two states (`data-kp-when`) are read by the stylesheet, and the
+        // time chart reads the same two words.
+        aliases: ['spark', 'tone', 'when'],
+        intro: 'A strip of key figures: each `.kp-kpi` tile a label, the number (with its unit and a note such as “avg 15 min” beside it), a trend line, and at the bottom a 24-hour sparkline or a meter. Every tile is as tall as the tallest on every row the strip wraps to, so labels, numbers and trend lines line up across it. js/kpi.js draws the sparklines and turns a tile into a filter toggle.',
+        whenToUse:
+            'At the top of a dashboard, for the handful of numbers a reader checks first. Not for a table of figures, and not for more than a row or two of tiles: a key figure that is one of thirty is not key.',
+        examples: [
+            {
+                title: 'A strip: a meter, a sparkline, a link and a filter',
+                why: 'The tile is a `div`, an `a` that leads to its detail, or a `button.kp-kpi--toggle` that turns a filter on this page on and off. Pressed, a filter tile takes a primary border over a faint primary background, and its corner word changes; the words are yours.',
+                markup: `
+<div class="kp-kpis" role="group" aria-label="Network at a glance">
+<div class="kp-kpi">
+<span class="kp-kpi__label">Pump houses online</span>
+<span class="kp-kpi__value">14<small>of 15</small></span>
+<span class="kp-kpi__trend">Pump house 7 offline</span>
+<span class="kp-kpi__meter" role="meter" aria-label="Pump houses online: 93 %" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100" style="--kp-value: 0.93"></span>
+</div>
+<a class="kp-kpi" href="#">
+<span class="kp-kpi__label">Flow now</span>
+<span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+<span class="kp-kpi__trend"><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span>
+<svg class="kp-kpi__spark" data-kp-spark="380 371 352 340 335 338 360 395 430 451 448 440 436 429 431 440 452 470 480 466 441 420 409 412"></svg>
+</a>
+<button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="true" data-kp-tone="warning">
+<span class="kp-kpi__label">Open incidents</span>
+<span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span>
+<span class="kp-kpi__value">3</span>
+<span class="kp-kpi__trend">2 new today</span>
+</button>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-kpis', what: 'The strip: as many tiles a row as fit, every tile one height on every row.' },
+            { name: '.kp-kpi', what: 'One tile: a `div`, an `a` (its border answers hover), or a `button.kp-kpi--toggle`.' },
+            { name: '.kp-kpi__label, __value, __note, __trend', what: 'The label (small capitals, one line, wrapping on a narrow tile), the number with a `<small>` unit, a note beside it, and the trend line.' },
+            { name: '.kp-kpi__delta', what: 'A change in the trend line: `data-kp-direction="up|down"` puts ▲ or ▼ before it, `data-kp-tone="good|bad"` colours it.' },
+            { name: '.kp-kpi__spark', what: 'An inline SVG with `data-kp-spark="12 14 13 …"`: the script draws a line over a soft area from the numbers, and again when they change.' },
+            { name: '.kp-kpi__meter', what: 'A used-of-total bar with `role="meter"`; the share, 0 to 1, is a custom property on its style (see the knobs).' },
+            { name: 'data-kp-tone', what: 'On the tile, `warning` or `destructive`: a coloured edge and a coloured number (and the meter’s fill).' },
+            { name: '.kp-kpi--toggle', what: 'A filter tile: a click flips `aria-pressed` and fires `kp-kpi-toggle` with `detail.pressed`; the page filters. Pressed, a primary border over a faint primary background.' },
+            { name: '.kp-kpi__hint', what: 'What a click does, beside the label, in the page’s words: one child `data-kp-when="off"`, one `data-kp-when="on"`.' },
+            { name: 'data-kp-kpi-owned', what: 'Leaves a toggle to the page, for a framework that keeps the pressed state itself.' },
+        ],
+        accessibility: [
+            'Built in — a filter tile is a real button with `aria-pressed`, so a screen reader says whether the filter is on.',
+            'Built in — the sparkline is hidden from a screen reader unless it has a role of its own; the number and the trend line carry the meaning.',
+            'Built in — a delta’s direction is a ▲ or ▼ as well as a colour.',
+            'Yours — give the meter its `aria-label` and values, and say in the trend line what a sparkline would otherwise only show.',
+            'Yours — keep the hint `aria-hidden`; the pressed state already says what it says.',
+        ],
+    },
+    {
+        id: 'chart',
+        title: 'Time chart',
+        group: 'Data',
+        classes: ['kp-chart', 'kp-chart-group', 'kp-chart-ranges', 'kp-chart-zoom'],
+        exports: [],
+        // The marks the script writes on what it draws: a source's colour
+        // (`data-kp-series`, `data-kp-dash`), a legend button kept off, a
+        // pinned tooltip, an event's tone, the hint's two audiences.
+        aliases: ['series', 'dash', 'off', 'pinned', 'tone', 'when'],
+        intro: 'The one time chart every page draws, so its controls mean the same everywhere. js/chart.js draws a `[data-kp-chart]` from the page’s data: a legend that singles a source out and keeps sources on or off, a crosshair every chart of a group shares, a tooltip beside it with every value, the change over the hour before and the events within reach, drag to zoom, event markers, range buttons, and a spark variant that is a tile’s 24-hour line on the same crosshair.',
+        whenToUse:
+            'For readings over time: pressures, flows, response times, a queue’s length. Not for a share of a whole or a comparison of categories, and not for a single number now, which is a key figure.',
+        examples: [
+            {
+                title: 'Two sources, an alarm level and events',
+                why: 'The data is the page’s, here as a JSON child (`setChartData()` does the same from a script). Point at the plot for the tooltip, click to pin it, drag to zoom, and use ←/→, Home/End, Enter and Esc on the focused plot. With one or two sources on, a soft area lies under each line.',
+                markup: `
+<figure class="kp-chart" data-kp-chart aria-label="Pressure" lang="en-GB">
+<figcaption class="kp-chart__title">Pressure, bar</figcaption>
+<script type="application/json" data-kp-chart-data>{"label":"Pressure","unit":"bar","digits":2,"threshold":2.1,"series":[{"label":"Pump house 1","start":1791010800000,"step":3600000,"values":[3.36,3.45,3.44,3.44,3.45,3.45,3.45,3.44,3.4,3.35,3.32,3.35,3.41,3.44,3.46,3.44,3.48,3.55,3.58,3.55,3.51,3.38,3.31,3.3,3.36]},{"label":"Pump house 3","start":1791010800000,"step":3600000,"values":[2.77,2.86,2.86,2.89,2.87,2.9,2.85,2.87,2.83,2.75,2.74,2.76,2.84,2.84,2.85,2.87,2.92,2.97,3,3.01,2.91,2.83,2.69,1.92,2.76]}],"events":[{"at":1791087000000,"label":"Valve swap, ring main","tone":"info"},{"at":1791091920000,"label":"Alarm: pump house 3 below 2.1 bar","tone":"critical"},{"at":1791094320000,"label":"Pump restart, pump house 3","tone":"warning"}]}</script>
+</figure>
+`,
+            },
+            {
+                title: 'A group with ranges, a zoom chip and a spark',
+                why: 'The charts of one `[data-kp-chart-group]` share a crosshair, a zoom and a range. A range button fires `kp-chart-range` before the charts redraw, so the page can hand them that range’s data; the chip shows a zoom and resets it.',
+                markup: `
+<div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" lang="en-GB">
+<div class="kp-chart-group__bar">
+<div class="kp-chart-ranges" role="group" aria-label="Time range">
+<button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
+<button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+</div>
+<span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+</div>
+<figure class="kp-chart" data-kp-chart aria-label="Pump house 1">
+<script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"series":[{"label":"Pump house 1","start":1791010800000,"step":3600000,"values":[3.36,3.45,3.44,3.44,3.45,3.45,3.45,3.44,3.4,3.35,3.32,3.35,3.41,3.44,3.46,3.44,3.48,3.55,3.58,3.55,3.51,3.38,3.31,3.3,3.36]}]}</script>
+</figure>
+<div class="kp-chart" data-kp-chart="spark" aria-label="Pump house 3">
+<script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"series":[{"label":"Pump house 3","start":1791010800000,"step":3600000,"values":[2.77,2.86,2.86,2.89,2.87,2.9,2.85,2.87,2.83,2.75,2.74,2.76,2.84,2.84,2.85,2.87,2.92,2.97,3,3.01,2.91,2.83,2.69,1.92,2.76],"colour":"var(--chart-2)"}]}</script>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '[data-kp-chart]', what: 'A chart; usually a `figure.kp-chart` with a `.kp-chart__title` caption. Its data comes from a `script[type="application/json"][data-kp-chart-data]` child or from `setChartData(el, data)`, before or after it is attached.' },
+            { name: 'data-kp-chart="spark"', what: 'The spark variant: one source’s line over a soft area, its value at the crosshair (or now) beside its name, on the group’s crosshair.' },
+            { name: '.kp-chart-group', what: '`[data-kp-chart-group]`: the charts in it share one crosshair, one zoom and one range; `data-kp-chart-span="24h"` is the window (`15m`, `1h`, `7d` …).' },
+            { name: '.kp-chart-ranges', what: 'The range buttons, each with `data-kp-chart-range`; the script writes `aria-pressed` on the one in force and fires `kp-chart-range`.' },
+            { name: '.kp-chart-zoom', what: '`[data-kp-chart-zoom]`: the chip the script fills while the group is zoomed, with its Reset; `kp-chart-zoom` fires on the group.' },
+            { name: 'the legend', what: 'Hover or focus singles a source out; a click keeps one or several on and fires `kp-chart-select`; Show all and Esc reset. Hidden for a single source.' },
+            { name: 'the tooltip', what: 'Beside the crosshair, on the side with room: every visible source’s value, ▲/▼ over the hour before, the events within a thirtieth of the window. A click pins it; ✕ or Esc releases it.' },
+            { name: 'colours', what: 'The theme’s five chart colours in order; from the sixth source on they come round again with one of three dashes. A series’ own `colour` overrides.' },
+            { name: 'under the lines', what: 'A soft area while one or two sources are on, a stronger one for a source alone; with three or more, the lines alone. Stacked sources are areas.' },
+        ],
+        accessibility: [
+            'Built in — the plot is focusable, with ←/→ (Shift: ten points), Home/End, Enter to pin and Esc to step back; what is under the crosshair is said through a polite live region, on keys and pins only.',
+            'Built in — the legend’s buttons carry `aria-pressed`; a source kept off is faded and named so in its title.',
+            'Built in — the hint under the legend speaks to a pointer or to a finger, never both.',
+            'Built in — every word the chart says is in the dictionary (`chart…` in js/strings.js); `attachCharts(root, { strings, locale })` overrides them per chart.',
+            'Yours — name each chart (`aria-label`) and give it a caption; the drawing itself is hidden from a screen reader.',
+            'Yours — say the reading that matters in text near the chart; a chart is the overview, not the only place a number lives.',
+        ],
+    },
+    {
+        id: 'state-word',
+        title: 'State word',
+        group: 'Data',
+        classes: ['kp-state-word'],
+        exports: [],
+        aliases: ['words'],
+        intro: 'A word that changes with its state (“Running”, “Stopped”, “in 3 min”) and keeps the width of the widest word it can show, so nothing beside it moves when it changes. `setStateWord(el, word)` in js/components.js changes it and adds a new word to the ones it keeps room for.',
+        whenToUse:
+            'Where a state sits in front of a control that changes it: a second click without moving the mouse must hit the same button. Not for running text, where a word may take the room it needs.',
+        examples: [
+            {
+                title: 'A pump, its state and its button',
+                why: 'The words are listed in `data-kp-words`, one per line (`&#10;` between them in markup); an invisible line of no height holds the widest.',
+                markup: `
+<p class="kp-row"><b>Pump 1</b> <span class="kp-state-word" data-kp-words="Running&#10;Stopped&#10;Starting in 3 min">Stopped</span> <button type="button" class="kp-button kp-button--sm">Start</button></p>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-state-word', what: 'As wide as the widest of its words, the shown word at its start.' },
+            { name: '.kp-state-word--center', what: 'The shown word in the middle of that width.' },
+            { name: 'data-kp-words', what: 'Every word it can show, one per line. `setStateWord()` adds a word that is new, so the width never shrinks back.' },
+        ],
+        accessibility: [
+            'Built in — the held width is an invisible pseudo-element; a screen reader reads the shown word only.',
+            'Yours — announce a state change that matters (a live region nearby); the word changing on screen is silent.',
         ],
     },
     {
@@ -2699,6 +2976,93 @@ export const DESCRIPTORS = [
             'Yours — use a real heading for the title if the card is a section of the page rather than one of many equal records.',
             'Yours — put the link or the button inside the card rather than making the whole card clickable.',
             'Yours — keep the reading order the source order; a card that reads bottom to top on a screen reader is a card laid out with the visual only in mind.',
+        ],
+    },
+    {
+        id: 'tiles',
+        title: 'Tiles of one height',
+        group: 'Structure',
+        classes: ['kp-tiles'],
+        exports: [],
+        intro: '`.kp-tiles` lays the package’s own `.kp-card` out in a grid: every tile as tall as the tallest tile of the grid, on every row, and each card’s footer kept to its bottom edge, so the footers of a row form one line however long the text above them is.',
+        whenToUse:
+            'For a grid of records of the same kind: pump houses, projects, services. Not for cards of different kinds or weights on one page, which want a layout of their own, and not for a single card.',
+        examples: [
+            {
+                title: 'Cards with footers',
+                why: 'The second card has the longest text; every card takes its height, and every footer keeps to the bottom.',
+                markup: `
+<ul class="kp-tiles">
+<li class="kp-card">
+<h3 class="kp-card__title">Pump house 1</h3>
+<p class="kp-card__body">Two pumps, both running.</p>
+<div class="kp-card__footer kp-row kp-row--between"><span class="kp-timestamp">Read 2 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#">Open</a></div>
+</li>
+<li class="kp-card">
+<h3 class="kp-card__title">Pump house 3</h3>
+<p class="kp-card__body">Pressure below 2.1 bar for forty minutes; the field engineer is on the way.</p>
+<div class="kp-card__footer kp-row kp-row--between"><span class="kp-timestamp">Read 1 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#">Open</a></div>
+</li>
+</ul>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-tiles', what: 'A list or a div of `.kp-card`s: as many columns as fit, every row as tall as the tallest tile. A tile’s title is a step under a page card’s.' },
+            { name: 'the footer', what: 'A `.kp-card__footer` keeps to the tile’s bottom edge; the body never touches its rule.' },
+        ],
+        accessibility: [
+            'Built in — the grid is layout only; the cards keep their order in the markup, which is the reading order.',
+            'Yours — use a list (`ul`) when the tiles are a list of like records, so a screen reader says how many there are.',
+        ],
+    },
+    {
+        id: 'page-header',
+        title: 'Page header',
+        group: 'Structure',
+        classes: ['kp-page-header'],
+        exports: [],
+        intro: 'A page’s title and its one-sentence description on the left; what acts on the whole page on the right: secondary buttons, one primary, and an overflow button that says “More ▾” for the rare things. On a narrow page it reads top to bottom, the primary first at the full width.',
+        whenToUse:
+            'At the top of a page that does something: a list with its actions, a record with its own. Not inside a card or a dialog, which have headers of their own, and not for more than one primary action.',
+        examples: [
+            {
+                title: 'Title, description, three buttons and More',
+                why: 'The overflow is the package’s popover and menu, hanging under its button towards the start so it stays on the page.',
+                markup: `
+<header class="kp-page-header">
+<div class="kp-page-header__inner">
+<div>
+<h1 class="kp-page-header__title">Pump houses</h1>
+<p class="kp-page-header__description">Fifteen pump houses on the northern network: their state, the last reading of each, and what needs a visit.</p>
+</div>
+<div class="kp-page-header__actions">
+<button type="button" class="kp-button">Export readings</button>
+<button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+<button type="button" class="kp-button" popovertarget="doc-page-more" aria-haspopup="menu" style="anchor-name: --doc-page-more">More ▾</button>
+<div popover="auto" id="doc-page-more" class="kp-popover" style="position-anchor: --doc-page-more">
+<ul class="kp-menu" role="menu">
+<li role="none"><button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button></li>
+<li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Archive the network…</button></li>
+</ul>
+</div>
+</div>
+</div>
+</header>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-page-header', what: 'The header; it measures its own width.' },
+            { name: '.kp-page-header__inner', what: 'Two columns: the text block, and the actions against the far edge, level with the title.' },
+            { name: '.kp-page-header__title, __description', what: 'The page’s heading, and one sentence under it at a readable measure in the muted ink.' },
+            { name: '.kp-page-header__actions', what: 'The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.' },
+            { name: 'on a phone', what: 'Under 40rem the title takes the width and the buttons fold under the description: the primary on a line of its own at the full width, the others beside each other under it, from the left.' },
+        ],
+        accessibility: [
+            'Built in — the order on a phone is visual only; in the markup and the tab order the buttons keep yours.',
+            'Built in — the overflow is a popover menu, so Escape and light dismiss are the browser’s.',
+            'Yours — one `h1` per page, and the overflow button says what it is (“More ▾”) rather than a bare icon.',
         ],
     },
     {

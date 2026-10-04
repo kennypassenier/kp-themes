@@ -4509,6 +4509,33 @@
         text-align: center;
     }
 
+    /* --- A state word that keeps its width [scope-143] -------------------- */
+
+    /* A word that changes with its state ("Running", "Stopped", "in 3 min")
+ * is as wide as the widest word it can show, so nothing beside it moves
+ * when it changes. The words are listed in `data-kp-words`, one per line
+ * (`&#10;` between them in markup); an invisible line of no height holds
+ * the width. */
+    .kp-state-word {
+        display: inline-flex;
+        flex-direction: column;
+        font-variant-numeric: tabular-nums;
+        vertical-align: baseline;
+    }
+
+    .kp-state-word::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-state-word--center {
+        align-items: center;
+        text-align: center;
+    }
+
     /* --- The page's shell [TH36] ---------------------------------------- */
 
     /* The skip link is visible only when focused, and then it must be
@@ -4527,6 +4554,69 @@
 
     .kp-skip-link:focus {
         inset-block-start: 0.5rem;
+    }
+
+    /* --- Page header [scope-143] ------------------------------------------ */
+
+    /* A page's title and its one-sentence description on the left; what acts
+ * on the whole page on the right: secondary buttons, ONE primary, and an
+ * overflow menu last (a `.kp-button` that says "More ▾", opening a
+ * `.kp-popover` with a `.kp-menu`). On a narrow page it reads top to
+ * bottom. */
+    .kp-page-header {
+        container: kp-page-header / inline-size;
+    }
+
+    .kp-page-header__inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-page-header__title {
+        margin: 0;
+    }
+
+    .kp-page-header__description {
+        max-inline-size: 70ch;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+    }
+
+    .kp-page-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-page-header__actions > .kp-button {
+        white-space: nowrap;
+    }
+
+    /* The overflow menu hangs under its button towards the start, so it
+ * stays on the page from a header's far end. */
+    .kp-page-header__actions > .kp-popover {
+        position-area: block-end span-inline-start;
+    }
+
+    @container kp-page-header (max-width: 40rem) {
+        .kp-page-header__inner {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        /* The buttons from the left, wrapping; the primary on a line of
+ * its own, full width and first, the rest beside each other under it. */
+        .kp-page-header__actions {
+            justify-content: flex-start;
+        }
+
+        .kp-page-header__actions > .kp-button--primary {
+            flex: 1 1 100%;
+            order: -1;
+        }
     }
 
     /* ====================================================================
@@ -5215,6 +5305,785 @@
         margin-inline-start: var(--kp-space-xs);
     }
 
+    /* --- Tiles of one height [scope-143] ---------------------------------- */
+
+    /* Cards in a grid are one height, and each card's footer keeps to its
+ * bottom edge, so the footers of a row form one line. The cards are the
+ * package's own `.kp-card`; this only lays them out. */
+    .kp-tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-tile-min, 15rem)), 1fr));
+        /* Every row as tall as the tallest tile of the grid. */
+        grid-auto-rows: 1fr;
+        gap: var(--kp-tiles-gap, var(--kp-space-md, 1rem));
+        /* A tile is a small card: its title a step under a page card's. */
+        --kp-card-title-size: var(--kp-tile-title-size, 1.125rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-tiles > .kp-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-tiles > .kp-card > .kp-card__footer {
+        margin-block-start: auto;
+    }
+
+    /* The body never touches the footer's rule when the card is the tallest. */
+    .kp-tiles > .kp-card > :nth-last-child(2):not(.kp-card__footer) {
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* --- Key figures: the KPI strip and tile [scope-143] ------------------- */
+
+    /* A row of key figures. Every tile is as tall as the tallest, on every row
+ * the strip wraps to; inside a tile the label, the number and the trend sit
+ * on the same lines as the neighbours', and the sparkline or meter keeps to
+ * the bottom. */
+    .kp-kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-kpi-min, 9rem)), 1fr));
+        grid-auto-rows: 1fr;
+        gap: var(--kp-kpis-gap, var(--kp-space-md, 1rem));
+    }
+
+    .kp-kpi {
+        container: kp-kpi / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 0.125rem var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+    }
+
+    .kp-kpi > * {
+        grid-column: 1 / -1;
+    }
+
+    .kp-kpi__label {
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    /* The number, its unit, and a note beside it ("avg 15 min"). */
+    .kp-kpi__value {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-kpi-value-size, 1.75rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.15;
+    }
+
+    .kp-kpi__value small {
+        margin-inline-start: -0.25rem;
+        color: var(--muted-foreground);
+        font-size: 0.55em;
+        font-weight: 500;
+    }
+
+    .kp-kpi__note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 400;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+
+    .kp-kpi__trend {
+        min-block-size: 1.4em;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: break-word;
+    }
+
+    .kp-kpi__delta {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .kp-kpi__delta[data-kp-tone='good'] {
+        color: var(--success-foreground);
+    }
+
+    .kp-kpi__delta[data-kp-tone='bad'] {
+        color: var(--destructive);
+    }
+
+    .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '▲\00a0';
+    }
+
+    .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '▼\00a0';
+    }
+
+    .kp-kpi__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--kp-kpi-spark-height, 1.75rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        overflow: visible;
+        color: var(--chart-1);
+    }
+
+    .kp-kpi__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    /* The line over a soft area. */
+    .kp-kpi__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    /* A used-of-total bar; the share is `--kp-value`, 0 to 1. */
+    .kp-kpi__meter {
+        position: relative;
+        display: block;
+        block-size: 0.375rem;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--muted);
+    }
+
+    .kp-kpi__meter::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * 100%);
+        border-radius: inherit;
+        background: var(--kp-kpi-meter-fill, var(--primary));
+    }
+
+    .kp-kpi[data-kp-tone='warning'] {
+        box-shadow: inset 3px 0 0 var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
+        color: var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='warning'] {
+        --kp-kpi-meter-fill: var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='destructive'] {
+        --kp-kpi-meter-fill: var(--destructive);
+        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border));
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    .kp-kpi[data-kp-tone='destructive'] .kp-kpi__value {
+        color: var(--destructive);
+    }
+
+    /* A tile that is a link to its detail, or a filter toggle on this page. */
+    a.kp-kpi:hover,
+    .kp-kpi--toggle:hover {
+        border-color: var(--ring);
+    }
+
+    .kp-kpi--toggle {
+        cursor: pointer;
+    }
+
+    .kp-kpi--toggle:focus-visible,
+    a.kp-kpi:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    /* Pressed (a filter on): the primary edge over a primary wash, so the
+ * filters that are on read from across the room. */
+    .kp-kpi--toggle[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 9%, var(--card));
+        box-shadow: none;
+    }
+
+    /* What a click does, beside the label: the consumer's words, one per
+ * state. The label gives way to it, never the other way round. */
+    .kp-kpi--toggle > .kp-kpi__label {
+        grid-column: 1;
+    }
+
+    .kp-kpi > .kp-kpi__hint {
+        grid-row: 1;
+        grid-column: 2;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: inherit;
+    }
+
+    .kp-kpi__hint > [data-kp-when='on'],
+    .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__hint > [data-kp-when='off'] {
+        display: none;
+    }
+
+    .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__hint > [data-kp-when='on'] {
+        display: inline;
+        color: var(--primary);
+    }
+
+    /* A narrow tile (two a row on a phone) wraps its label and its trend
+ * rather than cutting them off. */
+    @container kp-kpi (max-width: 12rem) {
+        .kp-kpi__label {
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
+    }
+
+    /* --- Time chart [scope-143] ------------------------------------------- */
+
+    /* One time chart for every page, so its controls mean the same
+ * everywhere: a legend that singles a source out and keeps sources on or
+ * off, a crosshair every chart of a group shares, a tooltip with the change
+ * over the hour before and the events within reach, drag to zoom, and
+ * event markers. attachCharts() draws it; the colours are the theme's
+ * `--chart-1..5`, and from the sixth source on they come round again with
+ * a dashed line. */
+    .kp-chart-group {
+        display: grid;
+        gap: var(--kp-space-lg, 1.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The range buttons and the zoom chip, once for the group. */
+    .kp-chart-group__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    }
+
+    .kp-chart-ranges {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-chart-ranges > [aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-chart-zoom {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart-zoom[hidden] {
+        display: none;
+    }
+
+    .kp-chart-zoom__reset {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+    }
+
+    .kp-chart-zoom__reset:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-chart {
+        container: kp-chart / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+        /* The source's colour: its `--chart-n`, or its own. */
+        --kp-chart-series: var(--chart-1);
+    }
+
+    .kp-chart__title {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-chart [data-kp-series='2'] {
+        --kp-chart-series: var(--chart-2);
+    }
+
+    .kp-chart [data-kp-series='3'] {
+        --kp-chart-series: var(--chart-3);
+    }
+
+    .kp-chart [data-kp-series='4'] {
+        --kp-chart-series: var(--chart-4);
+    }
+
+    .kp-chart [data-kp-series='5'] {
+        --kp-chart-series: var(--chart-5);
+    }
+
+    .kp-chart__plot {
+        position: relative;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        cursor: crosshair;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-chart__plot:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 4px;
+    }
+
+    .kp-chart__plot > svg {
+        display: block;
+        inline-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-chart__grid {
+        stroke: var(--border);
+        stroke-width: 1;
+    }
+
+    .kp-chart__tick {
+        fill: var(--muted-foreground);
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart__line {
+        fill: none;
+        stroke: var(--kp-chart-series);
+        stroke-width: 2;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+
+    .kp-chart__series[data-kp-dash='1'] .kp-chart__line {
+        stroke-dasharray: 5 3;
+    }
+
+    .kp-chart__series[data-kp-dash='2'] .kp-chart__line {
+        stroke-dasharray: 1.5 2.5;
+    }
+
+    .kp-chart__series[data-kp-dash='3'] .kp-chart__line {
+        stroke-dasharray: 8 3 1.5 3;
+    }
+
+    /* A soft area under the line while one or two sources are on; with
+ * three or more, the lines alone. Stacked sources are areas always. */
+    .kp-chart__area {
+        fill: var(--kp-chart-series);
+        fill-opacity: 0.06;
+        stroke: none;
+    }
+
+    .kp-chart__area--alone {
+        fill-opacity: 0.12;
+    }
+
+    .kp-chart__area--stacked {
+        fill-opacity: 0.22;
+    }
+
+    .kp-chart__point {
+        fill: var(--kp-chart-series);
+    }
+
+    /* A source singled out: it thickens, the others fade. */
+    .kp-chart__series[data-kp-state='hot'] .kp-chart__line {
+        stroke-width: 2.75;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__line {
+        opacity: 0.18;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__area {
+        fill-opacity: 0.02;
+    }
+
+    .kp-chart__threshold {
+        stroke: var(--destructive);
+        stroke-dasharray: 4 4;
+        opacity: 0.8;
+    }
+
+    .kp-chart__event-line {
+        stroke: var(--muted-foreground);
+        stroke-dasharray: 2 3;
+        opacity: 0.7;
+    }
+
+    .kp-chart__mark {
+        cursor: pointer;
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    .kp-chart [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning-foreground);
+    }
+
+    .kp-chart [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+
+    .kp-chart__mark-hit {
+        fill: transparent;
+    }
+
+    .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--card);
+        stroke-width: 1.5;
+    }
+
+    .kp-chart__mark:hover .kp-chart__mark-dot {
+        stroke: var(--foreground);
+    }
+
+    .kp-chart__crosshair {
+        stroke: var(--foreground);
+        opacity: 0.35;
+    }
+
+    .kp-chart__crosshair--pinned {
+        stroke-width: 1.5;
+        opacity: 0.8;
+    }
+
+    .kp-chart__snap {
+        fill: var(--kp-chart-series);
+        stroke: var(--card);
+        stroke-width: 2;
+    }
+
+    .kp-chart__brush {
+        fill: hsl(from var(--chart-1) h s l / 0.16);
+        stroke: var(--chart-1);
+        stroke-dasharray: 3 3;
+    }
+
+    /* The tooltip: beside the crosshair, on the side with room. */
+    .kp-chart__tip {
+        position: absolute;
+        z-index: 5;
+        inset-block-start: 4px;
+        inset-inline-start: var(--kp-chart-tip-x, 0);
+        display: grid;
+        gap: 3px;
+        inline-size: max-content;
+        min-inline-size: min(14rem, 100%);
+        max-inline-size: min(17.5rem, 100%);
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.14);
+        font-size: var(--kp-text-xs, 0.75rem);
+        pointer-events: none;
+    }
+
+    .kp-chart__tip[hidden] {
+        display: none;
+    }
+
+    /* Pinned: it takes the pointer (its ✕, an event's link) and says so. */
+    .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 1px var(--ring),
+            0 8px 24px hsl(from var(--foreground) h s l / 0.14);
+        pointer-events: auto;
+    }
+
+    .kp-chart__tip p {
+        margin: 0;
+    }
+
+    .kp-chart__tip-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.625rem;
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart__pin {
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-chart__release {
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-chart__release:focus-visible {
+        outline: 2px solid var(--focus-ring);
+    }
+
+    .kp-chart__tip-row {
+        display: grid;
+        grid-template-columns: 10px minmax(0, 1fr) auto 4.5rem;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .kp-chart__tip-row > span:nth-child(2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-chart__tip-row[data-kp-state='hot'] {
+        font-weight: 700;
+    }
+
+    .kp-chart__num {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    /* The change over the hour before: up and down are not good or bad, so
+ * neither is green or red. */
+    .kp-chart__delta {
+        color: var(--muted-foreground);
+    }
+
+    .kp-chart__delta[data-kp-direction='up'] {
+        color: var(--warning-foreground);
+    }
+
+    .kp-chart__delta[data-kp-direction='down'] {
+        color: var(--info-foreground);
+    }
+
+    .kp-chart__tip-foot {
+        color: var(--muted-foreground);
+        text-align: end;
+    }
+
+    .kp-chart__tip-event {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-chart__tip-event > a {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .kp-chart__dot {
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-chart-tone, var(--info-foreground));
+    }
+
+    .kp-chart__swatch {
+        display: inline-block;
+        inline-size: 10px;
+        block-size: 3px;
+        border-radius: 2px;
+        background: var(--kp-chart-series);
+    }
+
+    [data-kp-dash] > .kp-chart__swatch,
+    .kp-chart__swatch[data-kp-dash] {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 3px, transparent 3px 5px);
+    }
+
+    /* The legend: one button per source, its value at the crosshair (or
+ * the latest), and Show all while some are kept on. */
+    .kp-chart__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-start: 0.625rem;
+    }
+
+    .kp-chart__legend[hidden],
+    .kp-chart__hint[hidden] {
+        display: none;
+    }
+
+    .kp-chart__source,
+    .kp-chart__show-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px var(--kp-space-sm, 0.5rem);
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: none;
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        cursor: pointer;
+    }
+
+    .kp-chart__source > b {
+        color: var(--foreground);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-chart__source:hover,
+    .kp-chart__source:focus-visible {
+        border-color: var(--border);
+        color: var(--foreground);
+    }
+
+    .kp-chart__source:focus-visible,
+    .kp-chart__show-all:focus-visible {
+        outline: 2px solid var(--focus-ring);
+    }
+
+    .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border);
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 0 0 0 1px var(--ring);
+    }
+
+    .kp-chart__source[data-kp-off] {
+        opacity: 0.45;
+    }
+
+    .kp-chart__source[data-kp-off] > .kp-chart__swatch {
+        background: var(--muted-foreground);
+    }
+
+    .kp-chart__show-all {
+        border: 1px dashed var(--border-strong, var(--border));
+        color: var(--foreground);
+    }
+
+    .kp-chart__show-all[hidden] {
+        display: none;
+    }
+
+    .kp-chart__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Words for a pointer, or for a finger: never both. */
+    .kp-chart__hint > [data-kp-when='touch'] {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .kp-chart__hint > [data-kp-when='pointer'] {
+            display: none;
+        }
+
+        .kp-chart__hint > [data-kp-when='touch'] {
+            display: inline;
+        }
+    }
+
+    /* The spark variant: a tile's 24-hour line on the group's crosshair,
+ * drawn by drawSparkline(), its value at the crosshair (or now) beside
+ * its name: a line over a soft area, as the KPI tile's. */
+    .kp-chart--spark {
+        gap: 2px;
+    }
+
+    .kp-chart__spark-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-chart__spark-label {
+        overflow: hidden;
+        color: var(--muted-foreground);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-chart__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--kp-kpi-spark-height, 1.75rem);
+        overflow: visible;
+        color: var(--kp-chart-series);
+    }
+
+    .kp-chart__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-chart__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    .kp-chart__spark .kp-chart__crosshair {
+        stroke-width: 1;
+    }
+
     /* --- Alert [TH4] ----------------------------------------------------- */
 
     .kp-alert {
@@ -5270,6 +6139,95 @@
     .kp-alert__close {
         margin-inline-start: auto;
         flex: none;
+    }
+
+    /* --- Attention band [scope-143] --------------------------------------- */
+
+    /* One alert per problem, worst first, each with its own fix. With no
+ * problem the band takes no room at all: never an "all is well" filler.
+ * attachAttention() keeps the items in severity order in the DOM, so a
+ * screen reader meets them in the order the eye does. */
+    .kp-attention {
+        container: kp-attention / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-attention:not(:has(> .kp-attention__item)) {
+        display: none;
+    }
+
+    .kp-attention__item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: 0;
+    }
+
+    .kp-attention__icon {
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: 50%;
+        background: color-mix(in oklab, currentColor 14%, transparent);
+        font-weight: 700;
+    }
+
+    .kp-attention__text > strong {
+        display: block;
+    }
+
+    .kp-attention__text > span {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-attention__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-attention (max-width: 34rem) {
+        .kp-attention__item {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-attention__actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+    }
+
+    /* A soft tint of the severity with an edge of it, in the page's own
+ * text colour, and a solid round icon: calm, still unmistakable. */
+    .kp-attention > .kp-attention__item {
+        border-color: color-mix(in oklab, var(--kp-attention-tone) 45%, var(--border));
+        border-inline-start-width: 3px;
+        background: color-mix(in oklab, var(--kp-attention-tone) 8%, var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-attention > .kp-attention__item > .kp-attention__icon {
+        background: var(--kp-attention-tone);
+        color: var(--kp-attention-on-tone);
+    }
+
+    .kp-attention__item[data-kp-severity='critical'] {
+        --kp-attention-tone: var(--destructive);
+        --kp-attention-on-tone: var(--destructive-foreground);
+    }
+
+    .kp-attention__item[data-kp-severity='warning'] {
+        --kp-attention-tone: var(--warning-foreground);
+        --kp-attention-on-tone: var(--warning);
+    }
+
+    .kp-attention__item[data-kp-severity='info'] {
+        --kp-attention-tone: var(--info-foreground);
+        --kp-attention-on-tone: var(--info);
     }
 
     /* --- Form field [TH5] ------------------------------------------------ */
@@ -5752,6 +6710,142 @@
 
     .kp-table tbody tr:hover {
         background: var(--muted);
+    }
+
+    /* --- Action columns [scope-143] --------------------------------------- */
+
+    /* A list's row buttons sit in columns the whole list shares, so a button
+ * of one role starts at one edge and has one width on every row, whatever
+ * its label, and a row that lacks a role leaves that column empty.
+ *
+ * A list (`ul`, `ol`) is a grid; each row is a subgrid of it, and the row's
+ * button box a subgrid of the row. The browser sizes every column to its
+ * widest button: no measuring, nothing to redo when a font arrives or the
+ * theme changes. By position from the end it needs no script at all (up to
+ * four buttons); with named roles (`data-kp-action` on a button)
+ * attachActionColumns() writes each button's column and the list's count.
+ *
+ * A table cannot be a subgrid, so there the script measures each role's
+ * widest button and writes the widths on the table. */
+    .kp-action-list {
+        --kp-action-count: 1;
+        container: kp-action-list / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) repeat(var(--kp-action-count), auto);
+        column-gap: var(--kp-action-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(2)) {
+        --kp-action-count: 2;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(3)) {
+        --kp-action-count: 3;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(4)) {
+        --kp-action-count: 4;
+    }
+
+    .kp-action-list > li {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-action-list > li > :first-child {
+        grid-column: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-row-actions {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        grid-template-columns: var(--kp-action-widths, none);
+        justify-content: end;
+        align-items: center;
+        gap: var(--kp-action-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-action-list .kp-row-actions {
+        grid-column: 2 / -1;
+        grid-template-columns: subgrid;
+    }
+
+    /* By position from the end, the primary last: CSS alone. */
+    .kp-action-list .kp-row-actions > :nth-last-child(1) {
+        --kp-action-col: -2 / -1;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(2) {
+        --kp-action-col: -3 / -2;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(3) {
+        --kp-action-col: -4 / -3;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(4) {
+        --kp-action-col: -5 / -4;
+    }
+
+    /* A button fills its column, its label centred: one role, one width. */
+    .kp-row-actions > * {
+        grid-column: var(--kp-action-col, auto);
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .kp-row-actions:empty {
+        display: none;
+    }
+
+    /* While the script measures a table, every button at its own size. */
+    [data-kp-action-measuring] .kp-row-actions > * {
+        grid-column: auto;
+        justify-self: start;
+    }
+
+    /* On a narrow list the row's text takes the whole line and its buttons
+     * go under it, spread over the full width in equal columns: the list's
+     * own columns, so a role still lines up from row to row (Kenny,
+     * 2026-10-04: "side by side under the text … more spread out, no more of
+     * this right aligned buttons"). */
+    @container kp-action-list (max-width: 30rem) {
+        /* Every row lays out the same equal columns, as many as the list
+           has buttons, so they still line up without the list's grid. */
+        .kp-action-list > li {
+            grid-template-columns: repeat(var(--kp-action-count), minmax(0, 1fr));
+        }
+
+        .kp-action-list > li > :first-child,
+        .kp-action-list .kp-row-actions {
+            grid-column: 1 / -1;
+        }
+
+        .kp-action-list .kp-row-actions > * {
+            justify-self: stretch;
+            inline-size: 100%;
+        }
+    }
+
+    @container kp-table (max-width: 30rem) {
+        .kp-table .kp-row-actions {
+            grid-auto-flow: row;
+            grid-template-columns: var(--kp-action-stack, max-content);
+        }
+
+        .kp-table .kp-row-actions > * {
+            grid-column: 1;
+        }
     }
 
     /* --- Navigation bar [TH7] -------------------------------------------- */
@@ -8657,6 +9751,40 @@
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
         font-variant-numeric: tabular-nums;
+    }
+
+    /* Loading, on a phone [scope-143]: the layer clips rather than spilling
+ * over the status line, and in a narrow table the panel lies flat: the
+ * spinner beside the words, the words kept to three lines (the status line
+ * says all of it), so it fits over the three skeleton rows of a first
+ * load. */
+    .kp-datatable__busy-overlay {
+        overflow: hidden;
+    }
+
+    @container kp-table (max-width: 30rem) {
+        .kp-datatable__busy-panel {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0 var(--kp-space-md, 1rem);
+            max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
+            padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+            text-align: start;
+        }
+
+        .kp-datatable__busy-panel > .kp-spinner {
+            --kp-spinner-size: var(--kp-busy-overlay-spinner-narrow, 1.75rem);
+            grid-row: span 2;
+        }
+
+        .kp-datatable__busy-panel > .kp-datatable__busy-words {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+        }
     }
 
     /* Choosing which columns show [#columns]. The menu hangs under its

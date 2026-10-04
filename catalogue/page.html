@@ -32,6 +32,7 @@
                 <li><a href="#theme-menu-react">Theme menu, React shape</a></li>
                 <li><a href="#theme-buttons">Theme picker as buttons</a></li>
                 <li><a href="#theme-status">Theme picker, choice not kept</a></li>
+                <li><a href="#page-header">Page header</a></li>
             </ul>
 
             <section class="cat-block" id="footer">
@@ -691,6 +692,99 @@
                             </ul>
                         </div>
                     </span>
+                </div>
+            </section>
+
+            <section class="cat-block" id="page-header">
+                <h2>Page header</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-page-header</code>: the page's title and its one-sentence description on the left; on the right two
+                    secondary buttons, one primary and an overflow button that says <b>More ▾</b>, against the right edge and level with the title.
+                    The description keeps under the title and stops at a readable measure. Open <b>More ▾</b>: the menu hangs under the button and
+                    stays on the page. In the phone pane the title takes the width and the buttons fold under the description: the primary first, on a
+                    line of its own at the full width, and the others beside each other under it, from the left.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <header class="kp-page-header">
+                        <div class="kp-page-header__inner">
+                            <div>
+                                <h1 class="kp-page-header__title">Pump houses</h1>
+                                <p class="kp-page-header__description">
+                                    Fifteen pump houses on the northern network: their state, the last reading of each, and what needs a visit.
+                                </p>
+                            </div>
+                            <div class="kp-page-header__actions">
+                                <button type="button" class="kp-button">Export readings</button>
+                                <button type="button" class="kp-button">Schedule a visit</button>
+                                <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                                <button
+                                    type="button"
+                                    class="kp-button"
+                                    popovertarget="cat-ph-more"
+                                    aria-haspopup="menu"
+                                    style="anchor-name: --cat-ph-more"
+                                >
+                                    More ▾
+                                </button>
+                                <div popover="auto" id="cat-ph-more" class="kp-popover" style="position-anchor: --cat-ph-more">
+                                    <ul class="kp-menu" role="menu">
+                                        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button></li>
+                                        <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Print the overview</button></li>
+                                        <li role="separator" class="kp-menu__separator"></li>
+                                        <li role="none">
+                                            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">
+                                                Archive the network…
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <header class="kp-page-header">
+                            <div class="kp-page-header__inner">
+                                <div>
+                                    <h1 class="kp-page-header__title">Pump houses</h1>
+                                    <p class="kp-page-header__description">
+                                        Fifteen pump houses on the northern network: their state, the last reading of each, and what needs a visit.
+                                    </p>
+                                </div>
+                                <div class="kp-page-header__actions">
+                                    <button type="button" class="kp-button">Export readings</button>
+                                    <button type="button" class="kp-button">Schedule a visit</button>
+                                    <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                                    <button
+                                        type="button"
+                                        class="kp-button"
+                                        popovertarget="cat-ph-more-phone"
+                                        aria-haspopup="menu"
+                                        style="anchor-name: --cat-ph-more-phone"
+                                    >
+                                        More ▾
+                                    </button>
+                                    <div popover="auto" id="cat-ph-more-phone" class="kp-popover" style="position-anchor: --cat-ph-more-phone">
+                                        <ul class="kp-menu" role="menu">
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button>
+                                            </li>
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-menu__item">Print the overview</button>
+                                            </li>
+                                            <li role="separator" class="kp-menu__separator"></li>
+                                            <li role="none">
+                                                <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">
+                                                    Archive the network…
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
                 </div>
             </section>
         </main>

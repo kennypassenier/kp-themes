@@ -243,7 +243,14 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // scope-142 added one, --kp-resize-dur: how long a box's glide to its
     // new height lasts, which js/motion.js writes and the transitions that
     // fade a theme's character read: 249 + 1.
-    assert.equal(result.expected, 250, 'AR21 counted the --kp-* properties in css/components.css');
+    // scope-143 (the dashboard components) added nineteen: the action
+    // columns' five (--kp-action-col, -count, -gap, -stack, -widths), the
+    // attention band's two tones, the tiles' three (--kp-tile-min,
+    // --kp-tiles-gap, --kp-tile-title-size), the KPI strip's five
+    // (--kp-kpi-min, --kp-kpis-gap, --kp-kpi-spark-height, -value-size,
+    // -meter-fill), the chart's three (--kp-chart-series, -tone, -tip-x)
+    // and the busy panel's --kp-busy-overlay-spinner-narrow: 250 + 19.
+    assert.equal(result.expected, 269, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -285,8 +292,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // progress bar contract's segment count (scope-140), declared on the bar
     // so every register that draws segments reads one value; the plain bar
     // the package draws has no segments to count. scope-142's
-    // --kp-resize-dur is read through var() too: 248 + 1.
-    assert.equal(result.readCount, 249);
+    // --kp-resize-dur is read through var() too: 248 + 1. So are
+    // scope-143's nineteen: 249 + 19.
+    assert.equal(result.readCount, 268);
     assert.deepEqual(result.unread, ['--kp-steps']);
 });
 

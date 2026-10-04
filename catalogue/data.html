@@ -21,7 +21,8 @@
                 diff (<code>.kp-diff</code>), a value with a copy button (<code>.kp-copyable</code>), identifiers and addresses (<code>.kp-id</code>,
                 <code>.kp-url</code>), masked values, timestamps and truncation, the keyboard shortcut sheet (<code>.kp-shortcuts</code>), and the
                 table column that gives way first (<code>.kp-col-low</code>). The extremes are the ones that push pages sideways: a 90-character URL,
-                a 70-character id, and a diff of forty lines.
+                a 70-character id, and a diff of forty lines. At the end, three a dashboard needs: tiles of one height (<code>.kp-tiles</code>), key
+                figures (<code>.kp-kpis</code>) and a state word that keeps its width (<code>.kp-state-word</code>).
             </p>
             <ul class="cat-toc">
                 <li><a href="#health">Health</a></li>
@@ -34,6 +35,9 @@
                 <li><a href="#col-low">Low-priority column</a></li>
                 <li><a href="#count">Numbers that count up</a></li>
                 <li><a href="#card">Card with actions</a></li>
+                <li><a href="#tiles">Tiles of one height</a></li>
+                <li><a href="#kpis">Key figures</a></li>
+                <li><a href="#state-word">A state word that keeps its width</a></li>
             </ul>
 
             <section class="cat-block" id="health">
@@ -465,6 +469,272 @@
                             </div>
                             <div class="kp-card__body"><p>Running hot for 43 minutes.</p></div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="tiles">
+                <h2>Tiles of one height</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-tiles</code> lays the package's own <code>.kp-card</code> out in a grid, and every tile is as tall as
+                    the tallest tile of the whole grid, on every row: the short second row is as tall as the first, whose second card has the longest
+                    text. Each card's footer keeps to its bottom edge, so the footer lines (<b>Read … ago</b> and <b>Open</b>) of a row sit at one
+                    height however long the text above them is, and the body never touches the footer's rule in the tallest card. A tile's title is a
+                    step smaller than a page card's. Narrow the pane: the tiles go to fewer columns and then one, and stay one height.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <ul class="kp-tiles">
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Pump house 1</h3>
+                            <p class="kp-card__body">Two pumps, both running. Pressure 3.4 bar.</p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 2 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                            </div>
+                        </li>
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Pump house 3</h3>
+                            <p class="kp-card__body">
+                                Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way; the
+                                valve on the ring main is half closed until she arrives.
+                            </p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 1 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                            </div>
+                        </li>
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Pump house 7</h3>
+                            <p class="kp-card__body">No reading since 06:00.</p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 2 h 41 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                            </div>
+                        </li>
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Reservoir North</h3>
+                            <p class="kp-card__body">71 % full.</p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 3 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                            </div>
+                        </li>
+                        <li class="kp-card">
+                            <h3 class="kp-card__title">Reservoir South</h3>
+                            <p class="kp-card__body">64 % full.</p>
+                            <div class="kp-card__footer kp-row kp-row--between kp-fs-sm">
+                                <span class="kp-timestamp">Read 3 min ago</span
+                                ><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="cat-block" id="kpis">
+                <h2>Key figures</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-kpis</code>, a strip of <code>.kp-kpi</code> tiles, every tile as tall as the tallest on every row it
+                    wraps to. Across the strip the labels, the numbers and the trend lines sit on one line each, and the 24-hour sparklines (a line
+                    over a soft area) and the meters keep to the bottom. <b>Flow now</b> carries a unit and an <i>avg 15 min</i> note beside its
+                    number and is a link to its detail. The amber and the red tile carry a coloured edge and a coloured number.
+                    <b>Open incidents</b> and <b>Pressure alarms</b> are filters: press one and it turns on, a primary border over a faint primary
+                    background, and its corner word changes from <i>Filter</i> to <i>Filtering ×</i>; the line under the stage shows the
+                    <code>kp-kpi-toggle</code> event. The second strip shows a filter off and on side by side. In the phone pane the strip goes to two
+                    tiles a row and a long label wraps rather than being cut off.
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Pump houses online</span>
+                            <span class="kp-kpi__value">14<small>of 15</small></span>
+                            <span class="kp-kpi__trend">Pump house 7 offline</span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-label="Pump houses online: 93 %"
+                                aria-valuenow="93"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                style="--kp-value: 0.93"
+                            ></span>
+                        </div>
+                        <a class="kp-kpi" href="#kpis">
+                            <span class="kp-kpi__label">Flow now</span>
+                            <span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                            >
+                            <svg
+                                class="kp-kpi__spark"
+                                data-kp-spark="380 371 352 340 335 338 360 395 430 451 448 440 436 429 431 440 452 470 480 466 441 420 409 412"
+                            ></svg>
+                        </a>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value">3</span>
+                            <span class="kp-kpi__trend">2 new today</span>
+                        </button>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="destructive">
+                            <span class="kp-kpi__label">Pressure alarms</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value">1</span>
+                            <span class="kp-kpi__trend">Pump house 3, since 08:12</span>
+                        </button>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Readings today</span>
+                            <span class="kp-kpi__value">18 240</span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span
+                            >
+                            <svg
+                                class="kp-kpi__spark"
+                                data-kp-spark="760 762 758 761 760 759 755 750 748 760 762 761 763 757 740 712 698 705 731 752 760 759 761 760"
+                            ></svg>
+                        </div>
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Storage used</span>
+                            <span class="kp-kpi__value">71<small>%</small></span>
+                            <span class="kp-kpi__trend">Reservoirs, both</span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-label="Storage used: 71 %"
+                                aria-valuenow="71"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                style="--kp-value: 0.71"
+                            ></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-kpis" style="max-inline-size: 22.5rem">
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-kpi-owned tabindex="-1">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value">3</span>
+                            <span class="kp-kpi__trend">off</span>
+                        </button>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="true" data-kp-kpi-owned tabindex="-1">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value">3</span>
+                            <span class="kp-kpi__trend">on</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div class="kp-kpis" role="group" aria-label="Network at a glance, phone width">
+                            <div class="kp-kpi">
+                                <span class="kp-kpi__label">Pump houses online</span>
+                                <span class="kp-kpi__value">14<small>of 15</small></span>
+                                <span class="kp-kpi__trend">Pump house 7 offline</span>
+                                <span
+                                    class="kp-kpi__meter"
+                                    role="meter"
+                                    aria-label="Pump houses online: 93 %"
+                                    aria-valuenow="93"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style="--kp-value: 0.93"
+                                ></span>
+                            </div>
+                            <a class="kp-kpi" href="#kpis">
+                                <span class="kp-kpi__label">Flow now</span>
+                                <span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+                                <span class="kp-kpi__trend"
+                                    ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                                >
+                                <svg
+                                    class="kp-kpi__spark"
+                                    data-kp-spark="380 371 352 340 335 338 360 395 430 451 448 440 436 429 431 440 452 470 480 466 441 420 409 412"
+                                ></svg>
+                            </a>
+                            <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning">
+                                <span class="kp-kpi__label">Open incidents</span>
+                                <span class="kp-kpi__hint" aria-hidden="true"
+                                    ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                >
+                                <span class="kp-kpi__value">3</span>
+                                <span class="kp-kpi__trend">2 new today</span>
+                            </button>
+                            <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="destructive">
+                                <span class="kp-kpi__label">Pressure alarms</span>
+                                <span class="kp-kpi__hint" aria-hidden="true"
+                                    ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                                >
+                                <span class="kp-kpi__value">1</span>
+                                <span class="kp-kpi__trend">Pump house 3, since 08:12</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p class="cat-note" data-cat-kpi-log>No filter on.</p>
+            </section>
+
+            <section class="cat-block" id="state-word">
+                <h2>A state word that keeps its width</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-state-word</code> is as wide as the widest word it can show, listed in <code>data-kp-words</code>, so
+                    the button beside it never moves when the state changes: a second click without moving the mouse hits the same button. Press
+                    <b>Change the states</b>: in the first list (plain words) the Stop and Start buttons jump left and right with each word; in the
+                    second (<code>.kp-state-word</code>, changed through <code>setStateWord()</code>) they stand still while the words change in front
+                    of them. The last line is centred (<code>.kp-state-word--center</code>): the word stays in the middle of its own width.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-state-cycle aria-pressed="false">Change the states</button>
+                </p>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-pair">
+                        <ul class="kp-stack" data-cat-state-list>
+                            <li class="kp-row">
+                                <b>Pump 1</b> <span data-cat-state>Running</span> <button type="button" class="kp-button kp-button--sm">Stop</button>
+                            </li>
+                            <li class="kp-row">
+                                <b>Pump 2</b> <span data-cat-state>Stopped</span> <button type="button" class="kp-button kp-button--sm">Start</button>
+                            </li>
+                            <li class="kp-row">
+                                <b>Pump 3</b> <span data-cat-state>Restarting</span>
+                                <button type="button" class="kp-button kp-button--sm">Stop</button>
+                            </li>
+                        </ul>
+                        <ul class="kp-stack" data-cat-state-list>
+                            <li class="kp-row">
+                                <b>Pump 1</b>
+                                <span class="kp-state-word" data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min" data-cat-state
+                                    >Running</span
+                                >
+                                <button type="button" class="kp-button kp-button--sm">Stop</button>
+                            </li>
+                            <li class="kp-row">
+                                <b>Pump 2</b>
+                                <span class="kp-state-word" data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min" data-cat-state
+                                    >Stopped</span
+                                >
+                                <button type="button" class="kp-button kp-button--sm">Start</button>
+                            </li>
+                            <li class="kp-row">
+                                <b>Pump 3</b>
+                                <span
+                                    class="kp-state-word kp-state-word--center"
+                                    data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min"
+                                    data-cat-state
+                                    >Restarting</span
+                                >
+                                <button type="button" class="kp-button kp-button--sm">Stop</button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </section>

@@ -31,8 +31,9 @@ export const PAGES = [
             { href: 'catalogue/navigation.html', label: 'Navigation', component: true },
             { href: 'catalogue/structure.html', label: 'Accordion, tree, timeline, split, reorder, wizard', component: true },
             { href: 'catalogue/data.html', label: 'Showing data', component: true },
+            { href: 'catalogue/chart.html', label: 'Charts', component: true },
             { href: 'catalogue/media.html', label: 'Media, grid, marquee', component: true },
-            { href: 'catalogue/page.html', label: 'Footer, palette, theme menu', component: true },
+            { href: 'catalogue/page.html', label: 'Page header, footer, palette, theme menu', component: true },
             { href: 'catalogue/page-effects.html', label: 'Page effects', component: true },
             { href: 'catalogue/motion.html', label: 'Motion: closing, resizing, arriving, leaving', component: true },
             // Not a component page: each block is a window playing one theme's
@@ -70,7 +71,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [{ href: 'research/dashboard-ports/demo.html', label: 'Dashboard components to port' }],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -78,6 +79,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided at scope-143: the eight dashboard components, moved into the package.
+            { href: 'research/dashboard-ports/demo.html', label: 'Dashboard components to port' },
             // Decided at scope-142: closing, resizing, arriving and leaving, every theme.
             { href: 'research/size-motion/demo.html', label: 'Closing, resizing and leaving per theme' },
             // Decided at scope-124: the three research demos of 2026-09-17.

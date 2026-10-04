@@ -21,6 +21,7 @@ export {
     findViolations,
     openConfirmation,
     placeNavMenu,
+    setStateWord,
     skipTo,
 } from './js/components.js';
 export {
@@ -84,6 +85,12 @@ export {
     setProgress as setProgressbar,
     syncProgressbar,
 } from './js/progressbar.js';
+// The dashboard components [scope-143].
+export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
+export { KPI_TOGGLE, KPI_TOGGLE_EVENT, SPARK, attachKpiToggles, attachSparklines, drawSparkline, sparkPaths } from './js/kpi.js';
+export { ATTENTION, SEVERITIES, attachAttention, sortAttention } from './js/attention.js';
+export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, attachCharts, chartWords, setChartData } from './js/chart.js';
+/** @typedef {import('./js/chart.js').ChartData} ChartData */
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

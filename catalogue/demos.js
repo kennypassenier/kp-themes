@@ -309,3 +309,106 @@ document.addEventListener('click', (event) => {
     const host = button?.closest('[data-cat-effect]');
     if (host) stampEffect(host);
 });
+
+/* ------------------------------------------- the dashboard components [scope-143] */
+
+// catalogue/data.html#kpis: the filter a page would apply, said in the
+// block's own line.
+document.addEventListener('kp-kpi-toggle', (event) => {
+    const block = event.target instanceof Element ? event.target.closest('.cat-block') : null;
+    const line = block?.querySelector('[data-cat-kpi-log]');
+    if (!block || !line) return;
+    const on = [...block.querySelectorAll('.kp-kpi--toggle[aria-pressed="true"]:not([data-kp-kpi-owned]) .kp-kpi__label')].map((label) =>
+        (label.textContent ?? '').toLowerCase(),
+    );
+    const { pressed } = /** @type {CustomEvent} */ (event).detail;
+    line.textContent = `kp-kpi-toggle: pressed ${pressed}. ${on.length ? `Filtering the list: ${[...new Set(on)].join(' and ')} only.` : 'No filter on.'}`;
+});
+
+// catalogue/data.html#state-word: every state word in the block moves on a
+// step every 1.2 s while the button is pressed; the plain words are set as
+// text, the .kp-state-word ones through setStateWord().
+const STATES = ['Running', 'Stopped', 'Restarting', 'Starting in 3 min'];
+/** The block a cycle runs in, and its timer. @type {WeakMap<Element, number>} */
+const cycles = new WeakMap();
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-state-cycle]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const on = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(on));
+    button.textContent = on ? 'Stop changing' : 'Change the states';
+    clearInterval(cycles.get(block));
+    if (!on) return;
+    import('../js/components.js').then(({ setStateWord }) => {
+        let step = 0;
+        cycles.set(
+            block,
+            window.setInterval(() => {
+                step += 1;
+                for (const list of block.querySelectorAll('[data-cat-state-list]')) {
+                    [...list.querySelectorAll('[data-cat-state]')].forEach((word, at) => {
+                        const next = STATES[(at + step) % STATES.length];
+                        if (word.classList.contains('kp-state-word')) setStateWord(/** @type {HTMLElement} */ (word), next);
+                        else word.textContent = next;
+                    });
+                }
+            }, 1200),
+        );
+    });
+});
+
+// catalogue/feedback.html#attention: a warning added, every problem resolved,
+// and the problems back, in every band of the block.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-attention]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const what = button.getAttribute('data-cat-attention');
+    const from = /** @type {HTMLTemplateElement | null} */ (
+        block.querySelector(what === 'add' ? 'template[data-cat-attention-extra]' : 'template[data-cat-attention-items]')
+    );
+    for (const band of block.querySelectorAll('.kp-attention')) {
+        if (what === 'clear') band.replaceChildren();
+        else if (what === 'reset') band.replaceChildren(from ? from.content.cloneNode(true) : '');
+        else if (from) band.append(from.content.cloneNode(true));
+    }
+});
+
+// catalogue/table.html#action-columns: one label grows, and its whole column
+// with it, on every row.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-longer]') : null;
+    const block = button?.closest('.cat-block');
+    if (!button || !block) return;
+    const longer = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(longer));
+    for (const assign of block.querySelectorAll('.kp-row-actions > button')) {
+        const words = assign.textContent?.trim();
+        if (words === 'Assign…' || words === 'Assign to the night shift…') assign.textContent = longer ? 'Assign to the night shift…' : 'Assign…';
+    }
+});
+
+// catalogue/chart.html: a range button asks for that range's readings, which
+// the page hands the group's charts before they redraw (`kp-chart-range`, fired
+// before the redraw for exactly this). The two modules are fetched once a page
+// carries a sample group, so the answer can be given at once.
+/** @type {{ setChartData: (el: Element, data: any) => void, sampleData: (name: string, range?: string) => any } | null} */
+let chartSample = null;
+let chartSampleAsked = false;
+function wantChartSample() {
+    if (chartSampleAsked || !document.querySelector('[data-cat-chart-sample]')) return;
+    chartSampleAsked = true;
+    Promise.all([import('../js/chart.js'), import('./chart-sample.js')]).then(([{ setChartData }, { sampleData }]) => {
+        chartSample = { setChartData, sampleData };
+    });
+}
+wantChartSample();
+new MutationObserver(wantChartSample).observe(document.documentElement, { childList: true, subtree: true });
+document.addEventListener('kp-chart-range', (event) => {
+    const group = event.target instanceof Element ? event.target.closest('[data-cat-chart-sample]') : null;
+    if (!group || !chartSample) return;
+    const { range } = /** @type {CustomEvent} */ (event).detail;
+    for (const chart of group.querySelectorAll('[data-cat-chart]'))
+        chartSample.setChartData(chart, chartSample.sampleData(chart.getAttribute('data-cat-chart') ?? '', range));
+});

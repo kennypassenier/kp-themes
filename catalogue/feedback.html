@@ -32,6 +32,7 @@
                 <li><a href="#spinner">Spinner</a></li>
                 <li><a href="#skeleton">Skeleton</a></li>
                 <li><a href="#empty">Empty state</a></li>
+                <li><a href="#attention">Attention band</a></li>
             </ul>
 
             <section class="cat-block" id="alerts">
@@ -431,6 +432,125 @@
                         <p class="kp-empty__title">Nothing matches “pump house 9”</p>
                         <p class="kp-empty__body">There are four pump houses. Check the number, or clear the search to see every incident.</p>
                         <button type="button" class="kp-button kp-button--secondary">Clear the search</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="attention">
+                <h2>Attention band</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>.kp-attention</code>: one <code>.kp-alert</code> per problem, each with the action that fixes it, as a soft
+                    tint of its severity with a coloured edge, the page's own text colour and a solid round icon: calm, and still unmistakable. The
+                    markup lists the problems as info, critical, warning; the band shows critical, warning, info, because
+                    <code>attachAttention()</code> keeps them worst first in the page itself, so a screen reader meets them in the order the eye does.
+                    Press <b>Add a warning</b>: it lands under the critical one, not at the bottom. <b>Resolve all</b> empties the band and it takes
+                    no room at all, never an "all is well" line; <b>Bring them back</b> restores it. In the phone pane the fix buttons go under the
+                    words.
+                </div>
+                <p class="cat-live__bar">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention="add">Add a warning</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention="clear">Resolve all</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-attention="reset">Bring them back</button>
+                </p>
+                <template data-cat-attention-items>
+                    <div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+                        <span class="kp-attention__icon" aria-hidden="true">i</span>
+                        <div class="kp-attention__text">
+                            <strong><span class="kp-sr-only">Information: </span>Firmware 4.2 is out for six field units</strong>
+                            <span>It fixes the flow meter's drift after a power cut.</span>
+                        </div>
+                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Plan the update</button></div>
+                    </div>
+                    <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+                        <span class="kp-attention__icon" aria-hidden="true">!</span>
+                        <div class="kp-attention__text">
+                            <strong><span class="kp-sr-only">Critical: </span>Pump house 3 is below 2.1 bar</strong>
+                            <span>For forty minutes; the homes on the ring main will lose pressure first.</span>
+                        </div>
+                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Open the incident</button></div>
+                    </div>
+                    <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+                        <span class="kp-attention__icon" aria-hidden="true">!</span>
+                        <div class="kp-attention__text">
+                            <strong><span class="kp-sr-only">Warning: </span>Pump house 7 has sent no reading since 06:00</strong>
+                            <span>The unit answers a ping; its modem may need a restart.</span>
+                        </div>
+                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Restart the modem</button></div>
+                    </div>
+                </template>
+                <template data-cat-attention-extra>
+                    <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+                        <span class="kp-attention__icon" aria-hidden="true">!</span>
+                        <div class="kp-attention__text">
+                            <strong><span class="kp-sr-only">Warning: </span>Reservoir South fills slower than forecast</strong>
+                            <span>64 % now, 70 % expected by 09:00.</span>
+                        </div>
+                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">See the forecast</button></div>
+                    </div>
+                </template>
+                <div class="cat-stage cat-stage--block">
+                    <div class="kp-attention" role="region" aria-label="Needs attention">
+                        <div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+                            <span class="kp-attention__icon" aria-hidden="true">i</span>
+                            <div class="kp-attention__text">
+                                <strong><span class="kp-sr-only">Information: </span>Firmware 4.2 is out for six field units</strong>
+                                <span>It fixes the flow meter's drift after a power cut.</span>
+                            </div>
+                            <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Plan the update</button></div>
+                        </div>
+                        <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+                            <span class="kp-attention__icon" aria-hidden="true">!</span>
+                            <div class="kp-attention__text">
+                                <strong><span class="kp-sr-only">Critical: </span>Pump house 3 is below 2.1 bar</strong>
+                                <span>For forty minutes; the homes on the ring main will lose pressure first.</span>
+                            </div>
+                            <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Open the incident</button></div>
+                        </div>
+                        <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+                            <span class="kp-attention__icon" aria-hidden="true">!</span>
+                            <div class="kp-attention__text">
+                                <strong><span class="kp-sr-only">Warning: </span>Pump house 7 has sent no reading since 06:00</strong>
+                                <span>The unit answers a ping; its modem may need a restart.</span>
+                            </div>
+                            <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Restart the modem</button></div>
+                        </div>
+                    </div>
+                    <p class="cat-note">Above this line the band's own space ends: with nothing to show, this line moves up.</p>
+                </div>
+                <div class="cat-stage cat-stage--block">
+                    <div class="cat-resize" style="inline-size: 22.5rem">
+                        <div class="kp-attention" role="region" aria-label="Needs attention, phone width">
+                            <div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+                                <span class="kp-attention__icon" aria-hidden="true">i</span>
+                                <div class="kp-attention__text">
+                                    <strong><span class="kp-sr-only">Information: </span>Firmware 4.2 is out for six field units</strong>
+                                    <span>It fixes the flow meter's drift after a power cut.</span>
+                                </div>
+                                <div class="kp-attention__actions">
+                                    <button type="button" class="kp-button kp-button--sm">Plan the update</button>
+                                </div>
+                            </div>
+                            <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+                                <span class="kp-attention__icon" aria-hidden="true">!</span>
+                                <div class="kp-attention__text">
+                                    <strong><span class="kp-sr-only">Critical: </span>Pump house 3 is below 2.1 bar</strong>
+                                    <span>For forty minutes; the homes on the ring main will lose pressure first.</span>
+                                </div>
+                                <div class="kp-attention__actions">
+                                    <button type="button" class="kp-button kp-button--sm">Open the incident</button>
+                                </div>
+                            </div>
+                            <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+                                <span class="kp-attention__icon" aria-hidden="true">!</span>
+                                <div class="kp-attention__text">
+                                    <strong><span class="kp-sr-only">Warning: </span>Pump house 7 has sent no reading since 06:00</strong>
+                                    <span>The unit answers a ping; its modem may need a restart.</span>
+                                </div>
+                                <div class="kp-attention__actions">
+                                    <button type="button" class="kp-button kp-button--sm">Restart the modem</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

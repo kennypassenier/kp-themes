@@ -56,7 +56,14 @@ const ROOT = fileURLToPath(new URL('../', import.meta.url));
  * from the other side: a container name the stylesheet queries and this
  * list does not name is a failure.
  *
- * @type {Array<{ container: string, class: string, attribute?: string, why: string }>}
+ * An entry marked `self` is a component that establishes its own container
+ * and whose queries reach only its own parts [scope-143]: a part cannot be
+ * drawn outside the component, so no page can leave it unwrapped. It is
+ * listed so every container name the stylesheet queries is accounted for,
+ * and held to it: the class it names must be the one establishing the
+ * container.
+ *
+ * @type {Array<{ container: string, class: string, attribute?: string, self?: true, why: string }>}
  */
 export const REQUIRED = [
     {
@@ -77,6 +84,30 @@ export const REQUIRED = [
         // layout is opt-in, so only a table that opted in needs a
         // container to opt in against [TH96].
         why: 'A table that asked for the card layout needs the width of its own box to decide, and the query rewrites the table itself [TH96].',
+    },
+    {
+        container: 'kp-action-list',
+        class: 'kp-action-list',
+        self: true,
+        why: 'The list measures its own width and moves its rows’ buttons under their text when narrow; the query reaches only its own rows [scope-143].',
+    },
+    {
+        container: 'kp-kpi',
+        class: 'kp-kpi',
+        self: true,
+        why: 'A tile two to a row on a phone wraps its own label; the query reaches only the tile’s own label [scope-143].',
+    },
+    {
+        container: 'kp-page-header',
+        class: 'kp-page-header',
+        self: true,
+        why: 'The header measures its own width and stacks its title over its buttons when narrow; the query reaches only its own parts [scope-143].',
+    },
+    {
+        container: 'kp-attention',
+        class: 'kp-attention',
+        self: true,
+        why: 'The band measures its own width and moves each problem’s fix under its words when narrow; the query reaches only its own items [scope-143].',
     },
 ];
 
@@ -144,7 +175,7 @@ function attributesOf(tag) {
  * styles a container's contents, never the container.
  *
  * @param {string} html
- * @param {Array<{ container: string, class: string, attribute?: string, why: string }>} required
+ * @param {Array<{ container: string, class: string, attribute?: string, self?: true, why: string }>} required
  * @param {Map<string, string[]>} wrappers
  * @returns {Array<{ line: number, class: string, container: string, wrappers: string[], wrapped: boolean }>}
  */
@@ -175,6 +206,7 @@ export function drawn(html, required, wrappers) {
 
         const { classes, attributes: names } = attributesOf(` ${attributes} `);
         for (const entry of required) {
+            if (entry.self) continue;
             if (!classes.has(entry.class)) continue;
             if (entry.attribute !== undefined && !names.has(entry.attribute)) continue;
             const allowed = wrappers.get(entry.container) ?? [];
@@ -214,6 +246,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         }
         if ((wrappers.get(entry.container) ?? []).length === 0) {
             failures.push(`[stale] nothing in css/components.css establishes a container named \`${entry.container}\`.`);
+        }
+        if (entry.self && !(wrappers.get(entry.container) ?? []).includes(entry.class)) {
+            failures.push(`[stale] \`${entry.container}\` is listed as the own container of \`.${entry.class}\`, which does not establish it.`);
         }
         if (entry.why.trim().length < 40) failures.push(`[stale] the entry for \`${entry.container}\` carries no real reason.`);
     }
