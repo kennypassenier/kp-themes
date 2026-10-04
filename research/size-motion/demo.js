@@ -1,59 +1,44 @@
-// The proposal behind research/size-motion: a dialog that leaves the way it
-// came, and boxes that ease to a new size instead of jumping, growing or
-// shrinking. Demo code: what Kenny approves here is what the package then
-// builds into js/overlays.js and a small size helper.
+// research/size-motion, round two: the proposal side runs the package's own
+// js/motion.js in every theme; the "Package today" side runs nothing.
 
-const root = document.documentElement;
+import { THEMES } from '../../js/theme-registry.js';
+import { attachMotion, closeDialog, easeSize, themeMotion } from '../../js/motion.js';
+
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduced()) document.querySelector('[data-sm-motion]')?.removeAttribute('hidden');
 
-/** A theme knob in milliseconds, read from the element it applies to. */
-const ms = (/** @type {Element} */ el, /** @type {string} */ name, /** @type {number} */ fallback) => {
-    const raw = getComputedStyle(el).getPropertyValue(name).trim();
-    const n = parseFloat(raw);
-    if (Number.isNaN(n)) return fallback;
-    return raw.endsWith('ms') ? n : n * 1000;
+// One note per section serves every theme: the review dialog reads a note
+// per theme, so formal's is copied to the other twenty-one.
+for (const look of document.querySelectorAll('[data-review-look]')) {
+    const note = look.querySelector('[data-for="formal"]');
+    if (!note) continue;
+    for (const { name } of THEMES) {
+        if (name === 'formal') continue;
+        const copy = /** @type {HTMLElement} */ (note.cloneNode(true));
+        copy.setAttribute('data-for', name);
+        look.append(copy);
+    }
+}
+
+/** The theme's timing, shown in the intro and refreshed when the theme changes. */
+const timing = document.querySelector('[data-sm-timing]');
+const showTiming = () => {
+    if (!timing) return;
+    const { open, close, size, ease } = themeMotion();
+    timing.textContent = open
+        ? `opens in ${Math.round(open)} ms, closes in ${Math.round(close)} ms, resizes in ${Math.round(size)} ms, on ${ease}`
+        : 'this theme has no dialog entrance, so nothing moves';
 };
-const knob = (/** @type {Element} */ el, /** @type {string} */ name, /** @type {string} */ fallback) =>
-    getComputedStyle(el).getPropertyValue(name).trim() || fallback;
+// The register arrives after the theme attribute changes; read once it has.
+new MutationObserver(() => setTimeout(showTiming, 300)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+addEventListener('load', showTiming);
 
 /** How much slower everything plays: 4 for the "¼ speed" buttons. */
 let slow = 1;
-
-/* ------------------------------------------------------- size, eased */
-
-/**
- * Ease `box` from its old height to its new one whenever its content
- * (`inner`) changes size, in both directions. A change during a glide
- * continues from where the box is.
- * @param {HTMLElement} box @param {HTMLElement} inner
- */
-function smoothSize(box, inner) {
-    let last = box.getBoundingClientRect().height;
-    /** @type {Animation | null} */
-    let running = null;
-    new ResizeObserver(() => {
-        const from = running ? box.getBoundingClientRect().height : last;
-        running?.cancel();
-        const to = box.getBoundingClientRect().height;
-        last = to;
-        if (reduced() || Math.abs(to - from) < 1 || !box.isConnected) return;
-        box.style.overflow = 'clip';
-        running = box.animate([{ height: `${from}px` }, { height: `${to}px` }], {
-            duration: ms(box, '--kp-size-dur', 240) * slow,
-            easing: knob(box, '--kp-size-ease', 'ease-out'),
-        });
-        const mine = running;
-        mine.finished
-            .then(() => {
-                if (running === mine) {
-                    running = null;
-                    box.style.overflow = '';
-                }
-            })
-            .catch(() => {});
-    }).observe(inner);
-}
+const setSlow = (/** @type {number} */ n) => {
+    slow = n;
+    document.documentElement.style.setProperty('--kp-motion-scale', String(n));
+};
 
 /* --------------------------------------------------------- the rows */
 
@@ -74,74 +59,44 @@ const changeRows = (list, what) => {
 
 /* ------------------------------------------------------- the dialogs */
 
-/**
- * Close the way it opened, reversed: formal's sheet sinks the 14px it rose
- * and fades, with the backdrop fading along.
- * @param {HTMLDialogElement} dialog
- */
-async function closeEased(dialog) {
-    if (dialog.dataset.smClosing) return;
-    if (reduced()) return dialog.close();
-    dialog.dataset.smClosing = '1';
-    const timing = {
-        duration: ms(root, '--kp-close-dur', 200) * slow,
-        easing: knob(root, '--kp-close-ease', 'ease-in'),
-        fill: /** @type {const} */ ('forwards'),
-    };
-    const out = [
-        dialog.animate(
-            [
-                { opacity: 1, transform: 'none' },
-                { opacity: 0, transform: 'translateY(14px) scale(0.985)' },
-            ],
-            timing,
-        ),
-    ];
-    try {
-        out.push(dialog.animate([{ opacity: 1 }, { opacity: 0 }], { ...timing, pseudoElement: '::backdrop' }));
-    } catch {
-        /* an engine that cannot animate ::backdrop lets it go at the end */
-    }
-    await Promise.all(out.map((a) => a.finished.catch(() => {})));
-    dialog.close();
-    for (const a of out) a.cancel();
-}
-
 /** @param {string} kind @param {'proposal' | 'today'} mode */
 function openDialog(kind, mode) {
     const template = /** @type {HTMLTemplateElement} */ (document.querySelector(`[data-sm-template="${kind}"]`));
-    const dialog = /** @type {HTMLDialogElement} */ (template.content.firstElementChild.cloneNode(true));
+    const dialog = /** @type {HTMLDialogElement} */ (template.content.firstElementChild?.cloneNode(true));
     document.body.append(dialog);
     const proposal = mode === 'proposal';
-    const close = () => (proposal ? closeEased(dialog) : dialog.close());
-    dialog.addEventListener('cancel', (event) => {
-        event.preventDefault();
-        close();
-    });
+    // Slow motion stretches the theme's own entrance too, so in and out are compared at one speed.
+    if (slow > 1) dialog.style.setProperty('--kp-sig-dur', `calc(${getComputedStyle(dialog).getPropertyValue('--kp-sig-dur') || '300ms'} * ${slow})`);
+    if (proposal) attachMotion(dialog);
+    const close = () => (proposal ? closeDialog(dialog) : dialog.close());
+    if (!proposal)
+        dialog.addEventListener('cancel', (event) => {
+            event.preventDefault();
+            dialog.close();
+        });
     dialog.addEventListener('click', (event) => {
         const target = /** @type {HTMLElement} */ (event.target);
         if (target === dialog) {
             // A click on the backdrop lands on the dialog itself, outside its box.
             const box = dialog.getBoundingClientRect();
             const inside = event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
-            if (!inside) close();
+            if (!inside) void close();
         }
-        if (target.closest('[data-sm-close]')) close();
+        if (target.closest('[data-sm-close]')) void close();
         const rows = target.closest('[data-sm-rows]');
         if (rows) changeRows(/** @type {HTMLElement} */ (dialog.querySelector('[data-sm-list]')), rows.getAttribute('data-sm-rows') ?? '');
     });
     dialog.addEventListener('close', () => {
         dialog.remove();
-        slow = 1;
+        setSlow(1);
     });
     dialog.showModal();
-    if (proposal && kind === 'grow') smoothSize(dialog, /** @type {HTMLElement} */ (dialog.querySelector('[data-sm-inner]')));
 }
 
 document.addEventListener('click', (event) => {
     const button = /** @type {HTMLElement} */ (event.target).closest('[data-sm-dialog]');
     if (!button) return;
-    slow = button.hasAttribute('data-sm-slow') ? 4 : 1;
+    setSlow(button.hasAttribute('data-sm-slow') ? 4 : 1);
     openDialog(button.getAttribute('data-sm-dialog') ?? 'close', /** @type {'proposal' | 'today'} */ (button.getAttribute('data-sm-mode')));
 });
 
@@ -149,10 +104,9 @@ document.addEventListener('click', (event) => {
 
 for (const col of document.querySelectorAll('[data-sm-card]')) {
     const card = /** @type {HTMLElement} */ (col.querySelector('.sm-card'));
-    const inner = /** @type {HTMLElement} */ (col.querySelector('[data-sm-inner]'));
     const list = /** @type {HTMLElement} */ (col.querySelector('[data-sm-list]'));
     const alert = /** @type {HTMLElement} */ (col.querySelector('[data-sm-alert]'));
-    if (col.getAttribute('data-sm-card') === 'proposal') smoothSize(card, inner);
+    if (col.getAttribute('data-sm-card') === 'proposal') easeSize(card);
     col.addEventListener('click', (event) => {
         const act = /** @type {HTMLElement} */ (event.target).closest('[data-sm-card-act]')?.getAttribute('data-sm-card-act');
         if (act === 'alert') alert.hidden = !alert.hidden;
@@ -164,49 +118,9 @@ for (const col of document.querySelectorAll('[data-sm-card]')) {
     });
 }
 
-/* ----------------------------------------------------- the accordion */
+/* -------------------------------------------- the accordion and tabs */
 
-// The answer unfolds: the item eases from the summary's height to its open
-// height and back. Closing waits for the fold before `open` goes away, so
-// the answer is still there to fold.
-for (const item of document.querySelectorAll('[data-sm-accordion] .kp-accordion__item')) {
-    const details = /** @type {HTMLDetailsElement} */ (item);
-    const summary = /** @type {HTMLElement} */ (details.querySelector('summary'));
-    /** @type {Animation | null} */
-    let running = null;
-    summary.addEventListener('click', (event) => {
-        if (reduced()) return;
-        event.preventDefault();
-        const from = details.getBoundingClientRect().height;
-        running?.cancel();
-        const opening = !details.open || details.dataset.smClosing === '1';
-        delete details.dataset.smClosing;
-        details.open = true;
-        const full = details.getBoundingClientRect().height;
-        const shut = summary.getBoundingClientRect().height + parseFloat(getComputedStyle(details).borderBottomWidth || '0');
-        const to = opening ? full : shut;
-        if (!opening) details.dataset.smClosing = '1';
-        details.style.overflow = 'clip';
-        running = details.animate([{ height: `${from}px` }, { height: `${to}px` }], {
-            duration: ms(details, '--kp-size-dur', 240) * slow,
-            easing: knob(details, '--kp-size-ease', 'ease-out'),
-        });
-        const mine = running;
-        mine.finished
-            .then(() => {
-                if (running !== mine) return;
-                running = null;
-                details.style.overflow = '';
-                if (details.dataset.smClosing === '1') {
-                    details.open = false;
-                    delete details.dataset.smClosing;
-                }
-            })
-            .catch(() => {});
-    });
-}
-
-/* ---------------------------------------------------------- the tabs */
+for (const el of document.querySelectorAll('[data-sm-accordion]')) attachMotion(el);
 
 const PANELS = [
     ['Summary', 'Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.'],
@@ -222,11 +136,8 @@ for (const host of document.querySelectorAll('[data-sm-tabs]')) {
         <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471 (${mode})">
             ${PANELS.map(([label], i) => `<button type="button" class="kp-tab" role="tab" id="sm-${mode}-tab-${i}" aria-controls="sm-${mode}-panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${label}</button>`).join('')}
         </div>
-        <div data-sm-tabs-box><div data-sm-inner>
-            ${PANELS.map(([, text], i) => `<div class="kp-tabs__panel" role="tabpanel" id="sm-${mode}-panel-${i}" aria-labelledby="sm-${mode}-tab-${i}"${i === 0 ? '' : ' hidden'}>${text}</div>`).join('')}
-        </div></div>`;
-    const box = /** @type {HTMLElement} */ (host.querySelector('[data-sm-tabs-box]'));
-    if (mode === 'proposal') smoothSize(box, /** @type {HTMLElement} */ (host.querySelector('[data-sm-inner]')));
+        ${PANELS.map(([, text], i) => `<div class="kp-tabs__panel" role="tabpanel" id="sm-${mode}-panel-${i}" aria-labelledby="sm-${mode}-tab-${i}"${i === 0 ? '' : ' hidden'}>${text}</div>`).join('')}`;
+    if (mode === 'proposal') attachMotion(host);
     host.addEventListener('click', (event) => {
         const tab = /** @type {HTMLElement} */ (event.target).closest('[role="tab"]');
         if (!tab) return;
@@ -238,3 +149,4 @@ for (const host of document.querySelectorAll('[data-sm-tabs]')) {
         }
     });
 }
+void slow;

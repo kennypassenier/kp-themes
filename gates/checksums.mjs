@@ -152,6 +152,7 @@ export const FILES = [
     'js/palette.js',
     'js/patterns.js',
     'js/progressbar.js',
+    'js/motion.js',
     'js/remember.js',
     'js/sidenav.js',
     'js/strings.js',

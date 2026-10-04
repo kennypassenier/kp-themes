@@ -132,6 +132,10 @@
             "types": "./js/progressbar.d.ts",
             "default": "./js/progressbar.js"
         },
+        "./js/motion": {
+            "types": "./js/motion.d.ts",
+            "default": "./js/motion.js"
+        },
         "./js/wizard": {
             "types": "./js/wizard.d.ts",
             "default": "./js/wizard.js"

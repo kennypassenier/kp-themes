@@ -2397,3 +2397,23 @@ moved into its own space above the title after "the red line above the
 title is touching the text". research/dialog-title/check-clear.mjs measures
 that no ornament touches a dialog title in any of the 22 themes.
 Round two of the dialog title: grotesk approved (Kenny: "the version is fixed").
+
+**scope-142 · A dialog leaves the way it came; a box eases to its new size.**
+Kenny, 2026-10-04: "we hebben nu wel een goede animatie voor dialog opens, maar
+wat met dialog closes? … dan opent de dialog mooi, en dan verspringt de grootte
+heel plots omdat er elementen bijkomen", and "kijk is waar we dat nog kunnen
+toepassen, bv als een div groeit of krimpt? want krimpen daar moet je dan ook
+rekening mee houden". The formal demo (research/size-motion) was approved 5 of
+5 the same morning, with: "het openen van een dialog heeft al bepaalde
+snelheden per thema, baseer je op die snelheden om te weten hoe snel je kan
+sluiten/uitbreiden/krimpen. Maak direct alle componenten voor elk thema".
+`js/motion.js` reads every speed from the theme's dialog entrance: a dialog
+closes by playing its entrance backwards in two thirds of its time, and a box
+eases to a new height, growing or shrinking, in four fifths of it, on the
+entrance's curve; both capped (`--kp-close-max` 600 ms, `--kp-size-max`
+480 ms) because light's and dark's entrances run over two seconds. Formal's
+approved numbers fall out of the rule: 300 ms in, 200 ms out, 240 ms to
+resize. It applies to every dialog, accordion item, tab set, data table, toast
+stack, upload list, combobox list, tree, wizard and field, and to any box
+marked `data-kp-size-motion`; `js/auto.js` loads it, and the React `Dialog`
+attaches it itself. Reduced motion: none.

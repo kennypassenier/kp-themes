@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { openAtTop, revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
+import { attachMotion } from '../js/motion.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -93,6 +94,13 @@ function DialogInner(
         }
         if (!open && dialog.open) dialog.close();
     }, [open, modal, initialFocus]);
+
+    // The dialog leaves the way it came and eases to a new size [scope-142],
+    // as in the framework-free channel.
+    useEffect(() => {
+        const dialog = inner.current;
+        return dialog ? attachMotion(dialog) : undefined;
+    }, []);
 
     // Whether the dialog or its body scrolls, for a register that draws its
     // own scrollbar (js/overlays.js watchScrollbar) [retro notes, 2026-09-15].

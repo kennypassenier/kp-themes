@@ -14,6 +14,10 @@
         "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
+        "js/motion.js": {
+            "digest": "606116758a09f04e",
+            "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
+        },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/patterns.js": { "digest": "2b6eeed7f66b345b", "when": "[data-kp-copy], [data-kp-undo-action]" },
         "js/progressbar.js": { "digest": "6d0f772e21c2b243", "when": ".kp-progressbar" },
@@ -5771,6 +5775,7 @@
                 "data-kp-open-on-focus",
                 "data-kp-option",
                 "data-kp-overlay-side",
+                "data-kp-size-motion",
                 "data-kp-stay-open",
                 "data-kp-tag-list",
                 "data-kp-tag-remove",
@@ -5937,6 +5942,7 @@
                 "data-kp-row-toggle",
                 "data-kp-scrolled",
                 "data-kp-server",
+                "data-kp-size-motion",
                 "data-kp-skeleton-row",
                 "data-kp-sort",
                 "data-kp-sort-cycle",
@@ -5999,7 +6005,7 @@
             ]
         },
         "feedback": {
-            "modules": "f0626ba8078b0b1c",
+            "modules": "fbc0aa088213b308",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
@@ -6026,6 +6032,7 @@
                 "data-kp-popover-overflowing",
                 "data-kp-semantic",
                 "data-kp-separator",
+                "data-kp-size-motion",
                 "data-kp-skip",
                 "data-kp-tooltip-owner",
                 "data-kp-undo",
@@ -6073,6 +6080,7 @@
                 "data-kp-radiogroup",
                 "data-kp-revalidate-on",
                 "data-kp-select",
+                "data-kp-size-motion",
                 "data-kp-stay-open",
                 "data-kp-submit",
                 "data-kp-tag-list",
@@ -6230,7 +6238,7 @@
             ]
         },
         "navigation": {
-            "modules": "2636daa55b7e7d26",
+            "modules": "4bcf3b3ab1afcc20",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -6303,6 +6311,7 @@
                 "data-kp-sidenav-slim-show",
                 "data-kp-sidenav-slim-toggle",
                 "data-kp-sidenav-toggle",
+                "data-kp-size-motion",
                 "data-kp-skip",
                 "data-kp-sort-priority",
                 "data-kp-split",
@@ -6344,7 +6353,7 @@
             ]
         },
         "overlays": {
-            "modules": "144649972cd1f1c1",
+            "modules": "62f823056730a2b6",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
@@ -6371,6 +6380,7 @@
                 "data-kp-popover-overflowing",
                 "data-kp-semantic",
                 "data-kp-separator",
+                "data-kp-size-motion",
                 "data-kp-skip",
                 "data-kp-tooltip-owner",
                 "data-kp-undo",
@@ -6583,6 +6593,7 @@
                 "data-kp-reorder-status",
                 "data-kp-revalidate-on",
                 "data-kp-selectable",
+                "data-kp-size-motion",
                 "data-kp-sort-priority",
                 "data-kp-split",
                 "data-kp-step",
@@ -6601,6 +6612,7 @@
                 "data-kp-wizard-status",
                 "data-kp-wizard-steps",
                 "data-kp-year",
+                "kp-accordion",
                 "kp-remember",
                 "kp-remember-clash",
                 "kp-reorder",
@@ -6670,6 +6682,7 @@
                 "data-kp-max-files",
                 "data-kp-max-total",
                 "data-kp-month",
+                "data-kp-size-motion",
                 "data-kp-step",
                 "data-kp-step-label",
                 "data-kp-upload",

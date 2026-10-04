@@ -2131,6 +2131,40 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'size-motion',
+        title: 'Closing and resizing',
+        group: 'Theming',
+        classes: [],
+        aliases: ['size-motion'],
+        exports: [],
+        intro: 'A dialog leaves the way it came, and a box that changes size eases to its new height, growing and shrinking alike. Nothing here has a speed of its own: every duration and curve is read from the theme’s dialog entrance.',
+        whenToUse:
+            'Nothing to do for the components: every dialog, accordion, tab set, data table, toast stack, upload list, combobox list, tree, wizard and field gets it from `js/motion.js`, which `js/auto.js` loads wherever one of them is. Mark any other box whose content changes after it is drawn with `data-kp-size-motion`: a card that fills after loading, a panel that shows its errors. Not on a box that scrolls its own content, which does not change size.',
+        examples: [
+            {
+                title: 'A card that eases to its new height',
+                why: 'The card’s children are watched, not the card: when one grows, shrinks, arrives or leaves, the card glides from its old height to the new one in four fifths of the theme’s dialog entrance, capped at `--kp-size-max`. A reader who asked for reduced motion sees it take its size at once.',
+                markup: `
+<div class="kp-card" data-kp-size-motion>
+  <h3>Line 2 readings</h3>
+  <ul id="readings"></ul>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-size-motion', what: 'Ease this box to its new height whenever its content changes size.' },
+            { name: '--kp-close-max', what: 'The longest a dialog may take to leave. It leaves in two thirds of its entrance, never longer than this. Default 600ms.' },
+            { name: '--kp-size-max', what: 'The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.' },
+            { name: '--kp-motion-scale', what: 'On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.' },
+        ],
+        accessibility: [
+            'Built in — a reader who asked for reduced motion gets none: the dialog closes and the box takes its size at once.',
+            'Built in — the dialog stays open, and modal, until its leaving motion ends; its `close` event comes then, with its return value.',
+            'Yours — a box that grows under the reader’s pointer moves what is below it; keep what people click above content that arrives.',
+        ],
+    },
+    {
         id: 'media',
         title: 'Media',
         group: 'Content',

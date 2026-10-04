@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- **A dialog leaves the way it came, and boxes ease to a new size**
+  [scope-142]. `js/motion.js` (loaded by `js/auto.js`, attached by the React
+  `Dialog`) closes every `.kp-dialog` by playing its theme's entrance
+  backwards, in two thirds of the entrance's time, and eases dialogs,
+  accordion items, tabs, the data table, toasts, the upload and combobox
+  lists, the tree, the wizard, fields and any `[data-kp-size-motion]` box to a
+  new height, growing and shrinking, in four fifths of it. Knobs:
+  `--kp-close-max` (600ms), `--kp-size-max` (480ms), `--kp-motion-scale` (1).
+  A closing dialog stays `open` until its motion ends; its `close` event comes
+  then. Reduced motion: nothing moves.
+
 ## 9.0.1 — 2026-10-04
 
 - **A modal dialog opens centred under a CSS reset.** Tailwind's preflight

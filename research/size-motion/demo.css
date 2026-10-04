@@ -123,12 +123,3 @@
 .sm-where ul {
     margin: 0;
 }
-
-/* The proposal's knobs, formal's values: out a third faster than in, on the
-   mirrored curve; a size change on the opening curve. */
-[data-theme='formal'] {
-    --kp-close-dur: 200ms;
-    --kp-close-ease: cubic-bezier(0.3, 0, 1, 1);
-    --kp-size-dur: 240ms;
-    --kp-size-ease: cubic-bezier(0.2, 0, 0, 1);
-}

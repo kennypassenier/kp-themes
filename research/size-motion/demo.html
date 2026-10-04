@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="formal" data-review="size-motion" data-review-themes="formal">
+<html lang="en" data-theme="formal" data-review="size-motion">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,18 @@
         <link rel="stylesheet" href="../../css/components.css" />
         <link rel="stylesheet" href="../../css/layout.css" />
         <link rel="stylesheet" href="../../css/utilities.css" />
-        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
         <link rel="stylesheet" href="demo.css" />
     </head>
     <body>
@@ -28,9 +39,10 @@
                     it off in the system settings to judge the motion.
                 </p>
                 <p class="sm-meta">
-                    Formal's timing, read from its register: the dialog opens in 300 ms on <code>cubic-bezier(0.2, 0, 0, 1)</code>. The proposal
-                    closes it in 200 ms on the mirrored curve, <code>cubic-bezier(0.3, 0, 1, 1)</code> (out goes faster than in), and changes a size
-                    in 240 ms on the opening curve. Both are knobs on the theme: <code>--kp-close-dur</code> and <code>--kp-size-dur</code>.
+                    The proposal is now the package's own <code>js/motion.js</code>, in every theme. Nothing in it has a speed of its own: a dialog
+                    leaves in two thirds of the time the theme's dialog takes to open, and a box changes size in four fifths of it, on the same curve;
+                    both are capped (600 ms to close, 480 ms to resize), because light and dark open over two seconds. This theme:
+                    <b data-sm-timing>…</b>
                 </p>
             </header>
 
@@ -75,8 +87,8 @@
                 <div data-review-look>
                     <p data-for="formal">
                         Open the dialog, then use <b>Load five rows</b>, <b>Add a row</b>, <b>Remove a row</b> and <b>Clear</b> inside it. The box
-                        should glide to each new height in both directions, growing out from its middle as a centred dialog does, and a second
-                        click during a glide should continue from where the box is, not jump.
+                        should glide to each new height in both directions, growing out from its middle as a centred dialog does, and a second click
+                        during a glide should continue from where the box is, not jump.
                     </p>
                 </div>
                 <p class="sm-actions">
@@ -230,8 +242,9 @@
                 <h2 id="h-where">Where else this applies</h2>
                 <p>
                     Searched the package's scripts for every place that changes a box after it is drawn (<code>.hidden =</code>,
-                    <code>.remove()</code>, <code>replaceChildren</code>, <code>append(</code> in <code>js/*.js</code>). Once formal is right, the
-                    same two knobs would carry to these:
+                    <code>.remove()</code>, <code>replaceChildren</code>, <code>append(</code> in <code>js/*.js</code>).
+                    <code>js/motion.js</code> eases these too, wherever <code>js/auto.js</code> runs, and any box marked
+                    <code>data-kp-size-motion</code>:
                 </p>
                 <ul>
                     <li><b>Data table</b>: rows arriving after the busy state, a row expanding to its detail, a filter emptying the list.</li>
@@ -239,11 +252,10 @@
                     <li><b>Combobox and select list</b>: the list shrinking as you type a filter.</li>
                     <li><b>Upload</b>: the file list growing per file and shrinking on remove.</li>
                     <li><b>Field errors</b>: the error line appearing under a field and leaving again.</li>
-                    <li><b>Side navigation</b>: a group folding open and closed.</li>
                     <li><b>Tree</b>: a branch folding open and closed.</li>
                     <li><b>Wizard</b>: one step swapped for the next, of another height.</li>
                 </ul>
-                <p>Not proposed: menus and tooltips, which open in one piece and already have their own entrance.</p>
+                <p>Not included: menus and tooltips, which open in one piece and already have their own entrance.</p>
             </section>
         </main>
 

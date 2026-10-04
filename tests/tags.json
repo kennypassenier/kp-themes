@@ -117,6 +117,7 @@
         { "path": "js/datatable.js", "tags": ["@component:datatable"] },
         { "path": "js/log.js", "tags": ["@component:data"] },
         { "path": "js/progressbar.js", "tags": ["@component:feedback"] },
+        { "path": "js/motion.js", "tags": ["@component:overlays", "@component:structure", "@component:navigation", "@component:datatable", "@component:feedback", "@component:upload", "@component:combobox", "@component:field"] },
         { "path": "js/tables.js", "tags": ["@component:table", "@component:datatable"] },
         { "path": "js/datepicker.js", "tags": ["@component:datepicker", "@component:datatable"] },
         { "path": "js/locale.js", "tags": ["@component:datepicker", "@component:datatable", "@component:upload"] },

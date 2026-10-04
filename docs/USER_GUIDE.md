@@ -465,6 +465,36 @@ the bar is one. Knobs: `--kp-progressbar-height` (0.75rem),
 `--kp-progressbar-duration` (240ms), `--kp-progressbar-ease` (ease-out) and
 `--kp-progress-group-gap`.
 
+## Closing and resizing [scope-142]
+
+A dialog leaves the way it came, and a box whose content changes eases to its
+new height, growing and shrinking alike. `js/motion.js` does it, and
+`js/auto.js` loads it wherever a dialog, accordion, tab set, data table, toast
+stack, upload or combobox list, tree, wizard or field is; the React `Dialog`
+attaches it itself. Every speed comes from the theme's dialog entrance: a
+close takes two thirds of it, a resize four fifths, on the entrance's curve,
+capped at `--kp-close-max` (600ms) and `--kp-size-max` (480ms).
+`--kp-motion-scale` on the root plays all of it slower or faster at once.
+
+Any other box opts in with one attribute:
+
+```html
+<div class="kp-card" data-kp-size-motion>…</div>
+```
+
+or, for a page that does not load `js/auto.js`:
+
+```js
+import { attachMotion, closeDialog } from '@kp-soft/themes/js/motion';
+
+attachMotion(document);
+await closeDialog(dialog, 'saved');
+```
+
+A closing dialog keeps `open` until its motion ends, and its `close` event
+comes then, with its return value. A reader who asked for reduced motion gets
+none: the dialog closes and the box takes its size at once.
+
 ## The alarm [scope-94]
 
 Bigger than a toast: a full-screen dramatic alert with a code line, one huge
