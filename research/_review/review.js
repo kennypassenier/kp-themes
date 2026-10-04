@@ -115,9 +115,13 @@ function save() {
     }
 }
 
-// A later round reopens the pairs it redrew, and only those, once per browser:
+// A later round reopens, once per browser, every pair rejected in the rounds
+// before it, plus any pair it names as redrawn:
 //   <script type="application/json" data-review-round>{"round": "<id>", "reopen": ["<theme>|<item>", …]}</script>
-// Every other verdict stands, and the dialog walks only what is open again.
+// `reopen` is optional: a new round id alone reopens the rejected pairs. Every
+// approved verdict stands, and the dialog walks only what is open again
+// (Kenny, 2026-10-04, review-rereview-M1: a second round walked all 176 pairs
+// and needed the stored answer cleared by hand before it walked at all).
 let round = null;
 try {
     round = JSON.parse(document.querySelector('script[data-review-round]')?.textContent || 'null');
@@ -125,6 +129,7 @@ try {
     round = null;
 }
 if (round?.round && state.__round !== round.round) {
+    for (const [key, entry] of Object.entries(state)) if (entry?.verdict === 'rejected') delete state[key];
     for (const key of round.reopen || []) delete state[key];
     state.__round = round.round;
     save();

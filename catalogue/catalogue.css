@@ -488,7 +488,26 @@
 
     .cat-review-dialog[open] {
         display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+    }
+
+    /* A theme's in-flow dialog ornament (deco, sepia and lapis draw one as
+       ::before since 9.0.0) gets a row of its own, so it never takes the
+       head's row (review-ornament-M1). An empty row is zero tall. */
+    .cat-review-dialog::before {
+        grid-row: 1;
+    }
+
+    .cat-review-dialog__head {
+        grid-row: 2;
+    }
+
+    .cat-review-dialog__grid {
+        grid-row: 3;
+    }
+
+    .cat-review-dialog::after {
+        grid-row: 4;
     }
 
     .cat-review-dialog__head {

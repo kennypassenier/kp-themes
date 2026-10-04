@@ -62,3 +62,17 @@ Not approved:
 
 Verdicts and notes live in the browser's localStorage under
 `kp-demo-review:<demo id>`, until "Clear all verdicts".
+
+## A second round
+
+After fixing what was not approved, add a round marker with a new id to the
+demo, and keep its demo id:
+
+```html
+<script type="application/json" data-review-round>{ "round": "r2" }</script>
+```
+
+On the reviewer's next visit the new round reopens every pair rejected
+before it, once, and keeps every approval: the dialog walks only the rejected
+pairs, with no stored answer to clear by hand. Name pairs in `"reopen":
+["<theme>|<item>", …]` only when something approved was redrawn too.

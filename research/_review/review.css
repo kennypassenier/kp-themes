@@ -71,7 +71,28 @@
 
 .rv-dialog[open] {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+/* A theme may draw its dialog's ornament as an in-flow ::before or ::after
+   (deco, sepia and lapis since 9.0.0). Each gets a row of its own, so the
+   ornament never takes the head's row and pushes the body into a row the
+   dialog clips (Kenny, 2026-10-04, review-ornament-M1). An empty row is
+   zero tall; an absolutely positioned ornament takes no row at all. */
+.rv-dialog::before {
+    grid-row: 1;
+}
+
+.rv-dialog__head {
+    grid-row: 2;
+}
+
+.rv-dialog__grid {
+    grid-row: 3;
+}
+
+.rv-dialog::after {
+    grid-row: 4;
 }
 
 .rv-dialog__head {
