@@ -155,3 +155,13 @@
 [data-sm-leave] .sm-list li {
     align-items: center;
 }
+
+.sm-trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 60rem) {
+    .sm-trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

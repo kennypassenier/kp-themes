@@ -1,0 +1,602 @@
+/* Round five, exit options: two more exits per theme beside the one in
+   leaves.css (Kenny, 2026-10-04: "wees creatief en geef een paar opties per
+   thema"). Shown only in the demo's option columns; the approved one per
+   theme moves into its register under kp.signature. */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* formal, option 2: Folded up like a letter, from the bottom edge to the top. */
+    [data-theme='formal'] [data-sm-exit='2'] [data-kp-leaving] {
+        transform-origin: top;
+        animation: lx-formal-2 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-formal-2 {
+        to {
+            transform: scaleY(0);
+            opacity: 0.2;
+        }
+    }
+
+    /* formal, option 3: The ink greys out and the line slides back into the margin. */
+    [data-theme='formal'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-formal-3 420ms ease-in forwards;
+    }
+
+    @keyframes lx-formal-3 {
+        to {
+            filter: grayscale(1);
+            opacity: 0;
+            transform: translateX(-12px);
+        }
+    }
+
+    /* light, option 2: Lifted up and out of the page. */
+    [data-theme='light'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-light-2 380ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-light-2 {
+        to {
+            transform: translateY(-60%);
+            opacity: 0;
+        }
+    }
+
+    /* light, option 3: It brightens to white where it stands. */
+    [data-theme='light'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-light-3 400ms ease-in forwards;
+    }
+
+    @keyframes lx-light-3 {
+        to {
+            filter: brightness(2.4);
+            opacity: 0;
+        }
+    }
+
+    /* dark, option 2: It sinks into the dark. */
+    [data-theme='dark'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-dark-2 460ms ease-in forwards;
+    }
+
+    @keyframes lx-dark-2 {
+        to {
+            filter: brightness(0);
+            opacity: 0;
+            transform: scale(0.98);
+        }
+    }
+
+    /* dark, option 3: It slips left into shadow. */
+    [data-theme='dark'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-dark-3 420ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-dark-3 {
+        to {
+            transform: translateX(-28px);
+            filter: brightness(0.3);
+            opacity: 0;
+        }
+    }
+
+    /* cyberpunk, option 2: Derezzed: colours shift, it skews and breaks up. */
+    [data-theme='cyberpunk'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-cyberpunk-2 400ms steps(8, jump-end) forwards;
+    }
+
+    @keyframes lx-cyberpunk-2 {
+        50% {
+            filter: hue-rotate(90deg) saturate(3);
+            transform: skewX(-12deg);
+        }
+        to {
+            filter: hue-rotate(180deg) saturate(4);
+            transform: skewX(20deg) scaleY(0.2);
+            opacity: 0;
+        }
+    }
+
+    /* cyberpunk, option 3: A scanline wipes it from the top down. */
+    [data-theme='cyberpunk'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-cyberpunk-3 380ms steps(10, jump-end) forwards;
+    }
+
+    @keyframes lx-cyberpunk-3 {
+        from {
+            filter: drop-shadow(0 2px 0 var(--primary));
+        }
+        to {
+            clip-path: inset(100% 0 0 0);
+            filter: hue-rotate(60deg);
+        }
+    }
+
+    /* synthwave, option 2: It sinks into the sunset, colours shifting. */
+    [data-theme='synthwave'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-synthwave-2 460ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-synthwave-2 {
+        to {
+            transform: translateY(20px);
+            filter: hue-rotate(-50deg) saturate(2);
+            opacity: 0;
+        }
+    }
+
+    /* synthwave, option 3: It turns to neon vapour and drifts away. */
+    [data-theme='synthwave'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-synthwave-3 480ms ease-in forwards;
+    }
+
+    @keyframes lx-synthwave-3 {
+        to {
+            filter: blur(8px) saturate(3);
+            transform: scale(1.06);
+            opacity: 0;
+        }
+    }
+
+    /* pastel, option 2: A balloon let go: it floats up with a little tilt. */
+    [data-theme='pastel'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-pastel-2 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-pastel-2 {
+        to {
+            transform: translateY(-28px) rotate(-5deg);
+            opacity: 0;
+        }
+    }
+
+    /* pastel, option 3: It melts down softly into the page. */
+    [data-theme='pastel'] [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: bottom;
+        animation: lx-pastel-3 460ms ease-in forwards;
+    }
+
+    @keyframes lx-pastel-3 {
+        to {
+            transform: scaleY(0.2);
+            filter: blur(4px);
+            opacity: 0;
+        }
+    }
+
+    /* terminal, option 2: Cleared from the top, line by line. */
+    [data-theme='terminal'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-terminal-2 400ms steps(8, jump-end) forwards;
+    }
+
+    @keyframes lx-terminal-2 {
+        to {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* terminal, option 3: It flickers twice and is gone. */
+    [data-theme='terminal'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-terminal-3 360ms linear forwards;
+    }
+
+    @keyframes lx-terminal-3 {
+        0%,
+        24% {
+            opacity: 1;
+        }
+        25%,
+        49% {
+            opacity: 0;
+        }
+        50%,
+        74% {
+            opacity: 1;
+        }
+        75%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* forest, option 2: It withers: browns, shrinks and fades. */
+    [data-theme='forest'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-forest-2 560ms ease-in forwards;
+    }
+
+    @keyframes lx-forest-2 {
+        to {
+            filter: sepia(1) saturate(0.6);
+            transform: scale(0.94);
+            opacity: 0;
+        }
+    }
+
+    /* forest, option 3: Blown off by the wind, to the right. */
+    [data-theme='forest'] [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: 0 100%;
+        animation: lx-forest-3 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-forest-3 {
+        to {
+            transform: translateX(48px) rotate(10deg);
+            opacity: 0;
+        }
+    }
+
+    /* high-contrast, option 2: Inverted for a moment, then gone. */
+    [data-theme='high-contrast'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-high-contrast-2 300ms steps(1, jump-end) forwards;
+    }
+
+    @keyframes lx-high-contrast-2 {
+        from {
+            filter: invert(1);
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* high-contrast, option 3: Collapsed to a thick line, then gone. */
+    [data-theme='high-contrast'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-high-contrast-3 300ms steps(2, jump-end) forwards;
+    }
+
+    @keyframes lx-high-contrast-3 {
+        50% {
+            clip-path: inset(45% 0 45% 0);
+        }
+        to {
+            clip-path: inset(50% 0 50% 0);
+            opacity: 0;
+        }
+    }
+
+    /* sepia, option 2: It fades like an old photograph. */
+    [data-theme='sepia'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-sepia-2 520ms linear forwards;
+    }
+
+    @keyframes lx-sepia-2 {
+        to {
+            filter: sepia(1) contrast(0.4);
+            opacity: 0;
+        }
+    }
+
+    /* sepia, option 3: Slid back into the book, like a page turned sideways. */
+    [data-theme='sepia'] [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: left;
+        animation: lx-sepia-3 460ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-sepia-3 {
+        to {
+            transform: perspective(600px) rotateY(70deg);
+            opacity: 0;
+        }
+    }
+
+    /* blueprint, option 2: Erased from left to right at an even pace. */
+    [data-theme='blueprint'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-blueprint-2 420ms linear forwards;
+    }
+
+    @keyframes lx-blueprint-2 {
+        from {
+            outline: 1px dashed var(--primary);
+        }
+        to {
+            outline: 1px dashed var(--primary);
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* blueprint, option 3: It fades back to tracing paper, then is gone. */
+    [data-theme='blueprint'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-blueprint-3 460ms linear forwards;
+    }
+
+    @keyframes lx-blueprint-3 {
+        50% {
+            opacity: 0.3;
+            filter: blur(1px) grayscale(1);
+        }
+        to {
+            opacity: 0;
+            filter: blur(2px) grayscale(1);
+        }
+    }
+
+    /* solstice, option 2: It rises like morning mist. */
+    [data-theme='solstice'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-solstice-2 540ms ease-in forwards;
+    }
+
+    @keyframes lx-solstice-2 {
+        to {
+            transform: translateY(-14px);
+            filter: brightness(1.4) blur(3px);
+            opacity: 0;
+        }
+    }
+
+    /* solstice, option 3: An eclipse: a circle closes over it. */
+    [data-theme='solstice'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-solstice-3 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes lx-solstice-3 {
+        from {
+            clip-path: circle(75% at 50% 50%);
+        }
+        to {
+            clip-path: circle(0% at 50% 50%);
+        }
+    }
+
+    /* brutalism, option 2: Slammed out to the left in two hard steps. */
+    [data-theme='brutalism'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-brutalism-2 240ms steps(2, jump-end) forwards;
+    }
+
+    @keyframes lx-brutalism-2 {
+        to {
+            transform: translateX(-60px);
+            opacity: 0;
+        }
+    }
+
+    /* brutalism, option 3: Cut in half, then gone. */
+    [data-theme='brutalism'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-brutalism-3 240ms steps(2, jump-end) forwards;
+    }
+
+    @keyframes lx-brutalism-3 {
+        to {
+            clip-path: inset(0 50% 0 50%);
+        }
+    }
+
+    /* deco, option 2: A curtain closing from both sides to the centre. */
+    [data-theme='deco'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-deco-2 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes lx-deco-2 {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+        to {
+            clip-path: inset(0 50% 0 50%);
+        }
+    }
+
+    /* deco, option 3: A last gold flash, then it fades. */
+    [data-theme='deco'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-deco-3 520ms ease-in forwards;
+    }
+
+    @keyframes lx-deco-3 {
+        40% {
+            filter: sepia(1) saturate(2.5) brightness(1.3);
+        }
+        to {
+            filter: sepia(1) saturate(2.5) brightness(1.6);
+            opacity: 0;
+        }
+    }
+
+    /* phantom, option 2: It rises into mist. */
+    [data-theme='phantom'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-phantom-2 580ms ease-in forwards;
+    }
+
+    @keyframes lx-phantom-2 {
+        to {
+            transform: translateY(-12px);
+            filter: blur(8px);
+            opacity: 0;
+        }
+    }
+
+    /* phantom, option 3: It flickers like a ghost before vanishing. */
+    [data-theme='phantom'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-phantom-3 560ms linear forwards;
+    }
+
+    @keyframes lx-phantom-3 {
+        20% {
+            opacity: 0.3;
+        }
+        35% {
+            opacity: 0.9;
+        }
+        60% {
+            opacity: 0.2;
+            filter: blur(2px);
+        }
+        75% {
+            opacity: 0.6;
+        }
+        to {
+            opacity: 0;
+            filter: blur(4px);
+        }
+    }
+
+    /* shade, option 2: Lifted off the page: its shadow grows, then it fades. */
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-shade-2 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-shade-2 {
+        50% {
+            transform: translateY(-6px) scale(1.02);
+            filter: drop-shadow(0 14px 10px hsl(from var(--foreground) h s l / 0.35));
+        }
+        to {
+            transform: translateY(-12px) scale(1.03);
+            opacity: 0;
+        }
+    }
+
+    /* shade, option 3: Pressed flat into the page. */
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-sm-exit='3'] [data-kp-leaving] {
+        transform-origin: bottom;
+        animation: lx-shade-3 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes lx-shade-3 {
+        to {
+            transform: scaleY(0);
+            opacity: 0.4;
+        }
+    }
+
+    /* retro, option 2: It falls off the screen in four pixel steps. */
+    [data-theme='retro'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-retro-2 320ms steps(4, jump-end) forwards;
+    }
+
+    @keyframes lx-retro-2 {
+        to {
+            transform: translateY(40px);
+            opacity: 0;
+        }
+    }
+
+    /* retro, option 3: It blinks out like a lost life. */
+    [data-theme='retro'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-retro-3 400ms linear forwards;
+    }
+
+    @keyframes lx-retro-3 {
+        0%,
+        19% {
+            opacity: 1;
+        }
+        20%,
+        39% {
+            opacity: 0;
+        }
+        40%,
+        59% {
+            opacity: 1;
+        }
+        60%,
+        79% {
+            opacity: 0;
+        }
+        80%,
+        99% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* grotesk, option 2: Shoved out to the right in three hard steps. */
+    [data-theme='grotesk'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-grotesk-2 240ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes lx-grotesk-2 {
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    /* grotesk, option 3: Cut away from the top in three cuts. */
+    [data-theme='grotesk'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-grotesk-3 240ms steps(3, jump-end) forwards;
+    }
+
+    @keyframes lx-grotesk-3 {
+        to {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* lapis, option 2: It sinks into deep blue. */
+    [data-theme='lapis'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-lapis-2 520ms ease-in forwards;
+    }
+
+    @keyframes lx-lapis-2 {
+        to {
+            transform: translateY(10px);
+            filter: hue-rotate(20deg) brightness(0.4) saturate(1.6);
+            opacity: 0;
+        }
+    }
+
+    /* lapis, option 3: A gold sweep wipes it away from the left. */
+    [data-theme='lapis'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-lapis-3 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes lx-lapis-3 {
+        from {
+            filter: sepia(0.6) saturate(2);
+        }
+        to {
+            filter: sepia(0.6) saturate(2);
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* nostromo, option 2: The phosphor glows up and fades out. */
+    [data-theme='nostromo'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-nostromo-2 480ms ease-in forwards;
+    }
+
+    @keyframes lx-nostromo-2 {
+        35% {
+            filter: brightness(1.8) blur(1px);
+        }
+        to {
+            filter: brightness(1.2) blur(3px);
+            opacity: 0;
+        }
+    }
+
+    /* nostromo, option 3: It scrolls off the top of the monitor. */
+    [data-theme='nostromo'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-nostromo-3 360ms steps(6, jump-end) forwards;
+    }
+
+    @keyframes lx-nostromo-3 {
+        to {
+            transform: translateY(-40%);
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* titanium, option 2: It slides down a rail at an even pace. */
+    [data-theme='titanium'] [data-sm-exit='2'] [data-kp-leaving] {
+        animation: lx-titanium-2 320ms linear forwards;
+    }
+
+    @keyframes lx-titanium-2 {
+        to {
+            transform: translateY(18px);
+            opacity: 0;
+        }
+    }
+
+    /* titanium, option 3: A shutter closes over it from the top. */
+    [data-theme='titanium'] [data-sm-exit='3'] [data-kp-leaving] {
+        animation: lx-titanium-3 320ms linear forwards;
+    }
+
+    @keyframes lx-titanium-3 {
+        to {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+}

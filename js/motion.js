@@ -347,7 +347,7 @@ function arrival(scope) {
  * @param {HTMLElement} el @param {string | null} motion
  */
 function arrive(el, motion) {
-    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving')) return;
+    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving')) return;
     // A register that has its own arrival draws it on `[data-kp-arriving]`;
     // one that has not lends its toast's.
     el.setAttribute('data-kp-arriving', '');
@@ -420,11 +420,44 @@ export async function leave(el, { hide = false } = {}) {
     /** @type {Promise<unknown>[]} */
     const running = [];
     const lasts = own ? own.duration : (arrival?.duration ?? 0);
-    if (!own && arrival) el.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
+    // `--kp-leave-fold: ghost` lets a stand-in of the same shape play the
+    // exit on top while the element itself, hidden, folds its space shut
+    // underneath, so neither squeezes the other (Kenny, 2026-10-04: "maak
+    // een div die de vorm van het te verdwijnen element overneemt en pas
+    // daar een animatie op toe").
+    const fold = style.getPropertyValue('--kp-leave-fold').trim();
+    /** @type {HTMLElement} */
+    let actor = el;
+    if (fold === 'ghost' && lasts > 0) {
+        actor = /** @type {HTMLElement} */ (el.cloneNode(true));
+        actor.setAttribute('aria-hidden', 'true');
+        actor.inert = true;
+        Object.assign(actor.style, {
+            position: 'absolute',
+            top: `${el.offsetTop}px`,
+            left: `${el.offsetLeft}px`,
+            width: `${el.offsetWidth}px`,
+            height: `${el.offsetHeight}px`,
+            margin: '0',
+            boxSizing: 'border-box',
+            pointerEvents: 'none',
+            zIndex: '1',
+        });
+        el.after(actor);
+        // Offsets round to whole pixels and skip some borders; correct by
+        // what the two boxes measure.
+        const want = el.getBoundingClientRect();
+        const got = actor.getBoundingClientRect();
+        actor.style.top = `${el.offsetTop + want.top - got.top}px`;
+        actor.style.left = `${el.offsetLeft + want.left - got.left}px`;
+        el.style.setProperty('visibility', 'hidden');
+        el.style.setProperty('animation', 'none');
+    }
+    if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
     if (lasts > 0)
         running.push(
             new Promise((resolve) => {
-                el.addEventListener('animationend', resolve, { once: true });
+                actor.addEventListener('animationend', resolve, { once: true });
                 setTimeout(resolve, lasts + 100);
             }),
         );
@@ -443,24 +476,32 @@ export async function leave(el, { hide = false } = {}) {
             ? { width: `${el.offsetWidth}px`, marginLeft: style.marginLeft, marginRight: style.marginRight, paddingLeft: style.paddingLeft, paddingRight: style.paddingRight }
             : { height: `${el.offsetHeight}px`, marginTop: style.marginTop, marginBottom: style.marginBottom, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom };
         const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
-        // The space closes a third of the way into the leave, so the theme's
-        // exit shows first, and slower than a plain resize, so the eye can
-        // follow what closes up (Kenny, 2026-10-04: "ik zou het graag iets
-        // trager zien gaan, zodat de animatie zichtbaar is").
-        const fold = el.animate([from, to], {
+        // The space closes slower than a plain resize, so the eye can follow
+        // what closes up (Kenny, 2026-10-04: "ik zou het graag iets trager
+        // zien gaan, zodat de animatie zichtbaar is"). `--kp-leave-fold`
+        // says when: `together` starts it a third of the way into the
+        // theme's exit, `after` once the exit is over, plus
+        // `--kp-leave-pause` ms, so the exit is never hidden by the fold
+        // (Kenny, 2026-10-04: "misschien moet je eerst de elementen laten
+        // faden en dan pas die accordion").
+        const after = fold === 'after';
+        const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
+        const folding = el.animate([from, to], {
             duration: Math.max(size, lasts) * 1.25,
-            delay: lasts / 3,
+            delay: after ? lasts + pause : lasts / 3,
             easing: withoutOvershoot(ease),
             fill: 'forwards',
         });
-        running.push(fold.finished.catch(() => undefined));
+        running.push(folding.finished.catch(() => undefined));
     }
     await Promise.all(running);
+    if (actor !== el) actor.remove();
     gone();
     el.removeAttribute('data-kp-leaving');
     el.style.removeProperty('animation');
     el.style.removeProperty('overflow');
     el.style.removeProperty('box-sizing');
+    el.style.removeProperty('visibility');
     for (const a of el.getAnimations()) a.cancel();
 }
 

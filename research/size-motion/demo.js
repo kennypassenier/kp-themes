@@ -55,6 +55,32 @@ const LEAVE = {
     titanium: 'Pulled out like a drawer, at an even mechanical pace.',
 };
 
+// Options 2 and 3 per theme in the exit-options section (exits.css).
+const EXITS = {
+    formal: ['Folded up like a letter, from the bottom edge to the top.', 'The ink greys out and the line slides back into the margin.'],
+    light: ['Lifted up and out of the page.', 'It brightens to white where it stands.'],
+    dark: ['It sinks into the dark.', 'It slips left into shadow.'],
+    cyberpunk: ['Derezzed: colours shift, it skews and breaks up.', 'A scanline wipes it from the top down.'],
+    synthwave: ['It sinks into the sunset, colours shifting.', 'It turns to neon vapour and drifts away.'],
+    pastel: ['A balloon let go: it floats up with a little tilt.', 'It melts down softly into the page.'],
+    terminal: ['Cleared from the top, line by line.', 'It flickers twice and is gone.'],
+    forest: ['It withers: browns, shrinks and fades.', 'Blown off by the wind, to the right.'],
+    'high-contrast': ['Inverted for a moment, then gone.', 'Collapsed to a thick line, then gone.'],
+    sepia: ['It fades like an old photograph.', 'Slid back into the book, like a page turned sideways.'],
+    blueprint: ['Erased from left to right at an even pace.', 'It fades back to tracing paper, then is gone.'],
+    solstice: ['It rises like morning mist.', 'An eclipse: a circle closes over it.'],
+    brutalism: ['Slammed out to the left in two hard steps.', 'Cut in half, then gone.'],
+    deco: ['A curtain closing from both sides to the centre.', 'A last gold flash, then it fades.'],
+    phantom: ['It rises into mist.', 'It flickers like a ghost before vanishing.'],
+    'shade-light': ['Lifted off the page: its shadow grows, then it fades.', 'Pressed flat into the page.'],
+    retro: ['It falls off the screen in four pixel steps.', 'It blinks out like a lost life.'],
+    grotesk: ['Shoved out to the right in three hard steps.', 'Cut away from the top in three cuts.'],
+    lapis: ['It sinks into deep blue.', 'A gold sweep wipes it away from the left.'],
+    nostromo: ['The phosphor glows up and fades out.', 'It scrolls off the top of the monitor.'],
+    titanium: ['It slides down a rail at an even pace.', 'A shutter closes over it from the top.'],
+    'shade-dark': ['Lifted off the page: its shadow grows, then it fades.', 'Pressed flat into the page.'],
+};
+
 // One note per section serves every theme: the review dialog reads a note
 // per theme, so formal's is copied to the other twenty-one, and the two
 // growing sections add the theme's character where it was re-drawn.
@@ -70,7 +96,10 @@ for (const look of document.querySelectorAll('[data-review-look]')) {
         const character = /** @type {Record<string, string>} */ (CHARACTER)[name];
         if (grows && character) copy.innerHTML = `${base}<br /><b>This theme's character:</b> ${character}`;
         const leaves = /** @type {Record<string, string>} */ (LEAVE)[name];
-        if (item === 'leave' && leaves) copy.innerHTML = `${base}<br /><b>This theme's leave:</b> ${leaves}`;
+        if (item.startsWith('leave') && item !== 'leave-exits' && leaves) copy.innerHTML = `${base}<br /><b>This theme's leave:</b> ${leaves}`;
+        const exits = /** @type {Record<string, string[]>} */ (EXITS)[name];
+        if (item === 'leave-exits' && leaves && exits)
+            copy.innerHTML = `${base}<br /><b>Option 1:</b> ${leaves}<br /><b>Option 2:</b> ${exits[0]}<br /><b>Option 3:</b> ${exits[1]}`;
         if (copy !== note) {
             copy.hidden = true;
             look.append(copy);
@@ -218,7 +247,7 @@ const NOTICES = [
     ['kp-alert--success', 'Line 1 is back within range.'],
 ];
 for (const col of document.querySelectorAll('[data-sm-leave]')) {
-    const proposal = col.getAttribute('data-sm-leave') === 'proposal';
+    const proposal = col.getAttribute('data-sm-leave') !== 'today';
     const card = /** @type {HTMLElement} */ (col.querySelector('.sm-card'));
     const notices = /** @type {HTMLElement} */ (col.querySelector('[data-sm-notices]'));
     const list = /** @type {HTMLElement} */ (col.querySelector('[data-sm-leave-list]'));
@@ -257,3 +286,16 @@ for (const col of document.querySelectorAll('[data-sm-leave]')) {
         if (act === 'all') for (const el of [...notices.children, ...list.children]) void go(/** @type {HTMLElement} */ (el));
     });
 }
+
+// The exit-options section closes its space with the timing picked above it.
+const exitTiming = /** @type {HTMLSelectElement | null} */ (document.querySelector('[data-sm-exit-timing]'));
+const applyExitTiming = () => {
+    if (!exitTiming) return;
+    for (const col of document.querySelectorAll('[data-sm-exit]')) {
+        const style = /** @type {HTMLElement} */ (col).style;
+        style.setProperty('--kp-leave-fold', exitTiming.value === 'pause' ? 'after' : exitTiming.value);
+        style.setProperty('--kp-leave-pause', exitTiming.value === 'pause' ? '150ms' : '0ms');
+    }
+};
+exitTiming?.addEventListener('change', applyExitTiming);
+applyExitTiming();
