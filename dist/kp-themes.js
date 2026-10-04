@@ -11126,22 +11126,37 @@ function withoutOvershoot(ease) {
   const hold = (y) => Math.min(1, Math.max(0, y));
   return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
 }
-function sizeEase(box, ease, change) {
+function sizeEase(box, ease, change, plain = false) {
   const style = getComputedStyle(box);
+  if (plain) return withoutOvershoot(ease);
+  const own = style.getPropertyValue("--kp-size-ease").trim();
+  if (own) ease = own;
   if (style.getPropertyValue("--kp-size-steps").trim() === "line") {
     const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
     return `steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`;
   }
   return withoutOvershoot(ease);
 }
-function glide(box, from, to, duration, easing) {
+function glide(box, from, to, duration, easing, plain = false) {
   box.style.setProperty("overflow", "clip");
   box.style.setProperty("box-sizing", "border-box");
+  box.style.setProperty("--kp-resize-dur", `${Math.round(duration)}ms`);
+  if (!plain) box.setAttribute("data-kp-resizing", to > from ? "grow" : "shrink");
   const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+  const own = (
+    /** @type {any} */
+    box
+  );
+  own.__kpGlide = mine;
   const done = () => {
+    if (own.__kpGlide !== mine) return;
+    own.__kpGlide = null;
     box.style.removeProperty("overflow");
     box.style.removeProperty("box-sizing");
+    box.style.removeProperty("--kp-resize-dur");
+    box.removeAttribute("data-kp-resizing");
   };
+  mine.addEventListener("cancel", done);
   return { animation: mine, done };
 }
 function arrival(scope) {
@@ -11166,9 +11181,16 @@ function arrival(scope) {
   }
 }
 function arrive(el2, motion) {
-  if (!motion || el2.style.animation) return;
-  el2.style.animation = motion;
-  el2.addEventListener("animationend", () => el2.style.removeProperty("animation"), { once: true });
+  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving")) return;
+  el2.setAttribute("data-kp-arriving", "");
+  const own = getComputedStyle(el2).animationName;
+  if (!own || own === "none") el2.style.animation = motion;
+  const end = () => {
+    el2.style.removeProperty("animation");
+    el2.removeAttribute("data-kp-arriving");
+  };
+  el2.addEventListener("animationend", end, { once: true });
+  setTimeout(end, 1500);
 }
 function easeSize(box) {
   const own = (
@@ -11256,7 +11278,7 @@ function attachFold(details) {
       summary.offsetHeight + parseFloat(getComputedStyle(details).borderBlockStartWidth || "0") + parseFloat(getComputedStyle(details).borderBlockEndWidth || "0")
     );
     const to = opening ? full : shut;
-    const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from));
+    const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
     running = mine;
     mine.finished.then(() => {
       if (running !== mine) return;

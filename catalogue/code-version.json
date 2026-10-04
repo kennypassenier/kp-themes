@@ -15,7 +15,7 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/motion.js": {
-            "digest": "0feff3554a66e686",
+            "digest": "c08832fa835275cc",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -970,7 +970,7 @@
         "deco||@container (min-width: 48rem)||.kp-side-note": "22fdca5a6161fb7f",
         "deco||@container kp-nav (max-width: 40rem)||.kp-nav__menu": "47153fde29005258",
         "deco||@media (prefers-reduced-motion: no-preference)||.kp-button": "cc8afdefb881498b",
-        "deco||@media (prefers-reduced-motion: no-preference)||.kp-dialog": "b8dcbc3a9f3ff3a7",
+        "deco||@media (prefers-reduced-motion: no-preference)||.kp-dialog": "9fa2dc32aac9ba25",
         "deco||@media (prefers-reduced-motion: no-preference)||.kp-field__check[type='checkbox']": "852f56d0a7a0df1b",
         "deco||@media (prefers-reduced-motion: no-preference)||.kp-field__check[type='radio']": "8f25c39e8f29692d",
         "deco||@media (prefers-reduced-motion: no-preference)||.kp-nav__link": "bafa9545bd695c8f",
@@ -5759,6 +5759,7 @@
         "combobox": {
             "modules": "58fda77c0d684111",
             "families": [
+                "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-close-on-blur",
                 "data-kp-combobox",
@@ -5775,6 +5776,7 @@
                 "data-kp-open-on-focus",
                 "data-kp-option",
                 "data-kp-overlay-side",
+                "data-kp-resizing",
                 "data-kp-size-motion",
                 "data-kp-stay-open",
                 "data-kp-tag-list",
@@ -5831,6 +5833,7 @@
             "modules": "0f8cc6a16c8a4ae7",
             "families": [
                 "data-kp-align",
+                "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-busy-overlay",
                 "data-kp-cards",
@@ -5936,6 +5939,7 @@
                 "data-kp-region",
                 "data-kp-region-label",
                 "data-kp-remember",
+                "data-kp-resizing",
                 "data-kp-row-detail",
                 "data-kp-row-key",
                 "data-kp-row-key-field",
@@ -6009,6 +6013,7 @@
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
+                "data-kp-arriving",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
                 "data-kp-confirm",
@@ -6030,6 +6035,7 @@
                 "data-kp-open-delay",
                 "data-kp-orientation",
                 "data-kp-popover-overflowing",
+                "data-kp-resizing",
                 "data-kp-semantic",
                 "data-kp-separator",
                 "data-kp-size-motion",
@@ -6056,6 +6062,7 @@
         "field": {
             "modules": "00e535d81b7ff097",
             "families": [
+                "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-close-on-blur",
                 "data-kp-combobox",
@@ -6078,6 +6085,7 @@
                 "data-kp-option",
                 "data-kp-overlay-side",
                 "data-kp-radiogroup",
+                "data-kp-resizing",
                 "data-kp-revalidate-on",
                 "data-kp-select",
                 "data-kp-size-motion",
@@ -6243,6 +6251,7 @@
                 "data-kp-activation",
                 "data-kp-against",
                 "data-kp-armed",
+                "data-kp-arriving",
                 "data-kp-channel",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
@@ -6284,6 +6293,7 @@
                 "data-kp-orientation",
                 "data-kp-popover-overflowing",
                 "data-kp-remember",
+                "data-kp-resizing",
                 "data-kp-semantic",
                 "data-kp-separator",
                 "data-kp-sidenav",
@@ -6357,6 +6367,7 @@
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
+                "data-kp-arriving",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
                 "data-kp-confirm",
@@ -6378,6 +6389,7 @@
                 "data-kp-open-delay",
                 "data-kp-orientation",
                 "data-kp-popover-overflowing",
+                "data-kp-resizing",
                 "data-kp-semantic",
                 "data-kp-separator",
                 "data-kp-size-motion",
@@ -6563,6 +6575,7 @@
         "structure": {
             "modules": "890468a04858ddbf",
             "families": [
+                "data-kp-arriving",
                 "data-kp-click",
                 "data-kp-collapse",
                 "data-kp-column-hidden",
@@ -6591,6 +6604,7 @@
                 "data-kp-remember",
                 "data-kp-reorder",
                 "data-kp-reorder-status",
+                "data-kp-resizing",
                 "data-kp-revalidate-on",
                 "data-kp-selectable",
                 "data-kp-size-motion",
@@ -6668,6 +6682,7 @@
         "upload": {
             "modules": "41beb48099cf8444",
             "families": [
+                "data-kp-arriving",
                 "data-kp-date-input",
                 "data-kp-date-open",
                 "data-kp-date-panel",
@@ -6682,6 +6697,7 @@
                 "data-kp-max-files",
                 "data-kp-max-total",
                 "data-kp-month",
+                "data-kp-resizing",
                 "data-kp-size-motion",
                 "data-kp-step",
                 "data-kp-step-label",

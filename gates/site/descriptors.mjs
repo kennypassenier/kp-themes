@@ -2135,7 +2135,7 @@ export const DESCRIPTORS = [
         title: 'Closing and resizing',
         group: 'Theming',
         classes: [],
-        aliases: ['size-motion'],
+        aliases: ['size-motion', 'resizing', 'arriving'],
         exports: [],
         intro: 'A dialog leaves the way it came, and a box that changes size eases to its new height, growing and shrinking alike. Nothing here has a speed of its own: every duration and curve is read from the theme’s dialog entrance.',
         whenToUse:
@@ -2156,6 +2156,10 @@ export const DESCRIPTORS = [
             { name: 'data-kp-size-motion', what: 'Ease this box to its new height whenever its content changes size.' },
             { name: '--kp-close-max', what: 'The longest a dialog may take to leave. It leaves in two thirds of its entrance, never longer than this. Default 600ms.' },
             { name: '--kp-size-max', what: 'The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.' },
+            { name: 'data-kp-resizing', what: 'Written on a box while it glides to a new height, `grow` or `shrink`. A register draws its own character on it. Read it, do not set it.' },
+            { name: 'data-kp-arriving', what: 'Written for one arrival on what arrives in a box (a row, a shown panel or message). A register may give it its own arrival; without one it plays the theme\u2019s toast entrance.' },
+            { name: '--kp-size-ease', what: 'A theme\u2019s own curve for its size changes, held from overshooting. Default: the dialog entrance\u2019s curve.' },
+            { name: '--kp-size-steps', what: '`line` moves a size one line of text at a time, growing and shrinking alike (terminal).' },
             { name: '--kp-motion-scale', what: 'On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.' },
         ],
         accessibility: [

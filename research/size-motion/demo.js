@@ -7,17 +7,46 @@ import { attachMotion, closeDialog, easeSize, themeMotion } from '../../js/motio
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduced()) document.querySelector('[data-sm-motion]')?.removeAttribute('hidden');
 
+/** Round four: what each re-drawn theme's growing and shrinking is meant to feel like. */
+const CHARACTER = {
+    formal: 'A ledger: a fine frame is ruled around the box while it changes, and a new line is written in from left to right, like ink.',
+    light: 'Daylight: the box brightens a touch while it opens up, and new content blooms in out of the glare.',
+    dark: 'The darkroom: the oxide halo glows while the box changes, and new content develops from a pale print to full contrast.',
+    synthwave: 'Neon: the edge burns pink and cyan while it moves, and new rows race in from the left, leaning into the speed.',
+    'high-contrast':
+        'Clarity first: the box changes in two plain steps behind a bold outline, and whatever arrives is outlined once so the eye finds it.',
+    sepia: 'Paper: the box unrolls with a curl of shadow under its edge, and a new line turns down like a page.',
+    blueprint:
+        "The drawing: a dashed dimension frame stands off the box while it is measured anew, and new lines are plotted top down at the plotter's even pace.",
+    solstice: 'Dawn: a warm light rises under the box as it grows, and new content rises into it, still bright from the sun.',
+    'shade-light':
+        "The shadow: the box's shadow lengthens as if it were lifted to be resized and settles back, and new rows come up out of their own shadow.",
+    'shade-dark':
+        "The shadow: the box's shadow lengthens as if it were lifted to be resized and settles back, and new rows come up out of their own shadow.",
+    grotesk: 'The cut: the box jumps in three hard cuts behind a heavy rule, and a new line is cut in from the left in three.',
+    lapis: 'The burnish: the box catches the gold while it moves, and new content arrives gilded and cools to its own colour.',
+    nostromo: "The ship's terminal, in amber: the box moves a line at a time inside a glowing amber frame, and a new line prints with a scan.",
+    titanium: 'The machine: the box runs at an even, mechanical pace inside a fine machined edge, and new content slides in like a drawer.',
+};
+
 // One note per section serves every theme: the review dialog reads a note
-// per theme, so formal's is copied to the other twenty-one.
+// per theme, so formal's is copied to the other twenty-one, and the two
+// growing sections add the theme's character where it was re-drawn.
 for (const look of document.querySelectorAll('[data-review-look]')) {
     const note = look.querySelector('[data-for="formal"]');
     if (!note) continue;
+    const item = look.closest('[data-review-item]')?.getAttribute('data-review-item') ?? '';
+    const grows = item === 'dialog-grow' || item === 'card-grow';
+    const base = note.innerHTML;
     for (const { name } of THEMES) {
-        if (name === 'formal') continue;
-        const copy = /** @type {HTMLElement} */ (note.cloneNode(true));
+        const copy = name === 'formal' ? note : /** @type {HTMLElement} */ (note.cloneNode(true));
         copy.setAttribute('data-for', name);
-        copy.hidden = true;
-        look.append(copy);
+        const character = /** @type {Record<string, string>} */ (CHARACTER)[name];
+        if (grows && character) copy.innerHTML = `${base}<br /><b>This theme's character:</b> ${character}`;
+        if (copy !== note) {
+            copy.hidden = true;
+            look.append(copy);
+        }
     }
 }
 

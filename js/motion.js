@@ -249,9 +249,15 @@ export function withoutOvershoot(ease) {
  * where the theme asks for it (`--kp-size-steps: line`, terminal), one step
  * per line of text the box gains or loses.
  * @param {HTMLElement} box @param {string} ease @param {number} change in px
+ * @param {boolean} [plain] the entrance's curve alone, without the theme's size character (the accordion, approved as it is)
  */
-function sizeEase(box, ease, change) {
+function sizeEase(box, ease, change, plain = false) {
     const style = getComputedStyle(box);
+    if (plain) return withoutOvershoot(ease);
+    // A theme may give its sizes a curve of their own (`--kp-size-ease`),
+    // still held from overshooting.
+    const own = style.getPropertyValue('--kp-size-ease').trim();
+    if (own) ease = own;
     if (style.getPropertyValue('--kp-size-steps').trim() === 'line') {
         const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
         return `steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`;
@@ -265,15 +271,29 @@ function sizeEase(box, ease, change) {
  * size it keeps (a card with padding read its padding twice and then
  * clicked smaller, in forest and high-contrast).
  * @param {HTMLElement} box @param {number} from @param {number} to @param {number} duration @param {string} easing
+ * @param {boolean} [plain] no `[data-kp-resizing]` character
  */
-function glide(box, from, to, duration, easing) {
+function glide(box, from, to, duration, easing, plain = false) {
     box.style.setProperty('overflow', 'clip');
     box.style.setProperty('box-sizing', 'border-box');
+    // While it glides the box says so, which way and for how long: a
+    // register draws its own character on `[data-kp-resizing]` (an edge
+    // that glows, a rule that draws, a shadow that lengthens) [scope-142].
+    box.style.setProperty('--kp-resize-dur', `${Math.round(duration)}ms`);
+    if (!plain) box.setAttribute('data-kp-resizing', to > from ? 'grow' : 'shrink');
     const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+    const own = /** @type {any} */ (box);
+    own.__kpGlide = mine;
     const done = () => {
+        // A glide cancelled for a newer one leaves the box to the newer one.
+        if (own.__kpGlide !== mine) return;
+        own.__kpGlide = null;
         box.style.removeProperty('overflow');
         box.style.removeProperty('box-sizing');
+        box.style.removeProperty('--kp-resize-dur');
+        box.removeAttribute('data-kp-resizing');
     };
+    mine.addEventListener('cancel', done);
     return { animation: mine, done };
 }
 
@@ -310,9 +330,18 @@ function arrival(scope) {
  * @param {HTMLElement} el @param {string | null} motion
  */
 function arrive(el, motion) {
-    if (!motion || el.style.animation) return;
-    el.style.animation = motion;
-    el.addEventListener('animationend', () => el.style.removeProperty('animation'), { once: true });
+    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving')) return;
+    // A register that has its own arrival draws it on `[data-kp-arriving]`;
+    // one that has not lends its toast's.
+    el.setAttribute('data-kp-arriving', '');
+    const own = getComputedStyle(el).animationName;
+    if (!own || own === 'none') el.style.animation = motion;
+    const end = () => {
+        el.style.removeProperty('animation');
+        el.removeAttribute('data-kp-arriving');
+    };
+    el.addEventListener('animationend', end, { once: true });
+    setTimeout(end, 1500);
 }
 
 /**
@@ -415,7 +444,9 @@ function attachFold(details) {
             parseFloat(getComputedStyle(details).borderBlockStartWidth || '0') +
             parseFloat(getComputedStyle(details).borderBlockEndWidth || '0');
         const to = opening ? full : shut;
-        const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from));
+        // The accordion keeps the motion Kenny approved in every theme: the
+        // entrance's curve, without a theme's size character.
+        const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
         running = mine;
         mine.finished
             .then(() => {

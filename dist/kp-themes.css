@@ -35548,13 +35548,22 @@
         }
     }
 
+    /* `outline-offset` stays 0 throughout: it is there only so the browser
+       runs this animation on the main thread. Deco is the one register whose
+       dialog entrance animates a circle(); Kenny saw the dialog stay cut
+       along that circle in Firefox (2026-10-04). Not reproduced here, where
+       the animation always reported finished at its full size; a cut that
+       outlives a finished animation points at the compositor's copy of the
+       clip, which this takes out of play. */
     @keyframes kp-sig-deco-deco-sunburst {
         from {
             clip-path: circle(0 at 50% 0);
+            outline-offset: 0;
         }
 
         to {
             clip-path: circle(150% at 50% 0);
+            outline-offset: 0;
         }
     }
 

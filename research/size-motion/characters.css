@@ -1,0 +1,295 @@
+/* Round four: a character of its own for the fourteen themes whose growing
+   and shrinking Kenny found plain (2026-10-04: "de anderen moeten nog een
+   unieke insteek krijgen"). Cyberpunk, pastel, terminal, forest, brutalism,
+   deco, phantom and retro are approved as they are and are not touched here.
+
+   Two hooks, both written by js/motion.js:
+   - `[data-kp-resizing]` on a box while it glides to a new height
+     ("grow" or "shrink"), with `--kp-resize-dur` its duration. The box's
+     own `animation` is left alone (a dialog would replay its entrance), so
+     the character is a state with a transition: it fades in as the glide
+     starts and out as it ends.
+   - `[data-kp-arriving]` on what arrives in a box (a row, a shown panel or
+     message), for one arrival.
+   `--kp-size-ease` gives a theme a curve of its own for the glide, and
+   `--kp-size-steps: line` makes it move one line at a time.
+
+   Once approved, each block moves into its register under kp.signature. */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* The boxes carry the transition at rest too, so the character fades
+       out as well as in. */
+    :is(
+        .kp-dialog,
+        .kp-tabs,
+        .kp-card,
+        .kp-datatable,
+        .kp-toasts,
+        .kp-upload__list,
+        .kp-combobox__list,
+        .kp-tree,
+        .kp-wizard,
+        .kp-field,
+        [data-kp-size-motion]
+    ) {
+        transition:
+            outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+            outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+            filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out;
+        outline: 0 solid transparent;
+    }
+
+    /* ── formal: a ledger. The frame is ruled in as the box changes, and a
+       new line is written from left to right, as ink. ───────────────── */
+    [data-theme='formal'] [data-kp-resizing] {
+        outline: 1px solid var(--border-strong);
+        outline-offset: 4px;
+    }
+
+    [data-theme='formal'] [data-kp-arriving] {
+        animation: sm-formal-ink 320ms cubic-bezier(0.2, 0, 0, 1) backwards;
+    }
+
+    @keyframes sm-formal-ink {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    /* ── light: daylight. The box brightens as it opens up, and new
+       content blooms in out of the glare. ───────────────────────────── */
+    [data-theme='light'] [data-kp-resizing] {
+        filter: brightness(1.04) drop-shadow(0 0 14px hsl(from var(--primary) h s l / 0.28));
+    }
+
+    [data-theme='light'] [data-kp-arriving] {
+        animation: sm-light-bloom 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+
+    @keyframes sm-light-bloom {
+        from {
+            opacity: 0;
+            filter: blur(4px) brightness(1.4);
+        }
+    }
+
+    /* ── dark: the darkroom. The oxide halo glows while the box changes,
+       and new content develops, from a pale print to its own contrast. ─ */
+    [data-theme='dark'] [data-kp-resizing] {
+        filter: drop-shadow(0 0 16px hsl(from var(--primary) h s l / 0.45));
+    }
+
+    [data-theme='dark'] [data-kp-arriving] {
+        animation: sm-dark-develop 480ms ease-out backwards;
+    }
+
+    @keyframes sm-dark-develop {
+        from {
+            opacity: 0.2;
+            filter: contrast(0.2) brightness(1.8) sepia(0.6);
+        }
+    }
+
+    /* ── synthwave: neon. The edge burns pink and cyan, and new rows race
+       in from the left, leaning into the speed. ─────────────────────── */
+    [data-theme='synthwave'] [data-kp-resizing] {
+        outline: 1px solid var(--primary);
+        outline-offset: 3px;
+        filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 18px var(--accent));
+    }
+
+    [data-theme='synthwave'] [data-kp-arriving] {
+        animation: sm-synthwave-race 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+
+    @keyframes sm-synthwave-race {
+        from {
+            opacity: 0;
+            transform: translateX(-28px) skewX(-18deg);
+            filter: drop-shadow(-12px 0 6px var(--primary));
+        }
+    }
+
+    /* ── high-contrast: clarity first. The changing box is marked with a
+       bold outline while it moves, in two plain steps, and what arrives is
+       outlined once so the eye finds it. ────────────────────────────── */
+    [data-theme='high-contrast'] {
+        --kp-size-ease: steps(2, jump-end);
+    }
+
+    [data-theme='high-contrast'] [data-kp-resizing] {
+        outline: 3px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    [data-theme='high-contrast'] [data-kp-arriving] {
+        animation: sm-hc-mark 600ms steps(1, jump-end) backwards;
+    }
+
+    @keyframes sm-hc-mark {
+        from {
+            outline: 3px solid var(--ring);
+            outline-offset: 1px;
+        }
+    }
+
+    /* ── sepia: paper. The box unrolls with the curl's shadow under its
+       edge, and a new line turns down like a page. ──────────────────── */
+    [data-theme='sepia'] [data-kp-resizing] {
+        filter: drop-shadow(0 8px 5px hsl(30 40% 20% / 0.35));
+    }
+
+    [data-theme='sepia'] [data-kp-arriving] {
+        transform-origin: top;
+        animation: sm-sepia-turn 440ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    @keyframes sm-sepia-turn {
+        from {
+            opacity: 0;
+            transform: perspective(600px) rotateX(-70deg);
+        }
+    }
+
+    /* ── blueprint: the drawing. A dashed dimension frame stands off the
+       box while it is measured anew, and new lines are plotted top down,
+       at the plotter's even pace. ──────────────────────────────────── */
+    [data-theme='blueprint'] [data-kp-resizing] {
+        outline: 1px dashed var(--primary);
+        outline-offset: 8px;
+    }
+
+    [data-theme='blueprint'] [data-kp-arriving] {
+        animation: sm-blueprint-plot 420ms linear backwards;
+    }
+
+    @keyframes sm-blueprint-plot {
+        from {
+            clip-path: inset(0 0 100% 0);
+            outline: 1px dashed var(--primary);
+        }
+    }
+
+    /* ── solstice: dawn. A warm light rises under the box as it grows, and
+       new content rises into it, still bright from the sun. ─────────── */
+    [data-theme='solstice'] [data-kp-resizing] {
+        filter: drop-shadow(0 10px 18px hsl(35 95% 60% / 0.45));
+    }
+
+    [data-theme='solstice'] [data-kp-arriving] {
+        animation: sm-solstice-rise 480ms cubic-bezier(0.2, 0, 0, 1) backwards;
+    }
+
+    @keyframes sm-solstice-rise {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+            filter: brightness(1.5) saturate(1.4);
+        }
+    }
+
+    /* ── shade-light and shade-dark: the shadow. The box's shadow lengthens
+       as it moves, as if lifted to be resized, and settles back; new rows
+       come up out of their own shadow. ──────────────────────────────── */
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-kp-resizing] {
+        filter: drop-shadow(0 18px 16px hsl(from var(--foreground) h s l / 0.3));
+    }
+
+    :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-kp-arriving] {
+        animation: sm-shade-lift 420ms cubic-bezier(0.25, 0.1, 0.25, 1) backwards;
+    }
+
+    @keyframes sm-shade-lift {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+            filter: drop-shadow(0 10px 6px hsl(from var(--foreground) h s l / 0.45));
+        }
+    }
+
+    /* ── grotesk: the cut. The box jumps in three hard cuts behind a heavy
+       rule, and a new line is cut in from the left in three. ────────── */
+    [data-theme='grotesk'] {
+        --kp-size-ease: steps(3, jump-end);
+    }
+
+    [data-theme='grotesk'] [data-kp-resizing] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 0;
+    }
+
+    [data-theme='grotesk'] [data-kp-arriving] {
+        animation: sm-grotesk-cut 240ms steps(3, jump-end) backwards;
+    }
+
+    @keyframes sm-grotesk-cut {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    /* ── lapis: the burnish. The box catches the gold while it moves, and
+       new content arrives gilded and cools to its colour. ───────────── */
+    [data-theme='lapis'] [data-kp-resizing] {
+        filter: brightness(1.12) saturate(1.25) drop-shadow(0 0 10px hsl(45 90% 55% / 0.4));
+    }
+
+    [data-theme='lapis'] [data-kp-arriving] {
+        animation: sm-lapis-gild 520ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    @keyframes sm-lapis-gild {
+        from {
+            opacity: 0;
+            filter: sepia(1) saturate(3) brightness(1.4) hue-rotate(-10deg);
+        }
+    }
+
+    /* ── nostromo: the ship's terminal, in amber. The box moves a line at a
+       time behind a flickering amber frame, and a new line prints with a
+       scan. ─────────────────────────────────────────────────────────── */
+    [data-theme='nostromo'] {
+        --kp-size-steps: line;
+    }
+
+    [data-theme='nostromo'] [data-kp-resizing] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        filter: drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    [data-theme='nostromo'] [data-kp-arriving] {
+        animation: sm-nostromo-scan 300ms steps(4, jump-end) backwards;
+    }
+
+    @keyframes sm-nostromo-scan {
+        from {
+            clip-path: inset(0 0 100% 0);
+            filter: brightness(1.8);
+        }
+    }
+
+    /* ── titanium: the machine. The box runs at an even, mechanical pace
+       inside a fine machined edge, and new content slides in like a
+       drawer. ───────────────────────────────────────────────────────── */
+    [data-theme='titanium'] {
+        --kp-size-ease: linear;
+    }
+
+    [data-theme='titanium'] [data-kp-resizing] {
+        outline: 1px solid var(--border-strong);
+        outline-offset: -3px;
+        filter: brightness(1.05);
+    }
+
+    [data-theme='titanium'] [data-kp-arriving] {
+        animation: sm-titanium-drawer 260ms linear backwards;
+    }
+
+    @keyframes sm-titanium-drawer {
+        from {
+            opacity: 0;
+            transform: translateX(14px);
+        }
+    }
+}

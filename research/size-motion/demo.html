@@ -22,6 +22,7 @@
             })();
         </script>
         <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="characters.css" />
     </head>
     <body>
         <main class="sm-page">
@@ -32,8 +33,8 @@
                     en dan verspringt de grootte heel plots omdat er elementen bijkomen", and "kijk is waar we dat nog kunnen toepassen, bv als een
                     div groeit of krimpt? want krimpen daar moet je dan ook rekening mee houden". Every section below has the same two buttons side by
                     side: <b>Proposal</b> moves the way the theme moves, and <b>Package today</b> does what 9.0.1 does, so the difference is one click
-                    apart. Round three: every theme, with what Kenny asked on 2026-10-04 (no overshoot, no click at the end, terminal line by line,
-                    new content arriving the theme's way, the tabs last).
+                    apart. Round four: a character of its own for the fourteen themes whose growing and shrinking was still plain; each section's note
+                    in the review dialog says what that theme's character is.
                 </p>
                 <p class="sm-motion" data-sm-motion hidden>
                     <b>Your system asks for reduced motion</b>, so the proposal changes size and closes at once, exactly like the package today. Turn
@@ -290,75 +291,41 @@
             </dialog>
         </template>
 
-        <!-- Round three (2026-10-04): Kenny approved the close and the accordion in every theme; his notes on growing and shrinking
-             hold for every theme but blueprint, so those pairs are judged again. -->
+        <!-- Round four (2026-10-04): close, accordion and tabs are approved in every theme, and growing and shrinking in cyberpunk,
+             pastel, terminal, forest, brutalism, deco, phantom and retro; the fourteen others have a character of their own now
+             (characters.css) and are judged again, with deco's dialog. -->
         <script type="application/json" data-review-round>
             {
-                "round": "2026-10-04-r3",
+                "round": "2026-10-04-r4",
                 "reopen": [
                     "formal|dialog-grow",
                     "formal|card-grow",
-                    "formal|tabs",
                     "light|dialog-grow",
                     "light|card-grow",
-                    "light|tabs",
                     "dark|dialog-grow",
                     "dark|card-grow",
-                    "dark|tabs",
-                    "cyberpunk|dialog-grow",
-                    "cyberpunk|card-grow",
-                    "cyberpunk|tabs",
                     "synthwave|dialog-grow",
                     "synthwave|card-grow",
-                    "synthwave|tabs",
-                    "pastel|dialog-grow",
-                    "pastel|card-grow",
-                    "pastel|tabs",
-                    "terminal|dialog-grow",
-                    "terminal|card-grow",
-                    "terminal|tabs",
-                    "forest|dialog-grow",
-                    "forest|card-grow",
-                    "forest|tabs",
                     "high-contrast|dialog-grow",
                     "high-contrast|card-grow",
-                    "high-contrast|tabs",
                     "sepia|dialog-grow",
                     "sepia|card-grow",
-                    "sepia|tabs",
+                    "blueprint|dialog-grow",
+                    "blueprint|card-grow",
                     "solstice|dialog-grow",
                     "solstice|card-grow",
-                    "solstice|tabs",
-                    "brutalism|dialog-grow",
-                    "brutalism|card-grow",
-                    "brutalism|tabs",
-                    "deco|dialog-grow",
-                    "deco|card-grow",
-                    "deco|tabs",
-                    "phantom|dialog-grow",
-                    "phantom|card-grow",
-                    "phantom|tabs",
                     "shade-light|dialog-grow",
                     "shade-light|card-grow",
-                    "shade-light|tabs",
                     "shade-dark|dialog-grow",
                     "shade-dark|card-grow",
-                    "shade-dark|tabs",
-                    "retro|dialog-grow",
-                    "retro|card-grow",
-                    "retro|tabs",
                     "grotesk|dialog-grow",
                     "grotesk|card-grow",
-                    "grotesk|tabs",
                     "lapis|dialog-grow",
                     "lapis|card-grow",
-                    "lapis|tabs",
                     "nostromo|dialog-grow",
                     "nostromo|card-grow",
-                    "nostromo|tabs",
                     "titanium|dialog-grow",
-                    "titanium|card-grow",
-                    "titanium|tabs"
+                    "titanium|card-grow"
                 ]
             }
         </script>
