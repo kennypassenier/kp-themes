@@ -226,6 +226,12 @@ export const PREPARE = async ({ base, theme, only = null }) => {
 export async function shootPlaywright(page, { base, href, themes, width, height = 1000, only = null, repeat = true }) {
     const { createHash } = await import('node:crypto');
     await page.setViewportSize({ width, height });
+    // The page's clock stands still at one moment, its timers still run: a
+    // block that counts or dates by itself (the data table's busy clock,
+    // table.html#datatable-states, "42 s so far" and ticking; a date picker's
+    // today) reads the same in every photograph, at every commit, on every
+    // day. Nothing in the package changes; only the photograph's Date does.
+    await page.clock.setFixedTime(new Date('2026-10-04T10:00:00Z'));
     await page.goto(new URL(href, base).href, { waitUntil: 'load' });
     /** @type {Map<string, { first: string, second: string }>} */
     const out = new Map();
@@ -236,9 +242,21 @@ export async function shootPlaywright(page, { base, href, themes, width, height 
             // where it sat on the other side of the comparison: a theme's
             // texture is drawn against the page, and a block that moved down
             // because another was added above it would read as changed.
+            // The page's head goes as well (its title, intro and list of
+            // blocks): a block added to a page adds a line to that list, and
+            // every block under it moved down by a line, which read as changed
+            // in the themes whose texture is drawn against the page and, by a
+            // device pixel of rounding, in others (2026-10-04: field.html in
+            // cyberpunk, retro and synthwave; table.html in 16 themes; every
+            // older block of data.html and page.html).
             await page.evaluate((id) => {
                 for (const section of document.querySelectorAll('.cat-block[id], main section[id]'))
                     /** @type {HTMLElement} */ (section).hidden = section.id !== id && !section.contains(document.getElementById(id));
+                const own = document.getElementById(id);
+                const main = own?.closest('main');
+                if (main && own)
+                    for (const el of main.children)
+                        if (!el.matches('section') && !el.contains(own)) /** @type {HTMLElement} */ (el).style.setProperty('display', 'none', 'important');
                 window.scrollTo(0, 0);
             }, block.id);
             const parts = block.stages > 0 ? page.locator(`[id="${block.id}"] .cat-stage`) : page.locator(`[id="${block.id}"]`);

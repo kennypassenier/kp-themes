@@ -613,7 +613,9 @@ async function pixels(args) {
     // The browser the photographs are taken in: a digest is only reused in
     // the same one, since another build draws text a pixel differently.
     const { version: playwrightVersion } = JSON.parse(readFileSync(join(ROOT, 'node_modules/@playwright/test/package.json'), 'utf8'));
-    const renderer = `${process.platform} playwright ${playwrightVersion} width ${width}`;
+    // The recipe joins it: a digest taken before the page's head was hidden
+    // and its clock fixed (2026-10-04) is not one to compare against.
+    const renderer = `${process.platform} playwright ${playwrightVersion} width ${width} head hidden, clock fixed`;
     /** @type {any} */
     let earlier = null;
     if (existsSync(join(ROOT, PIXELS))) {

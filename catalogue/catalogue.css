@@ -8,10 +8,6 @@
     /* The shell catalogue.js builds around every page: the package's own
        side navigation beside a column holding the bar and the page. */
     body.cat-shell {
-        /* A `.kp-shell` in a stage (navigation.html#app-shell) takes the
-           window's body margin away, which is right for an app and wrong
-           for the page reviewing it: the browser's margin stays. */
-        margin: revert;
         display: flex;
         align-items: flex-start;
         min-block-size: 100vh;
@@ -748,5 +744,18 @@
         inline-size: 32rem;
         border: 1px dashed var(--border);
         padding: 1rem;
+    }
+}
+
+/* A `.kp-shell` in a stage (navigation.html#app-shell) matches the
+   package's `body:has(.kp-shell) { margin: 0 }` (css/layout.css), which is
+   right for an app and wrong for the page reviewing it. Undone in that rule's
+   own layer, with `revert-layer`: the body gets back exactly what the layers
+   under kp.layout give it, the browser's margin in most themes and retro's
+   centred window in retro. A `margin: revert` in the catalogue layer threw
+   the theme's margin away as well, and moved every block in retro. */
+@layer kp.layout {
+    body.cat-shell:has(.kp-shell) {
+        margin: revert-layer;
     }
 }
