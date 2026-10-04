@@ -357,8 +357,20 @@ function arrive(el, motion) {
         el.style.removeProperty('animation');
         el.removeAttribute('data-kp-arriving');
     };
-    el.addEventListener('animationend', end, { once: true });
-    setTimeout(end, 1500);
+    void playedOut(el, 1500).then(end);
+}
+
+/**
+ * Settles when the CSS animations running on `el` have played out, at
+ * whatever rate they play (a slowed-down review plays them at a quarter);
+ * with none running, after `fallback` ms.
+ * @param {HTMLElement} el @param {number} fallback
+ * @returns {Promise<unknown>}
+ */
+function playedOut(el, fallback) {
+    const css = el.getAnimations().filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation);
+    if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback));
+    return Promise.all(css.map((a) => a.finished.catch(() => undefined)));
 }
 
 /**
@@ -455,12 +467,7 @@ export async function leave(el, { hide = false } = {}) {
     }
     if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
     if (lasts > 0)
-        running.push(
-            new Promise((resolve) => {
-                actor.addEventListener('animationend', resolve, { once: true });
-                setTimeout(resolve, lasts + 100);
-            }),
-        );
+        running.push(playedOut(actor, lasts + 100));
     // A table row cannot be folded below its cells' content: it plays its
     // leave, and the table glides shut once it is out.
     if (size > 0 && !(el instanceof HTMLTableRowElement)) {

@@ -299,3 +299,44 @@ const applyExitTiming = () => {
 };
 exitTiming?.addEventListener('change', applyExitTiming);
 applyExitTiming();
+
+// Slow motion for judging (Kenny, 2026-10-04: "zet is een optie om alles op
+// 1/4 snelheid te kunnen afspelen"): every animation on the page, CSS or
+// scripted, plays at a quarter while the toggle is on; remembered per viewer.
+const slowButton = document.querySelector('[data-sm-slow]');
+let rate = 1;
+try {
+    if (localStorage.getItem('sm-slow') === '1') rate = 0.25;
+} catch {
+    // No storage: start at full speed.
+}
+const animate = Element.prototype.animate;
+Element.prototype.animate = function (...args) {
+    const a = animate.apply(this, /** @type {any} */ (args));
+    a.playbackRate = rate;
+    return a;
+};
+const slowNow = () => {
+    for (const a of document.getAnimations()) if (a.playbackRate !== rate) a.playbackRate = rate;
+};
+const slowEachFrame = () => {
+    slowNow();
+    requestAnimationFrame(slowEachFrame);
+};
+document.addEventListener('animationstart', slowNow, { capture: true });
+requestAnimationFrame(slowEachFrame);
+const showSlow = () => {
+    if (!slowButton) return;
+    slowButton.setAttribute('aria-pressed', String(rate < 1));
+    slowButton.textContent = rate < 1 ? 'Back to full speed' : 'Play everything at ¼ speed';
+};
+slowButton?.addEventListener('click', () => {
+    rate = rate < 1 ? 1 : 0.25;
+    try {
+        localStorage.setItem('sm-slow', rate < 1 ? '1' : '0');
+    } catch {
+        // Not remembered; it still applies now.
+    }
+    showSlow();
+});
+showSlow();
