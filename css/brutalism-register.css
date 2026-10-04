@@ -447,6 +447,15 @@
         box-shadow: 3px 3px 0 0 var(--border-strong);
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='brutalism'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='brutalism'] .kp-icon-button:hover {
         background: var(--secondary);
     }

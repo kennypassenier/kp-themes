@@ -9238,6 +9238,7 @@
 
     .kp-combobox__clear {
         grid-area: input;
+        font: inherit;
         justify-self: end;
         align-self: center;
         margin-inline-end: var(--kp-space-sm);
@@ -14758,6 +14759,15 @@
         border-radius: 0;
         box-shadow: var(--kp-raised);
         font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='retro'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='retro'] .kp-card,
@@ -22886,6 +22896,15 @@
         color: var(--foreground);
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='terminal'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='terminal'] .kp-icon-button:hover {
         border-color: var(--foreground);
         color: var(--kp-hot);
@@ -25097,6 +25116,15 @@
         border-radius: 0;
         background: var(--card);
         box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='brutalism'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='brutalism'] .kp-icon-button:hover {
@@ -27523,6 +27551,15 @@
         font-weight: 600;
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='titanium'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='titanium'] .kp-button:hover {
         background: var(--accent);
     }
@@ -29585,6 +29622,15 @@
                 rotate var(--fx-duration) var(--fx-ease),
                 box-shadow var(--fx-duration) var(--fx-ease),
                 scale var(--fx-duration) var(--fx-ease);
+        }
+
+        /* On a toast the close button sits on the toast's own plate, in the
+           toast's ink: a plate of its own under the error toast's dark ink read
+           1.01:1 (nostromo-notes, 2026-10-04). */
+        [data-theme='pastel'] .kp-toast .kp-icon-button {
+            background: transparent;
+            border-color: transparent;
+            color: inherit;
         }
 
         [data-theme='pastel'] .kp-icon-button:active:not(:disabled) {
@@ -33765,6 +33811,15 @@
         background: var(--card);
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='forest'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='forest'] .kp-icon-button:hover {
         border-color: var(--primary);
         background: color-mix(in srgb, var(--primary) 8%, transparent);
@@ -35647,6 +35702,15 @@
         border-radius: 0;
         background: var(--card);
         color: var(--foreground);
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='deco'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='deco'] .kp-icon-button:hover {
@@ -41343,6 +41407,15 @@
         color: var(--secondary-foreground);
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='blueprint'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='blueprint'] .kp-button:hover,
     [data-theme='blueprint'] .kp-icon-button:hover {
         background: var(--secondary);
@@ -43474,6 +43547,15 @@
         border: 1px solid var(--border-strong);
         background: transparent;
         color: var(--foreground);
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='nostromo'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='nostromo'] .kp-icon-button:hover:not(:disabled) {
@@ -45769,6 +45851,15 @@
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
         font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='dark'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     /* Hover answers a live button only [scope-100]: a disabled one took the
@@ -49668,6 +49759,15 @@
         /* The transition itself lives inside the no-preference guard
            below (DI7); box-shadow is deliberately not in it, because
            DI2's focus ring must be visible instantly, not eased in. */
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='sepia'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='sepia'] .kp-button:hover,
@@ -55346,6 +55446,15 @@
         color: var(--foreground);
     }
 
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='lapis'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
     [data-theme='lapis'] .kp-icon-button:hover {
         border-color: var(--primary);
         color: var(--primary);
@@ -57256,6 +57365,15 @@
         border: 1px solid transparent;
         border-radius: var(--radius);
         font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='shade-dark'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
     }
 
     [data-theme='shade-dark'] .kp-button:hover {

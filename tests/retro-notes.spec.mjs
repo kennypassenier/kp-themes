@@ -84,7 +84,10 @@ test.describe('retro: pressing a button moves its label, not the interface', { t
         // `Small` grew by 7px and `Large` shrank by 9px, and in the sizes row
         // the moved baseline moved the other two buttons 1px down.
         await openCatalogue(page, '/catalogue/button.html');
-        const buttons = page.locator('.cat-stage :is(.kp-button, .kp-icon-button):not(:disabled)');
+        // An inline confirm swaps its own label on a press ("Sure? Press
+        // again", catalogue/button.html#confirm-inline since 9.2.0), so its
+        // box changing is the pattern, not a moved interface.
+        const buttons = page.locator('.cat-stage :is(.kp-button, .kp-icon-button):not(:disabled):not([data-kp-confirm-mode="inline"])');
         const count = await buttons.count();
         expect(count).toBeGreaterThan(10);
         const moved = [];

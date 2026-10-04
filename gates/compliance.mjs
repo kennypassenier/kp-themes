@@ -15,7 +15,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { leakedColours } from './check-layers.mjs';
-import { SHORTEST_THEME_DURATION_MS } from './check-motion.mjs';
+import { flashVerdict } from './check-motion.mjs';
 import { execFileSync } from 'node:child_process';
 import process from 'node:process';
 import {
@@ -72,7 +72,8 @@ function motionScope() {
 
 /** DI5 and DI7 are properties of the stylesheets, so they are measured once. */
 function motionVerdicts() {
-    const flash = [];
+    /** @type {Record<string, boolean>} */
+    const flash = {};
     const guard = [];
     for (const rel of [
         '../css/cyberpunk-register.css',
@@ -99,30 +100,16 @@ function motionVerdicts() {
         '../css/_rules.css',
     ]) {
         const source = readFileSync(new URL(rel, import.meta.url), 'utf8');
-        const frames = parseOpacityKeyframes(source);
-        for (const a of animations(source)) {
-            const stops = frames.get(a.name);
-            if (!stops) continue;
-            // A calc() duration is bounded by the shortest any theme
-            // declares; the motion gate does the same arithmetic and is
-            // where the number lives.
-            //
-            // WITH THE CYCLE COUNT [step-6]. This call had two arguments
-            // where the gate's has three, so `cycles` fell back to its
-            // default of Infinity and an animation that runs once was rated
-            // as though it looped forever. Measured 2026-09-11: fourteen of
-            // thirty-six animations came out over the threshold on the
-            // two-argument call and none on the three-argument one, which is
-            // why this table read FAIL on DI5 for every theme while the gate
-            // it quotes read pass. The same sum in two places is one sum too
-            // many; the test below now lays the two verdicts side by side.
-            flash.push(flashesPerSecond(stops, a.durationMs ?? SHORTEST_THEME_DURATION_MS, a.cycles) <= 3);
-        }
+        // One sum, in gates/check-motion.mjs, rated per register [step-6]:
+        // a theme's DI5 reading is its own register's, and the shared rules
+        // count for every theme.
+        const theme = rel.replace('../css/', '').replace('-register.css', '').replace('.css', '');
+        flash[theme] = flashVerdict(source);
         guard.push(unguardedMotion(source).length === 0);
     }
     const fx = new URL('../fx/', import.meta.url).pathname.replace(/\/$/, '');
     guard.push(unsubscribedPreferenceReads(fx).length === 0);
-    return { flash: flash.every(Boolean), guard: guard.every(Boolean) };
+    return { flash, guard: guard.every(Boolean) };
 }
 
 /** @typedef {import('./check-invariants.mjs').Theme} Theme */
@@ -173,7 +160,7 @@ export function table() {
         ['DI3 states are visible as states [KT2]', (t) => verdict(checkStateVisibility(t).length === 0)],
         ['DI4 badge plates read against their surface [KT2]', (t) => verdict(checkSecondHalves(t).length === 0)],
         ['DI4 opposed status plates distinguishable', (t) => verdict(checkColourVision(t).length === 0)],
-        ['DI5 flash threshold', (t) => (scope.has(t.name) ? verdict(motion.flash) : 'n/a')],
+        ['DI5 flash threshold', (t) => (scope.has(t.name) ? verdict(motion.flash[t.name] && motion.flash['_rules']) : 'n/a')],
         ['DI6 declares colour-scheme and layers rise', (t) => verdict(checkColourScheme(t).length === 0)],
         ['DI7 reduced motion honoured', () => verdict(motion.guard)],
         ['DI9 theme colour stays in the token layer', () => verdict(layersClean())],

@@ -298,8 +298,10 @@ test.describe(
                         }),
                     );
             });
-            expect(read.map((r) => r.block).sort()).toEqual(['datatable-states', 'empty']);
-            expect(read.filter((r) => r.retry).map((r) => r.block)).toEqual(['datatable-states']);
+            // #datatable-states holds two failed tables since 9.2.0 (one with a
+            // written reason), so a block is read once per retry button.
+            expect([...new Set(read.map((r) => r.block))].sort()).toEqual(['datatable-states', 'empty']);
+            expect([...new Set(read.filter((r) => r.retry).map((r) => r.block))]).toEqual(['datatable-states']);
             for (const r of read) {
                 if (r.retry) {
                     expect(r.frame, `${r.block} ${r.text}: the frame is the label's ink`).toEqual(r.label);

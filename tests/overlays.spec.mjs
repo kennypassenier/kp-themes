@@ -136,9 +136,10 @@ test(
         await page.goto('/catalogue/feedback.html');
         await waitForJudging(page);
         const toasts = page.locator('#toasts .kp-toast');
-        await expect(toasts).toHaveCount(5);
+        // The plain toast, the four of meaning and, since 9.2.0, the error toast.
+        await expect(toasts).toHaveCount(6);
         await page.locator('#toasts .kp-toast--warning .kp-toast__close').click();
-        await expect(toasts).toHaveCount(4);
+        await expect(toasts).toHaveCount(5);
         await expect(page.locator('#toasts .kp-toast--warning')).toHaveCount(0);
     },
 );

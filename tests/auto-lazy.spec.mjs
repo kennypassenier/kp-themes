@@ -38,7 +38,15 @@ const ROOT = new URL('../', import.meta.url);
 // js/progressbar.js writes the track, fill and head into a one-line bar
 // [scope-140]. (js/log.js, also later, writes only `style`, which is volatile.)
 const EAGER =
-    readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8') + "\nimport('./progressbar.js').then((m) => m.attachProgressbars());\n";
+    readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8') +
+    "\nimport('./progressbar.js').then((m) => m.attachProgressbars());\n" +
+    // The dashboard components [scope-143] write markup too: shared action
+    // columns, sparklines and KPI toggles, the attention band's order, and
+    // the chart's drawing.
+    "import('./actions.js').then((m) => m.attachActionColumns());\n" +
+    "import('./kpi.js').then((m) => { m.attachSparklines(); m.attachKpiToggles(); });\n" +
+    "import('./attention.js').then((m) => m.attachAttention());\n" +
+    "import('./chart.js').then((m) => m.attachCharts());\n";
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
 

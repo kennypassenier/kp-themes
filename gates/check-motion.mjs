@@ -25,9 +25,88 @@ const LUMINANCE_STEP = 0.1;
  * duration is a calc() over that token is bounded by this, so the gate
  * measures the worst case rather than giving up.
  */
+// A theme that declares 0ms runs no motion at all (high-contrast since
+// 2026-09-05), so it cannot flash: the bound is the shortest duration a
+// theme that moves declares. At 0 every computed duration read as Infinity
+// flashes, which is what the compliance table published once it was
+// regenerated on 2026-10-04 (it had not been since report:di5 started
+// refusing, which stops `generate:all` before the table).
 export const SHORTEST_THEME_DURATION_MS = Math.min(
-    ...[...readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8').matchAll(/--fx-duration:\s*([\d.]+)ms/g)].map((m) => Number(m[1])),
+    ...[...readFileSync(new URL('../css/themes.css', import.meta.url), 'utf8').matchAll(/--fx-duration:\s*([\d.]+)ms/g)]
+        .map((m) => Number(m[1]))
+        .filter((ms) => ms > 0),
 );
+
+/**
+ * The duration to rate an animation at: its literal, else, for a custom
+ * property such as `var(--kp-sig-dur)`, the shortest value the same
+ * stylesheet gives that property (a register sets it per element), else the
+ * shortest a theme that moves declares. The compliance table rates with the
+ * same function [step-6].
+ * @param {{ name: string, durationMs: number | null, duration: string }} anim
+ * @param {string} source
+ * @returns {number}
+ */
+export function durationBound(anim, source) {
+    if (anim.durationMs !== null) return anim.durationMs;
+    const custom = /var\(\s*(--[\w-]+)/.exec(anim.duration);
+    if (custom) {
+        const declaration = new RegExp(`${custom[1]}:\\s*([\\d.]+)(ms|s)\\b`, 'g');
+        const ms = (/** @type {RegExpMatchArray} */ m) => (m[2] === 's' ? Number(m[1]) * 1000 : Number(m[1]));
+        // The property is set on the element the animation runs on, or on
+        // the element whose pseudo-element runs it: read the rule block that
+        // names the animation, else the blocks for the same element
+        // (its selector without the pseudo-element).
+        const selectorOf = (/** @type {number} */ open) => {
+            const start = Math.max(source.lastIndexOf('}', open), source.lastIndexOf('{', open - 1), source.lastIndexOf('*/', open)) + 1;
+            return source
+                .slice(start, open)
+                .replace(/::?(after|before)\b/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        };
+        const found = [];
+        const uses = new RegExp(`animation[^;]*\\b${anim.name}\\b`, 'g');
+        for (const use of source.matchAll(uses)) {
+            const open = source.lastIndexOf('{', use.index);
+            const close = source.indexOf('}', use.index);
+            const own = [...source.slice(open, close).matchAll(declaration)].map(ms);
+            if (own.length) {
+                found.push(Math.min(...own));
+                continue;
+            }
+            const element = selectorOf(open);
+            for (const brace of source.matchAll(/\{/g)) {
+                const at = /** @type {number} */ (brace.index);
+                if (selectorOf(at) !== element) continue;
+                const end = source.indexOf('}', at);
+                const there = [...source.slice(at, end).matchAll(declaration)].map(ms);
+                if (there.length) found.push(Math.min(...there));
+            }
+        }
+        if (found.length) return Math.min(...found);
+        const declared = [...source.matchAll(declaration)].map(ms);
+        if (declared.length) return Math.min(...declared);
+    }
+    return SHORTEST_THEME_DURATION_MS;
+}
+
+/**
+ * Whether every opacity animation a stylesheet runs stays under the flash
+ * threshold, rated the one way: the compliance table and the gate's test
+ * read this, so the same sum cannot drift between them [step-6].
+ * @param {string} source
+ * @returns {boolean}
+ */
+export function flashVerdict(source) {
+    const frames = parseOpacityKeyframes(source);
+    for (const anim of animations(source)) {
+        const stops = frames.get(anim.name);
+        if (!stops) continue;
+        if (flashesPerSecond(stops, durationBound(anim, source), anim.cycles) > MAX_FLASHES_PER_SECOND) return false;
+    }
+    return true;
+}
 
 // components.css joined this list the moment it grew an animation. A
 // motion gate that reads two of three stylesheets reports green over the
@@ -256,7 +335,9 @@ export function animations(source) {
 /** DI7: no transition or animation outside a reduced-motion guard. */
 /** @param {string} source @returns {{line: number, declaration: string}[]} */
 export function unguardedMotion(source) {
-    const guards = [...source.matchAll(/@media\s*\(prefers-reduced-motion:\s*no-preference\)\s*\{/g)].map((m) => m.index);
+    // A `reduce` block is the preference honoured (its `transition: none`
+    // is the guard itself), so it counts as guarded too.
+    const guards = [...source.matchAll(/@media\s*\(prefers-reduced-motion:\s*(?:no-preference|reduce)\)\s*\{/g)].map((m) => m.index);
     /** @type {{line: number, declaration: string}[]} */
     const problems = [];
     // `transition: none` and `animation: none` are the ABSENCE of motion.
@@ -277,7 +358,14 @@ export function unguardedMotion(source) {
             }
             return false;
         });
-        if (!guarded) {
+        // Inside the progress bar the guard is css/components.css's own
+        // `prefers-reduced-motion: reduce` block, which reaches every
+        // register's motion in the bar with `!important` [scope-140]: a
+        // register's bar rule is guarded from there, whichever file it is in.
+        const open = source.lastIndexOf('{', m.index);
+        const selectorStart = Math.max(source.lastIndexOf('}', open), source.lastIndexOf('{', open - 1), source.lastIndexOf('*/', open)) + 1;
+        const inBar = /kp-progressbar/.test(source.slice(selectorStart, open));
+        if (!guarded && !inBar) {
             const line = source.slice(0, m.index).split('\n').length;
             problems.push({ line, declaration: m[1] });
         }
@@ -389,9 +477,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 // It changes opacity and the gate cannot tell how fast.
                 // The worst case is the shortest duration any theme
                 // declares, so the flash rate is bounded by that.
-                const shortest = SHORTEST_THEME_DURATION_MS;
+                const shortest = durationBound(anim, source);
                 checked++;
-                const rate = flashesPerSecond(stops, shortest);
+                const rate = flashesPerSecond(stops, shortest, anim.cycles);
                 if (rate > MAX_FLASHES_PER_SECOND) {
                     failed++;
                     console.error(
@@ -416,7 +504,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             checked++;
             // Reached only when the duration is a literal: the computed
             // case is handled above and returns before here.
-            const rate = flashesPerSecond(stops, anim.durationMs ?? SHORTEST_THEME_DURATION_MS, anim.cycles);
+            const rate = flashesPerSecond(stops, durationBound(anim, source), anim.cycles);
             if (rate > MAX_FLASHES_PER_SECOND) {
                 failed++;
                 console.error(

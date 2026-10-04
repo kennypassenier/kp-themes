@@ -23,6 +23,10 @@ if (mount) {
     // read as a flake in chromium once. This renders synchronously, so the
     // tree exists on the next line.
     flushSync(() => root.render(<ExamplePage id={id} copy={copy} />));
+    // Every framework-free example page carries the back-to-top control
+    // after its main (gates/generate-examples.mjs); this channel ends the
+    // same way, so the two shapes stay equal [AR20].
+    mount.insertAdjacentHTML('beforeend', '<button type="button" class="kp-button kp-to-top" data-kp-to-top></button>');
     // The descriptors are markup, not React components, so the behaviour
     // on these pages comes from the framework-free modules in both
     // channels — a React consumer using the CSS shapes attaches them the

@@ -167,7 +167,7 @@ test.describe(
                 // bar was already black.
                 await open(page, '/catalogue/feedback.html', 'high-contrast');
                 const toasts = page.locator('#toasts .cat-stage .kp-toast');
-                expect(await toasts.count(), 'the plain toast and the four of meaning').toBe(5);
+                expect(await toasts.count(), 'the plain toast, the four of meaning and the error toast (9.2.0)').toBe(6);
                 await toasts.evaluateAll((els) => {
                     for (const toast of els) {
                         if (toast.querySelector('.kp-button--ghost')) continue;

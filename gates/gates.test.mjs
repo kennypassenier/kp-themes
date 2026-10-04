@@ -24,6 +24,7 @@ import {
     reachableKeyframes,
     unguardedMotion,
     unsubscribedPreferenceReads,
+    flashVerdict,
 } from './check-motion.mjs';
 import { cancelledPressedStates, pressedInBase } from './check-pressed-state.mjs';
 import { swallowedVariants, variantGrounds } from './check-variant-ground.mjs';
@@ -1247,9 +1248,30 @@ test('step-6: the compliance table and the motion gate rate the same animation t
 
     // And the shipped table says what the gate says.
     const table = readFileSync(new URL('../docs/DESIGN_INVARIANTS.md', import.meta.url), 'utf8');
-    const row = table.split('\n').find((line) => line.includes('DI5 flash threshold'));
+    const lines = table.split('\n');
+    const row = lines.find((line) => line.includes('DI5 flash threshold'));
     assert.ok(row, 'the compliance table carries a DI5 row');
-    assert.ok(!row.includes('FAIL'), `the table still publishes a DI5 failure the motion gate does not see: ${row.trim()}`);
+    // Per theme, the cell says what flashVerdict() says of that theme's
+    // register (the sum lives in gates/check-motion.mjs, read by the table
+    // and here alike).
+    const header = lines.find((line) => /^\| Invariant/.test(line)) ?? lines[lines.indexOf(row) - 2];
+    const themes = header
+        .split('|')
+        .map((c) => c.trim())
+        .slice(2, -1);
+    const cells = row
+        .split('|')
+        .map((c) => c.trim())
+        .slice(2, -1);
+    for (const [i, theme] of themes.entries()) {
+        if (cells[i] === 'n/a') continue;
+        const source = readFileSync(new URL(`../css/${theme}-register.css`, import.meta.url), 'utf8');
+        assert.equal(
+            cells[i] === 'FAIL',
+            !flashVerdict(source),
+            `${theme}: the table says ${cells[i]} where the motion gate says ${flashVerdict(source) ? 'pass' : 'FAIL'}`,
+        );
+    }
 });
 
 // ── the no-flash snippet, which is text that becomes a <script> ─────────

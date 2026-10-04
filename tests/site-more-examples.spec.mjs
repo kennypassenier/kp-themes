@@ -14,11 +14,14 @@ test(
     async ({ page }) => {
         await page.goto('/site/components/datatable.html');
         const more = page.locator('#more-examples figure');
-        // Twelve since the busy overlay's block (8.1.0).
-        await expect(more).toHaveCount(12);
+        // Twelve since the busy overlay's block (8.1.0); fourteen since the
+        // states block shows the live busy counter and a written failure
+        // reason as stages of their own (9.2.0).
+        await expect(more).toHaveCount(14);
         await expect(page.locator('#more-table-datatable-busy-overlay .kp-datatable__busy-overlay .kp-spinner')).toHaveCount(1);
         const states = page.locator('#more-table-datatable-states');
-        await expect(states.locator('[data-kp-datatable-status] .kp-spinner')).toHaveCount(2);
+        // Three since 9.2.0: the live counter's table is busy too.
+        await expect(states.locator('[data-kp-datatable-status] .kp-spinner')).toHaveCount(3);
         await expect(states.locator('[data-cat-busy] [data-kp-datatable-status]'), "the app's own words, through busy()").toContainText(
             'Asking the host… 42 s so far',
         );

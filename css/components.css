@@ -4935,6 +4935,7 @@
 
     .kp-combobox__clear {
         grid-area: input;
+        font: inherit;
         justify-self: end;
         align-self: center;
         margin-inline-end: var(--kp-space-sm);
