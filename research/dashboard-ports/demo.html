@@ -32,15 +32,15 @@
             <header class="dp-intro">
                 <h1>Dashboard components to port</h1>
                 <p>
-                    The admin dashboard grew a handful of components that any app built on the package needs: buttons that line up from row to
-                    row, tiles of one height, key figures, a page header, a band of problems, a word that keeps its width, and a calmer loading
-                    panel on a phone. Each section below is that component written already in the package's style (<code>ports.css</code> and
-                    <code>ports.js</code> next to this page), shown in formal only. Where there is a real choice, the review dialog asks it as
-                    options to tick, and the buttons in the section let you see each option first.
+                    The admin dashboard grew a handful of components that any app built on the package needs: buttons that line up from row to row,
+                    tiles of one height, key figures, a page header, a band of problems, a word that keeps its width, a calmer loading panel on a
+                    phone, and a time chart. Each section below is that component written already in the package's style (<code>ports.css</code> and
+                    <code>ports.js</code> next to this page), shown in formal only. Where there is a real choice, the review dialog asks it as options
+                    to tick, and the buttons in the section let you see each option first.
                 </p>
                 <p class="dp-meta">
-                    Each section shows the component at full width and, beside it, in a frame as narrow as a phone, so both widths can be judged
-                    on one screen. The data is made up: a water company's pump houses, readings and incidents.
+                    Each section shows the component at full width and, beside it, in a frame as narrow as a phone, so both widths can be judged on
+                    one screen. The data is made up: a water company's pump houses, readings and incidents.
                 </p>
             </header>
 
@@ -60,16 +60,16 @@
                     <h2 id="h-actions">Buttons in shared columns</h2>
                     <p>
                         A list's row buttons share columns: a button of one role starts at one edge and has one width on every row, whatever its
-                        label, and a row without that button leaves its column empty. In a list the browser does it (a subgrid); by position from
-                        the end it needs no script at all. A table measures, through <code>attachActionColumns()</code>.
+                        label, and a row without that button leaves its column empty. In a list the browser does it (a subgrid); by position from the
+                        end it needs no script at all. A table measures, through <code>attachActionColumns()</code>.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        In the list, every <b>Open</b> sits in one column, every <b>Assign…</b> and the second row's <b>Reassign…</b> in the one before it, one width, and the incident without
-                        Acknowledge leaves that slot empty. Press <b>Longer label</b>: the whole Assign column widens, on every row. In the table the
-                        buttons are named by role, so <b>Open</b> stays under Open even on the rows without Recalibrate. Compare with <b>Package
-                        today</b> at the bottom, where the buttons wander.
+                        In the list, every <b>Open</b> sits in one column, every <b>Assign…</b> and the second row's <b>Reassign…</b> in the one
+                        before it, one width, and the incident without Acknowledge leaves that slot empty. Press <b>Longer label</b>: the whole Assign
+                        column widens, on every row. In the table the buttons are named by role, so <b>Open</b> stays under Open even on the rows
+                        without Recalibrate. Compare with <b>Package today</b> at the bottom, where the buttons wander.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="phone">
@@ -210,37 +210,51 @@
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="rows">
                     <span>Rows:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="all" aria-pressed="true">Every row as tall as the tallest tile</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="per-row" aria-pressed="false">Each row as tall as its own tallest</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="all" aria-pressed="true">
+                        Every row as tall as the tallest tile
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="per-row" aria-pressed="false">
+                        Each row as tall as its own tallest
+                    </button>
                 </div>
                 <ul class="kp-tiles" data-dp-tiles>
                     <li class="kp-card">
                         <h3 class="kp-card__title">Pump house 1</h3>
                         <p class="kp-card__body">Two pumps, both running. Pressure 3.4 bar.</p>
-                        <div class="kp-card__footer dp-foot"><span>Read 2 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a></div>
+                        <div class="kp-card__footer dp-foot">
+                            <span>Read 2 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                        </div>
                     </li>
                     <li class="kp-card">
                         <h3 class="kp-card__title">Pump house 3</h3>
                         <p class="kp-card__body">
-                            Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way; the
-                            valve on the ring main is half closed until she arrives.
+                            Pressure below 2.1 bar for forty minutes. The second pump started at 08:12 and the field engineer is on the way; the valve
+                            on the ring main is half closed until she arrives.
                         </p>
-                        <div class="kp-card__footer dp-foot"><span>Read 1 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a></div>
+                        <div class="kp-card__footer dp-foot">
+                            <span>Read 1 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                        </div>
                     </li>
                     <li class="kp-card">
                         <h3 class="kp-card__title">Pump house 7</h3>
                         <p class="kp-card__body">No reading since 06:00.</p>
-                        <div class="kp-card__footer dp-foot"><span>Read 2 h 41 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a></div>
+                        <div class="kp-card__footer dp-foot">
+                            <span>Read 2 h 41 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                        </div>
                     </li>
                     <li class="kp-card">
                         <h3 class="kp-card__title">Reservoir North</h3>
                         <p class="kp-card__body">71 % full.</p>
-                        <div class="kp-card__footer dp-foot"><span>Read 3 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a></div>
+                        <div class="kp-card__footer dp-foot">
+                            <span>Read 3 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                        </div>
                     </li>
                     <li class="kp-card">
                         <h3 class="kp-card__title">Reservoir South</h3>
                         <p class="kp-card__body">64 % full.</p>
-                        <div class="kp-card__footer dp-foot"><span>Read 3 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a></div>
+                        <div class="kp-card__footer dp-foot">
+                            <span>Read 3 min ago</span><a class="kp-button kp-button--sm kp-button--ghost" href="#tiles">Open</a>
+                        </div>
                     </li>
                 </ul>
             </section>
@@ -263,9 +277,9 @@
                 <div class="dp-sec__head">
                     <h2 id="h-kpis">Key figures</h2>
                     <p>
-                        <code>.kp-kpis</code> is a strip of <code>.kp-kpi</code> tiles, one height on every row it wraps to: a label, the number
-                        (with its unit and a note such as <i>avg 15 min</i> beside it), a trend line, and at the bottom a 24-hour sparkline or a
-                        meter. A tile can be a link to its detail, or a button that turns a filter on this page on and off.
+                        <code>.kp-kpis</code> is a strip of <code>.kp-kpi</code> tiles, one height on every row it wraps to: a label, the number (with
+                        its unit and a note such as <i>avg 15 min</i> beside it), a trend line, and at the bottom a 24-hour sparkline or a meter. A
+                        tile can be a link to its detail, or a button that turns a filter on this page on and off.
                     </p>
                 </div>
                 <div data-review-look>
@@ -278,7 +292,9 @@
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="pressed">
                     <span>When on:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="ring" aria-pressed="true">A doubled primary edge</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="tint" aria-pressed="false">A primary edge over a light wash</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="tint" aria-pressed="false">
+                        A primary edge over a light wash
+                    </button>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="spark">
                     <span>Sparkline:</span>
@@ -291,37 +307,79 @@
                             <span class="kp-kpi__label">Pump houses online</span>
                             <span class="kp-kpi__value">14<small>of 15</small></span>
                             <span class="kp-kpi__trend">Pump house 7 offline</span>
-                            <span class="kp-kpi__meter" role="meter" aria-label="Pump houses online: 93 %" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100" style="--kp-value: 0.93"></span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-label="Pump houses online: 93 %"
+                                aria-valuenow="93"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                style="--kp-value: 0.93"
+                            ></span>
                         </div>
                         <a class="kp-kpi" href="#kpis">
                             <span class="kp-kpi__label">Flow now</span>
                             <span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
-                            <span class="kp-kpi__trend"><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span>
-                            <svg class="kp-kpi__spark" data-kp-spark="380 371 352 340 335 338 360 395 430 451 448 440 436 429 431 440 452 470 480 466 441 420 409 412"></svg>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                            >
+                            <svg
+                                class="kp-kpi__spark"
+                                data-kp-spark="380 371 352 340 335 338 360 395 430 451 448 440 436 429 431 440 452 470 480 466 441 420 409 412"
+                            ></svg>
                         </a>
-                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning" data-dp-filter="open incidents">
+                        <button
+                            type="button"
+                            class="kp-kpi kp-kpi--toggle"
+                            aria-pressed="false"
+                            data-kp-tone="warning"
+                            data-dp-filter="open incidents"
+                        >
                             <span class="kp-kpi__label">Open incidents</span>
-                            <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
                             <span class="kp-kpi__value">3</span>
                             <span class="kp-kpi__trend">2 new today</span>
                         </button>
-                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="destructive" data-dp-filter="pressure alarms">
+                        <button
+                            type="button"
+                            class="kp-kpi kp-kpi--toggle"
+                            aria-pressed="false"
+                            data-kp-tone="destructive"
+                            data-dp-filter="pressure alarms"
+                        >
                             <span class="kp-kpi__label">Pressure alarms</span>
-                            <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
                             <span class="kp-kpi__value">1</span>
                             <span class="kp-kpi__trend">Pump house 3, since 08:12</span>
                         </button>
                         <div class="kp-kpi">
                             <span class="kp-kpi__label">Readings today</span>
                             <span class="kp-kpi__value">18 240</span>
-                            <span class="kp-kpi__trend"><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span>
-                            <svg class="kp-kpi__spark" data-kp-spark="760 762 758 761 760 759 755 750 748 760 762 761 763 757 740 712 698 705 731 752 760 759 761 760"></svg>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span
+                            >
+                            <svg
+                                class="kp-kpi__spark"
+                                data-kp-spark="760 762 758 761 760 759 755 750 748 760 762 761 763 757 740 712 698 705 731 752 760 759 761 760"
+                            ></svg>
                         </div>
                         <div class="kp-kpi">
                             <span class="kp-kpi__label">Storage used</span>
                             <span class="kp-kpi__value">71<small>%</small></span>
                             <span class="kp-kpi__trend">Reservoirs, both</span>
-                            <span class="kp-kpi__meter" role="meter" aria-label="Storage used: 71 %" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100" style="--kp-value: 0.71"></span>
+                            <span
+                                class="kp-kpi__meter"
+                                role="meter"
+                                aria-label="Storage used: 71 %"
+                                aria-valuenow="71"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                style="--kp-value: 0.71"
+                            ></span>
                         </div>
                     </div>
                     <div class="dp-narrow">
@@ -356,9 +414,9 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        At full width the buttons sit against the right edge, level with the title, and the description keeps under the title.
-                        Open the overflow menu. In the phone frame the title takes the width and the buttons fold under the description; try both
-                        options for the overflow button and for the phone.
+                        At full width the buttons sit against the right edge, level with the title, and the description keeps under the title. Open
+                        the overflow menu. In the phone frame the title takes the width and the buttons fold under the description; try both options
+                        for the overflow button and for the phone.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="overflow">
@@ -368,8 +426,12 @@
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="header-phone">
                     <span>On a phone:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="wrap" aria-pressed="true">One row from the left, wrapping</button>
-                    <button type="button" class="kp-button kp-button--sm" data-value="primary" aria-pressed="false">The primary first, full width</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="wrap" aria-pressed="true">
+                        One row from the left, wrapping
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="primary" aria-pressed="false">
+                        The primary first, full width
+                    </button>
                 </div>
                 <div class="dp-frame">
                     <header class="kp-page-header" data-dp-header="wide">
@@ -384,14 +446,35 @@
                                 <button type="button" class="kp-button">Export readings</button>
                                 <button type="button" class="kp-button">Schedule a visit</button>
                                 <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
-                                <button type="button" class="kp-icon-button dp-more dp-more--icon" popovertarget="dp-more-wide" aria-haspopup="menu" aria-label="More actions" id="dp-more-wide-icon">⋯</button>
-                                <button type="button" class="kp-button dp-more dp-more--text" popovertarget="dp-more-wide" aria-haspopup="menu" id="dp-more-wide-text">More ▾</button>
+                                <button
+                                    type="button"
+                                    class="kp-icon-button dp-more dp-more--icon"
+                                    popovertarget="dp-more-wide"
+                                    aria-haspopup="menu"
+                                    aria-label="More actions"
+                                    id="dp-more-wide-icon"
+                                >
+                                    ⋯
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-button dp-more dp-more--text"
+                                    popovertarget="dp-more-wide"
+                                    aria-haspopup="menu"
+                                    id="dp-more-wide-text"
+                                >
+                                    More ▾
+                                </button>
                                 <div popover="auto" id="dp-more-wide" class="kp-popover dp-menu">
                                     <ul class="kp-menu" role="menu">
                                         <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button></li>
                                         <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Print the overview</button></li>
                                         <li role="separator" class="kp-menu__separator"></li>
-                                        <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Archive the network…</button></li>
+                                        <li role="none">
+                                            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">
+                                                Archive the network…
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -411,14 +494,35 @@
                                 <button type="button" class="kp-button">Export readings</button>
                                 <button type="button" class="kp-button">Schedule a visit</button>
                                 <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
-                                <button type="button" class="kp-icon-button dp-more dp-more--icon" popovertarget="dp-more-narrow" aria-haspopup="menu" aria-label="More actions" id="dp-more-narrow-icon">⋯</button>
-                                <button type="button" class="kp-button dp-more dp-more--text" popovertarget="dp-more-narrow" aria-haspopup="menu" id="dp-more-narrow-text">More ▾</button>
+                                <button
+                                    type="button"
+                                    class="kp-icon-button dp-more dp-more--icon"
+                                    popovertarget="dp-more-narrow"
+                                    aria-haspopup="menu"
+                                    aria-label="More actions"
+                                    id="dp-more-narrow-icon"
+                                >
+                                    ⋯
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-button dp-more dp-more--text"
+                                    popovertarget="dp-more-narrow"
+                                    aria-haspopup="menu"
+                                    id="dp-more-narrow-text"
+                                >
+                                    More ▾
+                                </button>
                                 <div popover="auto" id="dp-more-narrow" class="kp-popover dp-menu">
                                     <ul class="kp-menu" role="menu">
                                         <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Import from a file…</button></li>
                                         <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Print the overview</button></li>
                                         <li role="separator" class="kp-menu__separator"></li>
-                                        <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Archive the network…</button></li>
+                                        <li role="none">
+                                            <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">
+                                                Archive the network…
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -449,14 +553,16 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        The markup lists the problems as info, critical, warning; the band shows critical, warning, info. Use <b>Add a warning</b>:
-                        it lands under the critical one, not at the bottom. <b>Resolve all</b> makes the band vanish without leaving a gap;
+                        The markup lists the problems as info, critical, warning; the band shows critical, warning, info. Use <b>Add a warning</b>: it
+                        lands under the critical one, not at the bottom. <b>Resolve all</b> makes the band vanish without leaving a gap;
                         <b>Bring them back</b> restores it. In the phone frame the fix buttons go under the words.
                     </p>
                 </div>
                 <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="look">
                     <span>Look:</span>
-                    <button type="button" class="kp-button kp-button--sm" data-value="soft" aria-pressed="true">A soft tint with a coloured edge</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="soft" aria-pressed="true">
+                        A soft tint with a coloured edge
+                    </button>
                     <button type="button" class="kp-button kp-button--sm" data-value="plate" aria-pressed="false">The package's alert plates</button>
                 </div>
                 <p class="dp-actions">
@@ -560,17 +666,17 @@
                 <div class="dp-sec__head">
                     <h2 id="h-busy">A data table loading, on a phone</h2>
                     <p>
-                        The package's data table already shows three skeleton rows on a first load, and with <code>data-kp-busy-overlay</code> a
-                        large spinner with the app's words over them. In a table as narrow as a phone that panel is taller than the three rows and
-                        spills over the status line. The proposal lays it flat there: the spinner beside the words, the words kept to three lines
-                        (the status line under the table still says all of it), and the layer clipped to the table.
+                        The package's data table already shows three skeleton rows on a first load, and with <code>data-kp-busy-overlay</code> a large
+                        spinner with the app's words over them. In a table as narrow as a phone that panel is taller than the three rows and spills
+                        over the status line. The proposal lays it flat there: the spinner beside the words, the words kept to three lines (the status
+                        line under the table still says all of it), and the layer clipped to the table.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Both tables are as wide as a phone and loading for the first time. On the left the package today: a tall card that covers
-                        the skeleton rows and runs over the status line. On the right the proposal: a low panel inside the rows, the spinner beside
-                        the words, and the status line under the table free.
+                        Both tables are as wide as a phone and loading for the first time. On the left the package today: a tall card that covers the
+                        skeleton rows and runs over the status line. On the right the proposal: a low panel inside the rows, the spinner beside the
+                        words, and the status line under the table free.
                     </p>
                 </div>
                 <div class="dp-pair dp-pair--phones">
@@ -623,6 +729,103 @@
                 </div>
             </section>
 
+            <!-- 9 · Time chart -->
+            <section
+                class="dp-sec"
+                id="time-chart"
+                data-review-item="time-chart"
+                data-review-components="chart"
+                data-review-title="Time chart"
+                data-review-choices='[{ "id": "tip", "label": "Where the tooltip sits", "once": true, "options": [
+                    { "value": "follow", "label": "Beside the crosshair", "hint": "It moves with the pointer, on whichever side has room, so the numbers stay next to the time they belong to (the dashboard does this)." },
+                    { "value": "docked", "label": "Docked in a top corner of the plot", "hint": "Always in the corner away from the crosshair, so the eye knows where to look; on a phone it spans the plot&#39;s width." }]},
+                  { "id": "fill", "label": "Under the lines", "once": true, "options": [
+                    { "value": "area", "label": "A soft area while one or two sources are on", "hint": "With few lines the shape reads at a glance; with three or more the areas are left out (the dashboard does this)." },
+                    { "value": "lines", "label": "Lines only", "hint": "Quieter and the same at any number of sources; one source alone reads a little less at a glance." }]}]'
+                aria-labelledby="h-chart"
+            >
+                <div class="dp-sec__head">
+                    <h2 id="h-chart">Time chart</h2>
+                    <p>
+                        <code>.kp-chart</code>, drawn by <code>attachCharts()</code> from the page&#39;s data (<code>setChartData()</code> or a JSON
+                        child): the charts of one <code>.kp-chart-group</code> share a crosshair, a zoom and a range. Hover a source in the legend to
+                        single it out, click to keep one or several on; point at the plot for every source&#39;s value, the change over the hour
+                        before and the events near it; click to pin; drag to zoom both charts. The colours are the theme&#39;s
+                        <code>--chart-1..5</code>; from the sixth source on they repeat with a dashed line. Under the charts, the spark variant: a
+                        tile&#39;s 24-hour line on the same crosshair.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Point at either chart: one crosshair runs through both and through the three sparklines, and only the chart under the pointer
+                        shows its tooltip (values, ▲/▼ over the hour before, and the event near it). Drag across one chart: both zoom, and
+                        <b>Zoomed · Reset</b> appears beside the ranges; double-click or Esc resets. In <b>Flow</b>, the sixth and seventh pump houses
+                        repeat the first two colours as dashed lines. Click two sources in the legend, then <b>Show all</b>. Click a marker above the
+                        plot (the red alarm at 07:32): the tooltip pins with its <b>Open</b> link. Tab to a plot and use ←/→, Shift, Home/End, Enter
+                        and Esc. Try <b>1 h</b> and <b>7 d</b>. In the phone frame, the same with a finger&#39;s words in the hint.
+                    </p>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="tip">
+                    <span>Tooltip:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="follow" aria-pressed="true">Beside the crosshair</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="docked" aria-pressed="false">Docked in a top corner</button>
+                </div>
+                <div class="dp-preview" role="group" aria-label="See an option" data-dp-preview="fill">
+                    <span>Under the lines:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="area" aria-pressed="true">
+                        A soft area (one or two sources)
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="lines" aria-pressed="false">Lines only</button>
+                </div>
+                <div class="dp-frame">
+                    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-dp-charts="wide">
+                        <div class="kp-chart-group__bar">
+                            <div class="kp-chart-ranges" role="group" aria-label="Time range">
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+                            </div>
+                            <span data-kp-chart-zoom hidden></span>
+                        </div>
+                        <figure class="kp-chart" data-kp-chart data-dp-chart="pressure" aria-label="Pressure">
+                            <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                        </figure>
+                        <figure class="kp-chart" data-kp-chart data-dp-chart="flow" aria-label="Flow">
+                            <figcaption class="kp-chart__title">Flow, m³/h</figcaption>
+                        </figure>
+                        <div class="dp-sparks">
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="0" aria-label="Pump house 1 pressure"></div>
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="1" aria-label="Pump house 3 pressure"></div>
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="2" aria-label="Pump house 7 pressure"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dp-frame dp-narrow">
+                    <p class="dp-label">Phone width (its data from JSON children)</p>
+                    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h" data-dp-charts="phone">
+                        <div class="kp-chart-group__bar">
+                            <div class="kp-chart-ranges" role="group" aria-label="Time range, phone width">
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+                            </div>
+                            <span data-kp-chart-zoom hidden></span>
+                        </div>
+                        <figure class="kp-chart" data-kp-chart data-dp-chart="pressure" aria-label="Pressure, phone width">
+                            <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                        </figure>
+                        <figure class="kp-chart" data-kp-chart data-dp-chart="flow" aria-label="Flow, phone width">
+                            <figcaption class="kp-chart__title">Flow, m³/h</figcaption>
+                        </figure>
+                        <div class="dp-sparks">
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="0" aria-label="Pump house 1 pressure, phone width"></div>
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="1" aria-label="Pump house 3 pressure, phone width"></div>
+                            <div class="kp-chart" data-kp-chart="spark" data-dp-spark="2" aria-label="Pump house 7 pressure, phone width"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Not judged: what the package already has, and what comes later. -->
             <section class="dp-sec dp-notes" aria-labelledby="h-notes">
                 <div class="dp-sec__head">
@@ -631,9 +834,9 @@
                 </div>
                 <ul class="dp-note-list">
                     <li>
-                        <b>A row that opens from anywhere in it</b> (the dashboard's <code>rowtoggle.js</code>): already the data table's own. A
-                        click anywhere in a <code>data-kp-expandable</code> row opens it, except on a control of the row's own; it waits on main for
-                        the next release. Nothing to port.
+                        <b>A row that opens from anywhere in it</b> (the dashboard's <code>rowtoggle.js</code>): already the data table's own. A click
+                        anywhere in a <code>data-kp-expandable</code> row opens it, except on a control of the row's own; it waits on main for the
+                        next release. Nothing to port.
                     </li>
                     <li>
                         <b>"Read 12 s ago" words that tick</b> (<code>ago.js</code>): not covered. <code>js/as-of.js</code> is about something else
@@ -641,13 +844,12 @@
                         with one timer per page, words through the dictionary, and a stale mark. Its own round.
                     </li>
                     <li>
-                        <b>A folded group that remembers</b>: covered. A <code>&lt;details class="kp-accordion__item" data-kp-remember="…"&gt;</code>
-                        keeps its open state through <code>js/remember.js</code>, across pages. Only "fill the body the first time it opens" is the
-                        dashboard's own, and that is app code.
+                        <b>A folded group that remembers</b>: covered. A
+                        <code>&lt;details class="kp-accordion__item" data-kp-remember="…"&gt;</code> keeps its open state through
+                        <code>js/remember.js</code>, across pages. Only "fill the body the first time it opens" is the dashboard's own, and that is
+                        app code.
                     </li>
-                    <li>
-                        <b>Later</b>: the time chart, the calendar heatmap, the help tour and the topology graph.
-                    </li>
+                    <li><b>Later</b>: the calendar heatmap, the help tour and the topology graph.</li>
                 </ul>
             </section>
         </main>

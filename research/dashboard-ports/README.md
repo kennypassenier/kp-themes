@@ -1,6 +1,6 @@
 # Dashboard components to port
 
-**Round one open (2026-10-04).** Formal only; seven sections in the review dialog, choices to tick in five of them.
+**Round one open (2026-10-04).** Formal only; eight sections in the review dialog, choices to tick in six of them. The time chart (9) joined the same round later that day: the round id stays `2026-10-04-r1`, so verdicts already given stand and only the new section is open.
 
 The homelab admin dashboard (branch `fix-371-1`, `admin/web/`) grew components
 any app on this package needs. This demo shows the generic ones already written
@@ -8,11 +8,11 @@ in package style, so they can be approved before they move into
 `css/components.css` and `js/`. No app names, data or knowledge came along: the
 sample is the catalogue's usual world (pump houses, readings, incidents).
 
-| File | What |
-| --- | --- |
-| `demo.html`, `demo.css`, `demo.js` | the review page: each component at full width and in a 360 px frame, the option buttons, the sample data moving |
-| `ports.css` | the proposal, one `@layer kp.components { … }` block as it would land; both options of each choice are in it, marked Option A / B, and the one not picked is deleted before the move |
-| `ports.js` | the behaviour, pure exports in the style of `js/components.js`: one `attachX(root)` per behaviour returning a detach |
+| File                               | What                                                                                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `demo.html`, `demo.css`, `demo.js` | the review page: each component at full width and in a 360 px frame, the option buttons, the sample data moving                                                                      |
+| `ports.css`                        | the proposal, one `@layer kp.components { … }` block as it would land; both options of each choice are in it, marked Option A / B, and the one not picked is deleted before the move |
+| `ports.js`                         | the behaviour, pure exports in the style of `js/components.js`: one `attachX(root)` per behaviour returning a detach                                                                 |
 
 ## The components
 
@@ -125,12 +125,63 @@ in a `kp-table` container under 30rem, lays the panel flat (spinner beside the
 words, words clamped to three lines). Lands in the data table's block; no new
 class, knob `--kp-busy-overlay-spinner-narrow`.
 
+### 9. Time chart
+
+From `js/timechart.js` (whole file: legend `:591-645`, tooltip `:647-726`,
+pointer and keys `:728-819`, the group and its zoom chip `:186-245`),
+`css/app.css:4059-4308` (the `tc-` classes) and `css/pages/metrics.css:367-382`
+(pointer or touch hint). Left out: the Live view `declare()`/`drivable()`
+hooks and the `percent/bytes/rate/celsius` units (a value is a number and a
+unit string here). Added: the group's range buttons, the 24 h spark variant,
+an `aria-live` readout, a JSON child as a data source, and 30 min / 3 h tick
+steps so a zoomed span keeps more than one time label.
+
+- CSS: `.kp-chart-group` (`[data-kp-chart-group]`, `data-kp-chart-span="24h"`)
+  with `__bar` holding `.kp-chart-ranges` (buttons with
+  `data-kp-chart-range="1h|24h|7d"`, `aria-pressed` written by the script) and
+  `[data-kp-chart-zoom]` (the "Zoomed: 20:41–05:29 · Reset" chip, filled by
+  the script). `.kp-chart` (`[data-kp-chart]`, a `figure` with an optional
+  `.kp-chart__title`), parts drawn by the script: `__plot` (focusable,
+  `role="application"`), `__tip`, `__readout` (`kp-sr-only`, `aria-live`),
+  `__legend` with `__source` buttons and `__show-all`, `__hint` (pointer or
+  touch words). Colours: `data-kp-series="1-5"` maps to `--chart-n` through
+  `--kp-chart-series`, `data-kp-dash="1-3"` from the sixth source on; a
+  series' own `colour` overrides. Event tones `data-kp-tone="critical|warning|info"`.
+  Container `kp-chart`, 30rem. Spark: `.kp-chart--spark`
+  (`data-kp-chart="spark"`), parts `__spark-head`, `__spark-label`,
+  `__spark-value`, `__spark` (the SVG, `__spark-line`, `__spark-area`).
+- JS: `attachCharts(root, { strings?, locale? })` returns a detach;
+  `setChartData(el, data)` before or after attaching (or a
+  `<script type="application/json" data-kp-chart-data>` child). `ChartData`:
+  `{ label?, unit?, digits?, series: [{ label, points: [[ms, value]…] } |
+{ label, start, step, values }, colour?, total? ], events?: [{ at, label,
+tone?, href? }], from?, to?, yMax?, threshold?, stacked?, height? }`.
+  Events: `kp-chart-select` on a chart (`detail.on`), `kp-chart-zoom` on the
+  group (`{ from, to }` or null), `kp-chart-range` on the group
+  (`{ range, span }`, fired before the redraw so the page can hand new data).
+  Pure helpers: `dashOf`, `parseSpan`, `niceMax`, `indexAt`, `hourChange`,
+  `toggleSource`, `pointsOf`; words in `CHART_STRINGS` (they join
+  `js/strings.js` on the move). The spark variant draws through
+  `drawSparkline(svg, values, { parts })`, the KPI tile's own function, which
+  gained the `parts` option for that.
+- Behaviour: legend hover or focus singles a source out; a click keeps one or
+  several on (no modifier keys); Show all and Esc reset. One crosshair for the
+  group; only the chart under the pointer shows its tooltip (values, time,
+  ▲/▼ over the hour before, events within a thirtieth of the window); a click
+  pins it (✕ releases). Drag zooms the group, double-click or Esc (anywhere
+  outside a plot or dialog) resets. Keys on a plot: ←/→ (Shift: ten points),
+  Home/End, Enter pins, Esc releases → shows all → resets the zoom. A marker
+  snaps the crosshair on hover and pins on click, with its link.
+- Choices: tooltip beside the crosshair (A, the dashboard's) or docked in a
+  top corner (B, `.kp-chart--tip-docked`); a soft area under one or two
+  sources (A, the dashboard's) or lines only (B, `.kp-chart--lines`).
+
 ## Notes, no block
 
 - **"12 s ago" words (`js/ago.js`) versus `js/as-of.js`.** Nothing to merge:
   `as-of.js` attaches a late module to the page as it stood, it has no notion
   of time. The port would be a new `js/freshness.js`: `data-kp-ago="<ISO or
-  ms>"`, an optional verb (`data-kp-ago-verb`), `data-kp-stale-after="180"`
+ms>"`, an optional verb (`data-kp-ago-verb`), `data-kp-stale-after="180"`
   setting `data-kp-stale`, one timer per page, words through the dictionary
   (`Intl.RelativeTimeFormat` in the page's locale). Its own round.
 - **A folded group that remembers.** Covered: `.kp-accordion` on `<details>`
@@ -140,6 +191,6 @@ class, knob `--kp-busy-overlay-spinner-narrow`.
 
 ## Later
 
-The time chart (`js/timechart.js`), the calendar heatmap
+The calendar heatmap
 (`js/backupcalendar.js`), the help tour (`js/helptour.js`) and the topology
 graph (`js/topology.js`).

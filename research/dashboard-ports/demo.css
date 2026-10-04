@@ -250,3 +250,10 @@
     margin: 0;
     padding-inline-start: 1.25rem;
 }
+
+/* The time chart's sparklines: three to a row, fewer when narrow. */
+.dp-sparks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+}

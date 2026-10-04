@@ -618,4 +618,555 @@
             line-clamp: 3;
         }
     }
+
+    /* --- Time chart [port-9] ---------------------------------------------- */
+
+    /* One time chart for every page, so its controls mean the same
+ * everywhere: a legend that singles a source out and keeps sources on or
+ * off, a crosshair every chart of a group shares, a tooltip with the change
+ * over the hour before and the events within reach, drag to zoom, and
+ * event markers. attachCharts() draws it; the colours are the theme's
+ * `--chart-1..5`, and from the sixth source on they come round again with
+ * a dashed line. */
+    .kp-chart-group {
+        display: grid;
+        gap: var(--kp-space-lg, 1.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The range buttons and the zoom chip, once for the group. */
+    .kp-chart-group__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    }
+
+    .kp-chart-ranges {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-chart-ranges > [aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-chart-zoom {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart-zoom[hidden] {
+        display: none;
+    }
+
+    .kp-chart-zoom__reset {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+    }
+
+    .kp-chart-zoom__reset:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-chart {
+        container: kp-chart / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+        /* The source's colour: its `--chart-n`, or its own. */
+        --kp-chart-series: var(--chart-1);
+    }
+
+    .kp-chart__title {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-chart [data-kp-series='2'] {
+        --kp-chart-series: var(--chart-2);
+    }
+
+    .kp-chart [data-kp-series='3'] {
+        --kp-chart-series: var(--chart-3);
+    }
+
+    .kp-chart [data-kp-series='4'] {
+        --kp-chart-series: var(--chart-4);
+    }
+
+    .kp-chart [data-kp-series='5'] {
+        --kp-chart-series: var(--chart-5);
+    }
+
+    .kp-chart__plot {
+        position: relative;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        cursor: crosshair;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-chart__plot:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 4px;
+    }
+
+    .kp-chart__plot > svg {
+        display: block;
+        inline-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-chart__grid {
+        stroke: var(--border);
+        stroke-width: 1;
+    }
+
+    .kp-chart__tick {
+        fill: var(--muted-foreground);
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart__line {
+        fill: none;
+        stroke: var(--kp-chart-series);
+        stroke-width: 2;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+
+    .kp-chart__series[data-kp-dash='1'] .kp-chart__line {
+        stroke-dasharray: 5 3;
+    }
+
+    .kp-chart__series[data-kp-dash='2'] .kp-chart__line {
+        stroke-dasharray: 1.5 2.5;
+    }
+
+    .kp-chart__series[data-kp-dash='3'] .kp-chart__line {
+        stroke-dasharray: 8 3 1.5 3;
+    }
+
+    /* Option A (fill: "area"): a soft area under the line while one or two
+ * sources are on. Option B (`.kp-chart--lines`): the lines alone. */
+    .kp-chart__area {
+        fill: var(--kp-chart-series);
+        fill-opacity: 0.06;
+        stroke: none;
+    }
+
+    .kp-chart__area--alone {
+        fill-opacity: 0.12;
+    }
+
+    .kp-chart__area--stacked {
+        fill-opacity: 0.22;
+    }
+
+    .kp-chart--lines .kp-chart__area:not(.kp-chart__area--stacked) {
+        display: none;
+    }
+
+    .kp-chart__point {
+        fill: var(--kp-chart-series);
+    }
+
+    /* A source singled out: it thickens, the others fade. */
+    .kp-chart__series[data-kp-state='hot'] .kp-chart__line {
+        stroke-width: 2.75;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__line {
+        opacity: 0.18;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__area {
+        fill-opacity: 0.02;
+    }
+
+    .kp-chart__threshold {
+        stroke: var(--destructive);
+        stroke-dasharray: 4 4;
+        opacity: 0.8;
+    }
+
+    .kp-chart__event-line {
+        stroke: var(--muted-foreground);
+        stroke-dasharray: 2 3;
+        opacity: 0.7;
+    }
+
+    .kp-chart__mark {
+        cursor: pointer;
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    .kp-chart [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning-foreground);
+    }
+
+    .kp-chart [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+
+    .kp-chart__mark-hit {
+        fill: transparent;
+    }
+
+    .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--card);
+        stroke-width: 1.5;
+    }
+
+    .kp-chart__mark:hover .kp-chart__mark-dot {
+        stroke: var(--foreground);
+    }
+
+    .kp-chart__crosshair {
+        stroke: var(--foreground);
+        opacity: 0.35;
+    }
+
+    .kp-chart__crosshair--pinned {
+        stroke-width: 1.5;
+        opacity: 0.8;
+    }
+
+    .kp-chart__snap {
+        fill: var(--kp-chart-series);
+        stroke: var(--card);
+        stroke-width: 2;
+    }
+
+    .kp-chart__brush {
+        fill: hsl(from var(--chart-1) h s l / 0.16);
+        stroke: var(--chart-1);
+        stroke-dasharray: 3 3;
+    }
+
+    /* The tooltip. Option A (tip: "follow"): beside the crosshair, on the
+ * side with room. Option B (`.kp-chart--tip-docked`): in the plot's top
+ * corner away from the crosshair, never moving with it. */
+    .kp-chart__tip {
+        position: absolute;
+        z-index: 5;
+        inset-block-start: 4px;
+        inset-inline-start: var(--kp-chart-tip-x, 0);
+        display: grid;
+        gap: 3px;
+        inline-size: max-content;
+        min-inline-size: min(14rem, 100%);
+        max-inline-size: min(17.5rem, 100%);
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.14);
+        font-size: var(--kp-text-xs, 0.75rem);
+        pointer-events: none;
+    }
+
+    .kp-chart__tip[hidden] {
+        display: none;
+    }
+
+    .kp-chart--tip-docked .kp-chart__tip {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    .kp-chart--tip-docked .kp-chart__tip[data-kp-side='start'] {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
+
+    /* Pinned: it takes the pointer (its ✕, an event's link) and says so. */
+    .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 1px var(--ring),
+            0 8px 24px hsl(from var(--foreground) h s l / 0.14);
+        pointer-events: auto;
+    }
+
+    .kp-chart__tip p {
+        margin: 0;
+    }
+
+    .kp-chart__tip-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.625rem;
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart__pin {
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-chart__release {
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-chart__release:focus-visible {
+        outline: 2px solid var(--focus-ring);
+    }
+
+    .kp-chart__tip-row {
+        display: grid;
+        grid-template-columns: 10px minmax(0, 1fr) auto 4.5rem;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .kp-chart__tip-row > span:nth-child(2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-chart__tip-row[data-kp-state='hot'] {
+        font-weight: 700;
+    }
+
+    .kp-chart__num {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    /* The change over the hour before: up and down are not good or bad, so
+ * neither is green or red. */
+    .kp-chart__delta {
+        color: var(--muted-foreground);
+    }
+
+    .kp-chart__delta[data-kp-direction='up'] {
+        color: var(--warning-foreground);
+    }
+
+    .kp-chart__delta[data-kp-direction='down'] {
+        color: var(--info-foreground);
+    }
+
+    .kp-chart__tip-foot {
+        color: var(--muted-foreground);
+        text-align: end;
+    }
+
+    .kp-chart__tip-event {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-chart__tip-event > a {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .kp-chart__dot {
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-chart-tone, var(--info-foreground));
+    }
+
+    .kp-chart__swatch {
+        display: inline-block;
+        inline-size: 10px;
+        block-size: 3px;
+        border-radius: 2px;
+        background: var(--kp-chart-series);
+    }
+
+    [data-kp-dash] > .kp-chart__swatch,
+    .kp-chart__swatch[data-kp-dash] {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 3px, transparent 3px 5px);
+    }
+
+    /* The legend: one button per source, its value at the crosshair (or
+ * the latest), and Show all while some are kept on. */
+    .kp-chart__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-start: 0.625rem;
+    }
+
+    .kp-chart__legend[hidden],
+    .kp-chart__hint[hidden] {
+        display: none;
+    }
+
+    .kp-chart__source,
+    .kp-chart__show-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px var(--kp-space-sm, 0.5rem);
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: none;
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        cursor: pointer;
+    }
+
+    .kp-chart__source > b {
+        color: var(--foreground);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-chart__source:hover,
+    .kp-chart__source:focus-visible {
+        border-color: var(--border);
+        color: var(--foreground);
+    }
+
+    .kp-chart__source:focus-visible,
+    .kp-chart__show-all:focus-visible {
+        outline: 2px solid var(--focus-ring);
+    }
+
+    .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border);
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 0 0 0 1px var(--ring);
+    }
+
+    .kp-chart__source[data-kp-off] {
+        opacity: 0.45;
+    }
+
+    .kp-chart__source[data-kp-off] > .kp-chart__swatch {
+        background: var(--muted-foreground);
+    }
+
+    .kp-chart__show-all {
+        border: 1px dashed var(--border-strong, var(--border));
+        color: var(--foreground);
+    }
+
+    .kp-chart__show-all[hidden] {
+        display: none;
+    }
+
+    .kp-chart__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Words for a pointer, or for a finger: never both. */
+    .kp-chart__hint > [data-kp-when='touch'] {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .kp-chart__hint > [data-kp-when='pointer'] {
+            display: none;
+        }
+
+        .kp-chart__hint > [data-kp-when='touch'] {
+            display: inline;
+        }
+    }
+
+    /* On a phone the docked tooltip takes the plot's whole width. */
+    @container kp-chart (max-width: 30rem) {
+        .kp-chart--tip-docked .kp-chart__tip,
+        .kp-chart--tip-docked .kp-chart__tip[data-kp-side='start'] {
+            inset-inline: 0;
+            inline-size: auto;
+            max-inline-size: none;
+        }
+    }
+
+    /* The spark variant: a tile's 24-hour line on the group's crosshair,
+ * drawn by drawSparkline(), its value at the crosshair (or now) beside
+ * its name. Its area follows the fill choice (`.kp-chart--lines`). */
+    .kp-chart--spark {
+        gap: 2px;
+    }
+
+    .kp-chart__spark-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-chart__spark-label {
+        overflow: hidden;
+        color: var(--muted-foreground);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-chart__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--kp-kpi-spark-height, 1.75rem);
+        overflow: visible;
+        color: var(--kp-chart-series);
+    }
+
+    .kp-chart__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-chart__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    .kp-chart--lines .kp-chart__spark-area {
+        display: none;
+    }
+
+    .kp-chart__spark .kp-chart__crosshair {
+        stroke-width: 1;
+    }
 }
