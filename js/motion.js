@@ -541,9 +541,11 @@ async function leaveOne(el, hide, exited) {
     if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
     const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
     // The next in a row of leaves starts once this one's exit is
-    // `--kp-leave-stagger` of the way through (1, the default, waits for
+    // `--kp-leave-stagger` of the way through (0.5 by default; 1 waits for
     // all of it), read off the animation itself so any playback rate holds.
-    const stagger = parseFloat(style.getPropertyValue('--kp-leave-stagger'));
+    // Halfway unless the page says otherwise (Kenny's pick, 2026-10-04).
+    const set = parseFloat(style.getPropertyValue('--kp-leave-stagger'));
+    const stagger = Number.isNaN(set) ? 0.5 : set;
     if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
     else void exit.then(exited);
     running.push(exit);

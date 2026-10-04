@@ -2398,5 +2398,23 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── dark: it slips left into shadow ── */
+        [data-theme='dark'] [data-kp-leaving] {
+            animation: kp-sig-dark-leave 460ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-dark-leave {
+            to {
+                filter: brightness(0);
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

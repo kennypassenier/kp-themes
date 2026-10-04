@@ -2000,5 +2000,50 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── grotesk: colour bands: accent, ink and paper sweep across like a Swiss poster and take it with them ── */
+        [data-theme='grotesk'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-grotesk-leave 550ms linear forwards;
+        }
+
+        [data-theme='grotesk'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            inset: 0 auto 0 0;
+            width: 300%;
+            background: linear-gradient(90deg, var(--primary) 0 33.3%, var(--foreground) 33.3% 66.6%, var(--background) 66.6% 100%);
+            animation: kp-sig-grotesk-leave-2 550ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes kp-sig-grotesk-leave {
+            0%,
+            90% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-grotesk-leave-2 {
+            from {
+                transform: translateX(33.4%);
+            }
+
+            to {
+                transform: translateX(-66.7%);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -2254,5 +2254,22 @@
             transform: translateX(calc(100cqi - 100%));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── brutalism: slammed out to the left in two hard steps ── */
+        [data-theme='brutalism'] [data-kp-leaving] {
+            animation: kp-sig-brutalism-leave 240ms steps(2, jump-end) forwards;
+        }
+
+        @keyframes kp-sig-brutalism-leave {
+            to {
+                transform: translateX(-60px);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

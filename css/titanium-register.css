@@ -2178,5 +2178,56 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: anodised: it runs through the colours titanium takes under heat, gold, violet, blue, and cools away ── */
+        [data-theme='titanium'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-titanium-leave 650ms ease-in forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+            background-size: 300% 100%;
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-leave-2 650ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-titanium-leave {
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-titanium-leave-2 {
+            from {
+                opacity: 0;
+                background-position: 0 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 1;
+                background-position: 100% 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

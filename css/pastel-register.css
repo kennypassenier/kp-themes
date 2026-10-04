@@ -2131,5 +2131,22 @@
             transform: translateX(370%);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── pastel: a balloon let go: it floats up with a little tilt ── */
+        [data-theme='pastel'] [data-kp-leaving] {
+            animation: kp-sig-pastel-leave 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-pastel-leave {
+            to {
+                transform: translateY(-28px) rotate(-5deg);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

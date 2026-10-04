@@ -3021,5 +3021,22 @@
             opacity: 0;
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── retro: shrunk away in four pixel steps ── */
+        [data-theme='retro'] [data-kp-leaving] {
+            animation: kp-sig-retro-leave 280ms steps(4, jump-end) forwards;
+        }
+
+        @keyframes kp-sig-retro-leave {
+            to {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

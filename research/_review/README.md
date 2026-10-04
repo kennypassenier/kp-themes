@@ -76,3 +76,23 @@ On the reviewer's next visit the new round reopens every pair rejected
 before it, once, and keeps every approval: the dialog walks only the rejected
 pairs, with no stored answer to clear by hand. Name pairs in `"reopen":
 ["<theme>|<item>", …]` only when something approved was redrawn too.
+
+## Choices to tick
+
+When a demo asks the reviewer to pick between options, the options go in the
+dialog as choices to tick, never as a number typed into a note (Kenny,
+2026-10-04). A section lists them in `data-review-choices`:
+
+```html
+<section data-review-item="leave" data-review-choices='[
+  { "id": "exit", "label": "Exit for this theme",
+    "options": [{ "value": "1", "label": "Exit 1", "hints": { "formal": "Blotted out …" } }, …] },
+  { "id": "space", "label": "When the space closes", "once": true,
+    "options": [{ "value": "together", "label": "During the exit", "hint": "…" }, …] }]'>
+```
+
+A choice is asked per theme, or with `"once": true` once for the whole demo.
+Each option may carry a `hint`, or `hints` by theme, shown under its label.
+Approving refuses until every choice is ticked; ticking fires `review:choice`
+(`{ id, value }`) on the section so the page can show the pick; the picks are
+in the answer under "Picked per theme" and "Picked once".

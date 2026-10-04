@@ -2271,5 +2271,50 @@
             transform: translateX(calc(100cqi - 3ch));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── terminal: the block cursor glides back over the line, deleting it as it goes ── */
+        [data-theme='terminal'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-terminal-leave 480ms linear forwards;
+        }
+
+        [data-theme='terminal'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            inset: 0 auto 0 auto;
+            width: 0.7em;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+            animation: kp-sig-terminal-leave-2 480ms linear forwards;
+        }
+
+        @keyframes kp-sig-terminal-leave {
+            from {
+                clip-path: inset(0 0 0 0);
+            }
+
+            to {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-terminal-leave-2 {
+            from {
+                right: 0;
+            }
+
+            to {
+                right: calc(100% - 0.7em);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

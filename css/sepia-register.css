@@ -2177,5 +2177,55 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── sepia: burned: the edges brown and char inward like paper held to a candle ── */
+        [data-theme='sepia'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-sepia-leave 700ms ease-in forwards;
+        }
+
+        [data-theme='sepia'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            animation: kp-sig-sepia-leave-2 700ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-sepia-leave {
+            0%,
+            80% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-sepia-leave-2 {
+            from {
+                box-shadow: inset 0 0 0 0 var(--foreground);
+            }
+
+            40% {
+                box-shadow:
+                    inset 0 0 12px 6px var(--primary),
+                    inset 0 0 2px 2px var(--foreground);
+            }
+
+            to {
+                box-shadow:
+                    inset 0 0 40px 60px var(--foreground),
+                    inset 0 0 4px 4px hsl(from var(--foreground) h s calc(l - 10));
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

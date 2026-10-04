@@ -11182,7 +11182,7 @@ function arrival(scope) {
   }
 }
 function arrive(el2, motion) {
-  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving")) return;
+  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving")) return;
   el2.setAttribute("data-kp-arriving", "");
   const own = getComputedStyle(el2).animationName;
   if (!own || own === "none") el2.style.animation = motion;
@@ -11190,8 +11190,29 @@ function arrive(el2, motion) {
     el2.style.removeProperty("animation");
     el2.removeAttribute("data-kp-arriving");
   };
-  el2.addEventListener("animationend", end, { once: true });
-  setTimeout(end, 1500);
+  void playedOut(el2, 1500).then(end);
+}
+function partway(el2, share, done) {
+  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2);
+  const reached = new Promise((resolve) => {
+    const tick = () => {
+      const through = css.every((a) => {
+        const timing = a.effect?.getComputedTiming();
+        return a.playState === "finished" || (timing?.progress ?? 0) >= share || (timing?.currentIteration ?? 0) > 0;
+      });
+      if (through) resolve(void 0);
+      else requestAnimationFrame(tick);
+    };
+    tick();
+  });
+  return Promise.race([reached, done]);
+}
+function playedOut(el2, fallback2) {
+  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2);
+  if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback2));
+  return Promise.all(css.map((a) => a.finished.catch(() => void 0)));
 }
 function arrivalOf(el2) {
   if (reduced()) return null;
@@ -11211,51 +11232,120 @@ function arrivalOf(el2) {
   const [name, duration, ...ease] = toast2.split(" ");
   return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(" ") };
 }
-async function leave(el2, { hide = false } = {}) {
+function leave(el2, { hide = false } = {}) {
+  return new Promise((resolve) => {
+    if (!batch) {
+      batch = [];
+      queueMicrotask(() => {
+        const items = (
+          /** @type {Leaving[]} */
+          batch
+        );
+        batch = null;
+        void leaveInTurn(items);
+      });
+    }
+    batch.push({ el: el2, hide, resolve });
+  });
+}
+async function leaveInTurn(items) {
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  for (const item of items) {
+    const exited = new Promise((resolve) => {
+      void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+    });
+    await exited;
+  }
+}
+async function leaveOne(el2, hide, exited) {
   const gone = () => {
     if (hide) el2.hidden = true;
     else el2.remove();
   };
-  if (!el2.isConnected || el2.hasAttribute("data-kp-leaving")) return;
-  const motion = arrivalOf(el2);
+  if (!el2.isConnected || el2.hasAttribute("data-kp-leaving")) return exited();
+  const before = getComputedStyle(el2).animationName;
+  const arrival2 = arrivalOf(el2);
   const { size, ease } = themeMotion(el2);
-  if (!motion && size <= 0) return gone();
-  el2.setAttribute("data-kp-leaving", "");
-  const running = [];
-  if (motion) {
-    el2.style.animation = `${motion.name} ${motion.duration}ms ${motion.ease} reverse forwards`;
-    running.push(
-      new Promise((resolve) => {
-        el2.addEventListener("animationend", resolve, { once: true });
-        setTimeout(resolve, motion.duration + 100);
-      })
-    );
+  if (!arrival2 && size <= 0) {
+    exited();
+    return gone();
   }
-  if (size > 0) {
-    const style = getComputedStyle(el2);
+  el2.setAttribute("data-kp-leaving", "");
+  const style = getComputedStyle(el2);
+  const ownName = style.animationName;
+  const own = ownName && ownName !== "none" && ownName !== before ? { duration: firstMs(style.animationDuration) } : null;
+  const running = [];
+  const lasts = own ? own.duration : arrival2?.duration ?? 0;
+  const fold = style.getPropertyValue("--kp-leave-fold").trim();
+  let actor = el2;
+  if (fold === "ghost" && lasts > 0) {
+    actor = /** @type {HTMLElement} */
+    el2.cloneNode(true);
+    actor.setAttribute("aria-hidden", "true");
+    actor.inert = true;
+    Object.assign(actor.style, {
+      position: "absolute",
+      top: `${el2.offsetTop}px`,
+      left: `${el2.offsetLeft}px`,
+      width: `${el2.offsetWidth}px`,
+      height: `${el2.offsetHeight}px`,
+      margin: "0",
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      zIndex: "1"
+    });
+    el2.after(actor);
+    const want = el2.getBoundingClientRect();
+    const got = actor.getBoundingClientRect();
+    actor.style.top = `${el2.offsetTop + want.top - got.top}px`;
+    actor.style.left = `${el2.offsetLeft + want.left - got.left}px`;
+    el2.style.setProperty("visibility", "hidden");
+    el2.style.setProperty("animation", "none");
+  }
+  if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
+  const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
+  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
+  const stagger = Number.isNaN(set) ? 0.5 : set;
+  if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+  else void exit.then(exited);
+  running.push(exit);
+  if (size > 0 && !(el2 instanceof HTMLTableRowElement)) {
+    const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
+    const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
-    const fold = el2.animate(
-      [
-        {
-          height: `${el2.offsetHeight}px`,
-          marginTop: style.marginTop,
-          marginBottom: style.marginBottom,
-          paddingTop: style.paddingTop,
-          paddingBottom: style.paddingBottom
-        },
-        { height: "0px", marginTop: "0px", marginBottom: "0px", paddingTop: "0px", paddingBottom: "0px" }
-      ],
-      { duration: Math.max(size, motion?.duration ?? 0), easing: withoutOvershoot(ease), fill: "forwards" }
-    );
-    running.push(fold.finished.catch(() => void 0));
+    const from = sideways ? {
+      width: `${el2.offsetWidth}px`,
+      marginLeft: style.marginLeft,
+      marginRight: style.marginRight,
+      paddingLeft: style.paddingLeft,
+      paddingRight: style.paddingRight
+    } : {
+      height: `${el2.offsetHeight}px`,
+      marginTop: style.marginTop,
+      marginBottom: style.marginBottom,
+      paddingTop: style.paddingTop,
+      paddingBottom: style.paddingBottom
+    };
+    const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
+    const after = fold === "after";
+    const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+    const folding = el2.animate([from, to], {
+      duration: Math.max(size, lasts) * 1.25,
+      delay: after ? lasts + pause : lasts / 3,
+      easing: withoutOvershoot(ease),
+      fill: "forwards"
+    });
+    running.push(folding.finished.catch(() => void 0));
   }
   await Promise.all(running);
+  if (actor !== el2) actor.remove();
   gone();
   el2.removeAttribute("data-kp-leaving");
   el2.style.removeProperty("animation");
   el2.style.removeProperty("overflow");
   el2.style.removeProperty("box-sizing");
+  el2.style.removeProperty("visibility");
   for (const a of el2.getAnimations()) a.cancel();
 }
 function easeSize(box) {
@@ -11395,7 +11485,7 @@ function attachMotion(root = document) {
     for (const one of detaches) one();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, switching;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, switching, batch;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -11441,6 +11531,7 @@ var init_motion = __esm({
         requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     }
+    batch = null;
   }
 });
 

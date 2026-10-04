@@ -12980,6 +12980,77 @@
             transform: translateX(216px);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── cyberpunk: the classic glitch: the text turns neon blue, a cyan copy jumps right and up, a magenta copy right and down, and it is sliced away ── */
+        [data-theme='cyberpunk'] [data-kp-leaving] {
+            animation: kp-sig-cyberpunk-leave 650ms linear forwards;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-leaving] * {
+            color: inherit !important;
+            text-shadow: inherit;
+        }
+
+        @keyframes kp-sig-cyberpunk-leave {
+            0% {
+                color: inherit;
+                text-shadow: none;
+            }
+
+            12% {
+                color: var(--accent-hover);
+                text-shadow:
+                    4px -3px 0 hsl(from var(--accent) h s l / 0.85),
+                    4px 3px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(2px);
+            }
+
+            24% {
+                text-shadow:
+                    7px -5px 0 hsl(from var(--accent) h s l / 0.85),
+                    7px 5px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(-2px);
+            }
+
+            36% {
+                text-shadow:
+                    3px -2px 0 hsl(from var(--accent) h s l / 0.85),
+                    3px 2px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(3px);
+                clip-path: inset(0 0 0 0);
+            }
+
+            50% {
+                color: var(--accent-hover);
+                text-shadow:
+                    10px -6px 0 hsl(from var(--accent) h s l / 0.9),
+                    10px 6px 0 hsl(from var(--chart-3) h s l / 0.9);
+                clip-path: inset(20% 0 35% 0);
+                transform: translateX(-4px);
+            }
+
+            65% {
+                clip-path: inset(55% 0 10% 0);
+                transform: translateX(6px);
+            }
+
+            80% {
+                clip-path: inset(5% 0 75% 0);
+                transform: translateX(-3px);
+            }
+
+            to {
+                color: var(--accent-hover);
+                clip-path: inset(50% 0 50% 0);
+                transform: translateX(8px);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -16006,6 +16077,23 @@
             opacity: 0;
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── retro: shrunk away in four pixel steps ── */
+        [data-theme='retro'] [data-kp-leaving] {
+            animation: kp-sig-retro-leave 280ms steps(4, jump-end) forwards;
+        }
+
+        @keyframes kp-sig-retro-leave {
+            to {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -18490,6 +18578,51 @@
                 opacity: 0;
                 transform: translateX(-28px) skewX(-18deg);
                 filter: drop-shadow(-12px 0 6px var(--primary));
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── synthwave: sunset: the striped retro sun rises behind it from below until it is gone in the glow ── */
+        [data-theme='synthwave'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-synthwave-leave 750ms ease-in forwards;
+        }
+
+        [data-theme='synthwave'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(180deg, var(--chart-3), color-mix(in oklab, var(--chart-3), var(--primary)) 35%, var(--primary) 70%, var(--chart-4));
+            mask: repeating-linear-gradient(180deg, black 0 8px, transparent 8px 12px);
+            animation: kp-sig-synthwave-leave-2 750ms cubic-bezier(0.3, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes kp-sig-synthwave-leave {
+            0%,
+            60% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-synthwave-leave-2 {
+            from {
+                clip-path: circle(0% at 50% 120%);
+            }
+
+            70%,
+            to {
+                clip-path: circle(120% at 50% 120%);
             }
         }
     }
@@ -20997,6 +21130,44 @@
             transform: translateX(300%);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── phantom: see-through and wavering, it rises a little and dissolves ── */
+        [data-theme='phantom'] [data-kp-leaving] {
+            animation: kp-sig-phantom-leave 650ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-phantom-leave {
+            0% {
+                opacity: 1;
+                filter: none;
+            }
+
+            25% {
+                opacity: 0.55;
+                transform: skewX(4deg);
+                filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            }
+
+            50% {
+                transform: translateY(-3px) skewX(-4deg);
+            }
+
+            75% {
+                transform: translateY(-6px) skewX(3deg);
+                opacity: 0.3;
+            }
+
+            to {
+                transform: translateY(-9px) scaleX(0.94);
+                opacity: 0;
+                filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -23273,6 +23444,51 @@
             transform: translateX(calc(100cqi - 3ch));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── terminal: the block cursor glides back over the line, deleting it as it goes ── */
+        [data-theme='terminal'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-terminal-leave 480ms linear forwards;
+        }
+
+        [data-theme='terminal'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            inset: 0 auto 0 auto;
+            width: 0.7em;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+            animation: kp-sig-terminal-leave-2 480ms linear forwards;
+        }
+
+        @keyframes kp-sig-terminal-leave {
+            from {
+                clip-path: inset(0 0 0 0);
+            }
+
+            to {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-terminal-leave-2 {
+            from {
+                right: 0;
+            }
+
+            to {
+                right: calc(100% - 0.7em);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -25532,6 +25748,23 @@
             transform: translateX(calc(100cqi - 100%));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── brutalism: slammed out to the left in two hard steps ── */
+        [data-theme='brutalism'] [data-kp-leaving] {
+            animation: kp-sig-brutalism-leave 240ms steps(2, jump-end) forwards;
+        }
+
+        @keyframes kp-sig-brutalism-leave {
+            to {
+                transform: translateX(-60px);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -27715,6 +27948,57 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: anodised: it runs through the colours titanium takes under heat, gold, violet, blue, and cools away ── */
+        [data-theme='titanium'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-titanium-leave 650ms ease-in forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+            background-size: 300% 100%;
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-leave-2 650ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-titanium-leave {
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-titanium-leave-2 {
+            from {
+                opacity: 0;
+                background-position: 0 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 1;
+                background-position: 100% 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -29851,6 +30135,23 @@
             transform: translateX(370%);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── pastel: a balloon let go: it floats up with a little tilt ── */
+        [data-theme='pastel'] [data-kp-leaving] {
+            animation: kp-sig-pastel-leave 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-pastel-leave {
+            to {
+                transform: translateY(-28px) rotate(-5deg);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -31802,6 +32103,27 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── shade-light: lifted off the page: its shadow grows, then it fades ── */
+        [data-theme='shade-light'] [data-kp-leaving] {
+            animation: kp-sig-shade-light-leave 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-shade-light-leave {
+            50% {
+                transform: translateY(-6px) scale(1.02);
+                filter: drop-shadow(0 14px 10px hsl(from var(--foreground) h s l / 0.35));
+            }
+            to {
+                transform: translateY(-12px) scale(1.03);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -33711,6 +34033,24 @@
        nostromo pass, note 4). */
     [data-theme='forest'] .kp-toast--success {
         --kp-toast-button-hover: color-mix(in srgb, var(--success-foreground) 14%, transparent);
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── forest: blown off by the wind, to the right ── */
+        [data-theme='forest'] [data-kp-leaving] {
+            animation: kp-sig-forest-leave 560ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-forest-leave {
+            to {
+                filter: sepia(1) saturate(0.6);
+                transform: scale(0.94);
+                opacity: 0;
+            }
+        }
     }
 }
 /* ── End of the signature ── */
@@ -35693,6 +36033,23 @@
             transform: translateX(var(--dc-chevron));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── deco: it closes like a fan, folding to its centre ── */
+        [data-theme='deco'] [data-kp-leaving] {
+            animation: kp-sig-deco-leave 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes kp-sig-deco-leave {
+            to {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -37187,6 +37544,24 @@
             from {
                 opacity: 0;
                 filter: blur(4px) brightness(1.4);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── light: it rises into the light and is gone in the glare ── */
+        [data-theme='light'] [data-kp-leaving] {
+            animation: kp-sig-light-leave 420ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-light-leave {
+            to {
+                opacity: 0;
+                transform: translateY(-8px);
+                filter: blur(5px) brightness(1.6);
             }
         }
     }
@@ -39192,6 +39567,51 @@
         @keyframes kp-sig-grotesk-size-cut {
             from {
                 clip-path: inset(0 100% 0 0);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── grotesk: colour bands: accent, ink and paper sweep across like a Swiss poster and take it with them ── */
+        [data-theme='grotesk'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-grotesk-leave 550ms linear forwards;
+        }
+
+        [data-theme='grotesk'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            inset: 0 auto 0 0;
+            width: 300%;
+            background: linear-gradient(90deg, var(--primary) 0 33.3%, var(--foreground) 33.3% 66.6%, var(--background) 66.6% 100%);
+            animation: kp-sig-grotesk-leave-2 550ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes kp-sig-grotesk-leave {
+            0%,
+            90% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-grotesk-leave-2 {
+            from {
+                transform: translateX(33.4%);
+            }
+
+            to {
+                transform: translateX(-66.7%);
             }
         }
     }
@@ -41372,6 +41792,52 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── blueprint: hatched out like a wall marked for demolition on a plan, then lifted off the sheet ── */
+        [data-theme='blueprint'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            outline: 1px dashed var(--primary);
+            animation: kp-sig-blueprint-leave 1100ms linear forwards;
+        }
+
+        [data-theme='blueprint'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: repeating-linear-gradient(45deg, var(--primary) 0 1.5px, transparent 1.5px 9px);
+            animation: kp-sig-blueprint-leave-2 1100ms linear forwards;
+        }
+
+        @keyframes kp-sig-blueprint-leave {
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translate(6px, -6px);
+            }
+        }
+
+        @keyframes kp-sig-blueprint-leave-2 {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            60%,
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -43341,6 +43807,26 @@
             from {
                 clip-path: inset(0 0 100% 0);
                 filter: brightness(1.8);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: it scrolls off the top of the monitor ── */
+        [data-theme='nostromo'] [data-kp-leaving] {
+            animation: kp-sig-nostromo-leave 480ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-nostromo-leave {
+            35% {
+                filter: brightness(1.8) blur(1px);
+            }
+            to {
+                filter: brightness(1.2) blur(3px);
+                opacity: 0;
             }
         }
     }
@@ -45747,6 +46233,24 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── dark: it slips left into shadow ── */
+        [data-theme='dark'] [data-kp-leaving] {
+            animation: kp-sig-dark-leave 460ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-dark-leave {
+            to {
+                filter: brightness(0);
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -47462,6 +47966,24 @@
         @keyframes kp-sig-formal-size-ink {
             from {
                 clip-path: inset(0 100% 0 0);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── formal: folded up like a letter, from the bottom edge to the top ── */
+        [data-theme='formal'] [data-kp-leaving] {
+            transform-origin: top;
+            animation: kp-sig-formal-leave 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-formal-leave {
+            to {
+                transform: scaleY(0);
+                opacity: 0.2;
             }
         }
     }
@@ -49647,6 +50169,56 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── sepia: burned: the edges brown and char inward like paper held to a candle ── */
+        [data-theme='sepia'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-sepia-leave 700ms ease-in forwards;
+        }
+
+        [data-theme='sepia'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            animation: kp-sig-sepia-leave-2 700ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-sepia-leave {
+            0%,
+            80% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-sepia-leave-2 {
+            from {
+                box-shadow: inset 0 0 0 0 var(--foreground);
+            }
+
+            40% {
+                box-shadow:
+                    inset 0 0 12px 6px var(--primary),
+                    inset 0 0 2px 2px var(--foreground);
+            }
+
+            to {
+                box-shadow:
+                    inset 0 0 40px 60px var(--foreground),
+                    inset 0 0 4px 4px hsl(from var(--foreground) h s calc(l - 10));
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -51315,6 +51887,24 @@
                 opacity: 0;
                 transform: translateY(10px);
                 filter: brightness(1.5) saturate(1.4);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── solstice: an eclipse: a circle closes over it ── */
+        [data-theme='solstice'] [data-kp-leaving] {
+            animation: kp-sig-solstice-leave 540ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-solstice-leave {
+            to {
+                transform: translateY(-14px);
+                filter: brightness(1.4) blur(3px);
+                opacity: 0;
             }
         }
     }
@@ -53039,6 +53629,59 @@
             from {
                 outline: 3px solid var(--ring);
                 outline-offset: 1px;
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── high-contrast: announced: a REMOVED caption, ink on yellow, is laid across it the way a screen reader would say it, then it is gone in one step ── */
+        [data-theme='high-contrast'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-high-contrast-leave 700ms linear forwards;
+        }
+
+        [data-theme='high-contrast'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            content: '✕ REMOVED';
+            display: flex;
+            align-items: center;
+            padding-inline: 0.75em;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: var(--foreground);
+            background: var(--accent);
+            border: 3px solid var(--foreground);
+            animation: kp-sig-high-contrast-leave-2 700ms cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        @keyframes kp-sig-high-contrast-leave {
+            0%,
+            85% {
+                opacity: 1;
+            }
+
+            86%,
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-high-contrast-leave-2 {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            30%,
+            to {
+                clip-path: inset(0 0 0 0);
             }
         }
     }
@@ -55037,6 +55680,69 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── lapis: gold leaf is laid over it with one shimmer, then the gilded piece flakes off from the corner ── */
+        [data-theme='lapis'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-lapis-leave 550ms ease-in forwards;
+        }
+
+        [data-theme='lapis'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background:
+                linear-gradient(110deg, transparent 30%, hsl(from var(--foreground) h s l / 0.8) 45%, transparent 60%) no-repeat,
+                linear-gradient(135deg, var(--primary-disabled), var(--primary-active) 45%, var(--primary-disabled));
+            background-size:
+                250% 100%,
+                100% 100%;
+            animation: kp-sig-lapis-leave-2 550ms ease-out forwards;
+        }
+
+        @keyframes kp-sig-lapis-leave {
+            0%,
+            45% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+
+            70% {
+                clip-path: polygon(0 0, 100% 0, 100% 55%, 65% 100%, 0 100%);
+            }
+
+            to {
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0);
+            }
+        }
+
+        @keyframes kp-sig-lapis-leave-2 {
+            from {
+                opacity: 0;
+                background-position:
+                    150% 0,
+                    0 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            45%,
+            to {
+                opacity: 1;
+                background-position:
+                    -100% 0,
+                    0 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -56822,6 +57528,27 @@
                 opacity: 0;
                 transform: translateY(8px);
                 filter: drop-shadow(0 10px 6px hsl(from var(--foreground) h s l / 0.45));
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── shade-dark: lifted off the page: its shadow grows, then it fades ── */
+        [data-theme='shade-dark'] [data-kp-leaving] {
+            animation: kp-sig-shade-dark-leave 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-shade-dark-leave {
+            50% {
+                transform: translateY(-6px) scale(1.02);
+                filter: drop-shadow(0 14px 10px hsl(from var(--foreground) h s l / 0.35));
+            }
+            to {
+                transform: translateY(-12px) scale(1.03);
+                opacity: 0;
             }
         }
     }

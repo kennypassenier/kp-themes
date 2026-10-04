@@ -497,15 +497,35 @@ own toast entrance. A theme may ask for its sizes to move one line at a time
 with `--kp-size-steps: line` (terminal does); `withoutOvershoot(ease)` is the
 curve rule, exported for a page that animates its own boxes.
 
-What leaves goes the same way backwards: `leave(el)` plays the element's
-arrival in reverse while it folds shut, then removes it (`leave(el, { hide:
-true })` sets `hidden` instead), so what is under it closes up:
+What leaves goes with its theme's own exit: `leave(el)` marks it
+`[data-kp-leaving]`, the theme's register draws the exit on it (formal folds
+it up like a letter, retro shrinks it in pixel steps, titanium runs it through
+the colours titanium takes under heat, high-contrast lays a REMOVED caption
+across it, and so on: one per theme, picked by Kenny on 2026-10-04), its space
+closes during the exit so the box around it shrinks along, and then it is
+removed (`leave(el, { hide: true })` sets `hidden` instead). A theme without
+an exit of its own plays the element's arrival backwards.
 
 ```js
 import { leave } from '@kp-soft/themes/js/motion';
 
 await leave(row);
 ```
+
+Several elements told to leave in the same task go one by one, the lowest
+first, each starting when the one before is halfway through its exit:
+
+```js
+for (const row of selected) leave(row); // bottom row first, then upward
+```
+
+Two custom properties change that, on the element or any ancestor:
+`--kp-leave-stagger` is how far into one exit the next starts (`0.5` by
+default, `1` waits for each in full), and `--kp-leave-fold` is when the space
+closes: `together` (the default, a third of the way into the exit), `after`
+(once the exit is over, plus `--kp-leave-pause` ms) or `ghost` (a copy plays
+the exit on top while the element folds underneath at once). An exit is
+drawn inside the element's own box.
 
 A live view that redraws its rows on every refresh marks the box
 `data-kp-arrive="none"`; otherwise every refresh replays every row's

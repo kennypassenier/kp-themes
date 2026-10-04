@@ -43,6 +43,8 @@ export declare function withoutOvershoot(ease: string): string;
  * and the box around it shrinks with it. Under reduced motion, or in a theme
  * with no arrival, it goes at once.
  *
+ * Elements told to leave in the same task leave one by one, bottom first.
+ *
  * @param {HTMLElement} el
  * @param {{ hide?: boolean }} [options] `hide: true` sets `hidden` instead of removing it
  * @returns {Promise<void>} settled once it is gone
@@ -50,6 +52,11 @@ export declare function withoutOvershoot(ease: string): string;
 export declare function leave(el: HTMLElement, { hide }?: {
     hide?: boolean;
 }): Promise<void>;
+export type Leaving = {
+    el: HTMLElement;
+    hide: boolean;
+    resolve: () => void;
+};
 /**
  * Ease `box` to its new height whenever what is in it changes size, in both
  * directions; a change during a glide continues from where the box is.

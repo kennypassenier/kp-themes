@@ -3,10 +3,23 @@
 ## Unreleased
 
 - **Elements leave the theme's way** [scope-142]: `leave(el)` (js/motion.js)
-  plays the element's arrival backwards while it folds shut, then removes it
-  (or hides it with `{ hide: true }`), so what is under it closes up and the
-  box around it shrinks along. `data-kp-arrive="none"` on a box keeps a live
-  view's redraws from replaying every arrival.
+  marks the element `[data-kp-leaving]` and every register now draws its own
+  exit on it, one per theme, picked by Kenny on research/size-motion over
+  rounds five to eight (formal folds up like a letter, terminal's block cursor
+  deletes the line, retro shrinks in pixel steps, titanium anodises,
+  cyberpunk glitches, high-contrast announces REMOVED, ...). The space closes
+  during the exit, so the box around it shrinks along; then the element is
+  removed (or hidden with `{ hide: true }`). Elements told to leave together
+  go one by one, bottom first, the next starting halfway through the one
+  before (`--kp-leave-stagger`, `--kp-leave-fold` and `--kp-leave-pause` to
+  change it). `data-kp-arrive="none"` on a box keeps a live view's redraws
+  from replaying every arrival.
+- **leave() and arrivals follow their animation's own clock**: they end when
+  their CSS animations (pseudo-elements included) have played out, at any
+  playback rate, instead of on a fixed timeout.
+- **The demo review kit asks for picks as ticked choices**
+  (`data-review-choices`, per theme or once), each option explained, and
+  puts them in the answer.
 
 ## 9.1.0 — 2026-10-04
 

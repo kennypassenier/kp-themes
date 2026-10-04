@@ -108,6 +108,12 @@
         }
     }
 
+    /* Its text takes the glitch colour too, whatever colour it had. */
+    [data-theme='cyberpunk'] [data-sm-exit='1'] [data-kp-leaving] * {
+        color: inherit !important;
+        text-shadow: inherit;
+    }
+
     /* 2. Slice shift: it is cut into bands that slide past each other, the
        colour drifting, until the bands run out. */
     [data-theme='cyberpunk'] [data-sm-exit='2'] [data-kp-leaving] {

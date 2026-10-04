@@ -2172,5 +2172,51 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── blueprint: hatched out like a wall marked for demolition on a plan, then lifted off the sheet ── */
+        [data-theme='blueprint'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            outline: 1px dashed var(--primary);
+            animation: kp-sig-blueprint-leave 1100ms linear forwards;
+        }
+
+        [data-theme='blueprint'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: repeating-linear-gradient(45deg, var(--primary) 0 1.5px, transparent 1.5px 9px);
+            animation: kp-sig-blueprint-leave-2 1100ms linear forwards;
+        }
+
+        @keyframes kp-sig-blueprint-leave {
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translate(6px, -6px);
+            }
+        }
+
+        @keyframes kp-sig-blueprint-leave-2 {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            60%,
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

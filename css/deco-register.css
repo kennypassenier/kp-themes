@@ -1976,5 +1976,22 @@
             transform: translateX(var(--dc-chevron));
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── deco: it closes like a fan, folding to its centre ── */
+        [data-theme='deco'] [data-kp-leaving] {
+            animation: kp-sig-deco-leave 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes kp-sig-deco-leave {
+            to {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

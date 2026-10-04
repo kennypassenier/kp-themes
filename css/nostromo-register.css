@@ -1967,5 +1967,25 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: it scrolls off the top of the monitor ── */
+        [data-theme='nostromo'] [data-kp-leaving] {
+            animation: kp-sig-nostromo-leave 480ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-nostromo-leave {
+            35% {
+                filter: brightness(1.8) blur(1px);
+            }
+            to {
+                filter: brightness(1.2) blur(3px);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

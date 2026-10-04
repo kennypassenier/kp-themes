@@ -1990,5 +1990,68 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── lapis: gold leaf is laid over it with one shimmer, then the gilded piece flakes off from the corner ── */
+        [data-theme='lapis'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-lapis-leave 550ms ease-in forwards;
+        }
+
+        [data-theme='lapis'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background:
+                linear-gradient(110deg, transparent 30%, hsl(from var(--foreground) h s l / 0.8) 45%, transparent 60%) no-repeat,
+                linear-gradient(135deg, var(--primary-disabled), var(--primary-active) 45%, var(--primary-disabled));
+            background-size:
+                250% 100%,
+                100% 100%;
+            animation: kp-sig-lapis-leave-2 550ms ease-out forwards;
+        }
+
+        @keyframes kp-sig-lapis-leave {
+            0%,
+            45% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+
+            70% {
+                clip-path: polygon(0 0, 100% 0, 100% 55%, 65% 100%, 0 100%);
+            }
+
+            to {
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0);
+            }
+        }
+
+        @keyframes kp-sig-lapis-leave-2 {
+            from {
+                opacity: 0;
+                background-position:
+                    150% 0,
+                    0 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            45%,
+            to {
+                opacity: 1;
+                background-position:
+                    -100% 0,
+                    0 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -2499,5 +2499,43 @@
             transform: translateX(300%);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── phantom: see-through and wavering, it rises a little and dissolves ── */
+        [data-theme='phantom'] [data-kp-leaving] {
+            animation: kp-sig-phantom-leave 650ms ease-in forwards;
+        }
+
+        @keyframes kp-sig-phantom-leave {
+            0% {
+                opacity: 1;
+                filter: none;
+            }
+
+            25% {
+                opacity: 0.55;
+                transform: skewX(4deg);
+                filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            }
+
+            50% {
+                transform: translateY(-3px) skewX(-4deg);
+            }
+
+            75% {
+                transform: translateY(-6px) skewX(3deg);
+                opacity: 0.3;
+            }
+
+            to {
+                transform: translateY(-9px) scaleX(0.94);
+                opacity: 0;
+                filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

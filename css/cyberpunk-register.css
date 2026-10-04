@@ -2626,5 +2626,76 @@
             transform: translateX(216px);
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── cyberpunk: the classic glitch: the text turns neon blue, a cyan copy jumps right and up, a magenta copy right and down, and it is sliced away ── */
+        [data-theme='cyberpunk'] [data-kp-leaving] {
+            animation: kp-sig-cyberpunk-leave 650ms linear forwards;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-leaving] * {
+            color: inherit !important;
+            text-shadow: inherit;
+        }
+
+        @keyframes kp-sig-cyberpunk-leave {
+            0% {
+                color: inherit;
+                text-shadow: none;
+            }
+
+            12% {
+                color: var(--accent-hover);
+                text-shadow:
+                    4px -3px 0 hsl(from var(--accent) h s l / 0.85),
+                    4px 3px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(2px);
+            }
+
+            24% {
+                text-shadow:
+                    7px -5px 0 hsl(from var(--accent) h s l / 0.85),
+                    7px 5px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(-2px);
+            }
+
+            36% {
+                text-shadow:
+                    3px -2px 0 hsl(from var(--accent) h s l / 0.85),
+                    3px 2px 0 hsl(from var(--chart-3) h s l / 0.85);
+                transform: translateX(3px);
+                clip-path: inset(0 0 0 0);
+            }
+
+            50% {
+                color: var(--accent-hover);
+                text-shadow:
+                    10px -6px 0 hsl(from var(--accent) h s l / 0.9),
+                    10px 6px 0 hsl(from var(--chart-3) h s l / 0.9);
+                clip-path: inset(20% 0 35% 0);
+                transform: translateX(-4px);
+            }
+
+            65% {
+                clip-path: inset(55% 0 10% 0);
+                transform: translateX(6px);
+            }
+
+            80% {
+                clip-path: inset(5% 0 75% 0);
+                transform: translateX(-3px);
+            }
+
+            to {
+                color: var(--accent-hover);
+                clip-path: inset(50% 0 50% 0);
+                transform: translateX(8px);
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -1719,5 +1719,58 @@
             }
         }
     }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── high-contrast: announced: a REMOVED caption, ink on yellow, is laid across it the way a screen reader would say it, then it is gone in one step ── */
+        [data-theme='high-contrast'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-high-contrast-leave 700ms linear forwards;
+        }
+
+        [data-theme='high-contrast'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            content: '✕ REMOVED';
+            display: flex;
+            align-items: center;
+            padding-inline: 0.75em;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: var(--foreground);
+            background: var(--accent);
+            border: 3px solid var(--foreground);
+            animation: kp-sig-high-contrast-leave-2 700ms cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        @keyframes kp-sig-high-contrast-leave {
+            0%,
+            85% {
+                opacity: 1;
+            }
+
+            86%,
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes kp-sig-high-contrast-leave-2 {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            30%,
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
