@@ -226,6 +226,7 @@
             <section
                 class="sm-sec"
                 data-review-item="leave"
+                data-review-choices='[{"id": "exit", "label": "Exit for this theme", "options": [{"value": "1", "label": "Exit 1"}, {"value": "2", "label": "Exit 2"}, {"value": "3", "label": "Exit 3 (signature)"}]}, {"id": "space", "label": "When the space closes", "once": true, "options": [{"value": "together", "label": "During the exit"}, {"value": "after", "label": "After the exit"}, {"value": "pause", "label": "After the exit and a short pause"}, {"value": "ghost", "label": "At once, under a copy that plays the exit"}]}, {"id": "stagger", "label": "Remove all at once", "once": true, "options": [{"value": "1", "label": "One after another, each exit in full"}, {"value": "0.5", "label": "The next one starts halfway"}]}]'
                 data-review-title="Elements that leave"
                 data-review-components="card"
                 aria-labelledby="h-leave"
@@ -262,10 +263,10 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Three things to decide. <b>Per theme:</b> which exit, 1, 2 or 3; write the number in this theme's note, and approve when one
-                        of the three fits. Exit 3 is the theme's signature exit, drawn for this theme alone. <b>Once, in any note:</b> which button
-                        under <i>When the space closes</i>, and which under <i>Remove all at once</i>. Every animation plays at a quarter; the speed
-                        buttons at the top of the page change that.
+                        Three things to decide, each ticked here. <b>Per theme:</b> which exit, 1, 2 or 3; exit 3 is the theme's signature, drawn for
+                        this theme alone. <b>Once, for every theme:</b> when the space closes, and how several leave when removed all at once; ticking
+                        one sets the buttons on the page, so what you tick is what you see. Every animation plays at a quarter; the speed buttons at
+                        the top of the page change that.
                     </p>
                 </div>
                 <div class="sm-pair sm-trio">

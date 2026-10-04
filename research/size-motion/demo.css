@@ -172,3 +172,8 @@
     background: var(--primary);
     color: var(--primary-foreground);
 }
+
+.sm-picked .sm-card {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}

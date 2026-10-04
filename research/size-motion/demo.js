@@ -84,6 +84,36 @@ const EXITS = {
     'shade-dark': ['Lifted off the page: its shadow grows, then it fades.', 'Its own shadow grows under it and swallows it whole.'],
 };
 
+// The leave section's choices say what each option does; the exits in each
+// theme's own words (Kenny, 2026-10-04: "leg duidelijker uit wat het verschil
+// tussen opties is"). Set before the review kit reads them.
+const leaveSection = /** @type {HTMLElement | null} */ (document.querySelector('[data-review-item="leave"]'));
+if (leaveSection) {
+    const choices = JSON.parse(leaveSection.dataset.reviewChoices || '[]');
+    const names = THEMES.map((t) => t.name);
+    const exitHints = (/** @type {number} */ n) =>
+        Object.fromEntries(
+            names.map((name) => [
+                name,
+                n === 0 ? /** @type {Record<string, string>} */ (LEAVE)[name] : /** @type {Record<string, string[]>} */ (EXITS)[name]?.[n - 1],
+            ]),
+        );
+    const HINTS = {
+        together: 'The space starts closing while the exit is still playing: quicker, but the closing squeezes part of the exit.',
+        after: 'The exit plays out in full on its own; only then does the space close and the card shrink.',
+        pause: 'As after the exit, with a short empty moment (150 ms) between the exit and the closing.',
+        ghost: 'A copy plays the exit on top while the space closes underneath at the same moment: the exit is never squeezed, and it is the quickest.',
+        1: 'Each element finishes its exit before the next one starts: nine rows take 10.4 s at full speed.',
+        0.5: 'The next one starts when the one before is halfway: nine rows take 6.3 s at full speed.',
+    };
+    for (const choice of choices)
+        for (const [n, option] of choice.options.entries()) {
+            if (choice.id === 'exit') option.hints = exitHints(n);
+            else option.hint = /** @type {Record<string, string>} */ (HINTS)[option.value];
+        }
+    leaveSection.dataset.reviewChoices = JSON.stringify(choices);
+}
+
 // One note per section serves every theme: the review dialog reads a note
 // per theme, so formal's is copied to the other twenty-one, and the two
 // growing sections add the theme's character where it was re-drawn.
@@ -361,5 +391,18 @@ const describeExits = () => {
     const texts = [/** @type {Record<string, string>} */ (LEAVE)[name], ...exits];
     for (const el of document.querySelectorAll('[data-sm-exit-desc]')) el.textContent = texts[Number(el.getAttribute('data-sm-exit-desc')) - 1] ?? '';
 };
-new MutationObserver(describeExits).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+new MutationObserver(() => {
+    describeExits();
+    // The exit ticked for one theme says nothing about the next.
+    for (const col of document.querySelectorAll('.sm-picked')) col.classList.remove('sm-picked');
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 describeExits();
+
+// What is ticked in the review dialog is what the page shows.
+document.querySelector('[data-review-item="leave"]')?.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
+    if (id === 'space') applyExitTiming(value);
+    if (id === 'stagger') applyStagger(value);
+    if (id === 'exit')
+        for (const col of document.querySelectorAll('[data-sm-exit]')) col.classList.toggle('sm-picked', col.getAttribute('data-sm-exit') === value);
+});

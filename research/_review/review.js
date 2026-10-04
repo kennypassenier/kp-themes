@@ -11,6 +11,20 @@
 //     <div data-review-look><p data-for="formal">what to look at in formal</p>…</div>
 //   <script type="module" src="../_review/review.js"></script>
 //
+// A section that asks the reviewer to pick between options lists them, so
+// they are ticked in the dialog rather than typed into a note (Kenny,
+// 2026-10-04: "als ik een keuze moet maken tussen bepaalde opties, zet die
+// opties dan ook in de beoordeling zodat ik het kan aanvinken welke ik wil"):
+//
+//   <section data-review-item="leave" data-review-choices='[
+//     { "id": "exit", "label": "Exit for this theme", "options": [{ "value": "1", "label": "Exit 1" }, …] },
+//     { "id": "space", "label": "When the space closes", "once": true, "options": […] }]'>
+//
+// A choice is asked per theme, or with `"once": true` a single time for the
+// whole demo (shown in every theme, the same answer everywhere). Approving
+// needs every choice answered; ticking one fires `review:choice` on the
+// section ({ id, value }), so the demo can show what was picked.
+//
 // and, optionally, catalogue blocks to judge in the same sitting, as a last
 // step, each shown in its own theme through block.html:
 //
@@ -42,10 +56,25 @@ const ORDER = root.dataset.reviewThemes
           .filter(Boolean)
     : THEMES.map((t) => t.name);
 
+/**
+ * An option may say what it means (`hint`), or what it means in each theme
+ * (`hints`, by theme name), shown under its label in the dialog.
+ * @typedef {{ value: string, label: string, hint?: string, hints?: Record<string, string> }} Option
+ * @typedef {{ id: string, label: string, once?: boolean, options: Option[] }} Choice
+ */
+/** @param {HTMLElement} section @returns {Choice[]} */
+const choicesOf = (section) => {
+    try {
+        return JSON.parse(section.dataset.reviewChoices || '[]');
+    } catch {
+        return [];
+    }
+};
 const items = [...document.querySelectorAll('[data-review-item]')].map((section) => ({
     id: section.dataset.reviewItem,
     title: section.dataset.reviewTitle || section.querySelector('h2, h3')?.textContent.trim() || section.dataset.reviewItem,
     section,
+    choices: choicesOf(section),
 }));
 
 /** @type {{ page: string, block: string, theme: string, engine?: string, title?: string, look?: string }[]} */
@@ -136,6 +165,10 @@ if (round?.round && state.__round !== round.round) {
 }
 const verdictOf = (pair) => state[pair.key]?.verdict;
 const noteOf = (pair) => state[pair.key]?.note || '';
+/** Where a choice's answer is kept: on the pair, or once for the demo. */
+const onceKey = (item, choice) => `once|${item.id}|${choice.id}`;
+const choiceOf = (pair, choice) => (choice.once ? state[onceKey(pair.item, choice)]?.value : state[pair.key]?.choices?.[choice.id]) || '';
+const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
 const stepOpen = (step) => step.pairs.some(isOpen);
 
@@ -207,6 +240,16 @@ function answer() {
     if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
+    const picked = pairs.flatMap((p) =>
+        (p.item?.choices || []).filter((c) => !c.once && choiceOf(p, c)).map((c) => `- ${p.label}: ${c.label} = ${optionLabel(c, choiceOf(p, c))}`),
+    );
+    if (picked.length) lines.push('', 'Picked per theme:', ...picked);
+    const once = items.flatMap((item) =>
+        item.choices
+            .filter((c) => c.once && state[onceKey(item, c)]?.value)
+            .map((c) => `- ${item.id}: ${c.label} = ${optionLabel(c, state[onceKey(item, c)].value)}`),
+    );
+    if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
     const openSteps = steps.filter(stepOpen);
     if (openSteps.length) lines.push('', `Still open: ${openSteps.map((s) => s.theme || s.title).join(', ')}`);
     return { text: lines.join('\n'), judged: judged.length, rejected: rejected.length };
@@ -341,12 +384,53 @@ function rowFor(pair) {
             </span>
         </div>
         <p class="rv-row__look" data-rv-row-look></p>
+        <div class="rv-row__choices" data-rv-choices></div>
         <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>`;
     li.querySelector('[data-rv-jump]').textContent = pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
     const lookBox = li.querySelector('[data-rv-row-look]');
     if (look) lookBox.innerHTML = look;
     else lookBox.remove();
+    const choiceBox = li.querySelector('[data-rv-choices]');
+    for (const choice of pair.item?.choices || []) {
+        const set = document.createElement('fieldset');
+        set.className = 'rv-choice';
+        set.dataset.rvChoice = choice.id;
+        const legend = document.createElement('legend');
+        legend.textContent = choice.once ? `${choice.label} (once, for every theme)` : choice.label;
+        set.append(legend);
+        for (const option of choice.options) {
+            const label = document.createElement('label');
+            label.className = 'rv-choice__option';
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = `${id}-${choice.id}`;
+            input.value = option.value;
+            input.checked = choiceOf(pair, choice) === option.value;
+            input.addEventListener('change', () => {
+                if (choice.once) state[onceKey(pair.item, choice)] = { value: option.value };
+                else state[pair.key] = { ...state[pair.key], choices: { ...state[pair.key]?.choices, [choice.id]: option.value } };
+                save();
+                render();
+                pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value: option.value } }));
+            });
+            const text = document.createElement('span');
+            const name = document.createElement('b');
+            name.textContent = option.label;
+            text.append(name);
+            const hint = option.hints?.[pair.theme] || option.hint;
+            if (hint) {
+                const small = document.createElement('span');
+                small.className = 'rv-choice__hint';
+                small.textContent = hint;
+                text.append(small);
+            }
+            label.append(input, text);
+            set.append(label);
+        }
+        choiceBox.append(set);
+    }
+    if (!choiceBox.childElementCount) choiceBox.remove();
     const box = /** @type {HTMLInputElement} */ (li.querySelector('[data-rv-reject]'));
     const note = /** @type {HTMLTextAreaElement} */ (li.querySelector('[data-rv-row-note]'));
     note.setAttribute('aria-label', `What should change in ${pair.title}`);
@@ -442,11 +526,20 @@ function approveStep() {
         missing[0].querySelector('[data-rv-row-note]').focus();
         return;
     }
+    const unpicked = shownPairs.filter(
+        (pair, i) => !rows[i].querySelector('[data-rv-reject]').checked && (pair.item?.choices || []).some((c) => !choiceOf(pair, c)),
+    );
+    if (unpicked.length) {
+        const names = unpicked.flatMap((pair) => pair.item.choices.filter((c) => !choiceOf(pair, c)).map((c) => `${pair.title}: ${c.label}`));
+        refused.textContent = `Pick before approving: ${names.join('; ')}.`;
+        refused.hidden = false;
+        return;
+    }
     const at = new Date().toISOString();
     for (const [i, pair] of shownPairs.entries()) {
         const rejected = rows[i].querySelector('[data-rv-reject]').checked;
         const note = rows[i].querySelector('[data-rv-row-note]').value.trim();
-        state[pair.key] = { verdict: rejected ? 'rejected' : 'approved', note, at };
+        state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
     }
     save();
     render();
